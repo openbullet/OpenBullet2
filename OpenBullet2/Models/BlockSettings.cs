@@ -5,6 +5,6 @@ namespace OpenBullet2.Models
     public class BlockSettings
     {
         public string Label { get; set; }
-        public Setting[] Settings { get; set; }
+        public BlockSetting[] Settings { get; set; }
     }
 }

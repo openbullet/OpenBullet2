@@ -33,7 +33,8 @@ namespace OpenBullet2.Helpers
                         Description = attribute.description ?? string.Empty,
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
                         Category = type.Namespace.Split('.')[2],
-                        Parameters = method.GetParameters().Select(p => ToBlockParameter(p)).ToArray()
+                        Parameters = method.GetParameters().Select(p => ToBlockParameter(p)).ToArray(),
+                        ReturnType = ToVariableType(method.ReturnType)
                     });
                 }
             }
@@ -48,6 +49,28 @@ namespace OpenBullet2.Helpers
 
             var replaced = Regex.Replace(name, @"(\B[A-Z]+?(?=[A-Z][^A-Z])|\B[A-Z]+?(?=[^A-Z]))", " $1");
             return char.ToUpper(replaced[0]) + replaced.Substring(1);
+        }
+
+        private static VariableType? ToVariableType(Type type)
+        {
+            if (type == typeof(void))
+                return null;
+
+            var dict = new Dictionary<Type, VariableType>
+            {
+                { typeof(string), VariableType.String },
+                { typeof(int), VariableType.Int },
+                { typeof(float), VariableType.Float },
+                { typeof(bool), VariableType.Bool },
+                { typeof(List<string>), VariableType.ListOfStrings },
+                { typeof(Dictionary<string, string>), VariableType.DictionaryOfStrings },
+                { typeof(byte[]), VariableType.ByteArray }
+            };
+
+            if (dict.ContainsKey(type))
+                return dict[type];
+
+            throw new InvalidCastException($"The type {type} could not be casted to VariableType");
         }
 
         private static BlockParameter ToBlockParameter(ParameterInfo parameter)

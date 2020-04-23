@@ -9,7 +9,10 @@ namespace OpenBullet2.Models.BlockParameters
         
         public virtual Setting ToSetting() 
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException();
         }
+
+        public BlockSetting ToBlockSetting()
+             => new BlockSetting { FixedSetting = ToSetting() };
     }
 }

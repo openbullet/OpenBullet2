@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Models.BlockParameters;
+using RuriLib.Models.Variables;
 using System.Linq;
 
 namespace OpenBullet2.Models
@@ -10,6 +11,7 @@ namespace OpenBullet2.Models
         public string Description { get; set; }
         public string ExtraInfo { get; set; }
         public BlockParameter[] Parameters { get; set; }
+        public VariableType? ReturnType { get; set; }
 
         public BlockInstance CreateInstance()
         {
@@ -19,7 +21,7 @@ namespace OpenBullet2.Models
                 Settings = new BlockSettings
                 {
                     Label = Name,
-                    Settings = Parameters.Select(p => p.ToSetting()).ToArray()
+                    Settings = Parameters.Select(p => p.ToBlockSetting()).ToArray()
                 }
             };
         }

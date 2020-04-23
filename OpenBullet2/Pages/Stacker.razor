@@ -2,7 +2,7 @@
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col">
             <h5>Current stack</h5>
@@ -12,7 +12,7 @@
             <h5>Block information</h5>
             @if (selectedBlock != null)
             {
-                <BlockSettingsViewer BlockSettings="selectedBlock.Settings" />
+                <BlockSettingsViewer Block="selectedBlock" />
             }
             else
             {
@@ -46,7 +46,11 @@
     private async Task SelectedBlock(BlockInstance block)
     {
         selectedBlock = block;
-        await js.Log($"Selected block {block.Info.Name}");
+
+        if (block != null)
+        {
+            await js.Log($"Selected block {block.Info.Name}");
+        }
     }
 
     private async Task AddBlock(BlockInfo block)

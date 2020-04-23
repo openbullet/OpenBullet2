@@ -6,9 +6,9 @@
     <div draggable="true" class="card" style="background-color: @BlockBuilder.GetColor(block.Info.Category); cursor: pointer;"
          @ondragstart="@(() => HandleDragStart(block))"
          @ondragover="@(() => HandleDragOver(block))"
-         @onclick="@(() => SelectedBlock.InvokeAsync(block))">
+         @onclick="@(() => SelectBlock(block))">
         <div class="card-body">
-            <h5 class="card-title">@block.Settings.Label</h5>
+            <h5 class="card-title" style="@(block == selectedBlock ? "font-weight: bold;" : "")">@block.Settings.Label</h5>
             <span @onclick="@(() => Remove(block))"
                   class="badge badge-primary badge-pill" style="cursor: pointer;">X</span>
         </div>
@@ -19,6 +19,7 @@
     [Parameter] public List<BlockInstance> Stack { get; set; }
     [Parameter] public EventCallback<BlockInstance> SelectedBlock { get; set; }
     private BlockInstance draggedItem;
+    private BlockInstance selectedBlock;
 
     private void HandleDragStart(BlockInstance item)
     {
@@ -37,5 +38,12 @@
     private void Remove(BlockInstance item)
     {
         Stack.Remove(item);
+        SelectBlock(null);
+    }
+
+    private void SelectBlock(BlockInstance item)
+    {
+        selectedBlock = item;
+        SelectedBlock.InvokeAsync(item);
     }
 }

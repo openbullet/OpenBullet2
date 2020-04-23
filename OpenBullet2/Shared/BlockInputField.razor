@@ -1,0 +1,58 @@
+﻿@using OpenBullet2.Enums
+@using OpenBullet2.Models.Settings
+
+@if (BlockSetting != null)
+{
+    <span>@BlockSetting.FixedSetting.Name</span>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm">
+                @switch (BlockSetting.InputMode)
+                {
+                    case InputMode.Variable:
+                        <CustomTypeahead Context="variableName" DefaultValue="@BlockSetting.InputVariableName" 
+                                         SearchMethod="@((string searchText) => SearchVariables(searchText))"
+                                         ValueChanged="@((string item) => BlockSetting.InputVariableName = item)">
+                            <ResultTemplate>
+                                <span style="cursor: pointer;">@variableName</span>
+                            </ResultTemplate>
+                        </CustomTypeahead>
+                        <br />
+                        break;
+
+                    case InputMode.Fixed:
+                        <SettingViewer Setting="BlockSetting.FixedSetting" />
+                        break;
+
+
+                    case InputMode.Interpolated:
+                        <text>Not available yet...</text>
+                        break;
+                }
+            </div>
+            <div class="col-sm">
+                <button class="@(BlockSetting.InputMode == InputMode.Variable ? "border-primary" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)">
+                    <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
+                </button>
+                <button class="@(BlockSetting.InputMode == InputMode.Fixed ? "border-primary" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)">
+                    <span class="oi oi-text" aria-hidden="true"></span>
+                </button>
+                <button class="@(BlockSetting.InputMode == InputMode.Interpolated ? "border-primary" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)">
+                    <span class="oi oi-code" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public BlockSetting BlockSetting { get; set; }
+
+    private async Task<IEnumerable<string>> SearchVariables(string searchText)
+    {
+        return await Task.FromResult(new string[] { "TEST", "VARIABLE", "ABCDEFG" });
+    }
+}
