@@ -1,0 +1,11 @@
+﻿@using OpenBullet2.Models
+
+<EditForm Model="BlockSettings">
+    <label for="label">Label</label>
+    <InputText @bind-Value="BlockSettings.Label" />
+</EditForm>
+<SettingsViewer Settings="BlockSettings.Settings" />
+
+@code {
+    [Parameter] public BlockSettings BlockSettings { get; set; }
+}

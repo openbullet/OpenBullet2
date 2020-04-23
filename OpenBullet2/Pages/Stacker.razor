@@ -1,0 +1,58 @@
+﻿@page "/stacker"
+@using OpenBullet2.Helpers
+@using OpenBullet2.Models
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Current stack</h5>
+            <StackViewer Stack="stack" SelectedBlock="SelectedBlock" />
+        </div>
+        <div class="col">
+            <h5>Block information</h5>
+            @if (selectedBlock != null)
+            {
+                <BlockSettingsViewer BlockSettings="selectedBlock.Settings" />
+            }
+            else
+            {
+                <text>Select a block to display its settings</text>
+            }
+        </div>
+        <div class="col">
+            <h5>Available blocks</h5>
+            <AvailableBlocksViewer Blocks="availableBlocks" SelectedBlock="AddBlock" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<BlockInfo> availableBlocks;
+    private List<BlockInstance> stack = new List<BlockInstance>();
+    private BlockInstance selectedBlock;
+
+    protected override void OnInitialized()
+    {
+        // Call a RuriLib method to let the JIT compiler load it
+        RuriLib.Functions.Parsing.LRParser.ParseBetween("abc", "a", "c");
+
+        // Get the RuriLib assembly
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var ruriLib = assemblies.FirstOrDefault(a => a.FullName.Contains("RuriLib"));
+
+        availableBlocks = BlockBuilder.FromExposedMethods(ruriLib).ToList();
+    }
+
+    private async Task SelectedBlock(BlockInstance block)
+    {
+        selectedBlock = block;
+        await js.Log($"Selected block {block.Info.Name}");
+    }
+
+    private async Task AddBlock(BlockInfo block)
+    {
+        selectedBlock = block.CreateInstance();
+        stack.Add(selectedBlock);
+        await js.Log($"Added block {block.Name}");
+    }
+}

@@ -1,0 +1,41 @@
+﻿@using OpenBullet2.Models
+@using OpenBullet2.Helpers
+
+@foreach (var block in Stack)
+{
+    <div draggable="true" class="card" style="background-color: @BlockBuilder.GetColor(block.Info.Category); cursor: pointer;"
+         @ondragstart="@(() => HandleDragStart(block))"
+         @ondragover="@(() => HandleDragOver(block))"
+         @onclick="@(() => SelectedBlock.InvokeAsync(block))">
+        <div class="card-body">
+            <h5 class="card-title">@block.Settings.Label</h5>
+            <span @onclick="@(() => Remove(block))"
+                  class="badge badge-primary badge-pill" style="cursor: pointer;">X</span>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public List<BlockInstance> Stack { get; set; }
+    [Parameter] public EventCallback<BlockInstance> SelectedBlock { get; set; }
+    private BlockInstance draggedItem;
+
+    private void HandleDragStart(BlockInstance item)
+    {
+        draggedItem = item;
+    }
+
+    private void HandleDragOver(BlockInstance item)
+    {
+        if (!item.Equals(draggedItem))
+        {
+            Stack.Remove(draggedItem);
+            Stack.Insert(Stack.IndexOf(item), draggedItem);
+        }
+    }
+
+    private void Remove(BlockInstance item)
+    {
+        Stack.Remove(item);
+    }
+}

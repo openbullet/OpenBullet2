@@ -1,0 +1,50 @@
+﻿@using OpenBullet2.Models
+@using OpenBullet2.Helpers
+
+@if (isCategorySelection)
+{
+    <GenericList List="categories">
+        <ElementTemplate Context="category">
+            <div class="card" style="background-color: @BlockBuilder.GetColor(category); cursor: pointer;"
+                 @onclick="@(() => SelectCategory(category))">
+                <div class="card-body">
+                    <h5 class="card-title">@category</h5>
+                </div>
+            </div>
+        </ElementTemplate>
+    </GenericList>
+}
+else
+{
+    <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
+    <GenericList List="Blocks.Where(b => b.Category == category).ToList()">
+        <ElementTemplate Context="block">
+            <IndividualBlock Block="block" SelectedBlock="SelectedBlock" />
+        </ElementTemplate>
+    </GenericList>
+}
+
+@code {
+    [Parameter] public List<BlockInfo> Blocks { get; set; }
+    [Parameter] public EventCallback<BlockInfo> SelectedBlock { get; set; }
+
+    private bool isCategorySelection = true;
+    private string category = null;
+    private List<string> categories;
+
+    protected override void OnInitialized()
+    {
+        categories = Blocks.Select(b => b.Category).Distinct().ToList();
+    }
+
+    private void SelectCategory(string category)
+    {
+        isCategorySelection = false;
+        this.category = category;
+    }
+
+    private void GoBack()
+    {
+        isCategorySelection = true;
+    }
+}

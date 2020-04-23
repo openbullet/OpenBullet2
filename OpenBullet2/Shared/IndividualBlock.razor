@@ -1,0 +1,29 @@
+﻿@using OpenBullet2.Models
+@using OpenBullet2.Helpers
+
+<div class="card" style="background-color: @BlockBuilder.GetColor(Block.Category); cursor: pointer;"
+     @onclick="@(() => SelectedBlock.InvokeAsync(Block))" @onmouseover="@(() => SetHovering(true))" @onmouseout="@(() => SetHovering(false))">
+    <div class="card-body">
+        <h5 class="card-title">@Block.Name</h5>
+        @if (isHovering)
+        {
+            <p class="card-text">@Block.Description</p>
+            @if (Block.ExtraInfo != string.Empty)
+            {
+                <p class="card-text" style="font-size: 12px">@Block.ExtraInfo</p>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public BlockInfo Block { get; set; }
+    [Parameter] public EventCallback<BlockInfo> SelectedBlock { get; set; }
+
+    private bool isHovering = false;
+
+    private void SetHovering(bool isHovering)
+    {
+        this.isHovering = isHovering;
+    }
+}

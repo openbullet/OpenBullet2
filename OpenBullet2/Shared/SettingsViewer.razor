@@ -1,0 +1,51 @@
+﻿@using OpenBullet2.Models.Settings
+
+<EditForm Model="Settings">
+    @foreach (var s in Settings)
+    {
+        <div class="form-group">
+            <label for="value">@s.Name</label>
+
+            @switch (s)
+            {
+                case StringSetting x:
+                    <InputText @bind-Value="@x.Value" />
+                    break;
+
+                case BoolSetting x:
+                    <InputCheckbox @bind-Value="@x.Value" />
+                    break;
+
+                case IntSetting x:
+                    <InputNumber @bind-Value="@x.Value" />
+                    break;
+
+                case EnumSetting x:
+                    <InputSelect @bind-Value="@x.Value">
+                        @foreach (var name in Enum.GetNames(x.EnumType))
+                        {
+                            <option value="@name">@name</option>
+                        }
+                    </InputSelect>
+                    break;
+
+                case FloatSetting x:
+                    <InputNumber @bind-Value="@x.Value" />
+                    break;
+
+                case ListOfStringsSetting x:
+                    <InputListOfStrings @bind-List="x.Value" />
+                    break;
+
+                case DictionaryOfStringsSetting x:
+                    <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                    break;
+            }
+
+        </div>
+    }
+</EditForm>
+
+@code {
+    [Parameter] public Setting[] Settings { get; set; }
+}
