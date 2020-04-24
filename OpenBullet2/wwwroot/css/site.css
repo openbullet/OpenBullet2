@@ -22,7 +22,7 @@ app {
 }
 
 .top-row {
-    height: 3.5rem;
+    height: 4.5rem;
     display: flex;
     align-items: center;
 }
@@ -48,7 +48,7 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-color: #111;
 }
 
     .sidebar .top-row {
@@ -181,4 +181,20 @@ app {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+input, textarea {
+    background-color: #111;
+    color: #FFF;
+    border: 1px solid black;
+    padding: 3px 6px 3px 6px;
+    font-family: Consolas;
+}
+
+input:not([type=checkbox]) {
+    width: 100%;
+}
+
+hr {
+    background-color: #666;
 }

@@ -6,14 +6,12 @@
     <label>@BlockSetting.FixedSetting.Name</label>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
+            <div class="col-9">
                 @switch (BlockSetting.InputMode)
                 {
                     case InputMode.Variable:
                         <div class="form-group">
-                            <EditForm Model="BlockSetting">
-                                <InputText @bind-Value="BlockSetting.InputVariableName" />
-                            </EditForm>
+                            <input style="background-color: #112" type="text" @bind="BlockSetting.InputVariableName" />
                         </div>
                         break;
 
@@ -27,17 +25,20 @@
                         break;
                 }
             </div>
-            <div class="col-sm">
-                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Variable ? "border-primary" : "")"
-                        @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)">
+            <div class="col-3 text-right">
+                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Variable ? "border-dark" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)"
+                        data-toggle="tooltip" data-placement="top" title="Specify a variable as input">
                     <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
                 </button>
-                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Fixed ? "border-primary" : "")"
-                        @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)">
+                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Fixed ? "border-dark" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)"
+                        data-toggle="tooltip" data-placement="top" title="Specify a fixed input">
                     <span class="oi oi-text" aria-hidden="true"></span>
                 </button>
-                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Interpolated ? "border-primary" : "")"
-                        @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)">
+                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Interpolated ? "border-dark" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)"
+                        data-toggle="tooltip" data-placement="top" title="Specify an interpolated string as input, the old OpenBullet style">
                     <span class="oi oi-code" aria-hidden="true"></span>
                 </button>
             </div>

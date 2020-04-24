@@ -1,6 +1,12 @@
 ﻿@using OpenBullet2.Models
 @using OpenBullet2.Helpers
 
+    <div class="list-group list-group-horizontal">
+        <button class="btn-sm btn-success m-sm-1"><span class="oi oi-plus"></span> Add</button>
+        <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> Delete</button>
+    </div>
+
+
 @foreach (var block in Stack)
 {
     <div draggable="true" class="card" style="background-color: @BlockBuilder.GetBGColor(block.Info.Category); 
@@ -11,8 +17,6 @@
         <div class="card-body">
             <h5 class="card-title @(block == selectedBlock ? "font-weight-bold;" : "")" 
                 style="color: @BlockBuilder.GetFGColor(block.Info.Category);">@block.Settings.Label</h5>
-            <span @onclick="@(() => Remove(block))"
-                  class="badge badge-primary badge-pill" style="cursor: pointer;">X</span>
         </div>
     </div>
 }
@@ -37,15 +41,18 @@
         }
     }
 
-    private void Remove(BlockInstance item)
-    {
-        Stack.Remove(item);
-        SelectBlock(null);
-    }
-
     private void SelectBlock(BlockInstance item)
     {
         selectedBlock = item;
         SelectedBlock.InvokeAsync(item);
+    }
+
+    private void DeleteSelectedBlock()
+    {
+        if (selectedBlock == null)
+            return;
+
+        Stack.Remove(selectedBlock);
+        SelectBlock(null);
     }
 }
