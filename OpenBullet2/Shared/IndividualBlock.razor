@@ -1,7 +1,7 @@
 ﻿@using OpenBullet2.Models
 @using OpenBullet2.Helpers
 
-<div class="card" style="background-color: @BlockBuilder.GetColor(Block.Category); cursor: pointer;"
+<div class="card" style="background-color: @BlockBuilder.GetBGColor(Block.Category); color: @BlockBuilder.GetFGColor(Block.Category); cursor: pointer; border: solid 3px #000;"
      @onclick="@(() => SelectedBlock.InvokeAsync(Block))" @onmouseover="@(() => SetHovering(true))" @onmouseout="@(() => SetHovering(false))">
     <div class="card-body">
         <h5 class="card-title">@Block.Name</h5>

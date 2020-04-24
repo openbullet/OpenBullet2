@@ -1,19 +1,19 @@
 ﻿@using OpenBullet2.Models
 
 <EditForm Model="Block">
-    <h6 style="font-weight: bold; color: blue;">Label:</h6>
+    <h6 class="font-weight-bold text-primary">Label:</h6>
     <InputText @bind-Value="Block.Settings.Label" />
 </EditForm>
 
 @if (Block.Info.ReturnType.HasValue)
 {
     <EditForm Model="Block">
-        <h6 style="font-weight: bold; color: blue; margin-top: 20px;">Output Variable:</h6>
+        <h6 class="font-weight-bold text-primary" style="margin-top: 20px;">Output Variable:</h6>
         <InputText @bind-Value="Block.OutputVariable" />
     </EditForm>
 }
 
-<h6 style="font-weight: bold; color: blue; margin-top: 20px;">Settings:</h6>
+<h6 class="font-weight-bold text-primary" style="margin-top: 20px;">Settings:</h6>
 @foreach (var setting in Block.Settings.Settings)
 {
     <BlockInputField BlockSetting="setting" />

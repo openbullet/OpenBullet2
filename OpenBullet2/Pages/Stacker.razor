@@ -4,11 +4,11 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col">
+        <div class="col-3">
             <h5>Current stack</h5>
             <StackViewer Stack="stack" SelectedBlock="SelectedBlock" />
         </div>
-        <div class="col">
+        <div class="col-6">
             <h5>Block information</h5>
             @if (selectedBlock != null)
             {
@@ -19,12 +19,14 @@
                 <text>Select a block to display its settings</text>
             }
         </div>
-        <div class="col">
+        <div class="col-3">
             <h5>Available blocks</h5>
             <AvailableBlocksViewer Blocks="availableBlocks" SelectedBlock="AddBlock" />
         </div>
     </div>
 </div>
+
+<button @onclick="CheckVariables">Check Variables</button>
 
 @code {
     private List<BlockInfo> availableBlocks;
@@ -58,5 +60,11 @@
         selectedBlock = block.CreateInstance();
         stack.Add(selectedBlock);
         await js.Log($"Added block {block.Name}");
+    }
+
+    private async Task CheckVariables()
+    {
+        try { ConfigBuilder.CheckVariables(stack); await js.AlertSuccess("Result", "Variables look ok!"); }
+        catch (Exception ex) { await js.AlertError("Uh-oh!", ex.Message); }
     }
 }

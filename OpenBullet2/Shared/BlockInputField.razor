@@ -3,21 +3,18 @@
 
 @if (BlockSetting != null)
 {
-    <span>@BlockSetting.FixedSetting.Name</span>
+    <label>@BlockSetting.FixedSetting.Name</label>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm">
                 @switch (BlockSetting.InputMode)
                 {
                     case InputMode.Variable:
-                        <CustomTypeahead Context="variableName" DefaultValue="@BlockSetting.InputVariableName" 
-                                         SearchMethod="@((string searchText) => SearchVariables(searchText))"
-                                         ValueChanged="@((string item) => BlockSetting.InputVariableName = item)">
-                            <ResultTemplate>
-                                <span style="cursor: pointer;">@variableName</span>
-                            </ResultTemplate>
-                        </CustomTypeahead>
-                        <br />
+                        <div class="form-group">
+                            <EditForm Model="BlockSetting">
+                                <InputText @bind-Value="BlockSetting.InputVariableName" />
+                            </EditForm>
+                        </div>
                         break;
 
                     case InputMode.Fixed:
@@ -31,15 +28,15 @@
                 }
             </div>
             <div class="col-sm">
-                <button class="@(BlockSetting.InputMode == InputMode.Variable ? "border-primary" : "")"
+                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Variable ? "border-primary" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)">
                     <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
                 </button>
-                <button class="@(BlockSetting.InputMode == InputMode.Fixed ? "border-primary" : "")"
+                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Fixed ? "border-primary" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)">
                     <span class="oi oi-text" aria-hidden="true"></span>
                 </button>
-                <button class="@(BlockSetting.InputMode == InputMode.Interpolated ? "border-primary" : "")"
+                <button class="btn btn-primary @(BlockSetting.InputMode == InputMode.Interpolated ? "border-primary" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)">
                     <span class="oi oi-code" aria-hidden="true"></span>
                 </button>

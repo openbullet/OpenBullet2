@@ -3,12 +3,14 @@
 
 @foreach (var block in Stack)
 {
-    <div draggable="true" class="card" style="background-color: @BlockBuilder.GetColor(block.Info.Category); cursor: pointer;"
+    <div draggable="true" class="card" style="background-color: @BlockBuilder.GetBGColor(block.Info.Category); 
+         cursor: pointer; margin-top: 5px; border: solid 3px #000;"
          @ondragstart="@(() => HandleDragStart(block))"
          @ondragover="@(() => HandleDragOver(block))"
          @onclick="@(() => SelectBlock(block))">
         <div class="card-body">
-            <h5 class="card-title" style="@(block == selectedBlock ? "font-weight: bold;" : "")">@block.Settings.Label</h5>
+            <h5 class="card-title @(block == selectedBlock ? "font-weight-bold;" : "")" 
+                style="color: @BlockBuilder.GetFGColor(block.Info.Category);">@block.Settings.Label</h5>
             <span @onclick="@(() => Remove(block))"
                   class="badge badge-primary badge-pill" style="cursor: pointer;">X</span>
         </div>

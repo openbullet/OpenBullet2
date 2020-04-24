@@ -119,18 +119,38 @@ namespace OpenBullet2.Helpers
             throw new ArgumentException($"Parameter {parameter.Name} has an invalid type ({parameter.ParameterType})");
         }
 
-        public static string GetColor(string category)
+        public static string GetBGColor(string category)
         {
             var dict = new Dictionary<string, string>
             {
-                { "Parsing", "#f4ff9e" },
-                { "Conversion", "#e2ff8c" }
+                { "Requests", "#32cd32" },
+                { "Parsing", "#ffd700" },
+                { "Conversion", "#f5deb3" },
+                { "Captchas", "#40e0d0" }
+                // Key check 1e90ff
+                // Function 9acd32
+                // Report captcha ff8c00
+                // Bypass CF e9967a
+                // TCP 9370db
+                // Navigate 4169e1
+                // Browser Action 008000
+                // Element Action b22222
+                // Execute JS 4b0082
             };
 
             if (dict.ContainsKey(category))
                 return dict[category];
 
             return "#fff";
+        }
+
+        public static string GetFGColor(string category)
+        {
+            switch (category)
+            {
+                default:
+                    return "#000";
+            }
         }
     }
 }

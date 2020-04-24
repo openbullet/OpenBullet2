@@ -5,9 +5,9 @@
 {
     <GenericList List="categories">
         <ElementTemplate Context="category">
-            <div class="card" style="background-color: @BlockBuilder.GetColor(category); cursor: pointer;"
+            <div class="card" style="background-color: @BlockBuilder.GetBGColor(category); cursor: pointer; margin-top: 5px; border: solid 3px #000;"
                  @onclick="@(() => SelectCategory(category))">
-                <div class="card-body">
+                <div class="card-body" style="color: @BlockBuilder.GetFGColor(category);">
                     <h5 class="card-title">@category</h5>
                 </div>
             </div>
@@ -19,6 +19,7 @@ else
     <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
     <GenericList List="Blocks.Where(b => b.Category == category).ToList()">
         <ElementTemplate Context="block">
+            <div style="margin-top: 5px" ></div>
             <IndividualBlock Block="block" SelectedBlock="SelectedBlock" />
         </ElementTemplate>
     </GenericList>
