@@ -1,12 +1,13 @@
-﻿@page "/stacker"
+﻿@page "/config/edit/stacker"
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models
+@using OpenBullet2.Models.Configs
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-3">
             <h5>Current stack</h5>
-            <StackViewer Stack="stack" SelectedBlock="SelectedBlock" />
+            <StackViewer Stack="config.Blocks" SelectedBlock="SelectedBlock" />
         </div>
         <div class="col-6">
             <h5>Block information</h5>
@@ -30,11 +31,13 @@
 
 @code {
     private List<BlockInfo> availableBlocks;
-    private List<BlockInstance> stack = new List<BlockInstance>();
+    private Config config;
     private BlockInstance selectedBlock;
 
     protected override void OnInitialized()
     {
+        config = Static.Config;
+
         // Call a RuriLib method to let the JIT compiler load it
         RuriLib.Functions.Parsing.LRParser.ParseBetween("abc", "a", "c");
 
@@ -58,13 +61,13 @@
     private async Task AddBlock(BlockInfo block)
     {
         selectedBlock = block.CreateInstance();
-        stack.Add(selectedBlock);
+        config.Blocks.Add(selectedBlock);
         await js.Log($"Added block {block.Name}");
     }
 
     private async Task CheckVariables()
     {
-        try { ConfigBuilder.CheckVariables(stack); await js.AlertSuccess("Result", "Variables look ok!"); }
+        try { ConfigBuilder.CheckVariables(config.Blocks); await js.AlertSuccess("Result", "Variables look ok!"); }
         catch (Exception ex) { await js.AlertError("Uh-oh!", ex.Message); }
     }
 }

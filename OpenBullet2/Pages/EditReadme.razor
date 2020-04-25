@@ -1,0 +1,15 @@
+﻿@page "/config/edit/readme"
+@using Models.Configs
+
+<EditForm Model="config">
+    <InputMarkdown Label="Readme" @bind-Value="config.Readme" For="@(() => config.Readme)" />
+</EditForm>
+
+@code {
+    private Config config;
+
+    protected override void OnInitialized()
+    {
+        config = Static.Config;
+    }
+}

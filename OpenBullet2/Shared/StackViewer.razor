@@ -4,8 +4,9 @@
 <div class="list-group list-group-horizontal">
     <button class="btn-sm btn-success m-sm-1"><span class="oi oi-plus"></span> Add</button>
     <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> Delete</button>
-    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span>Up</button>
-    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span>Down</button>
+    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> Up</button>
+    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> Down</button>
+    <button class="btn-sm btn-secondary m-sm-1" @onclick="CloneBlock"><span class="oi oi-layers"></span> Clone</button>
 </div>
 
 @foreach (var block in Stack)
@@ -86,5 +87,14 @@
 
         Stack.Remove(selectedBlock);
         Stack.Insert(index + 1, selectedBlock);
+    }
+
+    private void CloneBlock()
+    {
+        if (selectedBlock == null)
+            return;
+
+        var newBlock = Cloner.Clone(selectedBlock);
+        Stack.Insert(Stack.IndexOf(selectedBlock) + 1, newBlock);
     }
 }

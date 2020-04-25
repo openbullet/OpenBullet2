@@ -1,0 +1,22 @@
+﻿@page "/config/edit/metadata"
+@using Models.Configs
+
+<EditForm Model="config">
+    <label for="name">Name</label>
+    <InputText @bind-Value="config.Metadata.Name" />
+
+    <label for="author">Author</label>
+    <InputText @bind-Value="config.Metadata.Author" />
+
+    <label for="image">Image</label>
+    <InputImage @bind-Base64="@config.Metadata.Base64Image" />
+</EditForm>
+
+@code {
+    private Config config;
+
+    protected override void OnInitialized()
+    {
+        config = Static.Config;
+    }
+}
