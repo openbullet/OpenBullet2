@@ -28,17 +28,17 @@
             <div class="col-3 text-right">
                 <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Variable ? "border-dark" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)"
-                        data-toggle="tooltip" data-placement="top" title="Specify a variable as input">
+                        title="Specify a variable as input">
                     <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
                 </button>
                 <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Fixed ? "border-dark" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)"
-                        data-toggle="tooltip" data-placement="top" title="Specify a fixed input">
+                        title="Specify a fixed input">
                     <span class="oi oi-text" aria-hidden="true"></span>
                 </button>
                 <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Interpolated ? "border-dark" : "")"
                         @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)"
-                        data-toggle="tooltip" data-placement="top" title="Specify an interpolated string as input, the old OpenBullet style">
+                        title="Specify an interpolated string as input, the old OpenBullet style">
                     <span class="oi oi-code" aria-hidden="true"></span>
                 </button>
             </div>

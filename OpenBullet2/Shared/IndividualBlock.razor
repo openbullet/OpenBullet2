@@ -2,10 +2,14 @@
 @using OpenBullet2.Helpers
 
 <div class="card" style="background-color: @BlockBuilder.GetBGColor(Block.Category); color: @BlockBuilder.GetFGColor(Block.Category); cursor: pointer; border: solid 3px #000;"
-     @onclick="@(() => SelectedBlock.InvokeAsync(Block))" @onmouseover="@(() => SetHovering(true))" @onmouseout="@(() => SetHovering(false))">
+     @onclick="@(() => SelectedBlock.InvokeAsync(Block))">
     <div class="card-body">
-        <h5 class="card-title">@Block.Name</h5>
-        @if (isHovering)
+        <h5 class="card-title">@Block.Name
+            <span class="card-text oi @(isExpanded ? "oi-caret-top" : "oi-caret-bottom")" 
+                  @onclick="SetExpanded" @onclick:stopPropagation="true"></span>
+        </h5>
+        
+        @if (isExpanded)
         {
             <p class="card-text">@Block.Description</p>
             @if (Block.ExtraInfo != string.Empty)
@@ -20,10 +24,10 @@
     [Parameter] public BlockInfo Block { get; set; }
     [Parameter] public EventCallback<BlockInfo> SelectedBlock { get; set; }
 
-    private bool isHovering = false;
+    private bool isExpanded = false;
 
-    private void SetHovering(bool isHovering)
+    private void SetExpanded()
     {
-        this.isHovering = isHovering;
+        isExpanded = !isExpanded;
     }
 }

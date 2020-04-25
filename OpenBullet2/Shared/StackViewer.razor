@@ -1,22 +1,26 @@
 ﻿@using OpenBullet2.Models
 @using OpenBullet2.Helpers
 
-    <div class="list-group list-group-horizontal">
-        <button class="btn-sm btn-success m-sm-1"><span class="oi oi-plus"></span> Add</button>
-        <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> Delete</button>
-    </div>
-
+<div class="list-group list-group-horizontal">
+    <button class="btn-sm btn-success m-sm-1"><span class="oi oi-plus"></span> Add</button>
+    <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> Delete</button>
+    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span>Up</button>
+    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span>Down</button>
+</div>
 
 @foreach (var block in Stack)
 {
-    <div draggable="true" class="card" style="background-color: @BlockBuilder.GetBGColor(block.Info.Category); 
-         cursor: pointer; margin-top: 5px; border: solid 3px #000;"
+    <div draggable="true" class="card"
+         style="background-color: @BlockBuilder.GetBGColor(block.Info.Category); color: @BlockBuilder.GetFGColor(block.Info.Category); 
+         cursor: pointer; border: solid 3px #000; text-align: center; font-size: 20px;"
          @ondragstart="@(() => HandleDragStart(block))"
          @ondragover="@(() => HandleDragOver(block))"
          @onclick="@(() => SelectBlock(block))">
         <div class="card-body">
-            <h5 class="card-title @(block == selectedBlock ? "font-weight-bold;" : "")" 
-                style="color: @BlockBuilder.GetFGColor(block.Info.Category);">@block.Settings.Label</h5>
+            <span class="card-text @(block == selectedBlock ? "font-weight-bold" : "")"
+                  style="color: @BlockBuilder.GetFGColor(block.Info.Category);">
+                @block.Settings.Label
+            </span>
         </div>
     </div>
 }
@@ -37,7 +41,7 @@
         if (!item.Equals(draggedItem))
         {
             Stack.Remove(draggedItem);
-            Stack.Insert(Stack.IndexOf(item), draggedItem);
+            Stack.Insert(Stack.IndexOf(item) + 1, draggedItem);
         }
     }
 
@@ -54,5 +58,33 @@
 
         Stack.Remove(selectedBlock);
         SelectBlock(null);
+    }
+
+    private void MoveBlockUp()
+    {
+        if (selectedBlock == null)
+            return;
+
+        var index = Stack.IndexOf(selectedBlock);
+
+        if (index == 0)
+            return;
+
+        Stack.Remove(selectedBlock);
+        Stack.Insert(index - 1, selectedBlock);
+    }
+
+    private void MoveBlockDown()
+    {
+        if (selectedBlock == null)
+            return;
+
+        var index = Stack.IndexOf(selectedBlock);
+
+        if (index == Stack.Count - 1)
+            return;
+
+        Stack.Remove(selectedBlock);
+        Stack.Insert(index + 1, selectedBlock);
     }
 }
