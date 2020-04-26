@@ -1,0 +1,117 @@
+﻿@page "/configs"
+@using OpenBullet2.Helpers
+@using OpenBullet2.Models.Configs
+@using OpenBullet2.Repositories
+@inject IConfigRepository repo
+@inject NavigationManager nav
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> New</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> Edit</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="UploadConfig"><span class="oi oi-arrow-top"></span> Upload</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-arrow-bottom"></span> Download</button>
+            <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> Reload</button>
+            <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> Toggle View</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+        @if (detailedView)
+        {
+            <ul class="list-group" style="width: 100%;">
+                @foreach (var config in configs)
+                {
+                    <li class="list-group-item" style="cursor: pointer;"
+                        @onclick="@(() => selectedConfig = config)">ID: @config.Id, Name: @config.Metadata.Name</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-center" style="display: flex; flex-wrap: wrap; align-items: center; cursor: pointer;">
+                @foreach (var config in configs)
+                {
+                    <div class="container-fluid" style="padding: 10px; border-radius: 5px; background-color: @(selectedConfig == config ? "#111" : "transparent")"
+                         @onclick="@(() => selectedConfig = config)">
+                        <div class="row text-center">
+                            <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 128px; margin: 0 20px 0 20px;" />
+                        </div>
+                        <div class="row">
+                            <span class="text-center" style="width: 100%">@config.Metadata.Name</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-center" style="width: 100%">by @config.Metadata.Author</span>
+                        </div>
+                        <div class="row">
+                            <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    Config selectedConfig;
+    List<Config> configs;
+    bool detailedView = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Static.Configs == null)
+            await ReloadConfigs();
+
+        if (configs == null)
+            configs = Static.Configs;
+    }
+
+    private async Task ReloadConfigs()
+    {
+        Static.Configs = await repo.GetAll();
+        configs = Static.Configs;
+    }
+
+    private async Task CreateConfig()
+    {
+        selectedConfig = await repo.Create();
+        configs.Add(selectedConfig);
+        Static.Config = selectedConfig;
+        nav.NavigateTo("config/edit/metadata");
+    }
+
+    private async Task DeleteConfig()
+    {
+        if (selectedConfig == null)
+        {
+            await ShowNoConfigSelectedMessage();
+            return;
+        }
+
+        repo.Delete(selectedConfig);
+        configs.Remove(selectedConfig);
+        selectedConfig = null;
+    }
+
+    private async Task EditConfig()
+    {
+        if (selectedConfig == null)
+        {
+            await ShowNoConfigSelectedMessage();
+            return;
+        }
+
+        Static.Config = selectedConfig;
+    }
+
+    private async Task ShowNoConfigSelectedMessage()
+        => await js.AlertError("404", "It looks like you didn't select any config!");
+
+
+    private void DownloadConfig() { }
+    private void UploadConfig() { }
+
+    private void ToggleView() => detailedView = !detailedView;
+}
