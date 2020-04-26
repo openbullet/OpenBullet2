@@ -1,4 +1,5 @@
 ﻿@page "/configs"
+@using Radzen.Blazor 
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models.Configs
 @using OpenBullet2.Repositories
@@ -25,31 +26,32 @@
                 {
                     <li class="list-group-item" style="cursor: pointer;"
                         @onclick="@(() => selectedConfig = config)">ID: @config.Id, Name: @config.Metadata.Name</li>
-                }
+                    }
             </ul>
         }
         else
         {
-            <div class="text-center" style="display: flex; flex-wrap: wrap; align-items: center; cursor: pointer;">
-                @foreach (var config in configs)
-                {
-                    <div class="container-fluid" style="padding: 10px; border-radius: 5px; background-color: @(selectedConfig == config ? "#111" : "transparent")"
-                         @onclick="@(() => selectedConfig = config)">
-                        <div class="row text-center">
-                            <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 128px; margin: 0 20px 0 20px;" />
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config">
+                <Template Context="config">
+                    <RadzenCard Style="width:170px;">
+                        <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px;"
+                             @onclick="@(() => selectedConfig = config)">
+                            <div class="row">
+                                <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 110px; margin: 0 20px 0 20px;" />
+                            </div>
+                            <div class="row">
+                                <span class="text-center text-warning" style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>
+                            </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%">by @config.Metadata.Author</span>
+                            </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                            </div>
                         </div>
-                        <div class="row">
-                            <span class="text-center" style="width: 100%">@config.Metadata.Name</span>
-                        </div>
-                        <div class="row">
-                            <span class="text-center" style="width: 100%">by @config.Metadata.Author</span>
-                        </div>
-                        <div class="row">
-                            <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
-                        </div>
-                    </div>
-                }
-            </div>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
         }
     </div>
 </div>
@@ -90,9 +92,16 @@
             return;
         }
 
-        repo.Delete(selectedConfig);
-        configs.Remove(selectedConfig);
-        selectedConfig = null;
+        if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedConfig.Metadata.Name}?"))
+        {
+            repo.Delete(selectedConfig);
+            configs.Remove(selectedConfig);
+
+            if (Static.Config == selectedConfig)
+                Static.Config = null;
+
+            selectedConfig = null;
+        }
     }
 
     private async Task EditConfig()
@@ -104,6 +113,7 @@
         }
 
         Static.Config = selectedConfig;
+        nav.NavigateTo("config/edit/metadata");
     }
 
     private async Task ShowNoConfigSelectedMessage()

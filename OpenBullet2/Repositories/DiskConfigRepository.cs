@@ -12,7 +12,11 @@ namespace OpenBullet2.Repositories
 {
     public class DiskConfigRepository : IConfigRepository
     {
-        private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+        private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings 
+        { 
+            TypeNameHandling = TypeNameHandling.All,
+            Formatting = Formatting.Indented
+        };
 
         public DiskConfigRepository()
         {
