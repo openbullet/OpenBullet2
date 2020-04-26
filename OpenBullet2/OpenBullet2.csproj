@@ -14,6 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Blazaco">
+      <HintPath>..\..\Blazaco\src\Blazaco\bin\Debug\netstandard2.0\Blazaco.dll</HintPath>
+    </Reference>
     <Reference Include="RuriLib">
       <HintPath>..\..\RuriLib\RuriLib\bin\Debug\netcoreapp3.1\RuriLib.dll</HintPath>
     </Reference>

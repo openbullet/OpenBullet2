@@ -15,17 +15,25 @@
     <!--<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />-->
     <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
     <link rel="stylesheet" href="css/bootstrap/darkly.css" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link href="~/css/radzen-overrides.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/site.css"/>
+    <link rel="stylesheet" href="~/css/radzen-overrides.css" />
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/min/vs/editor/editor.main.css">
     <script src="~/js/sweetalert2.9.js"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="_content/BlazorInputFile/inputfile.js"></script>
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script src="~/js/blazaco.interop.js"></script>
 </head>
 <body>
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
+
+    <script>var require = { paths: { 'vs': 'monaco-editor/min/vs' } };</script>
+    <script src="monaco-editor/min/vs/loader.js"></script>
+    <script src="monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script src="monaco-editor/min/vs/editor/editor.main.js"></script>
+    <script type="blazor-boot"></script>
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
