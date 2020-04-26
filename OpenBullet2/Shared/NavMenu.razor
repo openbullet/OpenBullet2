@@ -93,6 +93,6 @@
         }
 
         await configRepo.Save(Static.Config);
-        await js.AlertSuccess("Aww yeah", "Your config was successfully saved!");
+        await js.AlertSuccess("Aww yeah", $"{Static.Config.Metadata.Name} was saved successfully!");
     }
 }

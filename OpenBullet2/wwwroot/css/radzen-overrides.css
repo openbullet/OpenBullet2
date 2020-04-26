@@ -17,4 +17,6 @@
 
 .swal2-popup {
     background-color: black !important;
+    border: 1px solid white !important;
+    border-radius: 5px !important;
 }
