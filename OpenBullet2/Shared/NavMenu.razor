@@ -1,4 +1,7 @@
-﻿@using OpenBullet2.Models.Configs
+﻿@using OpenBullet2.Helpers
+@using OpenBullet2.Models.Configs
+@using OpenBullet2.Repositories
+@inject IConfigRepository configRepo
 
 <div class="top-row pl-4 navbar navbar-dark">
     <div class="container-fluid">
@@ -49,6 +52,11 @@
                     <span class="oi oi-code" aria-hidden="true"></span> Code
                 </NavLink>
             </li>
+            <li class="nav-item px-3" style="width: 100%;">
+                <button type="button" class="btn btn-success" style="width: 100%" @onclick="SaveConfig">
+                    <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> Save Config
+                </button>
+            </li>
         }
     </ul>
 </div>
@@ -74,5 +82,17 @@
     {
         displayConfigSubmenu = config != null;
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SaveConfig()
+    {
+        if (Static.Config == null)
+        {
+            await js.AlertError("404", "No config selected!");
+            return;
+        }
+
+        await configRepo.Save(Static.Config);
+        await js.AlertSuccess("Aww yeah", "Your config was successfully saved!");
     }
 }

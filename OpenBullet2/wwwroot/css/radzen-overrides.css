@@ -6,3 +6,15 @@
 .card {
     padding: 0px;
 }
+
+.swal2-title {
+    color: #fff !important;
+}
+
+.swal2-content {
+    color: #fff !important;
+}
+
+.swal2-popup {
+    background-color: black !important;
+}

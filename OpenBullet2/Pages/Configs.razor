@@ -12,8 +12,8 @@
             <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> New</button>
             <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> Edit</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="UploadConfig"><span class="oi oi-arrow-top"></span> Upload</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-arrow-bottom"></span> Download</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="UploadConfig"><span class="oi oi-data-transfer-upload"></span> Upload</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> Download</button>
             <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> Reload</button>
             <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> Toggle View</button>
         </div>
@@ -37,7 +37,7 @@
                         <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px;"
                              @onclick="@(() => selectedConfig = config)">
                             <div class="row">
-                                <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 110px; margin: 0 20px 0 20px;" />
+                                <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 110px; height: 110px; margin: 0 20px 0 20px;" />
                             </div>
                             <div class="row">
                                 <span class="text-center text-warning" style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>

@@ -1,4 +1,5 @@
-﻿@using BlazorInputFile
+﻿@using OpenBullet2.Helpers
+@using BlazorInputFile
 @using System.IO
 
 <div>
@@ -32,7 +33,15 @@
             using (var ms = new MemoryStream())
             {
                 await file.Data.CopyToAsync(ms);
-                Base64 = Convert.ToBase64String(ms.ToArray());
+                var bytes = ms.ToArray();
+
+                if (bytes.Length > 50 * 1024)
+                {
+                    await js.AlertError("Image too T H I C C", "The image weighs more than 50KB. Please resize it or use a different one.");
+                    return;
+                }
+
+                Base64 = Convert.ToBase64String(bytes);
                 await Base64Changed.InvokeAsync(Base64);
                 StateHasChanged();
             }
