@@ -6,6 +6,8 @@ namespace OpenBullet2.Models
 {
     public class BlockInfo
     {
+        public string MethodName { get; set; }
+        public bool Async { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }

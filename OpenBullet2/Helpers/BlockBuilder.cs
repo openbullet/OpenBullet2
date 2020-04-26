@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace OpenBullet2.Helpers
 {
@@ -28,7 +30,9 @@ namespace OpenBullet2.Helpers
 
                     blocks.Add(new BlockInfo
                     {
-                        // If the name specified in the attribute is null, use the method's name
+                        MethodName = method.Name,
+                        Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
+                        // If the name specified in the attribute is null, use the readable method's name
                         Name = attribute.name ?? ToReadableName(method.Name),
                         Description = attribute.description ?? string.Empty,
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
@@ -70,6 +74,20 @@ namespace OpenBullet2.Helpers
             if (dict.ContainsKey(type))
                 return dict[type];
 
+            var taskDict = new Dictionary<Type, VariableType>
+            {
+                { typeof(Task<string>), VariableType.String },
+                { typeof(Task<int>), VariableType.Int },
+                { typeof(Task<float>), VariableType.Float },
+                { typeof(Task<bool>), VariableType.Bool },
+                { typeof(Task<List<string>>), VariableType.ListOfStrings },
+                { typeof(Task<Dictionary<string, string>>), VariableType.DictionaryOfStrings },
+                { typeof(Task<byte[]>), VariableType.ByteArray }
+            };
+
+            if (taskDict.ContainsKey(type))
+                return taskDict[type];
+
             throw new InvalidCastException($"The type {type} could not be casted to VariableType");
         }
 
@@ -78,7 +96,7 @@ namespace OpenBullet2.Helpers
             var dict = new Dictionary<Type, Func<BlockParameter>>
             {
                 { typeof(string), () => new StringParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : default } },
+                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : string.Empty } },
 
                 { typeof(int), () => new IntParameter
                     { DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue : default } },
@@ -123,7 +141,7 @@ namespace OpenBullet2.Helpers
         {
             var dict = new Dictionary<string, string>
             {
-                { "Requests", "#32cd32" },
+                { "Http", "#32cd32" },
                 { "Parsing", "#ffd700" },
                 { "Conversion", "#f5deb3" },
                 { "Captchas", "#40e0d0" }
