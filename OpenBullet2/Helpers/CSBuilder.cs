@@ -3,13 +3,11 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Host;
 using OpenBullet2.Enums;
 using OpenBullet2.Models;
-using OpenBullet2.Models.BlockParameters;
 using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Settings;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,11 +18,14 @@ namespace OpenBullet2.Helpers
     {
         public static void Compile(Config config)
         {
+            var script = FromBlocks(config);
+            config.CSharpScript = script;
+
             CSharpCompilationOptions options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                 .WithUsings(GetUsings(config));
 
             CSharpCompilation compilation = CSharpCompilation.Create(config.Id).WithOptions(options);
-            SyntaxTree tree = CSharpSyntaxTree.ParseText(FromBlocks(config));
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(script);
         }
 
         public static string FromBlocks(Config config)

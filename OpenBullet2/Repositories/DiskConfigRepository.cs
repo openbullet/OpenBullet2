@@ -14,7 +14,7 @@ namespace OpenBullet2.Repositories
     {
         private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings 
         { 
-            TypeNameHandling = TypeNameHandling.All,
+            TypeNameHandling = TypeNameHandling.Auto,
             Formatting = Formatting.Indented
         };
 
@@ -80,7 +80,15 @@ namespace OpenBullet2.Repositories
                 await CreateZipEntryFromString(archive, "readme.md", config.Readme);
                 await CreateZipEntryFromString(archive, "metadata.json", JsonConvert.SerializeObject(config.Metadata));
                 await CreateZipEntryFromString(archive, "settings.json", JsonConvert.SerializeObject(config.Settings));
-                await CreateZipEntryFromString(archive, "blocks.json", JsonConvert.SerializeObject(config.Blocks, jsonSettings));
+
+                if (config.CSharpMode)
+                {
+                    await CreateZipEntryFromString(archive, "script.cs", config.CSharpScript);
+                }
+                else
+                {
+                    await CreateZipEntryFromString(archive, "blocks.json", JsonConvert.SerializeObject(config.Blocks, jsonSettings));
+                }
             }
 
             return packageStream.ToArray();
@@ -91,9 +99,18 @@ namespace OpenBullet2.Repositories
             using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
             {
                 config.Readme = ReadStringFromZipEntry(archive, "readme.md");
-                config.Metadata = JsonConvert.DeserializeObject<ConfigMetadata>(ReadStringFromZipEntry(archive, "metadata.json"));
-                config.Settings = JsonConvert.DeserializeObject<ConfigSettings>(ReadStringFromZipEntry(archive, "settings.json"));
-                config.Blocks = JsonConvert.DeserializeObject<List<BlockInstance>>(ReadStringFromZipEntry(archive, "blocks.json"));
+                config.Metadata = JsonConvert.DeserializeObject<ConfigMetadata>(ReadStringFromZipEntry(archive, "metadata.json"), jsonSettings);
+                config.Settings = JsonConvert.DeserializeObject<ConfigSettings>(ReadStringFromZipEntry(archive, "settings.json"), jsonSettings);
+
+                if (archive.Entries.Any(e => e.Name.Contains("script.cs")))
+                {
+                    config.CSharpScript = ReadStringFromZipEntry(archive, "script.cs");
+                    config.CSharpMode = true;
+                }
+                else
+                {
+                    config.Blocks = JsonConvert.DeserializeObject<List<BlockInstance>>(ReadStringFromZipEntry(archive, "blocks.json"), jsonSettings);
+                }
             }
 
             return await Task.FromResult(config);

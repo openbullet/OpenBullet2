@@ -96,16 +96,16 @@ namespace OpenBullet2.Helpers
             var dict = new Dictionary<Type, Func<BlockParameter>>
             {
                 { typeof(string), () => new StringParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : string.Empty } },
+                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : "" } },
 
                 { typeof(int), () => new IntParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue : default } },
+                    { DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue : 0 } },
 
                 { typeof(float), () => new FloatParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (float)parameter.DefaultValue : default } },
+                    { DefaultValue = parameter.HasDefaultValue ? (float)parameter.DefaultValue : 0.0f } },
 
                 { typeof(bool), () => new BoolParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (bool)parameter.DefaultValue : default } },
+                    { DefaultValue = parameter.HasDefaultValue ? (bool)parameter.DefaultValue : false } },
 
                 // TODO: Add defaults for these through parameter attributes
                 { typeof(List<string>), () => new ListOfStringsParameter() },

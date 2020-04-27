@@ -2,6 +2,7 @@
 using OpenBullet2.Repositories;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace OpenBullet2.Controllers
 {
@@ -18,6 +19,8 @@ namespace OpenBullet2.Controllers
         [HttpGet("download/{id}")]
         public async Task<IActionResult> DownloadConfig(string id)
         {
+            id = HttpUtility.UrlDecode(id); 
+
             try
             {
                 var config = await repo.Get(id);

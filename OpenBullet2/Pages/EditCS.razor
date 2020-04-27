@@ -1,0 +1,27 @@
+﻿@using Blazaco.Editor
+@using Blazaco
+@page "/config/edit/code"
+
+<div class="container-fluid">
+    <div class="row">
+        <span class="text-warning">C# Editor</span>
+    </div>
+    @if (Config != null && !Config.CSharpMode)
+    {
+        <div class="row">
+            <div class="list-group list-group-horizontal">
+                <button class="btn-sm btn-success m-sm-1" @onclick="Compile"><span class="oi oi-cog"></span> Compile from Blocks</button>
+                <button class="btn-sm btn-warning m-sm-1" @onclick="ConvertConfig"><span class="oi oi-fire"></span> Convert to C# Config</button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div style="width: 100%; height: 500px; margin-top: 15px;">
+            <MonacoEditor @ref="_editor" class="fullscreen-editor" Model="@_editorModel" />
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

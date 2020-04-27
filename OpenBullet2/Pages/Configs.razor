@@ -3,6 +3,7 @@
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models.Configs
 @using OpenBullet2.Repositories
+@using System.Web 
 @inject IConfigRepository repo
 @inject NavigationManager nav
 
@@ -131,7 +132,7 @@
             return;
         }
 
-        nav.NavigateTo($"api/configs/download/{selectedConfig.Id}", true);
+        nav.NavigateTo($"api/configs/download/{HttpUtility.UrlEncode(selectedConfig.Id)}", true);
     }
 
     private void UploadConfig() { }
