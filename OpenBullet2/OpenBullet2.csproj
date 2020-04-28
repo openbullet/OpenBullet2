@@ -9,6 +9,7 @@
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.3.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Radzen.Blazor" Version="2.6.3" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
   </ItemGroup>
@@ -25,6 +26,12 @@
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Environment.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,51 @@
     padding: 0px;
 }
 
+.ui-datatable {
+    background-color: #111;
+}
+
+.ui-datatable-thead th {
+    background-color: #111;
+}
+
+.ui-datatable-scrollable-header {
+    background-color: #111;
+}
+
+.ui-datatable-thead th .ui-column-title {
+    color: #ffbc1b;
+}
+
+.ui-sortable-column .fa-sort {
+    color: #ffbc1b;
+}
+
+.ui-cell-filter {
+    background-color: #111;
+}
+
+.ui-datatable-even > td {
+    background-color: #111;
+}
+
+.ui-datatable-odd > td {
+    background-color: #111;
+}
+
+.ui-datatable-data td .ui-cell-data {
+    color: unset;
+}
+
+.ui-selectable .ui-datatable-even.ui-state-highlight > td, .ui-selectable .ui-datatable-odd.ui-state-highlight > td {
+    background-color: #333;
+}
+
+.ui-selectable .ui-datatable-even.ui-state-highlight > td, .ui-selectable .ui-datatable-odd.ui-state-highlight > td {
+    background-color: #333;
+}
+
+/* Swal2 overrides */
 .swal2-title {
     color: #fff !important;
 }

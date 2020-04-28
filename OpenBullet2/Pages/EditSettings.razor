@@ -1,0 +1,109 @@
+﻿@page "/config/edit/settings"
+@using Models.Configs
+@using RuriLib.Models.Proxies
+
+<h1>General</h1>
+<EditForm Model="settings.GeneralSettings">
+
+    <label>Suggested amount of Bots</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SuggestedBots" />
+
+    <label>CPM Limit (0 for no limit)</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.MaximumCPM" />
+
+    <label>Save empty captures too</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
+    <br />
+
+    <label>Statused for which the bot will continue / stop</label>
+    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
+</EditForm>
+
+<h1>Requests</h1>
+<EditForm Model="settings.RequestsSettings">
+    <label>Ignore response errors</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
+    <br />
+</EditForm>
+
+<h1>Proxies</h1>
+<EditForm Model="settings.ProxySettings">
+    <label>Use proxies</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.UseProxies" />
+    <br />
+
+    <label>Maximum uses per proxy (0 is infinite)</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
+
+    <label>Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 is infinite)</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
+
+    <label>Ban the proxy when the bot ends with one of this statuses</label>
+    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
+
+    <label>Allowed proxy types</label>
+    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedProxyTypes" Selected="unallowedProxyTypes" />
+</EditForm>
+
+<h1>Data</h1>
+<EditForm Model="settings.DataSettings">
+    <label>Allowed wordlist types</label>
+    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedWordlistTypes" Selected="unallowedWordlistTypes" />
+
+    <label>URL Encode data after slicing</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
+    <br />
+</EditForm>
+
+@code {
+    ConfigSettings settings;
+    List<string> continueStatuses;
+    List<string> stopStatuses;
+    List<string> proxyContinueStatuses;
+    List<string> proxyBanStatuses;
+    List<ProxyType> allowedProxyTypes;
+    List<ProxyType> unallowedProxyTypes;
+    List<string> allowedWordlistTypes;
+    List<string> unallowedWordlistTypes;
+
+    protected override void OnInitialized()
+    {
+        settings = Static.Config.Settings;
+
+        // HACK: I tried binding directly to lists but it would spit out double the amount of values when deserializing the json
+        // for some reason so this approach is working but it's not the best
+        continueStatuses = settings.GeneralSettings.ContinueStatuses.ToList();
+        stopStatuses = GetStatuses()
+            .Where(s => !continueStatuses.Contains(s)).ToList();
+
+        proxyBanStatuses = settings.ProxySettings.BanProxyStatuses.ToList();
+        proxyContinueStatuses = GetStatuses()
+            .Where(s => !proxyBanStatuses.Contains(s)).ToList();
+
+        allowedProxyTypes = settings.ProxySettings.AllowedProxyTypes.ToList();
+        unallowedProxyTypes = Enum.GetValues(typeof(ProxyType))
+            .Cast<ProxyType>().Where(t => !allowedProxyTypes.Contains(t)).ToList();
+
+        allowedWordlistTypes = settings.DataSettings.AllowedWordlistTypes.ToList();
+        unallowedWordlistTypes = Static.Environment.WordlistTypes
+            .Select(w => w.Name)
+            .Where(w => !allowedWordlistTypes.Contains(w)).ToList();
+    }
+
+    void OnSelectionChanged(object value)
+    {
+        // HACK: Set all here since I don't want to make 1 method for each one
+        settings.GeneralSettings.ContinueStatuses = continueStatuses.ToArray();
+        settings.ProxySettings.BanProxyStatuses = proxyBanStatuses.ToArray();
+        settings.ProxySettings.AllowedProxyTypes = allowedProxyTypes.ToArray();
+        settings.DataSettings.AllowedWordlistTypes = allowedWordlistTypes.ToArray();
+    }
+
+    private string[] GetStatuses()
+    {
+        return (new string[]
+        {
+            "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR"
+        }).Concat(Static.Environment.CustomStatuses.Select(s => s.Name)).ToArray();
+    }
+}

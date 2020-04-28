@@ -1,5 +1,6 @@
 ﻿@page "/configs"
 @using Radzen.Blazor 
+@using Radzen
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models.Configs
 @using OpenBullet2.Repositories
@@ -22,13 +23,17 @@
     <div class="row" style="margin-top: 30px;">
         @if (detailedView)
         {
-            <ul class="list-group" style="width: 100%;">
-                @foreach (var config in configs)
-                {
-                    <li class="list-group-item" style="cursor: pointer;"
-                        @onclick="@(() => selectedConfig = config)">ID: @config.Id, Name: @config.Metadata.Name</li>
-                    }
-            </ul>
+            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
+                        AllowSorting="true" Data="@configs" TItem="Config" ColumnWidth="200px" RowSelect="SelectConfig" RowDoubleClick="EditConfig">
+                <Columns>
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="Name" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="Author" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="Category" />
+                    <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="Proxies" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.CreationDate" Title="Creation Date" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="Last Modified" />
+                </Columns>
+            </RadzenGrid>
         }
         else
         {
@@ -36,7 +41,7 @@
                 <Template Context="config">
                     <RadzenCard Style="width:170px;">
                         <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px;"
-                             @onclick="@(() => selectedConfig = config)">
+                             @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
                             <div class="row">
                                 <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 110px; height: 110px; margin: 0 20px 0 20px;" />
                             </div>
@@ -78,6 +83,11 @@
     {
         Static.Configs = await repo.GetAll();
         configs = Static.Configs;
+    }
+
+    private void SelectConfig(Config config)
+    {
+        selectedConfig = config;
     }
 
     private async Task CreateConfig()

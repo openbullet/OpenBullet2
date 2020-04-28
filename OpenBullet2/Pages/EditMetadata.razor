@@ -8,6 +8,9 @@
     <label for="author">Author</label>
     <InputText @bind-Value="config.Metadata.Author" />
 
+    <label for="category">Category</label>
+    <InputText @bind-Value="config.Metadata.Category" />
+
     <label for="image">Image</label>
     <InputImage @bind-Base64="@config.Metadata.Base64Image" />
 </EditForm>

@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Models.Configs;
+using RuriLib.Models.Environment;
 using System;
 using System.Collections.Generic;
 
@@ -20,5 +21,8 @@ namespace OpenBullet2
                 ConfigSelected.Invoke(null, config);
             }
         }
+
+        public static EnvironmentSettings Environment { get; set; } =
+            EnvironmentSettings.FromIni("Environment.ini");
     }
 }

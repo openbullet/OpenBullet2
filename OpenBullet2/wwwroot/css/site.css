@@ -201,6 +201,10 @@ input:not([type=checkbox]) {
     width: 100%;
 }
 
+textarea {
+    width: 100%;
+}
+
 hr {
     background-color: #666;
 }
@@ -222,4 +226,40 @@ hr {
     width: 100%;
     height: 100%;
     display: flex;
+}
+
+.multiple-selector {
+    display: flex;
+}
+
+.selectable-ul {
+    height: 200px;
+    overflow-y: auto;
+    list-style-type: none;
+    width: 170px;
+    padding: 0;
+    border-radius: 3px;
+    border: 1px solid #666;
+}
+
+.selectable-ul li {
+    cursor: pointer;
+    border-bottom: 1px solid #999;
+    padding: 2px 10px;
+    font-size: 14px;
+}
+
+.selectable-ul li:hover {
+    background-color: #027;
+}
+
+.multiple-selector-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px;
+}
+
+.multiple-selector-buttons button {
+    margin: 5px;
 }

@@ -30,8 +30,6 @@
     </div>
 </div>
 
-<button @onclick="CheckVariables">Check Variables</button>
-
 @code {
     private List<BlockInfo> availableBlocks;
     private Config config;
@@ -66,11 +64,5 @@
         selectedBlock = block.CreateInstance();
         config.Blocks.Add(selectedBlock);
         await js.Log($"Added block {block.Name}");
-    }
-
-    private async Task CheckVariables()
-    {
-        try { ConfigBuilder.CheckVariables(config.Blocks); await js.AlertSuccess("Result", "Variables look ok!"); }
-        catch (Exception ex) { await js.AlertError("Uh-oh!", ex.Message); }
     }
 }

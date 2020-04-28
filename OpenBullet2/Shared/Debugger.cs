@@ -27,7 +27,18 @@ namespace OpenBullet2.Shared
 
         private async Task Run()
         {
-            // First of all, compile the config
+            // Check if variables are ok
+            try 
+            {
+                ConfigBuilder.CheckVariables(Config.Blocks); 
+            }
+            catch (Exception ex) 
+            {
+                await js.AlertError("Uh-oh!", ex.Message);
+                return;
+            }
+
+            // Compile the config
             CSBuilder.Compile(Config);
 
             log = new List<string>();
