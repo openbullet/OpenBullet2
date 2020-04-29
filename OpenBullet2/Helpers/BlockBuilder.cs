@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Models;
 using OpenBullet2.Models.BlockParameters;
 using RuriLib.Attributes;
+using RuriLib.Models.Bots;
 using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,14 @@ namespace OpenBullet2.Helpers
         {
             List<BlockInfo> blocks = new List<BlockInfo>();
 
-            // Get all exposed methods
+            // Get all types of the assembly
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
+                // Check if the type has a BlockCategory attribute
+                var category = type.GetCustomAttribute<RuriLib.Attributes.BlockCategory>();
+                if (category == null) continue;
+
                 var methods = type.GetMethods();
                 foreach (var method in methods)
                 {
@@ -36,9 +41,16 @@ namespace OpenBullet2.Helpers
                         Name = attribute.name ?? ToReadableName(method.Name),
                         Description = attribute.description ?? string.Empty,
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
-                        Category = type.Namespace.Split('.')[2],
-                        Parameters = method.GetParameters().Select(p => ToBlockParameter(p)).ToArray(),
-                        ReturnType = ToVariableType(method.ReturnType)
+                        Parameters = method.GetParameters().Where(p => p.ParameterType != typeof(BotData))
+                            .Select(p => ToBlockParameter(p)).ToArray(),
+                        ReturnType = ToVariableType(method.ReturnType),
+                        Category = new Models.BlockCategory
+                        {
+                            Name = category.name ?? type.Namespace.Split('.')[2],
+                            Description = category.description,
+                            ForegroundColor = category.foregroundColor,
+                            BackgroundColor = category.backgroundColor
+                        }
                     });
                 }
             }
@@ -46,6 +58,9 @@ namespace OpenBullet2.Helpers
             return blocks.ToArray();
         }
 
+        /// <summary>
+        /// Converts a <paramref name="name"/> from readableName to Readable Name
+        /// </summary>
         private static string ToReadableName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -135,40 +150,6 @@ namespace OpenBullet2.Helpers
             }
 
             throw new ArgumentException($"Parameter {parameter.Name} has an invalid type ({parameter.ParameterType})");
-        }
-
-        public static string GetBGColor(string category)
-        {
-            var dict = new Dictionary<string, string>
-            {
-                { "Http", "#32cd32" },
-                { "Parsing", "#ffd700" },
-                { "Conversion", "#f5deb3" },
-                { "Captchas", "#40e0d0" }
-                // Key check 1e90ff
-                // Function 9acd32
-                // Report captcha ff8c00
-                // Bypass CF e9967a
-                // TCP 9370db
-                // Navigate 4169e1
-                // Browser Action 008000
-                // Element Action b22222
-                // Execute JS 4b0082
-            };
-
-            if (dict.ContainsKey(category))
-                return dict[category];
-
-            return "#fff";
-        }
-
-        public static string GetFGColor(string category)
-        {
-            switch (category)
-            {
-                default:
-                    return "#000";
-            }
         }
     }
 }

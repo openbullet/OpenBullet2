@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Helpers;
+﻿using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 

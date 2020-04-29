@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenBullet2.Models;
 using OpenBullet2.Models.Configs;
+using RuriLib.Models.Configs;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;

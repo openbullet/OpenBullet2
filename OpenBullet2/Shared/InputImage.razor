@@ -12,8 +12,8 @@
     @if (Base64 != null)
     {
         <div>
-            <div style="margin: 10px;">
-                <img src="data:image/png;base64,@Base64" style="width: @MaxWidth px;" />
+            <div style="margin: 10px; width: @(MaxWidth)px; height: @(MaxHeight)px;">
+                <img src="data:image/png;base64,@Base64" style="height: 100%; width: 100%;" />
             </div>
         </div>
     }

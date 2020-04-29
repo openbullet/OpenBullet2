@@ -43,7 +43,9 @@
                         <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px;"
                              @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
                             <div class="row">
-                                <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 110px; height: 110px; margin: 0 20px 0 20px;" />
+                                <div style="width: 110px; height: 110px; margin: 0 20px 0 20px;">
+                                    <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 100%; height: 100%;" />
+                                </div>
                             </div>
                             <div class="row">
                                 <span class="text-center text-warning" style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>

@@ -9,11 +9,11 @@ namespace OpenBullet2.Models
         public string MethodName { get; set; }
         public bool Async { get; set; }
         public string Name { get; set; }
-        public string Category { get; set; }
         public string Description { get; set; }
         public string ExtraInfo { get; set; }
         public BlockParameter[] Parameters { get; set; }
         public VariableType? ReturnType { get; set; }
+        public BlockCategory Category { get; set; }
 
         public BlockInstance CreateInstance()
         {

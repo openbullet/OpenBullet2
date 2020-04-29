@@ -1,14 +1,13 @@
 ﻿@using OpenBullet2.Models
-@using OpenBullet2.Helpers
 
 @if (isCategorySelection)
 {
     <GenericList List="categories">
         <ElementTemplate Context="category">
-            <div class="card" style="background-color: @BlockBuilder.GetBGColor(category); cursor: pointer; margin-top: 5px; border: solid 3px #000;"
+            <div class="card" style="background-color: @category.BackgroundColor; cursor: pointer; margin-top: 5px; border: solid 3px #000;"
                  @onclick="@(() => SelectCategory(category))">
-                <div class="card-body" style="color: @BlockBuilder.GetFGColor(category);">
-                    <h5 class="card-title">@category</h5>
+                <div class="card-body" style="color: @category.ForegroundColor;">
+                    <h5 class="card-title">@category.Name</h5>
                 </div>
             </div>
         </ElementTemplate>
@@ -17,7 +16,7 @@
 else
 {
     <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
-    <GenericList List="Blocks.Where(b => b.Category == category).ToList()">
+    <GenericList List="Blocks.Where(b => b.Category.Name == category.Value.Name).ToList()">
         <ElementTemplate Context="block">
             <div style="margin-top: 5px" ></div>
             <IndividualBlock Block="block" SelectedBlock="SelectedBlock" />
@@ -30,15 +29,15 @@ else
     [Parameter] public EventCallback<BlockInfo> SelectedBlock { get; set; }
 
     private bool isCategorySelection = true;
-    private string category = null;
-    private List<string> categories;
+    private BlockCategory? category = null;
+    private List<BlockCategory> categories;
 
     protected override void OnInitialized()
     {
         categories = Blocks.Select(b => b.Category).Distinct().ToList();
     }
 
-    private void SelectCategory(string category)
+    private void SelectCategory(BlockCategory category)
     {
         isCategorySelection = false;
         this.category = category;

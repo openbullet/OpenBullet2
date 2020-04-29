@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Configs;
+using OpenBullet2.Models.Logging;
 
 namespace OpenBullet2.Shared
 {
@@ -15,13 +16,8 @@ namespace OpenBullet2.Shared
     {
         [Parameter] public Config Config { get; set; }
 
-        private List<string> log = new List<string>();
+        private BotLogger logger = new BotLogger();
         private CancellationTokenSource cts;
-
-        private void Log(string message)
-        {
-            log.Add(message);
-        }
 
         private async Task Run()
         {
@@ -39,7 +35,7 @@ namespace OpenBullet2.Shared
             // Compile the config
             CSBuilder.Compile(Config);
 
-            log = new List<string>();
+            //log = new List<string>();
             isRunning = true;
             cts = new CancellationTokenSource();
 
@@ -50,8 +46,11 @@ namespace OpenBullet2.Shared
             try
             {
                 var state = await CSharpScript.RunAsync<int>(Config.CSharpScript, options, null, null, cts.Token);
+
+                /*
                 foreach (var variable in state.Variables)
                     Log($"{variable.Name} = {variable.Value} of type {variable.Type}");
+                */
             }
             catch (Exception ex)
             {

@@ -18,8 +18,18 @@ namespace OpenBullet2.Helpers
         /// <exception cref="ArgumentException"></exception>
         public static void CheckVariables(Config config)
         {
-            // TODO: Initialize this list with the default variables like SOURCE etc.
-            List<(string, VariableType)> variables = new List<(string, VariableType)>();
+            // Initialize the list with all fixed variables
+            List<(string, VariableType)> variables = new List<(string, VariableType)>
+            {
+                ("data.Status", VariableType.String),
+                ("SOURCE", VariableType.String),
+                ("ADDRESS", VariableType.String),
+                ("HTTPCODE", VariableType.String),
+                ("COOKIES", VariableType.DictionaryOfStrings),
+                ("HEADERS", VariableType.DictionaryOfStrings)
+            };
+
+            // TODO: Add slice names from the current WordlistType
 
             // Add custom inputs
             config.Settings.InputSettings.CustomInputs

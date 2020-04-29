@@ -8,6 +8,7 @@ using OpenBullet2.Models.Settings;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,10 +51,11 @@ namespace OpenBullet2.Helpers
             if (block.Info.Async)
                 sb.Append("await ");
 
-            // TODO: Append CancellationToken parameter
-
-            // Append MethodName(setting1, "setting2", setting3);
-            sb.AppendLine($"{block.Info.MethodName}({string.Join(", ", block.Settings.Settings.Select(s => FromSetting(s)))});");
+            // Append MethodName(data, param1, "param2", param3);
+            var parameters = new List<string> { "data" }
+                .Concat(block.Settings.Settings.Select(s => FromSetting(s)));
+            
+            sb.AppendLine($"{block.Info.MethodName}({string.Join(", ", parameters)});");
         }
 
         private static string FromSetting(BlockSetting setting)
@@ -64,32 +66,17 @@ namespace OpenBullet2.Helpers
             if (setting.InputMode == InputMode.Interpolated)
                 throw new NotImplementedException();
 
-            switch (setting.FixedSetting)
+            return setting.FixedSetting switch
             {
-                case BoolSetting x:
-                    return ToPrimitive(x.Value);
-
-                case ByteArraySetting x:
-                    return ToPrimitive(x.Value);
-
-                case DictionaryOfStringsSetting x:
-                    return ToPrimitive(x.Value);
-
-                case FloatSetting x:
-                    return ToPrimitive(x.Value);
-
-                case IntSetting x:
-                    return ToPrimitive(x.Value);
-
-                case ListOfStringsSetting x:
-                    return ToPrimitive(x.Value);
-
-                case StringSetting x:
-                    return ToPrimitive(x.Value);
-
-                default:
-                    throw new NotImplementedException();
-            }
+                BoolSetting x => ToPrimitive(x.Value),
+                ByteArraySetting x => ToPrimitive(x.Value),
+                DictionaryOfStringsSetting x => ToPrimitive(x.Value),
+                FloatSetting x => ToPrimitive(x.Value),
+                IntSetting x => ToPrimitive(x.Value),
+                ListOfStringsSetting x => ToPrimitive(x.Value),
+                StringSetting x => ToPrimitive(x.Value),
+                _ => throw new NotImplementedException(),
+            };
         }
 
         private static string ToPrimitive(object value)
