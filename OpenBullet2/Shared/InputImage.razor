@@ -13,7 +13,7 @@
     {
         <div>
             <div style="margin: 10px;">
-                <img src="data:image/png;base64,@Base64" style="width: 128px;" />
+                <img src="data:image/png;base64,@Base64" style="width: @MaxWidth px;" />
             </div>
         </div>
     }
@@ -21,6 +21,10 @@
 
 @code {
     [Parameter] public string Base64 { get; set; }
+    [Parameter] public int MaxKilobytes { get; set; } = 100;
+    [Parameter] public int MaxWidth { get; set; } = 110;
+    [Parameter] public int MaxHeight { get; set; } = 110;
+    [Parameter] public int Resolution { get; set; } = 72;
     [Parameter] public EventCallback<string> Base64Changed { get; set; }
 
     async Task HandleSelection(IFileListEntry[] files)
@@ -35,13 +39,19 @@
                 await file.Data.CopyToAsync(ms);
                 var bytes = ms.ToArray();
 
-                if (bytes.Length > 50 * 1024)
+                var resize = false;
+
+                if (bytes.Length > MaxKilobytes * 1024)
                 {
-                    await js.AlertError("Image too T H I C C", "The image weighs more than 50KB. Please resize it or use a different one.");
-                    return;
+                    resize = await js.Confirm("Your image is T H I C C",
+                        $"The image weighs more than {MaxKilobytes}KB. Do you want to resize it automatically to decrease loading times when it is rendered?");
                 }
 
                 Base64 = Convert.ToBase64String(bytes);
+
+                if (resize)
+                    Base64 = ImageEditor.ResizeImageBase64(Base64, MaxWidth, MaxHeight, Resolution);
+
                 await Base64Changed.InvokeAsync(Base64);
                 StateHasChanged();
             }

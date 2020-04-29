@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazaco.Editor;
-using Blazaco.Editor.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -30,7 +28,7 @@ namespace OpenBullet2.Shared
             // Check if variables are ok
             try 
             {
-                ConfigBuilder.CheckVariables(Config.Blocks); 
+                ConfigBuilder.CheckVariables(Config);
             }
             catch (Exception ex) 
             {

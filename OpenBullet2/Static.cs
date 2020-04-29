@@ -24,5 +24,8 @@ namespace OpenBullet2
 
         public static EnvironmentSettings Environment { get; set; } =
             EnvironmentSettings.FromIni("Environment.ini");
+
+        private static DateTime startTime = DateTime.Now;
+        public static TimeSpan UpTime => DateTime.Now - startTime;
     }
 }

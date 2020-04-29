@@ -1,6 +1,8 @@
 ﻿@page "/config/edit/settings"
 @using Models.Configs
 @using RuriLib.Models.Proxies
+@using RuriLib.Models.Data
+@using RuriLib.Models 
 
 <h1>General</h1>
 <EditForm Model="settings.GeneralSettings">
@@ -15,7 +17,7 @@
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
     <br />
 
-    <label>Statused for which the bot will continue / stop</label>
+    <label>Statuses for which the bot will continue / stop</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
 </EditForm>
 
@@ -38,7 +40,7 @@
     <label>Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 is infinite)</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
 
-    <label>Ban the proxy when the bot ends with one of this statuses</label>
+    <label>Ban the proxy when the bot ends with one of these statuses</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
 
     <label>Allowed proxy types</label>
@@ -53,6 +55,116 @@
     <label>URL Encode data after slicing</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
     <br />
+
+    <label>Data Rules</label>
+    <br />
+    <div class="list-group list-group-horizontal">
+        <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new DataRule("", ".*")))">
+            <span class="oi oi-plus"></span>
+            Add Blank
+        </button>
+        <button type="button" class="btn-sm btn-primary"
+                @onclick="@(() => showRegexHelper = !showRegexHelper)">
+            <span class="oi oi-plus"></span> Toggle Regex Helper
+        </button>
+        <button type="button" class="btn-sm btn-danger"
+                @onclick="@(() => settings.DataSettings.DataRules.Clear())">
+            <span class="oi oi-x"></span> Clear
+        </button>
+    </div>
+    @if (showRegexHelper)
+    {
+        <RegexHelper BuiltRegex="@((regex) => settings.DataSettings.DataRules.Add(new DataRule("", regex)))" />
+    }
+    <div class="container-fluid" style="margin-top: 15px;">
+        @foreach (var rule in settings.DataSettings.DataRules)
+        {
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-2">
+                    <label>Slice Name</label>
+                    <InputText @bind-Value="rule.SliceName" />
+                </div>
+                <div class="col-9">
+                    <label>Regex to match</label>
+                    <InputText @bind-Value="rule.RegexToMatch" />
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
+                        <span class="oi oi-minus"></span>
+                        Remove
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</EditForm>
+
+<h1>Inputs</h1>
+<EditForm Model="settings.InputSettings">
+    <p>
+        Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start
+        a job and their answer will be inserted as a variable of type <i>string</i> that you can use as you please.
+    </p>
+    <label>Custom inputs</label>
+    <br />
+    <div class="list-group list-group-horizontal">
+        <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
+            <span class="oi oi-plus"></span> Add
+        </button>
+        <button type="button" class="btn-sm btn-danger"
+                @onclick="@(() => settings.InputSettings.CustomInputs.Clear())">
+            <span class="oi oi-x"></span> Clear
+        </button>
+    </div>
+    <div class="container-fluid" style="margin-top: 15px;">
+        @foreach (var input in settings.InputSettings.CustomInputs)
+        {
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-4">
+                    <label>Description (question for the user)</label>
+                    <InputText @bind-Value="input.Description" />
+                </div>
+                <div class="col-3">
+                    <label>Variable Name</label>
+                    <InputText @bind-Value="input.VariableName" />
+                </div>
+                <div class="col-4">
+                    <label>Default Answer</label>
+                    <InputText @bind-Value="input.DefaultAnswer" />
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
+                        <span class="oi oi-minus"></span>
+                        Remove
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</EditForm>
+
+<h1>Selenium</h1>
+<EditForm Model="settings.SeleniumSettings">
+    <label>Always open the browser at the start</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.AlwaysOpenBrowser" />
+    <br />
+
+    <label>Quit the browser when the bot ends with one of these statuses</label>
+    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
+
+    <label>Disable notifications from webpages</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.DisableNotifications" />
+    <br />
+
+    <label>Command line arguments (e.g. --headless --incognito)</label>
+    <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.CommandLineArgs" />
+
+    <label>User Agent (default if empty)</label>
+    <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UserAgent" />
+
+    <label>Random User Agent</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UseRandomUserAgent" />
+    <br />
 </EditForm>
 
 @code {
@@ -65,6 +177,9 @@
     List<ProxyType> unallowedProxyTypes;
     List<string> allowedWordlistTypes;
     List<string> unallowedWordlistTypes;
+    List<string> quitBrowserStatuses;
+    List<string> dontQuitBrowserStatuses;
+    private bool showRegexHelper = false;
 
     protected override void OnInitialized()
     {
@@ -88,6 +203,10 @@
         unallowedWordlistTypes = Static.Environment.WordlistTypes
             .Select(w => w.Name)
             .Where(w => !allowedWordlistTypes.Contains(w)).ToList();
+
+        quitBrowserStatuses = settings.SeleniumSettings.QuitBrowserStatuses.ToList();
+        dontQuitBrowserStatuses = GetStatuses()
+            .Where(s => !quitBrowserStatuses.Contains(s)).ToList();
     }
 
     void OnSelectionChanged(object value)
@@ -97,6 +216,7 @@
         settings.ProxySettings.BanProxyStatuses = proxyBanStatuses.ToArray();
         settings.ProxySettings.AllowedProxyTypes = allowedProxyTypes.ToArray();
         settings.DataSettings.AllowedWordlistTypes = allowedWordlistTypes.ToArray();
+        settings.SeleniumSettings.QuitBrowserStatuses = quitBrowserStatuses.ToArray();
     }
 
     private string[] GetStatuses()
@@ -104,6 +224,6 @@
         return (new string[]
         {
             "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR"
-        }).Concat(Static.Environment.CustomStatuses.Select(s => s.Name)).ToArray();
+            }).Concat(Static.Environment.CustomStatuses.Select(s => s.Name)).ToArray();
     }
 }

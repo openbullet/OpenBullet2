@@ -31,6 +31,16 @@
     background-color: #111;
 }
 
+.ui-selectable .ui-datatable-even:hover:not(.ui-state-highlight) > td,
+.ui-selectable .ui-datatable-odd:hover:not(.ui-state-highlight) > td {
+    background-color: #333;
+}
+
+.ui-selectable .ui-datatable-even:hover:not(.ui-state-highlight) .ui-cell-data,
+.ui-selectable .ui-datatable-odd:hover:not(.ui-state-highlight) .ui-cell-data {
+    color: unset;
+}
+
 .ui-datatable-even > td {
     background-color: #111;
 }
@@ -44,11 +54,16 @@
 }
 
 .ui-selectable .ui-datatable-even.ui-state-highlight > td, .ui-selectable .ui-datatable-odd.ui-state-highlight > td {
-    background-color: #333;
+    background-color: #444;
 }
 
 .ui-selectable .ui-datatable-even.ui-state-highlight > td, .ui-selectable .ui-datatable-odd.ui-state-highlight > td {
-    background-color: #333;
+    background-color: #444;
+}
+
+.ui-cell-filter input:focus,
+.ui-cell-filter input{
+    color: unset;
 }
 
 /* Swal2 overrides */

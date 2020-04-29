@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Configs\**" />
+    <Content Remove="Configs\**" />
+    <EmbeddedResource Remove="Configs\**" />
+    <None Remove="Configs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.3.1" />

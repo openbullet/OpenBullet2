@@ -1,10 +1,10 @@
-﻿using OpenBullet2.Models;
+﻿using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Settings;
 using RuriLib.Models.Variables;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace OpenBullet2.Helpers
 {
@@ -16,12 +16,16 @@ namespace OpenBullet2.Helpers
         /// <exception cref="NullReferenceException"></exception>
         /// <exception cref="InvalidCastException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static void CheckVariables(IEnumerable<BlockInstance> stack)
+        public static void CheckVariables(Config config)
         {
             // TODO: Initialize this list with the default variables like SOURCE etc.
             List<(string, VariableType)> variables = new List<(string, VariableType)>();
 
-            foreach (var block in stack)
+            // Add custom inputs
+            config.Settings.InputSettings.CustomInputs
+                .ForEach(i => variables.Add((i.VariableName, VariableType.String)));
+
+            foreach (var block in config.Blocks)
             {
                 // Check that all settings in variable mode use a variable that has already been
                 // declared and that is of the correct type
@@ -48,6 +52,17 @@ namespace OpenBullet2.Helpers
                 // If the method returns a value, add it to the available variables
                 if (block.Info.ReturnType.HasValue)
                     variables.Add((block.OutputVariable, block.Info.ReturnType.Value));
+            }
+
+            // TEMPORARY: Finally check if all the variable names are allowed
+            // TODO: Avoid this restriction and automatically transform invalid variable names into valid ones
+            var provider = CodeDomProvider.CreateProvider("C#");
+            foreach (var variable in variables)
+            {
+                if (!provider.IsValidIdentifier(variable.Item1))
+                {
+                    throw new Exception($"The name {variable.Item1} is not a valid variable name in the C# language. Some valid names are myvar, MyVar1, myVar_1. Please modify the invalid name and try again.");
+                }
             }
         }
 

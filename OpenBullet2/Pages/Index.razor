@@ -1,12 +1,28 @@
 ﻿@page "/"
+@using Helpers 
+@using System.Threading
 
-<h1>Hello, world!</h1>
+<h2>Welcome to OpenBullet 2</h2>
 
-Welcome to your new app.
+<p>
+    <b>Version: </b> pre-alpha.
+</p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<p>
+    <b>Webserver Uptime:</b> @Static.UpTime.ToReadableString()
+</p>
 
 @code {
+    protected override void OnInitialized()
+    {
+        RefreshUptime();
+    }
 
-    
+    private void RefreshUptime()
+    {
+        var timer = new Timer(new TimerCallback(async _ =>
+        {
+            await InvokeAsync(StateHasChanged);
+        }), null, 1000, 1000);
+    }
 }

@@ -6,9 +6,33 @@
     font-family: 'Oswald';
 }
 
+@font-face {
+    font-family: "Aleo";
+    src: url("../fonts/Aleo-Regular.otf");
+}
+
+@font-face {
+    font-family: "Aleo";
+    src: url("../fonts/Aleo-Bold.otf");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Aleo";
+    src: url("../fonts/Aleo-Italic.otf");
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Aleo";
+    src: url("../fonts/Aleo-BoldItalic.otf");
+    font-weight: bold;
+    font-style: italic;
+}
+
 html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
-    /* font-family: Oswald; */
+    font-family: Aleo !important;
 }
 
 a, .btn-link {
@@ -250,7 +274,7 @@ hr {
 }
 
 .selectable-ul li:hover {
-    background-color: #027;
+    background-color: #333;
 }
 
 .multiple-selector-buttons {

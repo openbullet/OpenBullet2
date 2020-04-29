@@ -3,13 +3,13 @@
 
 <EditForm Model="config">
     <label for="name">Name</label>
-    <InputText @bind-Value="config.Metadata.Name" />
+    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Name" />
 
     <label for="author">Author</label>
-    <InputText @bind-Value="config.Metadata.Author" />
+    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Author" />
 
     <label for="category">Category</label>
-    <InputText @bind-Value="config.Metadata.Category" />
+    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Category" />
 
     <label for="image">Image</label>
     <InputImage @bind-Base64="@config.Metadata.Base64Image" />

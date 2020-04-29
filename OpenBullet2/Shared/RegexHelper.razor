@@ -1,0 +1,135 @@
+﻿@using System.Text 
+@using System.Text.RegularExpressions
+@using Helpers 
+
+<div style="border: 1px dashed white; padding: 10px;">
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <label>Allowed Characters</label>
+            <MultipleSelector SelectionChanged="BuildRegex" NotSelected="allowedCharacters" Selected="unallowedCharacters" />
+        </div>
+        <div class="col">
+            <label>Must contain at least one</label>
+            <MultipleSelector SelectionChanged="BuildRegex" NotSelected="compulsoryCharacters" Selected="optionalCharacters" />
+        </div>
+    </div>
+    <div class="row" style="width: 100%">
+        <EditForm Model="supportedSymbols">
+            <label>Supported Symbols</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="SupportedSymbols" />
+            <label>Minimum Length (0 is unspecified)</label>
+            <InputNumber style="margin-bottom: 15px;" @bind-Value="MinLength" />
+            <label>Maximum Length (0 is unspecified)</label>
+            <InputNumber style="margin-bottom: 15px;" @bind-Value="MaxLength" />
+        </EditForm>
+    </div>
+    <div class="row">
+        <label>Preview</label>
+        <input style="margin-bottom: 15px;" type="text" readonly @bind-value="regex" />
+        <label>Test data</label>
+        <input style="margin-bottom: 15px;" type="text" @bind-value="testData" />
+    </div>
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary" @onclick="TestRegex"><span class="oi oi-fire"></span> Test Regex</button>
+            <button class="btn-sm btn-success" 
+                    @onclick="@(async () => { BuildRegex(); await BuiltRegex.InvokeAsync(regex); })">
+            <span class="oi oi-task"></span> Done</button>
+        </div>
+    </div>
+</div>
+</div>
+
+@code {
+    List<string> allowedCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
+    List<string> unallowedCharacters = new List<string>();
+    List<string> compulsoryCharacters = new List<string> { "Letters" };
+    List<string> optionalCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
+
+    string supportedSymbols = "@$!%*#?&";
+    string SupportedSymbols { get => supportedSymbols; set { supportedSymbols = value; BuildRegex(); } }
+
+    int minLength = 0;
+    int MinLength { get => minLength; set { minLength = value; BuildRegex(); } }
+
+    int maxLength = 0;
+    int MaxLength { get => maxLength; set { maxLength = value; BuildRegex(); } }
+
+    string regex = "";
+    string testData = "";
+
+    [Parameter] public EventCallback<string> BuiltRegex { get; set; }
+
+    protected override void OnInitialized()
+    {
+        BuildRegex();
+    }
+
+    private void BuildRegex()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("^");
+
+        // Compulsory
+        if (compulsoryCharacters.Contains("Letters"))
+            sb.Append("(?=.*[A-Za-z])");
+        else if (compulsoryCharacters.Contains("Lowercase"))
+            sb.Append("(?=.*[a-z])");
+        else if (compulsoryCharacters.Contains("Uppercase"))
+            sb.Append("(?=.*[A-Z])");
+
+        if (compulsoryCharacters.Contains("Numbers"))
+            sb.Append("(?=.*\\d)");
+
+        if (compulsoryCharacters.Contains("Symbols"))
+            sb.Append($"(?=.*[{Regex.Escape(supportedSymbols)}])");
+
+        // Allowed
+        sb.Append("[");
+        if (allowedCharacters.Contains("Lowercase"))
+            sb.Append("a-z");
+
+        if (allowedCharacters.Contains("Uppercase"))
+            sb.Append("A-Z");
+
+        if (allowedCharacters.Contains("Numbers"))
+            sb.Append("\\d");
+
+        if (allowedCharacters.Contains("Symbols"))
+            sb.Append(Regex.Escape(supportedSymbols));
+
+        sb.Append("]");
+
+        // Length
+        if (minLength > 0 || maxLength > 0)
+        {
+            sb.Append("{");
+            sb.Append(minLength);
+            sb.Append(",");
+            if (maxLength > 0)
+                sb.Append(maxLength);
+            sb.Append("}");
+        }
+        else
+        {
+            sb.Append("*");
+        }
+
+        sb.Append("$");
+
+        regex = sb.ToString();
+    }
+
+    private async Task TestRegex()
+    {
+        if (Regex.IsMatch(testData, regex))
+        {
+            await js.AlertSuccess("Success", "Your regex looks good");
+        }
+        else
+        {
+            await js.AlertError("Failed", "Your regex didn't match the test data");
+        }
+    }
+}
