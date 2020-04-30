@@ -5,6 +5,8 @@ using OpenBullet2.Enums;
 using OpenBullet2.Models;
 using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Settings;
+using RuriLib.Models.Bots;
+using RuriLib.Models.Variables;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
@@ -34,21 +36,32 @@ namespace OpenBullet2.Helpers
 
         public static string FromBlocks(Config config)
         {
+            List<string> declaredVariables = typeof(BotData).GetProperties()
+                .Select(p => $"data.{p.Name}").ToList();
+
             StringBuilder sb = new StringBuilder();
 
-            // TODO: Add the fixed variable declarations here
-
-            foreach (var block in config.Blocks)
-                FromBlock(sb, block);
+            foreach (var block in config.Blocks.Where(b => !b.Disabled))
+                FromBlock(sb, block, declaredVariables);
 
             return sb.ToString();
         }
 
-        private static void FromBlock(StringBuilder sb, BlockInstance block)
+        private static void FromBlock(StringBuilder sb, BlockInstance block, List<string> declaredVariables)
         {
             // If not void, do variable assignment
             if (block.Info.ReturnType.HasValue)
-                sb.Append($"var {block.OutputVariable} = ");
+            {
+                if (declaredVariables.Contains(block.OutputVariable))
+                {
+                    sb.Append($"{block.OutputVariable} = ");
+                }
+                else
+                {
+                    declaredVariables.Add(block.OutputVariable);
+                    sb.Append($"var {block.OutputVariable} = ");
+                }
+            }
 
             // If async, prepend the await keyword
             if (block.Info.Async)
@@ -95,7 +108,10 @@ namespace OpenBullet2.Helpers
         {
             var assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.FullName.Contains("RuriLib"));
             var categories = assembly.GetTypes().Where(t => t.GetCustomAttribute<RuriLib.Attributes.BlockCategory>() != null);
-            List<string> usings = new List<string> { "RuriLib.Models.Bots" };
+            List<string> usings = new List<string> 
+            {
+                "RuriLib.Models.Bots" 
+            };
             usings.AddRange(categories.Select(c => $"{c.Namespace}.{c.Name}"));
             return usings.ToArray();
         }

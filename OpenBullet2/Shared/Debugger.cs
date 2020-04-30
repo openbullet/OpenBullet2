@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Logging;
@@ -47,13 +48,19 @@ namespace OpenBullet2.Shared
 
             BotData data = new BotData(Static.RuriLibSettings, Config.Settings, logger, new Random(), null, null);
 
+            var ruriLib = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.Contains("RuriLib"));
+            var references = ruriLib.GetReferencedAssemblies();
+
             var script =
                 CSharpScript.Create(
                     code: Config.CSharpScript,
                     options: ScriptOptions.Default
-                        .WithReferences(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.Contains("RuriLib")))
+                        .WithReferences(ruriLib)
                         .WithImports(CSBuilder.GetUsings()),
                     globalsType: typeof(ScriptGlobals));
+
+            script.Options.AddReferences(AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => references.Any(r => r.FullName == a.FullName)));
 
             try
             {
@@ -76,6 +83,9 @@ namespace OpenBullet2.Shared
             {
                 isRunning = false;
             }
+
+            await InvokeAsync(StateHasChanged);
+            await js.InvokeVoidAsync("adjustTextAreas").ConfigureAwait(false);
         }
 
         private void Stop()

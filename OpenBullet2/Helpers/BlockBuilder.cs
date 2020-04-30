@@ -89,6 +89,9 @@ namespace OpenBullet2.Helpers
             if (dict.ContainsKey(type))
                 return dict[type];
 
+            if (type == typeof(Task))
+                return null;
+
             var taskDict = new Dictionary<Type, VariableType>
             {
                 { typeof(Task<string>), VariableType.String },

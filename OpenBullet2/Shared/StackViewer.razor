@@ -2,17 +2,21 @@
 @using OpenBullet2.Helpers
 
 <div class="list-group list-group-horizontal">
-    <button class="btn-sm btn-success m-sm-1"><span class="oi oi-plus"></span> Add</button>
     <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> Delete</button>
     <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> Up</button>
     <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> Down</button>
+</div>
+<div class="list-group list-group-horizontal">
     <button class="btn-sm btn-secondary m-sm-1" @onclick="CloneBlock"><span class="oi oi-layers"></span> Clone</button>
+    <button class="btn-sm btn-secondary m-sm-1" @onclick="DisableBlock"><span class="oi oi-ban"></span> Disable</button>
+    <button class="btn-sm btn-secondary m-sm-1" @onclick="Undo"><span class="oi oi-action-undo"></span> Undo</button>
 </div>
 
 @foreach (var block in Stack)
 {
     <div draggable="true" class="card"
-         style="background-color: @block.Info.Category.BackgroundColor; color: @block.Info.Category.ForegroundColor; 
+         style="background-color: @(block.Disabled ? "#666" : block.Info.Category.BackgroundColor); 
+         color: @block.Info.Category.ForegroundColor; 
          cursor: pointer; border: solid 3px #000; text-align: center; font-size: 20px;"
          @ondragstart="@(() => HandleDragStart(block))"
          @ondragover="@(() => HandleDragOver(block))"
@@ -28,6 +32,7 @@
 
 @code {
     [Parameter] public List<BlockInstance> Stack { get; set; }
+    [Parameter] public List<(BlockInstance, int)> DeletedBlocks { get; set; }
     [Parameter] public EventCallback<BlockInstance> SelectedBlock { get; set; }
     private BlockInstance draggedItem;
     private BlockInstance selectedBlock;
@@ -57,8 +62,35 @@
         if (selectedBlock == null)
             return;
 
+        DeletedBlocks.Add((selectedBlock, Stack.IndexOf(selectedBlock)));
         Stack.Remove(selectedBlock);
         SelectBlock(null);
+    }
+
+    private void Undo()
+    {
+        if (DeletedBlocks.Count == 0)
+            return;
+
+        var toRestore = DeletedBlocks.Last();
+        DeletedBlocks.Remove(toRestore);
+
+        if (Stack.Count >= toRestore.Item2)
+        {
+            Stack.Insert(toRestore.Item2, toRestore.Item1);
+        }
+        else
+        {
+            Stack.Add(toRestore.Item1);
+        }
+    }
+
+    private void DisableBlock()
+    {
+        if (selectedBlock == null)
+            return;
+
+        selectedBlock.Disabled = !selectedBlock.Disabled;
     }
 
     private void MoveBlockUp()

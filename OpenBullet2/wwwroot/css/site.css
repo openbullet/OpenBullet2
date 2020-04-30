@@ -287,3 +287,12 @@ hr {
 .multiple-selector-buttons button {
     margin: 5px;
 }
+
+.debugger-log {
+    background-color: #111;
+    font-family: Consolas;
+    padding: 20px;
+    height: 500px;
+    overflow-y: auto;
+    max-width: 1000px;
+}

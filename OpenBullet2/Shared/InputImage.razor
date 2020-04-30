@@ -24,7 +24,6 @@
     [Parameter] public int MaxKilobytes { get; set; } = 100;
     [Parameter] public int MaxWidth { get; set; } = 110;
     [Parameter] public int MaxHeight { get; set; } = 110;
-    [Parameter] public int Resolution { get; set; } = 72;
     [Parameter] public EventCallback<string> Base64Changed { get; set; }
 
     async Task HandleSelection(IFileListEntry[] files)
@@ -50,7 +49,7 @@
                 Base64 = Convert.ToBase64String(bytes);
 
                 if (resize)
-                    Base64 = ImageEditor.ResizeImageBase64(Base64, MaxWidth, MaxHeight, Resolution);
+                    Base64 = ImageEditor.ResizeBase64(Base64, MaxWidth, MaxHeight);
 
                 await Base64Changed.InvokeAsync(Base64);
                 StateHasChanged();

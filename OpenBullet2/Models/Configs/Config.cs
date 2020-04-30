@@ -13,6 +13,7 @@ namespace OpenBullet2.Models.Configs
         public string Readme { get; set; } = "Type some **markdown** here";
         public string CSharpScript { get; set; } = "";
         public List<BlockInstance> Blocks { get; set; } = new List<BlockInstance>();
+        public List<(BlockInstance, int)> DeletedBlocksHistory { get; set; } = new List<(BlockInstance, int)>();
 
         public Config()
         {
