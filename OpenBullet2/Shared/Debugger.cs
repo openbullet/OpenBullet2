@@ -9,6 +9,8 @@ using Microsoft.CodeAnalysis.Scripting;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Logging;
+using RuriLib.Models.Bots;
+using RuriLib.Models.Variables;
 
 namespace OpenBullet2.Shared
 {
@@ -16,12 +18,14 @@ namespace OpenBullet2.Shared
     {
         [Parameter] public Config Config { get; set; }
 
+        private List<Variable> variables = new List<Variable>();
         private BotLogger logger = new BotLogger();
         private CancellationTokenSource cts;
 
         private async Task Run()
         {
             // Check if variables are ok
+            /*
             try 
             {
                 ConfigBuilder.CheckVariables(Config);
@@ -31,26 +35,38 @@ namespace OpenBullet2.Shared
                 await js.AlertError("Uh-oh!", ex.Message);
                 return;
             }
+            */
 
             // Compile the config
             CSBuilder.Compile(Config);
 
-            //log = new List<string>();
+            logger = new BotLogger();
+            variables.Clear();
             isRunning = true;
             cts = new CancellationTokenSource();
 
-            ScriptOptions options = ScriptOptions.Default
-                .AddReferences(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.Contains("RuriLib")))
-                .AddImports(CSBuilder.GetUsings(Config));
+            BotData data = new BotData(Static.RuriLibSettings, Config.Settings, logger, new Random(), null, null);
+
+            var script =
+                CSharpScript.Create(
+                    code: Config.CSharpScript,
+                    options: ScriptOptions.Default
+                        .WithReferences(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.Contains("RuriLib")))
+                        .WithImports(CSBuilder.GetUsings()),
+                    globalsType: typeof(ScriptGlobals));
 
             try
             {
-                var state = await CSharpScript.RunAsync<int>(Config.CSharpScript, options, null, null, cts.Token);
+                var state = await script.RunAsync(new ScriptGlobals(data), null, cts.Token);
 
-                /*
-                foreach (var variable in state.Variables)
-                    Log($"{variable.Name} = {variable.Value} of type {variable.Type}");
-                */
+                foreach (var scriptVar in state.Variables)
+                {
+                    var type = BlockBuilder.ToVariableType(scriptVar.Type);
+                    
+                    if (type.HasValue)
+                        variables.Add(BlockBuilder.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
+                    
+                }
             }
             catch (Exception ex)
             {

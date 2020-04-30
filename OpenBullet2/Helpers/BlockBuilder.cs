@@ -70,7 +70,7 @@ namespace OpenBullet2.Helpers
             return char.ToUpper(replaced[0]) + replaced.Substring(1);
         }
 
-        private static VariableType? ToVariableType(Type type)
+        public static VariableType? ToVariableType(Type type)
         {
             if (type == typeof(void))
                 return null;
@@ -104,6 +104,29 @@ namespace OpenBullet2.Helpers
                 return taskDict[type];
 
             throw new InvalidCastException($"The type {type} could not be casted to VariableType");
+        }
+
+        public static Variable ToVariable(string name, Type type, dynamic value)
+        {
+            var t = ToVariableType(type);
+
+            if (!t.HasValue)
+                throw new InvalidCastException($"Cannot cast type {type} to a variable");
+            
+            Variable variable = t switch
+            {
+                VariableType.String => new StringVariable(value),
+                VariableType.Bool => new BoolVariable(value),
+                VariableType.ByteArray => new ByteArrayVariable(value),
+                VariableType.DictionaryOfStrings => new DictionaryOfStringsVariable(value),
+                VariableType.Float => new FloatVariable(value),
+                VariableType.Int => new IntVariable(value),
+                VariableType.ListOfStrings => new ListOfStringsVariable(value),
+                _ => throw new NotImplementedException(),
+            };
+
+            variable.Name = name;
+            return variable;
         }
 
         private static BlockParameter ToBlockParameter(ParameterInfo parameter)

@@ -97,7 +97,7 @@
         selectedConfig = await repo.Create();
         configs.Add(selectedConfig);
         Static.Config = selectedConfig;
-        nav.NavigateTo("config/edit/stacker");
+        nav.NavigateTo("config/edit/metadata");
     }
 
     private async Task DeleteConfig()
@@ -129,7 +129,11 @@
         }
 
         Static.Config = selectedConfig;
-        nav.NavigateTo("config/edit/metadata");
+
+        if (selectedConfig.CSharpMode)
+            nav.NavigateTo("config/edit/code");
+        else
+            nav.NavigateTo("config/edit/stacker");
     }
 
     private async Task ShowNoConfigSelectedMessage()

@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Models.Configs;
 using RuriLib.Models.Environment;
+using RuriLib.Models.Settings;
 using System;
 using System.Collections.Generic;
 
@@ -24,6 +25,8 @@ namespace OpenBullet2
 
         public static EnvironmentSettings Environment { get; set; } =
             EnvironmentSettings.FromIni("Environment.ini");
+
+        public static GlobalSettings RuriLibSettings { get; set; } = new GlobalSettings();
 
         private static DateTime startTime = DateTime.Now;
         public static TimeSpan UpTime => DateTime.Now - startTime;

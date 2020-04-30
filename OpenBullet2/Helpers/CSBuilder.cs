@@ -11,6 +11,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace OpenBullet2.Helpers
@@ -22,11 +23,13 @@ namespace OpenBullet2.Helpers
             var script = FromBlocks(config);
             config.CSharpScript = script;
 
+            /*
             CSharpCompilationOptions options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                 .WithUsings(GetUsings(config));
 
             CSharpCompilation compilation = CSharpCompilation.Create(config.Id).WithOptions(options);
             SyntaxTree tree = CSharpSyntaxTree.ParseText(script);
+            */
         }
 
         public static string FromBlocks(Config config)
@@ -88,11 +91,13 @@ namespace OpenBullet2.Helpers
             return writer.ToString();
         }
 
-        public static string[] GetUsings(Config config)
+        public static string[] GetUsings()
         {
-            return config.Blocks
-                .Select(block => $"RuriLib.ExposedMethods.{block.Info.Category}.Methods")
-                .Distinct().ToArray();
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().First(a => a.FullName.Contains("RuriLib"));
+            var categories = assembly.GetTypes().Where(t => t.GetCustomAttribute<RuriLib.Attributes.BlockCategory>() != null);
+            List<string> usings = new List<string> { "RuriLib.Models.Bots" };
+            usings.AddRange(categories.Select(c => $"{c.Namespace}.{c.Name}"));
+            return usings.ToArray();
         }
 
         class CSharpLanguage : ILanguageService

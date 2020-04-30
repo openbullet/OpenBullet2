@@ -1,8 +1,9 @@
 ﻿@using Blazaco
 @using Blazaco.Editor
 @using Blazaco.Editor.Options
+@using RuriLib.Models.Variables 
 
-<div class="container-fluid">
+<div class="container-fluid" style="margin-bottom: 50px;">
     <div class="row">
         <div class="list-group list-group-horizontal">
             @if (!isRunning)
@@ -16,11 +17,36 @@
         </div>
     </div>
     <div class="row">
-        @foreach (var entry in log)
-        {
-            <p>@entry</p>
-            <br />
-        }
+        <div class="col-8">
+            <h5>Complete Log</h5>
+            <div style="background-color: #111; font-family: Consolas; padding: 20px; height: 500px; overflow-y: auto">
+                @foreach (var entry in logger.Entries)
+                {
+                    <p style="color: @entry.Color;">@entry.Message</p>
+                }
+            </div>
+        </div>
+        <div class="col-4">
+            <h5>Variables</h5>
+            <RadzenTree Style="width: 100%; height: 300px; cursor: default;">
+                @foreach (var variable in variables)
+                {
+                    <RadzenTreeItem Text="@variable.Name">
+                        @if (variable is StringVariable)
+                        {
+                            <RadzenTreeItem Text="@variable.AsString()" />
+                        }
+                        else if (variable is ListOfStringsVariable)
+                        {
+                            @foreach(var element in variable.AsListOfStrings())
+                            {
+                                <RadzenTreeItem Text="@element" />
+                            }
+                        }
+                    </RadzenTreeItem>    
+                }
+            </RadzenTree>
+        </div>
     </div>
 </div>
 
