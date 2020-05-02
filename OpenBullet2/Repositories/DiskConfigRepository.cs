@@ -60,6 +60,13 @@ namespace OpenBullet2.Repositories
             return config;
         }
 
+        public async Task Upload(Stream stream)
+        {
+            var config = new Config();
+            config = await UnpackConfig(config, stream);
+            await File.WriteAllBytesAsync(GetFileName(config), await PackConfig(config));
+        }
+
         public async Task Save(Config config)
         {
             await File.WriteAllBytesAsync(GetFileName(config), await PackConfig(config));

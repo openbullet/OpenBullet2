@@ -13,7 +13,14 @@
             <h5>Block information</h5>
             @if (selectedBlock != null)
             {
-                <BlockSettingsViewer Block="selectedBlock" />
+                @if (selectedBlock is KeycheckBlock)
+                {
+                    <BlockSettingsViewer Block="selectedBlock as KeycheckBlock" />
+                }
+                else
+                {
+                    <BlockSettingsViewer Block="selectedBlock" />
+                }
             }
             else
             {
@@ -47,6 +54,19 @@
         var ruriLib = assemblies.FirstOrDefault(a => a.FullName.Contains("RuriLib"));
 
         availableBlocks = BlockBuilder.FromExposedMethods(ruriLib).ToList();
+
+        /*
+        availableBlocks.Add(new BlockInfo
+        {
+            Category = new BlockCategory 
+            {
+                BackgroundColor = "#1e90ff",
+                Description = "Blocks for changing the execution flow in the stack",
+                Name = "Flow Control"
+            },
+            
+        });
+        */
     }
 
     private async Task SelectedBlock(BlockInstance block)

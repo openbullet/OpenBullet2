@@ -5,6 +5,8 @@
 @using OpenBullet2.Models.Configs
 @using OpenBullet2.Repositories
 @using System.Web 
+@using BlazorInputFile 
+@using System.IO 
 @inject IConfigRepository repo
 @inject NavigationManager nav
 
@@ -14,12 +16,21 @@
             <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> New</button>
             <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> Edit</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="UploadConfig"><span class="oi oi-data-transfer-upload"></span> Upload</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="@(() => uploadDisplay = !uploadDisplay)">
+                <span class="oi oi-data-transfer-upload"></span> Upload</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> Download</button>
             <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> Reload</button>
             <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> Toggle View</button>
         </div>
     </div>
+    @if (uploadDisplay)
+    {
+        <div class="row">
+            <div class="drag-drop-zone">
+                <InputFile OnChange="ProcessUploadedConfigs" />
+            </div>
+        </div>
+    }
     <div class="row" style="margin-top: 30px;">
         @if (detailedView)
         {
@@ -48,7 +59,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <span class="text-center text-warning" style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>
+                                <span class="text-center text-warning margin-left: 5px;margin-right: 5px;" 
+                                      style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>
                             </div>
                             <div class="row">
                                 <span class="text-center" style="width: 100%">by @config.Metadata.Author</span>
@@ -68,6 +80,7 @@
     Config selectedConfig;
     List<Config> configs;
     bool detailedView = false;
+    bool uploadDisplay = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +149,34 @@
             nav.NavigateTo("config/edit/stacker");
     }
 
+    private async Task ProcessUploadedConfigs(IFileListEntry[] files)
+    {
+        if (files.Length == 0)
+            return;
+
+        try
+        {
+            foreach (var file in files)
+            {
+                using (var reader = new StreamReader(file.Data))
+                {
+                    var ms = new MemoryStream();
+                    await file.Data.CopyToAsync(ms);
+                    await repo.Upload(ms);
+                }
+            }
+
+            await js.AlertSuccess("All done!", $"Successfully uploaded {files.Length} configs");
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+
+        await ReloadConfigs();
+        uploadDisplay = false;
+    }
+
     private async Task ShowNoConfigSelectedMessage()
         => await js.AlertError("404", "It looks like you didn't select any config!");
 
@@ -150,8 +191,6 @@
 
         nav.NavigateTo($"api/configs/download/{HttpUtility.UrlEncode(selectedConfig.Id)}", true);
     }
-
-    private void UploadConfig() { }
 
     private void ToggleView() => detailedView = !detailedView;
 }

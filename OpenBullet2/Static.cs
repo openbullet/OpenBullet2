@@ -3,6 +3,7 @@ using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenBullet2
 {
@@ -30,5 +31,13 @@ namespace OpenBullet2
 
         private static DateTime startTime = DateTime.Now;
         public static TimeSpan UpTime => DateTime.Now - startTime;
+
+        public static string[] GetStatuses()
+        {
+            return (new string[]
+            {
+            "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR"
+                }).Concat(Environment.CustomStatuses.Select(s => s.Name)).ToArray();
+        }
     }
 }

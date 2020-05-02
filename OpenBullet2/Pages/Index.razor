@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Helpers 
 @using System.Threading
+@using Models
 
 <h2>Welcome to OpenBullet 2</h2>
 
@@ -12,7 +13,20 @@
     <b>Webserver Uptime:</b> @Static.UpTime.ToReadableString()
 </p>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <KeycheckBlockSettingsViewer Block="keycheck" />
+        </div>
+    </div>
+</div>
+
 @code {
+    private KeycheckBlock keycheck = new KeycheckBlock
+    {
+        Settings = new BlockSettings { Label = "KEYCHECK" }
+    };
+
     protected override void OnInitialized()
     {
         RefreshUptime();

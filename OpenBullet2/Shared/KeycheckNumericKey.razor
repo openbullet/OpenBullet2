@@ -1,0 +1,26 @@
+﻿@using OpenBullet2.Models.Keycheck
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col no-padding">
+            <BlockInputField BlockSetting="Key.Left" DisplayLabel="false" />
+        </div>
+        <div class="col-4">
+            <EditForm Model="Key">
+                <InputSelect @bind-Value="Key.Comparison">
+                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Functions.Conditions.NumericComparison)))
+                    {
+                        <option value="@name">@name</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+        <div class="col">
+            <BlockInputField BlockSetting="Key.Right" DisplayLabel="false" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public NumericKey Key { get; set; }
+}

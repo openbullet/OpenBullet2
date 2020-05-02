@@ -188,11 +188,11 @@
         // HACK: I tried binding directly to lists but it would spit out double the amount of values when deserializing the json
         // for some reason so this approach is working but it's not the best
         continueStatuses = settings.GeneralSettings.ContinueStatuses.ToList();
-        stopStatuses = GetStatuses()
+        stopStatuses = Static.GetStatuses()
             .Where(s => !continueStatuses.Contains(s)).ToList();
 
         proxyBanStatuses = settings.ProxySettings.BanProxyStatuses.ToList();
-        proxyContinueStatuses = GetStatuses()
+        proxyContinueStatuses = Static.GetStatuses()
             .Where(s => !proxyBanStatuses.Contains(s)).ToList();
 
         allowedProxyTypes = settings.ProxySettings.AllowedProxyTypes.ToList();
@@ -205,7 +205,7 @@
             .Where(w => !allowedWordlistTypes.Contains(w)).ToList();
 
         quitBrowserStatuses = settings.SeleniumSettings.QuitBrowserStatuses.ToList();
-        dontQuitBrowserStatuses = GetStatuses()
+        dontQuitBrowserStatuses = Static.GetStatuses()
             .Where(s => !quitBrowserStatuses.Contains(s)).ToList();
     }
 
@@ -217,13 +217,5 @@
         settings.ProxySettings.AllowedProxyTypes = allowedProxyTypes.ToArray();
         settings.DataSettings.AllowedWordlistTypes = allowedWordlistTypes.ToArray();
         settings.SeleniumSettings.QuitBrowserStatuses = quitBrowserStatuses.ToArray();
-    }
-
-    private string[] GetStatuses()
-    {
-        return (new string[]
-        {
-            "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR"
-            }).Concat(Static.Environment.CustomStatuses.Select(s => s.Name)).ToArray();
     }
 }

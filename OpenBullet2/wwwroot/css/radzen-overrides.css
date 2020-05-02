@@ -80,3 +80,11 @@
     border: 1px solid white !important;
     border-radius: 5px !important;
 }
+
+.ui-treenode-label {
+    cursor: default;
+}
+
+.ui-treenode-content:hover {
+    background-color: #444;
+}

@@ -296,3 +296,7 @@ hr {
     overflow-y: auto;
     max-width: 1000px;
 }
+
+.no-padding {
+    padding: 0px 0px 0px 0px;
+}

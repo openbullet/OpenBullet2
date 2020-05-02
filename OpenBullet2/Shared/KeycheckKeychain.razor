@@ -1,0 +1,140 @@
+﻿@using Models.Keycheck
+@using Models.Settings  
+
+<div class="container-fluid"
+     style="background-color: @GetBGColor()">
+    <div class="row">
+        <div class="col no-padding">Result Status:</div>
+        <div class="col no-padding">
+            <EditForm Model="Keychain">
+                <InputSelect @bind-Value="Keychain.ResultStatus">
+                    @foreach (var status in Static.GetStatuses())
+                    {
+                        <option value="@status">@status</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+        <div class="col no-padding">Mode:</div>
+        <div class="col no-padding">
+            <EditForm Model="Keychain">
+                <InputSelect @bind-Value="Keychain.Mode">
+                    @foreach (var mode in Enum.GetNames(typeof(OpenBullet2.Enums.KeychainMode)))
+                    {
+                        <option value="@mode">@mode</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+    </div>
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddStringKey"><span class="oi oi-plus"></span> String Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddIntKey"><span class="oi oi-plus"></span> Int Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddFloatKey"><span class="oi oi-plus"></span> Float Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddListKey"><span class="oi oi-plus"></span> List Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddDictionaryKey"><span class="oi oi-plus"></span> Dictionary Key</button>
+        </div>
+    </div>
+    @foreach (var key in Keychain.Keys)
+    {
+        <div class="row">
+            <div class="col-10 no-padding">
+                @switch (key)
+                {
+                    case StringKey x:
+                        <KeycheckStringKey Key="key as StringKey" />
+                        break;
+
+                    case NumericKey x:
+                        <KeycheckNumericKey Key="key as NumericKey" />
+                        break;
+
+                    case ListKey x:
+                        <KeycheckListKey Key="key as ListKey" />
+                        break;
+
+                    case DictionaryKey x:
+                        <KeycheckDictionaryKey Key="key as DictionaryKey" />
+                        break;
+                }
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn-sm btn-danger" @onclick="@(() => Keychain.Keys.Remove(key))">
+                <span class="oi oi-x"></span></button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Keychain Keychain { get; set; }
+
+    private void AddStringKey()
+    {
+        var key = new StringKey
+        {
+            Left = new BlockSetting { FixedSetting = new StringSetting() },
+            Right = new BlockSetting { FixedSetting = new StringSetting() }
+        };
+
+        Keychain.Keys.Add(key);
+    }
+
+    private void AddIntKey()
+    {
+        var key = new NumericKey
+        {
+            Left = new BlockSetting { FixedSetting = new IntSetting() },
+            Right = new BlockSetting { FixedSetting = new IntSetting() }
+        };
+
+        Keychain.Keys.Add(key);
+    }
+
+    private void AddFloatKey()
+    {
+        var key = new NumericKey
+        {
+            Left = new BlockSetting { FixedSetting = new FloatSetting() },
+            Right = new BlockSetting { FixedSetting = new FloatSetting() }
+        };
+
+        Keychain.Keys.Add(key);
+    }
+
+    private void AddListKey()
+    {
+        var key = new ListKey
+        {
+            Left = new BlockSetting { FixedSetting = new ListOfStringsSetting() },
+            Right = new BlockSetting { FixedSetting = new StringSetting() }
+        };
+
+        Keychain.Keys.Add(key);
+    }
+
+    private void AddDictionaryKey()
+    {
+        var key = new DictionaryKey
+        {
+            Left = new BlockSetting { FixedSetting = new DictionaryOfStringsSetting() },
+            Right = new BlockSetting { FixedSetting = new StringSetting() }
+        };
+
+        Keychain.Keys.Add(key);
+    }
+
+    private string GetBGColor()
+    {
+        return Keychain.ResultStatus switch
+        {
+            "SUCCESS" => "#006600",
+            "FAIL" => "#660000",
+            "RETRY" => "#666600",
+            "BAN" => "#660066",
+            "NONE" => "000066",
+            _ => "#c04000"
+        };
+    }
+}
