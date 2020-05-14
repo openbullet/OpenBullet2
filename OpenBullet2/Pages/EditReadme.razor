@@ -1,5 +1,5 @@
 ﻿@page "/config/edit/readme"
-@using Models.Configs
+@using RuriLib.Models.Configs
 
 <EditForm Model="config">
     <InputMarkdown Label="Readme" @bind-Value="config.Readme" For="@(() => config.Readme)" />

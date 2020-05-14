@@ -1,47 +1,47 @@
-﻿@using OpenBullet2.Enums
-@using OpenBullet2.Models.Settings
+﻿@using RuriLib.Models.Blocks.Settings
+@using RuriLib.Extensions 
 
 @if (BlockSetting != null)
 {
     @if (DisplayLabel)
     {
-        <label>@BlockSetting.FixedSetting.Name</label>
+        <label>@BlockSetting.Name.ToReadableName()</label>
     }
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 no-padding">
                 @switch (BlockSetting.InputMode)
                 {
-                    case InputMode.Variable:
+                    case SettingInputMode.Variable:
                         <div class="form-group">
                             <input style="background-color: #112" type="text" @bind="BlockSetting.InputVariableName" />
                         </div>
                         break;
 
-                    case InputMode.Fixed:
+                    case SettingInputMode.Fixed:
                         <SettingViewer Setting="BlockSetting.FixedSetting" />
                         break;
 
 
-                    case InputMode.Interpolated:
+                    case SettingInputMode.Interpolated:
                         <text>Not available yet...</text>
                         break;
                 }
             </div>
         </div>
         <div class="row" style="margin-top: -15px;">
-            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Variable ? "border-dark" : "")"
-                    @onclick="@(() => BlockSetting.InputMode = InputMode.Variable)"
+            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Variable ? "border-dark" : "")"
+                    @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Variable)"
                     title="Specify a variable as input">
                 <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
             </button>
-            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Fixed ? "border-dark" : "")"
-                    @onclick="@(() => BlockSetting.InputMode = InputMode.Fixed)"
+            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Fixed ? "border-dark" : "")"
+                    @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Fixed)"
                     title="Specify a fixed input">
                 <span class="oi oi-text" aria-hidden="true"></span>
             </button>
-            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == InputMode.Interpolated ? "border-dark" : "")"
-                    @onclick="@(() => BlockSetting.InputMode = InputMode.Interpolated)"
+            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
+                    @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
                     title="Specify an interpolated string as input, the old OpenBullet style">
                 <span class="oi oi-code" aria-hidden="true"></span>
             </button>
@@ -52,9 +52,4 @@
 @code {
     [Parameter] public BlockSetting BlockSetting { get; set; }
     [Parameter] public bool DisplayLabel { get; set; } = true;
-
-    private async Task<IEnumerable<string>> SearchVariables(string searchText)
-    {
-        return await Task.FromResult(new string[] { "TEST", "VARIABLE", "ABCDEFG" });
-    }
 }

@@ -1,5 +1,5 @@
 ﻿@using OpenBullet2.Helpers
-@using OpenBullet2.Models.Configs
+@using RuriLib.Models.Configs
 @using OpenBullet2.Repositories
 @inject IConfigRepository configRepo
 
@@ -85,7 +85,7 @@
     private async void OnConfigSelected(object sender, Config config)
     {
         displayConfigSubmenu = config != null;
-        displayStackerSubmenu = config != null && !config.CSharpMode;
+        displayStackerSubmenu = config != null && config.Mode != ConfigMode.CSharp;
         await InvokeAsync(StateHasChanged);
     }
 

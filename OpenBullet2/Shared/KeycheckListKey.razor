@@ -1,4 +1,4 @@
-﻿@using OpenBullet2.Models.Keycheck
+﻿@using RuriLib.Models.Blocks.Custom.Keycheck
 
 <div class="container-fluid">
     <div class="row">
@@ -8,7 +8,7 @@
         <div class="col-4">
             <EditForm Model="Key">
                 <InputSelect @bind-Value="Key.Comparison">
-                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Functions.Conditions.ListComparison)))
+                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.ListComparison)))
                     {
                         <option value="@name">@name</option>
                     }

@@ -8,7 +8,7 @@
         <div class="col-4">
             <EditForm Model="Key">
                 <InputSelect @bind-Value="Key.Comparison">
-                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.DictComparison)))
+                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
                     {
                         <option value="@name">@name</option>
                     }
@@ -22,5 +22,5 @@
 </div>
 
 @code {
-    [Parameter] public DictionaryKey Key { get; set; }
+    [Parameter] public IntKey Key { get; set; }
 }

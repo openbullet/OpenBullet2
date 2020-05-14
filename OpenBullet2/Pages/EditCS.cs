@@ -2,7 +2,9 @@
 using Blazaco.Editor.Options;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Configs;
+using RuriLib.Helpers.CSharp;
+using RuriLib.Helpers.Transpilers;
+using RuriLib.Models.Configs;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -23,7 +25,7 @@ namespace OpenBullet2.Pages
                 Value = Config.CSharpScript,
                 Language = "csharp",
                 Theme = "vs-dark",
-                ReadOnly = !Config.CSharpMode,
+                ReadOnly = Config.Mode != ConfigMode.CSharp,
                 Minimap = new MinimapOptions()
                 {
                     Enabled = false
@@ -36,7 +38,8 @@ namespace OpenBullet2.Pages
 
         private async Task Compile()
         {
-            CSBuilder.Compile(Config);
+            var stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
+            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack);
             await _editor.SetValue(Config.CSharpScript);
         }
 
@@ -48,7 +51,7 @@ namespace OpenBullet2.Pages
             if (!confirmed)
                 return;
 
-            Config.CSharpMode = true;
+            Config.ChangeMode(ConfigMode.CSharp);
             Static.Config = Config;
             nav.NavigateTo("config/edit/code", true);
         }

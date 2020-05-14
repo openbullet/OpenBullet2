@@ -2,7 +2,7 @@
 @using Radzen.Blazor 
 @using Radzen
 @using OpenBullet2.Helpers
-@using OpenBullet2.Models.Configs
+@using RuriLib.Models.Configs
 @using OpenBullet2.Repositories
 @using System.Web 
 @using BlazorInputFile 
@@ -143,7 +143,7 @@
 
         Static.Config = selectedConfig;
 
-        if (selectedConfig.CSharpMode)
+        if (selectedConfig.Mode == ConfigMode.CSharp)
             nav.NavigateTo("config/edit/code");
         else
             nav.NavigateTo("config/edit/stacker");

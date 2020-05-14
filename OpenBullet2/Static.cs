@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Models.Configs;
+﻿using RuriLib.Models.Configs;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using System;

@@ -1,0 +1,33 @@
+﻿@using RuriLib.Models.Blocks
+
+<div class="card" style="background-color: @Descriptor.Category.BackgroundColor; 
+     color: @Descriptor.Category.ForegroundColor; cursor: pointer; border: solid 3px #000;"
+     @onclick="@(() => SelectedDescriptor.InvokeAsync(Descriptor))">
+    <div class="card-body">
+        <h5 class="card-title">@Descriptor.Name
+            <span class="card-text oi @(isExpanded ? "oi-caret-top" : "oi-caret-bottom")" 
+                  @onclick="SetExpanded" @onclick:stopPropagation="true"></span>
+        </h5>
+        
+        @if (isExpanded)
+        {
+            <p class="card-text">@Descriptor.Description</p>
+            @if (Descriptor.ExtraInfo != string.Empty)
+            {
+                <p class="card-text" style="font-size: 12px">@Descriptor.ExtraInfo</p>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public BlockDescriptor Descriptor { get; set; }
+    [Parameter] public EventCallback<BlockDescriptor> SelectedDescriptor { get; set; }
+
+    private bool isExpanded = false;
+
+    private void SetExpanded()
+    {
+        isExpanded = !isExpanded;
+    }
+}

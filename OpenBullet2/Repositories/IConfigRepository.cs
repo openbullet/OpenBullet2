@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Models.Configs;
+﻿using RuriLib.Models.Configs;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;

@@ -1,12 +1,13 @@
 ﻿@using Blazaco.Editor
 @using Blazaco
+@using RuriLib.Models.Configs 
 @page "/config/edit/code"
 
 <div class="container-fluid">
     <div class="row">
         <span class="text-warning">C# Editor</span>
     </div>
-    @if (Config != null && !Config.CSharpMode)
+    @if (Config != null && Config.Mode != ConfigMode.CSharp)
     {
         <div class="row">
             <div class="list-group list-group-horizontal">

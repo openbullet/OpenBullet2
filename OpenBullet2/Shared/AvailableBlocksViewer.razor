@@ -1,4 +1,4 @@
-﻿@using OpenBullet2.Models
+﻿@using RuriLib.Models.Blocks
 
 @if (isCategorySelection)
 {
@@ -16,17 +16,17 @@
 else
 {
     <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
-    <GenericList List="Blocks.Where(b => b.Category.Name == category.Value.Name).ToList()">
-        <ElementTemplate Context="block">
+    <GenericList List="Descriptors.Where(b => b.Category.Name == category.Value.Name).ToList()">
+        <ElementTemplate Context="descriptor">
             <div style="margin-top: 5px" ></div>
-            <IndividualBlock Block="block" SelectedBlock="SelectedBlock" />
+            <IndividualDescriptor Descriptor="descriptor" SelectedDescriptor="SelectedDescriptor" />
         </ElementTemplate>
     </GenericList>
 }
 
 @code {
-    [Parameter] public List<BlockInfo> Blocks { get; set; }
-    [Parameter] public EventCallback<BlockInfo> SelectedBlock { get; set; }
+    [Parameter] public List<BlockDescriptor> Descriptors { get; set; }
+    [Parameter] public EventCallback<BlockDescriptor> SelectedDescriptor { get; set; }
 
     private bool isCategorySelection = true;
     private BlockCategory? category = null;
@@ -34,7 +34,7 @@ else
 
     protected override void OnInitialized()
     {
-        categories = Blocks.Select(b => b.Category).Distinct().ToList();
+        categories = Descriptors.Select(b => b.Category).Distinct().ToList();
     }
 
     private void SelectCategory(BlockCategory category)

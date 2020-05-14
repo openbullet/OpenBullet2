@@ -8,9 +8,12 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Configs;
 using OpenBullet2.Models.Logging;
+using RuriLib.Helpers.Blocks;
+using RuriLib.Helpers.CSharp;
+using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Configs;
 using RuriLib.Models.Variables;
 
 namespace OpenBullet2.Shared
@@ -25,22 +28,13 @@ namespace OpenBullet2.Shared
 
         private async Task Run()
         {
-            // Check if variables are ok
-            /*
-            try 
-            {
-                ConfigBuilder.CheckVariables(Config);
-            }
-            catch (Exception ex) 
-            {
-                await js.AlertError("Uh-oh!", ex.Message);
-                return;
-            }
-            */
+            // If we're in LoliCode mode, build the Stack
+            if (Config.Mode == ConfigMode.LoliCode)
+                Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
 
-            // Compile the config
-            CSBuilder.Compile(Config);
-
+            // Build the C# script
+            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack);
+            
             logger = new BotLogger();
             variables.Clear();
             isRunning = true;
@@ -48,19 +42,7 @@ namespace OpenBullet2.Shared
 
             BotData data = new BotData(Static.RuriLibSettings, Config.Settings, logger, new Random(), null, null);
 
-            var ruriLib = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.Contains("RuriLib"));
-            var references = ruriLib.GetReferencedAssemblies();
-
-            var script =
-                CSharpScript.Create(
-                    code: Config.CSharpScript,
-                    options: ScriptOptions.Default
-                        .WithReferences(ruriLib)
-                        .WithImports(CSBuilder.GetUsings()),
-                    globalsType: typeof(ScriptGlobals));
-
-            script.Options.AddReferences(AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => references.Any(r => r.FullName == a.FullName)));
+            var script = new ScriptBuilder().Build(Config);
 
             try
             {
@@ -68,10 +50,10 @@ namespace OpenBullet2.Shared
 
                 foreach (var scriptVar in state.Variables)
                 {
-                    var type = BlockBuilder.ToVariableType(scriptVar.Type);
+                    var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
                     
                     if (type.HasValue)
-                        variables.Add(BlockBuilder.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
+                        variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
                     
                 }
             }

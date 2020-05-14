@@ -1,25 +1,28 @@
 ﻿@page "/config/edit/stacker"
 @using OpenBullet2.Helpers
-@using OpenBullet2.Models
-@using OpenBullet2.Models.Configs
+@using RuriLib.Helpers.Blocks 
+@using RuriLib.Models.Blocks
+@using RuriLib.Models.Blocks.Custom
+@using RuriLib.Models.Configs
+@using RuriLib.Helpers.Transpilers 
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-3">
             <h5>Current stack</h5>
-            <StackViewer Stack="config.Blocks" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+            <StackViewer Stack="stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
         </div>
         <div class="col-6">
             <h5>Block information</h5>
             @if (selectedBlock != null)
             {
-                @if (selectedBlock is KeycheckBlock)
+                @if (selectedBlock is KeycheckBlockInstance)
                 {
-                    <BlockSettingsViewer Block="selectedBlock as KeycheckBlock" />
+                    <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
                 }
                 else
                 {
-                    <BlockSettingsViewer Block="selectedBlock" />
+                    <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" />
                 }
             }
             else
@@ -29,7 +32,7 @@
         </div>
         <div class="col-3">
             <h5>Available blocks</h5>
-            <AvailableBlocksViewer Blocks="availableBlocks" SelectedBlock="AddBlock" />
+            <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
         </div>
     </div>
     <div class="row">
@@ -38,13 +41,16 @@
 </div>
 
 @code {
-    private List<BlockInfo> availableBlocks;
+    private List<BlockDescriptor> availableBlocks;
     private Config config;
+    private List<BlockInstance> stack;
     private BlockInstance selectedBlock;
 
     protected override void OnInitialized()
     {
         config = Static.Config;
+        config.ChangeMode(ConfigMode.Stack);
+        stack = config.Stack;
 
         // Call a RuriLib method to let the JIT compiler load it
         RuriLib.Functions.Parsing.LRParser.ParseBetween("abc", "a", "c");
@@ -53,20 +59,7 @@
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var ruriLib = assemblies.FirstOrDefault(a => a.FullName.Contains("RuriLib"));
 
-        availableBlocks = BlockBuilder.FromExposedMethods(ruriLib).ToList();
-
-        /*
-        availableBlocks.Add(new BlockInfo
-        {
-            Category = new BlockCategory 
-            {
-                BackgroundColor = "#1e90ff",
-                Description = "Blocks for changing the execution flow in the stack",
-                Name = "Flow Control"
-            },
-            
-        });
-        */
+        availableBlocks = RuriLib.Globals.DescriptorsRepository.Descriptors;
     }
 
     private async Task SelectedBlock(BlockInstance block)
@@ -75,14 +68,14 @@
 
         if (block != null)
         {
-            await js.Log($"Selected block {block.Info.Name}");
+            await js.Log($"Selected block {block.Descriptor.Id}");
         }
     }
 
-    private async Task AddBlock(BlockInfo block)
+    private async Task AddBlock(BlockDescriptor descriptor)
     {
-        selectedBlock = block.CreateInstance();
-        config.Blocks.Add(selectedBlock);
-        await js.Log($"Added block {block.Name}");
+        selectedBlock = new BlockFactory().GetBlock<BlockInstance>(descriptor.Id);
+        stack.Add(selectedBlock);
+        await js.Log($"Added block {descriptor.Id}");
     }
 }

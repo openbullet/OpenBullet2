@@ -1,11 +1,11 @@
-﻿@using OpenBullet2.Models
+﻿@using RuriLib.Models.Blocks
 
 <EditForm Model="Block">
     <h6 class="font-weight-bold text-warning">Label:</h6>
-    <InputText @bind-Value="Block.Settings.Label" />
+    <InputText @bind-Value="Block.Label" />
 </EditForm>
 
-@if (Block.Info.ReturnType.HasValue)
+@if (Block.Descriptor.ReturnType.HasValue)
 {
     <EditForm Model="Block">
         <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Output Variable:</h6>
@@ -14,12 +14,12 @@
 }
 
 <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Settings:</h6>
-@foreach (var setting in Block.Settings.Settings)
+@foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />
     <hr />
 }
 
 @code {
-    [Parameter] public BlockInstance Block { get; set; }
+    [Parameter] public AutoBlockInstance Block { get; set; }
 }
