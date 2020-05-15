@@ -1,16 +1,14 @@
 ﻿@page "/config/edit/stacker"
-@using OpenBullet2.Helpers
-@using RuriLib.Helpers.Blocks 
 @using RuriLib.Models.Blocks
 @using RuriLib.Models.Blocks.Custom
-@using RuriLib.Models.Configs
-@using RuriLib.Helpers.Transpilers 
+@using Blazaco.Editor 
+@using RuriLib.Models.Configs 
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-3">
             <h5>Current stack</h5>
-            <StackViewer Stack="stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+            <StackViewer Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
         </div>
         <div class="col-6">
             <h5>Block information</h5>
@@ -19,6 +17,10 @@
                 @if (selectedBlock is KeycheckBlockInstance)
                 {
                     <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
+                }
+                else if (selectedBlock is LoliCodeBlockInstance)
+                {
+                    <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />
                 }
                 else
                 {
@@ -35,47 +37,8 @@
             <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
         </div>
     </div>
+
     <div class="row">
         <Debugger Config="config" />
     </div>
 </div>
-
-@code {
-    private List<BlockDescriptor> availableBlocks;
-    private Config config;
-    private List<BlockInstance> stack;
-    private BlockInstance selectedBlock;
-
-    protected override void OnInitialized()
-    {
-        config = Static.Config;
-        config.ChangeMode(ConfigMode.Stack);
-        stack = config.Stack;
-
-        // Call a RuriLib method to let the JIT compiler load it
-        RuriLib.Functions.Parsing.LRParser.ParseBetween("abc", "a", "c");
-
-        // Get the RuriLib assembly
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        var ruriLib = assemblies.FirstOrDefault(a => a.FullName.Contains("RuriLib"));
-
-        availableBlocks = RuriLib.Globals.DescriptorsRepository.Descriptors;
-    }
-
-    private async Task SelectedBlock(BlockInstance block)
-    {
-        selectedBlock = block;
-
-        if (block != null)
-        {
-            await js.Log($"Selected block {block.Descriptor.Id}");
-        }
-    }
-
-    private async Task AddBlock(BlockDescriptor descriptor)
-    {
-        selectedBlock = new BlockFactory().GetBlock<BlockInstance>(descriptor.Id);
-        stack.Add(selectedBlock);
-        await js.Log($"Added block {descriptor.Id}");
-    }
-}

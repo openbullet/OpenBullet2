@@ -1,0 +1,18 @@
+﻿@using Blazaco.Editor
+@page "/config/edit/lolicode"
+
+<div class="container-fluid">
+    <div class="row">
+        <span class="text-warning">LoliCode Editor</span>
+    </div>
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="SaveLoliCode"><span class="oi oi-task"></span> Save Script</button>
+        </div>
+    </div>
+    <div class="row">
+        <div style="width: 100%; height: 500px; margin-top: 15px;">
+            <MonacoEditor @ref="_editor" class="fullscreen-editor" Model="@_editorModel" />
+        </div>
+    </div>
+</div>

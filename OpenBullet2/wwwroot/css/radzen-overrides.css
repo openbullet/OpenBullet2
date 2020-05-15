@@ -88,3 +88,27 @@
 .ui-treenode-content:hover {
     background-color: #444;
 }
+
+.ui-tabview-nav li {
+    background-color: #222;
+}
+
+.ui-tabview-nav li:hover:not(.ui-tabview-selected):not(.ui-state-disabled) {
+    background-color: #444;
+}
+
+.ui-tabview-nav li:hover:not(.ui-tabview-selected):not(.ui-state-disabled) a {
+    color: #aaa;
+}
+
+.ui-tabview-nav .ui-tabview-selected {
+    background-color: #222;
+}
+
+.ui-tabview-nav .ui-tabview-selected a {
+    color: #fff;
+}
+
+.ui-tabview-panels {
+    background-color: unset;
+}

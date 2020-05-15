@@ -43,7 +43,7 @@ namespace OpenBullet2.Shared
             BotData data = new BotData(Static.RuriLibSettings, Config.Settings, logger, new Random(), null, null);
 
             var script = new ScriptBuilder().Build(Config);
-
+            
             try
             {
                 var state = await script.RunAsync(new ScriptGlobals(data), null, cts.Token);
@@ -56,6 +56,8 @@ namespace OpenBullet2.Shared
                         variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
                     
                 }
+
+                logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");
             }
             catch (Exception ex)
             {

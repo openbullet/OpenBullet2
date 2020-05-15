@@ -78,7 +78,7 @@
     {
         var key = new StringKey
         {
-            Left = new BlockSetting { FixedSetting = new StringSetting() },
+            Left = new BlockSetting { FixedSetting = new StringSetting(), InputMode = SettingInputMode.Variable },
             Right = new BlockSetting { FixedSetting = new StringSetting() }
         };
 
@@ -89,7 +89,7 @@
     {
         var key = new IntKey
         {
-            Left = new BlockSetting { FixedSetting = new IntSetting() },
+            Left = new BlockSetting { FixedSetting = new IntSetting(), InputMode = SettingInputMode.Variable },
             Right = new BlockSetting { FixedSetting = new IntSetting() }
         };
 
@@ -100,7 +100,7 @@
     {
         var key = new FloatKey
         {
-            Left = new BlockSetting { FixedSetting = new FloatSetting() },
+            Left = new BlockSetting { FixedSetting = new FloatSetting(), InputMode = SettingInputMode.Variable },
             Right = new BlockSetting { FixedSetting = new FloatSetting() }
         };
 
@@ -111,7 +111,7 @@
     {
         var key = new ListKey
         {
-            Left = new BlockSetting { FixedSetting = new ListOfStringsSetting() },
+            Left = new BlockSetting { FixedSetting = new ListOfStringsSetting(), InputMode = SettingInputMode.Variable },
             Right = new BlockSetting { FixedSetting = new StringSetting() }
         };
 
@@ -122,7 +122,7 @@
     {
         var key = new DictionaryKey
         {
-            Left = new BlockSetting { FixedSetting = new DictionaryOfStringsSetting() },
+            Left = new BlockSetting { FixedSetting = new DictionaryOfStringsSetting(), InputMode = SettingInputMode.Variable },
             Right = new BlockSetting { FixedSetting = new StringSetting() }
         };
 

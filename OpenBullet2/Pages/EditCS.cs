@@ -2,7 +2,6 @@
 using Blazaco.Editor.Options;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
-using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace OpenBullet2.Pages
         [Inject] NavigationManager nav { get; set; }
         [Parameter] public Config Config { get; set; }
         private EditorModel _editorModel { get; set; }
-        private MonacoEditor _editor;
+        private MonacoEditor _editor { get; set; }
 
         protected override void OnInitialized()
         {
