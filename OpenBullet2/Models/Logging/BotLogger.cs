@@ -35,5 +35,10 @@ namespace OpenBullet2.Models.Logging
                 Color = LogColors.ChromeYellow
             });
         }
+
+        public void Clear()
+        {
+            Entries.Clear();
+        }
     }
 }

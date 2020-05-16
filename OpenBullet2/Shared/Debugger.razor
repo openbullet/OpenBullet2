@@ -35,6 +35,33 @@
             </div>
         </div>
         <div class="col-4">
+            <EditForm Model="options">
+                <label>Test Data</label>
+                <InputText @bind-Value="options.TestData" />
+                <label style="margin-top: 15px;">Wordlist Type</label>
+                <br />
+                <InputSelect @bind-Value="options.WordlistType">
+                    @foreach (var name in Static.Environment.WordlistTypes.Select(w => w.Name))
+                    {
+                        <option value="@name">@name</option>
+                    }
+                </InputSelect>
+                <br />
+                <label style="margin-top: 15px;">Use Proxy</label>
+                <InputCheckbox @bind-Value="options.UseProxy" />
+                <br />
+                <label style="margin-top: 15px;">Test Proxy</label>
+                <InputText @bind-Value="options.TestProxy" />
+                <label style="margin-top: 15px;">Test Proxy</label>
+                <InputSelect @bind-Value="options.ProxyType">
+                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+                    {
+                        <option value="@name">@name</option>
+                    }
+                </InputSelect>
+            </EditForm>
+
+            <br />
             <h5>Variables</h5>
             <RadzenTree Style="width: 100%; height: 300px; cursor: default;">
                 @foreach (var variable in variables)
@@ -46,12 +73,12 @@
                         }
                         else if (variable is ListOfStringsVariable)
                         {
-                            @foreach(var element in variable.AsListOfStrings())
+                            @foreach (var element in variable.AsListOfStrings())
                             {
                                 <RadzenTreeItem Text="@element" />
                             }
                         }
-                    </RadzenTreeItem>    
+                    </RadzenTreeItem>
                 }
             </RadzenTree>
         </div>

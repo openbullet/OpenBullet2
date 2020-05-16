@@ -1,4 +1,6 @@
-﻿using RuriLib.Models.Configs;
+﻿using OpenBullet2.Models.Debugger;
+using OpenBullet2.Models.Logging;
+using RuriLib.Models.Configs;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using System;
@@ -28,6 +30,9 @@ namespace OpenBullet2
             EnvironmentSettings.FromIni("Environment.ini");
 
         public static GlobalSettings RuriLibSettings { get; set; } = new GlobalSettings();
+
+        public static DebuggerOptions DebuggerOptions { get; set; } = new DebuggerOptions();
+        public static BotLogger DebuggerLog { get; set; } = new BotLogger();
 
         private static DateTime startTime = DateTime.Now;
         public static TimeSpan UpTime => DateTime.Now - startTime;

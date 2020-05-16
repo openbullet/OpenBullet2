@@ -1,6 +1,8 @@
 ﻿using Blazaco.Editor;
 using Blazaco.Editor.Options;
+using OpenBullet2.Helpers;
 using RuriLib.Models.Configs;
+using System;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -11,10 +13,18 @@ namespace OpenBullet2.Pages
         private MonacoEditor _editor { get; set; }
         private Config config;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             config = Static.Config;
-            config.ChangeMode(ConfigMode.LoliCode);
+
+            try
+            {
+                config.ChangeMode(ConfigMode.LoliCode);
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError(ex.GetType().ToString(), ex.Message);
+            }
 
             var options = new EditorOptions()
             {

@@ -2,6 +2,7 @@
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,10 +14,18 @@ namespace OpenBullet2.Pages
         private Config config;
         private BlockInstance selectedBlock;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             config = Static.Config;
-            config.ChangeMode(ConfigMode.Stack);
+            
+            try
+            {
+                config.ChangeMode(ConfigMode.Stack);
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError(ex.GetType().ToString(), ex.Message);
+            }
 
             availableBlocks = RuriLib.Globals.DescriptorsRepository.Descriptors;
 

@@ -102,6 +102,20 @@
             return;
         }
 
+        // Check if the LoliCode is valid
+        if (Static.Config.Mode == ConfigMode.LoliCode)
+        {
+            try
+            {
+                new RuriLib.Helpers.Transpilers.Loli2StackTranspiler().Transpile(Static.Config.LoliCodeScript);
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError("Cannot save: invalid LoliCode!", ex.Message);
+                return;
+            }
+        }
+
         await configRepo.Save(Static.Config);
         await js.AlertSuccess("Aww yeah", $"{Static.Config.Metadata.Name} was saved successfully!");
     }
