@@ -1,0 +1,20 @@
+﻿@using OpenBullet2.Entities
+@inject IModalService ModalService
+@inject IProxyGroupRepository repo
+
+<EditForm Model="ProxyGroup">
+    <InputText @bind-Value="ProxyGroup.Name" />
+    <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="Edit">Edit</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public ProxyGroupEntity ProxyGroup { get; set; }
+
+    private async Task Edit()
+    {
+        await repo.Update(ProxyGroup);
+        BlazoredModal.Close();
+    }
+}

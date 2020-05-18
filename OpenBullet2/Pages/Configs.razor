@@ -1,6 +1,4 @@
 ﻿@page "/configs"
-@using Radzen.Blazor 
-@using Radzen
 @using OpenBullet2.Helpers
 @using RuriLib.Models.Configs
 @using OpenBullet2.Repositories
@@ -14,10 +12,11 @@
     <div class="row">
         <div class="list-group list-group-horizontal">
             <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> New</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> Edit</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="@(() => uploadDisplay = !uploadDisplay)">
-                <span class="oi oi-data-transfer-upload"></span> Upload</button>
+                <span class="oi oi-data-transfer-upload"></span> Upload
+            </button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> Download</button>
             <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> Reload</button>
             <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> Toggle View</button>

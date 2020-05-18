@@ -1,0 +1,22 @@
+﻿@using OpenBullet2.Entities
+@inject IModalService ModalService
+@inject IProxyGroupRepository repo
+
+<EditForm Model="proxyGroup">
+    <InputText @bind-Value="proxyGroup.Name" />
+    <button type="submit" class="btn btn-success" style="margin-top: 10px;" @onclick="Create">Create</button>
+</EditForm>
+
+
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    private ProxyGroupEntity proxyGroup = new ProxyGroupEntity { Name = "My proxy group" };
+
+    private async Task Create()
+    {
+        await repo.Add(proxyGroup);
+        BlazoredModal.Close(ModalResult.Ok(proxyGroup));
+    }
+}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Repositories
 {
-    public class DbRepository<T> : IDbRepository<T> where T : Entity
+    public class DbRepository<T> : IRepository<T> where T : Entity
     {
         protected readonly ApplicationDbContext context;
 

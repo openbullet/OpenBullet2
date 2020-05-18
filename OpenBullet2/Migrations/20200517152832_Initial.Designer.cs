@@ -9,7 +9,7 @@ using OpenBullet2;
 namespace OpenBullet2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200517025433_Initial")]
+    [Migration("20200517152832_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("GroupId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Host")
                         .HasColumnType("TEXT");
 
@@ -106,6 +109,20 @@ namespace OpenBullet2.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Proxies");
+                });
+
+            modelBuilder.Entity("OpenBullet2.Entities.ProxyGroupEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProxyGroups");
                 });
 
             modelBuilder.Entity("OpenBullet2.Entities.RecordEntity", b =>

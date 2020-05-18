@@ -55,11 +55,25 @@ namespace OpenBullet2.Migrations
                     Country = table.Column<string>(nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Ping = table.Column<int>(nullable: false),
-                    LastChecked = table.Column<DateTime>(nullable: false)
+                    LastChecked = table.Column<DateTime>(nullable: false),
+                    GroupId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Proxies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProxyGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProxyGroups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,6 +119,9 @@ namespace OpenBullet2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Proxies");
+
+            migrationBuilder.DropTable(
+                name: "ProxyGroups");
 
             migrationBuilder.DropTable(
                 name: "Records");

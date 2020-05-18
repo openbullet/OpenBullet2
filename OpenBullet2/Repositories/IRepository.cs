@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Repositories
 {
-    public interface IDbRepository<T> where T : Entity
+    public interface IRepository<T> where T : Entity
     {
         // CREATE
         Task Add(T entity);

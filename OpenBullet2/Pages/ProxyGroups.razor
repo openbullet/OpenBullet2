@@ -1,0 +1,44 @@
+﻿@page "/proxies/groups" 
+@using OpenBullet2.Entities 
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddGroup"><span class="oi oi-plus"></span> Add Group</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditGroup"><span class="oi oi-pencil"></span> Edit Group</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteGroup"><span class="oi oi-x"></span> Delete Group</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary m-sm-1" @onclick="ImportProxies"><span class="oi oi-data-transfer-upload"></span> Import Proxies</button>
+        </div>
+    </div>
+</div>
+
+<EditForm Model="groups">
+    <label>Proxy Group</label>
+    <InputSelectNumber T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)" 
+           ValueChanged="(async val => await OnGroupSelected(val))">
+        <option value="-1">All</option>
+        @foreach (var group in groups)
+        {
+            <option value="@group.Id">@group.Name</option>
+        }
+    </InputSelectNumber>
+</EditForm>
+
+<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
+            AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px" >
+    <Columns>
+        <RadzenGridColumn TItem="ProxyEntity" Property="Type" Title="Type" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Host" Title="Host" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Port" Title="Port" Width="100px" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Username" Title="Username" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Password" Title="Password" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Country" Title="Country" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Status" Title="Status" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Ping" Title="Ping" Width="100px" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="LastChecked" Title="LastChecked" />
+    </Columns>
+</RadzenGrid>

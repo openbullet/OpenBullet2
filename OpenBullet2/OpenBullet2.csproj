@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.5.0" />
@@ -49,6 +50,9 @@
   <ItemGroup>
     <None Update="Environment.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OpenBullet.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

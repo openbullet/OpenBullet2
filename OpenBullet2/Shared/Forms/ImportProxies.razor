@@ -1,0 +1,118 @@
+﻿@using OpenBullet2.Helpers
+@using BlazorInputFile
+@using System.IO 
+@using RuriLib.Models.Proxies 
+@inject IModalService ModalService
+
+<div style="margin-bottom: 10px;">
+    <RadzenTabs>
+        <Tabs>
+            <RadzenTabsItem Text="Paste">
+                <EditForm Model="pasteContent">
+                    <InputTextArea @bind-Value="pasteContent" />
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromPaste">Import</button>
+                </EditForm>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="File">
+                <EditForm Model="fileName">
+                    <InputFile OnChange="ProcessFile" />
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromFile">Import</button>
+                </EditForm>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="URL">
+                <EditForm Model="url">
+                    <InputText @bind-Value="url" />
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromUrl">Import</button>
+                </EditForm>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</div>
+
+<p>
+    <span style="color: orange;">Advanced syntax:</span><br />
+    <span>(type)host:port:username:password</span><br />
+    <span>Example: (socks5)127.0.0.1:8080:myuser:mypass</span>
+</p>
+
+<EditForm Model="defaultType">
+    <label>Default Type</label>
+    <InputSelect @bind-Value="defaultType">
+        @foreach (var type in Enum.GetNames(typeof(ProxyType)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect><br />
+    <label>Default Username</label>
+    <InputText @bind-Value="defaultUsername" />
+    <label>Default Password</label>
+    <InputText @bind-Value="defaultPassword" />
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    string pasteContent = "";
+    string fileName = "";
+    string fileContent = "";
+    string url = "";
+    ProxyType defaultType = ProxyType.Http;
+    string defaultUsername = "";
+    string defaultPassword = "";
+
+    private void ImportFromPaste()
+    {
+        ReturnLines(pasteContent);
+    }
+
+    private void ImportFromFile()
+    {
+        ReturnLines(fileContent);
+    }
+
+    private async Task ProcessFile(IFileListEntry[] files)
+    {
+        if (files.Length == 0)
+            return;
+
+        try
+        {
+            using (var reader = new StreamReader(files.First().Data))
+            {
+                fileContent = await reader.ReadToEndAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task ImportFromUrl()
+    {
+        try
+        {
+            var response = await new HttpClient().GetAsync(url);
+            var text = await response.Content.ReadAsStringAsync();
+            ReturnLines(text);
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private void ReturnLines(string text)
+    {
+        string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        var dto = new OpenBullet2.DTOs.ProxiesForImportDto
+        {
+            Lines = lines,
+            DefaultType = defaultType,
+            DefaultUsername = defaultUsername,
+            DefaultPassword = defaultPassword
+        };
+
+        BlazoredModal.Close(ModalResult.Ok(dto));
+    }
+}

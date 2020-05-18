@@ -112,3 +112,15 @@
 .ui-tabview-panels {
     background-color: unset;
 }
+
+.blazored-modal {
+    background-color: #222;
+}
+
+.blazored-modal-close {
+    color: #666;
+}
+
+.ui-paginator {
+    background-color: unset;
+}

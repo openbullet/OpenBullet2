@@ -12,6 +12,7 @@ namespace OpenBullet2
         }
 
         public DbSet<ProxyEntity> Proxies { get; set; }
+        public DbSet<ProxyGroupEntity> ProxyGroups { get; set; }
         public DbSet<WordlistEntity> Wordlists { get; set; }
         public DbSet<JobEntity> Jobs { get; set; }
         public DbSet<RecordEntity> Records { get; set; }

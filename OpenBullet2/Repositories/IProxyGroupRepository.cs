@@ -2,8 +2,7 @@
 
 namespace OpenBullet2.Repositories
 {
-    public interface IProxyRepository : IRepository<ProxyEntity>
+    public interface IProxyGroupRepository : IRepository<ProxyGroupEntity>
     {
-        
     }
 }
