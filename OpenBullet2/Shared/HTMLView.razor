@@ -1,0 +1,16 @@
+﻿@using Ganss.XSS 
+
+<div style="width: 500px; height: 500px;">
+    @((MarkupString)sanitizedHtml)
+</div>
+
+@code {
+    [Parameter] public string Html { get; set; }
+    private string sanitizedHtml;
+
+    protected override void OnInitialized()
+    {
+        var sanitizer = new HtmlSanitizer();
+        sanitizedHtml = sanitizer.Sanitize(Html);
+    }
+}

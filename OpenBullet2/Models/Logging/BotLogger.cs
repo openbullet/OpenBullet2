@@ -9,21 +9,23 @@ namespace OpenBullet2.Models.Logging
     {
         public List<BotLogEntry> Entries { get; set; } = new List<BotLogEntry>();
 
-        public void Log(string message, string color = "#fff")
+        public void Log(string message, string color = "#fff", bool canViewAsHtml = false)
         {
             Entries.Add(new BotLogEntry 
             {
                 Message = message,
-                Color = color
+                Color = color,
+                CanViewAsHtml = canViewAsHtml
             });
         }
 
-        public void Log(IEnumerable<string> enumerable, string color = "#fff")
+        public void Log(IEnumerable<string> enumerable, string color = "#fff", bool canViewAsHtml = false)
         {
             Entries.Add(new BotLogEntry 
             {
                 Message = string.Join(Environment.NewLine, enumerable),
-                Color = color
+                Color = color,
+                CanViewAsHtml = canViewAsHtml
             });
         }
 

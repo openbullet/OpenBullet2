@@ -19,6 +19,7 @@
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
+    <PackageReference Include="HtmlSanitizer" Version="5.0.319" />
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.5.0" />

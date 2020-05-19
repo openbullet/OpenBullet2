@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -23,6 +25,8 @@ namespace OpenBullet2.Shared
 {
     public partial class Debugger
     {
+        [Inject] IModalService Modal { get; set; }
+
         [Parameter] public Config Config { get; set; }
 
         private List<Variable> variables = new List<Variable>();
@@ -99,6 +103,14 @@ namespace OpenBullet2.Shared
         private void Stop()
         {
             cts.Cancel();
+        }
+
+        private void ViewHtml(string html)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(HTMLView.Html), html);
+
+            Modal.Show<HTMLView>("HTML View", parameters);
         }
     }
 }

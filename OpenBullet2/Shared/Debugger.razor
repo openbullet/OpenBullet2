@@ -24,8 +24,12 @@
                 {
                     @if (entry.Message.Contains("\n"))
                     {
-                        <textarea class="debugger-entry" readonly 
-                            style="color: @entry.Color; border: none; height: 500px; overflow: hidden;">@entry.Message</textarea>
+                        <textarea class="debugger-entry" readonly
+                                  style="color: @entry.Color; border: none; height: 500px; overflow: hidden;">@entry.Message</textarea>
+                        @if (entry.CanViewAsHtml)
+                        {
+                            <button class="btn-sm btn-primary" @onclick="@(() => ViewHtml(entry.Message))">View as HTML</button>
+                        }
                     }
                     else
                     {
