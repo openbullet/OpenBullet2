@@ -7,6 +7,7 @@ namespace OpenBullet2.Repositories
 {
     public interface IWordlistRepository
     {
+        Task Add(WordlistEntity entity);
         Task Add(WordlistEntity entity, MemoryStream stream);
         Task Delete(WordlistEntity entity, bool deleteFile = true);
         Task<WordlistEntity> Get(int id);

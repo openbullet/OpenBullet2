@@ -19,7 +19,7 @@ namespace OpenBullet2.Helpers
         public async static Task AlertError(this IJSRuntime js, string title, string message)
             => await js.InvokeVoidAsync("Swal.fire", title, message, "error");
 
-        public async static Task<bool> Confirm(this IJSRuntime js, string question, string message)
+        public async static Task<bool> Confirm(this IJSRuntime js, string question, string message, string cancelText = "Cancel")
         {
             var options = new
             {
@@ -29,6 +29,7 @@ namespace OpenBullet2.Helpers
                 showCancelButton = true,
                 confirmButtonColor = "#3085d6",
                 cancelButtonColor = "#d33",
+                cancelButtonText = cancelText,
                 confirmButtonText = "OK"
             };
 

@@ -86,8 +86,11 @@ namespace OpenBullet2.Pages
 
             if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedWordlist.Name}?"))
             {
+                var deleteFile = await js.Confirm("Delete the file too?", 
+                    $"Do you want to delete {selectedWordlist.FileName} from the disk as well?", "No, keep the file");
+
                 // Delete the wordlist from the DB and disk
-                await WordlistRepo.Delete(selectedWordlist);
+                await WordlistRepo.Delete(selectedWordlist, deleteFile);
 
                 // Delete the wordlist from the local list
                 wordlists.Remove(selectedWordlist);

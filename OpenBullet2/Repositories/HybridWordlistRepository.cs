@@ -17,6 +17,13 @@ namespace OpenBullet2.Repositories
             Directory.CreateDirectory("Wordlists");
         }
 
+        public async Task Add(WordlistEntity entity)
+        {
+            // Save it to the DB
+            context.Add(entity);
+            await context.SaveChangesAsync();
+        }
+
         public async Task Add(WordlistEntity entity, MemoryStream stream)
         {
             // Generate a unique filename
@@ -28,9 +35,7 @@ namespace OpenBullet2.Repositories
             // Count the amount of lines
             entity.Total = File.ReadLines(GetFileName(entity)).Count();
 
-            // Save it to the DB
-            context.Add(entity);
-            await context.SaveChangesAsync();
+            await Add(entity);
         }
 
         public IQueryable<WordlistEntity> GetAll()
@@ -51,7 +56,8 @@ namespace OpenBullet2.Repositories
 
         public async Task Delete(WordlistEntity entity, bool deleteFile = true)
         {
-            File.Delete(GetFileName(entity));
+            if (deleteFile && File.Exists(GetFileName(entity)))
+                File.Delete(GetFileName(entity));
 
             context.Remove(entity);
             await context.SaveChangesAsync();

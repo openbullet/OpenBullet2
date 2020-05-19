@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenBullet2.Models;
 using OpenBullet2.Repositories;
 
 namespace OpenBullet2
@@ -21,6 +22,7 @@ namespace OpenBullet2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Static.SecurityOptions = Configuration.GetSection("Security").Get<SecurityOptions>();
         }
 
         public IConfiguration Configuration { get; }

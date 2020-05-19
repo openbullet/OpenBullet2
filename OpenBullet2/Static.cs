@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Models.Debugger;
+﻿using OpenBullet2.Models;
+using OpenBullet2.Models.Debugger;
 using OpenBullet2.Models.Logging;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Environment;
@@ -12,6 +13,8 @@ namespace OpenBullet2
     // Just for testing
     public static class Static
     {
+        public static SecurityOptions SecurityOptions { get; set; } = new SecurityOptions();
+
         public static List<Config> Configs { get; set; }
         public static event EventHandler<Config> ConfigSelected;
 
