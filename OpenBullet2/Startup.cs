@@ -43,6 +43,7 @@ namespace OpenBullet2
             services.AddScoped<IProxyRepository, DbProxyRepository>();
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
             services.AddScoped<IWordlistRepository, HybridWordlistRepository>();
+            services.AddScoped<IHitRepository, DbHitRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

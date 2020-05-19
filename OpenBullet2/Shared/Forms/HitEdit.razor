@@ -1,0 +1,36 @@
+﻿@using OpenBullet2.Entities
+@inject IModalService ModalService
+@inject IHitRepository repo
+
+<EditForm Model="Hit">
+    <label>Data</label>
+    <InputText @bind-Value="Hit.Data" />
+    <label style="margin-top: 10px;">Hit Type</label>
+    <InputSelect @bind-Value="Hit.Type">
+        @foreach (var type in hitTypes)
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect><br />
+    <label>Captured Data</label>
+    <InputText @bind-Value="Hit.CapturedData" />
+    <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="Edit">Edit</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public HitEntity Hit { get; set; }
+    private List<string> hitTypes;
+
+    protected override void OnInitialized()
+    {
+        hitTypes = Static.GetStatuses().ToList();
+    }
+
+    private async Task Edit()
+    {
+        await repo.Update(Hit);
+        BlazoredModal.Close();
+    }
+}

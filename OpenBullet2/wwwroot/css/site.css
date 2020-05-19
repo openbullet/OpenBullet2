@@ -312,3 +312,8 @@ hr {
 progress {
     background-color: #111;
 }
+
+.grid-column-dynamic-width {
+    font-family: Consolas;
+    font-size: 12px;
+}
