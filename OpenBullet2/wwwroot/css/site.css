@@ -308,3 +308,7 @@ hr {
 .hidden {
     display: none;
 }
+
+progress {
+    background-color: #111;
+}

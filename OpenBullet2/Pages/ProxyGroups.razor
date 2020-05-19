@@ -1,5 +1,5 @@
-﻿@page "/proxies/groups" 
-@using OpenBullet2.Entities 
+﻿@page "/proxies/groups"
+@using OpenBullet2.Entities
 
 <div class="container-fluid">
     <div class="row">
@@ -18,18 +18,30 @@
 
 <EditForm Model="groups">
     <label>Proxy Group</label>
-    <InputSelectNumber T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)" 
-           ValueChanged="(async val => await OnGroupSelected(val))">
+    <InputSelectNumber T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)"
+                       ValueChanged="(async val => await OnGroupSelected(val))">
         <option value="-1">All</option>
         @foreach (var group in groups)
         {
             <option value="@group.Id">@group.Name</option>
         }
+    </InputSelectNumber><br />
+    <label>Results per page</label>
+    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
+                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
+        <option value="15">15</option>
+        <option value="30">30</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="500">500</option>
     </InputSelectNumber>
 </EditForm>
 
-<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
-            AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px" >
+<p>@proxies.Count results</p>
+
+<RadzenGrid @ref="proxiesGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowPaging="true" PageSize="@resultsPerPage"
+            AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px">
     <Columns>
         <RadzenGridColumn TItem="ProxyEntity" Property="Type" Title="Type" />
         <RadzenGridColumn TItem="ProxyEntity" Property="Host" Title="Host" />

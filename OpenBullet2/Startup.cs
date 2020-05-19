@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazor.FileReader;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -31,6 +32,7 @@ namespace OpenBullet2
             services.AddRazorPages();
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddBlazoredModal();
+            services.AddFileReaderService();
             services.AddScoped<IConfigRepository, DiskConfigRepository>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
@@ -38,6 +40,7 @@ namespace OpenBullet2
             // Repositories
             services.AddScoped<IProxyRepository, DbProxyRepository>();
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
+            services.AddScoped<IWordlistRepository, HybridWordlistRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

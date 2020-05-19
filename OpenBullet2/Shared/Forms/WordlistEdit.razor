@@ -1,0 +1,39 @@
+﻿@using BlazorInputFile
+@using OpenBullet2.Entities
+@using OpenBullet2.Helpers
+@using System.IO
+@inject IModalService ModalService
+@inject IWordlistRepository repo
+
+<EditForm Model="Wordlist">
+    <label style="margin-top: 10px;">Wordlist Type</label>
+    <InputSelect @bind-Value="Wordlist.Type">
+        @foreach (var type in wordlistTypes)
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect><br />
+    <label>Name</label>
+    <InputText @bind-Value="Wordlist.Name" />
+    <label>Purpose</label>
+    <InputText @bind-Value="Wordlist.Purpose" />
+    <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="Edit">Edit</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public WordlistEntity Wordlist { get; set; }
+    private List<string> wordlistTypes;
+
+    protected override void OnInitialized()
+    {
+        wordlistTypes = Static.Environment.WordlistTypes.Select(w => w.Name).ToList();
+    }
+
+    private async Task Edit()
+    {
+        await repo.Update(Wordlist);
+        BlazoredModal.Close();
+    }
+}

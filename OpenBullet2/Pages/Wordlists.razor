@@ -1,0 +1,39 @@
+﻿@page "/wordlists"
+@using OpenBullet2.Entities
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddWordlist"><span class="oi oi-plus"></span> Add</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditWordlist"><span class="oi oi-pencil"></span> Edit</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteWordlist"><span class="oi oi-x"></span> Delete</button>
+        </div>
+    </div>
+</div>
+
+<EditForm Model="resultsPerPage">
+    <label>Results per page</label>
+    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
+                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
+        <option value="15">15</option>
+        <option value="30">30</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="500">500</option>
+    </InputSelectNumber>
+</EditForm>
+
+<p>@wordlists.Count results</p>
+
+<RadzenGrid @ref="wordlistsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowPaging="true" PageSize="@resultsPerPage"
+            AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="200px"
+            RowSelect="SelectWordlist">
+    <Columns>
+        <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="Name" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="Type" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="Purpose" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="Total" Width="100px" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="File Name" Width="300px" />
+    </Columns>
+</RadzenGrid>

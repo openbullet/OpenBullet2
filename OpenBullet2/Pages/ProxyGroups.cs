@@ -7,6 +7,7 @@ using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Shared.Forms;
+using Radzen.Blazor;
 using RuriLib.Models.Proxies;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,9 @@ namespace OpenBullet2.Pages
         private int currentGroupId = -1;
         private List<ProxyEntity> proxies;
 
+        RadzenGrid<ProxyEntity> proxiesGrid;
+        private int resultsPerPage = 15;
+
         protected override async Task OnInitializedAsync()
         {
             groups = await ProxyGroupsRepo.GetAll().ToListAsync();
@@ -38,6 +42,13 @@ namespace OpenBullet2.Pages
             await RefreshList();
         }
 
+        private async Task OnResultsPerPageChanged(int value)
+        {
+            resultsPerPage = value;
+            await RefreshList();
+            StateHasChanged();
+        }
+
         private async Task RefreshList()
         {
             if (currentGroupId == -1)
@@ -50,6 +61,8 @@ namespace OpenBullet2.Pages
                     .Where(p => p.GroupId == currentGroupId)
                     .ToListAsync();
             }
+
+            StateHasChanged();
         }
 
         private async Task AddGroup()
@@ -77,7 +90,7 @@ namespace OpenBullet2.Pages
             parameters.Add(nameof(ProxyGroupEdit.ProxyGroup), groupToEdit);
 
             var modal = Modal.Show<ProxyGroupEdit>("Edit proxy group", parameters);
-            var result = await modal.Result;
+            await modal.Result;
         }
 
         private async Task DeleteGroup()

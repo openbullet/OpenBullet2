@@ -1,0 +1,96 @@
+﻿@using BlazorInputFile
+@using Blazor.FileReader 
+@using OpenBullet2.Entities
+@using OpenBullet2.Helpers
+@using System.IO
+@inject IModalService ModalService
+@inject IWordlistRepository repo
+@inject IFileReaderService fileReaderService;
+
+    <EditForm Model="wordlist">
+        <input type="file" @ref=inputTypeFileElement @onchange="ProcessUploadedWordlist" />
+        <br />
+        <br />
+        <progress max="@max" value="@value" /><span style="margin-left: 15px;">@(progress.ToString("F"))% Uploaded</span>
+        <br />
+        <label style="margin-top: 10px;">Wordlist Type</label>
+        <InputSelect @bind-Value="wordlist.Type">
+            @foreach (var type in wordlistTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect><br />
+        <label>Name</label>
+        <InputText @bind-Value="wordlist.Name" />
+        <label>Purpose</label>
+        <InputText @bind-Value="wordlist.Purpose" />
+        <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="Add">Add</button>
+    </EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    private ElementReference inputTypeFileElement;
+    private List<string> wordlistTypes;
+    private WordlistEntity wordlist;
+    private MemoryStream fileStream;
+    private long max;
+    private long value;
+    private decimal progress;
+
+    protected override void OnInitialized()
+    {
+        wordlistTypes = Static.Environment.WordlistTypes.Select(w => w.Name).ToList();
+
+        wordlist = new WordlistEntity
+        {
+            Name = "My Wordlist",
+            Type = wordlistTypes.First()
+        };
+    }
+
+    private async Task ProcessUploadedWordlist()
+    {
+        max = 0;
+        value = 0;
+        this.StateHasChanged();
+        var files = (await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync()).ToList();
+        var file = files.FirstOrDefault();
+
+        if (file == null)
+            return;
+
+        var fileInfo = await file.ReadFileInfoAsync();
+        max = fileInfo.Size;
+        this.StateHasChanged();
+
+        using (var fs = await file.OpenReadAsync())
+        {
+            var buffer = new byte[20480];
+            fileStream = new MemoryStream();
+            int count;
+            var lastAnnounce = 0m;
+            while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
+            {
+                value += count;
+                progress = ((decimal)fs.Position * 100) / fs.Length;
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(1);
+                await fileStream.WriteAsync(buffer, 0, count);
+            }
+        }
+        this.StateHasChanged();
+    }
+
+    private async Task Add()
+    {
+        if (fileStream == null)
+        {
+            await js.AlertError("Uh-oh", "You must upload a file first!");
+            return;
+        }
+
+        await repo.Add(wordlist, fileStream);
+        BlazoredModal.Close(ModalResult.Ok(wordlist));
+    }
+}
