@@ -3,12 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# RuriLib API Documentation
-RuriLib/_site/
-RuriLib/log.txt
-
-# Exclude the compiled Extreme.Net dll
-!Extreme.Net.dll
+# DB file
+OpenBullet.db
 
 # User-specific files
 *.suo
