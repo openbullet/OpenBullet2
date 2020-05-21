@@ -9,7 +9,7 @@ using OpenBullet2;
 namespace OpenBullet2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200517152832_Initial")]
+    [Migration("20200521024853_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Data")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Proxy")

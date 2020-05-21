@@ -37,7 +37,7 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Data")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Proxy")

@@ -15,6 +15,7 @@ using OpenBullet2.Models.Logging;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
+using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;

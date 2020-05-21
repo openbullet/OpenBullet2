@@ -16,7 +16,7 @@ namespace OpenBullet2.Migrations
                     Data = table.Column<string>(nullable: true),
                     CapturedData = table.Column<string>(nullable: true),
                     Proxy = table.Column<string>(nullable: true),
-                    Date = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTime>(nullable: false),
                     Type = table.Column<string>(nullable: true),
                     ConfigId = table.Column<string>(nullable: true),
                     ConfigName = table.Column<string>(nullable: true),
