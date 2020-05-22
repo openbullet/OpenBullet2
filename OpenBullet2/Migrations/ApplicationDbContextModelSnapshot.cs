@@ -63,6 +63,15 @@ namespace OpenBullet2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobOptions")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("JobType")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Jobs");

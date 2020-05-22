@@ -12,8 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using OpenBullet2.Models;
+using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
+using OpenBullet2.Services;
 
 namespace OpenBullet2
 {
@@ -44,6 +47,9 @@ namespace OpenBullet2
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
             services.AddScoped<IWordlistRepository, HybridWordlistRepository>();
             services.AddScoped<IHitRepository, DbHitRepository>();
+            services.AddScoped<IJobRepository, DbJobRepository>();
+
+            services.AddSingleton<JobManagerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +81,19 @@ namespace OpenBullet2
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            // Restore the saved jobs
+            var jobManager = app.ApplicationServices.GetService<JobManagerService>();
+            var context = app.ApplicationServices.GetService<ApplicationDbContext>();
+            var entries = context.Jobs.ToList();
+            var factory = new JobFactory();
+
+            foreach (var entry in entries)
+            {
+                var options = JsonConvert.DeserializeObject<JobOptions>(entry.JobOptions);
+                var job = factory.Create(entry.Id, options);
+                jobManager.Jobs.Add(job);
+            }
         }
     }
 }

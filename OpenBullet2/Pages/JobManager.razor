@@ -1,0 +1,22 @@
+﻿@page "/jobs"
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> New</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> Remove All</button>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var job in Manager.Jobs)
+        {
+            <div class="card" style="color: #fff; background-color: #111; cursor: pointer; margin-top: 5px; border: solid 3px #666;"
+                 @onclick="@(() => SelectJob(job))">
+                <div class="card-body">
+                    <h5 class="card-title">@job.Id (@job.Status)</h5>
+                    <button class="btn btn-danger" @onclick="@(() => Remove(job))">Remove</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

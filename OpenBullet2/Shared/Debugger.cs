@@ -11,7 +11,6 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
-using OpenBullet2.Models.Logging;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;

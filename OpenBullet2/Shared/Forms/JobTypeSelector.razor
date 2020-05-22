@@ -1,0 +1,22 @@
+﻿@using OpenBullet2.Models.Jobs
+@inject IModalService ModalService
+
+<div class="vertical-buttons-list">
+    <ul>
+        <li><button class="btn btn-primary" @onclick="@(() => Select(JobType.SingleRun))">Single Run</button></li>
+        <li><button class="btn btn-primary" @onclick="@(() => Select(JobType.MultiRun))">Multi Run</button></li>
+        <li><button class="btn btn-primary" @onclick="@(() => Select(JobType.Spider))">Spider</button></li>
+        <li><button class="btn btn-primary" @onclick="@(() => Select(JobType.Ripper))">Ripper</button></li>
+        <li><button class="btn btn-primary" @onclick="@(() => Select(JobType.SeleniumUnitTest))">Selenium Unit Test</button></li>
+    </ul>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    void Select(JobType type)
+    {
+        BlazoredModal.Close(ModalResult.Ok(type));
+    }
+}

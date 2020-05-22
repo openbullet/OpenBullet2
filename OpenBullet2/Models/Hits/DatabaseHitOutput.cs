@@ -12,7 +12,7 @@ namespace OpenBullet2.Models.Hits
 {
     public class DatabaseHitOutput : IHitOutput
     {
-        [Inject] public IHitRepository HitRepo { get; set; }
+        [Inject] IHitRepository HitRepo { get; set; }
 
         public async Task Store(Hit hit)
         {

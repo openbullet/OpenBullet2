@@ -1,6 +1,5 @@
 ﻿using OpenBullet2.Models;
 using OpenBullet2.Models.Debugger;
-using OpenBullet2.Models.Logging;
 using RuriLib.Logging;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Environment;

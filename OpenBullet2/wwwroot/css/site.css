@@ -317,3 +317,14 @@ progress {
     font-family: Consolas;
     font-size: 12px;
 }
+
+.vertical-buttons-list ul {
+    list-style: none;
+    padding: unset;
+    text-align: center;
+}
+
+.vertical-buttons-list ul li button {
+    width: 100%;
+    margin-bottom: 5px;
+}

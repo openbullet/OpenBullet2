@@ -34,7 +34,10 @@ namespace OpenBullet2.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    JobType = table.Column<int>(nullable: false),
+                    JobOptions = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
