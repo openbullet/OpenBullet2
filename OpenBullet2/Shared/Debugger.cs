@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
+using OpenBullet2.Services;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
@@ -26,6 +27,8 @@ namespace OpenBullet2.Shared
     public partial class Debugger
     {
         [Inject] IModalService Modal { get; set; }
+        [Inject] PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] VolatileSettingsService VolatileSettings { get; set; }
 
         [Parameter] public Config Config { get; set; }
 
@@ -36,8 +39,8 @@ namespace OpenBullet2.Shared
 
         protected override void OnInitialized()
         {
-            options = Static.DebuggerOptions;
-            logger = Static.DebuggerLog;
+            options = VolatileSettings.DebuggerOptions;
+            logger = VolatileSettings.DebuggerLog;
         }
 
         private async Task Run()
@@ -61,12 +64,12 @@ namespace OpenBullet2.Shared
             isRunning = true;
             cts = new CancellationTokenSource();
 
-            var wordlistType = Static.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
+            var wordlistType = PersistentSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
             var dataLine = new DataLine(options.TestData, wordlistType);
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
             // Build the BotData
-            BotData data = new BotData(Static.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
+            BotData data = new BotData(PersistentSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
 
             var script = new ScriptBuilder()
                 .ConfigureSlices(dataLine.GetVariables())

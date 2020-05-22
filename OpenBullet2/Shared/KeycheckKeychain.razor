@@ -1,5 +1,7 @@
 ﻿@using RuriLib.Models.Blocks.Settings
 @using RuriLib.Models.Blocks.Custom.Keycheck
+@using OpenBullet2.Services
+@inject PersistentSettingsService PersistentSettings 
 
 <div class="container-fluid"
      style="background-color: @GetBGColor()">
@@ -8,7 +10,7 @@
         <div class="col no-padding">
             <EditForm Model="Keychain">
                 <InputSelect @bind-Value="Keychain.ResultStatus">
-                    @foreach (var status in Static.GetStatuses())
+                    @foreach (var status in PersistentSettings.GetStatuses())
                     {
                         <option value="@status">@status</option>
                     }

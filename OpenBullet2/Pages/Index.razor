@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using Helpers 
 @using System.Threading
+@using OpenBullet2.Services
+@inject MetricsService Metrics 
 
 <h2>Welcome to OpenBullet 2</h2>
 
@@ -9,7 +11,7 @@
 </p>
 
 <p>
-    <b>Webserver Uptime:</b> @Static.UpTime.ToReadableString()
+    <b>Webserver Uptime:</b> @Metrics.UpTime.ToReadableString()
 </p>
 
 @code {

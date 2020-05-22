@@ -1,4 +1,6 @@
-﻿using OpenBullet2.Helpers;
+﻿using Microsoft.AspNetCore.Components;
+using OpenBullet2.Helpers;
+using OpenBullet2.Services;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
@@ -10,13 +12,15 @@ namespace OpenBullet2.Pages
 {
     public partial class Stacker
     {
+        [Inject] ConfigService ConfigService { get; set; }
+
         private List<BlockDescriptor> availableBlocks;
         private Config config;
         private BlockInstance selectedBlock;
 
         protected override async Task OnInitializedAsync()
         {
-            config = Static.Config;
+            config = ConfigService.SelectedConfig;
             
             try
             {

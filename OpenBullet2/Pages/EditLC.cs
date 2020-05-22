@@ -1,6 +1,8 @@
 ﻿using Blazaco.Editor;
 using Blazaco.Editor.Options;
+using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
+using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using System;
 using System.Threading.Tasks;
@@ -9,13 +11,15 @@ namespace OpenBullet2.Pages
 {
     public partial class EditLC
     {
+        [Inject] ConfigService ConfigService { get; set; }
+
         private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
         private Config config;
 
         protected override async Task OnInitializedAsync()
         {
-            config = Static.Config;
+            config = ConfigService.SelectedConfig;
 
             try
             {

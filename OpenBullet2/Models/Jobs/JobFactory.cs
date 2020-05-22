@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Jobs;
+﻿using OpenBullet2.Services;
+using RuriLib.Models.Jobs;
 using System;
 using System.Linq;
 
@@ -6,6 +7,13 @@ namespace OpenBullet2.Models.Jobs
 {
     public class JobFactory
     {
+        private readonly ConfigService configService;
+
+        public JobFactory(ConfigService configService)
+        {
+            this.configService = configService;
+        }
+
         public Job Create(int id, JobOptions options)
         {
             var job = options switch
@@ -22,7 +30,7 @@ namespace OpenBullet2.Models.Jobs
         {
             return new SingleRunJob()
             {
-                Config = Static.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
+                Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
                 Data = options.Data,
                 HitOutputs = options.HitOutputs,

@@ -2,6 +2,7 @@
 using Blazaco.Editor.Options;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
+using OpenBullet2.Services;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System.Threading.Tasks;
@@ -10,14 +11,16 @@ namespace OpenBullet2.Pages
 {
     public partial class EditCS
     {
-        [Inject] NavigationManager nav { get; set; }
+        [Inject] NavigationManager Nav { get; set; }
+        [Inject] ConfigService ConfigService { get; set; }
+
         [Parameter] public Config Config { get; set; }
         private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
 
         protected override void OnInitialized()
         {
-            Config = Static.Config;
+            Config = ConfigService.SelectedConfig;
 
             var options = new EditorOptions()
             {
@@ -51,8 +54,8 @@ namespace OpenBullet2.Pages
                 return;
 
             Config.ChangeMode(ConfigMode.CSharp);
-            Static.Config = Config;
-            nav.NavigateTo("config/edit/code", true);
+            ConfigService.SelectedConfig = Config;
+            Nav.NavigateTo("config/edit/code", true);
         }
     }
 }

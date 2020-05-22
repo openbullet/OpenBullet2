@@ -54,12 +54,14 @@ namespace OpenBullet2.Pages
         private async Task Add(Job job)
         {
             var factory = new JobOptionsFactory();
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var wrapper = new JobOptionsWrapper { Options = factory.GetOptions(job) };
 
             var entity = new JobEntity
             {
                 CreationDate = DateTime.Now,
                 JobType = GetJobType(job),
-                JobOptions = JsonConvert.SerializeObject(factory.GetOptions(job))
+                JobOptions = JsonConvert.SerializeObject(wrapper, settings)
             };
 
             await JobRepo.Add(entity);

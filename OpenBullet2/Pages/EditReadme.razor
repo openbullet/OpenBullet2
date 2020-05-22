@@ -1,5 +1,7 @@
 ﻿@page "/config/edit/readme"
 @using RuriLib.Models.Configs
+@using OpenBullet2.Services
+@inject ConfigService ConfigService 
 
 <EditForm Model="config">
     <InputMarkdown Label="Readme" @bind-Value="config.Readme" For="@(() => config.Readme)" />
@@ -10,6 +12,6 @@
 
     protected override void OnInitialized()
     {
-        config = Static.Config;
+        config = ConfigService.SelectedConfig;
     }
 }

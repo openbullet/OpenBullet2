@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using OpenBullet2.Models;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
@@ -25,7 +24,6 @@ namespace OpenBullet2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Static.SecurityOptions = Configuration.GetSection("Security").Get<SecurityOptions>();
         }
 
         public IConfiguration Configuration { get; }
@@ -49,6 +47,11 @@ namespace OpenBullet2
             services.AddScoped<IHitRepository, DbHitRepository>();
             services.AddScoped<IJobRepository, DbJobRepository>();
 
+            // Singletons
+            services.AddSingleton<MetricsService>();
+            services.AddSingleton<PersistentSettingsService>();
+            services.AddSingleton<VolatileSettingsService>();
+            services.AddSingleton<ConfigService>();
             services.AddSingleton<JobManagerService>();
         }
 
@@ -82,15 +85,26 @@ namespace OpenBullet2
                 endpoints.MapFallbackToPage("/_Host");
             });
 
+            // Load the configs
+            var configService = app.ApplicationServices.GetService<ConfigService>();
+            var configRepo = app.ApplicationServices.GetService<IConfigRepository>();
+            configService.Configs = configRepo.GetAll().Result;
+
             // Restore the saved jobs
             var jobManager = app.ApplicationServices.GetService<JobManagerService>();
-            var context = app.ApplicationServices.GetService<ApplicationDbContext>();
-            var entries = context.Jobs.ToList();
-            var factory = new JobFactory();
+            var jobRepo = app.ApplicationServices.GetService<IJobRepository>();
+            RestoreJobs(jobRepo, jobManager, configService);
+        }
+
+        private void RestoreJobs(IJobRepository jobRepo, JobManagerService jobManager, ConfigService configService)
+        {
+            var entries = jobRepo.GetAll().ToList();
+            var factory = new JobFactory(configService);
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
             foreach (var entry in entries)
             {
-                var options = JsonConvert.DeserializeObject<JobOptions>(entry.JobOptions);
+                var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entry.JobOptions, settings).Options;
                 var job = factory.Create(entry.Id, options);
                 jobManager.Jobs.Add(job);
             }

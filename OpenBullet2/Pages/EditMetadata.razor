@@ -1,5 +1,7 @@
 ﻿@page "/config/edit/metadata"
 @using RuriLib.Models.Configs
+@using OpenBullet2.Services
+@inject ConfigService ConfigService 
 
 <EditForm Model="config">
     <label for="name">Name</label>
@@ -20,6 +22,6 @@
 
     protected override void OnInitialized()
     {
-        config = Static.Config;
+        config = ConfigService.SelectedConfig;
     }
 }

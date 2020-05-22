@@ -1,7 +1,8 @@
 ﻿@using OpenBullet2.Helpers
 @using RuriLib.Models.Configs
 @using OpenBullet2.Repositories
-@inject IConfigRepository configRepo
+@inject IConfigRepository ConfigRepo
+@inject OpenBullet2.Services.ConfigService ConfigService
 
 <div class="top-row pl-4 navbar navbar-dark">
     <div class="container-fluid">
@@ -98,7 +99,7 @@
 
     protected override void OnInitialized()
     {
-        Static.ConfigSelected += OnConfigSelected;
+        ConfigService.OnConfigSelected += OnConfigSelected;
         base.OnInitialized();
     }
 
@@ -116,18 +117,18 @@
 
     private async Task SaveConfig()
     {
-        if (Static.Config == null)
+        if (ConfigService.SelectedConfig == null)
         {
             await js.AlertError("404", "No config selected!");
             return;
         }
 
         // Check if the LoliCode is valid
-        if (Static.Config.Mode == ConfigMode.LoliCode)
+        if (ConfigService.SelectedConfig.Mode == ConfigMode.LoliCode)
         {
             try
             {
-                new RuriLib.Helpers.Transpilers.Loli2StackTranspiler().Transpile(Static.Config.LoliCodeScript);
+                new RuriLib.Helpers.Transpilers.Loli2StackTranspiler().Transpile(ConfigService.SelectedConfig.LoliCodeScript);
             }
             catch (Exception ex)
             {
@@ -136,7 +137,7 @@
             }
         }
 
-        await configRepo.Save(Static.Config);
-        await js.AlertSuccess("Aww yeah", $"{Static.Config.Metadata.Name} was saved successfully!");
+        await ConfigRepo.Save(ConfigService.SelectedConfig);
+        await js.AlertSuccess("Aww yeah", $"{ConfigService.SelectedConfig.Metadata.Name} was saved successfully!");
     }
 }

@@ -4,9 +4,11 @@
 @using OpenBullet2.Helpers
 @using System.IO
 @using RuriLib.Extensions 
+@using OpenBullet2.Services 
 @inject IModalService ModalService
-@inject IWordlistRepository repo
-@inject IFileReaderService fileReaderService;
+@inject IWordlistRepository WordlistRepo
+@inject IFileReaderService FileReaderService;
+@inject PersistentSettingsService PersistentSettings;
 
 <EditForm Model="wordlist">
     <label style="margin-top: 10px;">Wordlist Type</label>
@@ -69,7 +71,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        wordlistTypes = Static.Environment.WordlistTypes.Select(w => w.Name).ToList();
+        wordlistTypes = PersistentSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
 
         wordlist = new WordlistEntity
         {
@@ -85,7 +87,7 @@
         max = 0;
         value = 0;
         this.StateHasChanged();
-        var files = (await fileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync()).ToList();
+        var files = (await FileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync()).ToList();
         var file = files.FirstOrDefault();
 
         if (file == null)
@@ -121,7 +123,7 @@
             return;
         }
 
-        if (!Static.SecurityOptions.AllowSystemWideFileAccess && !baseDirectory.IsSubPathOf(Directory.GetCurrentDirectory()))
+        if (!PersistentSettings.SecurityOptions.AllowSystemWideFileAccess && !baseDirectory.IsSubPathOf(Directory.GetCurrentDirectory()))
         {
             await js.AlertError("Unauthorized", "System wide file access has been disabled in appsettings.json");
             return;
@@ -183,7 +185,7 @@
             return;
         }
 
-        await repo.Add(wordlist, fileStream);
+        await WordlistRepo.Add(wordlist, fileStream);
         BlazoredModal.Close(ModalResult.Ok(wordlist));
     }
 
@@ -197,7 +199,7 @@
 
         wordlist.FileName = selectedFile;
         wordlist.Total = File.ReadLines(selectedFile).Count();
-        await repo.Add(wordlist);
+        await WordlistRepo.Add(wordlist);
         BlazoredModal.Close(ModalResult.Ok(wordlist));
     }
 }
