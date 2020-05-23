@@ -56,7 +56,7 @@
                 <br />
                 <label style="margin-top: 15px;">Test Proxy</label>
                 <InputText @bind-Value="options.TestProxy" />
-                <label style="margin-top: 15px;">Test Proxy</label>
+                <label style="margin-top: 15px;">Type</label>
                 <InputSelect @bind-Value="options.ProxyType">
                     @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
                     {

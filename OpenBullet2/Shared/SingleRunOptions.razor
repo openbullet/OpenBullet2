@@ -1,0 +1,67 @@
+﻿@using RuriLib.Models.Jobs
+@using OpenBullet2.Services
+@using OpenBullet2.Shared.Forms
+@using RuriLib.Models.Configs
+@inject PersistentSettingsService PersistentSettings
+@inject IModalService Modal
+
+<EditForm Model="Job">
+    <label>Config</label>
+    @if (Job.Config == null)
+    {
+        <p>No config selected</p>
+    }
+    else
+    {
+        <div style="width: 55px; height: 55px; margin: 0 20px 0 20px;">
+            <img src="data:image/png;base64,@Job.Config.Metadata.Base64Image" style="width: 100%; height: 100%;" />
+        </div>
+        <p>@Job.Config.Metadata.Name by @Job.Config.Metadata.Author</p>
+    }
+    <button class="btn btn-primary" @onclick="SelectConfig">Select Config</button>
+    <br />
+    <br />
+    <br />
+    <label>Data</label>
+    <InputText @bind-Value="Job.Data" />
+    <label style="margin-top: 15px;">Wordlist Type</label>
+    <InputSelect @bind-Value="Job.WordlistType">
+        @foreach (var name in PersistentSettings.Environment.WordlistTypes.Select(w => w.Name))
+        {
+            <option value="@name">@name</option>
+        }
+    </InputSelect>
+    <br />
+    <label style="margin-top: 15px;">Proxy Mode</label>
+    <InputSelect @bind-Value="Job.ProxyMode">
+        @foreach (var name in Enum.GetNames(typeof(JobProxyMode)))
+        {
+            <option value="@name">@name</option>
+        }
+    </InputSelect>
+    <br />
+    <label style="margin-top: 15px;">Proxy</label>
+    <InputText @bind-Value="Job.Proxy" />
+    <label style="margin-top: 15px;">Proxy Type</label>
+    <InputSelect @bind-Value="Job.ProxyType">
+        @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+        {
+            <option value="@name">@name</option>
+        }
+    </InputSelect>
+</EditForm>
+
+@code {
+    [Parameter] public SingleRunJob Job { get; set; }
+
+    async Task SelectConfig()
+    {
+        var modal = Modal.Show<ConfigSelector>("Select Config");
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            Job.Config = result.Data as Config;
+        }
+    }
+}

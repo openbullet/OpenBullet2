@@ -1,0 +1,12 @@
+﻿@page "/jobs/create"
+@page "/jobs/create/{Type}"
+@using RuriLib.Models.Jobs 
+
+@switch (job)
+{
+    case SingleRunJob x:
+        <SingleRunOptions Job="x" />
+        break;
+}
+
+<button class="btn btn-success" @onclick="Create">Create Job</button>
