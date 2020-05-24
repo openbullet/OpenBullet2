@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
+using RuriLib.Services;
 
 namespace OpenBullet2
 {
@@ -49,6 +50,7 @@ namespace OpenBullet2
 
             // Singletons
             services.AddSingleton<MetricsService>();
+            services.AddSingleton<RuriLibSettingsService>();
             services.AddSingleton<PersistentSettingsService>();
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
@@ -105,7 +107,7 @@ namespace OpenBullet2
             foreach (var entry in entries)
             {
                 var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entry.JobOptions, settings).Options;
-                var job = factory.Create(entry.Id, options);
+                var job = factory.FromOptions(entry.Id, options);
                 jobManager.Jobs.Add(job);
             }
         }

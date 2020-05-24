@@ -1,8 +1,8 @@
 ﻿@using OpenBullet2.Entities
-@using OpenBullet2.Services 
+@using RuriLib.Services 
 @inject IModalService ModalService
 @inject IWordlistRepository WordlistRepo
-@inject PersistentSettingsService PersistentSettings
+@inject RuriLibSettingsService RuriLibSettings
 
 <EditForm Model="Wordlist">
     <label style="margin-top: 10px;">Wordlist Type</label>
@@ -27,7 +27,7 @@
 
     protected override void OnInitialized()
     {
-        wordlistTypes = PersistentSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
+        wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
     }
 
     private async Task Edit()

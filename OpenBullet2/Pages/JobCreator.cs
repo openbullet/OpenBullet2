@@ -16,6 +16,8 @@ namespace OpenBullet2.Pages
     {
         [Inject] IJobRepository JobRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
+        [Inject] ConfigService ConfigService { get; set; }
+        [Inject] NavigationManager Nav { get; set; }
         [Parameter] public string Type { get; set; }
 
         Job job;
@@ -24,15 +26,9 @@ namespace OpenBullet2.Pages
         {
             Type ??= JobType.MultiRun.ToString();
 
-            job = Enum.Parse(typeof(JobType), Type) switch
-            {
-                JobType.SingleRun => new SingleRunJob(),
-                JobType.MultiRun => new MultiRunJob(),
-                JobType.Spider => new SpiderJob(),
-                JobType.Ripper => new RipJob(),
-                JobType.SeleniumUnitTest => new SeleniumUnitTestJob(),
-                _ => throw new NotImplementedException()
-            };
+            var factory = new JobFactory(ConfigService);
+            var type = (JobType)Enum.Parse(typeof(JobType), Type);
+            job = factory.CreateNew(type);
         }
 
         private async Task Create()
@@ -55,6 +51,7 @@ namespace OpenBullet2.Pages
 
             job.Id = entity.Id;
             Manager.Jobs.Add(job);
+            Nav.NavigateTo($"job/{job.Id}");
         }
 
         private JobType GetJobType(Job job)

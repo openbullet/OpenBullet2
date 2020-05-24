@@ -1,0 +1,28 @@
+﻿@page "/job/{id:int}"
+@using OpenBullet2.Services
+@using RuriLib.Models.Jobs 
+@inject JobManagerService Manager
+
+@if (job == null)
+{
+    <p>No job with id @Id, please go back and select a valid job</p>
+}
+else
+{
+    switch (job)
+    {
+        case SingleRunJob x:
+            <SingleRunJobViewer Job="x" />
+            break;
+    }
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    Job job;
+
+    protected override void OnInitialized()
+    {
+        job = Manager.Jobs.FirstOrDefault(j => j.Id == Id);
+    }
+}

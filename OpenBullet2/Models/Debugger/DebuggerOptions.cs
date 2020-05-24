@@ -1,5 +1,5 @@
-﻿using OpenBullet2.Services;
-using RuriLib.Models.Proxies;
+﻿using RuriLib.Models.Proxies;
+using RuriLib.Services;
 using System.Linq;
 
 namespace OpenBullet2.Models.Debugger
@@ -12,7 +12,7 @@ namespace OpenBullet2.Models.Debugger
         public bool UseProxy { get; set; } = false;
         public ProxyType ProxyType { get; set; } = ProxyType.Http;
 
-        public DebuggerOptions(PersistentSettingsService settings)
+        public DebuggerOptions(RuriLibSettingsService settings)
         {
             WordlistType = settings.Environment.WordlistTypes.First().Name;
         }

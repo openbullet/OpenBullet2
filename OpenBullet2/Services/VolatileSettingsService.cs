@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Models.Debugger;
 using RuriLib.Logging;
+using RuriLib.Services;
 
 namespace OpenBullet2.Services
 {
@@ -8,9 +9,9 @@ namespace OpenBullet2.Services
         public DebuggerOptions DebuggerOptions { get; set; }
         public BotLogger DebuggerLog { get; set; }
 
-        public VolatileSettingsService(PersistentSettingsService persistentSettings)
+        public VolatileSettingsService(RuriLibSettingsService ruriLibSettings)
         {
-            DebuggerOptions = new DebuggerOptions(persistentSettings);
+            DebuggerOptions = new DebuggerOptions(ruriLibSettings);
             DebuggerLog = new BotLogger();
         }
     }

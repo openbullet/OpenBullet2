@@ -1,0 +1,74 @@
+﻿@using RuriLib.Models.Hits
+@using OpenBullet2.Models.Hits
+@using RuriLib.Models.Hits.HitOutputs 
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddDatabase">
+                <span class="oi oi-plus"></span> Database
+            </button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddFileSystem">
+                <span class="oi oi-plus"></span> File System
+            </button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddDiscord">
+                <span class="oi oi-plus"></span> Discord Webhook
+            </button>
+        </div>
+    </div>
+
+    @foreach (var output in HitOutputs)
+    {
+        <div class="row" style="margin-bottom: 15px;">
+            <EditForm Model="output">
+                @switch (output)
+                {
+                    case DatabaseHitOutput x:
+                        <p style="color: aquamarine;">Database</p>
+                        break;
+
+                    case FileSystemHitOutput x:
+                        <p style="color: greenyellow;">File System</p>
+                        <label>Base Directory</label>
+                        <InputText @bind-Value="x.BaseDir" />
+                        break;
+
+                    case DiscordWebhookHitOutput x:
+                        <p style="color: hotpink;">Discord Webhook</p>
+                        <label>Webhook URL</label>
+                        <InputText @bind-Value="x.Webhook" />
+                        <label>Username</label>
+                        <InputText @bind-Value="x.Username" />
+                        <label>Avatar URL</label>
+                        <InputText @bind-Value="x.AvatarUrl" />
+                        break;
+                }
+                <button class="btn btn-danger" @onclick="(() => HitOutputs.Remove(output))">
+                    <span class="oi oi-x"></span> Remove
+                </button>
+            </EditForm>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<IHitOutput> HitOutputs { get; set; }
+
+    void AddDatabase()
+    {
+        if (!HitOutputs.Any(o => o is DatabaseHitOutput))
+            HitOutputs.Add(new DatabaseHitOutput());
+    }
+
+    void AddFileSystem()
+    {
+        if (!HitOutputs.Any(o => o is FileSystemHitOutput))
+            HitOutputs.Add(new FileSystemHitOutput());
+    }
+
+    void AddDiscord()
+    {
+        HitOutputs.Add(new DiscordWebhookHitOutput());
+    }
+}

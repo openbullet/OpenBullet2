@@ -1,0 +1,57 @@
+﻿@using RuriLib.Models.Jobs.StartConditions 
+
+<RadzenRadioButtonList @bind-Value="type" TValue="StartConditionType" Change="@((args) => Change(args))">
+    <Items>
+        <RadzenRadioButtonListItem Text="Start In" Value="StartConditionType.StartIn" />
+        <RadzenRadioButtonListItem Text="Start At" Value="StartConditionType.StartAt" />
+    </Items>
+</RadzenRadioButtonList>
+
+<br />
+
+<EditForm Model="StartCondition">
+    @switch (StartCondition)
+    {
+        case RelativeTimeStartCondition x:
+            <RelativeTimeStartConditionEditor StartCondition="x" />
+            break;
+
+        case AbsoluteTimeStartCondition x:
+                <RadzenDatePicker TValue="DateTime?" ShowTime="true" ShowSeconds="true" HoursStep="1" MinutesStep="5" SecondsStep="10" 
+                      Change="@(args => AbsoluteChange(x, args))" @bind-Value="dateTime" DateFormat="MM/dd/yyyy HH:mm:ss" />
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter] public StartCondition StartCondition { get; set; }
+    StartConditionType type = StartConditionType.StartIn;
+    DateTime? dateTime = DateTime.Now;
+
+    enum StartConditionType
+    {
+        StartIn,
+        StartAt
+    }
+
+    void Change(StartConditionType? value)
+    {
+        if (value.HasValue)
+        {
+            StartCondition = value.Value switch
+            {
+                StartConditionType.StartIn => new RelativeTimeStartCondition(),
+                StartConditionType.StartAt => new AbsoluteTimeStartCondition(),
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
+
+    void AbsoluteChange(AbsoluteTimeStartCondition condition, DateTime? value)
+    {
+        if (value.HasValue)
+        {
+            condition.StartAt = value.Value;
+        }
+    }
+}

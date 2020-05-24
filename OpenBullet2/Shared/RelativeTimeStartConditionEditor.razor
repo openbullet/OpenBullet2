@@ -1,0 +1,25 @@
+﻿@using RuriLib.Models.Jobs.StartConditions
+
+<input type="number" style="width: 50px;" value="@hours" @onchange="SetTimespan" /> hours
+<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> minutes
+<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> seconds
+
+@code {
+    [Parameter] public RelativeTimeStartCondition StartCondition { get; set; }
+    int hours, minutes, seconds;
+
+    protected override void OnInitialized()
+    {
+        hours = StartCondition.StartAfter.Hours;
+        minutes = StartCondition.StartAfter.Minutes;
+        seconds = StartCondition.StartAfter.Seconds;
+    }
+
+    void SetTimespan()
+    {
+        StartCondition.StartAfter = TimeSpan.Zero;
+        StartCondition.StartAfter.Add(TimeSpan.FromHours(hours));
+        StartCondition.StartAfter.Add(TimeSpan.FromMinutes(minutes));
+        StartCondition.StartAfter.Add(TimeSpan.FromSeconds(seconds));
+    }
+}

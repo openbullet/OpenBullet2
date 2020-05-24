@@ -124,3 +124,8 @@
 .ui-paginator {
     background-color: unset;
 }
+
+.ui-calendar-w-btn {
+    background-color: unset;
+    border: 1px solid black;
+}

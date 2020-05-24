@@ -1,14 +1,15 @@
-﻿@using BlazorInputFile
-@using Blazor.FileReader 
+﻿@using Blazor.FileReader 
 @using OpenBullet2.Entities
 @using OpenBullet2.Helpers
 @using System.IO
 @using RuriLib.Extensions 
+@using RuriLib.Services 
 @using OpenBullet2.Services 
 @inject IModalService ModalService
 @inject IWordlistRepository WordlistRepo
-@inject IFileReaderService FileReaderService;
-@inject PersistentSettingsService PersistentSettings;
+@inject IFileReaderService FileReaderService
+@inject RuriLibSettingsService RuriLibSettings
+@inject PersistentSettingsService PersistentSettings
 
 <EditForm Model="wordlist">
     <label style="margin-top: 10px;">Wordlist Type</label>
@@ -71,7 +72,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        wordlistTypes = PersistentSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
+        wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
 
         wordlist = new WordlistEntity
         {

@@ -1,4 +1,5 @@
 ﻿@page "/jobs"
+@using RuriLib.Models.Jobs 
 
 <div class="container-fluid">
     <div class="row">
@@ -7,16 +8,37 @@
             <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> Remove All</button>
         </div>
     </div>
-    <div class="row">
-        @foreach (var job in Manager.Jobs)
-        {
-            <div class="card" style="color: #fff; background-color: #111; cursor: pointer; margin-top: 5px; border: solid 3px #666;"
-                 @onclick="@(() => SelectJob(job))">
-                <div class="card-body">
-                    <h5 class="card-title">@job.Id (@job.Status)</h5>
-                    <button class="btn btn-danger" @onclick="@(() => Remove(job))">Remove</button>
+    @foreach (var job in Manager.Jobs)
+    {
+        <div class="row" style="margin-top: 5px;">
+            <div class="col-11">
+                <div class="card" style="color: #fff; background-color: #111; cursor: pointer; border: solid 3px #666;
+                        width: 100%;"
+                     @onclick="@(() => SelectJob(job))">
+                    <div class="card-body">
+                        <h5 class="card-title">Job #@job.Id (@job.Status)</h5>
+                        @switch (job)
+                        {
+                            case SingleRunJob x:
+                                if (x.Config != null)
+                                {
+                                    <p class="card-text">Config: @x.Config.Metadata.Name by @x.Config.Metadata.Author</p>
+                                }
+                                else
+                                {
+                                    <p class="card-text">No config selected</p>
+                                }
+                                break;
+                        }
+                    </div>
                 </div>
             </div>
-        }
-    </div>
+            <div class="col">
+                <button class="btn btn-danger" style="height: 100%"
+                        @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
+                    Remove
+                </button>
+            </div>
+        </div>
+    }
 </div>

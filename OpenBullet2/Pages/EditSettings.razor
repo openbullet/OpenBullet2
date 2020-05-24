@@ -4,8 +4,9 @@
 @using RuriLib.Models 
 @using RuriLib.Models.Configs 
 @using OpenBullet2.Services 
+@using RuriLib.Services 
 @inject ConfigService ConfigService 
-@inject PersistentSettingsService PersistentSettings
+@inject RuriLibSettingsService RuriLibSettings
 
 <h1>General</h1>
 <EditForm Model="settings.GeneralSettings">
@@ -191,11 +192,11 @@
         // HACK: I tried binding directly to lists but it would spit out double the amount of values when deserializing the json
         // for some reason so this approach is working but it's not the best
         continueStatuses = settings.GeneralSettings.ContinueStatuses.ToList();
-        stopStatuses = PersistentSettings.GetStatuses()
+        stopStatuses = RuriLibSettings.GetStatuses()
             .Where(s => !continueStatuses.Contains(s)).ToList();
 
         proxyBanStatuses = settings.ProxySettings.BanProxyStatuses.ToList();
-        proxyContinueStatuses = PersistentSettings.GetStatuses()
+        proxyContinueStatuses = RuriLibSettings.GetStatuses()
             .Where(s => !proxyBanStatuses.Contains(s)).ToList();
 
         allowedProxyTypes = settings.ProxySettings.AllowedProxyTypes.ToList();
@@ -203,12 +204,12 @@
             .Cast<ProxyType>().Where(t => !allowedProxyTypes.Contains(t)).ToList();
 
         allowedWordlistTypes = settings.DataSettings.AllowedWordlistTypes.ToList();
-        unallowedWordlistTypes = PersistentSettings.Environment.WordlistTypes
+        unallowedWordlistTypes = RuriLibSettings.Environment.WordlistTypes
             .Select(w => w.Name)
             .Where(w => !allowedWordlistTypes.Contains(w)).ToList();
 
         quitBrowserStatuses = settings.SeleniumSettings.QuitBrowserStatuses.ToList();
-        dontQuitBrowserStatuses = PersistentSettings.GetStatuses()
+        dontQuitBrowserStatuses = RuriLibSettings.GetStatuses()
             .Where(s => !quitBrowserStatuses.Contains(s)).ToList();
     }
 

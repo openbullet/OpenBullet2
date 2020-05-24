@@ -45,7 +45,7 @@
                 <label style="margin-top: 15px;">Wordlist Type</label>
                 <br />
                 <InputSelect @bind-Value="options.WordlistType">
-                    @foreach (var name in PersistentSettings.Environment.WordlistTypes.Select(w => w.Name))
+                    @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
                     {
                         <option value="@name">@name</option>
                     }

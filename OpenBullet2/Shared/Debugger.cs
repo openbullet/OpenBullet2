@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
@@ -21,13 +19,14 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Variables;
+using RuriLib.Services;
 
 namespace OpenBullet2.Shared
 {
     public partial class Debugger
     {
         [Inject] IModalService Modal { get; set; }
-        [Inject] PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] VolatileSettingsService VolatileSettings { get; set; }
 
         [Parameter] public Config Config { get; set; }
@@ -64,12 +63,12 @@ namespace OpenBullet2.Shared
             isRunning = true;
             cts = new CancellationTokenSource();
 
-            var wordlistType = PersistentSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
+            var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
             var dataLine = new DataLine(options.TestData, wordlistType);
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
             // Build the BotData
-            BotData data = new BotData(PersistentSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
+            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
 
             var script = new ScriptBuilder()
                 .ConfigureSlices(dataLine.GetVariables())

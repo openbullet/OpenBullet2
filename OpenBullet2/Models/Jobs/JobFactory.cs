@@ -1,6 +1,9 @@
-﻿using OpenBullet2.Services;
+﻿using OpenBullet2.Models.Hits;
+using OpenBullet2.Services;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenBullet2.Models.Jobs
@@ -14,7 +17,28 @@ namespace OpenBullet2.Models.Jobs
             this.configService = configService;
         }
 
-        public Job Create(int id, JobOptions options)
+        public Job CreateNew(JobType type)
+        {
+            return type switch
+            {
+                JobType.SingleRun => CreateSingleRun(),
+                JobType.MultiRun => new MultiRunJob(),
+                JobType.Spider => new SpiderJob(),
+                JobType.Ripper => new RipJob(),
+                JobType.SeleniumUnitTest => new SeleniumUnitTestJob(),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        private SingleRunJob CreateSingleRun()
+        {
+            return new SingleRunJob
+            {
+                HitOutputs = new List<IHitOutput> { new DatabaseHitOutput() }
+            };
+        }
+
+        public Job FromOptions(int id, JobOptions options)
         {
             var job = options switch
             {

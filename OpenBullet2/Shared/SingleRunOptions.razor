@@ -2,11 +2,17 @@
 @using OpenBullet2.Services
 @using OpenBullet2.Shared.Forms
 @using RuriLib.Models.Configs
-@inject PersistentSettingsService PersistentSettings
+@using RuriLib.Services 
+@inject RuriLibSettingsService RuriLibSettings
 @inject IModalService Modal
 
+<label style="color: orange;">Start Condition</label><br />
+<div style="margin-bottom: 20px;">
+    <StartConditionSelector StartCondition="Job.StartCondition" />
+</div>
+
 <EditForm Model="Job">
-    <label>Config</label>
+    <label style="color: orange;">Config</label>
     @if (Job.Config == null)
     {
         <p>No config selected</p>
@@ -18,15 +24,13 @@
         </div>
         <p>@Job.Config.Metadata.Name by @Job.Config.Metadata.Author</p>
     }
-    <button class="btn btn-primary" @onclick="SelectConfig">Select Config</button>
-    <br />
-    <br />
+    <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectConfig">Select Config</button>
     <br />
     <label>Data</label>
     <InputText @bind-Value="Job.Data" />
     <label style="margin-top: 15px;">Wordlist Type</label>
     <InputSelect @bind-Value="Job.WordlistType">
-        @foreach (var name in PersistentSettings.Environment.WordlistTypes.Select(w => w.Name))
+        @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
         {
             <option value="@name">@name</option>
         }
@@ -50,6 +54,9 @@
         }
     </InputSelect>
 </EditForm>
+
+<label style="color: orange; margin-top: 20px;">Hit Outputs</label>
+<HitOutputsSelector HitOutputs="Job.HitOutputs" />
 
 @code {
     [Parameter] public SingleRunJob Job { get; set; }
