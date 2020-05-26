@@ -6,6 +6,7 @@ using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Jobs;
+using RuriLib.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,8 +16,10 @@ namespace OpenBullet2.Pages
     public partial class JobCreator
     {
         [Inject] IJobRepository JobRepo { get; set; }
+        [Inject] SingletonDbHitRepository HitRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Parameter] public string Type { get; set; }
 
@@ -26,7 +29,7 @@ namespace OpenBullet2.Pages
         {
             Type ??= JobType.MultiRun.ToString();
 
-            var factory = new JobFactory(ConfigService);
+            var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo);
             var type = (JobType)Enum.Parse(typeof(JobType), Type);
             job = factory.CreateNew(type);
         }

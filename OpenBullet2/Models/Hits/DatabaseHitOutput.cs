@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Newtonsoft.Json;
 using OpenBullet2.Entities;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Data.DataPools;
@@ -12,16 +12,22 @@ namespace OpenBullet2.Models.Hits
 {
     public class DatabaseHitOutput : IHitOutput
     {
-        [Inject] IHitRepository HitRepo { get; set; }
+        [JsonIgnore]
+        private readonly SingletonDbHitRepository hitRepo;
+
+        public DatabaseHitOutput(SingletonDbHitRepository hitRepo)
+        {
+            this.hitRepo = hitRepo;
+        }
 
         public async Task Store(Hit hit)
         {
             var entity = new HitEntity
             {
-                CapturedData = ConvertCapturedData(hit.CapturedData),
-                Data = hit.Data.Data,
+                CapturedData = hit.CapturedDataString,
+                Data = hit.DataString,
                 Date = hit.Date,
-                Proxy = hit.Proxy.ToString(),
+                Proxy = hit.ProxyString,
                 Type = hit.Type,
                 ConfigId = hit.Config.Id,
                 ConfigName = hit.Config.Metadata.Name,
@@ -35,22 +41,7 @@ namespace OpenBullet2.Models.Hits
                 entity.WordlistName = wordlist.Name;
             }
 
-            await HitRepo.Add(entity);
-        }
-
-        private string ConvertCapturedData(Dictionary<string, object> capturedData)
-        {
-            List<Variable> variables = new List<Variable>();
-            VariableFactory factory = new VariableFactory();
-
-            foreach (var data in capturedData)
-            {
-                var variable = factory.FromObject(data.Value);
-                variable.Name = data.Key;
-                variables.Add(variable);
-            }
-
-            return string.Join(" | ", variables.Select(v => v.AsString()));
+            await hitRepo.Store(entity);
         }
     }
 }

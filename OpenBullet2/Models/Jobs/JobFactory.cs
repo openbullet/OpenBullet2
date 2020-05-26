@@ -1,7 +1,9 @@
 ﻿using OpenBullet2.Models.Hits;
+using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
+using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,30 +13,36 @@ namespace OpenBullet2.Models.Jobs
     public class JobFactory
     {
         private readonly ConfigService configService;
+        private readonly RuriLibSettingsService settingsService;
+        private readonly SingletonDbHitRepository hitRepo;
 
-        public JobFactory(ConfigService configService)
+        public JobFactory(ConfigService configService, RuriLibSettingsService settingsService,
+            SingletonDbHitRepository hitRepo)
         {
             this.configService = configService;
+            this.settingsService = settingsService;
+            this.hitRepo = hitRepo;
         }
 
         public Job CreateNew(JobType type)
         {
+
             return type switch
             {
                 JobType.SingleRun => CreateSingleRun(),
-                JobType.MultiRun => new MultiRunJob(),
-                JobType.Spider => new SpiderJob(),
-                JobType.Ripper => new RipJob(),
-                JobType.SeleniumUnitTest => new SeleniumUnitTestJob(),
+                JobType.MultiRun => new MultiRunJob(settingsService),
+                JobType.Spider => new SpiderJob(settingsService),
+                JobType.Ripper => new RipJob(settingsService),
+                JobType.SeleniumUnitTest => new SeleniumUnitTestJob(settingsService),
                 _ => throw new NotImplementedException()
             };
         }
 
         private SingleRunJob CreateSingleRun()
         {
-            return new SingleRunJob
+            return new SingleRunJob(settingsService)
             {
-                HitOutputs = new List<IHitOutput> { new DatabaseHitOutput() }
+                HitOutputs = new List<IHitOutput> { new DatabaseHitOutput(hitRepo) }
             };
         }
 
@@ -52,7 +60,7 @@ namespace OpenBullet2.Models.Jobs
 
         private SingleRunJob MakeSingleRunJob(SingleRunJobOptions options)
         {
-            return new SingleRunJob()
+            var job = new SingleRunJob(settingsService)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
@@ -64,6 +72,18 @@ namespace OpenBullet2.Models.Jobs
                 WordlistType = options.WordlistType,
                 StartCondition = options.StartCondition
             };
+
+            // We have to re-initialize the DatabaseHitOutput and give it the singleton repository
+            // TODO: Move these to a HitsOutput factory!
+            var dbOutput = job.HitOutputs.FirstOrDefault(o => o is DatabaseHitOutput);
+            
+            if (dbOutput != null)
+            {
+                job.HitOutputs.Remove(dbOutput);
+                job.HitOutputs.Add(new DatabaseHitOutput(hitRepo));
+            }
+
+            return job;
         }
     }
 }

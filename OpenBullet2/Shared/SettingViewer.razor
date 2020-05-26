@@ -19,9 +19,10 @@
             case EnumSetting x:
                 <InputSelect @bind-Value="@x.Value">
                     @foreach (var name in Enum.GetNames(x.EnumType))
-                    {
+                            {
                         <option value="@name">@name</option>
-                    }
+                            }
+                    /**/
                 </InputSelect>
                 break;
 

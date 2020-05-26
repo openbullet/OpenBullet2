@@ -55,6 +55,7 @@ namespace OpenBullet2
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JobManagerService>();
+            services.AddSingleton<SingletonDbHitRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,16 +93,23 @@ namespace OpenBullet2
             var configRepo = app.ApplicationServices.GetService<IConfigRepository>();
             configService.Configs = configRepo.GetAll().Result;
 
+            // Load the settings
+            var settingsService = app.ApplicationServices.GetService<RuriLibSettingsService>();
+
+            // Load the singleton hits repo (the one background jobs use to store hits)
+            var hitRepo = app.ApplicationServices.GetService<SingletonDbHitRepository>();
+
             // Restore the saved jobs
             var jobManager = app.ApplicationServices.GetService<JobManagerService>();
             var jobRepo = app.ApplicationServices.GetService<IJobRepository>();
-            RestoreJobs(jobRepo, jobManager, configService);
+            RestoreJobs(jobRepo, jobManager, configService, settingsService, hitRepo);
         }
 
-        private void RestoreJobs(IJobRepository jobRepo, JobManagerService jobManager, ConfigService configService)
+        private void RestoreJobs(IJobRepository jobRepo, JobManagerService jobManager, ConfigService configService,
+            RuriLibSettingsService settingsService, SingletonDbHitRepository hitRepo)
         {
             var entries = jobRepo.GetAll().ToList();
-            var factory = new JobFactory(configService);
+            var factory = new JobFactory(configService, settingsService, hitRepo);
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
             foreach (var entry in entries)

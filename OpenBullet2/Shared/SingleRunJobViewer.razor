@@ -1,7 +1,32 @@
-﻿@using RuriLib.Models.Jobs 
+﻿@using RuriLib.Models.Jobs
+@using RuriLib.Models.Hits 
 
-<p>@Job.Status</p>
+<p>Status: @Job.Status</p>
+<button class="btn btn-success" @onclick="(async () => await Job.Start())">Start</button>
+
+<RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowPaging="false" 
+            AllowSorting="true" Data="@Job.Hits" TItem="Hit" ColumnWidth="200px">
+    <Columns>
+        <RadzenGridColumn TItem="Hit" Property="Date" Title="Date" />
+        <RadzenGridColumn TItem="Hit" Property="DataString" Title="Data" />
+        <RadzenGridColumn TItem="Hit" Property="Type" Title="Type" />
+        <RadzenGridColumn TItem="Hit" Property="ProxyString" Title="Proxy" />
+        <RadzenGridColumn TItem="Hit" Property="CapturedDataString" Title="Captured Data" Width="1000px" />
+    </Columns>
+</RadzenGrid>
 
 @code {
     [Parameter] public SingleRunJob Job { get; set; }
+    RadzenGrid<Hit> hitsGrid;
+
+    protected override void OnInitialized()
+    {
+        Job.Finished += OnFinished;
+    }
+
+    private void OnFinished(object sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
 }

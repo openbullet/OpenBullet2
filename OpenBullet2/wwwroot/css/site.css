@@ -1,38 +1,32 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-/*@import url(http://fonts.googleapis.com/css?family=Oswald:400,300,700);*/
 
 @font-face {
-    src: url('../fonts/Oswald-VariableFont_wght.ttf');
-    font-family: 'Oswald';
+    font-family: "Roboto";
+    src: url("../fonts/Roboto-Regular.ttf");
 }
 
 @font-face {
-    font-family: "Aleo";
-    src: url("../fonts/Aleo-Regular.otf");
-}
-
-@font-face {
-    font-family: "Aleo";
-    src: url("../fonts/Aleo-Bold.otf");
+    font-family: "Roboto";
+    src: url("../fonts/Roboto-Bold.ttf");
     font-weight: bold;
 }
 
 @font-face {
-    font-family: "Aleo";
-    src: url("../fonts/Aleo-Italic.otf");
+    font-family: "Roboto";
+    src: url("../fonts/Roboto-Italic.ttf");
     font-style: italic;
 }
 
 @font-face {
-    font-family: "Aleo";
-    src: url("../fonts/Aleo-BoldItalic.otf");
+    font-family: "Roboto";
+    src: url("../fonts/Roboto-BoldItalic.ttf");
     font-weight: bold;
     font-style: italic;
 }
 
 html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
-    font-family: Aleo !important;
+    font-family: Roboto !important;
 }
 
 a, .btn-link {
@@ -52,7 +46,7 @@ app {
 }
 
 .top-row {
-    height: 4.5rem;
+    height: 5.5rem;
     display: flex;
     align-items: center;
 }
@@ -79,7 +73,7 @@ app {
 
 .sidebar {
     background-color: #111;
-    width: 250px;
+    width: 230px;
 }
 
     .sidebar .top-row {
@@ -103,7 +97,7 @@ app {
     }
 
         .sidebar .nav-item:first-of-type {
-            padding-top: 1rem;
+            padding-top: 0.5rem;
         }
 
         .sidebar .nav-item:last-of-type {
@@ -113,10 +107,10 @@ app {
         .sidebar .nav-item a {
             color: #d7d7d7;
             border-radius: 4px;
-            height: 3rem;
+            height: 2.5rem;
             display: flex;
             align-items: center;
-            line-height: 3rem;
+            line-height: 2.5rem;
         }
 
             .sidebar .nav-item a.active {
@@ -327,4 +321,12 @@ progress {
 .vertical-buttons-list ul li button {
     width: 100%;
     margin-bottom: 5px;
+}
+
+select {
+    margin-left: 5px !important;
+    background-color: #111;
+    color: white;
+    border-radius: 5px;
+    border: 1px solid black;
 }
