@@ -80,6 +80,8 @@
             Type = wordlistTypes.First()
         };
 
+        baseDirectory = Directory.GetCurrentDirectory();
+
         await LoadTree(baseDirectory);
     }
 

@@ -1,12 +1,13 @@
-﻿@using OpenBullet2.Models.Jobs 
-@using RuriLib.Models.Jobs 
+﻿@using OpenBullet2.Models.Jobs
+@using RuriLib.Models.Jobs
 @using OpenBullet2.Shared.Forms
 @using RuriLib.Models.Configs
-@using RuriLib.Services 
+@using RuriLib.Services
 @inject RuriLibSettingsService RuriLibSettings
 @inject IModalService Modal
 
-<label style="color: orange;">Start Condition</label><br />
+<label style="color: orange;">Start Condition</label>
+<br />
 <div style="margin-bottom: 20px;">
     <StartConditionSelector StartCondition="Options.StartCondition" />
 </div>
@@ -26,16 +27,6 @@
     }
     <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectConfig">Select Config</button>
     <br />
-    <label>Data</label>
-    <InputText @bind-Value="Options.Data" />
-    <label style="margin-top: 15px;">Wordlist Type</label>
-    <InputSelect @bind-Value="Options.WordlistType">
-        @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
-        {
-            <option value="@name">@name</option>
-        }
-    </InputSelect>
-    <br />
     <label style="margin-top: 15px;">Proxy Mode</label>
     <InputSelect @bind-Value="Options.ProxyMode">
         @foreach (var name in Enum.GetNames(typeof(JobProxyMode)))
@@ -44,22 +35,19 @@
         }
     </InputSelect>
     <br />
-    <label style="margin-top: 15px;">Proxy</label>
-    <InputText @bind-Value="Options.Proxy" />
-    <label style="margin-top: 15px;">Proxy Type</label>
-    <InputSelect @bind-Value="Options.ProxyType">
-        @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
-        {
-            <option value="@name">@name</option>
-        }
-    </InputSelect>
 </EditForm>
+
+<label style="color: orange; margin-top: 20px;">Proxy Source</label>
+<ProxySourceSelector Options="Options.ProxySource" />
+
+<label style="color: orange; margin-top: 20px;">Data Pool</label>
+<DataPoolSelector Options="Options.DataPool" />
 
 <label style="color: orange; margin-top: 20px;">Hit Outputs</label>
 <HitOutputsSelector HitOutputs="Options.HitOutputs" />
 
 @code {
-    [Parameter] public SingleRunJobOptions Options { get; set; }
+    [Parameter] public MultiRunJobOptions Options { get; set; }
     Config selectedConfig;
 
     async Task SelectConfig()

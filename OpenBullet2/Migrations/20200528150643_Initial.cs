@@ -21,7 +21,7 @@ namespace OpenBullet2.Migrations
                     ConfigId = table.Column<string>(nullable: true),
                     ConfigName = table.Column<string>(nullable: true),
                     ConfigCategory = table.Column<string>(nullable: true),
-                    WordlistId = table.Column<string>(nullable: true),
+                    WordlistId = table.Column<int>(nullable: false),
                     WordlistName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

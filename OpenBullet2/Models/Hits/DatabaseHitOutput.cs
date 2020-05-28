@@ -3,9 +3,6 @@ using OpenBullet2.Entities;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
-using RuriLib.Models.Variables;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Hits
@@ -13,9 +10,9 @@ namespace OpenBullet2.Models.Hits
     public class DatabaseHitOutput : IHitOutput
     {
         [JsonIgnore]
-        private readonly SingletonDbHitRepository hitRepo;
+        private readonly IHitRepository hitRepo;
 
-        public DatabaseHitOutput(SingletonDbHitRepository hitRepo)
+        public DatabaseHitOutput(IHitRepository hitRepo)
         {
             this.hitRepo = hitRepo;
         }
@@ -41,7 +38,7 @@ namespace OpenBullet2.Models.Hits
                 entity.WordlistName = wordlist.Name;
             }
 
-            await hitRepo.Store(entity);
+            await hitRepo.Add(entity);
         }
     }
 }

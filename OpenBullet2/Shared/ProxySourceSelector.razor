@@ -1,0 +1,71 @@
+﻿@using OpenBullet2.Models.Proxies
+@using OpenBullet2.Entities 
+@inject IProxyGroupRepository ProxyGroupRepo
+
+<RadzenRadioButtonList @bind-Value="type" TValue="ProxySourceType" Change="@((args) => Change(args))">
+    <Items>
+        <RadzenRadioButtonListItem Text="Group" Value="ProxySourceType.Group" />
+        <RadzenRadioButtonListItem Text="File" Value="ProxySourceType.File" />
+        <RadzenRadioButtonListItem Text="Remote" Value="ProxySourceType.Remote" />
+    </Items>
+</RadzenRadioButtonList>
+
+<br />
+
+<EditForm Model="Options">
+    @switch (Options)
+    {
+        case GroupProxySourceOptions x:
+            <label>Proxy Group</label>
+            <InputSelectNumber T="int" @bind-Value="x.GroupId">
+                <option value="-1">All</option>
+                @foreach (var group in groups)
+                {
+                    <option value="@group.Id">@group.Name</option>
+                }
+            </InputSelectNumber><br />
+            break;
+
+        case FileProxySourceOptions x:
+            <label>File Name:</label>
+            <InputText @bind-Value="x.FileName" />
+            break;
+
+        case RemoteProxySourceOptions x:
+            <label>Url:</label>
+            <InputText @bind-Value="x.Url" />
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter] public ProxySourceOptions Options { get; set; }
+    ProxySourceType type = ProxySourceType.Group;
+    List<ProxyGroupEntity> groups;
+
+    enum ProxySourceType
+    {
+        Group,
+        File,
+        Remote
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await ProxyGroupRepo.GetAll().ToListAsync();
+    }
+
+    void Change(ProxySourceType? value)
+    {
+        if (value.HasValue)
+        {
+            Options = value.Value switch
+            {
+                ProxySourceType.Group => new GroupProxySourceOptions(),
+                ProxySourceType.File => new FileProxySourceOptions(),
+                ProxySourceType.Remote => new RemoteProxySourceOptions(),
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
+}

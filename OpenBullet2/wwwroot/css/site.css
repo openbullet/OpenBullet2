@@ -107,10 +107,10 @@ app {
         .sidebar .nav-item a {
             color: #d7d7d7;
             border-radius: 4px;
-            height: 2.5rem;
+            height: 2rem;
             display: flex;
             align-items: center;
-            line-height: 2.5rem;
+            line-height: 2rem;
         }
 
             .sidebar .nav-item a.active {
@@ -217,6 +217,7 @@ input, textarea {
     border: 1px solid black;
     padding: 3px 6px 3px 6px;
     font-family: Consolas;
+    margin-bottom: 15px;
 }
 
 input:not([type=checkbox]) {

@@ -16,34 +16,37 @@ namespace OpenBullet2.Pages
     public partial class JobCreator
     {
         [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] SingletonDbHitRepository HitRepo { get; set; }
+        [Inject] IHitRepository HitRepo { get; set; }
+        [Inject] IWordlistRepository WordlistRepo { get; set; }
+        [Inject] IProxyGroupRepository ProxyGroupRepo { get; set; }
+        [Inject] IProxyRepository ProxyRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Parameter] public string Type { get; set; }
 
-        Job job;
+        JobType jobType;
+        JobOptions jobOptions;
 
         protected override void OnInitialized()
         {
             Type ??= JobType.MultiRun.ToString();
 
-            var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo);
-            var type = (JobType)Enum.Parse(typeof(JobType), Type);
-            job = factory.CreateNew(type);
+            var factory = new JobOptionsFactory();
+            jobType = (JobType)Enum.Parse(typeof(JobType), Type);
+            jobOptions = factory.CreateNew(jobType);
         }
 
         private async Task Create()
         {
-            var factory = new JobOptionsFactory();
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-            var wrapper = new JobOptionsWrapper { Options = factory.GetOptions(job) };
+            var wrapper = new JobOptionsWrapper { Options = jobOptions };
 
             var entity = new JobEntity
             {
                 CreationDate = DateTime.Now,
-                JobType = GetJobType(job),
+                JobType = jobType,
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
             };
 
@@ -52,7 +55,9 @@ namespace OpenBullet2.Pages
             // Get the entity that was just added in order to get its ID
             entity = await JobRepo.GetAll().OrderByDescending(e => e.Id).FirstAsync();
 
-            job.Id = entity.Id;
+            var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo, ProxyRepo, ProxyGroupRepo, WordlistRepo);
+            var job = factory.FromOptions(entity.Id, jobOptions);
+
             Manager.Jobs.Add(job);
             Nav.NavigateTo($"job/{job.Id}");
         }

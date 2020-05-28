@@ -46,8 +46,8 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("WordlistId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WordlistId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("WordlistName")
                         .HasColumnType("TEXT");

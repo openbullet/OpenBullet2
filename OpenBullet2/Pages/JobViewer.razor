@@ -1,6 +1,6 @@
 ﻿@page "/job/{id:int}"
 @using OpenBullet2.Services
-@using RuriLib.Models.Jobs 
+@using RuriLib.Models.Jobs
 @inject JobManagerService Manager
 
 @if (job == null)
@@ -13,6 +13,10 @@ else
     {
         case SingleRunJob x:
             <SingleRunJobViewer Job="x" />
+            break;
+
+        case MultiRunJob x:
+            <!--<MultiRunJobViewer Job="x" />-->
             break;
     }
 }

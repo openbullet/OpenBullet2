@@ -16,10 +16,21 @@
                         width: 100%;"
                      @onclick="@(() => SelectJob(job))">
                     <div class="card-body">
-                        <h5 class="card-title">Job #@job.Id (@job.Status)</h5>
+                        <h5 class="card-title">Job #@job.Id (@job.GetType().Name) (@job.Status)</h5>
                         @switch (job)
                         {
                             case SingleRunJob x:
+                                if (x.Config != null)
+                                {
+                                    <p class="card-text">Config: @x.Config.Metadata.Name by @x.Config.Metadata.Author</p>
+                                }
+                                else
+                                {
+                                    <p class="card-text">No config selected</p>
+                                }
+                                break;
+
+                            case MultiRunJob x:
                                 if (x.Config != null)
                                 {
                                     <p class="card-text">Config: @x.Config.Metadata.Name by @x.Config.Metadata.Author</p>

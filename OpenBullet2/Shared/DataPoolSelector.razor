@@ -1,0 +1,109 @@
+﻿@using OpenBullet2.Entities
+@using OpenBullet2.Models.Data
+@using OpenBullet2.Shared.Forms 
+@inject IModalService Modal
+
+<RadzenRadioButtonList @bind-Value="type" TValue="DataPoolType" Change="@((args) => Change(args))">
+    <Items>
+        <RadzenRadioButtonListItem Text="Wordlist" Value="DataPoolType.Wordlist" />
+        <RadzenRadioButtonListItem Text="File" Value="DataPoolType.File" />
+        <RadzenRadioButtonListItem Text="Range" Value="DataPoolType.Range" />
+        <RadzenRadioButtonListItem Text="Combinations" Value="DataPoolType.Combinations" />
+        <RadzenRadioButtonListItem Text="Infinite" Value="DataPoolType.Infinite" />
+    </Items>
+</RadzenRadioButtonList>
+
+<br />
+
+<EditForm Model="Options">
+    @switch (Options)
+    {
+        case WordlistDataPoolOptions x:
+            @if (selectedWordlist == null)
+            {
+                <p>No wordlist selected</p>
+            }
+            else
+            {
+                <p>@selectedWordlist.Name (@selectedWordlist.Total lines)</p>
+            }
+            <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectWordlist">Select Wordlist</button>
+            <br />
+            break;
+
+        case FileDataPoolOptions x:
+            <label>File Name:</label>
+            <InputText @bind-Value="x.FileName" />
+            break;
+
+        case RangeDataPoolOptions x:
+            <label>Start:</label>
+            <InputNumber @bind-Value="x.Start" />
+            <label>Amount:</label>
+            <InputNumber @bind-Value="x.Amount" />
+            <label>Step:</label>
+            <InputNumber @bind-Value="x.Step" />
+            <label>Pad:</label>
+            <InputCheckbox @bind-Value="x.Pad" />
+            <br />
+            break;
+
+        case CombinationsDataPoolOptions x:
+            <label>Character set:</label>
+            <InputText @bind-Value="x.CharSet" />
+            <label>Length:</label>
+            <InputNumber @bind-Value="x.Length" />
+            <p style="font-size: 12px; color: #ccc">
+                @Math.Pow(x.CharSet.Length, x.Length) combinations will be generated
+            </p>
+            break;
+
+        case InfiniteDataPoolOptions x:
+            <p style="font-style: italic;">No settings required.</p>
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter] public DataPoolOptions Options { get; set; }
+    DataPoolType type = DataPoolType.Wordlist;
+    WordlistEntity selectedWordlist;
+
+    enum DataPoolType
+    {
+        Wordlist,
+        File,
+        Range,
+        Combinations,
+        Infinite
+    }
+
+    void Change(DataPoolType? value)
+    {
+        if (value.HasValue)
+        {
+            Options = value.Value switch
+            {
+                DataPoolType.Wordlist => new WordlistDataPoolOptions() 
+                    { WordlistId = selectedWordlist == null ? -1 : selectedWordlist.Id },
+                DataPoolType.File => new FileDataPoolOptions(),
+                DataPoolType.Range => new RangeDataPoolOptions(),
+                DataPoolType.Combinations => new CombinationsDataPoolOptions(),
+                DataPoolType.Infinite => new InfiniteDataPoolOptions(),
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
+
+    async Task SelectWordlist()
+    {
+        var modal = Modal.Show<WordlistSelector>("Select Wordlist");
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            selectedWordlist = result.Data as WordlistEntity;
+            (Options as WordlistDataPoolOptions).WordlistId = selectedWordlist.Id;
+        }
+    }
+}

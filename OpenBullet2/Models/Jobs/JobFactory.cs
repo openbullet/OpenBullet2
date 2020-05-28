@@ -1,11 +1,11 @@
-﻿using OpenBullet2.Models.Hits;
+﻿using OpenBullet2.Models.Data;
+using OpenBullet2.Models.Hits;
+using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
-using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenBullet2.Models.Jobs
@@ -14,43 +14,29 @@ namespace OpenBullet2.Models.Jobs
     {
         private readonly ConfigService configService;
         private readonly RuriLibSettingsService settingsService;
-        private readonly SingletonDbHitRepository hitRepo;
+        private readonly IHitRepository hitRepo;
+        private readonly IProxyRepository proxyRepo;
+        private readonly IProxyGroupRepository proxyGroupsRepo;
+        private readonly IWordlistRepository wordlistRepo;
 
         public JobFactory(ConfigService configService, RuriLibSettingsService settingsService,
-            SingletonDbHitRepository hitRepo)
+            IHitRepository hitRepo, IProxyRepository proxyRepo, IProxyGroupRepository proxyGroupsRepo,
+            IWordlistRepository wordlistRepo)
         {
             this.configService = configService;
             this.settingsService = settingsService;
             this.hitRepo = hitRepo;
-        }
-
-        public Job CreateNew(JobType type)
-        {
-
-            return type switch
-            {
-                JobType.SingleRun => CreateSingleRun(),
-                JobType.MultiRun => new MultiRunJob(settingsService),
-                JobType.Spider => new SpiderJob(settingsService),
-                JobType.Ripper => new RipJob(settingsService),
-                JobType.SeleniumUnitTest => new SeleniumUnitTestJob(settingsService),
-                _ => throw new NotImplementedException()
-            };
-        }
-
-        private SingleRunJob CreateSingleRun()
-        {
-            return new SingleRunJob(settingsService)
-            {
-                HitOutputs = new List<IHitOutput> { new DatabaseHitOutput(hitRepo) }
-            };
+            this.proxyRepo = proxyRepo;
+            this.proxyGroupsRepo = proxyGroupsRepo;
+            this.wordlistRepo = wordlistRepo;
         }
 
         public Job FromOptions(int id, JobOptions options)
         {
-            var job = options switch
+            Job job = options switch
             {
                 SingleRunJobOptions x => MakeSingleRunJob(x),
+                MultiRunJobOptions x => MakeMultiRunJob(x),
                 _ => throw new NotImplementedException()
             };
 
@@ -77,6 +63,33 @@ namespace OpenBullet2.Models.Jobs
             // TODO: Move these to a HitsOutput factory!
             var dbOutput = job.HitOutputs.FirstOrDefault(o => o is DatabaseHitOutput);
             
+            if (dbOutput != null)
+            {
+                job.HitOutputs.Remove(dbOutput);
+                job.HitOutputs.Add(new DatabaseHitOutput(hitRepo));
+            }
+
+            return job;
+        }
+
+        private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
+        {
+            var job = new MultiRunJob(settingsService)
+            {
+                Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
+                CreationTime = DateTime.Now,
+                HitOutputs = options.HitOutputs,
+                ProxyMode = options.ProxyMode,
+                StartCondition = options.StartCondition
+            };
+
+            job.ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result;
+            job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;
+
+            // We have to re-initialize the DatabaseHitOutput and give it the singleton repository
+            // TODO: Move these to a HitsOutput factory!
+            var dbOutput = job.HitOutputs.FirstOrDefault(o => o is DatabaseHitOutput);
+
             if (dbOutput != null)
             {
                 job.HitOutputs.Remove(dbOutput);

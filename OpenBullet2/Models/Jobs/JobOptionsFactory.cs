@@ -1,32 +1,21 @@
-﻿using RuriLib.Models.Jobs;
+﻿using RuriLib.Models.Jobs.StartConditions;
 using System;
 
 namespace OpenBullet2.Models.Jobs
 {
     public class JobOptionsFactory
     {
-        public JobOptions GetOptions(Job job)
+        public JobOptions CreateNew(JobType type)
         {
-            return job switch
+            JobOptions options = type switch
             {
-                SingleRunJob x => BuildSingleRunOptions(x),
+                JobType.SingleRun => new SingleRunJobOptions(),
+                JobType.MultiRun => new MultiRunJobOptions(),
                 _ => throw new NotImplementedException()
             };
-        }
 
-        private SingleRunJobOptions BuildSingleRunOptions(SingleRunJob job)
-        {
-            return new SingleRunJobOptions
-            {
-                ConfigId = job.Config?.Id,
-                Data = job.Data,
-                Proxy = job.Proxy,
-                ProxyMode = job.ProxyMode,
-                ProxyType = job.ProxyType,
-                HitOutputs = job.HitOutputs,
-                StartCondition = job.StartCondition,
-                WordlistType = job.WordlistType
-            };
+            options.StartCondition = new RelativeTimeStartCondition();
+            return options;
         }
     }
 }

@@ -1,12 +1,18 @@
 ﻿@page "/jobs/create"
 @page "/jobs/create/{Type}"
-@using RuriLib.Models.Jobs 
+@using OpenBullet2.Models.Jobs
 
-@switch (job)
-{
-    case SingleRunJob x:
-        <SingleRunOptions Job="x" />
-        break;
-}
+<div style="margin-bottom: 20px;">
+    @switch (jobOptions)
+    {
+        case SingleRunJobOptions x:
+            <SingleRunOptions Options="x" />
+            break;
+
+        case MultiRunJobOptions x:
+            <MultiRunOptions Options="x" />
+            break;
+    }
+</div>
 
 <button class="btn btn-success" @onclick="Create">Create Job</button>

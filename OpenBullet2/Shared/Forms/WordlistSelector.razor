@@ -1,0 +1,67 @@
+﻿@using OpenBullet2.Entities 
+@using OpenBullet2.Helpers
+@inject IWordlistRepository WordlistRepo
+@inject IModalService ModalService
+
+<div class="container-fluid" style="overflow-y: auto; width: 1000px;">
+    <div class="row" style="height: 250px; overflow-y: auto;">
+        <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
+                    AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="130px"
+                    RowSelect="Preview" RowDoubleClick="Select">
+            <Columns>
+                <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="Name" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="Type" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="Purpose" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="Total" Width="100px" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="File Name" Width="300px" />
+            </Columns>
+        </RadzenGrid>
+    </div>
+    <div class="row" style="height: 250px; margin-top: 15px; overflow-y: auto;">
+        @foreach (var line in linesPreview)
+        {
+            <p style="font-family: Consolas;">@line</p>
+        }
+    </div>
+    <div class="row">
+        <button class="btn btn-success" @onclick="Select">Select</button>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    List<WordlistEntity> wordlists;
+    WordlistEntity selectedWordlist;
+    List<string> linesPreview = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        wordlists = await WordlistRepo.GetAll().ToListAsync();
+    }
+
+    void Preview(WordlistEntity wordlist)
+    {
+        selectedWordlist = wordlist;
+        var previewAmount = Math.Min(wordlist.Total, 10);
+
+        try
+        {
+            linesPreview = System.IO.File.ReadLines(wordlist.FileName).Take(previewAmount).ToList();
+        }
+        catch
+        {
+            linesPreview = new List<string>();
+        }
+    }
+
+    async Task Select()
+    {
+        if (selectedWordlist == null)
+        {
+            await js.AlertError("Uh-oh", "You must select a wordlist first");
+            return;
+        }
+
+        BlazoredModal.Close(ModalResult.Ok(selectedWordlist));
+    }
+}
