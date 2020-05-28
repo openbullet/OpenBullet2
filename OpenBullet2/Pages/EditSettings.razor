@@ -5,8 +5,10 @@
 @using RuriLib.Models.Configs 
 @using OpenBullet2.Services 
 @using RuriLib.Services 
+@using OpenBullet2.Helpers 
 @inject ConfigService ConfigService 
 @inject RuriLibSettingsService RuriLibSettings
+@inject NavigationManager Nav
 
 <h1>General</h1>
 <EditForm Model="settings.GeneralSettings">
@@ -171,6 +173,8 @@
     <br />
 </EditForm>
 
+<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">Restore Defaults</button>
+
 @code {
     ConfigSettings settings;
     List<string> continueStatuses;
@@ -221,5 +225,14 @@
         settings.ProxySettings.AllowedProxyTypes = allowedProxyTypes.ToArray();
         settings.DataSettings.AllowedWordlistTypes = allowedWordlistTypes.ToArray();
         settings.SeleniumSettings.QuitBrowserStatuses = quitBrowserStatuses.ToArray();
+    }
+
+    async Task RestoreDefaults()
+    {
+        if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
+        {
+            ConfigService.SelectedConfig.Settings = new ConfigSettings();
+            Nav.NavigateTo("/config/edit/settings");
+        }
     }
 }

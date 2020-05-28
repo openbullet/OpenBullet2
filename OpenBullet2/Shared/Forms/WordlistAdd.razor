@@ -95,6 +95,7 @@
             return;
 
         var fileInfo = await file.ReadFileInfoAsync();
+        wordlist.Name = Path.GetFileNameWithoutExtension(fileInfo.Name);
         max = fileInfo.Size;
         this.StateHasChanged();
 

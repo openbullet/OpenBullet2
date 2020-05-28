@@ -1,7 +1,9 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Components;
 using OpenBullet2.DTOs;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
@@ -21,6 +23,7 @@ namespace OpenBullet2.Pages
         [Inject] IProxyGroupRepository ProxyGroupsRepo { get; set; }
         [Inject] IProxyRepository ProxyRepo { get; set; }
 
+        InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups;
         private int currentGroupId = -1;
         private List<ProxyEntity> proxies;
@@ -74,6 +77,8 @@ namespace OpenBullet2.Pages
             {
                 groups.Add(result.Data as ProxyGroupEntity);
                 await js.AlertSuccess("Created", "The proxy group was created successfully!");
+                currentGroupId = groups.Last().Id;
+                await RefreshList();
             }
         }
 

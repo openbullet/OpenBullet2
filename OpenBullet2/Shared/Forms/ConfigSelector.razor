@@ -5,29 +5,25 @@
 @inject IModalService ModalService
 
 <div class="container-fluid" style="overflow-y: auto; width: 1000px;">
-    <div class="row" style="height: 500px;">
-        <div class="col-6">
-            <ul style="list-style: none; padding: unset;">
-                @foreach (var config in ConfigService.Configs)
-                {
-                    <li>
-                        <div style="cursor: pointer; 
-                             @(selectedConfig == config ? "background-color: #111" : "")" 
-                             @onclick="@(() => selectedConfig = config)"
-                             @ondblclick="Select">
-                            <span>@config.Metadata.Name by @config.Metadata.Author</span>
-                        </div>
-                    </li>
-                }
-            </ul>
-        </div>
-        <div class="col-6">
-            @if (selectedConfig != null)
-            {
-                <p>@selectedConfig.Metadata.Name by @selectedConfig.Metadata.Author</p>
-                <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
-            }
-        </div>
+    <div class="row" style="height: 250px; overflow-y: auto;">
+        <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
+                    AllowSorting="true" Data="@ConfigService.Configs" TItem="Config" ColumnWidth="130px"
+                    RowSelect="Preview" RowDoubleClick="Select">
+            <Columns>
+                <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="Name" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="Author" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="Category" />
+                <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="Proxies" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="Last Modified" />
+            </Columns>
+        </RadzenGrid>
+    </div>
+    <div class="row" style="height: 250px; margin-top: 15px; overflow-y: auto;">
+        @if (selectedConfig != null)
+        {
+            <p>@selectedConfig.Metadata.Name by @selectedConfig.Metadata.Author</p>
+            <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
+        }
     </div>
     <div class="row">
         <button class="btn btn-success" @onclick="Select">Select</button>
@@ -40,7 +36,7 @@
 
     void Preview(Config config)
     {
-
+        selectedConfig = config;
     }
 
     async Task Select()

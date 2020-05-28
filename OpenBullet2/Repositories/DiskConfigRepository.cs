@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace OpenBullet2.Repositories
 {
     public class DiskConfigRepository : IConfigRepository
     {
+        private string configDirectory = "Configs";
+
         public DiskConfigRepository()
         {
-            Directory.CreateDirectory("Configs");
+            Directory.CreateDirectory(configDirectory);
         }
 
         public async Task<List<Config>> GetAll()
@@ -19,7 +22,7 @@ namespace OpenBullet2.Repositories
             List<Config> configs = new List<Config>();
 
             // TODO: Parallelize this for max performance
-            foreach (var file in Directory.GetFiles("Configs").Where(file => file.EndsWith(".opk")))
+            foreach (var file in Directory.GetFiles(configDirectory).Where(file => file.EndsWith(".opk")))
             {
                 var config = await Get(Path.GetFileNameWithoutExtension(file));
                 configs.Add(config);
@@ -59,6 +62,7 @@ namespace OpenBullet2.Repositories
 
         public async Task Save(Config config)
         {
+            config.Metadata.LastModified = DateTime.Now;
             await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
         }
 
@@ -74,6 +78,6 @@ namespace OpenBullet2.Repositories
             => GetFileName(config.Id);
 
         private string GetFileName(string id)
-            => $"Configs/{id}.opk";
+            => $"{configDirectory}/{id}.opk";
     }
 }
