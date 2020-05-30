@@ -18,10 +18,7 @@
         </RadzenGrid>
     </div>
     <div class="row" style="height: 250px; margin-top: 15px; overflow-y: auto;">
-        @foreach (var line in linesPreview)
-        {
-            <p style="font-family: Consolas;">@line</p>
-        }
+        <textarea readonly>@linesPreview</textarea>
     </div>
     <div class="row">
         <button class="btn btn-success" @onclick="Select">Select</button>
@@ -32,7 +29,7 @@
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     List<WordlistEntity> wordlists;
     WordlistEntity selectedWordlist;
-    List<string> linesPreview = new List<string>();
+    string linesPreview = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,11 +43,12 @@
 
         try
         {
-            linesPreview = System.IO.File.ReadLines(wordlist.FileName).Take(previewAmount).ToList();
+            var lines = System.IO.File.ReadLines(wordlist.FileName).Take(previewAmount);
+            linesPreview = string.Join(Environment.NewLine, lines);
         }
         catch
         {
-            linesPreview = new List<string>();
+            linesPreview = string.Empty;
         }
     }
 

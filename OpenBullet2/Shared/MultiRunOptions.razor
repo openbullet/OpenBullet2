@@ -35,6 +35,14 @@
         }
     </InputSelect>
     <br />
+    <div style="width: 100px;">
+        <label style="margin-top: 15px;">Bots</label>
+        <InputNumber @bind-Value="Options.Bots" />
+    </div>
+    <div style="width: 100px;">
+        <label>Skip</label>
+        <InputNumber @bind-Value="Options.Skip" />
+    </div>
 </EditForm>
 
 <label style="color: orange; margin-top: 20px;">Proxy Source</label>

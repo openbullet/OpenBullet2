@@ -173,3 +173,9 @@
 .swal2-icon.swal2-error {
     border-color: #9e0000 !important;
 }
+
+.sidebar .oi {
+    font-size: 0.9rem;
+    width: 1.5rem;
+    margin-top: 3px;
+}

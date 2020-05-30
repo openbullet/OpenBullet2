@@ -4,8 +4,8 @@
 @inject ConfigService ConfigService
 @inject IModalService ModalService
 
-<div class="container-fluid" style="overflow-y: auto; width: 1000px;">
-    <div class="row" style="height: 250px; overflow-y: auto;">
+<div style="overflow-y: auto; width: 1000px;">
+    <div style="height: 250px; overflow-y: auto;">
         <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
                     AllowSorting="true" Data="@ConfigService.Configs" TItem="Config" ColumnWidth="130px"
                     RowSelect="Preview" RowDoubleClick="Select">
@@ -18,14 +18,18 @@
             </Columns>
         </RadzenGrid>
     </div>
-    <div class="row" style="height: 250px; margin-top: 15px; overflow-y: auto;">
+    <div style="height: 250px; margin-top: 15px; overflow-y: auto;">
         @if (selectedConfig != null)
         {
-            <p>@selectedConfig.Metadata.Name by @selectedConfig.Metadata.Author</p>
-            <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
+            <div style="width: 100%">
+                <p style="color: orange;">@selectedConfig.Metadata.Name by @selectedConfig.Metadata.Author</p>
+            </div>
+            <div style="width: 100%">
+                <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
+            </div>
         }
     </div>
-    <div class="row">
+    <div>
         <button class="btn btn-success" @onclick="Select">Select</button>
     </div>
 </div>

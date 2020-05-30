@@ -4,7 +4,7 @@
      color: @Descriptor.Category.ForegroundColor; cursor: pointer; border: solid 3px #000;"
      @onclick="@(() => SelectedDescriptor.InvokeAsync(Descriptor))">
     <div class="card-body">
-        <h5 class="card-title">@Descriptor.Name
+        <h5 class="card-text">@Descriptor.Name
             <span class="card-text oi @(isExpanded ? "oi-caret-top" : "oi-caret-bottom")" 
                   @onclick="SetExpanded" @onclick:stopPropagation="true"></span>
         </h5>

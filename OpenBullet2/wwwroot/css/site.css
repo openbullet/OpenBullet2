@@ -46,7 +46,7 @@ app {
 }
 
 .top-row {
-    height: 5.5rem;
+    height: 7.5rem;
     display: flex;
     align-items: center;
 }
@@ -330,4 +330,5 @@ select {
     color: white;
     border-radius: 5px;
     border: 1px solid black;
+    padding: 3px;
 }

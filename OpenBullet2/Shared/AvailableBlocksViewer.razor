@@ -7,7 +7,7 @@
             <div class="card" style="background-color: @category.BackgroundColor; cursor: pointer; margin-top: 5px; border: solid 3px #000;"
                  @onclick="@(() => SelectCategory(category))">
                 <div class="card-body" style="color: @category.ForegroundColor;">
-                    <h5 class="card-title">@category.Name</h5>
+                    <h5 class="card-text">@category.Name</h5>
                 </div>
             </div>
         </ElementTemplate>

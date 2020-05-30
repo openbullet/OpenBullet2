@@ -2,13 +2,39 @@
 @using Helpers 
 @using System.Threading
 @using OpenBullet2.Services
+@using System.Globalization 
 @inject MetricsService Metrics 
 
-<h2>Welcome to OpenBullet 2</h2>
+<h2 style="margin-bottom: 20px;">Welcome to OpenBullet 2</h2>
 
-<p>
-    <b>Webserver Uptime:</b> @Metrics.UpTime.ToReadableString()
-</p>
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="row">Local Time</th>
+            <td>@Metrics.ServerTime.ToLongDateString() - @Metrics.ServerTime.ToLongTimeString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Webserver Uptime</th>
+            <td>@Metrics.UpTime.ToReadableString()</td>
+        </tr>
+        <tr>
+            <th scope="row">Operative System</th>
+            <td>@Metrics.OS</td>
+        </tr>
+        <tr>
+            <th scope="row">Current Working Directory</th>
+            <td>@Metrics.CWD</td>
+        </tr>
+        <tr>
+            <th scope="row">CPU Usage</th>
+            <td>@(Metrics.CpuUsage.ToString("0.##", CultureInfo.InvariantCulture)) %</td>
+        </tr>
+        <tr>
+            <th scope="row">Memory Usage</th>
+            <td>@BytesToString(Metrics.MemoryUsage)</td>
+        </tr>
+    </tbody>
+</table>
 
 @code {
     protected override void OnInitialized()
@@ -22,5 +48,21 @@
         {
             await InvokeAsync(StateHasChanged);
         }), null, 1000, 1000);
+
+        var cpuTimer = new Timer(new TimerCallback(async _ =>
+        {
+            await Metrics.UpdateCpuUsage();
+        }), null, 500, 500);
+    }
+
+    private string BytesToString(long byteCount)
+    {
+        string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
+        if (byteCount == 0)
+            return "0" + $" {suf[0]}";
+        long bytes = Math.Abs(byteCount);
+        int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+        double num = Math.Round(bytes / Math.Pow(1024, place), 1);
+        return (Math.Sign(byteCount) * num).ToString("0.##", CultureInfo.InvariantCulture) + $" {suf[place]}";
     }
 }
