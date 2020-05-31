@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Hits;
+﻿using OpenBullet2.Models.Hits;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace OpenBullet2.Models.Jobs
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public string Proxy { get; set; } = string.Empty;
         public ProxyType ProxyType { get; set; } = ProxyType.Http;
-        public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
+        public List<HitOutputOptions> HitOutputs { get; set; } = new List<HitOutputOptions>();
     }
 }

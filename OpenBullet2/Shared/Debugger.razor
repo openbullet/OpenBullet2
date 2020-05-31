@@ -43,7 +43,6 @@
                 <label>Test Data</label>
                 <InputText @bind-Value="options.TestData" />
                 <label style="margin-top: 15px;">Wordlist Type</label>
-                <br />
                 <InputSelect @bind-Value="options.WordlistType">
                     @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
                     {

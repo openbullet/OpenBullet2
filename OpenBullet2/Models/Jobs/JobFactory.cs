@@ -51,7 +51,6 @@ namespace OpenBullet2.Models.Jobs
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
                 Data = options.Data,
-                HitOutputs = options.HitOutputs,
                 Proxy = options.Proxy,
                 ProxyMode = options.ProxyMode,
                 ProxyType = options.ProxyType,
@@ -59,15 +58,7 @@ namespace OpenBullet2.Models.Jobs
                 StartCondition = options.StartCondition
             };
 
-            // We have to re-initialize the DatabaseHitOutput and give it the singleton repository
-            // TODO: Move these to a HitsOutput factory!
-            var dbOutput = job.HitOutputs.FirstOrDefault(o => o is DatabaseHitOutput);
-            
-            if (dbOutput != null)
-            {
-                job.HitOutputs.Remove(dbOutput);
-                job.HitOutputs.Add(new DatabaseHitOutput(hitRepo));
-            }
+            job.HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList();
 
             return job;
         }
@@ -78,23 +69,13 @@ namespace OpenBullet2.Models.Jobs
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
-                HitOutputs = options.HitOutputs,
                 ProxyMode = options.ProxyMode,
                 StartCondition = options.StartCondition
             };
 
+            job.HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList();
             job.ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result;
             job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;
-
-            // We have to re-initialize the DatabaseHitOutput and give it the singleton repository
-            // TODO: Move these to a HitsOutput factory!
-            var dbOutput = job.HitOutputs.FirstOrDefault(o => o is DatabaseHitOutput);
-
-            if (dbOutput != null)
-            {
-                job.HitOutputs.Remove(dbOutput);
-                job.HitOutputs.Add(new DatabaseHitOutput(hitRepo));
-            }
 
             return job;
         }

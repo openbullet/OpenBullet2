@@ -31,8 +31,14 @@ namespace OpenBullet2.Pages
 
         private async Task ReloadConfigs()
         {
-            ConfigService.Configs = await ConfigRepo.GetAll();
-            configs = ConfigService.Configs;
+            if (await js.Confirm("Are you sure?", "This will reload all configs from disk, so all unsaved changes will be lost. Do you want to proceed?"))
+            {
+                ConfigService.Configs = await ConfigRepo.GetAll();
+                configs = ConfigService.Configs;
+                
+                ConfigService.SelectedConfig = null;
+                selectedConfig = null;
+            }
         }
 
         private void SelectConfig(Config config)
