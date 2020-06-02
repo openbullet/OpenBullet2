@@ -1,18 +1,25 @@
 ﻿<h5>Log</h5>
 <div class="generic-log" style="margin-bottom: 30px;">
-    @foreach (var entry in entries.Take(Math.Min(20, entries.Count)))
+    @lock (listLock)
     {
-        <span style="color: @entry.Color;">@entry.Message</span><br />
+        foreach (var entry in entries.Take(Math.Min(20, entries.Count)))
+        {
+            <span style="color: @entry.Color;">@entry.Message</span><br />
+        }
     }
 </div>
 
 @code {
     List<LogEntry> entries = new List<LogEntry>();
+    object listLock = new object();
 
     public void Log(LogKind kind, string message, string color)
     {
         var entry = $"[{DateTime.Now.ToLongTimeString()}] {message.Replace("\r\n", " ").Replace("\n", " ")}";
-        entries.Insert(0, new LogEntry(entry, color));
+        lock (listLock)
+        {
+            entries.Insert(0, new LogEntry(entry, color));
+        }
         InvokeAsync(StateHasChanged);
     }
 

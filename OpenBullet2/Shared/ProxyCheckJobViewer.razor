@@ -54,7 +54,8 @@
             break;
 
         case TaskManagerStatus.Stopping:
-            <span><i>Stopping... please wait until the current tasks finished processing</i></span>
+            <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
             break;
     }
 </div>
