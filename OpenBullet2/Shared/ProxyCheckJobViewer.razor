@@ -52,6 +52,10 @@
         case TaskManagerStatus.Pausing:
             <span><i>Pausing... please wait until the current tasks finished processing</i></span>
             break;
+
+        case TaskManagerStatus.Stopping:
+            <span><i>Stopping... please wait until the current tasks finished processing</i></span>
+            break;
     }
 </div>
 
@@ -111,17 +115,24 @@
         logger.LogError($"Task Error ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
     }
 
+    private void LogCompleted(object sender, EventArgs e)
+    {
+        logger.LogInfo($"The Task Manager completed all of its work");
+    }
+
     private void TryHookLogger()
     {
         try { Job.Manager.OnResult -= LogResult; } catch { }
         try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
         try { Job.Manager.OnError -= LogError; } catch { }
+        try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
 
         try
         {
             Job.Manager.OnResult += LogResult;
             Job.Manager.OnTaskError += LogTaskError;
             Job.Manager.OnError += LogError;
+            Job.Manager.OnCompleted += LogCompleted;
         }
         catch { }
     }
@@ -145,8 +156,8 @@
     {
         try
         {
+            logger.LogInfo("Sending soft stop signal");
             await Job.Stop();
-            logger.LogInfo("Stopped checking");
         }
         catch (Exception ex)
         {
@@ -158,8 +169,8 @@
     {
         try
         {
+            logger.LogInfo("Sending hard abort signal");
             await Job.Abort();
-            logger.LogInfo("Aborted checking");
         }
         catch (Exception ex)
         {
@@ -171,8 +182,9 @@
     {
         try
         {
+            logger.LogInfo("Sending pause signal");
             await Job.Pause();
-            logger.LogInfo("Paused checking");
+            logger.LogInfo("The Task Manager was paused");
         }
         catch (Exception ex)
         {
