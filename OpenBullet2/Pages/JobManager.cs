@@ -8,6 +8,7 @@ using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using RuriLib.Services;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -25,6 +26,8 @@ namespace OpenBullet2.Pages
         
         [Inject] IModalService Modal { get; set; }
         [Inject] NavigationManager Nav { get; set; }
+
+        private object removeLock = new object();
 
         protected override async Task OnInitializedAsync()
         {
@@ -70,9 +73,26 @@ namespace OpenBullet2.Pages
 
         public async Task Remove(Job job)
         {
-            var entity = await JobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
-            await JobRepo.Delete(entity);
-            Manager.Jobs.Remove(job);
+            while (!Monitor.TryEnter(removeLock))
+                await Task.Delay(100);
+
+            // If the user already deleted this job (e.g. clicked remove twice)
+            if (!Manager.Jobs.Contains(job))
+            {
+                Monitor.Exit(removeLock);
+                return;
+            }
+
+            try
+            {
+                var entity = await JobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
+                await JobRepo.Delete(entity);
+                Manager.Jobs.Remove(job);
+            }
+            finally
+            {
+                Monitor.Exit(removeLock);
+            }
         }
 
         public Task RemoveAll()
