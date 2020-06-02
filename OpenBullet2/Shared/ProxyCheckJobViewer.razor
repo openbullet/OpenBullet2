@@ -79,6 +79,11 @@
     [Parameter] public ProxyCheckJob Job { get; set; }
     int refreshInterval = 1000;
 
+    protected override void OnInitialized()
+    {
+        PeriodicRefresh(refreshInterval);
+    }
+
     private async Task Start()
     {
         try

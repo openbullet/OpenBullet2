@@ -7,7 +7,14 @@ namespace OpenBullet2.Models.Proxies
     {
         public Proxy FromEntity(ProxyEntity entity)
         {
-            return new Proxy(entity.Host, entity.Port, entity.Type, entity.Username, entity.Password);
+            return new Proxy(entity.Host, entity.Port, entity.Type, entity.Username, entity.Password) 
+            { 
+                Id = entity.Id,
+                Country = entity.Country,
+                WorkingStatus = entity.Status,
+                LastChecked = entity.LastChecked,
+                Ping = entity.Ping
+            };
         }
     }
 }
