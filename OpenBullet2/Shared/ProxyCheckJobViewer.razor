@@ -141,5 +141,8 @@
             await InvokeAsync(StateHasChanged);
             await Task.Delay(Math.Max(50, interval));
         }
+
+        // A final one to refresh the button status
+        await InvokeAsync(StateHasChanged);
     }
 }

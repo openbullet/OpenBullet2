@@ -31,6 +31,11 @@ namespace OpenBullet2.Models.Proxies
 
                 await proxyRepo.Update(entity);
             }
+            catch (ObjectDisposedException)
+            {
+                // If we are here, it means we deleted the job but the task manager was still running
+                // so we don't need to put anything in the database and we can safely ignore the exception.
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
