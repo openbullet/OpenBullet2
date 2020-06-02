@@ -1,5 +1,4 @@
-﻿<h5>Log</h5>
-<div class="generic-log" style="margin-bottom: 30px;">
+﻿<div class="generic-log" style="margin-bottom: 30px;">
     @lock (listLock)
     {
         foreach (var entry in entries.Take(Math.Min(20, entries.Count)))

@@ -2,6 +2,9 @@
 @using RuriLib.Models.Jobs.Threading
 @using OpenBullet2.Helpers
 @using RuriLib.Models.Proxies 
+@using System.Globalization
+@using OpenBullet2.Shared.Forms
+@inject IModalService Modal 
 
 <div>
     <p style="color: orange;"><b>Job Options</b></p>
@@ -25,7 +28,17 @@
             </tr>
             <tr>
                 <th scope="row">Bots</th>
-                <td>@Job.Bots</td>
+                <td>
+                    <span style="margin-right: 10px;">@Job.Bots</span>
+                    @if (!changingBots)
+                    {
+                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> Change</button>
+                    }
+                    else
+                    {
+                        <span><i>Changing... please wait</i></span>
+                    }
+                </td>
             </tr>
         </tbody>
     </table>
@@ -60,6 +73,11 @@
     }
 </div>
 
+<div class="progress mt-3">
+    <div class="progress-bar" role="progressbar" 
+         style="width: @((Job.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+</div>
+
 <div class="mt-2">
     <p style="color: orange;"><b>Stats</b></p>
     <table class="table">
@@ -88,11 +106,27 @@
     [Parameter] public ProxyCheckJob Job { get; set; }
     int refreshInterval = 1000;
     GenericLogger logger;
+    bool changingBots = false;
 
     protected override void OnInitialized()
     {
         PeriodicRefresh(refreshInterval);
         TryHookLogger();
+    }
+
+    private async Task ChangeBots()
+    {
+        var modal = Modal.Show<BotsSelector>("Edit bots amount");
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            var newAmount = (int)result.Data;
+            changingBots = true;
+            await Job.Manager.SetConcurrentTasks(newAmount);
+            Job.Bots = newAmount;
+            changingBots = false;
+        }
     }
 
     private void LogResult(object sender, ResultDetails<ProxyCheckerInput, Proxy> details)
