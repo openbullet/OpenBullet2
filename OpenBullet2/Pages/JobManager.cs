@@ -10,6 +10,7 @@ using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
 using RuriLib.Services;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -103,12 +104,18 @@ namespace OpenBullet2.Pages
             }
         }
 
-        public Task RemoveAll()
+        public async Task RemoveAll()
         {
+            var notIdleJobs = Manager.Jobs.Where(j => j.Status != TaskManagerStatus.Idle);
+
+            if (notIdleJobs.Count() > 0)
+            {
+                await js.AlertError($"Job #{notIdleJobs.First().Id} not idle", "Please stop or abort the job before deleting it");
+                return;
+            }
+
             JobRepo.Purge();
             Manager.Jobs.Clear();
-
-            return Task.CompletedTask;
         }
     }
 }
