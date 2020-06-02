@@ -1,0 +1,48 @@
+﻿@using OpenBullet2.Models.Jobs
+@using RuriLib.Services
+@using OpenBullet2.Entities
+@inject RuriLibSettingsService RuriLibSettings
+@inject IProxyGroupRepository ProxyGroupRepo
+
+<label style="color: orange;">Start Condition</label>
+<br />
+<div style="margin-bottom: 20px;">
+    <StartConditionSelector StartCondition="Options.StartCondition" />
+</div>
+
+<EditForm Model="Options">
+    <div style="width: 100px;">
+        <label style="margin-top: 15px;">Bots</label>
+        <InputNumber @bind-Value="Options.Bots" />
+    </div>
+    <label>Timeout (milliseconds)</label>
+    <div style="width: 100px;">
+        <InputNumber @bind-Value="Options.TimeoutMilliseconds" />
+    </div>
+    <label>Proxy Group</label>
+    <InputSelectNumber T="int" @bind-Value="Options.GroupId">
+        <option value="-1">All</option>
+        @foreach (var group in groups)
+        {
+            <option value="@group.Id">@group.Name</option>
+        }
+    </InputSelectNumber>
+    <br />
+    <label style="margin-top: 15px;">Check only untested</label>
+    <InputCheckbox @bind-Value="Options.CheckOnlyUntested" />
+    <br />
+    <label>Url</label>
+    <InputText @bind-Value="Options.Url" />
+    <label>Success Key</label>
+    <InputText @bind-Value="Options.SuccessKey" />
+</EditForm>
+
+@code {
+    [Parameter] public ProxyCheckJobOptions Options { get; set; }
+    List<ProxyGroupEntity> groups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await ProxyGroupRepo.GetAll().ToListAsync();
+    }
+}

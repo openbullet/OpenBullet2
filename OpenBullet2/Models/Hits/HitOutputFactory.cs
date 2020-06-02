@@ -1,9 +1,7 @@
 ﻿using OpenBullet2.Repositories;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
-using RuriLib.Services;
 using System;
-using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Hits
 {

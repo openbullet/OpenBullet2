@@ -1,0 +1,140 @@
+﻿@using RuriLib.Models.Jobs
+@using RuriLib.Models.Jobs.Threading
+@using OpenBullet2.Helpers
+
+<div>
+    <p style="color: orange;"><b>Job Options</b></p>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th scope="row">Url</th>
+                <td>@Job.Url</td>
+            </tr>
+            <tr>
+                <th scope="row">Success key</th>
+                <td>@Job.SuccessKey</td>
+            </tr>
+            <tr>
+                <th scope="row">Check only untested</th>
+                <td>@Job.CheckOnlyUntested.ToString()</td>
+            </tr>
+            <tr>
+                <th scope="row">Timeout (ms)</th>
+                <td>@Job.Timeout.TotalMilliseconds</td>
+            </tr>
+            <tr>
+                <th scope="row">Bots</th>
+                <td>@Job.Bots</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p style="color: orange;"><b>Controls</b></p>
+<div class="list-group list-group-horizontal">
+    @switch (Job.Status)
+    {
+        case TaskManagerStatus.Idle:
+            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            break;
+
+        case TaskManagerStatus.Paused:
+            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
+            break;
+
+        case TaskManagerStatus.Running:
+            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
+            break;
+
+        case TaskManagerStatus.Pausing:
+            <span><i>Pausing... please wait until the current tasks finished processing</i></span>
+            break;
+    }
+</div>
+
+<div class="mt-2">
+    <p style="color: orange;"><b>Stats</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Total</th>
+                <th scope="col">Tested</th>
+                <th scope="col" style="color: greenyellow;">Working</th>
+                <th scope="col" style="color: tomato;">NotWorking</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Job.Total</td>
+                <td>@Job.Tested</td>
+                <td style="color: greenyellow;">@Job.Working</td>
+                <td style="color: tomato;">@Job.NotWorking</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter] public ProxyCheckJob Job { get; set; }
+    int refreshInterval = 1000;
+
+    private async Task Start()
+    {
+        try
+        {
+            await Job.Start();
+            PeriodicRefresh(refreshInterval);
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Stop()
+    {
+        try
+        {
+            await Job.Stop();
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Pause()
+    {
+        try
+        {
+            await Job.Pause();
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Resume()
+    {
+        try
+        {
+            await Job.Resume();
+            PeriodicRefresh(refreshInterval);
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async void PeriodicRefresh(int interval)
+    {
+        while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
+        {
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(Math.Max(50, interval));
+        }
+    }
+}

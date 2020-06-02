@@ -68,6 +68,7 @@ namespace OpenBullet2.Pages
             {
                 SingleRunJob _ => JobType.SingleRun,
                 MultiRunJob _ => JobType.MultiRun,
+                ProxyCheckJob _ => JobType.ProxyCheck,
                 RipJob _ => JobType.Ripper,
                 SpiderJob _ => JobType.Spider,
                 SeleniumUnitTestJob _ => JobType.SeleniumUnitTest,

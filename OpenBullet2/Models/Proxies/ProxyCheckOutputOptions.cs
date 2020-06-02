@@ -1,0 +1,6 @@
+﻿namespace OpenBullet2.Models.Proxies
+{
+    public abstract class ProxyCheckOutputOptions
+    {
+    }
+}

@@ -4,6 +4,7 @@
     {
         SingleRun,
         MultiRun,
+        ProxyCheck,
         Spider,
         Ripper,
         SeleniumUnitTest

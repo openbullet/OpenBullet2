@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using OpenBullet2.Entities;
+﻿using OpenBullet2.Entities;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
@@ -9,7 +8,6 @@ namespace OpenBullet2.Models.Hits
 {
     public class DatabaseHitOutput : IHitOutput
     {
-        [JsonIgnore]
         private readonly IHitRepository hitRepo;
 
         public DatabaseHitOutput(IHitRepository hitRepo)

@@ -1,5 +1,4 @@
 ﻿using OpenBullet2.Models.Hits;
-using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using System.Collections.Generic;

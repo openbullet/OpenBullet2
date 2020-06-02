@@ -7,38 +7,44 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-3">
-            <h5>Current stack</h5>
-            <StackViewer Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+            <div style="height: 700px; overflow-y: auto;">
+                <h5>Current stack</h5>
+                <StackViewer Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+            </div>
         </div>
         <div class="col-6">
-            <h5>Block information</h5>
-            @if (selectedBlock != null)
-            {
-                @if (selectedBlock is KeycheckBlockInstance)
+            <div style="height: 700px; overflow-y: auto;">
+                <h5>Block information</h5>
+                @if (selectedBlock != null)
                 {
-                    <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
-                }
-                else if (selectedBlock is LoliCodeBlockInstance)
-                {
-                    <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />
+                    @if (selectedBlock is KeycheckBlockInstance)
+                    {
+                        <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
+                    }
+                    else if (selectedBlock is LoliCodeBlockInstance)
+                    {
+                        <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />
+                    }
+                    else
+                    {
+                        <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" />
+                    }
                 }
                 else
                 {
-                    <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" />
+                    <text>Select a block to display its settings</text>
                 }
-            }
-            else
-            {
-                <text>Select a block to display its settings</text>
-            }
+            </div>
         </div>
         <div class="col-3">
-            <h5>Available blocks</h5>
-            <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
+            <div style="height: 700px; overflow-y: auto;">
+                <h5>Available blocks</h5>
+                <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
+            </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-top: 30px;">
         <Debugger Config="config" />
     </div>
 </div>

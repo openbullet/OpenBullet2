@@ -39,10 +39,10 @@
 @code {
     protected override void OnInitialized()
     {
-        RefreshUptime();
+        StartPeriodicRefresh();
     }
 
-    private void RefreshUptime()
+    private void StartPeriodicRefresh()
     {
         var timer = new Timer(new TimerCallback(async _ =>
         {

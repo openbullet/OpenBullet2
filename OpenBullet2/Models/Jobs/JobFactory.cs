@@ -1,11 +1,14 @@
-﻿using OpenBullet2.Models.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Jobs;
+using RuriLib.Models.Proxies;
 using RuriLib.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenBullet2.Models.Jobs
@@ -37,6 +40,7 @@ namespace OpenBullet2.Models.Jobs
             {
                 SingleRunJobOptions x => MakeSingleRunJob(x),
                 MultiRunJobOptions x => MakeMultiRunJob(x),
+                ProxyCheckJobOptions x => MakeProxyCheckJob(x),
                 _ => throw new NotImplementedException()
             };
 
@@ -76,6 +80,34 @@ namespace OpenBullet2.Models.Jobs
             job.HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList();
             job.ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result;
             job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;
+
+            return job;
+        }
+
+        private ProxyCheckJob MakeProxyCheckJob(ProxyCheckJobOptions options)
+        {
+            var job = new ProxyCheckJob(settingsService)
+            {
+                StartCondition = options.StartCondition,
+                Bots = options.Bots,
+                CheckOnlyUntested = options.CheckOnlyUntested,
+                Url = options.Url,
+                SuccessKey = options.SuccessKey,
+                Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds)
+            };
+
+            var factory = new ProxyFactory();
+            var entities = options.GroupId == -1
+                ? proxyRepo.GetAll().ToListAsync().Result
+                : proxyRepo.GetAll().Where(p => p.GroupId == options.GroupId).ToListAsync().Result;
+
+            job.Proxies = entities.Select(e => factory.FromEntity(e));
+            job.ProxyOutput = new ProxyCheckOutputFactory(proxyRepo).FromOptions(options.CheckOutput);
+
+            job.Total = entities.Count();
+            job.Tested = entities.Count(p => p.Status != ProxyWorkingStatus.Untested);
+            job.Working = entities.Count(p => p.Status == ProxyWorkingStatus.Working);
+            job.NotWorking = entities.Count(p => p.Status == ProxyWorkingStatus.NotWorking);
 
             return job;
         }
