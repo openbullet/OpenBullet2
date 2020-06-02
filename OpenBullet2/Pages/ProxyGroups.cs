@@ -7,9 +7,12 @@ using OpenBullet2.Components;
 using OpenBullet2.DTOs;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
+using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
+using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using Radzen.Blazor;
+using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +25,7 @@ namespace OpenBullet2.Pages
         [Inject] IModalService Modal { get; set; }
         [Inject] IProxyGroupRepository ProxyGroupsRepo { get; set; }
         [Inject] IProxyRepository ProxyRepo { get; set; }
+        [Inject] JobManagerService JobManagerService { get; set; }
 
         InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups;
@@ -104,6 +108,23 @@ namespace OpenBullet2.Pages
             {
                 await js.AlertError("Hmm", "Please select an actual group first");
                 return;
+            }
+
+            // TODO: Find a better way to do this
+            // Get the first proxy of every ProxyCheckJob
+            var firstProxies = JobManagerService.Jobs.OfType<ProxyCheckJob>()
+                .Select(j => j.Proxies.FirstOrDefault()).Where(p => p != null);
+
+            // Run through all the list of proxies
+            foreach (var f in firstProxies)
+            {
+                // If we find that a proxy which is in use by a job belongs to the group to delete
+                if (proxies.Any(p => p.Id == f.Id))
+                {
+                    // Prompt error and return
+                    await js.AlertError("Group in use", "A job is currently using this proxy group. Please stop and remove the job from the manager and try again.");
+                    return;
+                }
             }
 
             var groupToDelete = groups.First(g => g.Id == currentGroupId);
