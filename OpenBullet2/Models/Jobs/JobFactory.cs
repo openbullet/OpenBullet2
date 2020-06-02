@@ -101,6 +101,9 @@ namespace OpenBullet2.Models.Jobs
                 ? proxyRepo.GetAll().ToListAsync().Result
                 : proxyRepo.GetAll().Where(p => p.GroupId == options.GroupId).ToListAsync().Result;
 
+            if (!options.CheckOnlyUntested)
+                entities.ForEach(e => e.Status = ProxyWorkingStatus.Untested);
+
             job.Proxies = entities.Select(e => factory.FromEntity(e));
             job.ProxyOutput = new ProxyCheckOutputFactory(proxyRepo).FromOptions(options.CheckOutput);
 
