@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
+using RuriLib.Models.Jobs.Threading;
 using RuriLib.Services;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,6 +75,12 @@ namespace OpenBullet2.Pages
 
         public async Task Remove(Job job)
         {
+            if (job.Status != TaskManagerStatus.Idle)
+            {
+                await js.AlertError("Job not idle", "Please stop or abort the job before deleting it");
+                return;
+            }
+
             while (!Monitor.TryEnter(removeLock))
                 await Task.Delay(100);
 
