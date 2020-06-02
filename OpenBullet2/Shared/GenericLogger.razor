@@ -11,7 +11,7 @@
 
     public void Log(LogKind kind, string message, string color)
     {
-        var entry = $"[{DateTime.Now.ToShortTimeString()}] {message.Replace("\r\n", " ").Replace("\n", " ")}";
+        var entry = $"[{DateTime.Now.ToLongTimeString()}] {message.Replace("\r\n", " ").Replace("\n", " ")}";
         entries.Insert(0, new LogEntry(entry, color));
         InvokeAsync(StateHasChanged);
     }
