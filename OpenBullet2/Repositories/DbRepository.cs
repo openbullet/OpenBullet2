@@ -2,6 +2,7 @@
 using OpenBullet2.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Repositories
@@ -9,6 +10,7 @@ namespace OpenBullet2.Repositories
     public class DbRepository<T> : IRepository<T> where T : Entity
     {
         protected readonly ApplicationDbContext context;
+        private object dbLock = new object();
 
         public DbRepository(ApplicationDbContext context)
         {
@@ -17,31 +19,81 @@ namespace OpenBullet2.Repositories
 
         public virtual async Task Add(T entity)
         {
-            context.Add(entity);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.Add(entity);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual async Task Add(IEnumerable<T> entities)
         {
-            context.AddRange(entities);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.AddRange(entities);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual async Task Delete(T entity)
         {
-            context.Remove(entity);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.Remove(entity);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual async Task Delete(IEnumerable<T> entities)
         {
-            context.RemoveRange(entities);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.RemoveRange(entities);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual async Task<T> Get(int id)
         {
-            return await GetAll().FirstAsync(e => e.Id == id);
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                return await GetAll().FirstAsync(e => e.Id == id);
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual IQueryable<T> GetAll()
@@ -51,14 +103,34 @@ namespace OpenBullet2.Repositories
 
         public virtual async Task Update(T entity)
         {
-            context.Update(entity);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.Update(entity);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
 
         public virtual async Task Update(IEnumerable<T> entities)
         {
-            context.UpdateRange(entities);
-            await context.SaveChangesAsync();
+            while (!Monitor.TryEnter(dbLock))
+                await Task.Delay(10);
+
+            try
+            {
+                context.UpdateRange(entities);
+                await context.SaveChangesAsync();
+            }
+            finally
+            {
+                Monitor.Exit(dbLock);
+            }
         }
     }
 }

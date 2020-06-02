@@ -9,7 +9,6 @@ namespace OpenBullet2.Models.Proxies
     public class DatabaseProxyCheckOutput : IProxyCheckOutput
     {
         private readonly IProxyRepository proxyRepo;
-        private object dbLock = new object();
 
         public DatabaseProxyCheckOutput(IProxyRepository proxyRepo)
         {
@@ -18,9 +17,6 @@ namespace OpenBullet2.Models.Proxies
 
         public async Task Store(Proxy proxy)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(100);
-
             try
             {
                 var entity = await proxyRepo.Get(proxy.Id);
@@ -35,14 +31,6 @@ namespace OpenBullet2.Models.Proxies
             {
                 // If we are here, it means we deleted the job but the task manager was still running
                 // so we don't need to put anything in the database and we can safely ignore the exception.
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                Monitor.Exit(dbLock);
             }
         }
     }
