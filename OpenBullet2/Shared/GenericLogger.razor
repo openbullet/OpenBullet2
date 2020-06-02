@@ -1,0 +1,44 @@
+﻿<h5>Log</h5>
+<div class="generic-log" style="margin-bottom: 30px;">
+    @foreach (var entry in entries.Take(Math.Min(20, entries.Count)))
+    {
+        <span style="color: @entry.Color;">@entry.Message</span><br />
+    }
+</div>
+
+@code {
+    List<LogEntry> entries = new List<LogEntry>();
+
+    public void Log(LogKind kind, string message, string color)
+    {
+        var entry = $"[{DateTime.Now.ToShortTimeString()}] {message.Replace("\r\n", " ").Replace("\n", " ")}";
+        entries.Insert(0, new LogEntry(entry, color));
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void LogInfo(string message) { Log(LogKind.Info, message, "white"); }
+    public void LogSuccess(string message) { Log(LogKind.Success, message, "greenyellow"); }
+    public void LogWarning(string message) { Log(LogKind.Warning, message, "orange"); }
+    public void LogError(string message) { Log(LogKind.Error, message, "tomato"); }
+    public void Clear() { entries.Clear(); }
+
+    public enum LogKind
+    {
+        Info,
+        Success,
+        Warning,
+        Error
+    }
+
+    struct LogEntry
+    {
+        public string Message { get; set; }
+        public string Color { get; set; }
+
+        public LogEntry(string message, string color)
+        {
+            Message = message;
+            Color = color;
+        }
+    }
+}

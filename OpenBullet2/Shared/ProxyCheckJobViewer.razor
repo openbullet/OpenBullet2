@@ -1,6 +1,7 @@
 ﻿@using RuriLib.Models.Jobs
 @using RuriLib.Models.Jobs.Threading
 @using OpenBullet2.Helpers
+@using RuriLib.Models.Proxies 
 
 <div>
     <p style="color: orange;"><b>Job Options</b></p>
@@ -75,13 +76,53 @@
     </table>
 </div>
 
+<GenericLogger @ref="logger" />
+
 @code {
     [Parameter] public ProxyCheckJob Job { get; set; }
     int refreshInterval = 1000;
+    GenericLogger logger;
 
     protected override void OnInitialized()
     {
         PeriodicRefresh(refreshInterval);
+        TryHookLogger();
+    }
+
+    private void LogResult(object sender, ResultDetails<ProxyCheckerInput, Proxy> details)
+    {
+        var result = details.Result;
+
+        if (result.WorkingStatus == ProxyWorkingStatus.Working)
+            logger.LogSuccess($"Proxy checked ({result.Host}:{result.Port}) with ping {result.Ping} and country {result.Country}");
+        else
+            logger.LogWarning($"Proxy checked ({result.Host}:{result.Port}) as not working");
+    }
+
+    private void LogError(object sender, Exception ex)
+    {
+        logger.LogError($"Task Manager Error! {ex.Message}");
+    }
+
+    private void LogTaskError(object sender, ErrorDetails<ProxyCheckerInput> details)
+    {
+        var proxy = details.Item.Proxy;
+        logger.LogError($"Task Error ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
+    }
+
+    private void TryHookLogger()
+    {
+        try { Job.Manager.OnResult -= LogResult; } catch { }
+        try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
+        try { Job.Manager.OnError -= LogError; } catch { }
+
+        try
+        {
+            Job.Manager.OnResult += LogResult;
+            Job.Manager.OnTaskError += LogTaskError;
+            Job.Manager.OnError += LogError;
+        }
+        catch { }
     }
 
     private async Task Start()
@@ -89,6 +130,8 @@
         try
         {
             await Job.Start();
+            TryHookLogger();
+            logger.LogInfo("Started checking");
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)
@@ -102,6 +145,7 @@
         try
         {
             await Job.Stop();
+            logger.LogInfo("Stopped checking");
         }
         catch (Exception ex)
         {
@@ -114,6 +158,7 @@
         try
         {
             await Job.Pause();
+            logger.LogInfo("Paused checking");
         }
         catch (Exception ex)
         {
@@ -126,6 +171,7 @@
         try
         {
             await Job.Resume();
+            logger.LogInfo("Resumed checking");
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)

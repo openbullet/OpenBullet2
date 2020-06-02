@@ -296,6 +296,14 @@ hr {
     max-width: 1000px;
 }
 
+.generic-log {
+    background-color: #111;
+    font-family: Consolas;
+    padding: 20px;
+    height: 500px;
+    overflow-y: auto;
+}
+
 .no-padding {
     padding: 0px 0px 0px 0px;
 }
