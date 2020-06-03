@@ -123,7 +123,10 @@
         {
             var newAmount = (int)result.Data;
             changingBots = true;
-            await Job.Manager.SetConcurrentTasks(newAmount);
+
+            if (Job.Manager != null)
+                await Job.Manager.SetConcurrentTasks(newAmount);
+
             Job.Bots = newAmount;
             changingBots = false;
         }
