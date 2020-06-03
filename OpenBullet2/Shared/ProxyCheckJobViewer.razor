@@ -167,19 +167,22 @@
 
     private void TryHookLogger()
     {
-        try { Job.Manager.OnResult -= LogResult; } catch { }
-        try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
-        try { Job.Manager.OnError -= LogError; } catch { }
-        try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
-
-        try
+        if (Job.Manager != null)
         {
-            Job.Manager.OnResult += LogResult;
-            Job.Manager.OnTaskError += LogTaskError;
-            Job.Manager.OnError += LogError;
-            Job.Manager.OnCompleted += LogCompleted;
+            try { Job.Manager.OnResult -= LogResult; } catch { }
+            try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
+            try { Job.Manager.OnError -= LogError; } catch { }
+            try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
+
+            try
+            {
+                Job.Manager.OnResult += LogResult;
+                Job.Manager.OnTaskError += LogTaskError;
+                Job.Manager.OnError += LogError;
+                Job.Manager.OnCompleted += LogCompleted;
+            }
+            catch { }
         }
-        catch { }
     }
 
     private async Task Start()
