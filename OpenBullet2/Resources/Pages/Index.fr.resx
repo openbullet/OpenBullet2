@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="OperativeSystem" xml:space="preserve">
-    <value>Je ne parle pas français</value>
+  <data name="OperatingSystem" xml:space="preserve">
+    <value>Système Opérateur</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bonjour monsieur baguette</value>
+    <value>Bienvenu(e) dans OpenBullet 2</value>
   </data>
 </root>

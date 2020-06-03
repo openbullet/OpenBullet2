@@ -1,0 +1,47 @@
+﻿@inject NavigationManager NavigationManager
+@inject IModalService ModalService
+
+<div class="container-flex">
+    <div class="row">
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("en"))" src="images/flags/en.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("it"))" src="images/flags/it.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("de"))" src="images/flags/de.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("fr"))" src="images/flags/fr.png" />
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("es"))" src="images/flags/es.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("pt"))" src="images/flags/pt.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("nl"))" src="images/flags/nl.png" />
+        </div>
+        <div class="col">
+            <img class="culture-flag" @onclick="@(() => ChangeCulture("ru"))" src="images/flags/ru.png" />
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    private void ChangeCulture(string culture)
+    {
+        var uri = new Uri(NavigationManager.Uri)
+            .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        var query = $"?culture={Uri.EscapeDataString(culture)}&" +
+            $"redirectUri={Uri.EscapeDataString(uri)}";
+
+        NavigationManager.NavigateTo("/Culture/SetCulture" + query, forceLoad: true);
+    }
+}

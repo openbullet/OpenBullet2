@@ -2,9 +2,11 @@
 @using Helpers
 @using System.Threading
 @using OpenBullet2.Services
+@using OpenBullet2.Shared.Forms 
 @using System.Globalization
 @inject MetricsService Metrics
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
+@inject IModalService Modal
 
 <h2 style="margin-bottom: 20px;">@Loc["WelcomeMessage"]</h2>
 
@@ -19,7 +21,7 @@
             <td>@Metrics.UpTime.ToReadableString()</td>
         </tr>
         <tr>
-            <th scope="row">@Loc["OperativeSystem"]</th>
+            <th scope="row">@Loc["OperatingSystem"]</th>
             <td>@Metrics.OS</td>
         </tr>
         <tr>
@@ -37,7 +39,7 @@
     </tbody>
 </table>
 
-<CultureSelector />
+<button class="btn btn-primary" @onclick="ChangeLanguage"><span class="oi oi-globe"></span> Change Language</button>
 
 @code {
     protected override void OnInitialized()
@@ -67,5 +69,10 @@
         int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
         double num = Math.Round(bytes / Math.Pow(1024, place), 1);
         return (Math.Sign(byteCount) * num).ToString("0.##", CultureInfo.InvariantCulture) + $" {suf[place]}";
+    }
+
+    void ChangeLanguage()
+    {
+        Modal.Show<CultureSelector>("Choose your language");
     }
 }

@@ -59,7 +59,11 @@ namespace OpenBullet2
                 new CultureInfo("en"),
                 new CultureInfo("it"),
                 new CultureInfo("fr"),
-                new CultureInfo("de")
+                new CultureInfo("de"),
+                new CultureInfo("es"),
+                new CultureInfo("pt"),
+                new CultureInfo("nl"),
+                new CultureInfo("ru"),
             };
                 options.DefaultRequestCulture = new RequestCulture("en", "en");
                 options.SupportedCultures = supportedCultures;

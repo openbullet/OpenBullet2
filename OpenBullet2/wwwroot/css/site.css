@@ -340,3 +340,13 @@ select {
     border: 1px solid black;
     padding: 3px;
 }
+
+.culture-flag {
+    width: 70px;
+    height: 47px;
+    cursor: pointer;
+}
+
+.culture-flag:hover {
+    opacity: 0.5;
+}
