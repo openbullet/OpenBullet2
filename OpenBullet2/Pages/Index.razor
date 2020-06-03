@@ -1,11 +1,12 @@
 ﻿@page "/"
-@using Helpers 
+@using Helpers
 @using System.Threading
 @using OpenBullet2.Services
-@using System.Globalization 
-@inject MetricsService Metrics 
+@using System.Globalization
+@inject MetricsService Metrics
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
 
-<h2 style="margin-bottom: 20px;">Welcome to OpenBullet 2</h2>
+<h2 style="margin-bottom: 20px;">@Loc["WelcomeMessage"]</h2>
 
 <table class="table">
     <tbody>
@@ -18,7 +19,7 @@
             <td>@Metrics.UpTime.ToReadableString()</td>
         </tr>
         <tr>
-            <th scope="row">Operative System</th>
+            <th scope="row">@Loc["OperativeSystem"]</th>
             <td>@Metrics.OS</td>
         </tr>
         <tr>
@@ -35,6 +36,8 @@
         </tr>
     </tbody>
 </table>
+
+<CultureSelector />
 
 @code {
     protected override void OnInitialized()

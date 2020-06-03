@@ -2,6 +2,7 @@ using Blazor.FileReader;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Services;
+using System.Globalization;
 
 namespace OpenBullet2
 {
@@ -47,6 +49,22 @@ namespace OpenBullet2
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JobManagerService>();
+
+            // Localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                new CultureInfo("en"),
+                new CultureInfo("it"),
+                new CultureInfo("fr"),
+                new CultureInfo("de")
+            };
+                options.DefaultRequestCulture = new RequestCulture("en", "en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +82,7 @@ namespace OpenBullet2
             }
 
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseStaticFiles();
 
             app.UseRouting();
