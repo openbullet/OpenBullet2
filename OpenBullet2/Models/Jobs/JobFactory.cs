@@ -104,6 +104,8 @@ namespace OpenBullet2.Models.Jobs
             if (!options.CheckOnlyUntested)
                 entities.ForEach(e => e.Status = ProxyWorkingStatus.Untested);
 
+            job.GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb");
+
             job.Proxies = entities.Select(e => factory.FromEntity(e));
             job.ProxyOutput = new ProxyCheckOutputFactory(proxyRepo).FromOptions(options.CheckOutput);
 

@@ -21,6 +21,7 @@
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
     <PackageReference Include="HtmlSanitizer" Version="5.0.319" />
     <PackageReference Include="Markdig" Version="0.20.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.4" />
@@ -51,6 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="dbip-country-lite.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Environment.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
