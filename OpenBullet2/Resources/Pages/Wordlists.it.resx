@@ -118,33 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Aggiungi</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Rimuovi</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifica</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>File Name</value>
+    <value>Nome File</value>
   </data>
   <data name="Lines" xml:space="preserve">
     <value>Righe</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Nome</value>
   </data>
   <data name="Purpose" xml:space="preserve">
-    <value>Purpose</value>
+    <value>Ambito</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>results</value>
+    <value>risultati</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Results per page</value>
+    <value>Risultati per pagina</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Tipo</value>
   </data>
 </root>

@@ -118,28 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddGroup" xml:space="preserve">
-    <value>Add Group</value>
+    <value>Aggiungi Gruppo</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>All</value>
+    <value>Tutti</value>
   </data>
   <data name="Country" xml:space="preserve">
-    <value>Country</value>
+    <value>Nazione</value>
   </data>
   <data name="DeleteGroup" xml:space="preserve">
-    <value>Delete Group</value>
+    <value>Rimuovi Gruppo</value>
   </data>
   <data name="EditGroup" xml:space="preserve">
-    <value>Edit Group</value>
+    <value>Modifica Gruppo</value>
   </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
   </data>
   <data name="ImportProxies" xml:space="preserve">
-    <value>Import Proxies</value>
+    <value>Importa Proxy</value>
   </data>
   <data name="LastChecked" xml:space="preserve">
-    <value>Last Checked</value>
+    <value>Ultimo Controllo</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
@@ -148,22 +148,22 @@
     <value>Ping</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>Port</value>
+    <value>Porta</value>
   </data>
   <data name="ProxyGroup" xml:space="preserve">
-    <value>Proxy Group</value>
+    <value>Gruppo di Proxy</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>results</value>
+    <value>risultati</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Results per page</value>
+    <value>Risultati per pagina</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Stato</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Tipo</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>

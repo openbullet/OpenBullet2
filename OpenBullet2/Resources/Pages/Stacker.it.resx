@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AvailableBlocks" xml:space="preserve">
-    <value>Available blocks</value>
+    <value>Blocchi disponibili</value>
   </data>
   <data name="BlockInformation" xml:space="preserve">
-    <value>Block information</value>
+    <value>Informazione blocco</value>
   </data>
   <data name="CurrentStack" xml:space="preserve">
-    <value>Current stack</value>
+    <value>Stack corrente</value>
   </data>
   <data name="NoBlockSelectedInfo" xml:space="preserve">
-    <value>Select a block to display its settings</value>
+    <value>Seleziona un blocco per visualizzarne le impostazioni</value>
   </data>
 </root>
