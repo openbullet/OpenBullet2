@@ -1,11 +1,12 @@
 ﻿@page "/jobs"
-@using RuriLib.Models.Jobs 
+@using RuriLib.Models.Jobs
+@inject Microsoft.Extensions.Localization.IStringLocalizer<JobManager> Loc
 
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> New</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> Remove All</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
     @foreach (var job in Manager.Jobs)
@@ -22,22 +23,22 @@
                             case SingleRunJob x:
                                 if (x.Config != null)
                                 {
-                                    <p class="card-text">Config: @x.Config.Metadata.Name by @x.Config.Metadata.Author</p>
+                                    <p class="card-text">Config: @x.Config.Metadata.Name @Loc["by"] @x.Config.Metadata.Author</p>
                                 }
                                 else
                                 {
-                                    <p class="card-text">No config selected</p>
+                                    <p class="card-text">@Loc["NoConfigSelected"]</p>
                                 }
                                 break;
 
                             case MultiRunJob x:
                                 if (x.Config != null)
                                 {
-                                    <p class="card-text">Config: @x.Config.Metadata.Name by @x.Config.Metadata.Author</p>
+                                    <p class="card-text">Config: @x.Config.Metadata.Name @Loc["by"] @x.Config.Metadata.Author</p>
                                 }
                                 else
                                 {
-                                    <p class="card-text">No config selected</p>
+                                    <p class="card-text">@Loc["NoConfigSelected"]</p>
                                 }
                                 break;
                         }
@@ -47,7 +48,7 @@
             <div class="col">
                 <button class="btn btn-danger" style="height: 100%"
                         @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
-                    Remove
+                    @Loc["Remove"]
                 </button>
             </div>
         </div>

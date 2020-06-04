@@ -13,11 +13,11 @@
 <table class="table">
     <tbody>
         <tr>
-            <th scope="row">Local Time</th>
+            <th scope="row">@Loc["LocalTime"]</th>
             <td>@Metrics.ServerTime.ToLongDateString() - @Metrics.ServerTime.ToLongTimeString()</td>
         </tr>
         <tr>
-            <th scope="row">Webserver Uptime</th>
+            <th scope="row">@Loc["WebserverUptime"]</th>
             <td>@Metrics.UpTime.ToReadableString()</td>
         </tr>
         <tr>
@@ -25,15 +25,15 @@
             <td>@Metrics.OS</td>
         </tr>
         <tr>
-            <th scope="row">Current Working Directory</th>
+            <th scope="row">@Loc["CurrentWorkingDirectory"]</th>
             <td>@Metrics.CWD</td>
         </tr>
         <tr>
-            <th scope="row">CPU Usage</th>
+            <th scope="row">@Loc["CPUUsage"]</th>
             <td>@(Metrics.CpuUsage.ToString("0.##", CultureInfo.InvariantCulture)) %</td>
         </tr>
         <tr>
-            <th scope="row">Memory Usage</th>
+            <th scope="row">@Loc["MemoryUsage"]</th>
             <td>@BytesToString(Metrics.MemoryUsage)</td>
         </tr>
     </tbody>

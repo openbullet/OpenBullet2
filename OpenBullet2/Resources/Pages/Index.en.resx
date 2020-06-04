@@ -117,8 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CPUUsage" xml:space="preserve">
+    <value>CPU Usage</value>
+  </data>
+  <data name="CurrentWorkingDirectory" xml:space="preserve">
+    <value>Current Working Directory</value>
+  </data>
+  <data name="LocalTime" xml:space="preserve">
+    <value>Local Time</value>
+  </data>
+  <data name="MemoryUsage" xml:space="preserve">
+    <value>Memory Usage</value>
+  </data>
   <data name="OperatingSystem" xml:space="preserve">
     <value>Operating System</value>
+  </data>
+  <data name="WebserverUptime" xml:space="preserve">
+    <value>Webserver Uptime</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Welcome to OpenBullet 2</value>

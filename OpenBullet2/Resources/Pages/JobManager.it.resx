@@ -117,25 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilizzo CPU</value>
+  <data name="By" xml:space="preserve">
+    <value>di</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Cartella Corrente</value>
+  <data name="New" xml:space="preserve">
+    <value>Nuovo</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ora Locale</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Nessuna Config selezionata</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilizzo Memoria</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Rimuovi</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Sistema Operativo</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime del Webserver</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Benvenuto/a in OpenBullet 2</value>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Rimuovi Tutti</value>
   </data>
 </root>
