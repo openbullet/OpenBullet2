@@ -1,8 +1,11 @@
 ﻿@using OpenBullet2.Helpers
 @using RuriLib.Models.Configs
+@using System.Globalization
 @using OpenBullet2.Repositories
+@using OpenBullet2.Shared.Forms 
 @inject IConfigRepository ConfigRepo
 @inject OpenBullet2.Services.ConfigService ConfigService
+@inject IModalService Modal
 
 <div class="top-row pl-4 navbar navbar-dark" style="padding-left: 0.5rem !important;">
     <div class="container-fluid" style="margin-left: -5px;">
@@ -88,10 +91,17 @@
                 </button>
             </li>
         }
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="settings/openbullet">
+                <span class="oi oi-wrench" aria-hidden="true"></span> OB Settings
+            </NavLink>
+        </li>
     </ul>
 </div>
 
 <div class="fixed-bottom float-left text-center mb-2" style="width: 230px;">
+    <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+    <br /><br />
     <span style="font-family: Consolas; color: #666; font-size: 10px;">v0.0.1 [Pre-Alpha]</span>
 </div>
 
@@ -146,5 +156,10 @@
 
         await ConfigRepo.Save(ConfigService.SelectedConfig);
         await js.AlertSuccess("Aww yeah", $"{ConfigService.SelectedConfig.Metadata.Name} was saved successfully!");
+    }
+
+    void ChangeLanguage()
+    {
+        Modal.Show<CultureSelector>("Choose your language");
     }
 }

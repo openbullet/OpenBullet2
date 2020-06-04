@@ -1,7 +1,7 @@
 ﻿<div class="generic-log" style="margin-bottom: 30px;">
     @lock (listLock)
     {
-        foreach (var entry in entries.Take(Math.Min(20, entries.Count)))
+        foreach (var entry in entries)
         {
             <span style="color: @entry.Color;">@entry.Message</span><br />
         }
@@ -9,6 +9,7 @@
 </div>
 
 @code {
+    [Parameter] public int BufferSize { get; set; } = 20;
     List<LogEntry> entries = new List<LogEntry>();
     object listLock = new object();
 
@@ -18,6 +19,9 @@
         lock (listLock)
         {
             entries.Insert(0, new LogEntry(entry, color));
+
+            if (entries.Count > BufferSize)
+                entries.RemoveAt(entries.Count - 1);
         }
         InvokeAsync(StateHasChanged);
     }

@@ -4,7 +4,11 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # DB file
-OpenBullet.db*
+OpenBullet.db
+
+# Settings
+OpenBulletSettings.json
+RuriLibSettings.json
 
 # User-specific files
 *.suo

@@ -2,6 +2,6 @@
 {
     public class SecurityOptions
     {
-        public bool AllowSystemWideFileAccess { get; set; } = false;
+        public bool AllowSystemWideFileAccess { get; private set; } = false;
     }
 }

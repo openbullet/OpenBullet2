@@ -1,8 +1,10 @@
 ﻿@using OpenBullet2.Models.Jobs
 @using RuriLib.Services
 @using OpenBullet2.Entities
+@using OpenBullet2.Services 
 @inject RuriLibSettingsService RuriLibSettings
 @inject IProxyGroupRepository ProxyGroupRepo
+@inject PersistentSettingsService PersistentSettings
 
 <label style="color: orange;">Start Condition</label>
 <br />
@@ -31,10 +33,13 @@
     <label style="margin-top: 15px;">Check only untested</label>
     <InputCheckbox @bind-Value="Options.CheckOnlyUntested" />
     <br />
-    <label>Url</label>
-    <InputText @bind-Value="Options.Url" />
-    <label>Success Key</label>
-    <InputText @bind-Value="Options.SuccessKey" />
+    <label style="margin-top: 15px;">Check on website</label>
+    <select value="@Options.Target.Url | @Options.Target.SuccessKey">
+        @foreach (var target in PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets)
+        {
+            <option @onclick="@(() => Options.Target = target)">@target.Url | @target.SuccessKey</option>
+        }
+    </select>
 </EditForm>
 
 @code {

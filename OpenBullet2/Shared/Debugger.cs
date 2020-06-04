@@ -58,7 +58,9 @@ namespace OpenBullet2.Shared
                 await js.AlertError(ex.GetType().ToString(), ex.Message);
             }
 
-            logger.Clear();
+            if (!VolatileSettings.DebuggerOptions.PersistLog)
+                logger.Clear();
+
             variables.Clear();
             isRunning = true;
             cts = new CancellationTokenSource();

@@ -11,6 +11,7 @@ namespace OpenBullet2.Models.Debugger
         public string TestProxy { get; set; } = "";
         public bool UseProxy { get; set; } = false;
         public ProxyType ProxyType { get; set; } = ProxyType.Http;
+        public bool PersistLog { get; set; } = false;
 
         public DebuggerOptions(RuriLibSettingsService settings)
         {

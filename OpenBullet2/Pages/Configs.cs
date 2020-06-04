@@ -1,6 +1,7 @@
 ﻿using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
+using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Configs;
@@ -17,6 +18,7 @@ namespace OpenBullet2.Pages
         [Inject] IConfigRepository ConfigRepo { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] PersistentSettingsService PersistentSettings { get; set; }
 
         Config selectedConfig;
         List<Config> configs;
@@ -50,6 +52,7 @@ namespace OpenBullet2.Pages
         {
             selectedConfig = await ConfigRepo.Create();
             configs.Add(selectedConfig);
+            selectedConfig.Metadata.Author = PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultAuthor;
             ConfigService.SelectedConfig = selectedConfig;
             Nav.NavigateTo("config/edit/metadata");
         }
@@ -84,10 +87,19 @@ namespace OpenBullet2.Pages
 
             ConfigService.SelectedConfig = selectedConfig;
 
-            if (selectedConfig.Mode == ConfigMode.CSharp)
-                Nav.NavigateTo("config/edit/code");
-            else
-                Nav.NavigateTo("config/edit/stacker");
+            var section = PersistentSettings.OpenBulletSettings.GeneralSettings.ConfigSectionOnLoad;
+            var uri = section switch
+            {
+                ConfigSection.Metadata => "config/edit/metadata",
+                ConfigSection.Readme => "config/edit/readme",
+                ConfigSection.Stacker => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/stacker",
+                ConfigSection.LoliCode => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/lolicode",
+                ConfigSection.Settings => "config/edit/settings",
+                ConfigSection.CSharpCode => "config/edit/code",
+                _ => throw new NotImplementedException()
+            };
+
+            Nav.NavigateTo(uri);
         }
 
         private async Task ProcessUploadedConfigs(IFileListEntry[] files)

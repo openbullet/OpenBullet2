@@ -91,8 +91,8 @@ namespace OpenBullet2.Models.Jobs
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
                 CheckOnlyUntested = options.CheckOnlyUntested,
-                Url = options.Url,
-                SuccessKey = options.SuccessKey,
+                Url = options.Target.Url,
+                SuccessKey = options.Target.SuccessKey,
                 Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds)
             };
 

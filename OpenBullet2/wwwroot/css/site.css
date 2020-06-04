@@ -347,6 +347,12 @@ select {
     cursor: pointer;
 }
 
-.culture-flag:hover {
+.culture-flag-small {
+    width: 49px;
+    height: 33px;
+    cursor: pointer;
+}
+
+.culture-flag:hover, .culture-flag-small:hover {
     opacity: 0.5;
 }

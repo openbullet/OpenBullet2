@@ -3,8 +3,10 @@
 @using OpenBullet2.Helpers
 @using RuriLib.Models.Proxies
 @using System.Globalization
+@using OpenBullet2.Services 
 @using OpenBullet2.Shared.Forms
 @inject IModalService Modal
+@inject PersistentSettingsService PersistentSettings
 
 <div>
     <p style="color: orange;"><b>Job Options</b></p>
@@ -107,7 +109,7 @@
     </div>
 }
 
-<GenericLogger @ref="logger" />
+<GenericLogger @ref="logger" BufferSize="PersistentSettings.OpenBulletSettings.GeneralSettings.LogBufferSize" />
 
 @code {
     [Parameter] public ProxyCheckJob Job { get; set; }
@@ -167,7 +169,7 @@
 
     private void TryHookLogger()
     {
-        if (Job.Manager != null)
+        if (Job.Manager != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
         {
             try { Job.Manager.OnResult -= LogResult; } catch { }
             try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
