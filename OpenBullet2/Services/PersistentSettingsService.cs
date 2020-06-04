@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using OpenBullet2.Models.Settings;
 using System.IO;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace OpenBullet2.Services
 {
@@ -19,14 +20,23 @@ namespace OpenBullet2.Services
         {
             SecurityOptions = configuration.GetSection("Security").Get<SecurityOptions>();
 
-            OpenBulletSettings = File.Exists(obSettFile)
-                ? JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(obSettFile), jsonSettings)
-                : new OpenBulletSettings();
+            if (File.Exists(obSettFile))
+                OpenBulletSettings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(obSettFile), jsonSettings);
+            else
+                Recreate();
         }
 
         public async Task Save()
         {
             await File.WriteAllTextAsync(obSettFile, JsonConvert.SerializeObject(OpenBulletSettings, jsonSettings));
+        }
+
+        public void Recreate()
+        {
+            OpenBulletSettings = new OpenBulletSettings();
+
+            if (OpenBulletSettings.GeneralSettings.ProxyCheckTargets == null)
+                OpenBulletSettings.GeneralSettings.ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() };
         }
     }
 }

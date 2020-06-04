@@ -2,10 +2,11 @@
 @using OpenBullet2.Services
 @using RuriLib.Models.Jobs
 @inject JobManagerService Manager
+@inject Microsoft.Extensions.Localization.IStringLocalizer<JobViewer> Loc
 
 @if (job == null)
 {
-    <p>No job with id @Id, please go back and select a valid job</p>
+    <p>@Loc["NoJob1"] @Id, @Loc["NoJob2"].</p>
 }
 else
 {

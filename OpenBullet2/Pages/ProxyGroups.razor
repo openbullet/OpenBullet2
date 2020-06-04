@@ -1,32 +1,33 @@
 ﻿@page "/proxies/groups"
 @using OpenBullet2.Entities
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroups> Loc
 
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddGroup"><span class="oi oi-plus"></span> Add Group</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="EditGroup"><span class="oi oi-pencil"></span> Edit Group</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteGroup"><span class="oi oi-x"></span> Delete Group</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddGroup"><span class="oi oi-plus"></span> @Loc["AddGroup"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditGroup"><span class="oi oi-pencil"></span> @Loc["EditGroup"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteGroup"><span class="oi oi-x"></span> @Loc["DeleteGroup"]</button>
         </div>
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-primary m-sm-1" @onclick="ImportProxies"><span class="oi oi-data-transfer-upload"></span> Import Proxies</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="ImportProxies"><span class="oi oi-data-transfer-upload"></span> @Loc["ImportProxies"]</button>
         </div>
     </div>
 </div>
 
 <EditForm Model="groups">
-    <label>Proxy Group</label>
+    <label>@Loc["ProxyGroup"]</label>
     <InputSelectNumber @ref="groupSelectElement" T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)"
                        ValueChanged="(async val => await OnGroupSelected(val))">
-        <option value="-1">All</option>
+        <option value="-1">@Loc["All"]</option>
         @foreach (var group in groups)
         {
             <option value="@group.Id">@group.Name</option>
         }
     </InputSelectNumber><br />
-    <label>Results per page</label>
+    <label>@Loc["ResultsPerPage"]</label>
     <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
                        ValueChanged="(async val => await OnResultsPerPageChanged(val))">
         <option value="15">15</option>
@@ -36,20 +37,20 @@
     </InputSelectNumber>
 </EditForm>
 
-<p>@proxies.Count results</p>
+<p>@proxies.Count @Loc["results"]</p>
 
 <RadzenGrid @ref="proxiesGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px">
     <Columns>
-        <RadzenGridColumn TItem="ProxyEntity" Property="Type" Title="Type" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Host" Title="Host" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Port" Title="Port" Width="100px" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Username" Title="Username" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Password" Title="Password" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Country" Title="Country" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Status" Title="Status" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="Ping" Title="Ping" Width="100px" />
-        <RadzenGridColumn TItem="ProxyEntity" Property="LastChecked" Title="LastChecked" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Type" Title="@Loc["Type"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Host" Title="@Loc["Host"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Port" Title="@Loc["Port"]" Width="100px" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Username" Title="@Loc["Username"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Password" Title="@Loc["Password"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Country" Title="@Loc["Country"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Status" Title="@Loc["Status"]" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="Ping" Title="@Loc["Ping"]" Width="100px" />
+        <RadzenGridColumn TItem="ProxyEntity" Property="LastChecked" Title="@Loc["LastChecked"]" />
     </Columns>
 </RadzenGrid>

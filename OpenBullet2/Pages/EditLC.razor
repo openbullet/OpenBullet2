@@ -1,13 +1,14 @@
 ﻿@using Blazaco.Editor
 @page "/config/edit/lolicode"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditLC> Loc
 
 <div class="container-fluid">
     <div class="row">
-        <span class="text-warning">LoliCode Editor</span>
+        <span class="text-warning">@Loc["LoliCodeEditor"]</span>
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="SaveLoliCode"><span class="oi oi-task"></span> Save Script</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="SaveLoliCode"><span class="oi oi-task"></span> @Loc["SaveScript"]</button>
         </div>
     </div>
     <div class="row">

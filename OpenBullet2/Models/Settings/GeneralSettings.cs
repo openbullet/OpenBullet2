@@ -29,6 +29,6 @@ namespace OpenBullet2.Models.Settings
         public int LogBufferSize { get; set; } = 20;
         public bool LogToFile { get; set; } = false;
         public bool IgnoreWordlistNameOnHitsDedupe { get; set; } = false;
-        public List<ProxyCheckTarget> ProxyCheckTargets { get; set; } = new List<ProxyCheckTarget> { new ProxyCheckTarget() };
+        public List<ProxyCheckTarget> ProxyCheckTargets { get; set; }
     }
 }

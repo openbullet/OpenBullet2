@@ -1,18 +1,19 @@
 ﻿@page "/wordlists"
 @using OpenBullet2.Entities
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Wordlists> Loc
 
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddWordlist"><span class="oi oi-plus"></span> Add</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="EditWordlist"><span class="oi oi-pencil"></span> Edit</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteWordlist"><span class="oi oi-x"></span> Delete</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddWordlist"><span class="oi oi-plus"></span> @Loc["Add"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditWordlist"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteWordlist"><span class="oi oi-x"></span> @Loc["Delete"]</button>
         </div>
     </div>
 </div>
 
 <EditForm Model="resultsPerPage">
-    <label>Results per page</label>
+    <label>@Loc["ResultsPerPage"]</label>
     <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
                        ValueChanged="(async val => await OnResultsPerPageChanged(val))">
         <option value="15">15</option>
@@ -22,17 +23,17 @@
     </InputSelectNumber>
 </EditForm>
 
-<p>@wordlists.Count results</p>
+<p>@wordlists.Count @Loc["results"]</p>
 
 <RadzenGrid @ref="wordlistsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="200px"
             RowSelect="SelectWordlist">
     <Columns>
-        <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="Name" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="Type" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="Purpose" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="Total" Width="100px" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="File Name" Width="300px" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="@Loc["Purpose"]" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="@Loc["Lines"]" Width="100px" />
+        <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="@Loc["FileName"]" Width="300px" />
     </Columns>
 </RadzenGrid>

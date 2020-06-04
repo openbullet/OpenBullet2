@@ -1,18 +1,19 @@
 ﻿@page "/hits"
 @using OpenBullet2.Entities
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Hits> Loc
 
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-primary m-sm-1" @onclick="EditHit"><span class="oi oi-pencil"></span> Edit</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteHit"><span class="oi oi-x"></span> Delete</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="PurgeHits"><span class="oi oi-trash"></span> Purge</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditHit"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteHit"><span class="oi oi-x"></span> @Loc["Delete"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="PurgeHits"><span class="oi oi-trash"></span> @Loc["Purge"]</button>
         </div>
     </div>
 </div>
 
 <EditForm Model="resultsPerPage">
-    <label>Results per page</label>
+    <label>@Loc["ResultsPerPage"]</label>
     <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
                        ValueChanged="(async val => await OnResultsPerPageChanged(val))">
         <option value="15">15</option>
@@ -22,19 +23,20 @@
     </InputSelectNumber>
 </EditForm>
 
-<p>@hits.Count results</p>
+<p>@hits.Count @Loc["results"]</p>
 
 <RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@hits" TItem="HitEntity" ColumnWidth="200px"
             RowSelect="SelectHit">
     <Columns>
-        <RadzenGridColumn TItem="HitEntity" Property="Data" Title="Data" />
-        <RadzenGridColumn TItem="HitEntity" Property="Type" Title="Type" />
-        <RadzenGridColumn TItem="HitEntity" Property="ConfigName" Title="Config" />
-        <RadzenGridColumn TItem="HitEntity" Property="Date" Title="Date" />
-        <RadzenGridColumn TItem="HitEntity" Property="WordlistName" Title="Wordlist" />
-        <RadzenGridColumn TItem="HitEntity" Property="Proxy" Title="Proxy" />
-        <RadzenGridColumn TItem="HitEntity" Property="CapturedData" Title="Captured Data" Width="@CaptureWidth" CssClass="grid-column-dynamic-width" />
+        <RadzenGridColumn TItem="HitEntity" Property="Data" Title="@Loc["Data"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="Type" Title="@Loc["Type"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="ConfigName" Title="@Loc["Config"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="Date" Title="@Loc["Date"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="WordlistName" Title="@Loc["Wordlist"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="Proxy" Title="@Loc["Proxy"]" />
+        <RadzenGridColumn TItem="HitEntity" Property="CapturedData" Title="@Loc["CapturedData"]" 
+                          Width="@CaptureWidth" CssClass="grid-column-dynamic-width" />
     </Columns>
 </RadzenGrid>

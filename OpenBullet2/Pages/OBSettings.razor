@@ -2,13 +2,14 @@
 @using OpenBullet2.Services
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models.Settings
-@inject PersistentSettingsService PersistentSettings 
+@inject PersistentSettingsService PersistentSettings
 @inject NavigationManager Nav
+@inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
 
-<h1>General</h1>
+<h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">
 
-    <label>When editing a config, navigate to</label>
+    <label>@Loc["NavigateOnEdit"]</label>
     <InputSelect @bind-Value="settings.GeneralSettings.ConfigSectionOnLoad">
         @foreach (var sect in Enum.GetNames(typeof(ConfigSection)))
         {
@@ -17,46 +18,43 @@
     </InputSelect>
     <br />
 
-    <label>Automatically set the recommended bots when a config is selected in the job creation page</label>
+    <label>@Loc["AutoSetRecommendedBots"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.AutoSetRecommendedBots" />
     <br />
 
-    <label>Show a warning when the currently loaded config was not saved and another one is loaded</label>
+    <label>@Loc["WarnConfigNotSaved"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.WarnConfigNotSaved" />
     <br />
 
-    <label>The default author on newly created configs</label>
+    <label>@Loc["DefaultAuthor"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.DefaultAuthor" />
 
-    <label>Enable logging in the job viewer page</label>
+    <label>@Loc["EnableJobLogging"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.EnableJobLogging" />
     <br />
 
-    <label>Log buffer size</label>
+    <label>@Loc["LogBufferSize"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.LogBufferSize" />
 
-    <label>Log to a file as well</label>
+    <label>@Loc["LogToFile"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.LogToFile" />
     <br />
 
     <!-- Maybe move this to the actual relevant page -->
-    <label>Ignore the wordlist name when removing duplicates from hits</label>
+    <label>@Loc["IgnoreWordlistNameOnHitsDedupe"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe" />
     <br />
 
-    <label style="color: orange;">Proxy Check Targets</label>
+    <label style="color: orange;">@Loc["ProxyCheckTargets"]</label>
     <br />
-    <p>
-        These are the proxy targets available in a Proxy Check Job. The proxies will be checked against the target URL
-        and if the success key is found in the downloaded source, the proxy will be marked as working.
-    </p>
+    <p>@Loc["ProxyCheckTargetsDescription"]</p>
     <div class="list-group list-group-horizontal">
         <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Add(new ProxyCheckTarget()))">
-            <span class="oi oi-plus"></span> Add
+            <span class="oi oi-plus"></span> @Loc["Add"]
         </button>
         <button type="button" class="btn-sm btn-danger"
                 @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Clear())">
-            <span class="oi oi-x"></span> Clear
+            <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
     </div>
     <div class="container-fluid" style="margin-top: 15px;">
@@ -64,17 +62,17 @@
         {
             <div class="row" style="margin-bottom: 15px;">
                 <div class="col-8">
-                    <label>URL</label>
+                    <label>@Loc["URL"]</label>
                     <InputText @bind-Value="input.Url" />
                 </div>
                 <div class="col-3">
-                    <label>Success Key</label>
+                    <label>@Loc["SuccessKey"]</label>
                     <InputText @bind-Value="input.SuccessKey" />
                 </div>
                 <div class="col-1">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
                         <span class="oi oi-minus"></span>
-                        Remove
+                        @Loc["Remove"]
                     </button>
                 </div>
             </div>
@@ -83,13 +81,13 @@
 
 </EditForm>
 
-<h1>Remote</h1>
+<h1>@Loc["Remote"]</h1>
 <EditForm Model="settings.RemoteSettings">
     <!-- Work in progress -->
 </EditForm>
 
-<button class="btn btn-success" style="margin: 10px 0;" @onclick="Save">Save</button>
-<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">Restore Defaults</button>
+<button class="btn btn-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
+<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
 
 @code {
     OpenBulletSettings settings;
@@ -103,7 +101,7 @@
     {
         if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
         {
-            PersistentSettings.OpenBulletSettings = new OpenBulletSettings();
+            PersistentSettings.Recreate();
             Nav.NavigateTo("/settings/openbullet");
         }
     }

@@ -1,6 +1,7 @@
 ﻿@page "/jobs/create"
 @page "/jobs/create/{Type}"
 @using OpenBullet2.Models.Jobs
+@inject Microsoft.Extensions.Localization.IStringLocalizer<JobCreator> Loc
 
 <div style="margin-bottom: 20px;">
     @switch (jobOptions)
@@ -19,4 +20,4 @@
     }
 </div>
 
-<button class="btn btn-success" style="margin-bottom: 30px;" @onclick="Create">Create Job</button>
+<button class="btn btn-success" style="margin-bottom: 30px;" @onclick="Create">@Loc["CreateJob"]</button>

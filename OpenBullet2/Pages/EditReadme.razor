@@ -1,10 +1,11 @@
 ﻿@page "/config/edit/readme"
 @using RuriLib.Models.Configs
 @using OpenBullet2.Services
-@inject ConfigService ConfigService 
+@inject ConfigService ConfigService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditReadme> Loc
 
 <EditForm Model="config">
-    <InputMarkdown Label="Readme" @bind-Value="config.Readme" For="@(() => config.Readme)" />
+    <InputMarkdown Label="@Loc["Readme"]" @bind-Value="config.Readme" For="@(() => config.Readme)" />
 </EditForm>
 
 @code {

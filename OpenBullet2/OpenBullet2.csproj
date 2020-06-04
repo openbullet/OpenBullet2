@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Resources\Pages\JobCreator.en.resx" />
+    <EmbeddedResource Remove="Resources\Pages\JobCreator.it.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
@@ -50,6 +55,11 @@
   <ItemGroup>
     <Folder Include="Resources\Shared\Forms\" />
     <Folder Include="wwwroot\fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\Pages\JobCreator.it.resx" />
+    <None Include="Resources\Pages\JobCreator.en.resx" />
   </ItemGroup>
 
   <ItemGroup>
