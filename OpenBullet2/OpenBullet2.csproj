@@ -48,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Resources\Shared\Forms\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 

@@ -1,81 +1,82 @@
 ﻿@page "/config/edit/settings"
 @using RuriLib.Models.Proxies
 @using RuriLib.Models.Data
-@using RuriLib.Models 
-@using RuriLib.Models.Configs 
-@using OpenBullet2.Services 
-@using RuriLib.Services 
-@using OpenBullet2.Helpers 
-@inject ConfigService ConfigService 
+@using RuriLib.Models
+@using RuriLib.Models.Configs
+@using OpenBullet2.Services
+@using RuriLib.Services
+@using OpenBullet2.Helpers
+@inject ConfigService ConfigService
 @inject RuriLibSettingsService RuriLibSettings
 @inject NavigationManager Nav
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditSettings> Loc
 
-<h1>General</h1>
+<h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">
 
-    <label>Suggested amount of Bots</label>
+    <label>@Loc["SuggestedBots"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SuggestedBots" />
 
-    <label>CPM Limit (0 for no limit)</label>
+    <label>@Loc["CPMLimit"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.MaximumCPM" />
 
-    <label>Save empty captures too</label>
+    <label>@Loc["SaveEmptyCaptures"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
     <br />
 
-    <label>Statuses for which the bot will continue / stop</label>
+    <label>@Loc["ContinueStopStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
 </EditForm>
 
-<h1>Requests</h1>
+<h1>@Loc["Requests"]</h1>
 <EditForm Model="settings.RequestsSettings">
-    <label>Ignore response errors</label>
+    <label>@Loc["IgnoreResponseErrors"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
     <br />
 </EditForm>
 
-<h1>Proxies</h1>
+<h1>@Loc["Proxies"]</h1>
 <EditForm Model="settings.ProxySettings">
-    <label>Use proxies</label>
+    <label>@Loc["UseProxies"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.UseProxies" />
     <br />
 
-    <label>Maximum uses per proxy (0 is infinite)</label>
+    <label>@Loc["MaxUsesPerProxy"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
 
-    <label>Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 is infinite)</label>
+    <label>@Loc["BanLoopEvasion"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
 
-    <label>Ban the proxy when the bot ends with one of these statuses</label>
+    <label>@Loc["BanStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
 
-    <label>Allowed proxy types</label>
+    <label>@Loc["AllowedProxyTypes"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedProxyTypes" Selected="unallowedProxyTypes" />
 </EditForm>
 
-<h1>Data</h1>
+<h1>@Loc["Data"]</h1>
 <EditForm Model="settings.DataSettings">
-    <label>Allowed wordlist types</label>
+    <label>@Loc["AllowedWordlistTypes"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedWordlistTypes" Selected="unallowedWordlistTypes" />
 
-    <label>URL Encode data after slicing</label>
+    <label>@Loc["UrlEncodeAfterSlicing"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
     <br />
 
-    <label>Data Rules</label>
+    <label>@Loc["DataRules"]</label>
     <br />
     <div class="list-group list-group-horizontal">
         <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new DataRule("", ".*")))">
             <span class="oi oi-plus"></span>
-            Add Blank
+            @Loc["AddBlank"]
         </button>
         <button type="button" class="btn-sm btn-primary"
                 @onclick="@(() => showRegexHelper = !showRegexHelper)">
-            <span class="oi oi-plus"></span> Toggle Regex Helper
+            <span class="oi oi-plus"></span> @Loc["ToggleRegexHelper"]
         </button>
         <button type="button" class="btn-sm btn-danger"
                 @onclick="@(() => settings.DataSettings.DataRules.Clear())">
-            <span class="oi oi-x"></span> Clear
+            <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
     </div>
     @if (showRegexHelper)
@@ -87,17 +88,17 @@
         {
             <div class="row" style="margin-bottom: 15px;">
                 <div class="col-2">
-                    <label>Slice Name</label>
+                    <label>@Loc["SliceName"]</label>
                     <InputText @bind-Value="rule.SliceName" />
                 </div>
                 <div class="col-9">
-                    <label>Regex to match</label>
+                    <label>@Loc["RegexToMatch"]</label>
                     <InputText @bind-Value="rule.RegexToMatch" />
                 </div>
                 <div class="col-1">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
                         <span class="oi oi-minus"></span>
-                        Remove
+                        @Loc["Remove"]
                     </button>
                 </div>
             </div>
@@ -105,21 +106,20 @@
     </div>
 </EditForm>
 
-<h1>Inputs</h1>
+<h1>@Loc["Inputs"]</h1>
 <EditForm Model="settings.InputSettings">
     <p>
-        Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start
-        a job and their answer will be inserted as a variable of type <i>string</i> that you can use as you please.
+        @Loc["InputsDescription"]
     </p>
-    <label>Custom inputs</label>
+    <label>@Loc["CustomInputs"]</label>
     <br />
     <div class="list-group list-group-horizontal">
         <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
-            <span class="oi oi-plus"></span> Add
+            <span class="oi oi-plus"></span> @Loc["Add"]
         </button>
         <button type="button" class="btn-sm btn-danger"
                 @onclick="@(() => settings.InputSettings.CustomInputs.Clear())">
-            <span class="oi oi-x"></span> Clear
+            <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
     </div>
     <div class="container-fluid" style="margin-top: 15px;">
@@ -127,21 +127,21 @@
         {
             <div class="row" style="margin-bottom: 15px;">
                 <div class="col-4">
-                    <label>Description (question for the user)</label>
+                    <label>@Loc["InputDescription"]</label>
                     <InputText @bind-Value="input.Description" />
                 </div>
                 <div class="col-3">
-                    <label>Variable Name</label>
+                    <label>@Loc["VariableName"]</label>
                     <InputText @bind-Value="input.VariableName" />
                 </div>
                 <div class="col-4">
-                    <label>Default Answer</label>
+                    <label>@Loc["DefaultAnswer"]</label>
                     <InputText @bind-Value="input.DefaultAnswer" />
                 </div>
                 <div class="col-1">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
                         <span class="oi oi-minus"></span>
-                        Remove
+                        @Loc["Remove"]
                     </button>
                 </div>
             </div>
@@ -149,31 +149,31 @@
     </div>
 </EditForm>
 
-<h1>Selenium</h1>
+<h1>@Loc["Selenium"]</h1>
 <EditForm Model="settings.SeleniumSettings">
-    <label>Always open the browser at the start</label>
+    <label>@Loc["AlwaysOpenBrowser"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.AlwaysOpenBrowser" />
     <br />
 
-    <label>Quit the browser when the bot ends with one of these statuses</label>
+    <label>@Loc["QuitBrowserStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
 
-    <label>Disable notifications from webpages</label>
+    <label>@Loc["DisableWebpagesNotifications"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.DisableNotifications" />
     <br />
 
-    <label>Command line arguments (e.g. --headless --incognito)</label>
+    <label>@Loc["SeleniumCommandLineArguments"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.CommandLineArgs" />
 
-    <label>User Agent (default if empty)</label>
+    <label>@Loc["SeleniumUserAgent"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UserAgent" />
 
-    <label>Random User Agent</label>
+    <label>@Loc["RandomUserAgent"]</label>
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UseRandomUserAgent" />
     <br />
 </EditForm>
 
-<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">Restore Defaults</button>
+<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
 
 @code {
     ConfigSettings settings;

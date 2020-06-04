@@ -1,19 +1,20 @@
 ﻿@page "/config/edit/metadata"
 @using RuriLib.Models.Configs
 @using OpenBullet2.Services
-@inject ConfigService ConfigService 
+@inject ConfigService ConfigService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditMetadata> Loc
 
 <EditForm Model="config">
-    <label for="name">Name</label>
+    <label for="name">@Loc["Name"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Name" />
 
-    <label for="author">Author</label>
+    <label for="author">@Loc["Author"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Author" />
 
-    <label for="category">Category</label>
+    <label for="category">@Loc["Category"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Category" />
 
-    <label for="image">Image</label>
+    <label for="image">@Loc["Image"]</label>
     <InputImage @bind-Base64="@config.Metadata.Base64Image" />
 </EditForm>
 

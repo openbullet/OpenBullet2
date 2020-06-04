@@ -1,19 +1,20 @@
 ﻿@page "/configs"
 @using RuriLib.Models.Configs
-@using BlazorInputFile 
+@using BlazorInputFile
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Configs> Loc
 
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> New</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> Edit</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> Delete</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> @Loc["Delete"]</button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="@(() => uploadDisplay = !uploadDisplay)">
-                <span class="oi oi-data-transfer-upload"></span> Upload
+                <span class="oi oi-data-transfer-upload"></span> @Loc["Upload"]
             </button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> Download</button>
-            <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> Reload</button>
-            <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> Toggle View</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> @Loc["Download"]</button>
+            <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> @Loc["Reload"]</button>
+            <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> @Loc["ToggleView"]</button>
         </div>
     </div>
     @if (uploadDisplay)
@@ -30,12 +31,12 @@
             <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
                         AllowSorting="true" Data="@configs" TItem="Config" ColumnWidth="200px" RowSelect="SelectConfig" RowDoubleClick="EditConfig">
                 <Columns>
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="Name" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="Author" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="Category" />
-                    <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="Proxies" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.CreationDate" Title="Creation Date" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="Last Modified" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="@Loc["Name"]" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="@Loc["Author"]" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="@Loc["Category"]" />
+                    <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="@Loc["Proxies"]" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.CreationDate" Title="@Loc["CreationDate"]" />
+                    <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="@Loc["LastModified"]" />
                 </Columns>
             </RadzenGrid>
         }
@@ -52,19 +53,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <span class="text-center text-warning margin-left: 5px;margin-right: 5px;" 
+                                <span class="text-center text-warning margin-left: 5px;margin-right: 5px;"
                                       style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>
+                                </div>
+                                <div class="row">
+                                    <span class="text-center" style="width: 100%">@Loc["by"] @config.Metadata.Author</span>
+                                </div>
+                                <div class="row">
+                                    <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                                </div>
                             </div>
-                            <div class="row">
-                                <span class="text-center" style="width: 100%">by @config.Metadata.Author</span>
-                            </div>
-                            <div class="row">
-                                <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
-                            </div>
-                        </div>
-                    </RadzenCard>
-                </Template>
-            </RadzenDataList>
-        }
+                        </RadzenCard>
+                    </Template>
+                </RadzenDataList>
+            }
     </div>
 </div>
