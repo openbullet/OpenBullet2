@@ -8,22 +8,22 @@
 <div style="margin-bottom: 10px;">
     <RadzenTabs>
         <Tabs>
-            <RadzenTabsItem Text="Paste">
+            <RadzenTabsItem Text="@Loc["Paste"]">
                 <EditForm Model="pasteContent">
                     <InputTextArea @bind-Value="pasteContent" />
-                    <button type="submit" class="btn btn-success" @onclick="ImportFromPaste">Import</button>
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromPaste">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>
-            <RadzenTabsItem Text="File">
+            <RadzenTabsItem Text="@Loc["File"]">
                 <EditForm Model="fileName">
                     <InputFile OnChange="ProcessFile" />
-                    <button type="submit" class="btn btn-success" @onclick="ImportFromFile">Import</button>
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromFile">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>
-            <RadzenTabsItem Text="URL">
+            <RadzenTabsItem Text="@Loc["URL"]">
                 <EditForm Model="url">
                     <InputText @bind-Value="url" />
-                    <button type="submit" class="btn btn-success" @onclick="ImportFromUrl">Import</button>
+                    <button type="submit" class="btn btn-success" @onclick="ImportFromUrl">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>
         </Tabs>
@@ -31,22 +31,22 @@
 </div>
 
 <p>
-    <span style="color: orange;">Advanced syntax:</span><br />
+    <span style="color: orange;">@Loc["AdvancedSyntax"]:</span><br />
     <span>(type)host:port:username:password</span><br />
-    <span>Example: (socks5)127.0.0.1:8080:myuser:mypass</span>
+    <span>@Loc["Example"]: (socks5)127.0.0.1:8080:myuser:mypass</span>
 </p>
 
 <EditForm Model="defaultType">
-    <label>Default Type</label>
+    <label>@Loc["DefaultType"]</label>
     <InputSelect @bind-Value="defaultType">
         @foreach (var type in Enum.GetNames(typeof(ProxyType)))
         {
             <option value="@type">@type</option>
         }
     </InputSelect><br />
-    <label>Default Username</label>
+    <label>@Loc["DefaultUsername"]</label>
     <InputText @bind-Value="defaultUsername" />
-    <label>Default Password</label>
+    <label>@Loc["DefaultPassword"]</label>
     <InputText @bind-Value="defaultPassword" />
 </EditForm>
 
