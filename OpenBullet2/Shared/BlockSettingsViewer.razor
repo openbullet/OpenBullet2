@@ -10,6 +10,8 @@
     <EditForm Model="Block">
         <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Output Variable:</h6>
         <InputText @bind-Value="Block.OutputVariable" />
+        <label>Is Capture</label>
+        <InputCheckbox @bind-Value="Block.IsCapture" />
     </EditForm>
 }
 

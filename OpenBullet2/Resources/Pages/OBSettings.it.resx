@@ -148,10 +148,10 @@
     <value>Quando viene scelta una config da modificare, naviga su</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
-    <value>Target del Controllo Proxy</value>
+    <value>Target del Proxy Check</value>
   </data>
   <data name="ProxyCheckTargetsDescription" xml:space="preserve">
-    <value>Questi sono i target disponibili nel Job Controllo Proxy. I proxy saranno controllati sull'URL target e se la chiave di successo viene trovata nel sorgente scaricato, il proxy sarà etichettato come funzionante.</value>
+    <value>Questi sono i target disponibili nel Proxy Check Job. I proxy saranno controllati sull'URL target e se la Success Key viene trovata nel sorgente scaricato, il proxy sarà etichettato come funzionante.</value>
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remoto</value>
@@ -166,7 +166,7 @@
     <value>Salva</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
-    <value>Chiave di Successo</value>
+    <value>Success Key</value>
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>

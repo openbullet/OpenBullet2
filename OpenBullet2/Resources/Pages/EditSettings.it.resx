@@ -133,7 +133,7 @@
     <value>Apri sempre il browser all'inizio</value>
   </data>
   <data name="BanLoopEvasion" xml:space="preserve">
-    <value>Evasione del ban loop, cioè dopo quanti stati di BAN la riga dati deve essere marcata come TOCHECK e il proxy deve essere bannato (0 per disattivare)</value>
+    <value>Evasione del ban loop, cioè dopo quanti stati di BAN la riga dati deve essere marcata come TOCHECK ed il proxy deve essere bannato (0 per disattivare)</value>
   </data>
   <data name="BanStatuses" xml:space="preserve">
     <value>Banna il proxy quando il bot termina con uno di questi stati</value>
@@ -214,7 +214,7 @@
     <value>User Agent (predefinito se vuoto)</value>
   </data>
   <data name="SliceName" xml:space="preserve">
-    <value>Nome della fetta</value>
+    <value>Nome della parte</value>
   </data>
   <data name="SuggestedBots" xml:space="preserve">
     <value>Numero di Bot suggerito</value>
@@ -223,7 +223,7 @@
     <value>Mostra Aiutante Regex</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
-    <value>Codifica dati per URL dopo averli affettati</value>
+    <value>Codifica dati per URL dopo averli divisi</value>
   </data>
   <data name="UseProxies" xml:space="preserve">
     <value>Usa i proxy</value>
