@@ -135,6 +135,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
   <data name="Purpose" xml:space="preserve">
     <value>Purpose</value>
   </data>

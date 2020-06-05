@@ -6,5 +6,6 @@
         public int Amount { get; set; } = 100;
         public int Step { get; set; } = 1;
         public bool Pad { get; set; } = false;
+        public string WordlistType { get; set; } = "Default";
     }
 }

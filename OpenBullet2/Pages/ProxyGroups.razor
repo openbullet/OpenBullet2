@@ -41,7 +41,7 @@
 
 <RadzenGrid @ref="proxiesGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
-            AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px">
+            AllowSorting="true" Data="@proxies" TItem="ProxyEntity" ColumnWidth="150px" EmptyText="@Loc["NoRecordsToDisplay"]">
     <Columns>
         <RadzenGridColumn TItem="ProxyEntity" Property="Type" Title="@Loc["Type"]" />
         <RadzenGridColumn TItem="ProxyEntity" Property="Host" Title="@Loc["Host"]" />

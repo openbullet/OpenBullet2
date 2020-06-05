@@ -1,7 +1,9 @@
 ﻿@using OpenBullet2.Entities
 @using OpenBullet2.Models.Data
 @using OpenBullet2.Shared.Forms 
+@using RuriLib.Services 
 @inject IModalService Modal
+@inject RuriLibSettingsService RuriLibSettings
 
 <RadzenRadioButtonList @bind-Value="type" TValue="DataPoolType" Change="@((args) => Change(args))">
     <Items>
@@ -34,6 +36,14 @@
         case FileDataPoolOptions x:
             <label>File Name:</label>
             <InputText @bind-Value="x.FileName" />
+            <label>Wordlist Type:</label>
+            <InputSelect @bind-Value="x.WordlistType">
+                @foreach (var name in wordlistTypes)
+                {
+                    <option value="@name">@name</option>
+                }
+            </InputSelect>
+            <br />
             break;
 
         case RangeDataPoolOptions x:
@@ -46,6 +56,14 @@
             <label>Pad:</label>
             <InputCheckbox @bind-Value="x.Pad" />
             <br />
+            <label>Wordlist Type:</label>
+            <InputSelect @bind-Value="x.WordlistType">
+                @foreach (var name in wordlistTypes)
+                {
+                    <option value="@name">@name</option>
+                }
+            </InputSelect>
+            <br />
             break;
 
         case CombinationsDataPoolOptions x:
@@ -56,10 +74,25 @@
             <p style="font-size: 12px; color: #ccc">
                 @Math.Pow(x.CharSet.Length, x.Length) combinations will be generated
             </p>
+            <label>Wordlist Type:</label>
+            <InputSelect @bind-Value="x.WordlistType">
+                @foreach (var name in wordlistTypes)
+                {
+                    <option value="@name">@name</option>
+                }
+            </InputSelect>
+            <br />
             break;
 
         case InfiniteDataPoolOptions x:
-            <p style="font-style: italic;">No settings required.</p>
+            <label>Wordlist Type:</label>
+            <InputSelect @bind-Value="x.WordlistType">
+                @foreach (var name in wordlistTypes)
+                {
+                    <option value="@name">@name</option>
+                }
+            </InputSelect>
+            <br />
             break;
     }
 </EditForm>
@@ -68,6 +101,12 @@
     [Parameter] public DataPoolOptions Options { get; set; }
     DataPoolType type = DataPoolType.Wordlist;
     WordlistEntity selectedWordlist;
+    List<string> wordlistTypes;
+
+    protected override void OnInitialized()
+    {
+        wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(t => t.Name).ToList();
+    }
 
     enum DataPoolType
     {
@@ -84,8 +123,8 @@
         {
             Options = value.Value switch
             {
-                DataPoolType.Wordlist => new WordlistDataPoolOptions() 
-                    { WordlistId = selectedWordlist == null ? -1 : selectedWordlist.Id },
+                DataPoolType.Wordlist => new WordlistDataPoolOptions()
+                { WordlistId = selectedWordlist == null ? -1 : selectedWordlist.Id },
                 DataPoolType.File => new FileDataPoolOptions(),
                 DataPoolType.Range => new RangeDataPoolOptions(),
                 DataPoolType.Combinations => new CombinationsDataPoolOptions(),

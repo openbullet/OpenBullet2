@@ -2,6 +2,6 @@
 {
     public class InfiniteDataPoolOptions : DataPoolOptions
     {
-
+        public string WordlistType { get; set; } = "Default";
     }
 }

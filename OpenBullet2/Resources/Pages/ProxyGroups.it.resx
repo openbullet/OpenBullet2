@@ -141,6 +141,9 @@
   <data name="LastChecked" xml:space="preserve">
     <value>Ultimo Controllo</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Nessun proxy trovato</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>

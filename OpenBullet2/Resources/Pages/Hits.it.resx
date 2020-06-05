@@ -135,6 +135,9 @@
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Nessuna hit trovata</value>
+  </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>
   </data>

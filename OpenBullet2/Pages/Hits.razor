@@ -28,7 +28,7 @@
 <RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@hits" TItem="HitEntity" ColumnWidth="200px"
-            RowSelect="SelectHit">
+            RowSelect="SelectHit" EmptyText="@Loc["NoRecordsToDisplay"]">
     <Columns>
         <RadzenGridColumn TItem="HitEntity" Property="Data" Title="@Loc["Data"]" />
         <RadzenGridColumn TItem="HitEntity" Property="Type" Title="@Loc["Type"]" />

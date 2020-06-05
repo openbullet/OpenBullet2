@@ -28,7 +28,7 @@
 <RadzenGrid @ref="wordlistsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="200px"
-            RowSelect="SelectWordlist">
+            RowSelect="SelectWordlist" EmptyText="@Loc["NoRecordsToDisplay"]">
     <Columns>
         <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
         <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />

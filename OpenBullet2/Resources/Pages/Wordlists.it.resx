@@ -135,6 +135,9 @@
   <data name="Name" xml:space="preserve">
     <value>Nome</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Nessuna wordlist trovata</value>
+  </data>
   <data name="Purpose" xml:space="preserve">
     <value>Ambito</value>
   </data>

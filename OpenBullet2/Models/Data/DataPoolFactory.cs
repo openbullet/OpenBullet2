@@ -22,10 +22,10 @@ namespace OpenBullet2.Models.Data
         {
             DataPool pool = options switch
             {
-                InfiniteDataPoolOptions _ => new InfiniteDataPool(),
-                CombinationsDataPoolOptions x => new CombinationsDataPool(x.CharSet, x.Length),
-                RangeDataPoolOptions x => new RangeDataPool(x.Start, x.Amount, x.Step, x.Pad),
-                FileDataPoolOptions x => new FileDataPool(x.FileName),
+                InfiniteDataPoolOptions x => new InfiniteDataPool(x.WordlistType),
+                CombinationsDataPoolOptions x => new CombinationsDataPool(x.CharSet, x.Length, x.WordlistType),
+                RangeDataPoolOptions x => new RangeDataPool(x.Start, x.Amount, x.Step, x.Pad, x.WordlistType),
+                FileDataPoolOptions x => new FileDataPool(x.FileName, x.WordlistType),
                 WordlistDataPoolOptions x => await MakeWordlistDataPool(x),
                 _ => throw new NotImplementedException()
             };

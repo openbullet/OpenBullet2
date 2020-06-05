@@ -141,6 +141,9 @@
   <data name="LastChecked" xml:space="preserve">
     <value>Last Checked</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
