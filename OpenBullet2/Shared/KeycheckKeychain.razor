@@ -6,28 +6,24 @@
 <div class="container-fluid"
      style="background-color: @GetBGColor()">
     <div class="row">
-        <div class="col no-padding">Result Status:</div>
-        <div class="col no-padding">
-            <EditForm Model="Keychain">
-                <InputSelect @bind-Value="Keychain.ResultStatus">
-                    @foreach (var status in RuriLibSettings.GetStatuses())
-                    {
-                        <option value="@status">@status</option>
-                    }
-                </InputSelect>
-            </EditForm>
-        </div>
-        <div class="col no-padding">Mode:</div>
-        <div class="col no-padding">
-            <EditForm Model="Keychain">
-                <InputSelect @bind-Value="Keychain.Mode">
-                    @foreach (var mode in Enum.GetNames(typeof(KeychainMode)))
-                    {
-                        <option value="@mode">@mode</option>
-                    }
-                </InputSelect>
-            </EditForm>
-        </div>
+        <EditForm Model="Keychain">
+            <label>Result Status:</label>
+            <InputSelect @bind-Value="Keychain.ResultStatus">
+                @foreach (var status in RuriLibSettings.GetStatuses())
+                {
+                    <option value="@status">@status</option>
+                }
+            </InputSelect>
+        </EditForm>
+        <EditForm Model="Keychain">
+            <label>Mode:</label>
+            <InputSelect @bind-Value="Keychain.Mode">
+                @foreach (var mode in Enum.GetNames(typeof(KeychainMode)))
+                {
+                    <option value="@mode">@mode</option>
+                }
+            </InputSelect>
+        </EditForm>
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">

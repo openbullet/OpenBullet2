@@ -3,6 +3,7 @@
 @using OpenBullet2.Helpers
 @inject ConfigService ConfigService
 @inject IModalService ModalService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ConfigSelector> Loc
 
 <div style="overflow-y: auto; width: 1000px;">
     <div style="height: 250px; overflow-y: auto;">
@@ -10,11 +11,11 @@
                     AllowSorting="true" Data="@ConfigService.Configs" TItem="Config" ColumnWidth="130px"
                     RowSelect="Preview" RowDoubleClick="Select">
             <Columns>
-                <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="Name" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="Author" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="Category" />
-                <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="Proxies" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="Last Modified" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="@Loc["Name"]" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="@Loc["Author"]" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="@Loc["Category"]" />
+                <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="@Loc["Proxies"]" />
+                <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="@Loc["LastModified"]" />
             </Columns>
         </RadzenGrid>
     </div>
@@ -22,7 +23,7 @@
         @if (selectedConfig != null)
         {
             <div style="width: 100%">
-                <p style="color: orange;">@selectedConfig.Metadata.Name by @selectedConfig.Metadata.Author</p>
+                <p style="color: orange;">@selectedConfig.Metadata.Name @Loc["by"] @selectedConfig.Metadata.Author</p>
             </div>
             <div style="width: 100%">
                 <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
@@ -30,7 +31,7 @@
         }
     </div>
     <div>
-        <button class="btn btn-success" @onclick="Select">Select</button>
+        <button class="btn btn-success" @onclick="Select">@Loc["Select"]</button>
     </div>
 </div>
 

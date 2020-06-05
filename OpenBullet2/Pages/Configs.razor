@@ -25,7 +25,7 @@
             </div>
         </div>
     }
-    <div class="row" style="margin-top: 30px;">
+    <div class="row config-list" style="margin-top: 30px;">
         @if (detailedView)
         {
             <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
@@ -44,23 +44,23 @@
         {
             <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config">
                 <Template Context="config">
-                    <RadzenCard Style="width:170px;">
-                        <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px;"
+                    <RadzenCard Style="width:130px;">
+                        <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px; margin: -10px;"
                              @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
                             <div class="row">
-                                <div style="width: 110px; height: 110px; margin: 0 20px 0 20px;">
-                                    <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 100%; height: 100%;" />
+                                <div style="margin: 0 auto;">
+                                    <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 80px; height:80px;" />
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <span class="text-center text-warning margin-left: 5px;margin-right: 5px;"
-                                      style="width: 100%; font-size: 20px;">@config.Metadata.Name</span>
+                                      style="width: 100%; font-size: 16px;">@config.Metadata.Name</span>
                                 </div>
                                 <div class="row">
-                                    <span class="text-center" style="width: 100%">@Loc["by"] @config.Metadata.Author</span>
+                                    <span class="text-center" style="width: 100%; font-size: 14px;">@Loc["by"] @config.Metadata.Author</span>
                                 </div>
                                 <div class="row">
-                                    <span class="text-center" style="width: 100%">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                                    <span class="text-center" style="width: 100%; font-size: 14px;">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
                                 </div>
                             </div>
                         </RadzenCard>

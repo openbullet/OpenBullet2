@@ -99,10 +99,11 @@
     </ul>
 </div>
 
-<div class="fixed-bottom float-left text-center mb-2" style="width: 230px;">
-    <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
-    <br /><br />
-    <span style="font-family: Consolas; color: #666; font-size: 10px;">v0.0.1 [Pre-Alpha]</span>
+<div class="fixed-bottom float-left text-center mb-3" style="width: 230px;">
+    <div style="width: 100%; margin-bottom: 10px;">
+        <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+    </div>
+    <span style="font-family: Consolas; color: #999; font-size: 12px;">v0.0.1 [Pre-Alpha]</span>
 </div>
 
 @code {

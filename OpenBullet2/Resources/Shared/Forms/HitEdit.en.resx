@@ -117,61 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add" xml:space="preserve">
-    <value>Aggiungi</value>
+  <data name="CapturedData" xml:space="preserve">
+    <value>Captured Data</value>
   </data>
-  <data name="AutoSetRecommendedBots" xml:space="preserve">
-    <value>Imposta automaticamente il numero di bot consigliato quando una config viene selezionata nella pagina di creazione dei job</value>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
   </data>
-  <data name="Clear" xml:space="preserve">
-    <value>Pulisci</value>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
   </data>
-  <data name="DefaultAuthor" xml:space="preserve">
-    <value>L'autore predefinito delle config create</value>
-  </data>
-  <data name="EnableJobLogging" xml:space="preserve">
-    <value>Abilita il logging nella pagina della visualizzazione job</value>
-  </data>
-  <data name="General" xml:space="preserve">
-    <value>Generali</value>
-  </data>
-  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
-    <value>Ignora il nome della wordlist quando si rimuovono i duplicati dalle hit</value>
-  </data>
-  <data name="LogBufferSize" xml:space="preserve">
-    <value>Dimensione buffer del log</value>
-  </data>
-  <data name="LogToFile" xml:space="preserve">
-    <value>Logga anche su file</value>
-  </data>
-  <data name="NavigateOnEdit" xml:space="preserve">
-    <value>Quando viene scelta una config da modificare, naviga su</value>
-  </data>
-  <data name="ProxyCheckTargets" xml:space="preserve">
-    <value>Target del Controllo Proxy</value>
-  </data>
-  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
-    <value>Questi sono i target disponibili nel Job Controllo Proxy. I proxy saranno controllati sull'URL target e se la chiave di successo viene trovata nel sorgente scaricato, il proxy sarà etichettato come funzionante.</value>
-  </data>
-  <data name="Remote" xml:space="preserve">
-    <value>Remoto</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Rimuovi</value>
-  </data>
-  <data name="RestoreDefaults" xml:space="preserve">
-    <value>Ripristina Predefiniti</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Salva</value>
-  </data>
-  <data name="SuccessKey" xml:space="preserve">
-    <value>Chiave di Successo</value>
-  </data>
-  <data name="URL" xml:space="preserve">
-    <value>URL</value>
-  </data>
-  <data name="WarnConfigNotSaved" xml:space="preserve">
-    <value>Mostra un avviso quando la config corrente non è stata modificata e non salvata e ne viene selezionata un'altra.</value>
+  <data name="HitType" xml:space="preserve">
+    <value>Hit Type</value>
   </data>
 </root>
