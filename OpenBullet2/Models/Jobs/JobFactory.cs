@@ -50,7 +50,7 @@ namespace OpenBullet2.Models.Jobs
 
         private SingleRunJob MakeSingleRunJob(SingleRunJobOptions options)
         {
-            var job = new SingleRunJob(settingsService)
+            return new SingleRunJob(settingsService)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
@@ -59,12 +59,9 @@ namespace OpenBullet2.Models.Jobs
                 ProxyMode = options.ProxyMode,
                 ProxyType = options.ProxyType,
                 WordlistType = options.WordlistType,
-                StartCondition = options.StartCondition
+                StartCondition = options.StartCondition,
+                HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList()
             };
-
-            job.HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList();
-
-            return job;
         }
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
@@ -74,13 +71,14 @@ namespace OpenBullet2.Models.Jobs
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
                 ProxyMode = options.ProxyMode,
-                StartCondition = options.StartCondition
+                StartCondition = options.StartCondition,
+                Bots = options.Bots,
+                Skip = options.Skip,
+                HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList(),
+                ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result
             };
 
-            job.HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList();
-            job.ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result;
             job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;
-
             return job;
         }
 

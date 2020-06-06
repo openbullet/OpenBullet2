@@ -74,7 +74,7 @@ namespace OpenBullet2.Shared
 
             var script = new ScriptBuilder()
                 .ConfigureSlices(dataLine.GetVariables())
-                .Build(Config);
+                .Build(Config.CSharpScript);
             
             try
             {

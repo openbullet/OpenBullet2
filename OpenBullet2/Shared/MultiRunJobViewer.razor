@@ -1,0 +1,387 @@
+﻿@using RuriLib.Models.Jobs
+@using RuriLib.Models.Jobs.Threading
+@using OpenBullet2.Helpers
+@using OpenBullet2.Services
+@using OpenBullet2.Shared.Forms
+@using OpenBullet2.Models.Hits
+@using RuriLib.Models.Hits.HitOutputs 
+@using RuriLib.Models.Proxies.ProxySources 
+@using RuriLib.Models.Data.DataPools 
+@using OpenBullet2.Models.Proxies.Sources 
+@using System.Globalization 
+@inject IModalService Modal
+@inject PersistentSettingsService PersistentSettings
+
+<div>
+    <p style="color: orange;"><b>Job Options</b></p>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th scope="row">Config</th>
+                <td>@Job.Config.Metadata.Name by @Job.Config.Metadata.Author</td>
+            </tr>
+            <tr>
+                <th scope="row">Data Pool</th>
+                <td>
+                    @switch (Job.DataPool)
+                    {
+                        case WordlistDataPool x:
+                            <span>Wordlist: @x.Wordlist.Name</span>
+                            break;
+
+                        case InfiniteDataPool x:
+                            <span>Infinite data pool</span>
+                            break;
+
+                        case CombinationsDataPool x:
+                            <span>Combinations of @x.CharSet with length @x.Length</span>
+                            break;
+
+                        case RangeDataPool x:
+                            <span>Range from @x.Start with amount @x.Amount and step @x.Step (padding @x.Pad)</span>
+                            break;
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Proxy Source</th>
+                <td>
+                    @switch (Job.ProxySource)
+                    {
+                        case GroupProxySource x:
+                            <span>Group: @x.GroupId</span>
+                            break;
+
+                        case FileProxySource x:
+                            <span>File: @x.FileName</span>
+                            break;
+
+                        case RemoteProxySource x:
+                            <span>Remote: @x.Url</span>
+                            break;
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Proxy Mode</th>
+                <td>@Job.ProxyMode</td>
+            </tr>
+            <tr>
+                <th scope="row">Hit Outputs</th>
+                <td>
+                    @foreach (var output in Job.HitOutputs)
+                    {
+                        <p>
+                            @switch (output)
+                            {
+                                case DatabaseHitOutput x:
+                                    <span style="color: aquamarine;">Database</span>
+                                    break;
+
+                                case FileSystemHitOutput x:
+                                    <span style="color: greenyellow;">FileSystem (@x.BaseDir)</span>
+                                    break;
+
+                                case DiscordWebhookHitOutput x:
+                                    <span style="color: hotpink;">FileSystem (@x.Webhook.Substring(10) ...)</span>
+                                    break;
+                            }
+                        </p>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Skip</th>
+                <td>@Job.Skip</td>
+            </tr>
+            <tr>
+                <th scope="row">Bots</th>
+                <td>
+                    <span style="margin-right: 10px;">@Job.Bots</span>
+                    @if (!changingBots)
+                    {
+                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> Change</button>
+                    }
+                    else
+                    {
+                        <span><i>Changing... please wait</i></span>
+                    }
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p style="color: orange;"><b>Controls</b></p>
+<div class="list-group list-group-horizontal">
+    @switch (Job.Status)
+    {
+        case TaskManagerStatus.Idle:
+            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            break;
+
+        case TaskManagerStatus.Paused:
+            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
+            break;
+
+        case TaskManagerStatus.Running:
+            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            break;
+
+        case TaskManagerStatus.Pausing:
+            <span><i>Pausing... please wait until the current tasks finished processing</i></span>
+            break;
+
+        case TaskManagerStatus.Stopping:
+            <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            break;
+    }
+</div>
+
+<div class="progress mt-3">
+    <div class="progress-bar" role="progressbar"
+         style="width: @((Job.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+</div>
+
+<div class="mt-2">
+    <p style="color: orange;"><b>Data Stats</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Total</th>
+                <th scope="col" style="color: greenyellow;">Hits</th>
+                <th scope="col" style="color: orange;">Custom</th>
+                <th scope="col" style="color: tomato;">Bad</th>
+                <th scope="col" style="color: yellow;">Retried</th>
+                <th scope="col" style="color: plum;">Banned</th>
+                <th scope="col" style="color: skyblue;">To Check</th>
+                <th scope="col" style="color: red;">Errors</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Job.DataTested</td>
+                <td style="color: greenyellow;">@Job.DataHits</td>
+                <td style="color: orange;">@Job.DataCustom</td>
+                <td style="color: tomato;">@Job.DataBad</td>
+                <td style="color: yellow;">@Job.DataRetried</td>
+                <td style="color: plum;">@Job.DataBanned</td>
+                <td style="color: skyblue;">@Job.DataToCheck</td>
+                <td style="color: red;">@Job.DataErrors</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-2">
+    <p style="color: orange;"><b>Proxy Stats</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Total</th>
+                <th scope="col" style="color: greenyellow;">Alive</th>
+                <th scope="col" style="color: tomato;">Bad</th>
+                <th scope="col" style="color: plum;">Banned</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Job.ProxiesTotal</td>
+                <td style="color: greenyellow;">@Job.ProxiesAlive</td>
+                <td style="color: tomato;">@Job.ProxiesBad</td>
+                <td style="color: plum;">@Job.ProxiesBanned</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-2">
+    <p style="color: orange;"><b>Other stats</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">CPM</th>
+                <th scope="col">Captcha Credit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Job.CPM</td>
+                <td>@Job.CaptchaCredit</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<GenericLogger @ref="logger" BufferSize="PersistentSettings.OpenBulletSettings.GeneralSettings.LogBufferSize" />
+
+@code {
+    [Parameter] public MultiRunJob Job { get; set; }
+    int refreshInterval = 1000;
+    GenericLogger logger;
+    bool changingBots = false;
+
+    protected override void OnInitialized()
+    {
+        PeriodicRefresh(refreshInterval);
+        TryHookLogger();
+    }
+
+    private async Task ChangeBots()
+    {
+        var modal = Modal.Show<BotsSelector>("Edit bots amount");
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            var newAmount = (int)result.Data;
+            changingBots = true;
+
+            if (Job.Manager != null)
+                await Job.Manager.SetConcurrentTasks(newAmount);
+
+            Job.Bots = newAmount;
+            changingBots = false;
+        }
+    }
+
+    private void LogResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
+    {
+        var botData = details.Result.BotData;
+        var data = botData.Line.Data;
+
+        var message = $"Line checked ({data}) with status {botData.STATUS}";
+        var color = botData.STATUS switch
+        {
+            "SUCCESS" => "yellowgreen",
+            "FAIL" => "tomato",
+            "BAN" => "plum",
+            "RETRY" => "yellow",
+            "ERROR" => "red",
+            "NONE" => "skyblue",
+            _ => "orange"
+        };
+        logger.Log(GenericLogger.LogKind.Info, message, color);
+    }
+
+    private void LogError(object sender, Exception ex)
+    {
+        logger.LogError($"Task Manager Error! {ex.Message}");
+    }
+
+    private void LogTaskError(object sender, ErrorDetails<MultiRunInput> details)
+    {
+        var proxy = details.Item.BotData.Proxy;
+        var data = details.Item.BotData.Line.Data;
+        logger.LogError($"Task Error ({proxy})({data})! {details.Exception.Message}");
+    }
+
+    private void LogCompleted(object sender, EventArgs e)
+    {
+        logger.LogInfo($"The Task Manager completed all of its work");
+    }
+
+    private void TryHookLogger()
+    {
+        if (Job.Manager != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+        {
+            try { Job.Manager.OnResult -= LogResult; } catch { }
+            try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
+            try { Job.Manager.OnError -= LogError; } catch { }
+            try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
+
+            try
+            {
+                Job.Manager.OnResult += LogResult;
+                Job.Manager.OnTaskError += LogTaskError;
+                Job.Manager.OnError += LogError;
+                Job.Manager.OnCompleted += LogCompleted;
+            }
+            catch { }
+        }
+    }
+
+    private async Task Start()
+    {
+        try
+        {
+            await Job.Start();
+            TryHookLogger();
+            logger.LogInfo("Started checking");
+            PeriodicRefresh(refreshInterval);
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Stop()
+    {
+        try
+        {
+            logger.LogInfo("Sending soft stop signal");
+            await Job.Stop();
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Abort()
+    {
+        try
+        {
+            logger.LogInfo("Sending hard abort signal");
+            await Job.Abort();
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Pause()
+    {
+        try
+        {
+            logger.LogInfo("Sending pause signal");
+            await Job.Pause();
+            logger.LogInfo("The Task Manager was paused");
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async Task Resume()
+    {
+        try
+        {
+            await Job.Resume();
+            logger.LogInfo("Resumed checking");
+            PeriodicRefresh(refreshInterval);
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().ToString(), ex.Message);
+        }
+    }
+
+    private async void PeriodicRefresh(int interval)
+    {
+        while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
+        {
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(Math.Max(50, interval));
+        }
+
+        // A final one to refresh the button status
+        await InvokeAsync(StateHasChanged);
+    }
+}

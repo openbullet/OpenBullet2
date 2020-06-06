@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # DB file
-OpenBullet.db
+OpenBullet.db*
 
 # Settings
 OpenBulletSettings.json
@@ -32,6 +32,7 @@ bld/
 [Ll]og/
 
 Configs/
+Wordlists/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

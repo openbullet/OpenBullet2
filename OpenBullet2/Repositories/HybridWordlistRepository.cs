@@ -17,6 +17,9 @@ namespace OpenBullet2.Repositories
             Directory.CreateDirectory("Wordlists");
         }
 
+        /// <summary>
+        /// Adds a wordlist that already exists on disk.
+        /// </summary>
         public async Task Add(WordlistEntity entity)
         {
             // Save it to the DB
@@ -24,16 +27,19 @@ namespace OpenBullet2.Repositories
             await context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Adds a wordlist and writes its content to disk.
+        /// </summary>
         public async Task Add(WordlistEntity entity, MemoryStream stream)
         {
             // Generate a unique filename
-            entity.FileName = $"{Guid.NewGuid()}.txt";
+            entity.FileName = $"Wordlists/{Guid.NewGuid()}.txt";
 
             // Create the file on disk
-            await File.WriteAllBytesAsync(GetFileName(entity), stream.ToArray());
+            await File.WriteAllBytesAsync(entity.FileName, stream.ToArray());
 
             // Count the amount of lines
-            entity.Total = File.ReadLines(GetFileName(entity)).Count();
+            entity.Total = File.ReadLines(entity.FileName).Count();
 
             await Add(entity);
         }
@@ -56,17 +62,11 @@ namespace OpenBullet2.Repositories
 
         public async Task Delete(WordlistEntity entity, bool deleteFile = true)
         {
-            if (deleteFile && File.Exists(GetFileName(entity)))
-                File.Delete(GetFileName(entity));
+            if (deleteFile && File.Exists(entity.FileName))
+                File.Delete(entity.FileName);
 
             context.Remove(entity);
             await context.SaveChangesAsync();
         }
-
-        private string GetFileName(WordlistEntity wordlist)
-            => GetFileName(wordlist.FileName);
-
-        private string GetFileName(string fileName)
-            => $"Wordlists/{fileName}";
     }
 }

@@ -142,7 +142,7 @@
         if (!result.Cancelled)
         {
             selectedWordlist = result.Data as WordlistEntity;
-            (Options as WordlistDataPoolOptions).WordlistId = selectedWordlist.Id;
+            ((WordlistDataPoolOptions)Options).WordlistId = selectedWordlist.Id;
         }
     }
 }
