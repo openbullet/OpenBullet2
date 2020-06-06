@@ -112,6 +112,7 @@ namespace OpenBullet2.Pages
             if (await js.Confirm("Are you sure?", $"Do you really want to DELETE ALL of your hits?"))
             {
                 HitRepo.Purge();
+                await RefreshList();
             }
         }
     }

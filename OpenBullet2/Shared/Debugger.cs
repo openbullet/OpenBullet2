@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Modal;
@@ -71,6 +72,7 @@ namespace OpenBullet2.Shared
 
             // Build the BotData
             BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
+            data.Objects.Add("httpClient", new HttpClient());
 
             var script = new ScriptBuilder()
                 .Build(Config.CSharpScript);
