@@ -73,7 +73,6 @@ namespace OpenBullet2.Shared
             BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
 
             var script = new ScriptBuilder()
-                .ConfigureSlices(dataLine.GetVariables())
                 .Build(Config.CSharpScript);
             
             try
