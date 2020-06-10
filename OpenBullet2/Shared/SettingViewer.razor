@@ -37,6 +37,10 @@
             case DictionaryOfStringsSetting x:
                 <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
                 break;
+
+            case ByteArraySetting x:
+                <InputByteArray @bind-Bytes="x.Value" />
+                break;
         }
 
     </div>

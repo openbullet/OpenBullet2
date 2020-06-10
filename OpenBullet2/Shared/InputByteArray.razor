@@ -1,0 +1,62 @@
+﻿@using RuriLib.Functions.Conversion 
+<span>Byte Array Value (as hex): @(Bytes == null ? "null" : HexConverter.ToHexString(Bytes))</span><br />
+<label>Hex</label>
+<InputText @oninput="OnHexChanged" @bind-Value="hexValue" />
+<label>Base64</label>
+<InputText @oninput="OnBase64Changed" @bind-Value="base64Value" />
+
+@code { 
+    [Parameter] public byte[] Bytes { get; set; }
+    [Parameter] public EventCallback<byte[]> BytesChanged { get; set; }
+
+    private string base64Value = string.Empty;
+    private string hexValue = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (Bytes != null)
+        {
+            base64Value = Base64Converter.ToBase64String(Bytes);
+            hexValue = HexConverter.ToHexString(Bytes);
+        }
+    }
+
+    private Task OnHexChanged(ChangeEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            Bytes = null;
+        }
+        else
+        {
+            try
+            {
+                Bytes = HexConverter.ToByteArray(e.Value.ToString(), false);
+                base64Value = Base64Converter.ToBase64String(Bytes);
+            }
+            catch { }
+        }
+        return BytesChanged.InvokeAsync(Bytes);
+    }
+
+    private Task OnBase64Changed(ChangeEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            Bytes = null;
+        }
+        else
+        {
+            try
+            {
+                Bytes = Base64Converter.ToByteArray(e.Value.ToString());
+                hexValue = HexConverter.ToHexString(Bytes);
+            }
+            catch { }
+        }
+
+        return BytesChanged.InvokeAsync(Bytes);
+    }
+}
