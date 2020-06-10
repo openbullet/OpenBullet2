@@ -1,6 +1,12 @@
 ﻿@using RuriLib.Models.Blocks
 
 <EditForm Model="Block">
+    <p style="color: darkseagreen">
+        <span><b>@Block.ReadableName (@Block.Id)</b></span><br />
+        <span style="font-size: 12px;"><i>@Block.Descriptor.Description</i></span><br />
+        <span style="font-size: 12px;"><i>@Block.Descriptor.ExtraInfo</i></span>
+    </p>
+
     <h6 class="font-weight-bold text-warning">Label:</h6>
     <InputText @bind-Value="Block.Label" />
 </EditForm>

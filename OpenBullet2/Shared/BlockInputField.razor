@@ -42,11 +42,14 @@
                     title="Specify a fixed input">
                 <span class="oi oi-text" aria-hidden="true"></span>
             </button>
-            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
-                    @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
-                    title="Specify an interpolated string as input, the old OpenBullet style">
-                <span class="oi oi-code" aria-hidden="true"></span>
-            </button>
+            @if (BlockSetting.FixedSetting is StringSetting)
+            {
+                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
+                        title="Specify an interpolated string as input, the old OpenBullet style">
+                    <span class="oi oi-code" aria-hidden="true"></span>
+                </button>
+            }
         </div>
     </div>
 }
