@@ -1,0 +1,194 @@
+﻿@page "/settings/rurilib"
+@using OpenBullet2.Helpers
+@using RuriLib.Services
+@using RuriLib.Models.Settings
+@using RuriLib.Functions.Captchas
+@inject RuriLibSettingsService RuriLibSettings
+@inject NavigationManager Nav
+@inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
+
+<h1>@Loc["General"]</h1>
+<EditForm Model="settings.GeneralSettings">
+
+    <label>@Loc["RestrictBlocksToCWD"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.RestrictBlocksToCWD" />
+    <br />
+
+    <label>@Loc["UserAgents"]</label>
+    <InputListOfStrings @bind-List="settings.GeneralSettings.UserAgents" />
+</EditForm>
+
+<h1>@Loc["Proxies"]</h1>
+<EditForm Model="settings.ProxySettings">
+    <label>@Loc["GlobalBanKeys"]</label>
+    <InputListOfStrings @bind-List="settings.ProxySettings.GlobalBanKeys" />
+
+    <label>@Loc["GlobalRetryKeys"]</label>
+    <InputListOfStrings @bind-List="settings.ProxySettings.GlobalRetryKeys" />
+</EditForm>
+
+<h1>@Loc["Captchas"]</h1>
+<EditForm Model="settings.CaptchaSettings">
+    <label>@Loc["TimeoutSeconds"]</label>
+    <InputNumber @bind-Value="settings.CaptchaSettings.TimeoutSeconds" />
+
+    <label>@Loc["CheckBalanceBeforeSolving"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CheckBalanceBeforeSolving" />
+    <br />
+
+    <label>@Loc["CurrentService"]</label>
+    <InputSelect @bind-Value="settings.CaptchaSettings.CurrentService">
+        @foreach (var service in Enum.GetNames(typeof(CaptchaServiceType)))
+        {
+            <option value="@service">@service</option>
+        }
+    </InputSelect>
+    <br />
+
+    @switch (settings.CaptchaSettings.CurrentService)
+    {
+        case CaptchaServiceType.AntiCaptcha:
+            <label>@Loc["AntiCaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.AntiCaptchaApiKey" />
+            break;
+
+        case CaptchaServiceType.AzCaptcha:
+            <label>@Loc["AZCaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.AZCaptchaApiKey" />
+            break;
+
+        case CaptchaServiceType.CapMonster:
+            <label>@Loc["CapMonsterHost"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CapMonsterHost" />
+
+            <label>@Loc["CapMonsterPort"]</label>
+            <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CapMonsterPort" />
+            break;
+
+        case CaptchaServiceType.CaptchasIO:
+            <label>@Loc["CaptchasDotIoApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CaptchasDotIoApiKey" />
+            break;
+
+        case CaptchaServiceType.CustomTwoCaptcha:
+            <label>@Loc["Custom2CaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CustomTwoCaptchaApiKey" />
+
+            <label>@Loc["Custom2CaptchaHost"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CustomTwoCaptchaDomain" />
+
+            <label>@Loc["Custom2CaptchaPort"]</label>
+            <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.CustomTwoCaptchaPort" />
+            break;
+
+        case CaptchaServiceType.DeathByCaptcha:
+            <label>@Loc["DeathByCaptchaUsername"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.DeathByCaptchaUsername" />
+
+            <label>@Loc["DeathByCaptchaPassword"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.DeathByCaptchaPassword" />
+            break;
+
+        case CaptchaServiceType.DeCaptcher:
+            <label>@Loc["DeCaptcherUsername"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.DeCaptcherUsername" />
+
+            <label>@Loc["DeCaptcherPassword"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.DeCaptcherPassword" />
+            break;
+
+        case CaptchaServiceType.ImageTyperz:
+            <label>@Loc["ImageTyperzApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.ImageTyperzApiKey" />
+            break;
+
+        case CaptchaServiceType.RuCaptcha:
+            <label>@Loc["RuCaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.RuCaptchaApiKey" />
+            break;
+
+        case CaptchaServiceType.SolveCaptcha:
+            <label>@Loc["SolveCaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.SolveCaptchaApiKey" />
+            break;
+
+        case CaptchaServiceType.SolveRecaptcha:
+            <label>@Loc["SolveRecaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.SolveRecaptchaApiKey" />
+            break;
+
+        case CaptchaServiceType.TrueCaptcha:
+            <label>@Loc["TrueCaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.TrueCaptchaApiKey" />
+
+            <label>@Loc["TrueCaptchaUsername"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.TrueCaptchaUsername" />
+            break;
+
+        case CaptchaServiceType.TwoCaptcha:
+            <label>@Loc["2CaptchaApiKey"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.CaptchaSettings.TwoCaptchaApiKey" />
+            break;
+    }
+</EditForm>
+
+<h1>@Loc["Selenium"]</h1>
+<EditForm Model="settings.SeleniumSettings">
+    <label>@Loc["SelectedBrowser"]</label>
+    <InputSelect @bind-Value="settings.SeleniumSettings.SelectedBrowser">
+        @foreach (var type in Enum.GetNames(typeof(SeleniumSettings.BrowserType)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect>
+    <br />
+
+    @switch (settings.SeleniumSettings.SelectedBrowser) 
+    {
+        case SeleniumSettings.BrowserType.Chrome:
+            <label>@Loc["ChromeBinaryLocation"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.ChromeBinaryLocation" />
+            break;
+
+        case SeleniumSettings.BrowserType.Firefox:
+            <label>@Loc["FirefoxBinaryLocation"]</label>
+            <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.FirefoxBinaryLocation" />
+            break;
+    }
+
+    <label>@Loc["DrawMouseMovement"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.DrawMouseMovement" />
+    <br />
+</EditForm>
+
+<button class="btn btn-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
+<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
+
+@code { GlobalSettings settings;
+
+            protected override void OnInitialized()
+            {
+                settings = RuriLibSettings.RuriLibSettings;
+            }
+
+            async Task RestoreDefaults()
+            {
+                if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
+                {
+                    RuriLibSettings.RuriLibSettings = new GlobalSettings();
+                    Nav.NavigateTo("/settings/rurilib");
+                }
+            }
+
+            async Task Save()
+            {
+                try
+                {
+                    await RuriLibSettings.Save();
+                    await js.AlertSuccess("Saved", "The settings were successfully saved.");
+                }
+                catch (Exception ex)
+                {
+                    await js.AlertError(ex.GetType().Name, ex.Message);
+                }
+            } }
