@@ -16,7 +16,7 @@
 else
 {
     <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
-    <GenericList List="Descriptors.Where(b => b.Category.Name == category.Value.Name).ToList()">
+    <GenericList List="Descriptors.Where(b => b.Category.Name == category.Value.Name).OrderBy(b => b.Name).ToList()">
         <ElementTemplate Context="descriptor">
             <div style="margin-top: 5px" ></div>
             <IndividualDescriptor Descriptor="descriptor" SelectedDescriptor="SelectedDescriptor" />
@@ -34,7 +34,7 @@ else
 
     protected override void OnInitialized()
     {
-        categories = Descriptors.Select(b => b.Category).Distinct().ToList();
+        categories = Descriptors.Select(b => b.Category).Distinct().OrderBy(c => c.Name).ToList();
     }
 
     private void SelectCategory(BlockCategory category)

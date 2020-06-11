@@ -32,11 +32,14 @@
             </div>
         </div>
         <div class="row" style="margin-top: -15px;">
-            <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Variable ? "border-dark" : "")"
-                    @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Variable)"
-                    title="Specify a variable as input">
-                <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
-            </button>
+            @if (!(BlockSetting.FixedSetting is EnumSetting))
+            {
+                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Variable ? "border-dark" : "")"
+                        @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Variable)"
+                        title="Specify a variable as input">
+                    <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
+                </button>
+            }
             <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Fixed ? "border-dark" : "")"
                     @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Fixed)"
                     title="Specify a fixed input">
@@ -44,12 +47,11 @@
             </button>
             @if (BlockSetting.FixedSetting is StringSetting)
             {
-                <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
-                        @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
-                        title="Specify an interpolated string as input, the old OpenBullet style">
-                    <span class="oi oi-code" aria-hidden="true"></span>
-                </button>
-            }
+        <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
+                @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
+                title="Specify an interpolated string as input, the old OpenBullet style">
+            <span class="oi oi-code" aria-hidden="true"></span>
+        </button>}
         </div>
     </div>
 }
