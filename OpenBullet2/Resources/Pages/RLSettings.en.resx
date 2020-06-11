@@ -138,6 +138,9 @@
   <data name="CaptchasDotIoApiKey" xml:space="preserve">
     <value>Captchas.IO API Key</value>
   </data>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Check Balance</value>
+  </data>
   <data name="CheckBalanceBeforeSolving" xml:space="preserve">
     <value>Check the account balance before solving the captcha</value>
   </data>
