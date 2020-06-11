@@ -33,7 +33,7 @@ namespace OpenBullet2.Pages
             var options = new EditorOptions()
             {
                 Value = config.LoliCodeScript,
-                Language = "csharp",
+                Language = "lolicode",
                 Theme = "vs-dark",
                 Minimap = new MinimapOptions()
                 {
