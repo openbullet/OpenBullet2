@@ -40,7 +40,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Radzen.Blazor" Version="2.8.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
-    <PackageReference Include="SocksSharp" Version="1.1.1" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="1.5.0.20109" />
   </ItemGroup>
@@ -51,6 +50,9 @@
     </Reference>
     <Reference Include="RuriLib">
       <HintPath>..\..\RuriLib\RuriLib\bin\Debug\netcoreapp3.1\RuriLib.dll</HintPath>
+    </Reference>
+    <Reference Include="SocksSharp">
+      <HintPath>..\..\SocksSharp\src\SocksSharp\bin\Debug\netstandard2.0\SocksSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
