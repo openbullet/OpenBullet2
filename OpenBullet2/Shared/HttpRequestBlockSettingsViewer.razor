@@ -1,0 +1,95 @@
+﻿@using RuriLib.Models.Blocks.Custom
+@using RuriLib.Models.Blocks.Custom.HttpRequest 
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold text-warning">Label:</h6>
+    <InputText @bind-Value="Block.Label" />
+</EditForm>
+
+<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Settings:</h6>
+@foreach (var setting in Block.Settings)
+{
+    <BlockInputField BlockSetting="setting" />
+    <hr />
+}
+
+<RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">
+    <Items>
+        <RadzenRadioButtonListItem Text="Standard" Value="RequestParamsType.Standard" />
+        <RadzenRadioButtonListItem Text="Raw" Value="RequestParamsType.Raw" />
+        <RadzenRadioButtonListItem Text="Basic Auth" Value="RequestParamsType.BasicAuth" />
+        <RadzenRadioButtonListItem Text="Multipart" Value="RequestParamsType.Multipart" />
+    </Items>
+</RadzenRadioButtonList>
+
+<EditForm Model="Block">
+    @switch (Block.RequestParams)
+    {
+        case StandardRequestParams x:
+            <BlockInputField BlockSetting="x.Content" />
+            <hr />
+            <BlockInputField BlockSetting="x.ContentType" />
+            <hr />
+            break;
+
+        case RawRequestParams x:
+            <BlockInputField BlockSetting="x.Content" />
+            <hr />
+            <BlockInputField BlockSetting="x.ContentType" />
+            <hr />
+            break;
+
+        case BasicAuthRequestParams x:
+            <BlockInputField BlockSetting="x.Username" />
+            <hr />
+            <BlockInputField BlockSetting="x.Password" />
+            <hr />
+            break;
+
+        case MultipartRequestParams x:
+            <BlockInputField BlockSetting="x.Boundary" />
+            <hr />
+            <MultipartSettingsViewer Contents="x.Contents" />
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter] public HttpRequestBlockInstance Block { get; set; }
+    enum RequestParamsType
+    {
+        Standard,
+        Raw,
+        BasicAuth,
+        Multipart
+    }
+
+    RequestParamsType type = RequestParamsType.Standard;
+
+    protected override void OnParametersSet()
+    {
+        type = Block.RequestParams switch
+        {
+            StandardRequestParams _ => RequestParamsType.Standard,
+            RawRequestParams _ => RequestParamsType.Raw,
+            BasicAuthRequestParams _ => RequestParamsType.BasicAuth,
+            MultipartRequestParams _ => RequestParamsType.Multipart,
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    void Change(RequestParamsType? value)
+    {
+        if (value.HasValue)
+        {
+            Block.RequestParams = value.Value switch
+            {
+                RequestParamsType.Standard => new StandardRequestParams(),
+                RequestParamsType.Raw => new RawRequestParams(),
+                RequestParamsType.BasicAuth => new BasicAuthRequestParams(),
+                RequestParamsType.Multipart => new MultipartRequestParams(),
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
+}

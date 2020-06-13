@@ -20,6 +20,10 @@
                     {
                         <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
                     }
+                    else if (selectedBlock is HttpRequestBlockInstance)
+                    {
+                        <HttpRequestBlockSettingsViewer Block="selectedBlock as HttpRequestBlockInstance" />
+                    }
                     else if (selectedBlock is LoliCodeBlockInstance)
                     {
                         <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />

@@ -1,0 +1,79 @@
+﻿@using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart 
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddStringContent"><span class="oi oi-plus"></span> String Content</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddRawContent"><span class="oi oi-plus"></span> Raw Content</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddFileContent"><span class="oi oi-plus"></span> File Content</button>
+        </div>
+    </div>
+    @foreach (var content in Contents)
+    {
+        <div class="row">
+            @switch (content)
+            {
+                case StringHttpContentSettingsGroup x:
+                    <p style="color: orange;">String Content</p>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.Name" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.Data" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.ContentType" />
+                    </div>
+                    break;
+
+                case RawHttpContentSettingsGroup x:
+                    <p style="color: orange;">Raw Content</p>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.Name" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.Data" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.ContentType" />
+                    </div>                        
+                    break;
+
+                case FileHttpContentSettingsGroup x:
+                    <p style="color: orange;">File Content</p>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.Name" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.FileName" />
+                    </div>
+                    <div class="col-3">
+                        <BlockInputField BlockSetting="x.ContentType" />
+                    </div>
+                    break;
+            }
+            <div class="col-2">
+                <button type="button" class="btn-sm btn-danger" @onclick="@(() => Contents.Remove(content))">
+                <span class="oi oi-x"></span></button>
+            </div>
+        </div>
+    }
+</div>
+@code {
+    [Parameter] public List<HttpContentSettingsGroup> Contents { get; set; }
+
+    private void AddStringContent()
+    {
+        Contents.Add(new StringHttpContentSettingsGroup());
+    }
+
+    private void AddRawContent()
+    {
+        Contents.Add(new RawHttpContentSettingsGroup());
+    }
+
+    private void AddFileContent()
+    {
+        Contents.Add(new FileHttpContentSettingsGroup());
+    }
+}
