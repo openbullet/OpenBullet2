@@ -10,11 +10,13 @@
     </div>
     @foreach (var content in Contents)
     {
-        <div class="row">
-            @switch (content)
-            {
-                case StringHttpContentSettingsGroup x:
+        @switch (content)
+        {
+            case StringHttpContentSettingsGroup x:
+                <div class="row mt-4">
                     <p style="color: orange;">String Content</p>
+                </div>
+                <div class="row">
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
@@ -24,10 +26,14 @@
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.ContentType" />
                     </div>
-                    break;
+                </div>
+                break;
 
-                case RawHttpContentSettingsGroup x:
+            case RawHttpContentSettingsGroup x:
+                <div class="row mt-4">
                     <p style="color: orange;">Raw Content</p>
+                </div>
+                <div class="row">
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
@@ -36,11 +42,15 @@
                     </div>
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.ContentType" />
-                    </div>                        
-                    break;
+                    </div>
+                </div>                    
+                break;
 
-                case FileHttpContentSettingsGroup x:
+            case FileHttpContentSettingsGroup x:
+                <div class="row mt-4">
                     <p style="color: orange;">File Content</p>
+                </div>
+                <div class="row">
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
@@ -50,13 +60,11 @@
                     <div class="col-3">
                         <BlockInputField BlockSetting="x.ContentType" />
                     </div>
-                    break;
-            }
-            <div class="col-2">
-                <button type="button" class="btn-sm btn-danger" @onclick="@(() => Contents.Remove(content))">
-                <span class="oi oi-x"></span></button>
-            </div>
-        </div>
+                </div>
+                break;
+        }
+        <button type="button" class="btn-sm btn-danger" @onclick="@(() => Contents.Remove(content))">
+        <span class="oi oi-x"></span> Remove</button>
     }
 </div>
 @code {
