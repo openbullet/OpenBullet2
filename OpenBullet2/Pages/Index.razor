@@ -14,7 +14,7 @@
     <tbody>
         <tr>
             <th scope="row">@Loc["LocalTime"]</th>
-            <td>@Metrics.ServerTime.ToLongDateString() - @Metrics.ServerTime.ToLongTimeString()</td>
+            <td>@Metrics.ServerTime.ToString()</td>
         </tr>
         <tr>
             <th scope="row">@Loc["WebserverUptime"]</th>
@@ -35,6 +35,10 @@
         <tr>
             <th scope="row">@Loc["MemoryUsage"]</th>
             <td>@BytesToString(Metrics.MemoryUsage)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["BuildNumber"]</th>
+            <td>@Metrics.BuildNumber (@Metrics.BuildDate.ToString())</td>
         </tr>
     </tbody>
 </table>

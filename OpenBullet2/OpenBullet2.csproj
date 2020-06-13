@@ -8,6 +8,13 @@
     <NoWarn>1701;1702;CS0169</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Configs\**" />
     <Content Remove="Configs\**" />

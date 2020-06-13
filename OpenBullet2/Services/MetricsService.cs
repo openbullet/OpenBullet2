@@ -20,6 +20,17 @@ namespace OpenBullet2.Services
 
         public DateTime ServerTime => DateTime.Now;
 
+        public string BuildNumber { get; private set; }
+        public DateTime BuildDate { get; private set; }
+
+        public MetricsService()
+        {
+            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            BuildDate = new DateTime(2000, 1, 1)
+                                    .AddDays(version.Build).AddSeconds(version.Revision * 2);
+            BuildNumber = $"{version.Build}.{version.Revision}";
+        }
+
         public async Task UpdateCpuUsage()
         {
             var startTime = DateTime.UtcNow;
