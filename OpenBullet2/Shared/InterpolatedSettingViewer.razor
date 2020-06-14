@@ -1,0 +1,25 @@
+﻿@using RuriLib.Models.Blocks.Settings.Interpolated
+
+<EditForm Model="Setting">
+    <div class="form-group" style="text-align: left;">
+        @switch (Setting)
+        {
+            case InterpolatedStringSetting x:
+                <InputText @bind-Value="@x.Value" />
+                break;
+
+            case InterpolatedListOfStringsSetting x:
+                <InputListOfStrings @bind-List="x.Value" />
+                break;
+
+            case InterpolatedDictionaryOfStringsSetting x:
+                <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                break;
+        }
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public InterpolatedSetting Setting { get; set; }
+}

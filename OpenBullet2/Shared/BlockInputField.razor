@@ -22,11 +22,8 @@
                         <SettingViewer Setting="BlockSetting.FixedSetting" />
                         break;
 
-
                     case SettingInputMode.Interpolated:
-                        <div class="form-group">
-                            <input style="background-color: #211" type="text" @bind="BlockSetting.InterpolatedString" />
-                        </div>
+                        <InterpolatedSettingViewer Setting="BlockSetting.InterpolatedSetting" />
                         break;
                 }
             </div>
@@ -45,7 +42,8 @@
                     title="Specify a fixed input">
                 <span class="oi oi-text" aria-hidden="true"></span>
             </button>
-            @if (BlockSetting.FixedSetting is StringSetting)
+            @if (BlockSetting.FixedSetting is StringSetting || BlockSetting.FixedSetting is ListOfStringsSetting
+                || BlockSetting.FixedSetting is DictionaryOfStringsSetting)
             {
         <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
                 @onclick="@(() => BlockSetting.InputMode = SettingInputMode.Interpolated)"
