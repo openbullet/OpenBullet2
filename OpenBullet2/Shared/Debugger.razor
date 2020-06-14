@@ -74,16 +74,29 @@
                 @foreach (var variable in variables)
                 {
                     <RadzenTreeItem Text="@variable.Name">
-                        @if (variable is StringVariable)
+                        @switch (variable)
                         {
-                            <RadzenTreeItem Text="@variable.AsString()" />
-                        }
-                        else if (variable is ListOfStringsVariable)
-                        {
-                            @foreach (var element in variable.AsListOfStrings())
-                            {
-                                <RadzenTreeItem Text="@element" />
-                            }
+                            default:
+                                <RadzenTreeItem Text="@variable.AsString()" />
+                                break;
+
+                            case ListOfStringsVariable _:
+                                @foreach (var element in variable.AsListOfStrings())
+                                {
+                                    <RadzenTreeItem Text="@element" />
+                                }
+                                break;
+
+                            case DictionaryOfStringsVariable _:
+                                @foreach (var element in variable.AsDictionaryOfStrings())
+                                {
+                                    <RadzenTreeItem Text="@($"{element.Key}: {element.Value}")" />
+                                }
+                                break;
+
+                            case ByteArrayVariable _:
+                                <RadzenTreeItem Text="@(Convert.ToBase64String(variable.AsByteArray()))" />
+                                break;
                         }
                     </RadzenTreeItem>
                 }
