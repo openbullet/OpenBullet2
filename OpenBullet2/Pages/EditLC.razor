@@ -9,8 +9,20 @@
     <div class="row">
         <div class="list-group list-group-horizontal">
             <button class="btn-sm btn-success m-sm-1" @onclick="SaveLoliCode"><span class="oi oi-task"></span> @Loc["SaveScript"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button> 
         </div>
     </div>
+    @if (showUsings)
+    {
+        <div class="row mt-3">
+            <p>@Loc["UsingsInfo"]</p><br />
+            <div style="width: 100%">
+                <EditForm Model="config.Settings.ScriptSettings">
+                    <InputListOfStrings @bind-List="config.Settings.ScriptSettings.CustomUsings" />
+                </EditForm>
+            </div>
+        </div>
+    }
     <div class="row">
         <div style="width: 100%; height: 500px; margin-top: 15px;">
             <MonacoEditor @ref="_editor" class="fullscreen-editor" Model="@_editorModel" />

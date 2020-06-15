@@ -16,6 +16,7 @@ namespace OpenBullet2.Pages
         private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
         private Config config;
+        private bool showUsings = false;
 
         protected override async Task OnInitializedAsync()
         {

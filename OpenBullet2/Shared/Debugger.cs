@@ -75,7 +75,7 @@ namespace OpenBullet2.Shared
             data.Objects.Add("httpClient", new HttpClient());
 
             var script = new ScriptBuilder()
-                .Build(Config.CSharpScript);
+                .Build(Config.CSharpScript, Config.Settings.ScriptSettings);
 
             logger.Log($"Sliced {dataLine.Data} into:");
             foreach (var slice in dataLine.GetVariables())
@@ -87,11 +87,18 @@ namespace OpenBullet2.Shared
 
                 foreach (var scriptVar in state.Variables)
                 {
-                    var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
-                    
-                    if (type.HasValue)
-                        variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
-                    
+                    try
+                    {
+                        var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
+
+                        if (type.HasValue)
+                            variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
+                    }
+                    catch
+                    {
+                        // The type is not supported, e.g. it was generated using custom C# code and not blocks
+                        // so we just disregard it
+                    }
                 }
 
                 logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");

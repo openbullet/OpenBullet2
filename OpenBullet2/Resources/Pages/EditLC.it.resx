@@ -123,4 +123,10 @@
   <data name="SaveScript" xml:space="preserve">
     <value>Salva Script</value>
   </data>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Mostra/Nascondi Usings</value>
+  </data>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Puoi scrivere i namespace che vuoi importare nello script C# generato, uno per riga</value>
+  </data>
 </root>
