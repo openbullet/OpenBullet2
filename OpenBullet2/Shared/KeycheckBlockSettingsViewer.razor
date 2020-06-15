@@ -24,6 +24,8 @@
     {
         <KeycheckKeychain Keychain="keychain" />
         <button class="btn-sm btn-danger" @onclick="@(() => Block.Keychains.Remove(keychain))"><span class="oi oi-x"></span></button>
+        <button class="btn-sm btn-primary" @onclick="@(() => MoveUp(keychain))"><span class="oi oi-arrow-top"></span> Move up</button>
+        <button class="btn-sm btn-primary" @onclick="@(() => MoveDown(keychain))"><span class="oi oi-arrow-bottom"></span> Move down</button>
     }
 </div>
 
@@ -33,5 +35,27 @@
     private void AddKeychain()
     {
         Block.Keychains.Add(new Keychain());
+    }
+
+    private void MoveUp(Keychain keychain)
+    {
+        var index = Block.Keychains.IndexOf(keychain);
+
+        if (index == 0)
+            return;
+
+        Block.Keychains.Remove(keychain);
+        Block.Keychains.Insert(index - 1, keychain);
+    }
+
+    private void MoveDown(Keychain keychain)
+    {
+        var index = Block.Keychains.IndexOf(keychain);
+
+        if (index == Block.Keychains.Count - 1)
+            return;
+
+        Block.Keychains.Remove(keychain);
+        Block.Keychains.Insert(index + 1, keychain);
     }
 }
