@@ -76,6 +76,10 @@ namespace OpenBullet2.Shared
 
             var script = new ScriptBuilder()
                 .Build(Config.CSharpScript);
+
+            logger.Log($"Sliced {dataLine.Data} into:");
+            foreach (var slice in dataLine.GetVariables())
+                logger.Log($"{slice.Name}: {slice.AsString()}");
             
             try
             {
