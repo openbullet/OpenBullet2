@@ -41,7 +41,7 @@ namespace OpenBullet2.Pages
         private async Task Compile()
         {
             var stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
-            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack);
+            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack, Config.Settings);
             await _editor.SetValue(Config.CSharpScript);
         }
 

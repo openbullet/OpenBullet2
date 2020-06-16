@@ -52,7 +52,7 @@ namespace OpenBullet2.Shared
                     Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
 
                 // Build the C# script
-                Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack);
+                Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
             }
             catch (Exception ex)
             {
