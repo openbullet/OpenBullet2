@@ -34,7 +34,17 @@
                 break;
 
             case IntSetting x:
-                <InputNumber @bind-Value="@x.Value" />
+                <div class="row">
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputNumber @bind-Value="@x.Value" />
+                    </div>
+                    <div class="col-sm-auto ml-0 pr-0">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
 
             case EnumSetting x:
@@ -54,19 +64,71 @@
                 break;
 
             case FloatSetting x:
-                <InputNumber @bind-Value="@x.Value" />
+                <div class="row">
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputNumber @bind-Value="@x.Value" />
+                    </div>
+                    <div class="col-sm-auto ml-0 pr-0">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
 
             case ListOfStringsSetting x:
-                <InputListOfStrings @bind-List="x.Value" />
+                <div class="row">
+                    <div class="col">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <InputListOfStrings @bind-List="x.Value" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
 
             case DictionaryOfStringsSetting x:
-                <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                <div class="row">
+                    <div class="col">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
 
             case ByteArraySetting x:
-                <InputByteArray @bind-Bytes="x.Value" />
+                 <div class="row">
+                    <div class="col">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <InputByteArray @bind-Bytes="x.Value" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
         }
 

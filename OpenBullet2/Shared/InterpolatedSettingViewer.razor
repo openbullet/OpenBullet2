@@ -3,29 +3,57 @@
 @using RuriLib.Extensions
 
 <EditForm Model="BlockSetting">
-    <div class="form-group" style="text-align: left;">
+    <div style="text-align: left;">
         @switch (BlockSetting.InterpolatedSetting)
         {
             case InterpolatedStringSetting x:
                 <div class="row">
-                    <div class="col-sm-auto">
-                        <label>@Name</label>
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
                     </div>
                     <div class="col">
-                        <InputText @bind-Value="@x.Value" />
+                        <input type="text" style="background-color: #121;" @bind="x.Value" />
                     </div>
-                    <div class="col-sm-auto">
-                        <SettingInputModeSelector BlockSetting="BlockSetting" />
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
                 break;
 
             case InterpolatedListOfStringsSetting x:
-                <InputListOfStrings @bind-List="x.Value" />
+                <div class="row">
+                    <div class="col">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <InputListOfStrings @bind-Dictionary="x.Value" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
 
             case InterpolatedDictionaryOfStringsSetting x:
-                <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                <div class="row">
+                    <div class="col">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
                 break;
         }
 
@@ -34,5 +62,6 @@
 
 @code {
     [Parameter] public BlockSetting BlockSetting { get; set; }
+    [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
     public string Name => BlockSetting.Name.ToReadableName();
 }

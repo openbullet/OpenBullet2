@@ -24,7 +24,7 @@
             break;
 
         case SettingInputMode.Interpolated:
-            <InterpolatedSettingViewer BlockSetting="BlockSetting" />
+            <InterpolatedSettingViewer BlockSetting="BlockSetting" SwitchedMode="@((args) => StateHasChanged())" />
             break;
     }
 }
