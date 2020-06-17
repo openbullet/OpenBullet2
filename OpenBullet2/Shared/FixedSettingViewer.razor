@@ -1,0 +1,80 @@
+﻿@using RuriLib.Models.Blocks.Settings
+@using RuriLib.Extensions 
+ 
+<EditForm Model="BlockSetting">
+    <div style="text-align: left;">
+        @switch (BlockSetting.FixedSetting)
+        {
+            case StringSetting x:
+                <div class="row">
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputText @bind-Value="@x.Value" />
+                    </div>
+                    <div class="col-sm-auto ml-0 pr-0">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
+                break;
+
+            case BoolSetting x:
+                <div class="row">
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputCheckbox @bind-Value="@x.Value" />
+                    </div>
+                    <div class="col-sm-auto ml-0 pr-0">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
+                    </div>
+                </div>
+                break;
+
+            case IntSetting x:
+                <InputNumber @bind-Value="@x.Value" />
+                break;
+
+            case EnumSetting x:
+                <div class="row">
+                    <div class="col-sm-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputSelect @bind-Value="@x.Value">
+                            @foreach (var name in Enum.GetNames(x.EnumType))
+                            {
+                                <option value="@name">@name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                break;
+
+            case FloatSetting x:
+                <InputNumber @bind-Value="@x.Value" />
+                break;
+
+            case ListOfStringsSetting x:
+                <InputListOfStrings @bind-List="x.Value" />
+                break;
+
+            case DictionaryOfStringsSetting x:
+                <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
+                break;
+
+            case ByteArraySetting x:
+                <InputByteArray @bind-Bytes="x.Value" />
+                break;
+        }
+
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public BlockSetting BlockSetting { get; set; }
+    [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
+    public string Name => BlockSetting.Name.ToReadableName();
+}

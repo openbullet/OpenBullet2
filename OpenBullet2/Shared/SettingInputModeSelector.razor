@@ -1,0 +1,60 @@
+﻿@using RuriLib.Models.Blocks.Settings
+@using RuriLib.Models.Blocks.Settings.Interpolated
+
+<button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Variable ? "border-dark" : "")"
+        @onclick="@(() => SwitchMode(SettingInputMode.Variable))"
+        title="Specify a variable as input">
+    <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
+</button>
+<button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Fixed ? "border-dark" : "")"
+        @onclick="@(() => SwitchMode(SettingInputMode.Fixed))"
+        title="Specify a fixed input">
+    <span class="oi oi-text" aria-hidden="true"></span>
+</button>
+@if (BlockSetting.FixedSetting is StringSetting || BlockSetting.FixedSetting is ListOfStringsSetting
+   || BlockSetting.FixedSetting is DictionaryOfStringsSetting)
+{
+    <button type="button" class="btn-sm btn-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
+            @onclick="@(() => SwitchMode(SettingInputMode.Interpolated))"
+            title="Specify an interpolated string as input, the old OpenBullet style">
+        <span class="oi oi-code" aria-hidden="true"></span>
+    </button>
+}
+
+@code { 
+    [Parameter] public BlockSetting BlockSetting { get; set; }
+    [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
+
+    private void SwitchMode(SettingInputMode newMode)
+    {
+        // Port the string over from one mode to the other in string settings
+        if (BlockSetting.FixedSetting is StringSetting)
+        {
+            string value = BlockSetting.InputMode switch
+            {
+                SettingInputMode.Fixed => (BlockSetting.FixedSetting as StringSetting).Value,
+                SettingInputMode.Variable => BlockSetting.InputVariableName,
+                SettingInputMode.Interpolated => (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value,
+                _ => throw new NotImplementedException()
+            };
+
+            switch (newMode)
+            {
+                case SettingInputMode.Fixed:
+                    (BlockSetting.FixedSetting as StringSetting).Value = value;
+                    break;
+
+                case SettingInputMode.Variable:
+                    BlockSetting.InputVariableName = value;
+                    break;
+
+                case SettingInputMode.Interpolated:
+                    (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value = value;
+                    break;
+            }
+        }
+
+        BlockSetting.InputMode = newMode;
+        SwitchedMode.InvokeAsync(newMode);
+    }
+}

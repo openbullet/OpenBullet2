@@ -10,7 +10,6 @@
 @foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />
-    <hr />
 }
 
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">

@@ -1,11 +1,23 @@
-﻿@using RuriLib.Models.Blocks.Settings.Interpolated
+﻿@using RuriLib.Models.Blocks.Settings
+@using RuriLib.Models.Blocks.Settings.Interpolated 
+@using RuriLib.Extensions
 
-<EditForm Model="Setting">
+<EditForm Model="BlockSetting">
     <div class="form-group" style="text-align: left;">
-        @switch (Setting)
+        @switch (BlockSetting.InterpolatedSetting)
         {
             case InterpolatedStringSetting x:
-                <InputText @bind-Value="@x.Value" />
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <label>@Name</label>
+                    </div>
+                    <div class="col">
+                        <InputText @bind-Value="@x.Value" />
+                    </div>
+                    <div class="col-sm-auto">
+                        <SettingInputModeSelector BlockSetting="BlockSetting" />
+                    </div>
+                </div>
                 break;
 
             case InterpolatedListOfStringsSetting x:
@@ -21,5 +33,6 @@
 </EditForm>
 
 @code {
-    [Parameter] public InterpolatedSetting Setting { get; set; }
+    [Parameter] public BlockSetting BlockSetting { get; set; }
+    public string Name => BlockSetting.Name.ToReadableName();
 }
