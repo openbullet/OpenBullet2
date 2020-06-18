@@ -218,8 +218,8 @@
                 {
                     <td>@Job.Manager.CPM</td>
                     <td>@Job.CaptchaCredit</td>
-                    <td>@Job.Manager.Elapsed.TotalDays day(s) @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</td>
-                    <td>@Job.Manager.Elapsed.TotalDays day(s) @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</td>
+                    <td>@((int)Job.Manager.Elapsed.TotalDays) day(s) @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</td>
+                    <td>@((int)Job.Manager.Elapsed.TotalDays) day(s) @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</td>
                 }
                 else
                 {
