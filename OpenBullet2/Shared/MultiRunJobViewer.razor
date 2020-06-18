@@ -141,10 +141,13 @@
     }
 </div>
 
-<div class="progress mt-3">
+@if (Job.Manager != null)
+{
+    <div class="progress mt-3">
     <div class="progress-bar" role="progressbar"
          style="width: @((Job.Manager.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
-</div>
+        </div>
+}
 
 <div class="mt-2">
     <p style="color: orange;"><b>Data Stats</b></p>
@@ -205,12 +208,26 @@
             <tr>
                 <th scope="col">CPM</th>
                 <th scope="col">Captcha Credit</th>
+                <th scope="col">Elapsed</th>
+                <th scope="col">Remaining</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>@Job.Manager.CPM</td>
-                <td>@Job.CaptchaCredit</td>
+                @if (Job.Manager != null)
+                {
+                    <td>@Job.Manager.CPM</td>
+                    <td>@Job.CaptchaCredit</td>
+                    <td>@Job.Manager.Elapsed.ToString()</td>
+                    <td>@Job.Manager.Remaining.ToString()</td>
+                }
+                else
+                {
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                }
             </tr>
         </tbody>
     </table>
