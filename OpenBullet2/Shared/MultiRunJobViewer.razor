@@ -143,7 +143,7 @@
 
 <div class="progress mt-3">
     <div class="progress-bar" role="progressbar"
-         style="width: @((Job.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+         style="width: @((Job.Manager.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
 </div>
 
 <div class="mt-2">
@@ -209,7 +209,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>@Job.CPM</td>
+                <td>@Job.Manager.CPM</td>
                 <td>@Job.CaptchaCredit</td>
             </tr>
         </tbody>
