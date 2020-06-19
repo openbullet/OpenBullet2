@@ -99,6 +99,7 @@
 
 @code {
     [Parameter] public DataPoolOptions Options { get; set; }
+    [Parameter] public EventCallback<DataPoolOptions> SetOptions { get; set; }
     DataPoolType type = DataPoolType.Wordlist;
     WordlistEntity selectedWordlist;
     List<string> wordlistTypes;
@@ -131,6 +132,8 @@
                 DataPoolType.Infinite => new InfiniteDataPoolOptions(),
                 _ => throw new NotImplementedException()
             };
+
+            SetOptions.InvokeAsync(Options);
         }
     }
 

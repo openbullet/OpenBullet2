@@ -40,6 +40,7 @@
 
 @code {
     [Parameter] public ProxySourceOptions Options { get; set; }
+    [Parameter] public EventCallback<ProxySourceOptions> SetOptions { get; set; }
     ProxySourceType type = ProxySourceType.Group;
     List<ProxyGroupEntity> groups;
 
@@ -66,6 +67,8 @@
                 ProxySourceType.Remote => new RemoteProxySourceOptions(),
                 _ => throw new NotImplementedException()
             };
+
+            SetOptions.InvokeAsync(Options);
         }
     }
 }

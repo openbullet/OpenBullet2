@@ -46,10 +46,10 @@
 </EditForm>
 
 <label style="color: orange; margin-top: 20px;">Proxy Source</label>
-<ProxySourceSelector Options="Options.ProxySource" />
+<ProxySourceSelector Options="Options.ProxySource" SetOptions="((options) => Options.ProxySource = options)" />
 
 <label style="color: orange; margin-top: 20px;">Data Pool</label>
-<DataPoolSelector Options="Options.DataPool" />
+<DataPoolSelector Options="Options.DataPool" SetOptions="((options) => Options.DataPool = options)" />
 
 <label style="color: orange; margin-top: 20px;">Hit Outputs</label>
 <HitOutputsSelector HitOutputs="Options.HitOutputs" />
