@@ -50,6 +50,9 @@ namespace OpenBullet2.Models.Jobs
 
         private SingleRunJob MakeSingleRunJob(SingleRunJobOptions options)
         {
+            if (string.IsNullOrEmpty(options.ConfigId))
+                throw new ArgumentException("No config specified");
+
             return new SingleRunJob(settingsService)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
@@ -66,6 +69,12 @@ namespace OpenBullet2.Models.Jobs
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
         {
+            if (string.IsNullOrEmpty(options.ConfigId))
+                throw new ArgumentException("No config specified");
+
+            if (options.DataPool is WordlistDataPoolOptions dataPool && dataPool.WordlistId == -1)
+                throw new ArgumentException("No wordlist specified");
+
             var hitOutputsFactory = new HitOutputFactory(hitRepo);
             var proxySourceFactory = new ProxySourceFactory(proxyGroupsRepo, proxyRepo);
 

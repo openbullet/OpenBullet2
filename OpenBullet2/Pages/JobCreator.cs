@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenBullet2.Entities;
+using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
@@ -56,10 +57,18 @@ namespace OpenBullet2.Pages
             entity = await JobRepo.GetAll().OrderByDescending(e => e.Id).FirstAsync();
 
             var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo, ProxyRepo, ProxyGroupRepo, WordlistRepo);
-            var job = factory.FromOptions(entity.Id, jobOptions);
 
-            Manager.Jobs.Add(job);
-            Nav.NavigateTo($"job/{job.Id}");
+            try
+            {
+                var job = factory.FromOptions(entity.Id, jobOptions);
+
+                Manager.Jobs.Add(job);
+                Nav.NavigateTo($"job/{job.Id}");
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError(ex.GetType().Name, ex.Message);
+            }
         }
 
         private JobType GetJobType(Job job)
