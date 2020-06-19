@@ -2,6 +2,7 @@
 using OpenBullet2.Repositories;
 using RuriLib.Extensions;
 using RuriLib.Models.Proxies;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace OpenBullet2.Models.Proxies.Sources
             this.proxyRepo = proxyRepo;
         }
 
-        public override async Task<ProxyPool> GetAll(bool shuffle = false)
+        public override async Task<IEnumerable<Proxy>> GetAll()
         {
             var group = await proxyGroupsRepo.Get(GroupId);
             var entities = await proxyRepo.GetAll()
@@ -29,12 +30,7 @@ namespace OpenBullet2.Models.Proxies.Sources
                 .ToListAsync();
 
             var proxyFactory = new ProxyFactory();
-            var proxies = entities.Select(e => proxyFactory.FromEntity(e)).ToList();
-
-            if (shuffle)
-                proxies.Shuffle(random);
-
-            return new ProxyPool(proxies);
+            return entities.Select(e => proxyFactory.FromEntity(e));
         }
     }
 }

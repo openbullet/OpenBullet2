@@ -66,6 +66,9 @@ namespace OpenBullet2.Models.Jobs
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
         {
+            var hitOutputsFactory = new HitOutputFactory(hitRepo);
+            var proxySourceFactory = new ProxySourceFactory(proxyGroupsRepo, proxyRepo);
+
             var job = new MultiRunJob(settingsService)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
@@ -74,8 +77,8 @@ namespace OpenBullet2.Models.Jobs
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
                 Skip = options.Skip,
-                HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList(),
-                ProxySource = new ProxySourceFactory(proxyGroupsRepo, proxyRepo).FromOptions(options.ProxySource).Result
+                HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
+                ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList()
             };
 
             job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;

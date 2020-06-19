@@ -13,7 +13,7 @@ namespace OpenBullet2.Models.Jobs
         public int Skip { get; set; } = 0;
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public DataPoolOptions DataPool { get; set; } = new WordlistDataPoolOptions();
-        public ProxySourceOptions ProxySource { get; set; } = new GroupProxySourceOptions();
+        public List<ProxySourceOptions> ProxySources { get; set; } = new List<ProxySourceOptions>();
         public List<HitOutputOptions> HitOutputs { get; set; } = new List<HitOutputOptions>();
     }
 }

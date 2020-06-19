@@ -48,21 +48,26 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">Proxy Source</th>
+                <th scope="row">Proxy Sources</th>
                 <td>
-                    @switch (Job.ProxySource)
+                    @foreach (var source in Job.ProxySources)
                     {
-                        case GroupProxySource x:
-                            <span>Group: @x.GroupId</span>
-                            break;
+                        <p>
+                            @switch (source)
+                            {
+                                case GroupProxySource x:
+                                    <span style="color: aquamarine;">Group: @x.GroupId</span>
+                                    break;
 
-                        case FileProxySource x:
-                            <span>File: @x.FileName</span>
-                            break;
+                                case FileProxySource x:
+                                    <span style="color: greenyellow;">>File: @x.FileName</span>
+                                    break;
 
-                        case RemoteProxySource x:
-                            <span>Remote: @x.Url</span>
-                            break;
+                                case RemoteProxySource x:
+                                    <span style="color: hotpink;">Remote: @x.Url</span>
+                                    break;
+                            }
+                        </p>
                     }
                 </td>
             </tr>

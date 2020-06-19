@@ -22,8 +22,8 @@ namespace OpenBullet2.Models.Proxies
         {
             ProxySource source = options switch
             {
-                RemoteProxySourceOptions x => new RemoteProxySource(x.Url),
-                FileProxySourceOptions x => new FileProxySource(x.FileName),
+                RemoteProxySourceOptions x => new RemoteProxySource(x.Url) { DefaultType = x.DefaultType },
+                FileProxySourceOptions x => new FileProxySource(x.FileName) { DefaultType = x.DefaultType },
                 GroupProxySourceOptions x => new GroupProxySource(x.GroupId, proxyGroupsRepo, proxyRepo),
                 _ => throw new NotImplementedException()
             };

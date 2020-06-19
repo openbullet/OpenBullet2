@@ -2,73 +2,94 @@
 @using OpenBullet2.Entities 
 @inject IProxyGroupRepository ProxyGroupRepo
 
-<RadzenRadioButtonList @bind-Value="type" TValue="ProxySourceType" Change="@((args) => Change(args))">
-    <Items>
-        <RadzenRadioButtonListItem Text="Group" Value="ProxySourceType.Group" />
-        <RadzenRadioButtonListItem Text="File" Value="ProxySourceType.File" />
-        <RadzenRadioButtonListItem Text="Remote" Value="ProxySourceType.Remote" />
-    </Items>
-</RadzenRadioButtonList>
+<div class="container-fluid">
 
-<br />
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddGroup">
+                <span class="oi oi-plus"></span> Group
+            </button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddFile">
+                <span class="oi oi-plus"></span> File
+            </button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddRemote">
+                <span class="oi oi-plus"></span> Remote
+            </button>
+        </div>
+    </div>
 
-<EditForm Model="Options">
-    @switch (Options)
+    @foreach (var source in ProxySources)
     {
-        case GroupProxySourceOptions x:
-            <label>Proxy Group</label>
-            <InputSelectNumber T="int" @bind-Value="x.GroupId">
-                <option value="-1">All</option>
-                @foreach (var group in groups)
+        <div class="row" style="margin-bottom: 15px;">
+            <EditForm Model="source">
+                @switch (source)
                 {
-                    <option value="@group.Id">@group.Name</option>
+                    case GroupProxySourceOptions x:
+                        <p style="color: aquamarine;">Group</p>
+                        <InputSelectNumber T="int" @bind-Value="x.GroupId">
+                            <option value="-1">All</option>
+                            @foreach (var group in groups)
+                            {
+                                <option value="@group.Id">@group.Name</option>
+                            }
+                        </InputSelectNumber><br /><br />
+                        break;
+
+                    case FileProxySourceOptions x:
+                        <p style="color: greenyellow;">File</p>
+                        <label>File Name</label>
+                        <InputText @bind-Value="x.FileName" />
+                        <InputSelect @bind-Value="x.DefaultType">
+                            @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </InputSelect>
+                        <br /><br />
+                        break;
+
+                    case RemoteProxySourceOptions x:
+                        <p style="color: hotpink;">Remote</p>
+                        <label>Url</label>
+                        <InputText @bind-Value="x.Url" />
+                        <InputSelect @bind-Value="x.DefaultType">
+                            @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </InputSelect>
+                        <br /><br />
+                        break;
                 }
-            </InputSelectNumber><br />
-            break;
-
-        case FileProxySourceOptions x:
-            <label>File Name:</label>
-            <InputText @bind-Value="x.FileName" />
-            break;
-
-        case RemoteProxySourceOptions x:
-            <label>Url:</label>
-            <InputText @bind-Value="x.Url" />
-            break;
+                <button class="btn btn-danger" @onclick="(() => ProxySources.Remove(source))">
+                    <span class="oi oi-x"></span> Remove
+                </button>
+            </EditForm>
+        </div>
     }
-</EditForm>
+</div>
 
 @code {
-    [Parameter] public ProxySourceOptions Options { get; set; }
-    [Parameter] public EventCallback<ProxySourceOptions> SetOptions { get; set; }
-    ProxySourceType type = ProxySourceType.Group;
+    [Parameter] public List<ProxySourceOptions> ProxySources { get; set; }
     List<ProxyGroupEntity> groups;
-
-    enum ProxySourceType
-    {
-        Group,
-        File,
-        Remote
-    }
 
     protected override async Task OnInitializedAsync()
     {
         groups = await ProxyGroupRepo.GetAll().ToListAsync();
     }
 
-    void Change(ProxySourceType? value)
+    void AddGroup()
     {
-        if (value.HasValue)
-        {
-            Options = value.Value switch
-            {
-                ProxySourceType.Group => new GroupProxySourceOptions(),
-                ProxySourceType.File => new FileProxySourceOptions(),
-                ProxySourceType.Remote => new RemoteProxySourceOptions(),
-                _ => throw new NotImplementedException()
-            };
+        ProxySources.Add(new GroupProxySourceOptions());
+    }
 
-            SetOptions.InvokeAsync(Options);
-        }
+    void AddFile()
+    {
+        ProxySources.Add(new FileProxySourceOptions());
+    }
+
+    void AddRemote()
+    {
+        ProxySources.Add(new RemoteProxySourceOptions());
     }
 }

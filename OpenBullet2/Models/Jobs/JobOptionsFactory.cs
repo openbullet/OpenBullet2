@@ -12,17 +12,39 @@ namespace OpenBullet2.Models.Jobs
         {
             JobOptions options = type switch
             {
-                JobType.SingleRun => new SingleRunJobOptions() 
-                    { HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() } },
-                JobType.MultiRun => new MultiRunJobOptions()
-                    { HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() } },
-                JobType.ProxyCheck => new ProxyCheckJobOptions()
-                    { CheckOutput = new DatabaseProxyCheckOutputOptions() },
+                JobType.SingleRun => MakeSingleRun(),
+                JobType.MultiRun => MakeMultiRun(),
+                JobType.ProxyCheck => MakeProxyCheck(),
                 _ => throw new NotImplementedException()
             };
 
             options.StartCondition = new RelativeTimeStartCondition();
             return options;
+        }
+
+        private SingleRunJobOptions MakeSingleRun()
+        {
+            return new SingleRunJobOptions
+            {
+                HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() }
+            };
+        }
+
+        private MultiRunJobOptions MakeMultiRun()
+        {
+            return new MultiRunJobOptions
+            {
+                HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() },
+                ProxySources = new List<ProxySourceOptions> { new GroupProxySourceOptions() { GroupId = -1 } }
+            };
+        }
+
+        private ProxyCheckJobOptions MakeProxyCheck()
+        {
+            return new ProxyCheckJobOptions
+            {
+                CheckOutput = new DatabaseProxyCheckOutputOptions()
+            };
         }
     }
 }
