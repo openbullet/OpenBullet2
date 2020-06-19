@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Entities;
 using OpenBullet2.Repositories;
 using RuriLib.Extensions;
 using RuriLib.Models.Proxies;
@@ -24,10 +25,19 @@ namespace OpenBullet2.Models.Proxies.Sources
 
         public override async Task<IEnumerable<Proxy>> GetAll()
         {
-            var group = await proxyGroupsRepo.Get(GroupId);
-            var entities = await proxyRepo.GetAll()
-                .Where(p => p.GroupId == GroupId)
-                .ToListAsync();
+            List<ProxyEntity> entities;
+
+            if (GroupId == -1)
+            {
+                entities = await proxyRepo.GetAll().ToListAsync();
+            }
+            else
+            {
+                var group = await proxyGroupsRepo.Get(GroupId);
+                entities = await proxyRepo.GetAll()
+                    .Where(p => p.GroupId == GroupId)
+                    .ToListAsync();
+            }
 
             var proxyFactory = new ProxyFactory();
             return entities.Select(e => proxyFactory.FromEntity(e));
