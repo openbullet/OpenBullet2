@@ -123,7 +123,7 @@ namespace OpenBullet2.Pages
             }
             catch (Exception ex)
             {
-                await js.AlertError(ex.GetType().ToString(), ex.Message);
+                await js.AlertError(ex.GetType().Name, ex.Message);
             }
 
             await ReloadConfigs();
