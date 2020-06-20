@@ -258,7 +258,10 @@
 
     private async Task ChangeBots()
     {
-        var modal = Modal.Show<BotsSelector>("Edit bots amount");
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(BotsSelector.Bots), Job.Bots);
+
+        var modal = Modal.Show<BotsSelector>("Edit bots amount", parameters);
         var result = await modal.Result;
 
         if (!result.Cancelled)

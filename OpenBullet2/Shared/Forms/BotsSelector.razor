@@ -2,24 +2,24 @@
 @inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<BotsSelector> Loc
 
-<EditForm Model="bots">
-    <InputNumber @bind-Value="bots" />
+<EditForm Model="Bots">
+    <InputNumber @bind-Value="Bots" />
 </EditForm>
 
 <button class="btn btn-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    int bots = 1;
-
+    [Parameter] public int Bots { get; set; }
+    
     private async Task Validate()
     {
-        if (bots < 1 || bots > 200)
+        if (Bots < 1 || Bots > 200)
         {
             await js.AlertError("Invalid amount", "The amount must be between 1 and 200");
             return;
         }
 
-        BlazoredModal.Close(ModalResult.Ok(bots));
+        BlazoredModal.Close(ModalResult.Ok(Bots));
     }
 }
