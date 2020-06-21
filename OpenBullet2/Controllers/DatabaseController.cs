@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Controllers
 {
     [ApiController, Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class DatabaseController : Controller
     {
         [HttpGet("download")]
