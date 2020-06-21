@@ -2,8 +2,10 @@
 @using OpenBullet2.Services
 @using OpenBullet2.Helpers
 @using OpenBullet2.Models.Settings
+@using OpenBullet2.Shared.Forms 
 @inject PersistentSettingsService PersistentSettings
 @inject NavigationManager Nav
+@inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
 
@@ -95,7 +97,7 @@
 
     <label>@Loc["AdminUsername"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminUsername" />
-    <button class="btn btn-primary">Change password</button>
+    <button class="btn btn-primary" @onclick="ChangePassword">Change password</button>
 
     <label>@Loc["AdminSessionLifetimeHours"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminSessionLifetimeHours" />
@@ -140,6 +142,18 @@
         catch (Exception ex)
         {
             await js.AlertError(ex.GetType().Name, ex.Message);
+        }
+    }
+
+    async Task ChangePassword()
+    {
+        var modal = Modal.Show<NewPasswordForm>("New admin password");
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            settings.SecuritySettings.SetupAdminPassword(result.Data as string);
+            await js.AlertSuccess("Done", "The new passwords was set!");
         }
     }
 }
