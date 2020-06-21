@@ -5,6 +5,7 @@
 @inject PersistentSettingsService PersistentSettings
 @inject NavigationManager Nav
 @inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
+@attribute [Authorize(Roles = "Admin")]
 
 <h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">

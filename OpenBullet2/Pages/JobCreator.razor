@@ -2,6 +2,7 @@
 @page "/jobs/create/{Type}"
 @using OpenBullet2.Models.Jobs
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobCreator> Loc
+@attribute [Authorize(Roles = "Admin,Guest")]
 
 <div style="margin-bottom: 20px;">
     @switch (jobOptions)

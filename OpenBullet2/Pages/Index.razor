@@ -7,6 +7,7 @@
 @inject MetricsService Metrics
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
 @inject IModalService Modal
+@attribute [Authorize(Roles = "Admin,Guest")]
 
 <h2 style="margin-bottom: 20px;">@Loc["WelcomeMessage"]</h2>
 

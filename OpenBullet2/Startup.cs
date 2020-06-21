@@ -1,12 +1,14 @@
 using Blazor.FileReader;
 using Blazored.Modal;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenBullet2.Auth;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Services;
@@ -31,11 +33,13 @@ namespace OpenBullet2
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddBlazoredModal();
             services.AddFileReaderService();
-            services.AddScoped<IConfigRepository, DiskConfigRepository>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAuthorizationCore();
+            services.AddScoped<AuthenticationStateProvider, OBAuthenticationStateProvider>();
 
             // Repositories
+            services.AddScoped<IConfigRepository, DiskConfigRepository>();
             services.AddScoped<IProxyRepository, DbProxyRepository>();
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
             services.AddScoped<IWordlistRepository, HybridWordlistRepository>();

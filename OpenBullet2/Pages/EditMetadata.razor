@@ -3,6 +3,7 @@
 @using OpenBullet2.Services
 @inject ConfigService ConfigService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditMetadata> Loc
+@attribute [Authorize(Roles = "Admin")]
 
 <EditForm Model="config">
     <label for="name">@Loc["Name"]</label>

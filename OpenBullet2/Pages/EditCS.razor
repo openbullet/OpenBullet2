@@ -1,6 +1,7 @@
 ﻿@using Blazaco.Editor
 @using RuriLib.Models.Configs 
 @page "/config/edit/code"
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="container-fluid">
     <div class="row">

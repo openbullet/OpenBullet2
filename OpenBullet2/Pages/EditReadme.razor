@@ -3,6 +3,7 @@
 @using OpenBullet2.Services
 @inject ConfigService ConfigService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditReadme> Loc
+@attribute [Authorize(Roles = "Admin")]
 
 <EditForm Model="config">
     <InputMarkdown Label="@Loc["Readme"]" @bind-Value="config.Readme" For="@(() => config.Readme)" />

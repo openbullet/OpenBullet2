@@ -1,6 +1,7 @@
 ﻿@using Blazaco.Editor
 @page "/config/edit/lolicode"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditLC> Loc
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="container-fluid">
     <div class="row">
@@ -9,7 +10,7 @@
     <div class="row">
         <div class="list-group list-group-horizontal">
             <button class="btn-sm btn-success m-sm-1" @onclick="SaveLoliCode"><span class="oi oi-task"></span> @Loc["SaveScript"]</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button> 
+            <button class="btn-sm btn-primary m-sm-1" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
         </div>
     </div>
     @if (showUsings)
