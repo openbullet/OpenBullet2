@@ -10,15 +10,19 @@ namespace OpenBullet2.Services
 {
     public class PersistentSettingsService
     {
-        private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        private readonly JsonSerializerSettings jsonSettings;
+
         private readonly string obSettFile = "OpenBulletSettings.json";
 
-        public SecurityOptions SecurityOptions { get; private set; }
         public OpenBulletSettings OpenBulletSettings { get; set; }
 
-        public PersistentSettingsService(IConfiguration configuration)
+        public PersistentSettingsService()
         {
-            SecurityOptions = configuration.GetSection("Security").Get<SecurityOptions>();
+            jsonSettings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                TypeNameHandling = TypeNameHandling.Auto
+            };
 
             if (File.Exists(obSettFile))
                 OpenBulletSettings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(obSettFile), jsonSettings);
@@ -33,10 +37,12 @@ namespace OpenBullet2.Services
 
         public void Recreate()
         {
-            OpenBulletSettings = new OpenBulletSettings();
-
-            if (OpenBulletSettings.GeneralSettings.ProxyCheckTargets == null)
-                OpenBulletSettings.GeneralSettings.ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() };
+            OpenBulletSettings = new OpenBulletSettings 
+            {
+                GeneralSettings = new GeneralSettings { ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() } },
+                RemoteSettings = new RemoteSettings(),
+                SecuritySettings = new SecuritySettings().GenerateJwtKey().SetupAdminPassword("admin")
+            };
         }
     }
 }

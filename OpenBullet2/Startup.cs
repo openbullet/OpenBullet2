@@ -1,25 +1,19 @@
 using Blazor.FileReader;
 using Blazored.Modal;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using OpenBullet2.Auth;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Services;
-using System;
 using System.Globalization;
-using System.Text;
+using Blazored.LocalStorage;
 
 namespace OpenBullet2
 {
@@ -42,20 +36,9 @@ namespace OpenBullet2
             services.AddFileReaderService();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddAuthorizationCore();
-            services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Security:JwtKey"])),
-                        ClockSkew = TimeSpan.Zero
-                    });
+            
+            services.AddScoped<AuthenticationStateProvider, OBAuthenticationStateProvider>();
+            services.AddBlazoredLocalStorage();
 
             // Repositories
             services.AddScoped<IConfigRepository, DiskConfigRepository>();

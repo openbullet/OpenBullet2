@@ -82,6 +82,29 @@
 
 </EditForm>
 
+<h1>@Loc["Security"]</h1>
+<EditForm Model="settings.SecuritySettings">
+
+    <label>@Loc["AllowSystemWideFileAccess"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AllowSystemWideFileAccess" />
+    <br />
+
+    <label>@Loc["RequireAdminLogin"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.RequireAdminLogin" />
+    <br />
+
+    <label>@Loc["AdminUsername"]</label>
+    <InputText style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminUsername" />
+    <button class="btn btn-primary">Change password</button>
+
+    <label>@Loc["AdminSessionLifetimeHours"]</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminSessionLifetimeHours" />
+
+    <label>@Loc["GuestSessionLifetimeHours"]</label>
+    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.GuestSessionLifetimeHours" />
+
+</EditForm>
+
 <h1>@Loc["Remote"]</h1>
 <EditForm Model="settings.RemoteSettings">
     <!-- Work in progress -->

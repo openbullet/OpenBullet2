@@ -127,7 +127,8 @@
             return;
         }
 
-        if (!PersistentSettings.SecurityOptions.AllowSystemWideFileAccess && !baseDirectory.IsSubPathOf(Directory.GetCurrentDirectory()))
+        if (!PersistentSettings.OpenBulletSettings.SecuritySettings.AllowSystemWideFileAccess && 
+            !baseDirectory.IsSubPathOf(Directory.GetCurrentDirectory()))
         {
             await js.AlertError("Unauthorized", "System wide file access has been disabled in appsettings.json");
             return;

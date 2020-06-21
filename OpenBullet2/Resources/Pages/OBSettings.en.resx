@@ -120,6 +120,15 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Admin session lifetime (hours)</value>
+  </data>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Admin username</value>
+  </data>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Allow system-wide file access</value>
+  </data>
   <data name="AutoSetRecommendedBots" xml:space="preserve">
     <value>Automatically set the recommended bots when a config is selected in the job creation page</value>
   </data>
@@ -134,6 +143,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>General</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Guest session lifetime (hours)</value>
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Ignore the wordlist name when removing duplicates from hits</value>
@@ -159,11 +171,17 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Require admin login</value>
+  </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Security</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>

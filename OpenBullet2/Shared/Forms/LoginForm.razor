@@ -1,0 +1,36 @@
+﻿@using OpenBullet2.Auth
+@using OpenBullet2.Helpers
+@inject AuthenticationStateProvider Auth
+@inject NavigationManager Nav
+
+<p>You are not authenticated, please login</p>
+<EditForm Model="user">
+    <label>Username</label>
+    <InputText @bind-Value="user.Username" />
+    <label>Password</label>
+    <InputText type="password" @bind-Value="user.Password" />
+    <button type="submit" class="btn btn-primary" @onclick="ValidateUser">Login</button>
+</EditForm>
+
+@code {
+    class User
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    User user = new User();
+
+    private async Task ValidateUser()
+    {
+        try
+        {
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password);
+            Nav.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().Name, ex.Message);
+        }
+    }
+}

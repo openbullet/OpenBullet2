@@ -1,9 +1,10 @@
-﻿
+﻿@using OpenBullet2.Shared.Forms
+
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
-                <text>Not authorized, please login (TODO: Put login form here)</text>
+                <LoginForm />
             </NotAuthorized>
         </AuthorizeRouteView>
     </Found>

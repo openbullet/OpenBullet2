@@ -120,6 +120,15 @@
   <data name="Add" xml:space="preserve">
     <value>Aggiungi</value>
   </data>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Validità massima della sessione amministratore (in ore)</value>
+  </data>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Username amministratore</value>
+  </data>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Permetti accesso ai file in tutto il sistema</value>
+  </data>
   <data name="AutoSetRecommendedBots" xml:space="preserve">
     <value>Imposta automaticamente il numero di bot consigliato quando una config viene selezionata nella pagina di creazione dei job</value>
   </data>
@@ -134,6 +143,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>Generali</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Validità massima della sessione ospite (in ore)</value>
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Ignora il nome della wordlist quando si rimuovono i duplicati dalle hit</value>
@@ -159,11 +171,17 @@
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
   </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Richiedi login amministratore</value>
+  </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Ripristina Predefiniti</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Salva</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sicurezza</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>
