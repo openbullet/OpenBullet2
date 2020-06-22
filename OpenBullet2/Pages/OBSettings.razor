@@ -97,7 +97,9 @@
 
     <label>@Loc["AdminUsername"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminUsername" />
-    <button class="btn btn-primary" @onclick="ChangePassword">Change password</button>
+    <button class="btn-sm btn-primary" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
+    <br />
+    <br />
 
     <label>@Loc["AdminSessionLifetimeHours"]</label>
     <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminSessionLifetimeHours" />
