@@ -19,25 +19,15 @@ namespace OpenBullet2.Auth
         private readonly ILocalStorageService localStorage;
         private readonly PersistentSettingsService settings;
         private readonly IGuestRepository guestRepo;
-        private readonly JwtSecurityTokenHandler handler;
-        private readonly TokenValidationParameters validationParams;
+        private readonly JwtValidationService jwtValidator;
 
         public OBAuthenticationStateProvider(ILocalStorageService localStorage, PersistentSettingsService settings,
-            IGuestRepository guestRepo)
+            IGuestRepository guestRepo, JwtValidationService jwtValidator)
         {
             this.localStorage = localStorage;
             this.settings = settings;
             this.guestRepo = guestRepo;
-            handler = new JwtSecurityTokenHandler();
-            validationParams = new TokenValidationParameters
-            {
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(settings.OpenBulletSettings.SecuritySettings.JwtKey),
-                ClockSkew = TimeSpan.Zero
-            };
+            this.jwtValidator = jwtValidator;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -60,7 +50,7 @@ namespace OpenBullet2.Auth
 
             try 
             {
-                var authenticatedUser = handler.ValidateToken(jwt, validationParams, out SecurityToken validatedToken);
+                var authenticatedUser = jwtValidator.ValidateToken(jwt, out SecurityToken validatedToken);
                 return new AuthenticationState(authenticatedUser);
             }
             catch
@@ -137,7 +127,7 @@ namespace OpenBullet2.Auth
             var expiration = DateTime.UtcNow.AddHours(settings.OpenBulletSettings.SecuritySettings.AdminSessionLifetimeHours);
 
             JwtSecurityToken token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
-            return handler.WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private string BuildGuestToken(IEnumerable<Claim> claims)
@@ -148,7 +138,7 @@ namespace OpenBullet2.Auth
             var expiration = DateTime.UtcNow.AddHours(settings.OpenBulletSettings.SecuritySettings.GuestSessionLifetimeHours);
 
             JwtSecurityToken token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
-            return handler.WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task Logout()

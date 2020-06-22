@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="BlazorDownloadFile" Version="1.0.10" />
     <PackageReference Include="Blazored.LocalStorage" Version="2.1.6" />
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="CaptchaSharp" Version="1.0.4" />

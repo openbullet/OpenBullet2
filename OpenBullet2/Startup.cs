@@ -14,6 +14,7 @@ using OpenBullet2.Services;
 using RuriLib.Services;
 using System.Globalization;
 using Blazored.LocalStorage;
+using BlazorDownloadFile;
 
 namespace OpenBullet2
 {
@@ -34,6 +35,7 @@ namespace OpenBullet2
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddBlazoredModal();
             services.AddFileReaderService();
+            services.AddBlazorDownloadFile();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             
@@ -56,6 +58,7 @@ namespace OpenBullet2
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JobManagerService>();
+            services.AddSingleton<JwtValidationService>();
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");

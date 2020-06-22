@@ -1,13 +1,19 @@
-﻿using BlazorInputFile;
+﻿using BlazorDownloadFile;
+using Blazored.LocalStorage;
+using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
+using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -19,6 +25,7 @@ namespace OpenBullet2.Pages
         [Inject] NavigationManager Nav { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
         Config selectedConfig;
         List<Config> configs;
@@ -142,7 +149,15 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            Nav.NavigateTo($"api/configs/download/{HttpUtility.UrlEncode(selectedConfig.Id)}", true);
+            try
+            {
+                await BlazorDownloadFileService.DownloadFile($"{selectedConfig.Id}.opk", await ConfigPacker.Pack(selectedConfig));
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError(ex.GetType().Name, ex.Message);
+                return;
+            }
         }
 
         private void ToggleView() => detailedView = !detailedView;
