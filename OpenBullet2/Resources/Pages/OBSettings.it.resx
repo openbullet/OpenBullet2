@@ -153,8 +153,8 @@
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Ignora il nome della wordlist quando si rimuovono i duplicati dalle hit</value>
   </data>
-  <data name="LogBufferSize" xml:space="preserve">
-    <value>Dimensione buffer del log</value>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Massimo numero di entry nel log</value>
   </data>
   <data name="LogToFile" xml:space="preserve">
     <value>Logga anche su file</value>
