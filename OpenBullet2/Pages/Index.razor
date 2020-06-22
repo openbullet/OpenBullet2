@@ -5,6 +5,8 @@
 @using OpenBullet2.Shared.Forms 
 @using System.Globalization
 @inject MetricsService Metrics
+@inject AuthenticationStateProvider Auth
+@inject NavigationManager Nav
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
 @inject IModalService Modal
 @attribute [Authorize(Roles = "Admin,Guest")]
@@ -13,6 +15,17 @@
 
 <table class="table">
     <tbody>
+        <AuthorizeView>
+            <Authorized>
+                <tr>
+                    <th scope="row">@Loc["AuthenticatedAs"]</th>
+                    <td>
+                        @context.User.Identity.Name
+                        <button class="btn-sm btn-primary ml-3" @onclick="Logout">Logout</button>
+                    </td>
+                </tr>
+            </Authorized>
+        </AuthorizeView>
         <tr>
             <th scope="row">@Loc["LocalTime"]</th>
             <td>@Metrics.ServerTime.ToString()</td>
@@ -77,5 +90,11 @@
     void ChangeLanguage()
     {
         Modal.Show<CultureSelector>("Choose your language");
+    }
+
+    private async Task Logout()
+    {
+        await ((OpenBullet2.Auth.OBAuthenticationStateProvider)Auth).Logout();
+        Nav.NavigateTo("/");
     }
 }

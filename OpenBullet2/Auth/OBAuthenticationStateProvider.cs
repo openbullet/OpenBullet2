@@ -66,7 +66,11 @@ namespace OpenBullet2.Auth
             catch
             {
                 // Token not present, expired or forged
-                var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+                var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity(new[] 
+                {
+                    new Claim(ClaimTypes.Name, "anonymous"),
+                    new Claim(ClaimTypes.Role, "Anonymous")
+                }, "anonymous"));
                 return new AuthenticationState(anonymousUser);
             }
         }
@@ -145,6 +149,11 @@ namespace OpenBullet2.Auth
 
             JwtSecurityToken token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
             return handler.WriteToken(token);
+        }
+
+        public async Task Logout()
+        {
+            await localStorage.RemoveItemAsync("jwt");
         }
     }
 }
