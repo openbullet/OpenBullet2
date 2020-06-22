@@ -1,0 +1,74 @@
+﻿@using OpenBullet2.Helpers
+@using System.ComponentModel.DataAnnotations;
+@inject IModalService ModalService
+@inject IGuestRepository GuestRepo
+
+<EditForm Model="guest" OnValidSubmit="HandleValidSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>Username</label>
+    <InputText @bind-Value="guest.Username" />
+
+    <label>Password</label>
+    <InputText type="password" @bind-Value="guest.Password" />
+
+    <label>Confirm password</label>
+    <InputText type="password" @bind-Value="guest.PasswordConfirmation" />
+
+    <label>Access expiration</label>
+    <InputDate @bind-Value="guest.AccessExpiration" />
+
+    <label>Allowed addresses</label>
+    <InputText @bind-Value="guest.AllowedAddresses" />
+
+    <button type="submit" class="btn btn-success">Ok</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+    class GuestCreateModel
+    {
+        [Required]
+        [StringLength(32, ErrorMessage = "The username must be between 3 and 32 characters.", MinimumLength = 3)]
+        public string Username { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(32, ErrorMessage = "The password must be between 8 and 32 characters.", MinimumLength = 8)]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
+        [Compare("Password")]
+        public string PasswordConfirmation { get; set; } = string.Empty;
+
+        [Required]
+        public DateTime AccessExpiration { get; set; } = DateTime.UtcNow.AddDays(7);
+        public string AllowedAddresses { get; set; } = string.Empty;
+    }
+
+    GuestCreateModel guest = new GuestCreateModel();
+
+    private async Task HandleValidSubmit()
+    {
+        var existingGuest = GuestRepo.GetAll().FirstOrDefault(g => g.Username == guest.Username);
+
+        if (existingGuest != null)
+        {
+            await js.AlertError("Uh-oh", "A guest with the same name already exists");
+            return;
+        }
+
+        var entity = new OpenBullet2.Entities.GuestEntity
+        {
+            Username = guest.Username,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(guest.Password),
+            AccessExpiration = guest.AccessExpiration,
+            AllowedAddresses = guest.AllowedAddresses
+        };
+
+        BlazoredModal.Close(ModalResult.Ok(entity));
+    }
+}

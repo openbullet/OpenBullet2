@@ -47,6 +47,7 @@ namespace OpenBullet2
             services.AddScoped<IWordlistRepository, HybridWordlistRepository>();
             services.AddScoped<IHitRepository, DbHitRepository>();
             services.AddScoped<IJobRepository, DbJobRepository>();
+            services.AddScoped<IGuestRepository, DbGuestRepository>();
 
             // Singletons
             services.AddSingleton<MetricsService>();

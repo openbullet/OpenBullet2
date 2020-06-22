@@ -17,5 +17,6 @@ namespace OpenBullet2
         public DbSet<JobEntity> Jobs { get; set; }
         public DbSet<RecordEntity> Records { get; set; }
         public DbSet<HitEntity> Hits { get; set; }
+        public DbSet<GuestEntity> Guests { get; set; }
     }
 }

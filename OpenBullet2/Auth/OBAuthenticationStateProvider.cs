@@ -1,10 +1,14 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
+using OpenBullet2.Exceptions;
+using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,13 +18,16 @@ namespace OpenBullet2.Auth
     {
         private readonly ILocalStorageService localStorage;
         private readonly PersistentSettingsService settings;
+        private readonly IGuestRepository guestRepo;
         private readonly JwtSecurityTokenHandler handler;
         private readonly TokenValidationParameters validationParams;
 
-        public OBAuthenticationStateProvider(ILocalStorageService localStorage, PersistentSettingsService settings)
+        public OBAuthenticationStateProvider(ILocalStorageService localStorage, PersistentSettingsService settings,
+            IGuestRepository guestRepo)
         {
             this.localStorage = localStorage;
             this.settings = settings;
+            this.guestRepo = guestRepo;
             handler = new JwtSecurityTokenHandler();
             validationParams = new TokenValidationParameters
             {
@@ -93,7 +100,16 @@ namespace OpenBullet2.Auth
 
         private async Task AuthenticateGuest(string username, string password)
         {
-            // TODO: Check password in database
+            var entity = guestRepo.GetAll().FirstOrDefault(g => g.Username == username);
+
+            if (entity == null)
+                throw new EntryNotFoundException("Could not find a guest with the given username");
+
+            if (!BCrypt.Net.BCrypt.Verify(password, entity.PasswordHash))
+                throw new UnauthorizedAccessException("Invalid password");
+
+            if (DateTime.UtcNow > entity.AccessExpiration)
+                throw new UnauthorizedAccessException("Access to this guest account has expired");
 
             var claims = new[]
             {

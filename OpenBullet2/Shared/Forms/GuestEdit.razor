@@ -1,0 +1,49 @@
+﻿@using OpenBullet2.Helpers
+@using OpenBullet2.Entities
+@inject IModalService ModalService
+@inject IGuestRepository GuestRepo
+
+<EditForm Model="Guest">
+
+    <label>Username</label>
+    <InputText @bind-Value="Guest.Username" />
+
+    <label>Access expiration</label>
+    <InputDate @bind-Value="Guest.AccessExpiration" />
+
+    <label>Allowed addresses</label>
+    <InputText @bind-Value="Guest.AllowedAddresses" />
+
+    <button type="submit" @onclick="Validate" class="btn btn-success">Ok</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public GuestEntity Guest { get; set; }
+
+    private async Task Validate()
+    {
+        if (string.IsNullOrEmpty(Guest.Username))
+        {
+            await js.AlertError("Uh-oh", "The username cannot be null");
+            return;
+        }
+
+        if (Guest.Username.Length < 3 || Guest.Username.Length > 32)
+        {
+            await js.AlertError("Uh-oh", "The username must be between 3 and 32 characters");
+            return;
+        }
+
+        var existingGuest = GuestRepo.GetAll().FirstOrDefault(g => g.Username == Guest.Username);
+
+        if (existingGuest != null)
+        {
+            await js.AlertError("Uh-oh", "A guest with the same name already exists");
+            return;
+        }
+
+        BlazoredModal.Close(ModalResult.Ok(Guest));
+    }
+}

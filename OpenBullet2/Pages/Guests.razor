@@ -1,0 +1,39 @@
+﻿@page "/guests"
+@using OpenBullet2.Entities
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Guests> Loc
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary m-sm-1" @onclick="AddGuest"><span class="oi oi-plus"> @Loc["Add"]</span></button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditGuestInfo"><span class="oi oi-pencil"></span> @Loc["EditInfo"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="EditGuestPassword"><span class="oi oi-pencil"></span> @Loc["EditPassword"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteGuest"><span class="oi oi-x"></span> @Loc["Delete"]</button>
+        </div>
+    </div>
+</div>
+
+<EditForm Model="resultsPerPage">
+    <label>@Loc["ResultsPerPage"]</label>
+    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
+                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
+        <option value="15">15</option>
+        <option value="30">30</option>
+        <option value="100">100</option>
+        <option value="250">250</option>
+    </InputSelectNumber>
+</EditForm>
+
+<p>@guests.Count @Loc["results"]</p>
+
+<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+            AllowPaging="true" PageSize="@resultsPerPage"
+            AllowSorting="true" Data="@guests" TItem="GuestEntity" ColumnWidth="200px"
+            RowSelect="SelectGuest" EmptyText="@Loc["NoRecordsToDisplay"]">
+    <Columns>
+        <RadzenGridColumn TItem="GuestEntity" Property="Username" Title="@Loc["Username"]" />
+        <RadzenGridColumn TItem="GuestEntity" Property="AccessExpiration" Title="@Loc["AccessExpiration"]" />
+        <RadzenGridColumn TItem="GuestEntity" Property="AllowedAddresses" Title="@Loc["AllowedAddresses"]" />
+    </Columns>
+</RadzenGrid>
