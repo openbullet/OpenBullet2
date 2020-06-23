@@ -37,6 +37,11 @@
     private BlockInstance draggedItem;
     private BlockInstance selectedBlock;
 
+    public void RefreshView()
+    {
+        StateHasChanged();
+    }
+
     private void HandleDragStart(BlockInstance item)
     {
         draggedItem = item;

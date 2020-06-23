@@ -8,7 +8,8 @@
     </p>
 
     <h6 class="font-weight-bold text-warning">Label:</h6>
-    <InputText @bind-Value="Block.Label" />
+    <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
+               ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
 </EditForm>
 
 @if (Block.Descriptor.ReturnType.HasValue)
@@ -29,4 +30,5 @@
 
 @code {
     [Parameter] public AutoBlockInstance Block { get; set; }
+    [Parameter] public EventCallback ChangedLabel { get; set; }
 }

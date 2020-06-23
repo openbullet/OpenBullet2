@@ -9,7 +9,7 @@
         <div class="col-3">
             <div style="height: 700px; overflow-y: auto;">
                 <h5>Current stack</h5>
-                <StackViewer Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+                <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
             </div>
         </div>
         <div class="col-6">
@@ -19,11 +19,11 @@
                 {
                     @if (selectedBlock is KeycheckBlockInstance)
                     {
-                        <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance" />
+                        <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance"  ChangedLabel="((args) => stackViewer.RefreshView())" />
                     }
                     else if (selectedBlock is HttpRequestBlockInstance)
                     {
-                        <HttpRequestBlockSettingsViewer Block="selectedBlock as HttpRequestBlockInstance" />
+                        <HttpRequestBlockSettingsViewer Block="selectedBlock as HttpRequestBlockInstance"  ChangedLabel="((args) => stackViewer.RefreshView())" />
                     }
                     else if (selectedBlock is LoliCodeBlockInstance)
                     {
@@ -31,7 +31,7 @@
                     }
                     else
                     {
-                        <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" />
+                        <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
                     }
                 }
                 else

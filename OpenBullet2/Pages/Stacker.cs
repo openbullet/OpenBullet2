@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Services;
+using OpenBullet2.Shared;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
@@ -17,6 +18,7 @@ namespace OpenBullet2.Pages
         private List<BlockDescriptor> availableBlocks;
         private Config config;
         private BlockInstance selectedBlock;
+        private StackViewer stackViewer;
 
         protected override async Task OnInitializedAsync()
         {

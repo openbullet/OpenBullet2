@@ -3,7 +3,8 @@
 
 <EditForm Model="Block">
     <h6 class="font-weight-bold text-warning">Label:</h6>
-    <InputText @bind-Value="Block.Label" />
+    <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
+               ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })"/>
 </EditForm>
 
 <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Settings:</h6>
@@ -55,6 +56,8 @@
 
 @code {
     [Parameter] public HttpRequestBlockInstance Block { get; set; }
+    [Parameter] public EventCallback ChangedLabel { get; set; }
+
     enum RequestParamsType
     {
         Standard,
