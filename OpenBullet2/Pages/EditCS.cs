@@ -47,8 +47,7 @@ namespace OpenBullet2.Pages
 
         private async Task ConvertConfig()
         {
-            var confirmed = await js.Confirm("WARNING! PLEASE READ!", 
-                "Once you convert the config to C# only, you won't be able to edit it with stacker anymore! Are you really, REALLY sure you know what you're doing?");
+            var confirmed = await js.Confirm(Loc["WarningPleaseRead"], Loc["ConfirmConfigConversion"], Loc["Cancel"]);
             
             if (!confirmed)
                 return;

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ConfirmConfigConversion" xml:space="preserve">
+    <value>Once you convert the config to C# only, you won't be able to edit it with stacker anymore! Are you really, REALLY sure you know what you're doing?</value>
+  </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
     <value>Convert to C# config</value>
   </data>
@@ -125,5 +131,8 @@
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
     <value>Transpile from blocks</value>
+  </data>
+  <data name="WarningPleaseRead" xml:space="preserve">
+    <value>WARNING! PLEASE READ!</value>
   </data>
 </root>
