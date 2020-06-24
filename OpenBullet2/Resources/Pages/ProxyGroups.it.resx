@@ -123,8 +123,17 @@
   <data name="All" xml:space="preserve">
     <value>Tutti</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Sei sicuro/a?</value>
+  </data>
   <data name="Country" xml:space="preserve">
     <value>Nazione</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Creato</value>
+  </data>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Crea gruppo proxy</value>
   </data>
   <data name="DeleteGroup" xml:space="preserve">
     <value>Rimuovi Gruppo</value>
@@ -132,14 +141,29 @@
   <data name="EditGroup" xml:space="preserve">
     <value>Modifica Gruppo</value>
   </data>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Modifica gruppo di proxy</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Gruppo in uso</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>Un job sta utilizzando questo gruppo di proxy. Per favore termina il job, rimuovilo dal manager e riprova.</value>
+  </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Importati</value>
   </data>
   <data name="ImportProxies" xml:space="preserve">
     <value>Importa Proxy</value>
   </data>
   <data name="LastChecked" xml:space="preserve">
     <value>Ultimo Controllo</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Per favore seleziona un gruppo prima</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Nessun proxy trovato</value>
@@ -153,8 +177,17 @@
   <data name="Port" xml:space="preserve">
     <value>Porta</value>
   </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Proxy importati correttamente</value>
+  </data>
   <data name="ProxyGroup" xml:space="preserve">
     <value>Gruppo di Proxy</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>Il gruppo di proxy è stato creato con successo!</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Vuoi davvero cancellare</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>risultati</value>
@@ -167,6 +200,9 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>

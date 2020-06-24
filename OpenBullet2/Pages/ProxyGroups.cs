@@ -1,13 +1,11 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
@@ -74,13 +72,13 @@ namespace OpenBullet2.Pages
 
         private async Task AddGroup()
         {
-            var modal = Modal.Show<ProxyGroupCreate>("Create proxy group");
+            var modal = Modal.Show<ProxyGroupCreate>(Loc["CreateProxyGroup"]);
             var result = await modal.Result;
 
             if (!result.Cancelled)
             {
                 groups.Add(result.Data as ProxyGroupEntity);
-                await js.AlertSuccess("Created", "The proxy group was created successfully!");
+                await js.AlertSuccess(Loc["Created"], Loc["ProxyGroupCreated"]);
                 currentGroupId = groups.Last().Id;
                 await RefreshList();
             }
@@ -90,7 +88,7 @@ namespace OpenBullet2.Pages
         {
             if (currentGroupId == -1)
             {
-                await js.AlertError("Hmm", "Please select an actual group first");
+                await ShowNoGroupSelectedWarning();
                 return;
             }
 
@@ -98,7 +96,7 @@ namespace OpenBullet2.Pages
             var parameters = new ModalParameters();
             parameters.Add(nameof(ProxyGroupEdit.ProxyGroup), groupToEdit);
 
-            var modal = Modal.Show<ProxyGroupEdit>("Edit proxy group", parameters);
+            var modal = Modal.Show<ProxyGroupEdit>(Loc["EditProxyGroup"], parameters);
             await modal.Result;
         }
 
@@ -106,7 +104,7 @@ namespace OpenBullet2.Pages
         {
             if (currentGroupId == -1)
             {
-                await js.AlertError("Hmm", "Please select an actual group first");
+                await ShowNoGroupSelectedWarning();
                 return;
             }
 
@@ -122,14 +120,14 @@ namespace OpenBullet2.Pages
                 if (proxies.Any(p => p.Id == f.Id))
                 {
                     // Prompt error and return
-                    await js.AlertError("Group in use", "A job is currently using this proxy group. Please stop and remove the job from the manager and try again.");
+                    await js.AlertError(Loc["GroupInUse"], Loc["GroupInUseWarning"]);
                     return;
                 }
             }
 
             var groupToDelete = groups.First(g => g.Id == currentGroupId);
 
-            if (await js.Confirm("Are you sure?", $"Do you really want to delete {groupToDelete.Name}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {groupToDelete.Name}?"))
             {
                 // Delete the group from the DB
                 await ProxyGroupsRepo.Delete(groupToDelete);
@@ -150,11 +148,11 @@ namespace OpenBullet2.Pages
         {
             if (currentGroupId == -1)
             {
-                await js.AlertError("Hmm", "Please create a proxy group or select a valid one");
+                await ShowNoGroupSelectedWarning();
                 return;
             }
 
-            var modal = Modal.Show<ImportProxies>("Import proxies");
+            var modal = Modal.Show<ImportProxies>(Loc["ImportProxies"]);
             var result = await modal.Result;
             
             if (!result.Cancelled)
@@ -171,7 +169,7 @@ namespace OpenBullet2.Pages
                 await ProxyRepo.Add(entities);
                 await RefreshList();
 
-                await js.AlertSuccess("Imported", $"{dto.Lines.Count()} proxies were imported successfully!");
+                await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Count()}");
             }
         }
 
@@ -189,5 +187,8 @@ namespace OpenBullet2.Pages
 
             return proxies.Select(p => Mapper.MapProxyToProxyEntity(p));
         }
+
+        private async Task ShowNoGroupSelectedWarning()
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoGroupSelected"]);
     }
 }
