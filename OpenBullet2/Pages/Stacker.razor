@@ -8,13 +8,13 @@
     <div class="row">
         <div class="col-3">
             <div style="height: 700px; overflow-y: auto;">
-                <h5>Current stack</h5>
+                <h5>@Loc["Current Stack"]</h5>
                 <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
             </div>
         </div>
         <div class="col-6">
             <div style="height: 700px; overflow-y: auto; padding-right: 30px;">
-                <h5>Block information</h5>
+                <h5>@Loc["BlockInformation"]</h5>
                 @if (selectedBlock != null)
                 {
                     @if (selectedBlock is KeycheckBlockInstance)
@@ -36,13 +36,13 @@
                 }
                 else
                 {
-                    <text>Select a block to display its settings</text>
+                    <text>@Loc["NoBlockSelectedInfo"]</text>
                 }
             </div>
         </div>
         <div class="col-3">
             <div style="height: 700px; overflow-y: auto;">
-                <h5>Available blocks</h5>
+                <h5>@Loc["AvailableBlocks"]</h5>
                 <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
             </div>
         </div>
