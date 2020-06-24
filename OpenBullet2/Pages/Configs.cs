@@ -34,7 +34,7 @@ namespace OpenBullet2.Pages
 
         private async Task ReloadConfigs()
         {
-            if (await js.Confirm("Are you sure?", "This will reload all configs from disk, so all unsaved changes will be lost. Do you want to proceed?"))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["ConfigReloadWarning"]))
             {
                 ConfigService.Configs = await ConfigRepo.GetAll();
                 configs = ConfigService.Configs;
@@ -66,7 +66,7 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedConfig.Metadata.Name}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedConfig.Metadata.Name}?"))
             {
                 ConfigRepo.Delete(selectedConfig);
                 configs.Remove(selectedConfig);
@@ -112,15 +112,13 @@ namespace OpenBullet2.Pages
             {
                 foreach (var file in files)
                 {
-                    using (var reader = new StreamReader(file.Data))
-                    {
-                        var ms = new MemoryStream();
-                        await file.Data.CopyToAsync(ms);
-                        await ConfigRepo.Upload(ms);
-                    }
+                    using var reader = new StreamReader(file.Data);
+                    var ms = new MemoryStream();
+                    await file.Data.CopyToAsync(ms);
+                    await ConfigRepo.Upload(ms);
                 }
 
-                await js.AlertSuccess("All done!", $"Successfully uploaded {files.Length} configs");
+                await js.AlertSuccess(Loc["AllDone"], $"{Loc["ConfigsSuccessfullyUploaded"]}: {files.Length}");
             }
             catch (Exception ex)
             {
@@ -132,7 +130,7 @@ namespace OpenBullet2.Pages
         }
 
         private async Task ShowNoConfigSelectedMessage()
-            => await js.AlertError("404", "It looks like you didn't select any config!");
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoConfigSelectedWarning"]);
 
 
         private async Task DownloadConfig()

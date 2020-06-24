@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllDone" xml:space="preserve">
+    <value>Fatto!</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Sei sicuro/a?</value>
+  </data>
   <data name="Author" xml:space="preserve">
     <value>Autore</value>
   </data>
@@ -125,6 +131,12 @@
   </data>
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
+  </data>
+  <data name="ConfigReloadWarning" xml:space="preserve">
+    <value>Verranno ricaricate le config dal disco, tutte le modifiche non salvate saranno perse. Procedere?</value>
+  </data>
+  <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
+    <value>Config caricate con successo</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Data di Creazione</value>
@@ -147,14 +159,23 @@
   <data name="New" xml:space="preserve">
     <value>Nuova</value>
   </data>
+  <data name="NoConfigSelectedWarning" xml:space="preserve">
+    <value>Non hai selezionato alcuna config!</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxy</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Vuoi veramente cancellare</value>
   </data>
   <data name="Reload" xml:space="preserve">
     <value>Ricarica</value>
   </data>
   <data name="ToggleView" xml:space="preserve">
     <value>Cambia Visuale</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Carica</value>
