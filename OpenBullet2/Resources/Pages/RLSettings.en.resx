@@ -132,6 +132,9 @@
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="CapMonsterHost" xml:space="preserve">
     <value>CapMonster Host</value>
   </data>

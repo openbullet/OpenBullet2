@@ -24,7 +24,7 @@ namespace OpenBullet2.Pages
 
         async Task RestoreDefaults()
         {
-            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"]))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"], Loc["Cancel"]))
             {
                 PersistentSettings.Recreate();
                 Nav.NavigateTo("/settings/openbullet");

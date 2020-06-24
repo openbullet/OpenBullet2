@@ -16,7 +16,7 @@
     {
         if (Bots < 1 || Bots > 200)
         {
-            await js.AlertError("Invalid amount", "The amount must be between 1 and 200");
+            await js.AlertError(Loc["InvalidAmount"], Loc["InvalidAmountWarning"]);
             return;
         }
 

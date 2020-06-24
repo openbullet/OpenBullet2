@@ -126,6 +126,9 @@
   <data name="AreYouSure" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Country" xml:space="preserve">
     <value>Country</value>
   </data>

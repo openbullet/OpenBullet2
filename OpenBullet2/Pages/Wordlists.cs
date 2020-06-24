@@ -84,7 +84,7 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedWordlist.Name}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedWordlist.Name}?", Loc["Cancel"]))
             {
                 var deleteFile = await js.Confirm(Loc["AlsoDeleteFile"], 
                     $"{Loc["DeleteFileText1"]} {selectedWordlist.FileName} {Loc["DeleteFileText2"]}", Loc["KeepFile"]);

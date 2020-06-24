@@ -48,7 +48,7 @@
     {
         if (selectedConfig == null)
         {
-            await js.AlertError("Uh-oh", "You must select a config first");
+            await js.AlertError(Loc["Uh-Oh"], Loc["NoConfigSelected"]);
             return;
         }
 

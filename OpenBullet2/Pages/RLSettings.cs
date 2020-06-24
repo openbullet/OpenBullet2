@@ -22,7 +22,7 @@ namespace OpenBullet2.Pages
 
         async Task RestoreDefaults()
         {
-            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"]))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"], Loc["Cancel"]))
             {
                 RuriLibSettings.RuriLibSettings = new GlobalSettings();
                 Nav.NavigateTo("/settings/rurilib");

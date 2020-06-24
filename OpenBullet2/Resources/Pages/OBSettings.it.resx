@@ -135,6 +135,9 @@
   <data name="AutoSetRecommendedBots" xml:space="preserve">
     <value>Imposta automaticamente il numero di bot consigliato quando una config viene selezionata nella pagina di creazione dei job</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
   <data name="ChangePassword" xml:space="preserve">
     <value>Cambia password</value>
   </data>

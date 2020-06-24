@@ -132,10 +132,16 @@
   <data name="Name" xml:space="preserve">
     <value>Nome</value>
   </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Devi prima selezionare una config</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxy</value>
   </data>
   <data name="Select" xml:space="preserve">
     <value>Seleziona</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>
