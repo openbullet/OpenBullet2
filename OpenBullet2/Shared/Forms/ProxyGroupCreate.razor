@@ -1,13 +1,12 @@
 ﻿@using OpenBullet2.Entities
 @inject IModalService ModalService
 @inject IProxyGroupRepository repo
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroupCreate> Loc
 
 <EditForm Model="proxyGroup">
     <InputText @bind-Value="proxyGroup.Name" />
-    <button type="submit" class="btn btn-success" style="margin-top: 10px;" @onclick="Create">Create</button>
+    <button type="submit" class="btn btn-success" style="margin-top: 10px;" @onclick="Create">@Loc["Create"]</button>
 </EditForm>
-
-
 
 @code {
 
