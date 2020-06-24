@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Helpers
@@ -18,6 +18,9 @@ namespace OpenBullet2.Helpers
 
         public async static Task AlertError(this IJSRuntime js, string title, string message)
             => await js.InvokeVoidAsync("Swal.fire", title, message, "error");
+
+        public async static Task AlertException(this IJSRuntime js, Exception ex)
+            => await js.AlertError(ex.GetType().Name, ex.Message);
 
         public async static Task<bool> Confirm(this IJSRuntime js, string question, string message, string cancelText = "Cancel")
         {

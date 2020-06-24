@@ -56,7 +56,7 @@ namespace OpenBullet2.Shared
             }
             catch (Exception ex)
             {
-                await js.AlertError(ex.GetType().Name, ex.Message);
+                await js.AlertException(ex);
             }
 
             if (!VolatileSettings.DebuggerOptions.PersistLog)
@@ -105,7 +105,7 @@ namespace OpenBullet2.Shared
             }
             catch (Exception ex)
             {
-                await js.AlertError(ex.GetType().Name, ex.Message);
+                await js.AlertException(ex);
             }
             finally
             {

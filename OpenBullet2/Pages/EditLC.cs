@@ -28,7 +28,7 @@ namespace OpenBullet2.Pages
             }
             catch (Exception ex)
             {
-                await js.AlertError(ex.GetType().Name, ex.Message);
+                await js.AlertException(ex);
             }
 
             var options = new EditorOptions()
