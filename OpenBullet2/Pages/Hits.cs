@@ -78,7 +78,7 @@ namespace OpenBullet2.Pages
         {
             if (selectedHit == null)
             {
-                await js.AlertError("Hmm", "You must select a hit first");
+                await ShowNoHitSelectedWarning();
                 return;
             }
 
@@ -93,11 +93,11 @@ namespace OpenBullet2.Pages
         {
             if (selectedHit == null)
             {
-                await js.AlertError("Hmm", "You must select a hit first");
+                await ShowNoHitSelectedWarning();
                 return;
             }
 
-            if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedHit.Data}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedHit.Data}?", Loc["Cancel"]))
             {
                 // Delete the hit from the db
                 await HitRepo.Delete(selectedHit);
@@ -109,11 +109,14 @@ namespace OpenBullet2.Pages
 
         private async Task PurgeHits()
         {
-            if (await js.Confirm("Are you sure?", $"Do you really want to DELETE ALL of your hits?"))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["ReallyDeleteAllHits"]))
             {
                 HitRepo.Purge();
                 await RefreshList();
             }
         }
+
+        private async Task ShowNoHitSelectedWarning()
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
     }
 }
