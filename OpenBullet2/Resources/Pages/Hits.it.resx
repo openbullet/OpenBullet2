@@ -141,6 +141,9 @@
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>
+  <data name="EditHit" xml:space="preserve">
+    <value>Modifica hit</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Devi prima selezionare una hit</value>
   </data>

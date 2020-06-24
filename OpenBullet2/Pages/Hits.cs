@@ -85,7 +85,7 @@ namespace OpenBullet2.Pages
             var parameters = new ModalParameters();
             parameters.Add(nameof(HitEdit.Hit), selectedHit);
 
-            var modal = Modal.Show<HitEdit>("Edit hit", parameters);
+            var modal = Modal.Show<HitEdit>(Loc["EditHit"], parameters);
             await modal.Result;
         }
 
@@ -109,7 +109,7 @@ namespace OpenBullet2.Pages
 
         private async Task PurgeHits()
         {
-            if (await js.Confirm(Loc["AreYouSure"], Loc["ReallyDeleteAllHits"]))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["ReallyDeleteAllHits"], Loc["Cancel"]))
             {
                 HitRepo.Purge();
                 await RefreshList();
