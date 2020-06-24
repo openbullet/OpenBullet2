@@ -123,8 +123,14 @@
   <data name="AntiCaptchaApiKey" xml:space="preserve">
     <value>Anti-Captcha API Key</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="AZCaptchaApiKey" xml:space="preserve">
     <value>AZ Captcha API Key</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
   </data>
   <data name="CapMonsterHost" xml:space="preserve">
     <value>CapMonster Host</value>
@@ -139,7 +145,7 @@
     <value>Captchas.IO API Key</value>
   </data>
   <data name="CheckBalance" xml:space="preserve">
-    <value>Check Balance</value>
+    <value>Check balance</value>
   </data>
   <data name="CheckBalanceBeforeSolving" xml:space="preserve">
     <value>Check the account balance before solving the captcha</value>
@@ -192,17 +198,26 @@
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Do you want to restore the default settings?</value>
+  </data>
   <data name="RestrictBlocksToCWD" xml:space="preserve">
     <value>Restrict blocks I/O capabilities to the Current Working Directory only</value>
   </data>
   <data name="RuCaptchaApiKey" xml:space="preserve">
     <value>RuCaptcha API Key</value>
   </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
   <data name="SelectedBrowser" xml:space="preserve">
     <value>Selected browser</value>
   </data>
   <data name="Selenium" xml:space="preserve">
     <value>Selenium</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>The settings were successfully saved.</value>
   </data>
   <data name="SolveCaptchaApiKey" xml:space="preserve">
     <value>SolveCaptcha API Key</value>

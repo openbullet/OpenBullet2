@@ -22,7 +22,7 @@ namespace OpenBullet2.Pages
 
         async Task RestoreDefaults()
         {
-            if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"]))
             {
                 RuriLibSettings.RuriLibSettings = new GlobalSettings();
                 Nav.NavigateTo("/settings/rurilib");
@@ -34,7 +34,7 @@ namespace OpenBullet2.Pages
             try
             {
                 await RuriLibSettings.Save();
-                await js.AlertSuccess("Saved", "The settings were successfully saved.");
+                await js.AlertSuccess(Loc["Saved"], Loc["SettingsSaved"]);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var balance = await service.GetBalanceAsync();
-                await js.AlertSuccess("Success", $"The balance is {balance}");
+                await js.AlertSuccess(Loc["Saved"], $"{Loc["Balance"]}: {balance}");
             }
             catch (Exception ex)
             {
