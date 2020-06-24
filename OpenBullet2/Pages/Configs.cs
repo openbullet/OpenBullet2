@@ -34,7 +34,7 @@ namespace OpenBullet2.Pages
 
         private async Task ReloadConfigs()
         {
-            if (await js.Confirm(Loc["AreYouSure"], Loc["ConfigReloadWarning"]))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["ConfigReloadWarning"], Loc["Cancel"]))
             {
                 ConfigService.Configs = await ConfigRepo.GetAll();
                 configs = ConfigService.Configs;
@@ -66,7 +66,7 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedConfig.Metadata.Name}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedConfig.Metadata.Name}?", Loc["Cancel"]))
             {
                 ConfigRepo.Delete(selectedConfig);
                 configs.Remove(selectedConfig);

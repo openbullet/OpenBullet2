@@ -129,6 +129,9 @@
   <data name="by" xml:space="preserve">
     <value>di</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
