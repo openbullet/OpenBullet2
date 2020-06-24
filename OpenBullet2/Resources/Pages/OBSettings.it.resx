@@ -129,6 +129,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Permetti accesso ai file in tutto il sistema</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Sei sicuro/a?</value>
+  </data>
   <data name="AutoSetRecommendedBots" xml:space="preserve">
     <value>Imposta automaticamente il numero di bot consigliato quando una config viene selezionata nella pagina di creazione dei job</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>L'autore predefinito delle config create</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Fatto</value>
   </data>
   <data name="EnableJobLogging" xml:space="preserve">
     <value>Abilita il logging nella pagina della visualizzazione job</value>
@@ -162,6 +168,12 @@
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>Quando viene scelta una config da modificare, naviga su</value>
   </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nuova password amministratore</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>La nuova password è stata impostata!</value>
+  </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Target del Proxy Check</value>
   </data>
@@ -180,11 +192,20 @@
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Ripristina Predefiniti</value>
   </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Vuoi tornare alle impostazioni predefinite?</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Salva</value>
   </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Salvataggio eseguito</value>
+  </data>
   <data name="Security" xml:space="preserve">
     <value>Sicurezza</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Le impostazioni sono state salvate con successo.</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>

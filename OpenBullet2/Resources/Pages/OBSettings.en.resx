@@ -129,6 +129,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Allow system-wide file access</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="AutoSetRecommendedBots" xml:space="preserve">
     <value>Automatically set the recommended bots when a config is selected in the job creation page</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>The default author on newly created configs</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Done</value>
   </data>
   <data name="EnableJobLogging" xml:space="preserve">
     <value>Enable logging in the job viewer page</value>
@@ -162,6 +168,12 @@
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>When editing a config, navigate to</value>
   </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>New admin password</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>The new passwords was set!</value>
+  </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Proxy Check Targets</value>
   </data>
@@ -180,11 +192,20 @@
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>
   </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Do you want to restore the default settings?</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
   <data name="Security" xml:space="preserve">
     <value>Security</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>The settings were successfully saved.</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>

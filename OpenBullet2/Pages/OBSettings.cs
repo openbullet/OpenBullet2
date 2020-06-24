@@ -24,7 +24,7 @@ namespace OpenBullet2.Pages
 
         async Task RestoreDefaults()
         {
-            if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"]))
             {
                 PersistentSettings.Recreate();
                 Nav.NavigateTo("/settings/openbullet");
@@ -36,7 +36,7 @@ namespace OpenBullet2.Pages
             try
             {
                 await PersistentSettings.Save();
-                await js.AlertSuccess("Saved", "The settings were successfully saved.");
+                await js.AlertSuccess(Loc["Saved"], Loc["SettingsSaved"]);
             }
             catch (Exception ex)
             {
@@ -46,13 +46,13 @@ namespace OpenBullet2.Pages
 
         async Task ChangePassword()
         {
-            var modal = Modal.Show<NewPasswordForm>("New admin password");
+            var modal = Modal.Show<NewPasswordForm>(Loc["NewAdminPassword"]);
             var result = await modal.Result;
 
             if (!result.Cancelled)
             {
                 settings.SecuritySettings.SetupAdminPassword(result.Data as string);
-                await js.AlertSuccess("Done", "The new passwords was set!");
+                await js.AlertSuccess(Loc["Done"], Loc["NewPasswordSet"]);
             }
         }
     }
