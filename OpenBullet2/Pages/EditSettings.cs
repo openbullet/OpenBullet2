@@ -28,7 +28,6 @@ namespace OpenBullet2.Pages
         List<string> unallowedWordlistTypes;
         List<string> quitBrowserStatuses;
         List<string> dontQuitBrowserStatuses;
-        private bool showRegexHelper = false;
 
         protected override void OnInitialized()
         {
@@ -70,7 +69,7 @@ namespace OpenBullet2.Pages
 
         async Task RestoreDefaults()
         {
-            if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
+            if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"], Loc["Cancel"]))
             {
                 ConfigService.SelectedConfig.Settings = new ConfigSettings();
                 Nav.NavigateTo("/config/edit/settings");

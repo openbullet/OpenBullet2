@@ -132,11 +132,17 @@
   <data name="AlwaysOpenBrowser" xml:space="preserve">
     <value>Always open the browser at the start</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="BanLoopEvasion" xml:space="preserve">
     <value>Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 to disable)</value>
   </data>
   <data name="BanStatuses" xml:space="preserve">
     <value>Ban the proxy when the bot ends with one of these statuses</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
@@ -200,6 +206,9 @@
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Do you want to restore the default settings?</value>
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
     <value>Save empty captures too</value>
