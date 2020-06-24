@@ -2,19 +2,20 @@
 @using OpenBullet2.Entities
 @inject IModalService ModalService
 @inject IGuestRepository GuestRepo
+@inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
 <EditForm Model="Guest">
 
-    <label>Username</label>
+    <label>@Loc["Username"]</label>
     <InputText @bind-Value="Guest.Username" />
 
-    <label>Access expiration</label>
+    <label>@Loc["AccessExpiration"]</label>
     <InputDate @bind-Value="Guest.AccessExpiration" />
 
-    <label>Allowed addresses</label>
+    <label>@Loc["AllowedAddresses"]</label>
     <InputText @bind-Value="Guest.AllowedAddresses" />
 
-    <button type="submit" @onclick="Validate" class="btn btn-success">Ok</button>
+    <button type="submit" @onclick="Validate" class="btn btn-success">@Loc["Ok"]</button>
 </EditForm>
 
 @code {
@@ -26,13 +27,13 @@
     {
         if (string.IsNullOrEmpty(Guest.Username))
         {
-            await js.AlertError("Uh-oh", "The username cannot be null");
+            await js.AlertError(Loc["Uh-Oh"], Loc["UsernameNull"]);
             return;
         }
 
         if (Guest.Username.Length < 3 || Guest.Username.Length > 32)
         {
-            await js.AlertError("Uh-oh", "The username must be between 3 and 32 characters");
+            await js.AlertError(Loc["Uh-Oh"], Loc["InvalidUsername"]);
             return;
         }
 
@@ -40,7 +41,7 @@
 
         if (existingGuest != null)
         {
-            await js.AlertError("Uh-oh", "A guest with the same name already exists");
+            await js.AlertError(Loc["Uh-Oh"], Loc["GuestAlreadyExists"]);
             return;
         }
 
