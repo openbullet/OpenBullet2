@@ -123,6 +123,9 @@
   <data name="Add" xml:space="preserve">
     <value>Aggiungi</value>
   </data>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Aggiungi ospite</value>
+  </data>
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Indirizzi permessi</value>
   </data>

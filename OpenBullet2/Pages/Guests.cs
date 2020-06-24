@@ -49,7 +49,7 @@ namespace OpenBullet2.Pages
 
         private async Task AddGuest()
         {
-            var modal = Modal.Show<GuestAdd>("Add guest");
+            var modal = Modal.Show<GuestAdd>(Loc["AddGuest"]);
             var result = await modal.Result;
 
             if (!result.Cancelled)
