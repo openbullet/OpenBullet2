@@ -126,8 +126,17 @@
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Allowed addresses</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Edit guest</value>
   </data>
   <data name="EditInfo" xml:space="preserve">
     <value>Edit Info</value>
@@ -135,14 +144,26 @@
   <data name="EditPassword" xml:space="preserve">
     <value>Edit Password</value>
   </data>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>New password for guest</value>
+  </data>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>You must select a guest first</value>
+  </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>results</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Results per page</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>

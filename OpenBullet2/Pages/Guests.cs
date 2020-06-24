@@ -64,14 +64,14 @@ namespace OpenBullet2.Pages
         {
             if (selectedGuest == null)
             {
-                await js.AlertError("Hmm", "You must select a guest first");
+                await ShowNoGuestSelectedWarning();
                 return;
             }
 
             var parameters = new ModalParameters();
             parameters.Add(nameof(GuestEdit.Guest), selectedGuest);
 
-            var modal = Modal.Show<GuestEdit>("Edit guest", parameters);
+            var modal = Modal.Show<GuestEdit>(Loc["EditGuest"], parameters);
             var result = await modal.Result;
 
             if (!result.Cancelled)
@@ -85,11 +85,11 @@ namespace OpenBullet2.Pages
         {
             if (selectedGuest == null)
             {
-                await js.AlertError("Hmm", "You must select a guest first");
+                await ShowNoGuestSelectedWarning();
                 return;
             }
 
-            var modal = Modal.Show<NewPasswordForm>("New guest password");
+            var modal = Modal.Show<NewPasswordForm>($"{Loc["NewPasswordForGuest"]}: {selectedGuest.Username}");
             var result = await modal.Result;
 
             if (!result.Cancelled)
@@ -104,11 +104,11 @@ namespace OpenBullet2.Pages
         {
             if (selectedGuest == null)
             {
-                await js.AlertError("Hmm", "You must select a guest first");
+                await ShowNoGuestSelectedWarning();
                 return;
             }
 
-            if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedGuest.Username}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedGuest.Username}?", Loc["Cancel"]))
             {
                 // Delete the guest from the db
                 await GuestRepo.Delete(selectedGuest);
@@ -117,5 +117,8 @@ namespace OpenBullet2.Pages
                 guests.Remove(selectedGuest);
             }
         }
+
+        private async Task ShowNoGuestSelectedWarning()
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoGuestSelectedWarning"]);
     }
 }

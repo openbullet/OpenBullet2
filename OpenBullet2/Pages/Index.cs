@@ -49,7 +49,7 @@ namespace OpenBullet2.Pages
         private async Task Logout()
         {
             await ((Auth.OBAuthenticationStateProvider)Auth).Logout();
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/", true);
         }
     }
 }
