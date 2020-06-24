@@ -2,14 +2,15 @@
 @using OpenBullet2.Helpers
 @inject AuthenticationStateProvider Auth
 @inject NavigationManager Nav
+@inject Microsoft.Extensions.Localization.IStringLocalizer<LoginForm> Loc
 
-<p>You are not authenticated, please login</p>
+<p>@Loc["NotAuthedPleaseLogin"]</p>
 <EditForm Model="user">
-    <label>Username</label>
+    <label>@Loc["Username"]</label>
     <InputText @bind-Value="user.Username" />
-    <label>Password</label>
+    <label>@Loc["Password"]</label>
     <InputText type="password" @bind-Value="user.Password" />
-    <button type="submit" class="btn btn-primary" @onclick="ValidateUser">Login</button>
+    <button type="submit" class="btn btn-primary" @onclick="ValidateUser">@Loc["Login"]</button>
 </EditForm>
 
 @code {
