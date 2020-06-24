@@ -2,32 +2,32 @@
 @using System.ComponentModel.DataAnnotations;
 @inject IModalService ModalService
 @inject IGuestRepository GuestRepo
+@inject Microsoft.Extensions.Localization.IStringLocalizer<GuestAdd> Loc
 
 <EditForm Model="guest" OnValidSubmit="HandleValidSubmit">
 
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <label>Username</label>
+    <label>@Loc["Username"]</label>
     <InputText @bind-Value="guest.Username" />
 
-    <label>Password</label>
+    <label>@Loc["Password"]</label>
     <InputText type="password" @bind-Value="guest.Password" />
 
-    <label>Confirm password</label>
+    <label>@Loc["ConfirmPassword"]</label>
     <InputText type="password" @bind-Value="guest.PasswordConfirmation" />
 
-    <label>Access expiration</label>
+    <label>@Loc["AccessExpiration"]</label>
     <InputDate @bind-Value="guest.AccessExpiration" />
 
-    <label>Allowed addresses</label>
+    <label>@Loc["AllowedAddresses"]</label>
     <InputText @bind-Value="guest.AllowedAddresses" />
 
-    <button type="submit" class="btn btn-success">Ok</button>
+    <button type="submit" class="btn btn-success">@Loc["Ok"]</button>
 </EditForm>
 
-@code {
-
+@code { 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
     class GuestCreateModel
@@ -57,7 +57,7 @@
 
         if (existingGuest != null)
         {
-            await js.AlertError("Uh-oh", "A guest with the same name already exists");
+            await js.AlertError(Loc["Uh-Oh"], Loc["GuestAlreadyExists"]);
             return;
         }
 
@@ -70,5 +70,5 @@
         };
 
         BlazoredModal.Close(ModalResult.Ok(entity));
-    }
+    } 
 }
