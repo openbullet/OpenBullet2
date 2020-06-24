@@ -120,6 +120,12 @@
   <data name="by" xml:space="preserve">
     <value>by</value>
   </data>
+  <data name="JobNotIdle" xml:space="preserve">
+    <value>Job not idle</value>
+  </data>
+  <data name="JobNotIdleWarning" xml:space="preserve">
+    <value>Please stop or abort the job before deleting it</value>
+  </data>
   <data name="New" xml:space="preserve">
     <value>New</value>
   </data>
@@ -131,5 +137,8 @@
   </data>
   <data name="RemoveAll" xml:space="preserve">
     <value>Remove All</value>
+  </data>
+  <data name="SelectJobType" xml:space="preserve">
+    <value>Select job type</value>
   </data>
 </root>

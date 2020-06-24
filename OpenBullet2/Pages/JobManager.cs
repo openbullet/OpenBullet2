@@ -62,7 +62,7 @@ namespace OpenBullet2.Pages
 
         private async Task NewJob()
         {
-            var modal = Modal.Show<JobTypeSelector>("Select Job Type");
+            var modal = Modal.Show<JobTypeSelector>(Loc["SelectJobType"]);
             var result = await modal.Result;
 
             if (!result.Cancelled)
@@ -78,7 +78,7 @@ namespace OpenBullet2.Pages
         {
             if (job.Status != TaskManagerStatus.Idle)
             {
-                await js.AlertError("Job not idle", "Please stop or abort the job before deleting it");
+                await js.AlertError(Loc["JobNotIdle"], Loc["JobNotIdleWarning"]);
                 return;
             }
 
@@ -110,7 +110,7 @@ namespace OpenBullet2.Pages
 
             if (notIdleJobs.Count() > 0)
             {
-                await js.AlertError($"Job #{notIdleJobs.First().Id} not idle", "Please stop or abort the job before deleting it");
+                await js.AlertError($"{Loc["JobNotIdle"]} #{notIdleJobs.First().Id}", Loc["JobNotIdleWarning"]);
                 return;
             }
 
