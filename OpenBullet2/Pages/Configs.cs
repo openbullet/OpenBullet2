@@ -1,8 +1,6 @@
 ﻿using BlazorDownloadFile;
-using Blazored.LocalStorage;
 using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
@@ -11,11 +9,8 @@ using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace OpenBullet2.Pages
 {
@@ -30,7 +25,6 @@ namespace OpenBullet2.Pages
         Config selectedConfig;
         List<Config> configs;
         bool detailedView = false;
-        bool uploadDisplay = false;
 
         protected override void OnInitialized()
         {

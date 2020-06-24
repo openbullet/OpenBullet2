@@ -1,14 +1,7 @@
 ﻿@page "/"
 @using Helpers
-@using System.Threading
-@using OpenBullet2.Services
-@using OpenBullet2.Shared.Forms 
 @using System.Globalization
-@inject MetricsService Metrics
-@inject AuthenticationStateProvider Auth
-@inject NavigationManager Nav
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
-@inject IModalService Modal
 @attribute [Authorize(Roles = "Admin,Guest")]
 
 <h2 style="margin-bottom: 20px;">@Loc["WelcomeMessage"]</h2>
@@ -56,45 +49,3 @@
         </tr>
     </tbody>
 </table>
-
-@code {
-    protected override void OnInitialized()
-    {
-        StartPeriodicRefresh();
-    }
-
-    private void StartPeriodicRefresh()
-    {
-        var timer = new Timer(new TimerCallback(async _ =>
-        {
-            await InvokeAsync(StateHasChanged);
-        }), null, 1000, 1000);
-
-        var cpuTimer = new Timer(new TimerCallback(async _ =>
-        {
-            await Metrics.UpdateCpuUsage();
-        }), null, 500, 500);
-    }
-
-    private string BytesToString(long byteCount)
-    {
-        string[] suf = { "B", "KB", "MB", "GB", "TB", "PB", "EB" }; //Longs run out around EB
-        if (byteCount == 0)
-            return "0" + $" {suf[0]}";
-        long bytes = Math.Abs(byteCount);
-        int place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
-        double num = Math.Round(bytes / Math.Pow(1024, place), 1);
-        return (Math.Sign(byteCount) * num).ToString("0.##", CultureInfo.InvariantCulture) + $" {suf[place]}";
-    }
-
-    void ChangeLanguage()
-    {
-        Modal.Show<CultureSelector>("Choose your language");
-    }
-
-    private async Task Logout()
-    {
-        await ((OpenBullet2.Auth.OBAuthenticationStateProvider)Auth).Logout();
-        Nav.NavigateTo("/");
-    }
-}

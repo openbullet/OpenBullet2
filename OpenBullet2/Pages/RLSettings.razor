@@ -1,10 +1,6 @@
 ﻿@page "/settings/rurilib"
-@using OpenBullet2.Helpers
-@using RuriLib.Services
 @using RuriLib.Models.Settings
 @using RuriLib.Functions.Captchas
-@inject RuriLibSettingsService RuriLibSettings
-@inject NavigationManager Nav
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RLSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
 
@@ -166,49 +162,3 @@
 
 <button class="btn btn-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
 <button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
-
-@code 
-{ 
-    GlobalSettings settings;
-
-    protected override void OnInitialized()
-    {
-        settings = RuriLibSettings.RuriLibSettings;
-    }
-
-    async Task RestoreDefaults()
-    {
-        if (await js.Confirm("Are you sure", "Do you want to restore the default settings?"))
-        {
-            RuriLibSettings.RuriLibSettings = new GlobalSettings();
-            Nav.NavigateTo("/settings/rurilib");
-        }
-    }
-
-    async Task Save()
-    {
-        try
-        {
-            await RuriLibSettings.Save();
-            await js.AlertSuccess("Saved", "The settings were successfully saved.");
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    async Task CheckBalance()
-    {
-        var service = CaptchaServiceFactory.GetService(settings.CaptchaSettings);
-        try
-        {
-            var balance = await service.GetBalanceAsync();
-            await js.AlertSuccess("Success", $"The balance is {balance}");
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-}
