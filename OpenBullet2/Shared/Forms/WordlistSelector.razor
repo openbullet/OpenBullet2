@@ -2,6 +2,7 @@
 @using OpenBullet2.Helpers
 @inject IWordlistRepository WordlistRepo
 @inject IModalService ModalService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
 <div class="container-fluid" style="overflow-y: auto; width: 1000px;">
     <div class="row" style="height: 250px; overflow-y: auto;">
@@ -9,11 +10,11 @@
                     AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="130px"
                     RowSelect="Preview" RowDoubleClick="Select">
             <Columns>
-                <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="Name" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="Type" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="Purpose" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="Total" Width="100px" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="File Name" Width="300px" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="@Loc["Purpose"]" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="@Loc["Total"]" Width="100px" />
+                <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="@Loc["FileName"]" Width="300px" />
             </Columns>
         </RadzenGrid>
     </div>
@@ -21,7 +22,7 @@
         <textarea readonly>@linesPreview</textarea>
     </div>
     <div class="row">
-        <button class="btn btn-success" @onclick="Select">Select</button>
+        <button class="btn btn-success" @onclick="Select">@Loc["Select"]</button>
     </div>
 </div>
 
@@ -56,7 +57,7 @@
     {
         if (selectedWordlist == null)
         {
-            await js.AlertError("Uh-oh", "You must select a wordlist first");
+            await js.AlertError(Loc["Uh-Oh"], Loc["SelectWordlistFirst"]);
             return;
         }
 
