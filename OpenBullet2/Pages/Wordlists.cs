@@ -51,13 +51,13 @@ namespace OpenBullet2.Pages
 
         private async Task AddWordlist()
         {
-            var modal = Modal.Show<WordlistAdd>("Add wordlist");
+            var modal = Modal.Show<WordlistAdd>(Loc["AddWordlist"]);
             var result = await modal.Result;
 
             if (!result.Cancelled)
             {
                 wordlists.Add(result.Data as WordlistEntity);
-                await js.AlertSuccess("Created", "The wordlist was added successfully!");
+                await js.AlertSuccess(Loc["Added"], Loc["AddedWordlist"]);
             }
         }
 
@@ -65,14 +65,14 @@ namespace OpenBullet2.Pages
         {
             if (selectedWordlist == null)
             {
-                await js.AlertError("Hmm", "You must select a wordlist first");
+                await ShowNoWordlistSelectedWarning();
                 return;
             }
 
             var parameters = new ModalParameters();
             parameters.Add(nameof(WordlistEdit.Wordlist), selectedWordlist);
 
-            var modal = Modal.Show<WordlistEdit>("Edit wordlist", parameters);
+            var modal = Modal.Show<WordlistEdit>(Loc["EditWordlist"], parameters);
             await modal.Result;
         }
 
@@ -80,14 +80,14 @@ namespace OpenBullet2.Pages
         {
             if (selectedWordlist == null)
             {
-                await js.AlertError("Hmm", "You must select a wordlist first");
+                await ShowNoWordlistSelectedWarning();
                 return;
             }
 
-            if (await js.Confirm("Are you sure?", $"Do you really want to delete {selectedWordlist.Name}?"))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedWordlist.Name}?"))
             {
-                var deleteFile = await js.Confirm("Delete the file too?", 
-                    $"Do you want to delete {selectedWordlist.FileName} from the disk as well?", "No, keep the file");
+                var deleteFile = await js.Confirm(Loc["AlsoDeleteFile"], 
+                    $"{Loc["DeleteFileText1"]} {selectedWordlist.FileName} {Loc["DeleteFileText2"]}", Loc["KeepFile"]);
 
                 // Delete the wordlist from the DB and disk
                 await WordlistRepo.Delete(selectedWordlist, deleteFile);
@@ -96,5 +96,8 @@ namespace OpenBullet2.Pages
                 wordlists.Remove(selectedWordlist);
             }
         }
+
+        private async Task ShowNoWordlistSelectedWarning()
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoWordlistSelected"]);
     }
 }

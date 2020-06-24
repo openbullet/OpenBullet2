@@ -120,14 +120,41 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="Added" xml:space="preserve">
+    <value>Added</value>
+  </data>
+  <data name="AddedWordlist" xml:space="preserve">
+    <value>The wordlist was added successfully!</value>
+  </data>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Add wordlist</value>
+  </data>
+  <data name="AlsoDeleteFile" xml:space="preserve">
+    <value>Delete the file too?</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>Do you want to delete</value>
+  </data>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>from the disk as well?</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>Edit wordlist</value>
+  </data>
   <data name="FileName" xml:space="preserve">
     <value>File Name</value>
+  </data>
+  <data name="KeepFile" xml:space="preserve">
+    <value>No, keep the file</value>
   </data>
   <data name="Lines" xml:space="preserve">
     <value>Lines</value>
@@ -138,8 +165,14 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
   </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>You must select a wordlist first</value>
+  </data>
   <data name="Purpose" xml:space="preserve">
     <value>Purpose</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>results</value>
@@ -149,5 +182,8 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>

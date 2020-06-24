@@ -120,14 +120,41 @@
   <data name="Add" xml:space="preserve">
     <value>Aggiungi</value>
   </data>
+  <data name="Added" xml:space="preserve">
+    <value>Aggiunta</value>
+  </data>
+  <data name="AddedWordlist" xml:space="preserve">
+    <value>La wordlist è stata aggiunta con successo!</value>
+  </data>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Aggiungi wordlist</value>
+  </data>
+  <data name="AlsoDeleteFile" xml:space="preserve">
+    <value>Rimuovere anche il file?</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Sei sicuro/a?</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Rimuovi</value>
+  </data>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>Vuoi anche cancellare</value>
+  </data>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>dal disco?</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>Modifica wordlist</value>
+  </data>
   <data name="FileName" xml:space="preserve">
     <value>Nome File</value>
+  </data>
+  <data name="KeepFile" xml:space="preserve">
+    <value>No, mantieni il file</value>
   </data>
   <data name="Lines" xml:space="preserve">
     <value>Righe</value>
@@ -138,8 +165,14 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Nessuna wordlist trovata</value>
   </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>Devi prima selezionare una wordlist</value>
+  </data>
   <data name="Purpose" xml:space="preserve">
     <value>Ambito</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Vuoi davvero cancellare</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>risultati</value>
@@ -149,5 +182,8 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>
