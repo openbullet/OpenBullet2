@@ -118,54 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Amount" xml:space="preserve">
-    <value>Amount</value>
+    <value>Quantità</value>
   </data>
   <data name="CharacterSet" xml:space="preserve">
-    <value>Character set</value>
+    <value>Set di caratteri</value>
   </data>
   <data name="Combinations" xml:space="preserve">
-    <value>Combinations</value>
+    <value>Combinazioni</value>
   </data>
   <data name="combinationsWillBeGenerated" xml:space="preserve">
-    <value>combinations will be generated</value>
+    <value>combinazioni verranno generate</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>File name</value>
+    <value>Nome del file</value>
   </data>
   <data name="Infinite" xml:space="preserve">
     <value>Infinite</value>
   </data>
   <data name="Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Lunghezza</value>
   </data>
   <data name="lines" xml:space="preserve">
-    <value>lines</value>
+    <value>righe</value>
   </data>
   <data name="NoWordlistSelected" xml:space="preserve">
-    <value>No wordlist selected</value>
+    <value>Nessuna wordlist selezionata</value>
   </data>
   <data name="Pad" xml:space="preserve">
-    <value>Pad</value>
+    <value>Applica padding</value>
   </data>
   <data name="Range" xml:space="preserve">
-    <value>Range</value>
+    <value>Intervallo</value>
   </data>
   <data name="SelectWordlist" xml:space="preserve">
-    <value>Select wordlist</value>
+    <value>Seleziona wordlist</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start</value>
+    <value>Inizio</value>
   </data>
   <data name="Step" xml:space="preserve">
-    <value>Step</value>
+    <value>Incremento</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Tipo di wordlist</value>
   </data>
 </root>

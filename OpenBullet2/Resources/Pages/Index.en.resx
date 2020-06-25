@@ -132,6 +132,9 @@
   <data name="LocalTime" xml:space="preserve">
     <value>Local Time</value>
   </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
   <data name="MemoryUsage" xml:space="preserve">
     <value>Memory Usage</value>
   </data>
