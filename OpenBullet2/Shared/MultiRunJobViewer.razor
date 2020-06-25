@@ -1,54 +1,49 @@
-﻿@using RuriLib.Models.Jobs
-@using RuriLib.Models.Jobs.Threading
-@using OpenBullet2.Helpers
-@using OpenBullet2.Services
-@using OpenBullet2.Shared.Forms
+﻿@using RuriLib.Models.Jobs.Threading
 @using OpenBullet2.Models.Hits
 @using RuriLib.Models.Hits.HitOutputs 
 @using RuriLib.Models.Proxies.ProxySources 
 @using RuriLib.Models.Data.DataPools 
 @using OpenBullet2.Models.Proxies.Sources 
-@using System.Globalization 
-@inject IModalService Modal
-@inject PersistentSettingsService PersistentSettings
+@using System.Globalization
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunJobViewer> Loc
 
 <div>
-    <p style="color: orange;"><b>Job Options</b></p>
+    <p style="color: orange;"><b>@Loc["JobOptions"]</b></p>
     <table class="table">
         <tbody>
             <tr>
-                <th scope="row">Config</th>
-                <td>@Job.Config.Metadata.Name by @Job.Config.Metadata.Author</td>
+                <th scope="row">@Loc["Config"]</th>
+                <td>@Job.Config.Metadata.Name @Loc["by"] @Job.Config.Metadata.Author</td>
             </tr>
             <tr>
-                <th scope="row">Data Pool</th>
+                <th scope="row">@Loc["DataPool"]</th>
                 <td>
                     @switch (Job.DataPool)
                     {
                         case WordlistDataPool x:
-                            <span>Wordlist: @x.Wordlist.Name</span>
+                            <span>@Loc["Wordlist"]: @x.Wordlist.Name</span>
                             break;
 
                         case FileDataPool x:
-                            <span>File: @x.FileName</span>
+                            <span>@Loc["File"]: @x.FileName</span>
                             break;
 
                         case InfiniteDataPool x:
-                            <span>Infinite data pool</span>
+                            <span>@Loc["InfiniteDataPool"]</span>
                             break;
 
                         case CombinationsDataPool x:
-                            <span>Combinations of @x.CharSet with length @x.Length</span>
+                            <span>@string.Format(Loc["CombinationsText"], x.CharSet, x.Length)</span>
                             break;
 
                         case RangeDataPool x:
-                            <span>Range from @x.Start with amount @x.Amount and step @x.Step (padding @x.Pad)</span>
+                            <span>@string.Format(Loc["RangeText"], x.Start, x.Amount, x.Step, x.Pad)</span>
                             break;
                     }
                 </td>
             </tr>
             <tr>
-                <th scope="row">Proxy Sources</th>
+                <th scope="row">@Loc["ProxySources"]</th>
                 <td>
                     @foreach (var source in Job.ProxySources)
                     {
@@ -56,15 +51,15 @@
                             @switch (source)
                             {
                                 case GroupProxySource x:
-                                    <span style="color: aquamarine;">Group: @x.GroupId</span>
+                                    <span style="color: aquamarine;">@Loc["Group"]: @x.GroupId</span>
                                     break;
 
                                 case FileProxySource x:
-                                    <span style="color: greenyellow;">File: @x.FileName</span>
+                                    <span style="color: greenyellow;">@Loc["File"]: @x.FileName</span>
                                     break;
 
                                 case RemoteProxySource x:
-                                    <span style="color: hotpink;">Remote: @x.Url</span>
+                                    <span style="color: hotpink;">@Loc["Remote"]: @x.Url</span>
                                     break;
                             }
                         </p>
@@ -72,11 +67,11 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">Proxy Mode</th>
+                <th scope="row">@Loc["ProxyMode"]</th>
                 <td>@Job.ProxyMode</td>
             </tr>
             <tr>
-                <th scope="row">Hit Outputs</th>
+                <th scope="row">@Loc["HitOutputs"]</th>
                 <td>
                     @foreach (var output in Job.HitOutputs)
                     {
@@ -84,15 +79,15 @@
                             @switch (output)
                             {
                                 case DatabaseHitOutput x:
-                                    <span style="color: aquamarine;">Database</span>
+                                    <span style="color: aquamarine;">@Loc["Database"]</span>
                                     break;
 
                                 case FileSystemHitOutput x:
-                                    <span style="color: greenyellow;">FileSystem (@x.BaseDir)</span>
+                                    <span style="color: greenyellow;">@Loc["FileSystem"] (@x.BaseDir)</span>
                                     break;
 
                                 case DiscordWebhookHitOutput x:
-                                    <span style="color: hotpink;">Webhook (@x.Webhook.Substring(0, 70) ...)</span>
+                                    <span style="color: hotpink;">@Loc["DiscordWebhook"] (@x.Webhook.Substring(0, 70) ...)</span>
                                     break;
                             }
                         </p>
@@ -100,20 +95,20 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">Skip</th>
+                <th scope="row">@Loc["Skip"]</th>
                 <td>@Job.Skip</td>
             </tr>
             <tr>
-                <th scope="row">Bots</th>
+                <th scope="row">@Loc["Bots"]</th>
                 <td>
                     <span style="margin-right: 10px;">@Job.Bots</span>
                     @if (!changingBots)
                     {
-                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> Change</button>
+                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> @Loc["Change"]</button>
                     }
                     else
                     {
-                        <span><i>Changing... please wait</i></span>
+                        <span><i>@Loc["ChangingPleaseWait"]</i></span>
                     }
                 </td>
             </tr>
@@ -121,31 +116,31 @@
     </table>
 </div>
 
-<p style="color: orange;"><b>Controls</b></p>
+<p style="color: orange;"><b>@Loc["Controls"]</b></p>
 <div class="list-group list-group-horizontal">
     @switch (Job.Status)
     {
         case TaskManagerStatus.Idle:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             break;
 
         case TaskManagerStatus.Paused:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
             break;
 
         case TaskManagerStatus.Running:
-            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> @Loc["Pause"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
         case TaskManagerStatus.Pausing:
-            <span><i>Pausing... please wait until the current tasks finished processing</i></span>
+            <span><i>@Loc["PausingMessage"]</i></span>
             break;
 
         case TaskManagerStatus.Stopping:
-            <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["Stopping message"] </i></span>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
     }
 </div>
@@ -159,18 +154,18 @@
 }
 
 <div class="mt-2">
-    <p style="color: orange;"><b>Data Stats</b></p>
+    <p style="color: orange;"><b>@Loc["DataStats"]</b></p>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Tested</th>
-                <th scope="col" style="color: greenyellow;">Hits</th>
-                <th scope="col" style="color: orange;">Custom</th>
-                <th scope="col" style="color: tomato;">Bad</th>
-                <th scope="col" style="color: yellow;">Retried</th>
-                <th scope="col" style="color: plum;">Banned</th>
-                <th scope="col" style="color: skyblue;">To Check</th>
-                <th scope="col" style="color: red;">Errors</th>
+                <th scope="col">@Loc["Tested"]</th>
+                <th scope="col" style="color: greenyellow;">@Loc["Hits"]</th>
+                <th scope="col" style="color: orange;">@Loc["Custom"]</th>
+                <th scope="col" style="color: tomato;">@Loc["Bad"]</th>
+                <th scope="col" style="color: yellow;">@Loc["Retried"]</th>
+                <th scope="col" style="color: plum;">@Loc["Banned"]</th>
+                <th scope="col" style="color: skyblue;">@Loc["ToCheck"]</th>
+                <th scope="col" style="color: red;">@Loc["Errors"]</th>
             </tr>
         </thead>
         <tbody>
@@ -189,14 +184,14 @@
 </div>
 
 <div class="mt-2">
-    <p style="color: orange;"><b>Proxy Stats</b></p>
+    <p style="color: orange;"><b>@Loc["ProxyStats"]</b></p>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Total</th>
-                <th scope="col" style="color: greenyellow;">Alive</th>
-                <th scope="col" style="color: tomato;">Bad</th>
-                <th scope="col" style="color: plum;">Banned</th>
+                <th scope="col">@Loc["Total"]</th>
+                <th scope="col" style="color: greenyellow;">@Loc["Alive"]</th>
+                <th scope="col" style="color: tomato;">@Loc["Bad"]</th>
+                <th scope="col" style="color: plum;">@Loc["Banned"]</th>
             </tr>
         </thead>
         <tbody>
@@ -211,14 +206,14 @@
 </div>
 
 <div class="mt-2">
-    <p style="color: orange;"><b>Other stats</b></p>
+    <p style="color: orange;"><b>@Loc["OtherStats"]</b></p>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">CPM</th>
-                <th scope="col">Captcha Credit</th>
-                <th scope="col">Elapsed</th>
-                <th scope="col">Remaining</th>
+                <th scope="col">@Loc["CPM"]</th>
+                <th scope="col">@Loc["CaptchaCredit"]</th>
+                <th scope="col">@Loc["Elapsed"]</th>
+                <th scope="col">@Loc["Remaining"]</th>
             </tr>
         </thead>
         <tbody>
@@ -227,8 +222,8 @@
                 {
                     <td>@Job.Manager.CPM</td>
                     <td>@Job.CaptchaCredit</td>
-                    <td>@((int)Job.Manager.Elapsed.TotalDays) day(s) @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</td>
-                    <td>@((int)Job.Manager.Remaining.TotalDays) day(s) @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</td>
+                    <td>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</td>
+                    <td>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</td>
                 }
                 else
                 {
@@ -243,174 +238,3 @@
 </div>
 
 <GenericLogger @ref="logger" BufferSize="PersistentSettings.OpenBulletSettings.GeneralSettings.LogBufferSize" />
-
-@code {
-    [Parameter] public MultiRunJob Job { get; set; }
-    int refreshInterval = 1000;
-    GenericLogger logger;
-    bool changingBots = false;
-
-    protected override void OnInitialized()
-    {
-        PeriodicRefresh(refreshInterval);
-        TryHookLogger();
-    }
-
-    private async Task ChangeBots()
-    {
-        var parameters = new ModalParameters();
-        parameters.Add(nameof(BotsSelector.Bots), Job.Bots);
-
-        var modal = Modal.Show<BotsSelector>("Edit bots amount", parameters);
-        var result = await modal.Result;
-
-        if (!result.Cancelled)
-        {
-            var newAmount = (int)result.Data;
-            changingBots = true;
-
-            if (Job.Manager != null)
-                await Job.Manager.SetConcurrentTasks(newAmount);
-
-            Job.Bots = newAmount;
-            changingBots = false;
-        }
-    }
-
-    private void LogResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
-    {
-        var botData = details.Result.BotData;
-        var data = botData.Line.Data;
-
-        var message = $"Line checked ({data}) with status {botData.STATUS}";
-        var color = botData.STATUS switch
-        {
-            "SUCCESS" => "yellowgreen",
-            "FAIL" => "tomato",
-            "BAN" => "plum",
-            "RETRY" => "yellow",
-            "ERROR" => "red",
-            "NONE" => "skyblue",
-            _ => "orange"
-        };
-        logger.Log(GenericLogger.LogKind.Info, message, color);
-    }
-
-    private void LogError(object sender, Exception ex)
-    {
-        logger.LogError($"Task Manager Error! {ex.Message}");
-    }
-
-    private void LogTaskError(object sender, ErrorDetails<MultiRunInput> details)
-    {
-        var proxy = details.Item.BotData.Proxy;
-        var data = details.Item.BotData.Line.Data;
-        logger.LogError($"Task Error ({proxy})({data})! {details.Exception.Message}");
-    }
-
-    private void LogCompleted(object sender, EventArgs e)
-    {
-        logger.LogInfo($"The Task Manager completed all of its work");
-    }
-
-    private void TryHookLogger()
-    {
-        if (Job.Manager != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
-        {
-            try { Job.Manager.OnResult -= LogResult; } catch { }
-            try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
-            try { Job.Manager.OnError -= LogError; } catch { }
-            try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
-
-            try
-            {
-                Job.Manager.OnResult += LogResult;
-                Job.Manager.OnTaskError += LogTaskError;
-                Job.Manager.OnError += LogError;
-                Job.Manager.OnCompleted += LogCompleted;
-            }
-            catch { }
-        }
-    }
-
-    private async Task Start()
-    {
-        try
-        {
-            await Job.Start();
-            TryHookLogger();
-            logger.LogInfo("Started checking");
-            PeriodicRefresh(refreshInterval);
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Stop()
-    {
-        try
-        {
-            logger.LogInfo("Sending soft stop signal");
-            await Job.Stop();
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Abort()
-    {
-        try
-        {
-            logger.LogInfo("Sending hard abort signal");
-            await Job.Abort();
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Pause()
-    {
-        try
-        {
-            logger.LogInfo("Sending pause signal");
-            await Job.Pause();
-            logger.LogInfo("The Task Manager was paused");
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Resume()
-    {
-        try
-        {
-            await Job.Resume();
-            logger.LogInfo("Resumed checking");
-            PeriodicRefresh(refreshInterval);
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async void PeriodicRefresh(int interval)
-    {
-        while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
-        {
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(Math.Max(50, interval));
-        }
-
-        // A final one to refresh the button status
-        await InvokeAsync(StateHasChanged);
-    }
-}
