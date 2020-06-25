@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompleteLog" xml:space="preserve">
-    <value>Complete log</value>
+    <value>Log completo</value>
   </data>
   <data name="PersistLog" xml:space="preserve">
-    <value>Persist log</value>
+    <value>Preserva log</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start</value>
+    <value>Avvia</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Stop</value>
+    <value>Ferma</value>
   </data>
   <data name="TestData" xml:space="preserve">
-    <value>Test data</value>
+    <value>Dati di test</value>
   </data>
   <data name="TestProxy" xml:space="preserve">
-    <value>Test proxy</value>
+    <value>Proxy di test</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Tipo</value>
   </data>
   <data name="UseProxy" xml:space="preserve">
-    <value>Use proxy</value>
+    <value>Usa il proxy</value>
   </data>
   <data name="Variables" xml:space="preserve">
-    <value>Variables</value>
+    <value>Variabili</value>
   </data>
   <data name="ViewAsHTML" xml:space="preserve">
-    <value>View as HTML</value>
+    <value>Visualizza come HTML</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Tipo di wordlist</value>
   </data>
 </root>
