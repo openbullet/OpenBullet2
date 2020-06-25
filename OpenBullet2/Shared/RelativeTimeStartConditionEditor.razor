@@ -1,8 +1,9 @@
 ﻿@using RuriLib.Models.Jobs.StartConditions
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RelativeTimeStartConditionEditor> Loc
 
-<input type="number" style="width: 50px;" value="@hours" @onchange="SetTimespan" /> hours
-<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> minutes
-<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> seconds
+<input type="number" style="width: 50px;" value="@hours" @onchange="SetTimespan" /> @Loc["hours"]
+<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> @Loc["minutes"]
+<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> @Loc["seconds"]
 
 @code {
     [Parameter] public RelativeTimeStartCondition StartCondition { get; set; }

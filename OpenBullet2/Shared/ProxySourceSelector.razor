@@ -1,19 +1,20 @@
 ﻿@using OpenBullet2.Models.Proxies
 @using OpenBullet2.Entities 
 @inject IProxyGroupRepository ProxyGroupRepo
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ProxySourceSelector> Loc
 
 <div class="container-fluid">
 
     <div class="row mb-3">
         <div class="list-group list-group-horizontal">
             <button class="btn-sm btn-primary m-sm-1" @onclick="AddGroup">
-                <span class="oi oi-plus"></span> Group
+                <span class="oi oi-plus"></span> @Loc["Group"]
             </button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="AddFile">
-                <span class="oi oi-plus"></span> File
+                <span class="oi oi-plus"></span> @Loc["File"]
             </button>
             <button class="btn-sm btn-primary m-sm-1" @onclick="AddRemote">
-                <span class="oi oi-plus"></span> Remote
+                <span class="oi oi-plus"></span> @Loc["Remote"]
             </button>
         </div>
     </div>
@@ -27,11 +28,11 @@
                     case GroupProxySourceOptions x:
                         <div class="row">
                             <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: aquamarine;">Group</label>
+                                <label style="line-height: 30px; color: aquamarine;">@Loc["Group"]</label>
                             </div>
                             <div class="col">
                                 <InputSelectNumber T="int" @bind-Value="x.GroupId">
-                                    <option value="-1">All</option>
+                                    <option value="-1">@Loc["All"]</option>
                                     @foreach (var group in groups)
                                     {
                                         <option value="@group.Id">@group.Name</option>
@@ -40,7 +41,7 @@
                             </div>
                             <div class="col-sm-auto ml-0 pr-0">
                                 <button class="btn-sm btn-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> Remove
+                                    <span class="oi oi-x"></span> @Loc["Remove"]
                                 </button>
                             </div>
                         </div>
@@ -50,7 +51,7 @@
                     case FileProxySourceOptions x:
                         <div class="row">
                             <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: greenyellow;">File Name</label>
+                                <label style="line-height: 30px; color: greenyellow;">@Loc["FileName"]</label>
                             </div>
                             <div class="col">
                                 <InputText @bind-Value="x.FileName" />
@@ -65,7 +66,7 @@
                             </div>
                             <div class="col-sm-auto ml-0 pr-0">
                                 <button class="btn-sm btn-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> Remove
+                                    <span class="oi oi-x"></span> @Loc["Remove"]
                                 </button>
                             </div>
                         </div>
@@ -74,7 +75,7 @@
                     case RemoteProxySourceOptions x:
                         <div class="row">
                             <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: hotpink;">Url</label>
+                                <label style="line-height: 30px; color: hotpink;">@Loc["Url"]</label>
                             </div>
                             <div class="col">
                                 <InputText @bind-Value="x.Url" />
@@ -89,7 +90,7 @@
                             </div>
                             <div class="col-sm-auto ml-0 pr-0">
                                 <button class="btn-sm btn-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> Remove
+                                    <span class="oi oi-x"></span> @Loc["Remove"]
                                 </button>
                             </div>
                         </div>
