@@ -117,34 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbruch</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="ConfirmConfigConversion" xml:space="preserve">
+    <value>Sobald die Config zu C# konvertiert wurde, kann sie im Stacker nicht mehr bearbeitet werden! Wirklich, WIRKLICH sicher?</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="ConvertToCSharpConfig" xml:space="preserve">
+    <value>Zu einer C# Config konvertieren</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="CSharpEditor" xml:space="preserve">
+    <value>C# Editor</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="TranspileFromBlocks" xml:space="preserve">
+    <value>Blöcke transpilieren</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="WarningPleaseRead" xml:space="preserve">
+    <value>WARNUNG! BITTE LESEN!</value>
   </data>
 </root>

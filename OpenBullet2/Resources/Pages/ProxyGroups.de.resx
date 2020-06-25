@@ -117,34 +117,97 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Gruppe hinzufügen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="All" xml:space="preserve">
+    <value>Alle</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Wirklich sicher?</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbruch</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="Country" xml:space="preserve">
+    <value>Land</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
+  <data name="Created" xml:space="preserve">
+    <value>Erstellt</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Proxy Gruppe erstellen</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Gruppe löschen</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
+  <data name="EditGroup" xml:space="preserve">
+    <value>Gruppe bearbeiten</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Proxy Gruppe bearbeiten</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Gruppe wird verwendet</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>Ein Job verwendet derzeit diese Proxy-Gruppe. Den Job im Manager stoppen und entfernen und es anschließend erneut versuchen</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Importiert</value>
+  </data>
+  <data name="ImportProxies" xml:space="preserve">
+    <value>Proxies imporieren</value>
+  </data>
+  <data name="LastChecked" xml:space="preserve">
+    <value>zuletzt geprüft</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Bitte wählen Sie zunächst eine Gruppe aus</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Keine anzuzeigenden Datensätze</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Proxies erfolgreich importiert</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Proxy Gruppe</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>Die Proxy Gruppe wurde erfolgreich erstellt!</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Wirklich löschen?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>Ergebnisse</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Ergebnisse pro Seite</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
   </data>
 </root>

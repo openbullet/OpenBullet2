@@ -117,34 +117,106 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="Add" xml:space="preserve">
+    <value>Hinzufügen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Gültigkeitsdauer der Admin-Sitzung (Stunden)</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Admin Benutzername</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Systemweiten Dateizugriff erlauben</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Wirklich sicher?</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Automatisch empfohlene Bot Anzahl einstellen, wenn eine Config auf der Seite zur Joberstellung ausgewählt wird</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Passwort ändern</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Löschen</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>Standardautor bei neu erstellten Configs</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Erledigt</value>
+  </data>
+  <data name="EnableJobLogging" xml:space="preserve">
+    <value>Protokoll in der Jobansicht einschalten</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Gültigkeitsdauer der GastSitzung (Stunden)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Den Wordlist Namen beim Entfernen der Duplikate in den Treffern ignorieren</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Maximale Anzahl von Einträgen im Protokoll</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Auch in eine Datei protokollieren</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Wenn eine Konfiguration bearbeitet wird, zu ... wechseln</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Neues Administrator-Passwort</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>Das neue Passwort wurde gesetzt!</value>
+  </data>
+  <data name="ProxyCheckTargets" xml:space="preserve">
+    <value>Proxy-Check-Ziele</value>
+  </data>
+  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
+    <value>Dies sind die Proxy-Ziele, die in einem Proxy-Check-Job verfügbar sind. Die Proxies werden gegen die Ziel-URL geprüft, und wenn der Success Key in der heruntergeladenen Quelle gefunden wird, wird der Proxy als funktionsfähig markiert.</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Admin-Login erforderlich</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Standardwerte wiederherstellen</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Standardeinstellungen wirklich wiederherstellen?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Gespeichert</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sicherheit</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Die Einstellungen wurden erfolgreich gespeichert.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Success Key</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Eine Warnung anzeigen, wenn die aktuell geladene Config nicht gespeichert wurde und eine andere geladen wird</value>
   </data>
 </root>

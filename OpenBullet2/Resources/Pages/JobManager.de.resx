@@ -117,34 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="by" xml:space="preserve">
+    <value>von</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="JobNotIdle" xml:space="preserve">
+    <value>Job nicht untätig</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="JobNotIdleWarning" xml:space="preserve">
+    <value>Vor dem Löschen eines Jobs bitte diesen anhalten oder abbrechen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="New" xml:space="preserve">
+    <value>Neu</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Keine Config ausgewählt</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Alle Entfernen</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="SelectJobType" xml:space="preserve">
+    <value>Art des Jobs auswählen</value>
   </data>
 </root>

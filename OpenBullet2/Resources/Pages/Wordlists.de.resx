@@ -117,34 +117,76 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="Add" xml:space="preserve">
+    <value>Hinzufügen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="Added" xml:space="preserve">
+    <value>Hinzugefügt</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="AddedWordlist" xml:space="preserve">
+    <value>Die Wordlist wurde erfolgreich hinzugefügt!</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Wordlist hinzufügen</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="AlsoDeleteFile" xml:space="preserve">
+    <value>Auch die Datei löschen?</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Wirklich sicher?</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbruch</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>Soll die Wordlist</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>auch von der Disk gelöscht werden?</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>Wordlist bearbeiten</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Dateiname</value>
+  </data>
+  <data name="KeepFile" xml:space="preserve">
+    <value>Nein, die Datei behalten</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Zeilen</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Keine anzuzeigenden Datensätze</value>
+  </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>Es muss erst eine Wordlist ausgewählt werden</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>Zweck</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Wirklich löschen?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>Ergebnisse</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Ergebnisse pro Seite</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>

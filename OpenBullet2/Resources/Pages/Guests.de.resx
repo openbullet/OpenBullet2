@@ -117,34 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Ablauf des Zugangs</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="Add" xml:space="preserve">
+    <value>Hinzufügen</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Gast hinzufügen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Erlaubte Adressen</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Wirklich sicher?</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbruch</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Gast bearbeiten</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Info bearbeiten</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="EditPassword" xml:space="preserve">
+    <value>Passwort bearbeiten</value>
+  </data>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>Neues Passwort für den Gast</value>
+  </data>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>Zuvor muß ein Gast ausgewählt werden</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Keine anzuzeigenden Datensätze</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Wirklich löschen?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>Ergebnisse</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Ergebnisse pro Seite</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
   </data>
 </root>

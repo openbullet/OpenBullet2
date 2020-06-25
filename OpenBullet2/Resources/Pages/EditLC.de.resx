@@ -117,34 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Angemeldet als</value>
+  <data name="LoliCodeEditor" xml:space="preserve">
+    <value>LoliCode Editor</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Build Nummber</value>
+  <data name="SaveScript" xml:space="preserve">
+    <value>Script speichern</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Verbrauch</value>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Usings anzeigen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Aktuelles Arbeitsverzeichnis</value>
-  </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Ortszeit</value>
-  </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Ausloggen</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Speichernutzung</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Betriebssystem</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver läuft seit</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Willkommen zu OpenBullet 2</value>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Namespaces die im generierten C# Code benutzt werden sollen könen hier eingegeben werden, einer pro Zeile</value>
   </data>
 </root>
