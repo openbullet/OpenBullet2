@@ -1,24 +1,22 @@
-﻿@using Blazaco
-@using Blazaco.Editor
-@using Blazaco.Editor.Options
-@using RuriLib.Models.Variables 
+﻿@using RuriLib.Models.Variables
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Debugger> Loc
 
 <div class="container-fluid" style="margin-bottom: 50px;">
     <div class="row">
-        <div class="list-group list-group-horizontal">
+        <div class="list-group list-group-horizontal mb-3">
             @if (!isRunning)
             {
-                <button class="btn-sm btn-success m-sm-1" @onclick="Run"><span class="oi oi-media-play"></span> Start</button>
+                <button class="btn-sm btn-success m-sm-1" @onclick="Run"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             }
             else
             {
-                <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
+                <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
             }
         </div>
     </div>
     <div class="row">
         <div class="col-8">
-            <h5>Complete Log</h5>
+            <h5>@Loc["CompleteLog"]</h5>
             <div class="debugger-log">
                 @foreach (var entry in logger.Entries)
                 {
@@ -28,7 +26,7 @@
                                   style="color: @entry.Color; border: none; height: 500px; overflow: hidden;">@entry.Message</textarea>
                         @if (entry.CanViewAsHtml)
                         {
-                            <button class="btn-sm btn-primary" @onclick="@(() => ViewHtml(entry.Message))">View as HTML</button>
+                            <button class="btn-sm btn-primary" @onclick="@(() => ViewHtml(entry.Message))">@Loc["ViewAsHTML"]</button>
                         }
                     }
                     else
@@ -40,9 +38,9 @@
         </div>
         <div class="col-4">
             <EditForm Model="options">
-                <label>Test Data</label>
+                <label>@Loc["TestData"]</label>
                 <InputText @bind-Value="options.TestData" />
-                <label style="margin-top: 15px;">Wordlist Type</label>
+                <label style="margin-top: 15px;">@Loc["WordlistType"]</label>
                 <InputSelect @bind-Value="options.WordlistType">
                     @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
                     {
@@ -50,12 +48,12 @@
                     }
                 </InputSelect>
                 <br />
-                <label style="margin-top: 15px;">Use Proxy</label>
+                <label style="margin-top: 15px;">@Loc["UseProxy"]</label>
                 <InputCheckbox @bind-Value="options.UseProxy" />
                 <br />
-                <label style="margin-top: 15px;">Test Proxy</label>
+                <label style="margin-top: 15px;">@Loc["TestProxy"]</label>
                 <InputText @bind-Value="options.TestProxy" />
-                <label style="margin-top: 15px;">Type</label>
+                <label style="margin-top: 15px;">@Loc["Type"]</label>
                 <InputSelect @bind-Value="options.ProxyType">
                     @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
                     {
@@ -63,13 +61,13 @@
                     }
                 </InputSelect>
                 <br />
-                <label style="margin-top: 15px;">Persist Log</label>
+                <label style="margin-top: 15px;">@Loc["PersistLog"]</label>
                 <InputCheckbox @bind-Value="options.PersistLog" />
                 <br />
             </EditForm>
 
             <br />
-            <h5>Variables</h5>
+            <h5>@Loc["Variables"]</h5>
             <RadzenTree Style="width: 100%; height: 300px; cursor: default;">
                 @foreach (var variable in variables)
                 {
