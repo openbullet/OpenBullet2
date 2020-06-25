@@ -6,6 +6,7 @@
 @inject IConfigRepository ConfigRepo
 @inject OpenBullet2.Services.ConfigService ConfigService
 @inject IModalService Modal
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 
 <div class="top-row pl-4 navbar navbar-dark" style="padding-left: 0.5rem !important;">
     <div class="container-fluid" style="margin-left: -5px;">
@@ -22,88 +23,88 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home" aria-hidden="true"></span> @Loc["Home"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="jobs">
-                <span class="oi oi-pulse" aria-hidden="true"></span> Jobs
+                <span class="oi oi-pulse" aria-hidden="true"></span> @Loc["Jobs"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="proxies/groups">
-                <span class="oi oi-shield" aria-hidden="true"></span> Proxies
+                <span class="oi oi-shield" aria-hidden="true"></span> @Loc["Proxies"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="wordlists">
-                <span class="oi oi-align-left" aria-hidden="true"></span> Wordlists
+                <span class="oi oi-align-left" aria-hidden="true"></span> @Loc["Wordlists"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="hits">
-                <span class="oi oi-bolt" aria-hidden="true"></span> Hits
+                <span class="oi oi-bolt" aria-hidden="true"></span> @Loc["Hits"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="configs">
-                <span class="oi oi-cog" aria-hidden="true"></span> Configs
+                <span class="oi oi-cog" aria-hidden="true"></span> @Loc["Configs"]
             </NavLink>
         </li>
         @if (displayConfigSubmenu)
         {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="config/edit/metadata">
-                    <span class="oi oi-ellipses ml-lg-4" aria-hidden="true"></span> Metadata
+                    <span class="oi oi-ellipses ml-lg-4" aria-hidden="true"></span> @Loc["Metadata"]
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="config/edit/readme">
-                    <span class="oi oi-pencil ml-lg-4" aria-hidden="true"></span> Readme
+                    <span class="oi oi-pencil ml-lg-4" aria-hidden="true"></span> @Loc["Readme"]
                 </NavLink>
             </li>
             @if (displayStackerSubmenu)
             {
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="config/edit/stacker">
-                        <span class="oi oi-menu ml-lg-4" aria-hidden="true"></span> Stacker
+                        <span class="oi oi-menu ml-lg-4" aria-hidden="true"></span> @Loc["Stacker"]
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="config/edit/lolicode">
-                        <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> LoliCode
+                        <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["LoliCode"]
                     </NavLink>
                 </li>
             }
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="config/edit/settings">
-                    <span class="oi oi-wrench ml-lg-4" aria-hidden="true"></span> Settings
+                    <span class="oi oi-wrench ml-lg-4" aria-hidden="true"></span> @Loc["Settings"]
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="config/edit/code">
-                    <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> C# Code
+                    <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["CSharpCode"]
                 </NavLink>
             </li>
             <li class="nav-item px-3" style="width: 100%;">
                 <button type="button" class="btn btn-success" style="width: 100%" @onclick="SaveConfig">
-                    <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> Save Config
+                    <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
                 </button>
             </li>
         }
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="settings/rurilib">
-                <span class="oi oi-wrench" aria-hidden="true"></span> RL Settings
+                <span class="oi oi-wrench" aria-hidden="true"></span> @Loc["RLSettings"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="settings/openbullet">
-                <span class="oi oi-wrench" aria-hidden="true"></span> OB Settings
+                <span class="oi oi-wrench" aria-hidden="true"></span> @Loc["OBSettings"]
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="guests">
-                <span class="oi oi-person" aria-hidden="true"></span> Guests
+                <span class="oi oi-person" aria-hidden="true"></span> @Loc["Guests"]
             </NavLink>
         </li>
     </ul>
@@ -147,7 +148,7 @@
     {
         if (ConfigService.SelectedConfig == null)
         {
-            await js.AlertError("404", "No config selected!");
+            await js.AlertError(Loc["Uh-Oh"], Loc["NoConfigSelected"]);
             return;
         }
 
@@ -160,17 +161,17 @@
             }
             catch (Exception ex)
             {
-                await js.AlertError("Cannot save: invalid LoliCode!", ex.Message);
+                await js.AlertError(Loc["InvalidLolicode"], ex.Message);
                 return;
             }
         }
 
         await ConfigRepo.Save(ConfigService.SelectedConfig);
-        await js.AlertSuccess("Aww yeah", $"{ConfigService.SelectedConfig.Metadata.Name} was saved successfully!");
+        await js.AlertSuccess(Loc["AwwYeah"], $"{ConfigService.SelectedConfig.Metadata.Name} {Loc["wasSavedSuccessfully"]}");
     }
 
     void ChangeLanguage()
     {
-        Modal.Show<CultureSelector>("Choose your language");
+        Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"]);
     }
 }
