@@ -79,20 +79,22 @@
     <div class="container-fluid" style="margin-top: 15px;">
         @foreach (var rule in settings.DataSettings.DataRules)
         {
-            <div class="row" style="margin-bottom: 15px;">
-                <div class="col-2">
-                    <label>@Loc["SliceName"]</label>
+            <div class="row">
+                <div class="col-sm-auto mr-0 pr-0">
+                    <label style="line-height: 30px;">@Loc["SliceName"]</label>
+                </div>
+                <div class="col">
                     <InputText @bind-Value="rule.SliceName" />
                 </div>
-                <div class="col-9">
-                    <label>@Loc["RegexToMatch"]</label>
+                <div class="col-sm-auto mr-0 pr-0">
+                    <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
+                </div>
+                <div class="col">
                     <InputText @bind-Value="rule.RegexToMatch" />
                 </div>
-                <div class="col-1">
+                <div class="col-sm-auto ml-0 pr-0">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
-                        <span class="oi oi-minus"></span>
-                        @Loc["Remove"]
-                    </button>
+                        <span class="oi oi-minus"></span> @Loc["Remove"]</button>
                 </div>
             </div>
         }
@@ -118,20 +120,26 @@
     <div class="container-fluid" style="margin-top: 15px;">
         @foreach (var input in settings.InputSettings.CustomInputs)
         {
-            <div class="row" style="margin-bottom: 15px;">
-                <div class="col-4">
-                    <label>@Loc["InputDescription"]</label>
+            <div class="row">
+                <div class="col-sm-auto mr-0 pr-0">
+                    <label style="line-height: 30px;">@Loc["InputDescription"]</label>
+                </div>
+                <div class="col">
                     <InputText @bind-Value="input.Description" />
                 </div>
-                <div class="col-3">
-                    <label>@Loc["VariableName"]</label>
+                <div class="col-sm-auto mr-0 pr-0">
+                    <label style="line-height: 30px;">@Loc["VariableName"]</label>
+                </div>
+                <div class="col">
                     <InputText @bind-Value="input.VariableName" />
                 </div>
-                <div class="col-4">
-                    <label>@Loc["DefaultAnswer"]</label>
+                <div class="col-sm-auto mr-0 pr-0">
+                    <label style="line-height: 30px;">@Loc["DefaultAnswer"]</label>
+                </div>
+                <div class="col">
                     <InputText @bind-Value="input.DefaultAnswer" />
                 </div>
-                <div class="col-1">
+                <div class="col-sm-auto ml-0 pr-0">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
                         <span class="oi oi-minus"></span>
                         @Loc["Remove"]
