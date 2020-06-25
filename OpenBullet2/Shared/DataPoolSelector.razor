@@ -4,17 +4,17 @@
 @using RuriLib.Services 
 @inject IModalService Modal
 @inject RuriLibSettingsService RuriLibSettings
+@inject Microsoft.Extensions.Localization.IStringLocalizer<DataPoolSelector> Loc
 
 <RadzenRadioButtonList @bind-Value="type" TValue="DataPoolType" Change="@((args) => Change(args))">
     <Items>
-        <RadzenRadioButtonListItem Text="Wordlist" Value="DataPoolType.Wordlist" />
-        <RadzenRadioButtonListItem Text="File" Value="DataPoolType.File" />
-        <RadzenRadioButtonListItem Text="Range" Value="DataPoolType.Range" />
-        <RadzenRadioButtonListItem Text="Combinations" Value="DataPoolType.Combinations" />
-        <RadzenRadioButtonListItem Text="Infinite" Value="DataPoolType.Infinite" />
+        <RadzenRadioButtonListItem Text="@Loc["Wordlist"]" Value="DataPoolType.Wordlist" />
+        <RadzenRadioButtonListItem Text="@Loc["File"]" Value="DataPoolType.File" />
+        <RadzenRadioButtonListItem Text="@Loc["Range"]" Value="DataPoolType.Range" />
+        <RadzenRadioButtonListItem Text="@Loc["Combinations"]" Value="DataPoolType.Combinations" />
+        <RadzenRadioButtonListItem Text="@Loc["Infinite"]" Value="DataPoolType.Infinite" />
     </Items>
 </RadzenRadioButtonList>
-
 <br />
 
 <EditForm Model="Options">
@@ -23,20 +23,20 @@
         case WordlistDataPoolOptions x:
             @if (selectedWordlist == null)
             {
-                <p>No wordlist selected</p>
+                <p>@Loc["NoWordlistSelected"]</p>
             }
             else
             {
-                <p>@selectedWordlist.Name (@selectedWordlist.Total lines)</p>
+                <p>@selectedWordlist.Name (@selectedWordlist.Total @Loc["lines"])</p>
             }
-            <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectWordlist">Select Wordlist</button>
+            <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectWordlist">@Loc["SelectWordlist"]</button>
             <br />
             break;
 
         case FileDataPoolOptions x:
-            <label>File Name:</label>
+            <label>@Loc["FileName"]:</label>
             <InputText @bind-Value="x.FileName" />
-            <label>Wordlist Type:</label>
+            <label>@Loc["WordlistType"]:</label>
             <InputSelect @bind-Value="x.WordlistType">
                 @foreach (var name in wordlistTypes)
                 {
@@ -47,16 +47,16 @@
             break;
 
         case RangeDataPoolOptions x:
-            <label>Start:</label>
+            <label>@Loc["Start"]:</label>
             <InputNumber @bind-Value="x.Start" />
-            <label>Amount:</label>
+            <label>@Loc["Amount"]:</label>
             <InputNumber @bind-Value="x.Amount" />
-            <label>Step:</label>
+            <label>@Loc["Step"]:</label>
             <InputNumber @bind-Value="x.Step" />
-            <label>Pad:</label>
+            <label>@Loc["Pad"]:</label>
             <InputCheckbox @bind-Value="x.Pad" />
             <br />
-            <label>Wordlist Type:</label>
+            <label>@Loc["WordlistType"]:</label>
             <InputSelect @bind-Value="x.WordlistType">
                 @foreach (var name in wordlistTypes)
                 {
@@ -67,14 +67,14 @@
             break;
 
         case CombinationsDataPoolOptions x:
-            <label>Character set:</label>
+            <label>@Loc["CharacterSet"]:</label>
             <InputText @bind-Value="x.CharSet" />
-            <label>Length:</label>
+            <label>@Loc["Length"]:</label>
             <InputNumber @bind-Value="x.Length" />
             <p style="font-size: 12px; color: #ccc">
-                @Math.Pow(x.CharSet.Length, x.Length) combinations will be generated
+                @Math.Pow(x.CharSet.Length, x.Length) @Loc["combinationsWillBeGenerated"]
             </p>
-            <label>Wordlist Type:</label>
+            <label>@Loc["WordlistType"]:</label>
             <InputSelect @bind-Value="x.WordlistType">
                 @foreach (var name in wordlistTypes)
                 {
@@ -85,7 +85,7 @@
             break;
 
         case InfiniteDataPoolOptions x:
-            <label>Wordlist Type:</label>
+            <label>@Loc["WordlistType"]:</label>
             <InputSelect @bind-Value="x.WordlistType">
                 @foreach (var name in wordlistTypes)
                 {
@@ -139,7 +139,7 @@
 
     async Task SelectWordlist()
     {
-        var modal = Modal.Show<WordlistSelector>("Select Wordlist");
+        var modal = Modal.Show<WordlistSelector>(Loc["SelectWordlist"]);
         var result = await modal.Result;
 
         if (!result.Cancelled)

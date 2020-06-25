@@ -1,4 +1,5 @@
 ﻿@using RuriLib.Models.Blocks
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BlockSettingsViewer> Loc
 
 <EditForm Model="Block">
     <p style="color: darkseagreen">
@@ -7,7 +8,7 @@
         <span style="font-size: 12px;"><i>@Block.Descriptor.ExtraInfo</i></span>
     </p>
 
-    <h6 class="font-weight-bold text-warning">Label:</h6>
+    <h6 class="font-weight-bold text-warning">@Loc["Label"]:</h6>
     <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
                ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
 </EditForm>
@@ -15,14 +16,14 @@
 @if (Block.Descriptor.ReturnType.HasValue)
 {
     <EditForm Model="Block">
-        <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Output Variable (@Block.Descriptor.ReturnType.Value):</h6>
+        <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["OutputVariable"] (@Block.Descriptor.ReturnType.Value):</h6>
         <InputText @bind-Value="Block.OutputVariable" />
-        <label>Is Capture</label>
+        <label>@Loc["IsCapture"]</label>
         <InputCheckbox @bind-Value="Block.IsCapture" />
     </EditForm>
 }
 
-<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Settings:</h6>
+<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["Settings"]:</h6>
 @foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />
