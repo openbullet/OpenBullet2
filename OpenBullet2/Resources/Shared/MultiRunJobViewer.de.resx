@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Abort" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Alive" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Bad" xml:space="preserve">
+    <value>Bad</value>
+  </data>
+  <data name="Banned" xml:space="preserve">
+    <value>Gebannt</value>
+  </data>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
+  </data>
+  <data name="by" xml:space="preserve">
+    <value>von</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Captcha Kontostand</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Ändern</value>
+  </data>
+  <data name="ChangingPleaseWait" xml:space="preserve">
+    <value>Wird geändert... bitte warten</value>
+  </data>
+  <data name="CombinationsText" xml:space="preserve">
+    <value>Kombinationen von {0} mit der Länge {1}</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="Controls" xml:space="preserve">
+    <value>Steuerung</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Datenpool</value>
+  </data>
+  <data name="DataStats" xml:space="preserve">
+    <value>Statistik</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>Tag(e)</value>
+  </data>
+  <data name="DiscordWebhook" xml:space="preserve">
+    <value>Discord webhook</value>
+  </data>
+  <data name="EditBotsAmount" xml:space="preserve">
+    <value>Anzahl der Bots bearbeiten</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Verstrichen</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="FileSystem" xml:space="preserve">
+    <value>Dateisystem</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="HardStopMessage" xml:space="preserve">
+    <value>Signal für harten Abbruch senden</value>
+  </data>
+  <data name="HitOutputs" xml:space="preserve">
+    <value>Treffer-Ausgaben</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Treffer</value>
+  </data>
+  <data name="InfiniteDataPool" xml:space="preserve">
+    <value>Unendlicher Datenpool</value>
+  </data>
+  <data name="JobOptions" xml:space="preserve">
+    <value>Job Optionen</value>
+  </data>
+  <data name="LineCheckedMessage" xml:space="preserve">
+    <value>Zeile ({0}) mit dem Status {1} überprüft</value>
+  </data>
+  <data name="OtherStats" xml:space="preserve">
+    <value>Andere Statistiken</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="PauseMessage" xml:space="preserve">
+    <value>Sende Pause Signal</value>
+  </data>
+  <data name="PausingMessage" xml:space="preserve">
+    <value>Pausieren... bitte warten bis die aktuellen Tasks die Verarbeitung beendet wurden</value>
+  </data>
+  <data name="ProxyMode" xml:space="preserve">
+    <value>Proxy-Modus</value>
+  </data>
+  <data name="ProxySources" xml:space="preserve">
+    <value>Proxy-Quellen</value>
+  </data>
+  <data name="ProxyStats" xml:space="preserve">
+    <value>Proxy-Statistiken</value>
+  </data>
+  <data name="RageText" xml:space="preserve">
+    <value>Bereich von {0} mit der Anzahl {1} und Schrittweite {2} (Padding {3})</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Übrig</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="ResumeMessage" xml:space="preserve">
+    <value>Prüfung fortgesetzt</value>
+  </data>
+  <data name="Retried" xml:space="preserve">
+    <value>Wiederholt</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Überspringen</value>
+  </data>
+  <data name="SoftStopMessage" xml:space="preserve">
+    <value>Signal für sanften Abbruch senden</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="StartedChecking" xml:space="preserve">
+    <value>Überprüfung gestartet</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="StoppingMessage" xml:space="preserve">
+    <value>Stoppe... bitte warten, bis die aktuellen Tasks beendet wurden. Man kann aber auch jederzeit</value>
+  </data>
+  <data name="TaskError" xml:space="preserve">
+    <value>Task Fehler</value>
+  </data>
+  <data name="TaskManagerCompleted" xml:space="preserve">
+    <value>Der Task-Manager hat seine komplette Arbeit erledigt</value>
+  </data>
+  <data name="TaskManagerError" xml:space="preserve">
+    <value>Task-Manager Fehler!</value>
+  </data>
+  <data name="TaskManagerPaused" xml:space="preserve">
+    <value>Der Task-Manager wurde pausiert</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Getestet</value>
+  </data>
+  <data name="ToCheck" xml:space="preserve">
+    <value>Zur Überprüfung</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Gesamt</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+</root>
