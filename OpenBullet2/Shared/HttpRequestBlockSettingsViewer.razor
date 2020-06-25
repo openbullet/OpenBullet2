@@ -1,13 +1,14 @@
 ﻿@using RuriLib.Models.Blocks.Custom
 @using RuriLib.Models.Blocks.Custom.HttpRequest 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<HttpRequestBlockSettingsViewer> Loc
 
 <EditForm Model="Block">
-    <h6 class="font-weight-bold text-warning">Label:</h6>
+    <h6 class="font-weight-bold text-warning">@Loc["Label"]:</h6>
     <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
                ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })"/>
 </EditForm>
 
-<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Settings:</h6>
+<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["Settings"]:</h6>
 @foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />
