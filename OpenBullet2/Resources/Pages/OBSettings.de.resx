@@ -157,7 +157,7 @@
     <value>Allgemein</value>
   </data>
   <data name="GuestSessionLifetimeHours" xml:space="preserve">
-    <value>Gültigkeitsdauer der GastSitzung (Stunden)</value>
+    <value>Gültigkeitsdauer der Gast-Sitzung (Stunden)</value>
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Den Wordlist Namen beim Entfernen der Duplikate in den Treffern ignorieren</value>

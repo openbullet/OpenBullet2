@@ -127,6 +127,6 @@
     <value>Usings anzeigen</value>
   </data>
   <data name="UsingsInfo" xml:space="preserve">
-    <value>Namespaces die im generierten C# Code benutzt werden sollen könen hier eingegeben werden, einer pro Zeile</value>
+    <value>Namespaces, die im generierten C# Code benutzt werden sollen könen hier eingegeben werden, einer pro Zeile</value>
   </data>
 </root>

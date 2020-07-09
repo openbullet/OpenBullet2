@@ -193,7 +193,7 @@
     <value>Browser schließen, wenn der Bot mit einem der folgenden Status endet</value>
   </data>
   <data name="RandomUserAgent" xml:space="preserve">
-    <value>ZufälligerUser Agent</value>
+    <value>Zufälliger User Agent</value>
   </data>
   <data name="RegexToMatch" xml:space="preserve">
     <value>Regex überprüfen</value>

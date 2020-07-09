@@ -124,7 +124,7 @@
     <value>Bezeichnung</value>
   </data>
   <data name="OutputVariable" xml:space="preserve">
-    <value>Ausgangsvariable</value>
+    <value>Ausgabevariable</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
