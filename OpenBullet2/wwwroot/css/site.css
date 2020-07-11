@@ -74,6 +74,7 @@ app {
 .sidebar {
     background-color: #111;
     width: 230px;
+    min-width: 230px;
 }
 
     .sidebar .top-row {
