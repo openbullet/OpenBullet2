@@ -75,7 +75,6 @@ namespace OpenBullet2.Pages
         {
             return job switch
             {
-                SingleRunJob _ => JobType.SingleRun,
                 MultiRunJob _ => JobType.MultiRun,
                 ProxyCheckJob _ => JobType.ProxyCheck,
                 RipJob _ => JobType.Ripper,

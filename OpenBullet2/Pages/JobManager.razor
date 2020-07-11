@@ -21,17 +21,6 @@
                         <h5 class="card-title">Job #@job.Id (@job.GetType().Name) (@job.Status)</h5>
                         @switch (job)
                         {
-                            case SingleRunJob x:
-                                if (x.Config != null)
-                                {
-                                    <p class="card-text">Config: @x.Config.Metadata.Name @Loc["by"] @x.Config.Metadata.Author</p>
-                                }
-                                else
-                                {
-                                    <p class="card-text">@Loc["NoConfigSelected"]</p>
-                                }
-                                break;
-
                             case MultiRunJob x:
                                 if (x.Config != null)
                                 {

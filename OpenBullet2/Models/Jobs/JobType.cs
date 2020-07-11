@@ -2,7 +2,6 @@
 {
     public enum JobType
     {
-        SingleRun,
         MultiRun,
         ProxyCheck,
         Spider,

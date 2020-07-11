@@ -12,7 +12,6 @@ namespace OpenBullet2.Models.Jobs
         {
             JobOptions options = type switch
             {
-                JobType.SingleRun => MakeSingleRun(),
                 JobType.MultiRun => MakeMultiRun(),
                 JobType.ProxyCheck => MakeProxyCheck(),
                 _ => throw new NotImplementedException()
@@ -20,14 +19,6 @@ namespace OpenBullet2.Models.Jobs
 
             options.StartCondition = new RelativeTimeStartCondition();
             return options;
-        }
-
-        private SingleRunJobOptions MakeSingleRun()
-        {
-            return new SingleRunJobOptions
-            {
-                HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() }
-            };
         }
 
         private MultiRunJobOptions MakeMultiRun()

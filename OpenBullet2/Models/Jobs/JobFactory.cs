@@ -8,7 +8,6 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenBullet2.Models.Jobs
@@ -38,7 +37,6 @@ namespace OpenBullet2.Models.Jobs
         {
             Job job = options switch
             {
-                SingleRunJobOptions x => MakeSingleRunJob(x),
                 MultiRunJobOptions x => MakeMultiRunJob(x),
                 ProxyCheckJobOptions x => MakeProxyCheckJob(x),
                 _ => throw new NotImplementedException()
@@ -46,25 +44,6 @@ namespace OpenBullet2.Models.Jobs
 
             job.Id = id;
             return job;
-        }
-
-        private SingleRunJob MakeSingleRunJob(SingleRunJobOptions options)
-        {
-            if (string.IsNullOrEmpty(options.ConfigId))
-                throw new ArgumentException("No config specified");
-
-            return new SingleRunJob(settingsService)
-            {
-                Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
-                CreationTime = DateTime.Now,
-                Data = options.Data,
-                Proxy = options.Proxy,
-                ProxyMode = options.ProxyMode,
-                ProxyType = options.ProxyType,
-                WordlistType = options.WordlistType,
-                StartCondition = options.StartCondition,
-                HitOutputs = options.HitOutputs.Select(o => new HitOutputFactory(hitRepo).FromOptions(o)).ToList()
-            };
         }
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
