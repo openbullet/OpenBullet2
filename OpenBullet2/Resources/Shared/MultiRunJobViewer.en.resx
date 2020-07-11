@@ -138,6 +138,9 @@
   <data name="CaptchaCredit" xml:space="preserve">
     <value>Captcha credit</value>
   </data>
+  <data name="CapturedData" xml:space="preserve">
+    <value>Captured data</value>
+  </data>
   <data name="Change" xml:space="preserve">
     <value>Change</value>
   </data>
@@ -159,6 +162,9 @@
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
   <data name="Database" xml:space="preserve">
     <value>Database</value>
   </data>
@@ -167,6 +173,9 @@
   </data>
   <data name="DataStats" xml:space="preserve">
     <value>Data stats</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
   </data>
   <data name="days" xml:space="preserve">
     <value>day(s)</value>
@@ -210,6 +219,9 @@
   <data name="LineCheckedMessage" xml:space="preserve">
     <value>Line checked ({0}) with status {1}</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
   <data name="OtherStats" xml:space="preserve">
     <value>Other stats</value>
   </data>
@@ -221,6 +233,9 @@
   </data>
   <data name="PausingMessage" xml:space="preserve">
     <value>Pausing... please wait until the current tasks finished processing</value>
+  </data>
+  <data name="Proxy" xml:space="preserve">
+    <value>Proxy</value>
   </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Proxy mode</value>
@@ -287,6 +302,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>

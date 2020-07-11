@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
+using Radzen.Blazor;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Shared
@@ -20,11 +23,42 @@ namespace OpenBullet2.Shared
         int refreshInterval = 1000;
         GenericLogger logger;
         bool changingBots = false;
+        RadzenGrid<Hit> hitsGrid;
+        Hit selectedHit;
+
+        private string CaptureWidth
+        {
+            get
+            {
+                if (Job.Hits.Count == 0)
+                    return "200px";
+
+                var longest = Job.Hits
+                    .Select(h => h.CapturedDataString.Length)
+                    .OrderBy(l => l)
+                    .Last();
+
+                // The 0.82 value is referred to Consolas font-style
+                // since 2048 units in height correspond to 1126 units in width,
+                // and the 12 is referred to 12px in the css
+                var totalWidth = (int)(longest * 12 * 0.82);
+
+                if (totalWidth < 200)
+                    return "200px";
+
+                return $"{totalWidth}px";
+            }
+        }
 
         protected override void OnInitialized()
         {
             PeriodicRefresh(refreshInterval);
             TryHookLogger();
+        }
+
+        private void SelectHit(Hit hit)
+        {
+            selectedHit = hit;
         }
 
         private async Task ChangeBots()
