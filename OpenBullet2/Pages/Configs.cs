@@ -5,6 +5,7 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
+using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System;
@@ -143,7 +144,8 @@ namespace OpenBullet2.Pages
 
             try
             {
-                await BlazorDownloadFileService.DownloadFile($"{selectedConfig.Id}.opk", await ConfigPacker.Pack(selectedConfig));
+                var fileName = selectedConfig.Metadata.Name.ToValidFileName() + ".opk";
+                await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.Pack(selectedConfig));
             }
             catch (Exception ex)
             {
