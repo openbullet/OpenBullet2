@@ -29,28 +29,21 @@
     {
         case StandardRequestParams x:
             <BlockInputField BlockSetting="x.Content" />
-            <hr />
             <BlockInputField BlockSetting="x.ContentType" />
-            <hr />
             break;
 
         case RawRequestParams x:
             <BlockInputField BlockSetting="x.Content" />
-            <hr />
             <BlockInputField BlockSetting="x.ContentType" />
-            <hr />
             break;
 
         case BasicAuthRequestParams x:
             <BlockInputField BlockSetting="x.Username" />
-            <hr />
             <BlockInputField BlockSetting="x.Password" />
-            <hr />
             break;
 
         case MultipartRequestParams x:
             <BlockInputField BlockSetting="x.Boundary" />
-            <hr />
             <MultipartSettingsViewer Contents="x.Contents" />
             break;
     }

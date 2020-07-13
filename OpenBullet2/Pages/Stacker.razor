@@ -25,6 +25,10 @@
                     {
                         <HttpRequestBlockSettingsViewer Block="selectedBlock as HttpRequestBlockInstance"  ChangedLabel="((args) => stackViewer.RefreshView())" />
                     }
+                    else if (selectedBlock is ParseBlockInstance)
+                    {
+                        <ParseBlockSettingsViewer Block="selectedBlock as ParseBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                    }
                     else if (selectedBlock is LoliCodeBlockInstance)
                     {
                         <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />

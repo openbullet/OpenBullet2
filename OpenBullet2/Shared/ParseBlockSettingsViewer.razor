@@ -1,0 +1,63 @@
+﻿@using RuriLib.Models.Blocks.Custom
+@using RuriLib.Models.Blocks.Custom.Parse
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ParseBlockSettingsViewer> Loc
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold text-warning">@Loc["Label"]:</h6>
+    <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
+               ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
+</EditForm>
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["OutputVariable"] (@(Block.Recursive ? "ListOfStrings" : "String")):</h6>
+    <InputText @bind-Value="Block.OutputVariable" />
+    <label>@Loc["IsCapture"]</label>
+    <br />
+    <InputCheckbox @bind-Value="Block.IsCapture" />
+    <label>@Loc["Recursive"]</label>
+    <InputCheckbox @bind-Value="Block.Recursive" />
+</EditForm>
+
+<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["Settings"]:</h6>
+
+<RadzenRadioButtonList @bind-Value="Block.Mode" TValue="ParseMode">
+    <Items>
+        <RadzenRadioButtonListItem Text="LR" Value="ParseMode.LR" />
+        <RadzenRadioButtonListItem Text="CSS" Value="ParseMode.CSS" />
+        <RadzenRadioButtonListItem Text="Json" Value="ParseMode.Json" />
+        <RadzenRadioButtonListItem Text="Regex" Value="ParseMode.Regex" />
+    </Items>
+</RadzenRadioButtonList>
+<br />
+
+<EditForm Model="Block">
+    <BlockInputField BlockSetting="Block.Input" />
+    @switch (Block.Mode)
+    {
+        case ParseMode.LR:
+            <BlockInputField BlockSetting="Block.LeftDelim" />
+            <BlockInputField BlockSetting="Block.RightDelim" />
+            <BlockInputField BlockSetting="Block.CaseSensitive" />
+            break;
+
+        case ParseMode.CSS:
+            <BlockInputField BlockSetting="Block.CssSelector" />
+            <BlockInputField BlockSetting="Block.AttributeName" />
+            break;
+
+        case ParseMode.Json:
+            <BlockInputField BlockSetting="Block.JToken" />
+            break;
+
+        case ParseMode.Regex:
+            <BlockInputField BlockSetting="Block.Pattern" />
+            <BlockInputField BlockSetting="Block.OutputFormat" />
+            break;
+    }
+</EditForm>
+
+@code {
+    [Parameter] public ParseBlockInstance Block { get; set; }
+    [Parameter] public EventCallback ChangedLabel { get; set; }
+
+}
