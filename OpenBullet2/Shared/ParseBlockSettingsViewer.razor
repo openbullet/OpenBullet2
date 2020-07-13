@@ -12,8 +12,8 @@
     <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["OutputVariable"] (@(Block.Recursive ? "ListOfStrings" : "String")):</h6>
     <InputText @bind-Value="Block.OutputVariable" />
     <label>@Loc["IsCapture"]</label>
-    <br />
     <InputCheckbox @bind-Value="Block.IsCapture" />
+    <br />
     <label>@Loc["Recursive"]</label>
     <InputCheckbox @bind-Value="Block.Recursive" />
 </EditForm>
