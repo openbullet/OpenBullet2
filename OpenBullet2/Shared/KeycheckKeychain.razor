@@ -27,11 +27,11 @@
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddStringKey"><span class="oi oi-plus"></span> String Key</button>
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddIntKey"><span class="oi oi-plus"></span> Int Key</button>
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddFloatKey"><span class="oi oi-plus"></span> Float Key</button>
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddListKey"><span class="oi oi-plus"></span> List Key</button>
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddDictionaryKey"><span class="oi oi-plus"></span> Dictionary Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
+            <button class="btn-sm btn-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
         </div>
     </div>
     @foreach (var key in Keychain.Keys)
@@ -71,61 +71,6 @@
 
 @code {
     [Parameter] public Keychain Keychain { get; set; }
-
-    private void AddStringKey()
-    {
-        var key = new StringKey
-        {
-            Left = new BlockSetting { FixedSetting = new StringSetting(), InputMode = SettingInputMode.Variable },
-            Right = new BlockSetting { FixedSetting = new StringSetting() }
-        };
-
-        Keychain.Keys.Add(key);
-    }
-
-    private void AddIntKey()
-    {
-        var key = new IntKey
-        {
-            Left = new BlockSetting { FixedSetting = new IntSetting(), InputMode = SettingInputMode.Variable },
-            Right = new BlockSetting { FixedSetting = new IntSetting() }
-        };
-
-        Keychain.Keys.Add(key);
-    }
-
-    private void AddFloatKey()
-    {
-        var key = new FloatKey
-        {
-            Left = new BlockSetting { FixedSetting = new FloatSetting(), InputMode = SettingInputMode.Variable },
-            Right = new BlockSetting { FixedSetting = new FloatSetting() }
-        };
-
-        Keychain.Keys.Add(key);
-    }
-
-    private void AddListKey()
-    {
-        var key = new ListKey
-        {
-            Left = new BlockSetting { FixedSetting = new ListOfStringsSetting(), InputMode = SettingInputMode.Variable },
-            Right = new BlockSetting { FixedSetting = new StringSetting() }
-        };
-
-        Keychain.Keys.Add(key);
-    }
-
-    private void AddDictionaryKey()
-    {
-        var key = new DictionaryKey
-        {
-            Left = new BlockSetting { FixedSetting = new DictionaryOfStringsSetting(), InputMode = SettingInputMode.Variable },
-            Right = new BlockSetting { FixedSetting = new StringSetting() }
-        };
-
-        Keychain.Keys.Add(key);
-    }
 
     private string GetBGColor()
     {
