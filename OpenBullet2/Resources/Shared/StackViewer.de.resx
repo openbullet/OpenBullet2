@@ -130,7 +130,7 @@
     <value>Nach unten</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Widerrufen</value>
+    <value>Aktivieren</value>
   </data>
   <data name="Undo" xml:space="preserve">
     <value>Rückgängig</value>
