@@ -6,24 +6,31 @@
 <div class="container-fluid"
      style="background-color: @GetBGColor()">
     <div class="row">
-        <EditForm Model="Keychain">
-            <label>Result Status:</label>
-            <InputSelect @bind-Value="Keychain.ResultStatus">
-                @foreach (var status in RuriLibSettings.GetStatuses())
-                {
-                    <option value="@status">@status</option>
-                }
-            </InputSelect>
-        </EditForm>
-        <EditForm Model="Keychain">
-            <label>Mode:</label>
-            <InputSelect @bind-Value="Keychain.Mode">
-                @foreach (var mode in Enum.GetNames(typeof(KeychainMode)))
-                {
-                    <option value="@mode">@mode</option>
-                }
-            </InputSelect>
-        </EditForm>
+        <div class="col mr-0 pr-0 ml-0 pl-0">
+            <EditForm Model="Keychain">
+                <label>Result Status:</label>
+                <InputSelect @bind-Value="Keychain.ResultStatus">
+                    @foreach (var status in RuriLibSettings.GetStatuses())
+                    {
+                        <option value="@status">@status</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+        <div class="col mr-0 pr-0 ml-0 pl-0">
+            <EditForm Model="Keychain">
+                <label class="ml-3">Mode:</label>
+                <InputSelect @bind-Value="Keychain.Mode">
+                    @foreach (var mode in Enum.GetNames(typeof(KeychainMode)))
+                    {
+                        <option value="@mode">@mode</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+        <div class="col mr-0 pr-0 ml-0 pl-0 text-right">
+            @Buttons
+        </div>
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
@@ -37,7 +44,7 @@
     @foreach (var key in Keychain.Keys)
     {
         <div class="row">
-            <div class="col-10 no-padding">
+            <div class="col-11 ml-0 mr-0 pl-0 pr-0">
                 @switch (key)
                 {
                     case StringKey x:
@@ -61,7 +68,7 @@
                         break;
                 }
             </div>
-            <div class="col-2">
+            <div class="col ml-0 mr-0 pl-0 pr-0">
                 <button type="button" class="btn-sm btn-danger" @onclick="@(() => Keychain.Keys.Remove(key))">
                 <span class="oi oi-x"></span></button>
             </div>
@@ -71,6 +78,7 @@
 
 @code {
     [Parameter] public Keychain Keychain { get; set; }
+    [Parameter] public RenderFragment Buttons { get; set; }
 
     private string GetBGColor()
     {
