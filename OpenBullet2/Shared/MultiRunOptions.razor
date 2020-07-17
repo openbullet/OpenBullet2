@@ -4,6 +4,7 @@
 @using RuriLib.Models.Configs
 @using RuriLib.Services
 @inject RuriLibSettingsService RuriLibSettings
+@inject IRecordRepository RecordRepo
 @inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunOptions> Loc
 
@@ -53,7 +54,8 @@
         </div>
         <div class="col">
             <label style="color: orange; margin-top: 20px;">@Loc["DataPool"]</label>
-            <DataPoolSelector Options="Options.DataPool" SetOptions="((options) => Options.DataPool = options)" />
+            <DataPoolSelector Options="Options.DataPool" SetOptions="((options) => Options.DataPool = options)"
+                              SetWordlist="(async _ => await TryApplyRecord())"/>
         </div>
     </div>
     <div class="row">
@@ -81,6 +83,19 @@
         {
             selectedConfig = result.Data as Config;
             Options.ConfigId = selectedConfig.Id;
+            await TryApplyRecord();
+        }
+    }
+
+    async Task TryApplyRecord()
+    {
+        if (Options.DataPool is OpenBullet2.Models.Data.WordlistDataPoolOptions pool)
+        {
+            var record = await RecordRepo.GetAll()
+                .FirstOrDefaultAsync(r => r.ConfigId == Options.ConfigId && r.WordlistId == pool.WordlistId);
+
+            if (record != null)
+                Options.Skip = record.Checkpoint;
         }
     }
 }

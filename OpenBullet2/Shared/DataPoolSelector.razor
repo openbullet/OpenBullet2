@@ -100,6 +100,7 @@
 @code {
     [Parameter] public DataPoolOptions Options { get; set; }
     [Parameter] public EventCallback<DataPoolOptions> SetOptions { get; set; }
+    [Parameter] public EventCallback<int> SetWordlist { get; set; }
     DataPoolType type = DataPoolType.Wordlist;
     WordlistEntity selectedWordlist;
     List<string> wordlistTypes;
@@ -146,6 +147,7 @@
         {
             selectedWordlist = result.Data as WordlistEntity;
             ((WordlistDataPoolOptions)Options).WordlistId = selectedWordlist.Id;
+            await SetWordlist.InvokeAsync(selectedWordlist.Id);
         }
     }
 }
