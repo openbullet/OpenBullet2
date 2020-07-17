@@ -9,7 +9,7 @@ using OpenBullet2;
 namespace OpenBullet2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200622011413_Initial")]
+    [Migration("20200717021852_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,8 +169,8 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("ConfigId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("WordlistId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("WordlistId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

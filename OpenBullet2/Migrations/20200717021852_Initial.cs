@@ -102,7 +102,7 @@ namespace OpenBullet2.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ConfigId = table.Column<string>(nullable: true),
-                    WordlistId = table.Column<string>(nullable: true),
+                    WordlistId = table.Column<int>(nullable: false),
                     Checkpoint = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

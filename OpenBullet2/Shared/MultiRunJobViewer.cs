@@ -1,10 +1,13 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
+using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using Radzen.Blazor;
+using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
@@ -18,6 +21,7 @@ namespace OpenBullet2.Shared
     {
         [Inject] public IModalService Modal { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] public IRecordRepository RecordRepo { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
         int refreshInterval = 1000;
@@ -53,7 +57,7 @@ namespace OpenBullet2.Shared
         protected override void OnInitialized()
         {
             PeriodicRefresh(refreshInterval);
-            TryHookLogger();
+            TryHookEvents();
         }
 
         private void SelectHit(Hit hit)
@@ -118,23 +122,55 @@ namespace OpenBullet2.Shared
             logger.LogInfo(Loc["TaskManagerCompleted"]);
         }
 
-        private void TryHookLogger()
+        private void SaveRecord(object sender, EventArgs e)
         {
-            if (Job.Manager != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+            if (Job.DataPool is WordlistDataPool pool)
             {
-                try { Job.Manager.OnResult -= LogResult; } catch { }
-                try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
-                try { Job.Manager.OnError -= LogError; } catch { }
-                try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
+                var record = RecordRepo.GetAll()
+                    .FirstOrDefault(r => r.ConfigId == Job.Config.Id && r.WordlistId == pool.Wordlist.Id);
 
-                try
+                if (record == null)
                 {
-                    Job.Manager.OnResult += LogResult;
-                    Job.Manager.OnTaskError += LogTaskError;
-                    Job.Manager.OnError += LogError;
-                    Job.Manager.OnCompleted += LogCompleted;
+                    RecordRepo.Add(new RecordEntity
+                    {
+                        ConfigId = Job.Config.Id,
+                        WordlistId = pool.Wordlist.Id,
+                        Checkpoint = Job.Skip + Job.DataTested
+                    });
                 }
-                catch { }
+                else
+                {
+                    record.Checkpoint = Job.Skip + Job.DataTested;
+                    RecordRepo.Update(record);
+                }
+            }
+        }
+
+        private void TryHookEvents()
+        {
+            if (Job.Manager != null)
+            {
+                if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+                {
+                    // TODO: Find a better way to clear previous hooks
+                    try { Job.Manager.OnResult -= LogResult; } catch { }
+                    try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
+                    try { Job.Manager.OnError -= LogError; } catch { }
+                    try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
+
+                    try
+                    {
+                        Job.Manager.OnResult += LogResult;
+                        Job.Manager.OnTaskError += LogTaskError;
+                        Job.Manager.OnError += LogError;
+                        Job.Manager.OnCompleted += LogCompleted;
+                        Job.OnTimerTick += SaveRecord;
+                    }
+                    catch { }
+                }
+
+                try { Job.OnTimerTick -= SaveRecord; } catch { }
+                try { Job.OnTimerTick += SaveRecord; } catch { }
             }
         }
 
@@ -143,7 +179,7 @@ namespace OpenBullet2.Shared
             try
             {
                 await Job.Start();
-                TryHookLogger();
+                TryHookEvents();
                 logger.LogInfo(Loc["StartedChecking"]);
                 PeriodicRefresh(refreshInterval);
             }

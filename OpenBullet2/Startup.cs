@@ -50,6 +50,7 @@ namespace OpenBullet2
             services.AddScoped<IHitRepository, DbHitRepository>();
             services.AddScoped<IJobRepository, DbJobRepository>();
             services.AddScoped<IGuestRepository, DbGuestRepository>();
+            services.AddScoped<IRecordRepository, DbRecordRepository>();
 
             // Singletons
             services.AddSingleton<MetricsService>();
