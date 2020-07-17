@@ -1,8 +1,10 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
+using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
@@ -22,6 +24,7 @@ namespace OpenBullet2.Shared
         [Inject] public IModalService Modal { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
         [Inject] public IRecordRepository RecordRepo { get; set; }
+        [Inject] public IJobRepository JobRepo { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
         int refreshInterval = 1000;
@@ -146,6 +149,27 @@ namespace OpenBullet2.Shared
             }
         }
 
+        private void SaveJobOptions(object sender, EventArgs e)
+        {
+            // Get the job
+            var job = JobRepo.Get(Job.Id).Result;
+            
+            // Deserialize and unwrap the job options
+            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(job.JobOptions, settings);
+            var options = ((MultiRunJobOptions)wrapper.Options);
+            
+            // Update the skip
+            options.Skip = Job.Skip + Job.DataTested;
+            
+            // Wrap and serialize again
+            var newWrapper = new JobOptionsWrapper { Options = options };
+            job.JobOptions = JsonConvert.SerializeObject(newWrapper, settings);
+
+            // Update the job
+            JobRepo.Update(job).ConfigureAwait(false);
+        }
+
         private void TryHookEvents()
         {
             if (Job.Manager != null)
@@ -169,8 +193,19 @@ namespace OpenBullet2.Shared
                     catch { }
                 }
 
-                try { Job.OnTimerTick -= SaveRecord; } catch { }
-                try { Job.OnTimerTick += SaveRecord; } catch { }
+                try 
+                { 
+                    Job.OnTimerTick -= SaveRecord;
+                    Job.OnTimerTick -= SaveJobOptions;
+                } 
+                catch { }
+                
+                try 
+                { 
+                    Job.OnTimerTick += SaveRecord; 
+                    Job.OnTimerTick += SaveJobOptions;
+                } 
+                catch { }
             }
         }
 
