@@ -3,6 +3,7 @@
 @using OpenBullet2.Shared.Forms 
 @using RuriLib.Services 
 @inject IModalService Modal
+@inject IWordlistRepository WordlistRepo
 @inject RuriLibSettingsService RuriLibSettings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<DataPoolSelector> Loc
 
@@ -110,6 +111,18 @@
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(t => t.Name).ToList();
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        // We're in edit mode
+        if (Options is WordlistDataPoolOptions o && o.WordlistId != -1)
+        {
+            selectedWordlist = await WordlistRepo.Get(o.WordlistId);
+        }
+
+        // Hook the correct type for radio buttons
+        type = GetCurrentType();
+    }
+
     enum DataPoolType
     {
         Wordlist,
@@ -136,6 +149,19 @@
 
             SetOptions.InvokeAsync(Options);
         }
+    }
+
+    DataPoolType GetCurrentType()
+    {
+        return Options switch
+        {
+            WordlistDataPoolOptions _ => DataPoolType.Wordlist,
+            FileDataPoolOptions _ => DataPoolType.File,
+            RangeDataPoolOptions _ => DataPoolType.Range,
+            CombinationsDataPoolOptions _ => DataPoolType.Combinations,
+            InfiniteDataPoolOptions _ => DataPoolType.Infinite,
+            _ => throw new NotImplementedException()
+        };
     }
 
     async Task SelectWordlist()

@@ -25,6 +25,9 @@
   <ItemGroup>
     <EmbeddedResource Remove="Resources\Pages\JobCreator.en.resx" />
     <EmbeddedResource Remove="Resources\Pages\JobCreator.it.resx" />
+    <EmbeddedResource Remove="Resources\Pages\JobEditor.de.resx" />
+    <EmbeddedResource Remove="Resources\Pages\JobEditor.en.resx" />
+    <EmbeddedResource Remove="Resources\Pages\JobEditor.it.resx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,6 +78,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Resources\Pages\JobEditor.de.resx" />
+    <None Include="Resources\Pages\JobEditor.it.resx" />
+    <None Include="Resources\Pages\JobEditor.en.resx" />
     <None Include="Resources\Pages\JobCreator.it.resx" />
     <None Include="Resources\Pages\JobCreator.en.resx" />
   </ItemGroup>

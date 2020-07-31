@@ -120,6 +120,9 @@
   <data name="by" xml:space="preserve">
     <value>by</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="JobNotIdle" xml:space="preserve">
     <value>Job not idle</value>
   </data>

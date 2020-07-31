@@ -36,10 +36,18 @@
                 </div>
             </div>
             <div class="col">
-                <button class="btn btn-danger" style="height: 100%"
-                        @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
-                    @Loc["Remove"]
-                </button>
+                <div class="row">
+                    <button class="btn btn-primary" style="height: 100%"
+                            @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
+                        @Loc["Edit"]
+                    </button>
+                </div>
+                <div class="row">
+                    <button class="btn btn-danger" style="height: 100%"
+                            @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
+                        @Loc["Remove"]
+                    </button>
+                </div>
             </div>
         </div>
     }

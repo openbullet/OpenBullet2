@@ -117,5 +117,10 @@ namespace OpenBullet2.Pages
             JobRepo.Purge();
             Manager.Jobs.Clear();
         }
+
+        public void Edit(Job job)
+        {
+            Nav.NavigateTo($"jobs/edit/{job.Id}");
+        }
     }
 }

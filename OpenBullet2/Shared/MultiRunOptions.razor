@@ -6,6 +6,7 @@
 @inject RuriLibSettingsService RuriLibSettings
 @inject IRecordRepository RecordRepo
 @inject IModalService Modal
+@inject IConfigRepository ConfigRepo
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunOptions> Loc
 
 <div class="container-fluid">
@@ -73,6 +74,17 @@
 @code {
     [Parameter] public MultiRunJobOptions Options { get; set; }
     Config selectedConfig;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // We're in edit mode, set the config
+        if (!string.IsNullOrEmpty(Options.ConfigId))
+        {
+            selectedConfig = await ConfigRepo.Get(Options.ConfigId);
+        }
+
+        // Refresh the radio buttons
+    }
 
     async Task SelectConfig()
     {

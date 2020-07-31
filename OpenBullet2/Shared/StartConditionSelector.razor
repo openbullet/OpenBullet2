@@ -35,6 +35,11 @@
         StartAt
     }
 
+    protected override void OnParametersSet()
+    {
+        type = GetCurrentType();
+    }
+
     void Change(StartConditionType? value)
     {
         if (value.HasValue)
@@ -46,6 +51,16 @@
                 _ => throw new NotImplementedException()
             };
         }
+    }
+
+    StartConditionType GetCurrentType()
+    {
+        return StartCondition switch
+        {
+            RelativeTimeStartCondition _ => StartConditionType.StartIn,
+            AbsoluteTimeStartCondition _ => StartConditionType.StartAt,
+            _ => throw new NotImplementedException()
+        };
     }
 
     void AbsoluteChange(AbsoluteTimeStartCondition condition, DateTime? value)
