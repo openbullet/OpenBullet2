@@ -118,8 +118,14 @@ namespace OpenBullet2.Pages
             Manager.Jobs.Clear();
         }
 
-        public void Edit(Job job)
+        public async Task Edit(Job job)
         {
+            if (job.Status != TaskManagerStatus.Idle)
+            {
+                await js.AlertError(Loc["JobNotIdle"], Loc["JobNotIdleWarning"]);
+                return;
+            }
+
             Nav.NavigateTo($"jobs/edit/{job.Id}");
         }
     }
