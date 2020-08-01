@@ -23,6 +23,12 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public GuestEntity Guest { get; set; }
+    private string originalUsername;
+
+    protected override void OnParametersSet()
+    {
+        originalUsername = Guest.Username;
+    }
 
     private async Task Validate()
     {
@@ -40,7 +46,7 @@
 
         var existingGuest = GuestRepo.GetAll().FirstOrDefault(g => g.Username == Guest.Username);
 
-        if (existingGuest != null)
+        if (originalUsername != Guest.Username && existingGuest != null)
         {
             await js.AlertError(Loc["Uh-Oh"], Loc["GuestAlreadyExists"]);
             return;
