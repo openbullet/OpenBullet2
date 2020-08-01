@@ -12,7 +12,8 @@
     <label>@Loc["AccessExpiration"]</label>
     <InputDate @bind-Value="Guest.AccessExpiration" />
 
-    <label>@Loc["AllowedAddresses"]</label>
+    <label>@Loc["AllowedAddresses"] (@Loc["allIfEmpty"])</label>
+    <p style="color: #ccc; font-size: small;">@Loc["Example"]: 192.168.1.1,10.0.0.0/24,example.dyndns.org,::1</p>
     <InputText @bind-Value="Guest.AllowedAddresses" />
 
     <button type="submit" @onclick="Validate" class="btn btn-success">@Loc["Ok"]</button>

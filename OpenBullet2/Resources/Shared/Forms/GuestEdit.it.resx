@@ -120,8 +120,14 @@
   <data name="AccessExpiration" xml:space="preserve">
     <value>Scadenza accesso</value>
   </data>
+  <data name="allIfEmpty" xml:space="preserve">
+    <value>tutti se vuoto</value>
+  </data>
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Indirizzi permessi</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Esempio</value>
   </data>
   <data name="GuestAlreadyExists" xml:space="preserve">
     <value>Esiste già un ospite con questo nome.</value>

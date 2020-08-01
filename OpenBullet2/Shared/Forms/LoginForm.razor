@@ -2,6 +2,7 @@
 @using OpenBullet2.Helpers
 @inject AuthenticationStateProvider Auth
 @inject NavigationManager Nav
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor ContextAccessor
 @inject Microsoft.Extensions.Localization.IStringLocalizer<LoginForm> Loc
 
 <p>@Loc["NotAuthedPleaseLogin"]</p>
@@ -26,7 +27,7 @@
     {
         try
         {
-            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password);
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password, ContextAccessor.HttpContext.Connection?.RemoteIpAddress);
             Nav.NavigateTo("/");
         }
         catch (Exception ex)

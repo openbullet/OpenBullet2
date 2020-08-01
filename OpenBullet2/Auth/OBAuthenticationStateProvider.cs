@@ -3,13 +3,17 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 using OpenBullet2.Exceptions;
+using OpenBullet2.Extensions;
+using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Auth
@@ -65,12 +69,12 @@ namespace OpenBullet2.Auth
             }
         }
 
-        public async Task AuthenticateUser(string username, string password)
+        public async Task AuthenticateUser(string username, string password, IPAddress ip)
         {
             if (settings.OpenBulletSettings.SecuritySettings.AdminUsername == username)
                 await AuthenticateAdmin(username, password);
             else
-                await AuthenticateGuest(username, password);
+                await AuthenticateGuest(username, password, ip);
         }
 
         private async Task AuthenticateAdmin(string username, string password)
@@ -92,7 +96,7 @@ namespace OpenBullet2.Auth
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(admin)));
         }
 
-        private async Task AuthenticateGuest(string username, string password)
+        private async Task AuthenticateGuest(string username, string password, IPAddress ip)
         {
             var entity = guestRepo.GetAll().FirstOrDefault(g => g.Username == username);
 
@@ -105,10 +109,14 @@ namespace OpenBullet2.Auth
             if (DateTime.UtcNow > entity.AccessExpiration)
                 throw new UnauthorizedAccessException("Access to this guest account has expired");
 
+            if (entity.AllowedAddresses.Count() > 0 && !CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries)))
+                throw new UnauthorizedAccessException("Unauthorized IP address");
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, "Guest")
+                new Claim(ClaimTypes.Role, "Guest"),
+                new Claim("IP", ip.ToString())
             };
 
             var jwt = BuildGuestToken(claims);
@@ -144,6 +152,47 @@ namespace OpenBullet2.Auth
         public async Task Logout()
         {
             await localStorage.RemoveItemAsync("jwt");
+        }
+
+        // Supported: IPv4, IPv6, masked IPv4, dynamic DNS
+        private bool CheckIpValidity(IPAddress ip, IEnumerable<string> allowed)
+        {
+            foreach (var addr in allowed)
+            {
+                try
+                {
+                    // Check if standard IPv4 or IPv6
+                    if (Regex.Match(addr, @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$").Success ||
+                        Regex.Match(addr, @"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$").Success)
+                    {
+                        if (ip.Equals(IPAddress.Parse(addr)))
+                            return true;
+                    }
+
+                    // Check if masked IPv4
+                    if (addr.Contains('/'))
+                    {
+                        var split = addr.Split('/');
+                        var maskLength = int.Parse(split[1]);
+                        var toCompare = IPAddress.Parse(split[0]);
+                        var mask = SubnetMask.CreateByNetBitLength(maskLength);
+
+                        if (ip.IsInSameSubnet(toCompare, mask))
+                            return true;
+                    }
+
+                    // Otherwise it must be a dynamic DNS
+                    var resolved = Dns.GetHostEntry(addr);
+                    if (resolved.AddressList.Any(a => a.Equals(ip)))
+                        return true;
+                }
+                catch
+                {
+
+                }
+            }
+
+            return false;
         }
     }
 }

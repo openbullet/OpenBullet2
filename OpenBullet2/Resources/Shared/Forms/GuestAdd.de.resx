@@ -120,11 +120,17 @@
   <data name="AccessExpiration" xml:space="preserve">
     <value>Ablauf des Zuganges</value>
   </data>
+  <data name="allIfEmpty" xml:space="preserve">
+    <value>alles, falls leer</value>
+  </data>
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Erlaubte Adressen</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
     <value>Passwort bestätigen</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Beispiel</value>
   </data>
   <data name="GuestAlreadyExists" xml:space="preserve">
     <value>Ein Gast mit dem gleichen Namen existiert bereits</value>
