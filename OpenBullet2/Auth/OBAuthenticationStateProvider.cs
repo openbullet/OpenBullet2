@@ -109,6 +109,9 @@ namespace OpenBullet2.Auth
             if (DateTime.UtcNow > entity.AccessExpiration)
                 throw new UnauthorizedAccessException("Access to this guest account has expired");
 
+            if (ip.IsIPv4MappedToIPv6)
+                ip = ip.MapToIPv4();
+
             if (entity.AllowedAddresses.Count() > 0 && !CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries)))
                 throw new UnauthorizedAccessException($"Unauthorized IP address: {ip}");
 
@@ -157,9 +160,6 @@ namespace OpenBullet2.Auth
         // Supported: IPv4, IPv6, masked IPv4, dynamic DNS
         private bool CheckIpValidity(IPAddress ip, IEnumerable<string> allowed)
         {
-            if (ip.IsIPv4MappedToIPv6)
-                ip = ip.MapToIPv4();
-
             foreach (var addr in allowed)
             {
                 try
