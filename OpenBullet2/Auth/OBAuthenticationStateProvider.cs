@@ -110,13 +110,13 @@ namespace OpenBullet2.Auth
                 throw new UnauthorizedAccessException("Access to this guest account has expired");
 
             if (entity.AllowedAddresses.Count() > 0 && !CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries)))
-                throw new UnauthorizedAccessException("Unauthorized IP address");
+                throw new UnauthorizedAccessException($"Unauthorized IP address: {ip}");
 
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, "Guest"),
-                new Claim("IP", ip.ToString())
+                new Claim("IPAtLogin", ip.ToString())
             };
 
             var jwt = BuildGuestToken(claims);
