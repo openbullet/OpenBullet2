@@ -123,6 +123,9 @@
   <data name="BuildNumber" xml:space="preserve">
     <value>Build Number</value>
   </data>
+  <data name="ClientIpAddress" xml:space="preserve">
+    <value>Client IP Address</value>
+  </data>
   <data name="CPUUsage" xml:space="preserve">
     <value>CPU Usage</value>
   </data>

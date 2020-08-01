@@ -1,10 +1,11 @@
 ﻿using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using OpenBullet2.Services;
-using OpenBullet2.Shared.Forms;
 using System;
 using System.Globalization;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,10 +17,18 @@ namespace OpenBullet2.Pages
         [Inject] public AuthenticationStateProvider Auth { get; set; }
         [Inject] public NavigationManager Nav { get; set; }
         [Inject] public IModalService Modal { get; set; }
+        [Inject] public IHttpContextAccessor HttpAccessor { get; set; }
+        public IPAddress IP { get; set; } = IPAddress.Parse("127.0.0.1");
 
         protected override void OnInitialized()
         {
             StartPeriodicRefresh();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+                IP = HttpAccessor.HttpContext.Connection?.RemoteIpAddress;
         }
 
         private void StartPeriodicRefresh()

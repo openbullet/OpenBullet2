@@ -47,5 +47,9 @@
             <th scope="row">@Loc["BuildNumber"]</th>
             <td>@Metrics.BuildNumber (@Metrics.BuildDate.ToString())</td>
         </tr>
+        <tr>
+            <th scope="row">@Loc["ClientIpAddress"]</th>
+            <td>@(IP.IsIPv4MappedToIPv6 ? IP.MapToIPv4() : IP)</td>
+        </tr>
     </tbody>
 </table>

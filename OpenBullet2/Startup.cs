@@ -41,6 +41,7 @@ namespace OpenBullet2
             
             services.AddScoped<AuthenticationStateProvider, OBAuthenticationStateProvider>();
             services.AddBlazoredLocalStorage();
+            services.AddHttpContextAccessor();
 
             // Repositories
             services.AddScoped<IConfigRepository, DiskConfigRepository>();
