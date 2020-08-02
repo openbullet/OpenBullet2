@@ -3,7 +3,7 @@
 
 <EditForm Model="Answer">
     <label>@Question</label>
-    <InputNumber @bind-Value="Answer" />
+    <InputText @bind-Value="Answer" />
 </EditForm>
 
 <button class="btn btn-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
