@@ -1,5 +1,6 @@
 ﻿@page "/jobs"
 @using RuriLib.Models.Jobs
+@using RuriLib.Models.Data.DataPools
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobManager> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
@@ -13,23 +14,71 @@
     @foreach (var job in Manager.Jobs)
     {
         <div class="row" style="margin-top: 5px;">
-            <div class="col-11">
-                <div class="card" style="color: #fff; background-color: #111; cursor: pointer; border: solid 3px #666;
-                        width: 100%;"
-                     @onclick="@(() => SelectJob(job))">
-                    <div class="card-body">
-                        <h5 class="card-title">Job #@job.Id (@job.GetType().Name) (@job.Status)</h5>
+            <div class="col-11 pl-0">
+                <div class="job-overview" @onclick="@(() => SelectJob(job))">
+                    <div class="p-4">
+                        <h5>Job #@job.Id (@job.GetType().Name) (@job.Status)</h5>
                         @switch (job)
                         {
                             case MultiRunJob x:
-                                if (x.Config != null)
-                                {
-                                    <p class="card-text">Config: @x.Config.Metadata.Name @Loc["by"] @x.Config.Metadata.Author</p>
-                                }
-                                else
-                                {
-                                    <p class="card-text">@Loc["NoConfigSelected"]</p>
-                                }
+                                <p style="margin-bottom: 0.2rem;">
+                                    <span>
+                                        @if (x.Config != null)
+                                        {
+                                            <b>Config:</b> @x.Config.Metadata.Name
+                                        }
+                                        else
+                                        {
+                                            @Loc["NoConfigSelected"]
+                                        }
+                                    </span>
+                                    <span>
+                                        <b>Wordlist:</b>
+                                        @switch (x.DataPool)
+                                        {
+                                            case WordlistDataPool p:
+                                                @p.Wordlist.Name
+                                                break;
+
+                                            case CombinationsDataPool p:
+                                                @("Combinations")
+                                                break;
+
+                                            case InfiniteDataPool p:
+                                                @("Infinite")
+                                                break;
+
+                                            case RangeDataPool p:
+                                                @("Range")
+                                                break;
+
+                                            case FileDataPool p:
+                                                @p.FileName
+                                                break;
+                                        }
+                                    </span>
+                                    <span>
+                                        <b>Bots:</b> @x.Bots
+                                    </span>
+                                    <span>
+                                        <b>Proxies:</b> @x.ProxyMode
+                                    </span>
+                                    <span style="color: yellowgreen;">
+                                        <b>Hits:</b> @x.DataHits
+                                    </span>
+                                    <span style="color: orange">
+                                        <b>Custom:</b> @x.DataCustom
+                                    </span>
+                                    <span style="color: aqua">
+                                        <b>ToCheck:</b> @x.DataToCheck
+                                    </span>
+                                    <span>
+                                        <b>Progress:</b> @(x.Manager != null ? x.Manager.Progress.ToString("0.00") : "?")%
+                                    </span>
+                                    <span>
+                                        <b>CPM:</b> @(x.Manager != null ? x.Manager.CPM : 0)
+                                    </span>
+                                </p>
                                 break;
                         }
                     </div>
@@ -37,13 +86,13 @@
             </div>
             <div class="col">
                 <div class="row">
-                    <button class="btn btn-primary" style="height: 100%"
+                    <button class="btn btn-primary" style="height: 100%; width: 100%;"
                             @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
                         @Loc["Edit"]
                     </button>
                 </div>
                 <div class="row">
-                    <button class="btn btn-danger" style="height: 100%"
+                    <button class="btn btn-danger" style="height: 100%; width: 100%;"
                             @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
                         @Loc["Remove"]
                     </button>

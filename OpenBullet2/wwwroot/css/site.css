@@ -361,3 +361,15 @@ select {
 .config-list > div > div.ui-g > div {
     margin: unset;
 }
+
+.job-overview {
+    color: #fff;
+    background-color: #111;
+    cursor: pointer;
+    border: solid 1px #999;
+    width: 100%;
+}
+
+.job-overview > div > p > span:not(:first-child) {
+    margin-left: 10px;
+}
