@@ -1,0 +1,20 @@
+﻿@inject IModalService ModalService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<CustomInputQuestion> Loc
+
+<EditForm Model="Answer">
+    <label>@Question</label>
+    <InputNumber @bind-Value="Answer" />
+</EditForm>
+
+<button class="btn btn-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public string Question { get; set; }
+    [Parameter] public string Answer { get; set; }
+
+    private void Validate()
+    {
+        BlazoredModal.Close(ModalResult.Ok(Answer));
+    }
+}

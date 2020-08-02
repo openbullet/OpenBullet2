@@ -213,6 +213,7 @@ namespace OpenBullet2.Shared
         {
             try
             {
+                await AskCustomInputs();
                 await Job.Start();
                 TryHookEvents();
                 logger.LogInfo(Loc["StartedChecking"]);
@@ -288,6 +289,22 @@ namespace OpenBullet2.Shared
 
             // A final one to refresh the button status
             await InvokeAsync(StateHasChanged);
+        }
+
+        private async Task AskCustomInputs()
+        {
+            Job.CustomInputsAnswers.Clear();
+            foreach (var input in Job.Config.Settings.InputSettings.CustomInputs)
+            {
+                var parameters = new ModalParameters();
+                parameters.Add(nameof(CustomInputQuestion.Question), input.Description);
+                parameters.Add(nameof(CustomInputQuestion.Answer), input.DefaultAnswer);
+
+                var modal = Modal.Show<CustomInputQuestion>(Loc["CustomInput"], parameters);
+                var result = await modal.Result;
+                var answer = result.Cancelled ? input.DefaultAnswer : (string)result.Data;
+                Job.CustomInputsAnswers[input.VariableName] = answer;
+            }
         }
     }
 }
