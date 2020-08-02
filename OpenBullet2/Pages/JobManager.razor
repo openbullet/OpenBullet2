@@ -33,11 +33,11 @@
                                         }
                                     </span>
                                     <span>
-                                        <b>Wordlist:</b>
+                                        <b>Data Pool:</b>
                                         @switch (x.DataPool)
                                         {
                                             case WordlistDataPool p:
-                                                @p.Wordlist.Name
+                                                @(p.Wordlist.Name + " (Wordlist)") 
                                                 break;
 
                                             case CombinationsDataPool p:
@@ -53,7 +53,7 @@
                                                 break;
 
                                             case FileDataPool p:
-                                                @p.FileName
+                                                @(p.FileName + ("File"))
                                                 break;
                                         }
                                     </span>
