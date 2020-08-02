@@ -5,6 +5,7 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -43,6 +44,12 @@ namespace OpenBullet2.Pages
 
             _editorModel = new EditorModel(options);
             base.OnInitialized();
+
+            // Save the content of the editor automatically every second
+            var timer = new Timer(new TimerCallback(async _ =>
+            {
+                await InvokeAsync(SaveLoliCode);
+            }), null, 1000, 1000);
         }
 
         private async Task SaveLoliCode()
