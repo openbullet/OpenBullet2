@@ -162,6 +162,9 @@
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="CustomInput" xml:space="preserve">
+    <value>Custom input</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Data</value>
   </data>

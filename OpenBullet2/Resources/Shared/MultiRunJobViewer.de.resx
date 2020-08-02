@@ -159,6 +159,9 @@
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="CustomInput" xml:space="preserve">
+    <value>Benutzerdefinierte Eingabe</value>
+  </data>
   <data name="Database" xml:space="preserve">
     <value>Datenbank</value>
   </data>
