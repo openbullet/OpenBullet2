@@ -83,7 +83,11 @@ namespace OpenBullet2.Shared
             
             try
             {
-                var state = await script.RunAsync(new ScriptGlobals(data), null, cts.Token);
+                var scriptGlobals = new ScriptGlobals(data);
+                foreach (var input in Config.Settings.InputSettings.CustomInputs)
+                    (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
+
+                var state = await script.RunAsync(scriptGlobals, null, cts.Token);
 
                 foreach (var scriptVar in state.Variables)
                 {
