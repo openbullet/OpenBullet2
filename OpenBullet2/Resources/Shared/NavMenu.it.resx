@@ -150,6 +150,9 @@
   <data name="Metadata" xml:space="preserve">
     <value>Metadati</value>
   </data>
+  <data name="Monitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
   <data name="NoConfigSelected" xml:space="preserve">
     <value>Nessuna config selezionata</value>
   </data>

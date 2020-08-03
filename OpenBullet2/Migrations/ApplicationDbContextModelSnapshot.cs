@@ -175,6 +175,20 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Records");
                 });
 
+            modelBuilder.Entity("OpenBullet2.Entities.TriggeredActionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TriggeredAction")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TriggeredActions");
+                });
+
             modelBuilder.Entity("OpenBullet2.Entities.WordlistEntity", b =>
                 {
                     b.Property<int>("Id")

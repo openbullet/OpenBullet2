@@ -52,6 +52,7 @@ namespace OpenBullet2
             services.AddScoped<IJobRepository, DbJobRepository>();
             services.AddScoped<IGuestRepository, DbGuestRepository>();
             services.AddScoped<IRecordRepository, DbRecordRepository>();
+            services.AddScoped<ITriggeredActionRepository, DbTriggeredActionRepository>();
 
             // Singletons
             services.AddSingleton<MetricsService>();
@@ -60,6 +61,7 @@ namespace OpenBullet2
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JobManagerService>();
+            services.AddSingleton<JobMonitorService>();
             services.AddSingleton<JwtValidationService>();
 
             // Localization

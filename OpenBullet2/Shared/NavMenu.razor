@@ -32,6 +32,11 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
+            <NavLink class="nav-link" href="monitor">
+                <span class="oi oi-eye" aria-hidden="true"></span> @Loc["Monitor"]
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="proxies/groups">
                 <span class="oi oi-shield" aria-hidden="true"></span> @Loc["Proxies"]
             </NavLink>
@@ -53,45 +58,43 @@
         </li>
         @if (displayConfigSubmenu)
         {
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="config/edit/metadata">
-                    <span class="oi oi-ellipses ml-lg-4" aria-hidden="true"></span> @Loc["Metadata"]
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="config/edit/readme">
-                    <span class="oi oi-pencil ml-lg-4" aria-hidden="true"></span> @Loc["Readme"]
-                </NavLink>
-            </li>
-            @if (displayStackerSubmenu)
-            {
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="config/edit/stacker">
-                        <span class="oi oi-menu ml-lg-4" aria-hidden="true"></span> @Loc["Stacker"]
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="config/edit/lolicode">
-                        <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["LoliCode"]
-                    </NavLink>
-                </li>
-            }
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="config/edit/settings">
-                    <span class="oi oi-wrench ml-lg-4" aria-hidden="true"></span> @Loc["Settings"]
-                </NavLink>
-            </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="config/edit/code">
-                    <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["CSharpCode"]
-                </NavLink>
-            </li>
-            <li class="nav-item px-3" style="width: 100%;">
-                <button type="button" class="btn btn-success" style="width: 100%" @onclick="SaveConfig">
-                    <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
-                </button>
-            </li>
-        }
+    <li class="nav-item px-3">
+        <NavLink class="nav-link" href="config/edit/metadata">
+            <span class="oi oi-ellipses ml-lg-4" aria-hidden="true"></span> @Loc["Metadata"]
+        </NavLink>
+    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="config/edit/readme">
+                            <span class="oi oi-pencil ml-lg-4" aria-hidden="true"></span> @Loc["Readme"]
+                        </NavLink>
+                    </li>
+                                    @if (displayStackerSubmenu)
+                                    {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="config/edit/stacker">
+                            <span class="oi oi-menu ml-lg-4" aria-hidden="true"></span> @Loc["Stacker"]
+                        </NavLink>
+                    </li>
+                                        <li class="nav-item px-3">
+                                            <NavLink class="nav-link" href="config/edit/lolicode">
+                                                <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["LoliCode"]
+                                            </NavLink>
+                                        </li>}
+                                                    <li class="nav-item px-3">
+                                                        <NavLink class="nav-link" href="config/edit/settings">
+                                                            <span class="oi oi-wrench ml-lg-4" aria-hidden="true"></span> @Loc["Settings"]
+                                                        </NavLink>
+                                                    </li>
+                                                                    <li class="nav-item px-3">
+                                                                        <NavLink class="nav-link" href="config/edit/code">
+                                                                            <span class="oi oi-code ml-lg-4" aria-hidden="true"></span> @Loc["CSharpCode"]
+                                                                        </NavLink>
+                                                                    </li>
+                                                                                    <li class="nav-item px-3" style="width: 100%;">
+                                                                                        <button type="button" class="btn btn-success" style="width: 100%" @onclick="SaveConfig">
+                                                                                            <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
+                                                                                        </button>
+                                                                                    </li>}
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="settings/rurilib">
                 <span class="oi oi-wrench" aria-hidden="true"></span> @Loc["RLSettings"]
