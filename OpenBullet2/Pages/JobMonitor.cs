@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
-    public partial class JobMonitor
+    public partial class JobMonitor : System.IDisposable
     {
         [Inject] JobMonitorService MonitorService { get; set; }
         [Inject] IModalService Modal { get; set; }
@@ -32,23 +32,24 @@ namespace OpenBullet2.Pages
         };
         private byte[] lastSavedHash = new byte[0];
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             if (!MonitorService.Initialized)
             {
-                await RestoreTriggeredActions();
+                RestoreTriggeredActions();
                 MonitorService.Initialized = true;
             }
 
-            timer = new Timer(new TimerCallback(async _ => await SaveStateIfChanged()), null, 10000, 10000);
+            if (timer == null)
+                timer = new Timer(new TimerCallback(_ => SaveStateIfChanged()), null, 10000, 10000);
         }
 
-        private async Task RestoreTriggeredActions()
+        private void RestoreTriggeredActions()
         {
             if (!File.Exists(fileName))
                 return;
 
-            var json = await File.ReadAllTextAsync(fileName);
+            var json = File.ReadAllText(fileName);
             MonitorService.TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings).ToList();
         }
 
@@ -61,15 +62,22 @@ namespace OpenBullet2.Pages
         private void RemoveAll()
             => MonitorService.TriggeredActions.Clear();
 
-        private async Task SaveStateIfChanged()
+        private void SaveStateIfChanged()
         {
             var json = JsonConvert.SerializeObject(MonitorService.TriggeredActions.ToArray(), jsonSettings);
             var hash = Crypto.MD5(Encoding.UTF8.GetBytes(json));
             
             if (hash != lastSavedHash)
             {
-                await File.WriteAllTextAsync(fileName, json);
-                lastSavedHash = hash;
+                try
+                {
+                    File.WriteAllText(fileName, json);
+                    lastSavedHash = hash;
+                }
+                catch
+                {
+                    // File probably in use
+                }
             }
         }
 
@@ -100,5 +108,10 @@ namespace OpenBullet2.Pages
 
         private void RemoveAllActions(TriggeredAction ta)
             => ta.Actions.Clear();
+
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
     }
 }

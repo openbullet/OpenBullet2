@@ -36,7 +36,7 @@
                     </div>
                     @foreach (var trigger in ta.Triggers)
                     {
-                        <div class="row">
+                        <div class="row triggered-action-row">
                             @switch (trigger)
                             {
                                 case HitCountTrigger t:
@@ -87,7 +87,7 @@
                                     <p>Job status is Idle</p>
                                     break;
                             }
-                            <div class="col text-right">
+                            <div class="col-auto text-right">
                                 <button class="btn-sm btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
                                     <span class="oi oi-x" />
                                 </button>
@@ -106,53 +106,59 @@
                     </div>
                     @foreach (var action in ta.Actions)
                     {
-                        <div class="row">
+                        <div class="row triggered-action-row">
                             @switch (action)
                             {
                                 case SetBotsAction a:
-                                    <div class="col">Set bots to</div>
+                                    <div class="col-auto">Set bots to</div>
                                     <div class="col"><input type="number" @bind="a.Amount" /></div>
-                                    <div class="col">in job</div>
+                                    <div class="col-auto">in job</div>
                                     <div class="col"><input type="number" @bind="a.TargetJobId" /></div>
                                     break;
 
                                 case WaitAction a:
-                                    <div class="col">Wait</div>
+                                    <div class="col-auto">Wait</div>
                                     <div class="col"><input type="number" @bind="a.Days" /></div>
-                                    <div class="col">days</div>
+                                    <div class="col-auto">days</div>
                                     <div class="col"><input type="number" @bind="a.Hours" /></div>
-                                    <div class="col">hours</div>
+                                    <div class="col-auto">hours</div>
                                     <div class="col"><input type="number" @bind="a.Minutes" /></div>
-                                    <div class="col">minutes</div>
+                                    <div class="col-auto">minutes</div>
                                     <div class="col"><input type="number" @bind="a.Seconds" /></div>
-                                    <div class="col">seconds</div>
+                                    <div class="col-auto">seconds</div>
                                     break;
 
                                 case SetRelativeStartConditionAction a:
-                                    <div class="col">Set relative time</div>
+                                    <div class="col-auto">Set relative time</div>
                                     <div class="col"><input type="number" @bind="a.Days" /></div>
-                                    <div class="col">days</div>
+                                    <div class="col-auto">days</div>
                                     <div class="col"><input type="number" @bind="a.Hours" /></div>
-                                    <div class="col">hours</div>
+                                    <div class="col-auto">hours</div>
                                     <div class="col"><input type="number" @bind="a.Minutes" /></div>
-                                    <div class="col">minutes</div>
+                                    <div class="col-auto">minutes</div>
                                     <div class="col"><input type="number" @bind="a.Seconds" /></div>
-                                    <div class="col">seconds</div>
-                                    <div class="col">on job</div>
+                                    <div class="col-auto">seconds on job</div>
                                     <div class="col"><input type="number" @bind="a.JobId" /></div>
                                     break;
 
                                 case StartJobAction a:
-                                    <div class="col">Start job</div>
+                                    <div class="col-auto">Start job</div>
                                     <div class="col"><input type="number" @bind="a.JobId" /></div>
                                     break;
 
                                 case StopJobAction a:
-                                    <div class="col">Stop job</div>
+                                    <div class="col-auto">Stop job</div>
                                     <div class="col"><input type="number" @bind="a.JobId" /></div>
                                     break;
+
+                                case DiscordWebhookAction a:
+                                    <div class="col-auto">Send</div>
+                                    <div class="col"><input type="text" @bind="a.Message" /></div>
+                                    <div class="col-auto">on webhook</div>
+                                    <div class="col"><input type="text" @bind="a.Webhook" /></div>
+                                    break;
                             }
-                            <div class="col text-right">
+                            <div class="col-auto text-right">
                                 <button class="btn-sm btn-danger" @onclick="(() => ta.Actions.Remove(action))">
                                     <span class="oi oi-x" />
                                 </button>

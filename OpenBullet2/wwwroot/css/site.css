@@ -379,3 +379,7 @@ select {
     border: solid 1px #999;
     padding: 20px;
 }
+
+.triggered-action-row div {
+    line-height: 30px !important;
+}
