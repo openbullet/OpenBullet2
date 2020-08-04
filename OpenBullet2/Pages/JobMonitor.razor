@@ -30,7 +30,7 @@
                     <p>All must be verified at the same time.</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
-                            <button class="btn-sm btn-success m-sm-1" @onclick="(() => AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
                             <button class="btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllTriggers(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                     <p>Executed sequentially.</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
-                            <button class="btn-sm btn-success m-sm-1" @onclick="(() => AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
                             <button class="btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllActions(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
                         </div>
                     </div>

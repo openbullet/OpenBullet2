@@ -36,7 +36,7 @@ namespace OpenBullet2.Services
                 
                 if (action.IsActive && !action.IsExecuting && (action.IsRepeatable || action.Executions == 0))
                 {
-                    action.CheckAndExecute(jobManager.Jobs);
+                    action.CheckAndExecute(jobManager.Jobs).ConfigureAwait(false);
                 }
             }
         }

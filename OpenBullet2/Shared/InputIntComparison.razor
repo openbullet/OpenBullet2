@@ -4,7 +4,7 @@
     @Label
 </div>
 <div class="col">
-    <select @bind="Comparison">
+    <select value="@Comparison" @onchange="OnComparisonChanged">
         @foreach (var name in Enum.GetNames(typeof(NumComparison)))
         {
             <option value="@name">@name</option>
@@ -12,17 +12,27 @@
     </select>
 </div>
 <div class="col">
-    <input type="number" @bind="Amount" />
+    <input type="number" value="@Amount" @onchange="OnAmountChanged" />
 </div>
 
 @code {
-    private int amount;
-    [Parameter] public int Amount { get => amount; set { amount = value; AmountChanged.InvokeAsync(value); } }
+    [Parameter] public int Amount { get; set; }
     [Parameter] public EventCallback<int> AmountChanged { get; set; }
 
-    private NumComparison comparison;
-    [Parameter] public NumComparison Comparison { get => comparison; set { comparison = value; ComparisonChanged.InvokeAsync(Comparison); } }
+    [Parameter] public NumComparison Comparison { get; set; }
     [Parameter] public EventCallback<NumComparison> ComparisonChanged { get; set; }
 
     [Parameter] public string Label { get; set; }
+
+    private Task OnAmountChanged(ChangeEventArgs e)
+    {
+        Amount = int.Parse((string)e.Value);
+        return AmountChanged.InvokeAsync(Amount);
+    }
+
+    private Task OnComparisonChanged(ChangeEventArgs e)
+    {
+        Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), (string)e.Value);
+        return ComparisonChanged.InvokeAsync(Comparison);
+    }
 }
