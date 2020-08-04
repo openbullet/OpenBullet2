@@ -87,9 +87,9 @@
                                     <p>Job status is Idle</p>
                                     break;
                             }
-                                <div class="col">
-                                    <button class="btn btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
-                                    @Loc["Remove"]
+                            <div class="col text-right">
+                                <button class="btn-sm btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
+                                    <span class="oi oi-x" />
                                 </button>
                             </div>
                         </div>
@@ -152,9 +152,9 @@
                                     <div class="col"><input type="number" @bind="a.JobId" /></div>
                                     break;
                             }
-                                <div class="col">
-                                    <button class="btn btn-danger" @onclick="(() => ta.Actions.Remove(action))">
-                                    @Loc["Remove"]
+                            <div class="col text-right">
+                                <button class="btn-sm btn-danger" @onclick="(() => ta.Actions.Remove(action))">
+                                    <span class="oi oi-x" />
                                 </button>
                             </div>
                         </div>

@@ -9,6 +9,7 @@ OpenBullet.db*
 # Settings
 OpenBulletSettings.json
 RuriLibSettings.json
+triggeredActions.json
 
 # User-specific files
 *.suo
