@@ -1,0 +1,28 @@
+﻿@using RuriLib.Models.Conditions.Comparisons 
+
+<div class="col">
+    @Label
+</div>
+<div class="col">
+    <select @bind="Comparison">
+        @foreach (var name in Enum.GetNames(typeof(NumComparison)))
+        {
+            <option value="@name">@name</option>
+        }
+    </select>
+</div>
+<div class="col">
+    <input type="number" @bind="Amount" />
+</div>
+
+@code {
+    private int amount;
+    [Parameter] public int Amount { get => amount; set { amount = value; AmountChanged.InvokeAsync(value); } }
+    [Parameter] public EventCallback<int> AmountChanged { get; set; }
+
+    private NumComparison comparison;
+    [Parameter] public NumComparison Comparison { get => comparison; set { comparison = value; ComparisonChanged.InvokeAsync(Comparison); } }
+    [Parameter] public EventCallback<NumComparison> ComparisonChanged { get; set; }
+
+    [Parameter] public string Label { get; set; }
+}

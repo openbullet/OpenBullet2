@@ -1,6 +1,178 @@
 ﻿@page "/monitor"
-@using RuriLib.Models.Jobs
-@using RuriLib.Models.Data.DataPools
+@using RuriLib.Models.Jobs.Monitor.Triggers
+@using RuriLib.Models.Jobs.Monitor.Actions 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobMonitor> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-success m-sm-1" @onclick="AddNew"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+        </div>
+    </div>
+    @foreach (var ta in MonitorService.TriggeredActions)
+    {
+        <div class="triggered-action-container">
+            <div class="row" style="margin-top: 5px;">
+                <div class="col-2">
+                    <span>Job:</span>
+                    <input type="number" @bind="ta.JobId" />
+                    <span>Active:</span>
+                    <input type="checkbox" @bind="ta.IsActive" /><br />
+                    <span>Repeatable:</span>
+                    <input type="checkbox" @bind="ta.IsRepeatable" /><br />
+                    <span>Executing: @ta.IsExecuting</span><br />
+                    <span>Executions: @ta.Executions</span>
+                </div>
+                <div class="col">
+                    <h5>Triggers:</h5>
+                    <p>All must be verified at the same time.</p>
+                    <div class="row">
+                        <div class="list-group list-group-horizontal">
+                            <button class="btn-sm btn-success m-sm-1" @onclick="(() => AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllTriggers(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+                        </div>
+                    </div>
+                    @foreach (var trigger in ta.Triggers)
+                    {
+                        <div class="row">
+                            @switch (trigger)
+                            {
+                                case HitCountTrigger t:
+                                    <InputIntComparison Label="Hit Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case CustomCountTrigger t:
+                                    <InputIntComparison Label="Custom Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case ToCheckCountTrigger t:
+                                    <InputIntComparison Label="ToCheck Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case BanCountTrigger t:
+                                    <InputIntComparison Label="Ban Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case RetryCountTrigger t:
+                                    <InputIntComparison Label="Retry Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case ErrorCountTrigger t:
+                                    <InputIntComparison Label="Error Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case FailCountTrigger t:
+                                    <InputIntComparison Label="Fail Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case TestedCountTrigger t:
+                                    <InputIntComparison Label="Tested Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case AliveProxiesCountTrigger t:
+                                    <InputIntComparison Label="Alive Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case BannedProxiesCountTrigger t:
+                                    <InputIntComparison Label="Banned Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case JobFinishedTrigger t:
+                                    <p>Job Finished</p>
+                                    break;
+
+                                case JobIdleTrigger t:
+                                    <p>Job status is Idle</p>
+                                    break;
+                            }
+                                <div class="col">
+                                    <button class="btn btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
+                                    @Loc["Remove"]
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col">
+                    <h5>Actions:</h5>
+                    <p>Executed sequentially.</p>
+                    <div class="row">
+                        <div class="list-group list-group-horizontal">
+                            <button class="btn-sm btn-success m-sm-1" @onclick="(() => AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllActions(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+                        </div>
+                    </div>
+                    @foreach (var action in ta.Actions)
+                    {
+                        <div class="row">
+                            @switch (action)
+                            {
+                                case SetBotsAction a:
+                                    <div class="col">Set bots to</div>
+                                    <div class="col"><input type="number" @bind="a.Amount" /></div>
+                                    <div class="col">in job</div>
+                                    <div class="col"><input type="number" @bind="a.TargetJobId" /></div>
+                                    break;
+
+                                case WaitAction a:
+                                    <div class="col">Wait</div>
+                                    <div class="col"><input type="number" @bind="a.Days" /></div>
+                                    <div class="col">days</div>
+                                    <div class="col"><input type="number" @bind="a.Hours" /></div>
+                                    <div class="col">hours</div>
+                                    <div class="col"><input type="number" @bind="a.Minutes" /></div>
+                                    <div class="col">minutes</div>
+                                    <div class="col"><input type="number" @bind="a.Seconds" /></div>
+                                    <div class="col">seconds</div>
+                                    break;
+
+                                case SetRelativeStartConditionAction a:
+                                    <div class="col">Set relative time</div>
+                                    <div class="col"><input type="number" @bind="a.Days" /></div>
+                                    <div class="col">days</div>
+                                    <div class="col"><input type="number" @bind="a.Hours" /></div>
+                                    <div class="col">hours</div>
+                                    <div class="col"><input type="number" @bind="a.Minutes" /></div>
+                                    <div class="col">minutes</div>
+                                    <div class="col"><input type="number" @bind="a.Seconds" /></div>
+                                    <div class="col">seconds</div>
+                                    <div class="col">on job</div>
+                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
+                                    break;
+
+                                case StartJobAction a:
+                                    <div class="col">Start job</div>
+                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
+                                    break;
+
+                                case StopJobAction a:
+                                    <div class="col">Stop job</div>
+                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
+                                    break;
+                            }
+                                <div class="col">
+                                    <button class="btn btn-danger" @onclick="(() => ta.Actions.Remove(action))">
+                                    @Loc["Remove"]
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-2">
+                    <div class="row">
+                        <button class="btn btn-danger" style="height: 100%; width: 100%;" @onclick="(() => Remove(ta))">
+                            @Loc["Remove"]
+                        </button>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-primary" style="height: 100%; width: 100%;" @onclick="(() => ta.Reset())">
+                            @Loc["Reset"]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

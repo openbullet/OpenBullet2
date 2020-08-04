@@ -1,0 +1,37 @@
+﻿@using RuriLib.Models.Jobs.Monitor.Triggers
+@inject IModalService ModalService
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>Generic</p>
+            <div class="vertical-buttons-list">
+                <ul>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new JobIdleTrigger())))">Job Idle</button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <p>MultiRunJob</p>
+            <div class="vertical-buttons-list">
+                <ul>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new JobFinishedTrigger())))">Job Finished</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new HitCountTrigger())))">Hit Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new CustomCountTrigger())))">Custom Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ToCheckCountTrigger())))">ToCheck Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new FailCountTrigger())))">Fail Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new BanCountTrigger())))">Ban Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ErrorCountTrigger())))">Error Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new RetryCountTrigger())))">Retry Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TestedCountTrigger())))">Tested Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new AliveProxiesCountTrigger())))">Alive Proxies Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new BannedProxiesCountTrigger())))">Banned Proxies Count</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code { 
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+}

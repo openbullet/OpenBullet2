@@ -73,7 +73,7 @@
                                         <b>ToCheck:</b> @x.DataToCheck
                                     </span>
                                     <span>
-                                        <b>Progress:</b> @(x.Manager != null ? x.Manager.Progress.ToString("0.00") : "?")%
+                                        <b>Progress:</b> @(x.Manager != null ? (x.Manager.Progress * 100).ToString("0.00") : "?")%
                                     </span>
                                     <span>
                                         <b>CPM:</b> @(x.Manager != null ? x.Manager.CPM : 0)

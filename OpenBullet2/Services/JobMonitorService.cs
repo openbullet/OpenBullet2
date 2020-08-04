@@ -14,6 +14,7 @@ namespace OpenBullet2.Services
         public JobMonitorService(JobManagerService jobManager)
         {
             this.jobManager = jobManager;
+            Start();
         }
 
         public void Start()

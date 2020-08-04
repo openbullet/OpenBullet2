@@ -373,3 +373,9 @@ select {
 .job-overview > div > p > span:not(:first-child) {
     margin-left: 10px;
 }
+
+.triggered-action-container {
+    color: #fff;
+    border: solid 1px #999;
+    padding: 20px;
+}
