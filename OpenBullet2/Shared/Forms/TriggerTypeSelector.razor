@@ -20,12 +20,18 @@
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new CustomCountTrigger())))">Custom Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ToCheckCountTrigger())))">ToCheck Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new FailCountTrigger())))">Fail Count</button></li>
-                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new BanCountTrigger())))">Ban Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new BanCountTrigger())))">Banned Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ErrorCountTrigger())))">Error Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new RetryCountTrigger())))">Retry Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TestedCountTrigger())))">Tested Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new AliveProxiesCountTrigger())))">Alive Proxies Count</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new BannedProxiesCountTrigger())))">Banned Proxies Count</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new CPMTrigger())))">CPM</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new CaptchaCreditTrigger())))">Captcha Credit</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ProgressTrigger())))">Progress</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TimeElapsedTrigger())))">Time Elapsed</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TimeRemainingTrigger())))">Time Remaining</button></li>
+
                 </ul>
             </div>
         </div>

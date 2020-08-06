@@ -20,6 +20,7 @@
             <div class="vertical-buttons-list">
                 <ul>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new SetBotsAction())))">Set Bots</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ReloadProxiesAction())))">Reload Proxies</button></li>
                 </ul>
             </div>
         </div>
