@@ -1,10 +1,11 @@
 ﻿using RuriLib.Models.Jobs.Monitor;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace OpenBullet2.Services
 {
-    public class JobMonitorService
+    public class JobMonitorService : IDisposable
     {
         public bool Initialized { get; set; } = false;
         public List<TriggeredAction> TriggeredActions { get; set; } = new List<TriggeredAction>();
@@ -39,6 +40,11 @@ namespace OpenBullet2.Services
                     action.CheckAndExecute(jobManager.Jobs).ConfigureAwait(false);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }

@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
-    public partial class EditLC
+    public partial class EditLC : IDisposable
     {
         [Inject] ConfigService ConfigService { get; set; }
 
         private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
         private Config config;
+        private Timer timer;
 
         protected override async Task OnInitializedAsync()
         {
@@ -46,7 +47,7 @@ namespace OpenBullet2.Pages
             base.OnInitialized();
 
             // Save the content of the editor automatically every second
-            var timer = new Timer(new TimerCallback(async _ =>
+            timer = new Timer(new TimerCallback(async _ =>
             {
                 await InvokeAsync(SaveLoliCode);
             }), null, 1000, 1000);
@@ -55,6 +56,11 @@ namespace OpenBullet2.Pages
         private async Task SaveLoliCode()
         {
             config.LoliCodeScript = await _editor.GetValue();
+        }
+
+        public void Dispose()
+        {
+            timer.Dispose();
         }
     }
 }
