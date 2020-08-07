@@ -1,0 +1,38 @@
+﻿@using RuriLib.Models.Conditions.Comparisons
+
+<div class="col-auto">
+    @Label
+</div>
+<div class="col">
+    <select value="@Comparison" @onchange="OnComparisonChanged">
+        @foreach (var name in Enum.GetNames(typeof(NumComparison)))
+        {
+            <option value="@name">@name</option>
+        }
+    </select>
+</div>
+<div class="col">
+    <input type="number" value="@Amount" @onchange="OnAmountChanged" />
+</div>
+
+@code {
+    [Parameter] public float Amount { get; set; }
+    [Parameter] public EventCallback<float> AmountChanged { get; set; }
+
+    [Parameter] public NumComparison Comparison { get; set; }
+    [Parameter] public EventCallback<NumComparison> ComparisonChanged { get; set; }
+
+    [Parameter] public string Label { get; set; }
+
+    private Task OnAmountChanged(ChangeEventArgs e)
+    {
+        Amount = float.Parse((string)e.Value, System.Globalization.CultureInfo.InvariantCulture);
+        return AmountChanged.InvokeAsync(Amount);
+    }
+
+    private Task OnComparisonChanged(ChangeEventArgs e)
+    {
+        Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), (string)e.Value);
+        return ComparisonChanged.InvokeAsync(Comparison);
+    }
+}

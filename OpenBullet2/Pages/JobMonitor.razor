@@ -80,11 +80,67 @@
                                     break;
 
                                 case JobFinishedTrigger t:
-                                    <p>Job Finished</p>
+                                    <div class="col">Job Finished</div>
                                     break;
 
-                                case JobIdleTrigger t:
-                                    <p>Job status is Idle</p>
+                                case JobStatusTrigger t:
+                                    <div class="col">Job Status is</div>
+                                    <div class="col-auto">
+                                        <select @bind="t.Status">
+                                            @foreach (var status in Enum.GetNames(typeof(RuriLib.Models.Jobs.Threading.TaskManagerStatus)))
+                                            {
+                                                <option value="@status">@status</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    break;
+
+                                case CPMTrigger t:
+                                    <InputIntComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case CaptchaCreditTrigger t:
+                                    <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case ProgressTrigger t:
+                                    <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+                                    break;
+
+                                case TimeElapsedTrigger t:
+                                    <div class="col-auto">Time Elapsed</div>
+                                    <select @bind="t.Comparison">
+                                        @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
+                                        {
+                                            <option value="@comp">@comp</option>
+                                        }
+                                    </select>
+                                    <div class="col"><input type="number" @bind="t.Days" /></div>
+                                    <div class="col-auto">days</div>
+                                    <div class="col"><input type="number" @bind="t.Hours" /></div>
+                                    <div class="col-auto">hours</div>
+                                    <div class="col"><input type="number" @bind="t.Minutes" /></div>
+                                    <div class="col-auto">minutes</div>
+                                    <div class="col"><input type="number" @bind="t.Seconds" /></div>
+                                    <div class="col-auto">seconds</div>
+                                    break;
+
+                                case TimeRemainingTrigger t:
+                                    <div class="col-auto">Time Remaining</div>
+                                    <select @bind="t.Comparison">
+                                        @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
+                                        {
+                                            <option value="@comp">@comp</option>
+                                        }
+                                    </select>
+                                    <div class="col"><input type="number" @bind="t.Days" /></div>
+                                    <div class="col-auto">days</div>
+                                    <div class="col"><input type="number" @bind="t.Hours" /></div>
+                                    <div class="col-auto">hours</div>
+                                    <div class="col"><input type="number" @bind="t.Minutes" /></div>
+                                    <div class="col-auto">minutes</div>
+                                    <div class="col"><input type="number" @bind="t.Seconds" /></div>
+                                    <div class="col-auto">seconds</div>
                                     break;
                             }
                             <div class="col-auto text-right">
@@ -156,6 +212,10 @@
                                     <div class="col"><input type="text" @bind="a.Message" /></div>
                                     <div class="col-auto">on webhook</div>
                                     <div class="col"><input type="text" @bind="a.Webhook" /></div>
+                                    break;
+
+                                case ReloadProxiesAction a:
+                                    <div class="col">Reload Proxies</div>
                                     break;
                             }
                             <div class="col-auto text-right">

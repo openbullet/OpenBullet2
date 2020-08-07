@@ -7,7 +7,7 @@
             <p>Generic</p>
             <div class="vertical-buttons-list">
                 <ul>
-                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new JobIdleTrigger())))">Job Idle</button></li>
+                    <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new JobStatusTrigger())))">Job Status</button></li>
                 </ul>
             </div>
         </div>
@@ -31,7 +31,6 @@
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ProgressTrigger())))">Progress</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TimeElapsedTrigger())))">Time Elapsed</button></li>
                     <li><button class="btn btn-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new TimeRemainingTrigger())))">Time Remaining</button></li>
-
                 </ul>
             </div>
         </div>
