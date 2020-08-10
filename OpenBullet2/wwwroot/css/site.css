@@ -383,3 +383,11 @@ select {
 .triggered-action-row div {
     line-height: 30px !important;
 }
+
+.bulletta-messagebox {
+    background-color: #111;
+    border: 5px solid #ffc235;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    opacity: 0.8;
+}

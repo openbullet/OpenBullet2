@@ -1,0 +1,76 @@
+﻿@using System.Text.RegularExpressions
+
+<button class="btn-sm btn-primary" @onclick="Toggle"><span class="oi oi-question-mark"></span></button>
+
+@if (showHelp)
+{
+    <div class="container-fluid fixed-bottom">
+        <div class="row">
+            <div class="col bulletta-messagebox" style="height: auto;">
+                <h3>@Title</h3>
+                <MarkdownRenderer MarkdownContent="@Messages[index]" />
+
+                @if (index != Messages.Count() - 1)
+                {
+                    <button class="btn-sm btn-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>Next...</i></button>
+                }
+                else
+                {
+                    <button class="btn-sm btn-success" @onclick="Dismiss"><span class="oi oi-task"></span> <i>Ok!</i></button>
+                }
+            </div>
+            <div class="col-auto">
+                <img src="/images/bulletta.png" style="width: 300px; height: 300px;" />
+            </div>
+        </div> 
+    </div>
+}
+
+@code {
+    [Parameter] public string[] Messages { get; set; } = new string[] { string.Empty };
+    [Parameter] public string Title { get; set; } = "Title";
+    private bool showHelp = false;
+    private int index = 0;
+
+    protected override void OnParametersSet()
+    {
+        for (int i = 0; i < Messages.Count(); i++)
+        {
+            var matches = Regex.Matches(Messages[i], @"%([^%]+)%");
+            foreach (Match match in matches)
+            {
+                Messages[i] = Messages[i].Replace(match.Groups[0].Value, $"<span style=\"color: #ffc235\">{match.Groups[1].Value}</span>");
+            }
+        }
+    }
+
+    private void Toggle()
+    {
+        if (!showHelp)
+        {
+            index = 0;
+            showHelp = true;
+        }
+        else
+        {
+            Dismiss();
+        }
+    }
+
+    private void Previous()
+    {
+        if (index > 0)
+            index--;
+    }
+
+    private void Next()
+    {
+        if (index < Messages.Count() - 1)
+            index++;
+    }
+
+    private void Dismiss()
+    {
+        showHelp = false;
+    }
+}
