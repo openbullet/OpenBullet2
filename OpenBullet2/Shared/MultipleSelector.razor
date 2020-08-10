@@ -1,7 +1,7 @@
 ﻿@typeparam TItem
 
 <div class="multiple-selector">
-    <ul class="selectable-ul">
+    <ul class="selectable-ul" style="border-color: yellowgreen;">
         @foreach (var item in NotSelected)
         {
             <li @onclick="@(() => Select(item))">@item</li>
@@ -11,7 +11,7 @@
         <button type="button" class="btn btn-primary" @onclick="SelectAll"><span class="oi oi-arrow-right"></span></button>
         <button type="button" class="btn btn-primary" @onclick="DeselectAll"><span class="oi oi-arrow-left"></span></button>
     </div>
-    <ul class="selectable-ul">
+    <ul class="selectable-ul" style="border-color: tomato;">
         @foreach (var item in Selected)
         {
             <li @onclick="@(() => Deselect(item))">@item</li>
