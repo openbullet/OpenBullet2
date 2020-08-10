@@ -132,6 +132,15 @@
   <data name="CurrentWorkingDirectory" xml:space="preserve">
     <value>Current Working Directory</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>A warm welcome from Bulletta</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Hello and welcome %OpenBullet 2%, I'm %Bulletta% and I'll be your guide around here. Look for buttons with a question mark and I'll jump onto the screen to explain whatever you need!</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>I won't annoy you any longer, guess I'll see you around then. Byee!</value>
+  </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Local Time</value>
   </data>

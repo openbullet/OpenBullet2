@@ -132,6 +132,15 @@
   <data name="CurrentWorkingDirectory" xml:space="preserve">
     <value>Cartella Corrente</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Un caldo benvenuto da Bulletta</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Ciao e benvenuto/a su %OpenBullet 2%, sono %Bulletta% e sarò la tua guida qui intorno. Cerca i pulsanti con il punto interrogativo ed arriverò a spiegarti tutto quello che vuoi!</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Non ti disturbo più ora, ci vediamo in giro. Ciao!</value>
+  </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Ora Locale</value>
   </data>
