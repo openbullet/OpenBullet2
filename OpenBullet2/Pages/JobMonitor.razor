@@ -16,18 +16,18 @@
         <div class="triggered-action-container">
             <div class="row" style="margin-top: 5px;">
                 <div class="col-2">
-                    <span>Job:</span>
+                    <span>@Loc["Job"]:</span>
                     <input type="number" @bind="ta.JobId" />
-                    <span>Active:</span>
+                    <span>@Loc["Active"]:</span>
                     <input type="checkbox" @bind="ta.IsActive" /><br />
-                    <span>Repeatable:</span>
+                    <span>@Loc["Repeatable"]:</span>
                     <input type="checkbox" @bind="ta.IsRepeatable" /><br />
-                    <span>Executing: @ta.IsExecuting</span><br />
-                    <span>Executions: @ta.Executions</span>
+                    <span>@Loc["Executing"]: @ta.IsExecuting</span><br />
+                    <span>@Loc["Executions"]: @ta.Executions</span>
                 </div>
                 <div class="col">
-                    <h5>Triggers:</h5>
-                    <p>All must be verified at the same time.</p>
+                    <h5>@Loc["Triggers"]:</h5>
+                    <p>@Loc["TriggersDescription"].</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
                             <button class="btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
@@ -152,8 +152,8 @@
                     }
                 </div>
                 <div class="col">
-                    <h5>Actions:</h5>
-                    <p>Executed sequentially.</p>
+                    <h5>@Loc["Actions"]:</h5>
+                    <p>@Loc["ActionsDescription"].</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
                             <button class="btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>

@@ -1,4 +1,5 @@
 ﻿@using System.Text.RegularExpressions
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BullettaHelp> Loc
 
 <button class="btn-sm btn-primary" @onclick="Toggle"><span class="oi oi-question-mark"></span></button>
 
@@ -12,17 +13,17 @@
 
                 @if (index != Messages.Count() - 1)
                 {
-                    <button class="btn-sm btn-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>Next...</i></button>
+                    <button class="btn-sm btn-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>@Loc["Next"]...</i></button>
                 }
                 else
                 {
-                    <button class="btn-sm btn-success" @onclick="Dismiss"><span class="oi oi-task"></span> <i>Ok!</i></button>
+                    <button class="btn-sm btn-success" @onclick="Dismiss"><span class="oi oi-task"></span> <i>@Loc["Ok"]!</i></button>
                 }
             </div>
             <div class="col-auto">
                 <img src="/images/bulletta.png" style="width: 300px; height: 300px;" />
             </div>
-        </div> 
+        </div>
     </div>
 }
 
