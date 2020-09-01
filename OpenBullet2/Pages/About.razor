@@ -1,0 +1,40 @@
+﻿@page "/about"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<About> Loc
+@inject IModalService Modal
+@using OpenBullet2.Shared.Forms
+
+<table class="table">
+    <tbody>
+        <tr>
+            <th scope="row">@Loc["Developer"]</th>
+            <td>Ruri</td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["Collaborators"]</th>
+            <td>demiurgo, meinname</td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["OfficialForum"]</th>
+            <td><a href="https://forum.openbullet.dev/">forum.openbullet.dev</a></td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["OfficialRepository"]</th>
+            <td><a href="https://github.com/openbullet/OpenBullet2/">github.com/openbullet/OpenBullet2</a></td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["License"]</th>
+            <td><button class="btn-sm btn-primary" @onclick="ShowLicense">MIT</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<h5>@Loc["DonatorsAndSupporters"]</h5>
+[INSERT LIST HERE]
+
+@code {
+
+    void ShowLicense()
+    {
+        Modal.Show<License>(Loc["License"]);
+    }
+ }
