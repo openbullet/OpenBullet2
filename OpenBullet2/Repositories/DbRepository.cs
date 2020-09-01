@@ -10,7 +10,7 @@ namespace OpenBullet2.Repositories
     public class DbRepository<T> : IRepository<T> where T : Entity
     {
         protected readonly ApplicationDbContext context;
-        private object dbLock = new object();
+        private readonly object dbLock = new object();
 
         public DbRepository(ApplicationDbContext context)
         {
