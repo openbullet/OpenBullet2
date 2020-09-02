@@ -117,8 +117,44 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuthenticatedAs" xml:space="preserve">
+    <value>Autenticado como</value>
+  </data>
+  <data name="BuildNumber" xml:space="preserve">
+    <value>Número de compilación</value>
+  </data>
+  <data name="ClientIpAddress" xml:space="preserve">
+    <value>Dirección IP del cliente</value>
+  </data>
+  <data name="CPUUsage" xml:space="preserve">
+    <value>Uso de CPU</value>
+  </data>
+  <data name="CurrentWorkingDirectory" xml:space="preserve">
+    <value>Directorio de trabajo actual</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Una cálida bienvenida de Bulletta</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Hola y bienvenidos a OpenBullet% al 2%, estoy% Bulletta% y seré su guía por aquí. Busque botones con mi cara y voy a saltar sobre la pantalla para explicar lo que sea necesario!</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>No voy a molestar más, supongo que nos vemos en torno a continuación. Byee!</value>
+  </data>
+  <data name="LocalTime" xml:space="preserve">
+    <value>Hora local</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="MemoryUsage" xml:space="preserve">
+    <value>Uso de memoria</value>
+  </data>
   <data name="OperatingSystem" xml:space="preserve">
-    <value>Sistema Operativo</value>
+    <value>Sistema operativo</value>
+  </data>
+  <data name="WebserverUptime" xml:space="preserve">
+    <value>Uptime del servidor</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Bienvenido a OpenBullet 2</value>

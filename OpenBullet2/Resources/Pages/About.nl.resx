@@ -117,46 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Autenticado como</value>
+  <data name="Collaborators" xml:space="preserve">
+    <value>Medewerkers</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Número de compilação</value>
+  <data name="Developer" xml:space="preserve">
+    <value>Ontwikkelaar</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Endereço IP do cliente</value>
+  <data name="DonatorsAndSupporters" xml:space="preserve">
+    <value>Donateurs en Supporters</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilização do CPU</value>
+  <data name="License" xml:space="preserve">
+    <value>Licentie</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Diretório de trabalho atual</value>
+  <data name="OfficialForum" xml:space="preserve">
+    <value>Officiële forum</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>A calorosa recepção de Bulletta</value>
+  <data name="OfficialRepository" xml:space="preserve">
+    <value>Officiële repository</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Olá e bem-vindo ao% OpenBullet 2%, estou% Bulletta% e eu serei seu guia por aqui. Procure botões com meu rosto e eu vou pular na tela para explicar o que você precisa!</value>
-  </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Eu não irá perturbá-lo por mais tempo, acho que vou vê-lo em torno de então. Byee!</value>
-  </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Horário local</value>
-  </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Sair</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Uso de memória</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Sistema operacional</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver Uptime</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bem-vindo ao OpenBullet 2</value>
+  <data name="Read" xml:space="preserve">
+    <value>Lezen</value>
   </data>
 </root>
