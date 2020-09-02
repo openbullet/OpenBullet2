@@ -399,3 +399,14 @@ a {
 a:hover {
     color: turquoise;
 }
+
+.bulletta-image {
+    -webkit-filter: brightness(100%);
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+}
+
+.bulletta-image:hover {
+    -webkit-filter: brightness(70%);
+}
