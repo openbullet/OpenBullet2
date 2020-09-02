@@ -391,3 +391,11 @@ select {
     padding: 1rem 1.5rem;
     opacity: 0.8;
 }
+
+a {
+    color: #54a6fb;
+}
+
+a:hover {
+    color: turquoise;
+}

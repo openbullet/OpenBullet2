@@ -135,4 +135,7 @@
   <data name="OfficialRepository" xml:space="preserve">
     <value>Repository ufficiale</value>
   </data>
+  <data name="Read" xml:space="preserve">
+    <value>Leggi</value>
+  </data>
 </root>
