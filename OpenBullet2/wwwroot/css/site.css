@@ -410,3 +410,14 @@ a:hover {
 .bulletta-image:hover {
     -webkit-filter: brightness(70%);
 }
+
+.bulletta-image-sm {
+    -webkit-filter: brightness(100%);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.bulletta-image-sm:hover {
+    -webkit-filter: brightness(70%);
+}
