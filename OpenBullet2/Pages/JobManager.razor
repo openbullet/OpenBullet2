@@ -1,6 +1,7 @@
 ﻿@page "/jobs"
 @using RuriLib.Models.Jobs
 @using RuriLib.Models.Data.DataPools
+@using RuriLib.Models.Jobs.Threading 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobManager> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
@@ -14,14 +15,16 @@
     @foreach (var job in Manager.Jobs)
     {
         <div class="row" style="margin-top: 5px;">
-            <div class="col-11 pl-0">
+            <div class="col-1 pl-0 pr-0 mr-0 ml-0 job-overview-left-col">
+                #@job.Id  <span class="oi @TranslateStatus(job.Status)" style="font-size: 20px;"></span>
+            </div>
+            <div class="col-10 pl-0 job-overview-mid-col">
                 <div class="job-overview" @onclick="@(() => SelectJob(job))">
-                    <div class="p-4">
-                        <h5>Job #@job.Id (@job.GetType().Name) (@job.Status)</h5>
+                    <div class="pr-2 pl-2">
                         @switch (job)
                         {
                             case MultiRunJob x:
-                                <p style="margin-bottom: 0.2rem;">
+                                <p style="margin-bottom: 0.2rem; line-height: 2;">
                                     <span>
                                         @if (x.Config != null)
                                         {
@@ -84,20 +87,35 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="row">
-                    <button class="btn btn-primary" style="height: 100%; width: 100%;"
-                            @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
-                        @Loc["Edit"]
-                    </button>
-                </div>
-                <div class="row">
-                    <button class="btn btn-danger" style="height: 100%; width: 100%;"
-                            @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
-                        @Loc["Remove"]
-                    </button>
-                </div>
+            <div class="col-sm-auto pr-0">
+                <button class="btn btn-primary" style="height: 100%; width: 100%;"
+                        @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
+                    <span class="oi oi-pencil"></span>
+                </button>
+            </div>
+            <div class="col-sm-auto pr-0">
+                <button class="btn btn-danger" style="height: 100%; width: 100%;"
+                        @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
+                    <span class="oi oi-x"></span>
+                </button>
             </div>
         </div>
     }
 </div>
+
+@code {
+    string TranslateStatus(TaskManagerStatus status)
+    {
+        return status switch
+        {
+            TaskManagerStatus.Paused => "oi-media-pause",
+            TaskManagerStatus.Idle => "oi-power-standby",
+            TaskManagerStatus.Stopping => "oi-media-stop",
+            TaskManagerStatus.Running => "oi-media-play",
+            TaskManagerStatus.Resuming => "oi-reload",
+            TaskManagerStatus.Pausing => "oi-reload",
+            TaskManagerStatus.Starting => "oi-reload",
+            _ => string.Empty
+        };
+    }
+}

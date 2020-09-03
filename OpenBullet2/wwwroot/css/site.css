@@ -362,12 +362,26 @@ select {
     margin: unset;
 }
 
-.job-overview {
-    color: #fff;
-    background-color: #111;
+.job-overview-left-col {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background-color: green;
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    min-width: 50px;
+}
+
+.job-overview-mid-col {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid green;
     cursor: pointer;
-    border: solid 1px #999;
-    width: 100%;
+}
+
+.job-overview-mid-col:hover {
+    background-color: #111;
 }
 
 .job-overview > div > p > span:not(:first-child) {

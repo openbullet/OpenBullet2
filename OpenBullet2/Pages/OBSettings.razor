@@ -59,19 +59,19 @@
         @foreach (var input in settings.GeneralSettings.ProxyCheckTargets)
         {
             <div class="row">
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-sm-auto mr-0 pr-0 pl-0">
                     <label style="line-height: 30px;">@Loc["URL"]</label>
                 </div>
                 <div class="col">
                     <InputText @bind-Value="input.Url" />
                 </div>
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-sm-auto mr-0 pr-0 pl-0">
                     <label style="line-height: 30px;">@Loc["SuccessKey"]</label>
                 </div>
                 <div class="col">
                     <InputText @bind-Value="input.SuccessKey" />
                 </div>
-                <div class="col-sm-auto ml-0 pr-0">
+                <div class="col-sm-auto ml-0 pr-0 pl-0">
                     <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
                         <span class="oi oi-minus"></span>
                         @Loc["Remove"]
