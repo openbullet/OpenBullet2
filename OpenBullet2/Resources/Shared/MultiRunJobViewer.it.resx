@@ -237,6 +237,9 @@
   <data name="PausingMessage" xml:space="preserve">
     <value>Mettendo in pausa... per favore attendi che i task finiscano il loro lavoro</value>
   </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>
   </data>

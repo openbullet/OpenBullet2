@@ -225,6 +225,9 @@
   <data name="PausingMessage" xml:space="preserve">
     <value>Pausieren... bitte warten bis die aktuellen Tasks die Verarbeitung beendet wurden</value>
   </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Fortschritt</value>
+  </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Proxy-Modus</value>
   </data>
