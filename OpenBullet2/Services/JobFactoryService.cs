@@ -12,25 +12,25 @@ using System.Linq;
 
 namespace OpenBullet2.Models.Jobs
 {
-    public class JobFactory
+    public class JobFactoryService
     {
         private readonly ConfigService configService;
         private readonly RuriLibSettingsService settingsService;
         private readonly IHitRepository hitRepo;
-        private readonly IProxyRepository proxyRepo;
-        private readonly IProxyGroupRepository proxyGroupsRepo;
-        private readonly IWordlistRepository wordlistRepo;
+        private readonly ProxySourceFactoryService proxySourceFactory;
+        private readonly DataPoolFactoryService dataPoolFactory;
+        private readonly ProxyReloadService proxyReloadService;
 
-        public JobFactory(ConfigService configService, RuriLibSettingsService settingsService,
-            IHitRepository hitRepo, IProxyRepository proxyRepo, IProxyGroupRepository proxyGroupsRepo,
-            IWordlistRepository wordlistRepo)
+        public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService,
+            IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
+            ProxyReloadService proxyReloadService)
         {
             this.configService = configService;
             this.settingsService = settingsService;
             this.hitRepo = hitRepo;
-            this.proxyRepo = proxyRepo;
-            this.proxyGroupsRepo = proxyGroupsRepo;
-            this.wordlistRepo = wordlistRepo;
+            this.proxySourceFactory = proxySourceFactory;
+            this.dataPoolFactory = dataPoolFactory;
+            this.proxyReloadService = proxyReloadService;
         }
 
         public Job FromOptions(int id, JobOptions options)
@@ -55,7 +55,6 @@ namespace OpenBullet2.Models.Jobs
                 throw new ArgumentException("No wordlist specified");
 
             var hitOutputsFactory = new HitOutputFactory(hitRepo);
-            var proxySourceFactory = new ProxySourceFactory(proxyGroupsRepo, proxyRepo);
 
             var job = new MultiRunJob(settingsService)
             {
@@ -69,7 +68,7 @@ namespace OpenBullet2.Models.Jobs
                 ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList()
             };
 
-            job.DataPool = new DataPoolFactory(wordlistRepo, settingsService).FromOptions(options.DataPool).Result;
+            job.DataPool = dataPoolFactory.FromOptions(options.DataPool).Result;
             return job;
         }
 
@@ -85,23 +84,17 @@ namespace OpenBullet2.Models.Jobs
                 Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds)
             };
 
-            var factory = new ProxyFactory();
-            var entities = options.GroupId == -1
-                ? proxyRepo.GetAll().ToListAsync().Result
-                : proxyRepo.GetAll().Where(p => p.GroupId == options.GroupId).ToListAsync().Result;
-
-            if (!options.CheckOnlyUntested)
-                entities.ForEach(e => e.Status = ProxyWorkingStatus.Untested);
-
             job.GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb");
 
-            job.Proxies = entities.Select(e => factory.FromEntity(e));
-            job.ProxyOutput = new ProxyCheckOutputFactory(proxyRepo).FromOptions(options.CheckOutput);
+            var proxies = proxyReloadService.Reload(options.GroupId).Result;
+            job.Proxies = options.CheckOnlyUntested
+                ? proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
+                : proxies;
 
-            job.Total = entities.Count();
-            job.Tested = entities.Count(p => p.Status != ProxyWorkingStatus.Untested);
-            job.Working = entities.Count(p => p.Status == ProxyWorkingStatus.Working);
-            job.NotWorking = entities.Count(p => p.Status == ProxyWorkingStatus.NotWorking);
+            job.Total = proxies.Count();
+            job.Tested = proxies.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
+            job.Working = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.Working);
+            job.NotWorking = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.NotWorking);
 
             return job;
         }

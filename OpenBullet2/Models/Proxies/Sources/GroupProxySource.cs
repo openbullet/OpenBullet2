@@ -1,46 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OpenBullet2.Entities;
-using OpenBullet2.Repositories;
-using RuriLib.Extensions;
+﻿using OpenBullet2.Services;
 using RuriLib.Models.Proxies;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Proxies.Sources
 {
     public class GroupProxySource : ProxySource
     {
-        private readonly IProxyGroupRepository proxyGroupsRepo;
-        private readonly IProxyRepository proxyRepo;
+        private readonly ProxyReloadService reloadService;
 
         public int GroupId { get; set; }
 
-        public GroupProxySource(int groupId, IProxyGroupRepository proxyGroupsRepo, IProxyRepository proxyRepo)
+        public GroupProxySource(int groupId, ProxyReloadService reloadService)
         {
             GroupId = groupId;
-            this.proxyGroupsRepo = proxyGroupsRepo;
-            this.proxyRepo = proxyRepo;
+            this.reloadService = reloadService;
         }
 
         public override async Task<IEnumerable<Proxy>> GetAll()
-        {
-            List<ProxyEntity> entities;
-
-            if (GroupId == -1)
-            {
-                entities = await proxyRepo.GetAll().ToListAsync();
-            }
-            else
-            {
-                var group = await proxyGroupsRepo.Get(GroupId);
-                entities = await proxyRepo.GetAll()
-                    .Where(p => p.GroupId == GroupId)
-                    .ToListAsync();
-            }
-
-            var proxyFactory = new ProxyFactory();
-            return entities.Select(e => proxyFactory.FromEntity(e));
-        }
+            => await reloadService.Reload(GroupId);
     }
 }

@@ -15,14 +15,9 @@ namespace OpenBullet2.Pages
     public partial class JobEditor
     {
         [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] IHitRepository HitRepo { get; set; }
-        [Inject] IWordlistRepository WordlistRepo { get; set; }
-        [Inject] IProxyGroupRepository ProxyGroupRepo { get; set; }
-        [Inject] IProxyRepository ProxyRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
-        [Inject] ConfigService ConfigService { get; set; }
-        [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] NavigationManager Nav { get; set; }
+        [Inject] JobFactoryService JobFactory { get; set; }
 
         [Parameter] public int JobId { get; set; }
         JobEntity jobEntity;
@@ -42,12 +37,10 @@ namespace OpenBullet2.Pages
             
             await JobRepo.Update(jobEntity);
 
-            var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo, ProxyRepo, ProxyGroupRepo, WordlistRepo);
-
             try
             {
                 var oldJob = Manager.Jobs.First(j => j.Id == JobId);
-                var newJob = factory.FromOptions(JobId, jobOptions);
+                var newJob = JobFactory.FromOptions(JobId, jobOptions);
 
                 Manager.Jobs.Remove(oldJob);
                 Manager.Jobs.Add(newJob);

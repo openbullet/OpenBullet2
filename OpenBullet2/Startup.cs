@@ -15,6 +15,9 @@ using RuriLib.Services;
 using System.Globalization;
 using Blazored.LocalStorage;
 using BlazorDownloadFile;
+using OpenBullet2.Models.Jobs;
+using OpenBullet2.Models.Data;
+using OpenBullet2.Models.Proxies;
 
 namespace OpenBullet2
 {
@@ -63,6 +66,10 @@ namespace OpenBullet2
             services.AddSingleton<JobMonitorService>();
             services.AddSingleton<JwtValidationService>();
             services.AddSingleton<JobLoggerService>();
+            services.AddSingleton<ProxyReloadService>();
+            services.AddSingleton<JobFactoryService>();
+            services.AddSingleton<DataPoolFactoryService>();
+            services.AddSingleton<ProxySourceFactoryService>();
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");

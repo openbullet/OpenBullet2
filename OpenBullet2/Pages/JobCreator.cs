@@ -17,14 +17,9 @@ namespace OpenBullet2.Pages
     public partial class JobCreator
     {
         [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] IHitRepository HitRepo { get; set; }
-        [Inject] IWordlistRepository WordlistRepo { get; set; }
-        [Inject] IProxyGroupRepository ProxyGroupRepo { get; set; }
-        [Inject] IProxyRepository ProxyRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
-        [Inject] ConfigService ConfigService { get; set; }
-        [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] NavigationManager Nav { get; set; }
+        [Inject] JobFactoryService JobFactory { get; set; }
         [Parameter] public string Type { get; set; }
 
         JobType jobType;
@@ -56,11 +51,9 @@ namespace OpenBullet2.Pages
             // Get the entity that was just added in order to get its ID
             entity = await JobRepo.GetAll().OrderByDescending(e => e.Id).FirstAsync();
 
-            var factory = new JobFactory(ConfigService, RuriLibSettings, HitRepo, ProxyRepo, ProxyGroupRepo, WordlistRepo);
-
             try
             {
-                var job = factory.FromOptions(entity.Id, jobOptions);
+                var job = JobFactory.FromOptions(entity.Id, jobOptions);
 
                 Manager.Jobs.Add(job);
                 Nav.NavigateTo($"job/{job.Id}");

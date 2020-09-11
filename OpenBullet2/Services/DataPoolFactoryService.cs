@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Data
 {
-    public class DataPoolFactory
+    public class DataPoolFactoryService
     {
         private readonly IWordlistRepository wordlistRepo;
         private readonly RuriLibSettingsService ruriLibSettings;
 
-        public DataPoolFactory(IWordlistRepository wordlistRepo, RuriLibSettingsService ruriLibSettings)
+        public DataPoolFactoryService(IWordlistRepository wordlistRepo, RuriLibSettingsService ruriLibSettings)
         {
             this.wordlistRepo = wordlistRepo;
             this.ruriLibSettings = ruriLibSettings;
