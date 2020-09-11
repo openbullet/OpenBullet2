@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Proxies;
+using RuriLib.Helpers;
 using RuriLib.Models.Jobs.StartConditions;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,23 @@ namespace OpenBullet2.Models.Jobs
             {
                 CheckOutput = new DatabaseProxyCheckOutputOptions()
             };
+        }
+
+        public JobOptions CloneExistant(JobOptions options)
+        {
+            return options switch
+            {
+                MultiRunJobOptions x => CloneMultiRun(x),
+                ProxyCheckJobOptions x => Cloner.Clone(x),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        private MultiRunJobOptions CloneMultiRun(MultiRunJobOptions options)
+        {
+            var newOptions = Cloner.Clone(options);
+            newOptions.Skip = 0;
+            return newOptions;
         }
     }
 }

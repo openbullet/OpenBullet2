@@ -120,6 +120,9 @@
   <data name="by" xml:space="preserve">
     <value>von</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Klonen</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
   </data>

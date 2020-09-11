@@ -120,6 +120,9 @@
   <data name="By" xml:space="preserve">
     <value>di</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Clona</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>

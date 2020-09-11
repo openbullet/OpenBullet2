@@ -18,7 +18,7 @@
             <div class="col-1 pl-0 pr-0 mr-0 ml-0 job-overview-left-col">
                 #@job.Id  <span class="oi @TranslateStatus(job.Status)" style="font-size: 20px;"></span>
             </div>
-            <div class="col-10 pl-0 job-overview-mid-col">
+            <div class="col-9 pl-0 job-overview-mid-col">
                 <div class="job-overview" @onclick="@(() => SelectJob(job))">
                     <div class="pr-2 pl-2">
                         @switch (job)
@@ -90,13 +90,19 @@
             <div class="col-sm-auto pr-0">
                 <button class="btn btn-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
-                    <span class="oi oi-pencil"></span>
+                    <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
+                </button>
+            </div>
+            <div class="col-sm-auto pr-0">
+                <button class="btn btn-primary" style="height: 100%; width: 100%;"
+                        @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
+                    <span class="oi oi-layers" title="@Loc["Clone"]"></span>
                 </button>
             </div>
             <div class="col-sm-auto pr-0">
                 <button class="btn btn-danger" style="height: 100%; width: 100%;"
                         @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
-                    <span class="oi oi-x"></span>
+                    <span class="oi oi-x" title="@Loc["Remove"]"></span>
                 </button>
             </div>
         </div>

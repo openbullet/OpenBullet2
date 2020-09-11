@@ -128,5 +128,10 @@ namespace OpenBullet2.Pages
 
             Nav.NavigateTo($"jobs/edit/{job.Id}");
         }
+
+        public void Clone(Job job)
+        {
+            Nav.NavigateTo($"jobs/clone/{job.Id}");
+        }
     }
 }

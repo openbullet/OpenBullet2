@@ -10,6 +10,7 @@ OpenBullet.db*
 OpenBulletSettings.json
 RuriLibSettings.json
 triggeredActions.json
+ResXTranslator.exe
 
 # User-specific files
 *.suo

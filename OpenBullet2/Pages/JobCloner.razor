@@ -1,0 +1,19 @@
+﻿@page "/jobs/clone/{JobId:int}"
+@using OpenBullet2.Models.Jobs
+@inject Microsoft.Extensions.Localization.IStringLocalizer<JobCloner> Loc
+@attribute [Authorize(Roles = "Admin,Guest")]
+
+<div style="margin-bottom: 20px;">
+    @switch (jobOptions)
+    {
+        case MultiRunJobOptions x:
+            <MultiRunOptions Options="x" />
+            break;
+
+        case ProxyCheckJobOptions x:
+            <ProxyCheckOptions Options="x" />
+            break;
+    }
+</div>
+
+<button class="btn btn-success" style="margin-bottom: 30px;" @onclick="Clone">@Loc["CloneJob"]</button>
