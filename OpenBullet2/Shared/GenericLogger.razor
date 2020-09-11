@@ -1,4 +1,5 @@
 ﻿@inject JobLoggerService JobLoggerService
+@implements IDisposable
 
 <div class="generic-log" style="margin-bottom: 30px;">
     @foreach (var entry in JobLoggerService.GetLog(JobId).Reverse())
@@ -21,5 +22,10 @@
             return;
 
         InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        JobLoggerService.NewLog -= OnNewLog;
     }
 }
