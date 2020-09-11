@@ -154,88 +154,49 @@
     </div>
 }
 
-<div class="mt-2">
-    <p style="color: orange;"><b>@Loc["DataStats"]</b></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">@Loc["Tested"]</th>
-                <th scope="col" style="color: greenyellow;">@Loc["Hits"]</th>
-                <th scope="col" style="color: orange;">@Loc["Custom"]</th>
-                <th scope="col" style="color: tomato;">@Loc["Bad"]</th>
-                <th scope="col" style="color: yellow;">@Loc["Retried"]</th>
-                <th scope="col" style="color: plum;">@Loc["Banned"]</th>
-                <th scope="col" style="color: skyblue;">@Loc["ToCheck"]</th>
-                <th scope="col" style="color: red;">@Loc["Errors"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@Job.DataTested</td>
-                <td style="color: greenyellow;">@Job.DataHits</td>
-                <td style="color: orange;">@Job.DataCustom</td>
-                <td style="color: tomato;">@Job.DataBad</td>
-                <td style="color: yellow;">@Job.DataRetried</td>
-                <td style="color: plum;">@Job.DataBanned</td>
-                <td style="color: skyblue;">@Job.DataToCheck</td>
-                <td style="color: red;">@Job.DataErrors</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="mt-2">
-    <p style="color: orange;"><b>@Loc["ProxyStats"]</b></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">@Loc["Total"]</th>
-                <th scope="col" style="color: greenyellow;">@Loc["Alive"]</th>
-                <th scope="col" style="color: tomato;">@Loc["Bad"]</th>
-                <th scope="col" style="color: plum;">@Loc["Banned"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@Job.ProxiesTotal</td>
-                <td style="color: greenyellow;">@Job.ProxiesAlive</td>
-                <td style="color: tomato;">@Job.ProxiesBad</td>
-                <td style="color: plum;">@Job.ProxiesBanned</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="mt-2">
-    <p style="color: orange;"><b>@Loc["OtherStats"]</b></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">@Loc["CPM"]</th>
-                <th scope="col">@Loc["CaptchaCredit"]</th>
-                <th scope="col">@Loc["Elapsed"]</th>
-                <th scope="col">@Loc["Remaining"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                @if (Job.Manager != null)
-                {
-                    <td>@Job.Manager.CPM</td>
-                    <td>@Job.CaptchaCredit</td>
-                    <td>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</td>
-                    <td>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</td>
-                }
-                else
-                {
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                }
-            </tr>
-        </tbody>
-    </table>
+<div class="container-fluid pl-0 pr-0 mt-3 mb-3">
+    <div class="row">
+        <div class="col">
+            <span style="font-weight: bold; text-decoration: underline;">@Loc["DataStats"]</span><br /><br />
+            <span style="font-weight: bold;">@Loc["Tested"]: </span><span>@Job.DataTested</span><br />
+            <span style="font-weight: bold; color: greenyellow;">@Loc["Hits"]: </span><span style="color: greenyellow;">@Job.DataHits</span><br />
+            <span style="font-weight: bold; color: orange;">@Loc["Custom"]: </span><span style="color: orange;">@Job.DataCustom</span><br />
+            <span style="font-weight: bold; color: tomato;">@Loc["Bad"]: </span><span style="color: tomato;">@Job.DataBad</span><br />
+            <span style="font-weight: bold; color: yellow;">@Loc["Retried"]: </span><span style="color: yellow;">@Job.DataRetried</span><br />
+            <span style="font-weight: bold; color: plum;">@Loc["Banned"]: </span><span style="color: plum;">@Job.DataBanned</span><br />
+            <span style="font-weight: bold; color: skyblue;">@Loc["ToCheck"]: </span><span style="color: skyblue;">@Job.DataToCheck</span><br />
+            <span style="font-weight: bold; color: red;">@Loc["Errors"]: </span><span style="color: red;">@Job.DataErrors</span><br />
+        </div>
+        <div class="col">
+            <span style="font-weight: bold; text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
+            <span style="font-weight: bold;">@Loc["Total"]: </span><span>@Job.ProxiesTotal</span><br />
+            <span style="font-weight: bold; color: greenyellow;">@Loc["Alive"]: </span><span style="color: greenyellow;">@Job.ProxiesAlive</span><br />
+            <span style="font-weight: bold; color: tomato;">@Loc["Bad"]: </span><span style="color: tomato;">@Job.ProxiesBad</span><br />
+            <span style="font-weight: bold; color: plum;">@Loc["Banned"]: </span><span style="color: plum;">@Job.ProxiesBanned</span><br />
+        </div>
+        @if (Job.Manager != null)
+        {
+            <div class="col">
+                <span style="font-weight: bold; text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span style="font-weight: bold;">@Loc["CPM"]: </span><span>@Job.Manager.CPM</span><br />
+                <span style="font-weight: bold;">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
+                <span style="font-weight: bold;">@Loc["Elapsed"]: </span><span>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
+                <span style="font-weight: bold;">@Loc["Remaining"]: </span><span>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</span><br />
+                <span style="font-weight: bold;">@Loc["Progress"]: </span><span>@((Job.Manager.Progress * 100).ToString("0.00"))%</span>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <span style="font-weight: bold; text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span style="font-weight: bold;">@Loc["CPM"]: </span><span>-</span><br />
+                <span style="font-weight: bold;">@Loc["CaptchaCredit"]: </span><span>-</span><br />
+                <span style="font-weight: bold;">@Loc["Elapsed"]: </span><span>-</span><br />
+                <span style="font-weight: bold;">@Loc["Remaining"]: </span><span>-</span><br />
+                <span style="font-weight: bold;">@Loc["Progress"]: </span><span>-</span><br />
+            </div>
+        }
+    </div>
 </div>
 
 <GenericLogger @ref="logger" BufferSize="PersistentSettings.OpenBulletSettings.GeneralSettings.LogBufferSize" />
