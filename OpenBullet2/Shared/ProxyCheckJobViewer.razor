@@ -7,6 +7,7 @@
 @using OpenBullet2.Shared.Forms
 @inject IModalService Modal
 @inject PersistentSettingsService PersistentSettings
+@inject JobLoggerService Logger
 
 <div>
     <p style="color: orange;"><b>Job Options</b></p>
@@ -112,12 +113,11 @@
     </div>
 }
 
-<GenericLogger @ref="logger" BufferSize="PersistentSettings.OpenBulletSettings.GeneralSettings.LogBufferSize" />
+<GenericLogger JobId="Job.Id" />
 
 @code {
     [Parameter] public ProxyCheckJob Job { get; set; }
     int refreshInterval = 1000;
-    GenericLogger logger;
     bool changingBots = false;
 
     protected override void OnInitialized()
@@ -149,25 +149,25 @@
         var result = details.Result;
 
         if (result.WorkingStatus == ProxyWorkingStatus.Working)
-            logger.LogSuccess($"Proxy checked ({result.Host}:{result.Port}) with ping {result.Ping} and country {result.Country}");
+            Logger.LogSuccess(Job.Id, $"Proxy checked ({result.Host}:{result.Port}) with ping {result.Ping} and country {result.Country}");
         else
-            logger.LogWarning($"Proxy checked ({result.Host}:{result.Port}) as not working");
+            Logger.LogWarning(Job.Id, $"Proxy checked ({result.Host}:{result.Port}) as not working");
     }
 
     private void LogError(object sender, Exception ex)
     {
-        logger.LogError($"Task Manager Error! {ex.Message}");
+        Logger.LogError(Job.Id, $"Task Manager Error! {ex.Message}");
     }
 
     private void LogTaskError(object sender, ErrorDetails<ProxyCheckerInput> details)
     {
         var proxy = details.Item.Proxy;
-        logger.LogError($"Task Error ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
+        Logger.LogError(Job.Id, $"Task Error ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
     }
 
     private void LogCompleted(object sender, EventArgs e)
     {
-        logger.LogInfo($"The Task Manager completed all of its work");
+        Logger.LogInfo(Job.Id, $"The Task Manager completed all of its work");
     }
 
     private void TryHookLogger()
@@ -196,7 +196,7 @@
         {
             await Job.Start();
             TryHookLogger();
-            logger.LogInfo("Started checking");
+            Logger.LogInfo(Job.Id, "Started checking");
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)
@@ -209,7 +209,7 @@
     {
         try
         {
-            logger.LogInfo("Sending soft stop signal");
+            Logger.LogInfo(Job.Id, "Sending soft stop signal");
             await Job.Stop();
         }
         catch (Exception ex)
@@ -222,7 +222,7 @@
     {
         try
         {
-            logger.LogInfo("Sending hard abort signal");
+            Logger.LogInfo(Job.Id, "Sending hard abort signal");
             await Job.Abort();
         }
         catch (Exception ex)
@@ -235,9 +235,9 @@
     {
         try
         {
-            logger.LogInfo("Sending pause signal");
+            Logger.LogInfo(Job.Id, "Sending pause signal");
             await Job.Pause();
-            logger.LogInfo("The Task Manager was paused");
+            Logger.LogInfo(Job.Id, "The Task Manager was paused");
         }
         catch (Exception ex)
         {
@@ -250,7 +250,7 @@
         try
         {
             await Job.Resume();
-            logger.LogInfo("Resumed checking");
+            Logger.LogInfo(Job.Id, "Resumed checking");
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)

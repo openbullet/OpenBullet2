@@ -1,54 +1,25 @@
-﻿<div class="generic-log" style="margin-bottom: 30px;">
-    @lock (listLock)
+﻿@inject JobLoggerService JobLoggerService
+
+<div class="generic-log" style="margin-bottom: 30px;">
+    @foreach (var entry in JobLoggerService.GetLog(JobId).Reverse())
     {
-        foreach (var entry in entries)
-        {
-            <span style="color: @entry.Color;">@entry.Message</span><br />
-        }
+        <span style="color: @entry.color;">[@entry.date.ToLongTimeString()] @entry.message.Replace("\r\n", " ").Replace("\n", " ")</span><br />
     }
 </div>
 
 @code {
-    [Parameter] public int BufferSize { get; set; } = 20;
-    List<LogEntry> entries = new List<LogEntry>();
-    object listLock = new object();
+    [Parameter] public int JobId { get; set; } = 0;
 
-    public void Log(LogKind kind, string message, string color)
+    protected override void OnInitialized()
     {
-        var entry = $"[{DateTime.Now.ToLongTimeString()}] {message.Replace("\r\n", " ").Replace("\n", " ")}";
-        lock (listLock)
-        {
-            entries.Insert(0, new LogEntry(entry, color));
+        JobLoggerService.NewLog += OnNewLog;
+    }
 
-            if (entries.Count > BufferSize)
-                entries.RemoveAt(entries.Count - 1);
-        }
+    void OnNewLog(object sender, int id)
+    {
+        if (id != JobId)
+            return;
+
         InvokeAsync(StateHasChanged);
-    }
-
-    public void LogInfo(string message) { Log(LogKind.Info, message, "white"); }
-    public void LogSuccess(string message) { Log(LogKind.Success, message, "greenyellow"); }
-    public void LogWarning(string message) { Log(LogKind.Warning, message, "orange"); }
-    public void LogError(string message) { Log(LogKind.Error, message, "tomato"); }
-    public void Clear() { entries.Clear(); }
-
-    public enum LogKind
-    {
-        Info,
-        Success,
-        Warning,
-        Error
-    }
-
-    struct LogEntry
-    {
-        public string Message { get; set; }
-        public string Color { get; set; }
-
-        public LogEntry(string message, string color)
-        {
-            Message = message;
-            Color = color;
-        }
     }
 }

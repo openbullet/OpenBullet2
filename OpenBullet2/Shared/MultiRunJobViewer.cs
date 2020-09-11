@@ -23,12 +23,12 @@ namespace OpenBullet2.Shared
     {
         [Inject] public IModalService Modal { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] public JobLoggerService Logger { get; set; }
         [Inject] public IRecordRepository RecordRepo { get; set; }
         [Inject] public IJobRepository JobRepo { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
         int refreshInterval = 1000;
-        GenericLogger logger;
         bool changingBots = false;
         RadzenGrid<Hit> hitsGrid;
         Hit selectedHit;
@@ -105,24 +105,24 @@ namespace OpenBullet2.Shared
                 "NONE" => "skyblue",
                 _ => "orange"
             };
-            logger.Log(GenericLogger.LogKind.Info, message, color);
+            Logger.Log(Job.Id, message, LogKind.Custom, color);
         }
 
         private void LogError(object sender, Exception ex)
         {
-            logger.LogError($"{Loc["TaskManagerError"]} {ex.Message}");
+            Logger.LogError(Job.Id, $"{Loc["TaskManagerError"]} {ex.Message}");
         }
 
         private void LogTaskError(object sender, ErrorDetails<MultiRunInput> details)
         {
             var proxy = details.Item.BotData.Proxy;
             var data = details.Item.BotData.Line.Data;
-            logger.LogError($"{Loc["TaskError"]} ({proxy})({data})! {details.Exception.Message}");
+            Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({proxy})({data})! {details.Exception.Message}");
         }
 
         private void LogCompleted(object sender, EventArgs e)
         {
-            logger.LogInfo(Loc["TaskManagerCompleted"]);
+            Logger.LogInfo(Job.Id, Loc["TaskManagerCompleted"]);
         }
 
         private void SaveRecord(object sender, EventArgs e)
@@ -216,7 +216,7 @@ namespace OpenBullet2.Shared
                 await AskCustomInputs();
                 await Job.Start();
                 TryHookEvents();
-                logger.LogInfo(Loc["StartedChecking"]);
+                Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
                 PeriodicRefresh(refreshInterval);
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                logger.LogInfo(Loc["SoftStopMessage"]);
+                Logger.LogInfo(Job.Id, Loc["SoftStopMessage"]);
                 await Job.Stop();
             }
             catch (Exception ex)
@@ -242,7 +242,7 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                logger.LogInfo(Loc["HardStopMessage"]);
+                Logger.LogInfo(Job.Id, Loc["HardStopMessage"]);
                 await Job.Abort();
             }
             catch (Exception ex)
@@ -255,9 +255,9 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                logger.LogInfo(Loc["PauseMessage"]);
+                Logger.LogInfo(Job.Id, Loc["PauseMessage"]);
                 await Job.Pause();
-                logger.LogInfo(Loc["TaskManagerPaused"]);
+                Logger.LogInfo(Job.Id, Loc["TaskManagerPaused"]);
             }
             catch (Exception ex)
             {
@@ -270,7 +270,7 @@ namespace OpenBullet2.Shared
             try
             {
                 await Job.Resume();
-                logger.LogInfo(Loc["ResumeMessage"]);
+                Logger.LogInfo(Job.Id, Loc["ResumeMessage"]);
                 PeriodicRefresh(refreshInterval);
             }
             catch (Exception ex)

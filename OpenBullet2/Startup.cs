@@ -62,6 +62,7 @@ namespace OpenBullet2
             services.AddSingleton<JobManagerService>();
             services.AddSingleton<JobMonitorService>();
             services.AddSingleton<JwtValidationService>();
+            services.AddSingleton<JobLoggerService>();
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
