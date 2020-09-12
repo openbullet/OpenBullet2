@@ -39,7 +39,7 @@ namespace OpenBullet2.Services
 
             List<UserAgent> distribution = new List<UserAgent>();
             double cumulative = 0;
-            foreach (var elem in agents)
+            foreach (var elem in valid)
             {
                 cumulative += elem.weight;
                 distribution.Add(new UserAgent(elem.userAgentString, elem.platform, elem.weight, cumulative));
