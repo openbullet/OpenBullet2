@@ -6,6 +6,7 @@ using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
+using RuriLib.Models.UserAgents;
 using RuriLib.Services;
 using System;
 using System.Linq;
@@ -20,10 +21,11 @@ namespace OpenBullet2.Models.Jobs
         private readonly ProxySourceFactoryService proxySourceFactory;
         private readonly DataPoolFactoryService dataPoolFactory;
         private readonly ProxyReloadService proxyReloadService;
+        private readonly IRandomUAProvider randomUAProvider;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService,
             IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
-            ProxyReloadService proxyReloadService)
+            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider)
         {
             this.configService = configService;
             this.settingsService = settingsService;
@@ -31,6 +33,7 @@ namespace OpenBullet2.Models.Jobs
             this.proxySourceFactory = proxySourceFactory;
             this.dataPoolFactory = dataPoolFactory;
             this.proxyReloadService = proxyReloadService;
+            this.randomUAProvider = randomUAProvider;
         }
 
         public Job FromOptions(int id, JobOptions options)
@@ -65,7 +68,8 @@ namespace OpenBullet2.Models.Jobs
                 Bots = options.Bots,
                 Skip = options.Skip,
                 HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
-                ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList()
+                ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
+                RandomUAProvider = randomUAProvider
             };
 
             job.DataPool = dataPoolFactory.FromOptions(options.DataPool).Result;

@@ -18,6 +18,7 @@ using BlazorDownloadFile;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Proxies;
+using RuriLib.Models.UserAgents;
 
 namespace OpenBullet2
 {
@@ -70,6 +71,7 @@ namespace OpenBullet2
             services.AddSingleton<JobFactoryService>();
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
+            services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");

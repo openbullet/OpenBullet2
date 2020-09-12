@@ -11,6 +11,10 @@
     <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.RestrictBlocksToCWD" />
     <br />
 
+    <label>@Loc["UseCustomUserAgentsList"]</label>
+    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.UseCustomUserAgentsList" />
+    <br />
+
     <label>@Loc["UserAgents"]</label>
     <InputListOfStrings @bind-List="settings.GeneralSettings.UserAgents" />
 </EditForm>

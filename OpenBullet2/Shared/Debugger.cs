@@ -19,6 +19,7 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
+using RuriLib.Models.UserAgents;
 using RuriLib.Models.Variables;
 using RuriLib.Services;
 
@@ -27,6 +28,7 @@ namespace OpenBullet2.Shared
     public partial class Debugger
     {
         [Inject] IModalService Modal { get; set; }
+        [Inject] IRandomUAProvider RandomUAProvider { get; set; }
         [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] VolatileSettingsService VolatileSettings { get; set; }
 
@@ -71,7 +73,7 @@ namespace OpenBullet2.Shared
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
             // Build the BotData
-            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, new Random(), dataLine, proxy);
+            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy);
             data.Objects.Add("httpClient", new HttpClient());
 
             var script = new ScriptBuilder()

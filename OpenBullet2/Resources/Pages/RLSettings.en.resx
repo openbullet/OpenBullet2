@@ -237,6 +237,9 @@
   <data name="TrueCaptchaUsername" xml:space="preserve">
     <value>TrueCaptcha Username</value>
   </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Use custom User Agents list</value>
+  </data>
   <data name="UserAgents" xml:space="preserve">
     <value>User Agents</value>
   </data>
