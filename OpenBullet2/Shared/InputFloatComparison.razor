@@ -1,18 +1,20 @@
 ﻿@using RuriLib.Models.Conditions.Comparisons
 
-<div class="col-auto">
+<div class="row">
+    <div class="col-auto">
     @Label
-</div>
-<div class="col">
-    <select value="@Comparison" @onchange="OnComparisonChanged">
-        @foreach (var name in Enum.GetNames(typeof(NumComparison)))
-        {
-            <option value="@name">@name</option>
-        }
-    </select>
-</div>
-<div class="col">
-    <input type="number" value="@Amount" @onchange="OnAmountChanged" />
+    </div>
+    <div class="col">
+        <select value="@Comparison" @onchange="OnComparisonChanged">
+            @foreach (var name in Enum.GetNames(typeof(NumComparison)))
+            {
+                <option value="@name">@name</option>
+            }
+        </select>
+    </div>
+    <div class="col">
+        <input type="number" value="@Amount" @onchange="OnAmountChanged" />
+    </div>
 </div>
 
 @code {

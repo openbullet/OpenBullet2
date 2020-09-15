@@ -53,8 +53,6 @@
     }
 </EditForm>
 
-<button class="btn btn-success" @onclick="(() => BlazoredModal.Close())">@Loc["Ok"]</button>
-
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public RuriLib.Models.Jobs.Monitor.Actions.Action Action { get; set; }

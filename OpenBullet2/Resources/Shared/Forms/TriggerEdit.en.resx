@@ -117,59 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AliveProxies" xml:space="preserve">
-    <value>Alive Proxies</value>
-  </data>
-  <data name="BannedProxies" xml:space="preserve">
-    <value>Banned Proxies</value>
-  </data>
-  <data name="Bans" xml:space="preserve">
-    <value>Bans</value>
-  </data>
-  <data name="CaptchaCredit" xml:space="preserve">
-    <value>Captcha credit</value>
-  </data>
-  <data name="CPM" xml:space="preserve">
-    <value>CPM</value>
-  </data>
-  <data name="Customs" xml:space="preserve">
-    <value>Customs</value>
-  </data>
-  <data name="Errors" xml:space="preserve">
-    <value>Errors</value>
-  </data>
-  <data name="Fails" xml:space="preserve">
-    <value>Fails</value>
-  </data>
-  <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
-  </data>
   <data name="JobFinished" xml:space="preserve">
     <value>Job finished</value>
   </data>
   <data name="JobStatus" xml:space="preserve">
     <value>Job status</value>
   </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
-  </data>
-  <data name="Progress" xml:space="preserve">
-    <value>Progress</value>
-  </data>
-  <data name="Retries" xml:space="preserve">
-    <value>Retries</value>
-  </data>
-  <data name="Tested" xml:space="preserve">
-    <value>Tested</value>
-  </data>
   <data name="TimeElapsed" xml:space="preserve">
     <value>Time elapsed</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
     <value>Time remaining</value>
-  </data>
-  <data name="ToChecks" xml:space="preserve">
-    <value>To Checks</value>
   </data>
   <data name="TriggerWhen" xml:space="preserve">
     <value>Trigger when</value>

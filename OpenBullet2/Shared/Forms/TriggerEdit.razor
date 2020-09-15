@@ -6,61 +6,61 @@
     @switch (Trigger)
     {
         case HitCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Hits"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Hit Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case CustomCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Customs"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Custom Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case ToCheckCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["ToChecks"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="ToCheck Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case BanCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Bans"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Ban Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case RetryCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Retries"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Retry Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case ErrorCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Errors"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Error Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case FailCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Fails"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Fail Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case TestedCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Tested"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Tested Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case AliveProxiesCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["AliveProxies"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Alive Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case BannedProxiesCountTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["BannedProxies"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="Banned Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case JobFinishedTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["JobFinished"]</span>
+            <span>@Loc["TriggerWhen"] @Loc["JobFinished"]</span>
             break;
 
         case JobStatusTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["JobStatus"]</span>
+            <span>@Loc["TriggerWhen"] @Loc["JobStatus"]</span>
             <InputSelect @bind-Value="t.Status">
                 @foreach (var status in Enum.GetNames(typeof(RuriLib.Models.Jobs.Threading.TaskManagerStatus)))
                         {
@@ -70,22 +70,22 @@
             break;
 
         case CPMTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["CPM"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputIntComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case CaptchaCreditTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["CaptchaCredit"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case ProgressTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["Progress"]</span>
+            <span>@Loc["TriggerWhen"]</span>
             <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case TimeElapsedTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["TimeElapsed"]</span>
+            <span>@Loc["TriggerWhen"] @Loc["TimeElapsed"]</span>
             <InputSelect @bind-Value="t.Comparison">
                 @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
                         {
@@ -99,7 +99,7 @@
             break;
 
         case TimeRemainingTrigger t:
-            <span>@Loc["TriggerWhen"] </span><span>@Loc["TimeRemaining"]</span>
+            <span>@Loc["TriggerWhen"] @Loc["TimeRemaining"]</span>
             <InputSelect @bind-Value="t.Comparison">
                 @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
                         {
@@ -113,8 +113,6 @@
             break;
     }
 </EditForm>
-
-<button class="btn btn-success" @onclick="(() => BlazoredModal.Close())">@Loc["Ok"]</button>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }

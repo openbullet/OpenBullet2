@@ -129,9 +129,6 @@
   <data name="minutes" xml:space="preserve">
     <value>minutes</value>
   </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
-  </data>
   <data name="onWebhook" xml:space="preserve">
     <value>on webhook</value>
   </data>
