@@ -216,6 +216,9 @@
   <data name="LineCheckedMessage" xml:space="preserve">
     <value>Zeile ({0}) mit dem Status {1} überprüft</value>
   </data>
+  <data name="NoHitSelectedWarning" xml:space="preserve">
+    <value>Erst muss ein Treffer ausgewählt werden</value>
+  </data>
   <data name="OtherStats" xml:space="preserve">
     <value>Andere Statistiken</value>
   </data>
@@ -296,6 +299,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Gesamt</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>

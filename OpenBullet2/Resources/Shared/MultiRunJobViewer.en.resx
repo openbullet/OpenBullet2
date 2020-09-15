@@ -225,6 +225,9 @@
   <data name="LineCheckedMessage" xml:space="preserve">
     <value>Line checked ({0}) with status {1}</value>
   </data>
+  <data name="NoHitSelectedWarning" xml:space="preserve">
+    <value>You must select a hit first</value>
+  </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
   </data>
@@ -314,6 +317,9 @@
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
