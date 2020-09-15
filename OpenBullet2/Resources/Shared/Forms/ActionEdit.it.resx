@@ -117,145 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Actions" xml:space="preserve">
-    <value>Actions</value>
-  </data>
-  <data name="ActionsDescription" xml:space="preserve">
-    <value>Executed sequentially</value>
-  </data>
-  <data name="Active" xml:space="preserve">
-    <value>Active</value>
-  </data>
-  <data name="AliveProxies" xml:space="preserve">
-    <value>Alive Proxies</value>
-  </data>
-  <data name="BannedProxies" xml:space="preserve">
-    <value>Banned Proxies</value>
-  </data>
-  <data name="Bans" xml:space="preserve">
-    <value>Bans</value>
-  </data>
-  <data name="CaptchaCredit" xml:space="preserve">
-    <value>Captcha credit</value>
-  </data>
-  <data name="CPM" xml:space="preserve">
-    <value>CPM</value>
-  </data>
-  <data name="Customs" xml:space="preserve">
-    <value>Customs</value>
-  </data>
   <data name="days" xml:space="preserve">
-    <value>days</value>
-  </data>
-  <data name="EditAction" xml:space="preserve">
-    <value>Edit Action</value>
-  </data>
-  <data name="EditTrigger" xml:space="preserve">
-    <value>Edit Trigger</value>
-  </data>
-  <data name="Errors" xml:space="preserve">
-    <value>Errors</value>
-  </data>
-  <data name="Executing" xml:space="preserve">
-    <value>Executing</value>
-  </data>
-  <data name="Executions" xml:space="preserve">
-    <value>Executions</value>
-  </data>
-  <data name="Fails" xml:space="preserve">
-    <value>Fails</value>
-  </data>
-  <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+    <value>giorni</value>
   </data>
   <data name="hours" xml:space="preserve">
-    <value>hours</value>
+    <value>ore</value>
   </data>
   <data name="inJob" xml:space="preserve">
-    <value>in job</value>
-  </data>
-  <data name="Job" xml:space="preserve">
-    <value>Job</value>
-  </data>
-  <data name="JobFinished" xml:space="preserve">
-    <value>Job finished</value>
-  </data>
-  <data name="JobStatus" xml:space="preserve">
-    <value>Job status</value>
+    <value>nel job</value>
   </data>
   <data name="minutes" xml:space="preserve">
-    <value>minutes</value>
+    <value>minuti</value>
   </data>
-  <data name="New" xml:space="preserve">
-    <value>New</value>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
   </data>
   <data name="onWebhook" xml:space="preserve">
-    <value>on webhook</value>
-  </data>
-  <data name="Progress" xml:space="preserve">
-    <value>Progress</value>
+    <value>sul webhook</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Reload proxies</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="RemoveAll" xml:space="preserve">
-    <value>Remove All</value>
-  </data>
-  <data name="Repeatable" xml:space="preserve">
-    <value>Repeatable</value>
-  </data>
-  <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="Retries" xml:space="preserve">
-    <value>Retries</value>
+    <value>Ricarica proxy</value>
   </data>
   <data name="seconds" xml:space="preserve">
-    <value>seconds</value>
-  </data>
-  <data name="SelectActionType" xml:space="preserve">
-    <value>Select action type</value>
-  </data>
-  <data name="SelectTriggerType" xml:space="preserve">
-    <value>Select trigger type</value>
+    <value>secondi</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Send</value>
+    <value>Invia</value>
   </data>
   <data name="SetBotsTo" xml:space="preserve">
-    <value>Set bots to</value>
+    <value>Imposta i bot a</value>
   </data>
   <data name="SetRelativeTimeTo" xml:space="preserve">
-    <value>Set relative time to</value>
+    <value>Imposta il tempo relativo a</value>
   </data>
   <data name="StartJob" xml:space="preserve">
-    <value>Start Job</value>
+    <value>Inizia job</value>
   </data>
   <data name="StopJob" xml:space="preserve">
-    <value>Stop Job</value>
-  </data>
-  <data name="Tested" xml:space="preserve">
-    <value>Tested</value>
-  </data>
-  <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
-  </data>
-  <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
-  </data>
-  <data name="ToChecks" xml:space="preserve">
-    <value>To Checks</value>
-  </data>
-  <data name="Triggers" xml:space="preserve">
-    <value>Triggers</value>
-  </data>
-  <data name="TriggersDescription" xml:space="preserve">
-    <value>All must be verified at the same time</value>
+    <value>Ferma job</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Wait</value>
+    <value>Aspetta</value>
   </data>
 </root>

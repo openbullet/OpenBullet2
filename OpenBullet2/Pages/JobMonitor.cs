@@ -1,4 +1,5 @@
-﻿using Blazored.Modal.Services;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -92,6 +93,16 @@ namespace OpenBullet2.Pages
             }
         }
 
+        private async Task EditTrigger(Trigger t)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(TriggerEdit.Trigger), t);
+
+            var modal = Modal.Show<TriggerEdit>(Loc["EditTrigger"], parameters);
+            await modal.Result;
+            StateHasChanged();
+        }
+
         private void RemoveAllTriggers(TriggeredAction ta)
             => ta.Triggers.Clear();
 
@@ -104,6 +115,16 @@ namespace OpenBullet2.Pages
             {
                 ta.Actions.Add(result.Data as Action);
             }
+        }
+
+        private async Task EditAction(Action a)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ActionEdit.Action), a);
+
+            var modal = Modal.Show<ActionEdit>(Loc["EditAction"], parameters);
+            await modal.Result;
+            StateHasChanged();
         }
 
         private void RemoveAllActions(TriggeredAction ta)

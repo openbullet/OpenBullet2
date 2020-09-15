@@ -36,114 +36,85 @@
                     </div>
                     @foreach (var trigger in ta.Triggers)
                     {
-                        <div class="row triggered-action-row">
-                            @switch (trigger)
-                            {
-                                case HitCountTrigger t:
-                                    <InputIntComparison Label="Hit Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                        <div class="row justify-content-lg-center triggered-action-row pl-2 pr-2">
+                            <div class="col p-0">
+                                @switch (trigger)
+                                {
+                                    case HitCountTrigger t:
+                                        <span>@Loc["Hits"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case CustomCountTrigger t:
-                                    <InputIntComparison Label="Custom Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case CustomCountTrigger t:
+                                        <span>@Loc["Customs"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case ToCheckCountTrigger t:
-                                    <InputIntComparison Label="ToCheck Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case ToCheckCountTrigger t:
+                                        <span>@Loc["ToChecks"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case BanCountTrigger t:
-                                    <InputIntComparison Label="Ban Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case BanCountTrigger t:
+                                        <span>@Loc["Bans"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case RetryCountTrigger t:
-                                    <InputIntComparison Label="Retry Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case RetryCountTrigger t:
+                                        <span>@Loc["Retries"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case ErrorCountTrigger t:
-                                    <InputIntComparison Label="Error Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case ErrorCountTrigger t:
+                                        <span>@Loc["Errors"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case FailCountTrigger t:
-                                    <InputIntComparison Label="Fail Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case FailCountTrigger t:
+                                        <span>@Loc["Fails"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case TestedCountTrigger t:
-                                    <InputIntComparison Label="Tested Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case TestedCountTrigger t:
+                                        <span>@Loc["Tested"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case AliveProxiesCountTrigger t:
-                                    <InputIntComparison Label="Alive Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case AliveProxiesCountTrigger t:
+                                        <span>@Loc["AliveProxies"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case BannedProxiesCountTrigger t:
-                                    <InputIntComparison Label="Banned Proxies Count" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case BannedProxiesCountTrigger t:
+                                        <span>@Loc["BannedProxies"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case JobFinishedTrigger t:
-                                    <div class="col">Job Finished</div>
-                                    break;
+                                    case JobFinishedTrigger t:
+                                        <span>@Loc["JobFinished"]</span>
+                                        break;
 
-                                case JobStatusTrigger t:
-                                    <div class="col">Job Status is</div>
-                                    <div class="col-auto">
-                                        <select @bind="t.Status">
-                                            @foreach (var status in Enum.GetNames(typeof(RuriLib.Models.Jobs.Threading.TaskManagerStatus)))
-                                            {
-                                                <option value="@status">@status</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    break;
+                                    case JobStatusTrigger t:
+                                        <span>@Loc["JobStatus"] @t.Status</span>
+                                        break;
 
-                                case CPMTrigger t:
-                                    <InputIntComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case CPMTrigger t:
+                                        <span>@Loc["CPM"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case CaptchaCreditTrigger t:
-                                    <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case CaptchaCreditTrigger t:
+                                        <span>@Loc["CaptchaCredit"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case ProgressTrigger t:
-                                    <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
-                                    break;
+                                    case ProgressTrigger t:
+                                        <span>@Loc["Progress"] @t.Comparison @t.Amount</span>
+                                        break;
 
-                                case TimeElapsedTrigger t:
-                                    <div class="col-auto">Time Elapsed</div>
-                                    <select @bind="t.Comparison">
-                                        @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
-                                        {
-                                            <option value="@comp">@comp</option>
-                                        }
-                                    </select>
-                                    <div class="col"><input type="number" @bind="t.Days" /></div>
-                                    <div class="col-auto">days</div>
-                                    <div class="col"><input type="number" @bind="t.Hours" /></div>
-                                    <div class="col-auto">hours</div>
-                                    <div class="col"><input type="number" @bind="t.Minutes" /></div>
-                                    <div class="col-auto">minutes</div>
-                                    <div class="col"><input type="number" @bind="t.Seconds" /></div>
-                                    <div class="col-auto">seconds</div>
-                                    break;
+                                    case TimeElapsedTrigger t:
+                                        <span>@Loc["TimeElapsed"] @t.Comparison @t.Days @Loc["days"] @t.Hours @Loc["hours"] @t.Minutes @Loc["minutes"] @t.Seconds @Loc["seconds"]</span>
+                                        break;
 
-                                case TimeRemainingTrigger t:
-                                    <div class="col-auto">Time Remaining</div>
-                                    <select @bind="t.Comparison">
-                                        @foreach (var comp in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))
-                                        {
-                                            <option value="@comp">@comp</option>
-                                        }
-                                    </select>
-                                    <div class="col"><input type="number" @bind="t.Days" /></div>
-                                    <div class="col-auto">days</div>
-                                    <div class="col"><input type="number" @bind="t.Hours" /></div>
-                                    <div class="col-auto">hours</div>
-                                    <div class="col"><input type="number" @bind="t.Minutes" /></div>
-                                    <div class="col-auto">minutes</div>
-                                    <div class="col"><input type="number" @bind="t.Seconds" /></div>
-                                    <div class="col-auto">seconds</div>
-                                    break;
-                            }
-                            <div class="col-auto text-right">
+                                    case TimeRemainingTrigger t:
+                                        <span>@Loc["TimeRemaining"] @t.Comparison @t.Days @Loc["days"] @t.Hours @Loc["hours"] @t.Minutes @Loc["minutes"] @t.Seconds @Loc["seconds"]</span>
+                                        break;
+                                }
+                            </div>
+                            <div class="col-auto text-right p-0">
+                                <button class="btn-sm btn-primary" @onclick="(() => EditTrigger(trigger))">
+                                    <span class="oi oi-pencil" />
+                                </button>
+                            </div>
+                            <div class="col-auto text-right p-0">
                                 <button class="btn-sm btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
                                     <span class="oi oi-x" />
                                 </button>
@@ -162,63 +133,45 @@
                     </div>
                     @foreach (var action in ta.Actions)
                     {
-                        <div class="row triggered-action-row">
-                            @switch (action)
-                            {
-                                case SetBotsAction a:
-                                    <div class="col-auto">Set bots to</div>
-                                    <div class="col"><input type="number" @bind="a.Amount" /></div>
-                                    <div class="col-auto">in job</div>
-                                    <div class="col"><input type="number" @bind="a.TargetJobId" /></div>
-                                    break;
+                        <div class="row justify-content-lg-center triggered-action-row pr-2 pl-2">
+                            <div class="col p-0">
+                                @switch (action)
+                                {
+                                    case SetBotsAction a:
+                                        <span>@Loc["SetBotsTo"] @a.Amount @Loc["inJob"] @a.TargetJobId</span>
+                                        break;
 
-                                case WaitAction a:
-                                    <div class="col-auto">Wait</div>
-                                    <div class="col"><input type="number" @bind="a.Days" /></div>
-                                    <div class="col-auto">days</div>
-                                    <div class="col"><input type="number" @bind="a.Hours" /></div>
-                                    <div class="col-auto">hours</div>
-                                    <div class="col"><input type="number" @bind="a.Minutes" /></div>
-                                    <div class="col-auto">minutes</div>
-                                    <div class="col"><input type="number" @bind="a.Seconds" /></div>
-                                    <div class="col-auto">seconds</div>
-                                    break;
+                                    case WaitAction a:
+                                        <span>@Loc["Wait"] @a.Days @Loc["days"] @a.Hours @Loc["hours"] @a.Minutes @Loc["minutes"] @a.Seconds @Loc["seconds"]</span>
+                                        break;
 
-                                case SetRelativeStartConditionAction a:
-                                    <div class="col-auto">Set relative time</div>
-                                    <div class="col"><input type="number" @bind="a.Days" /></div>
-                                    <div class="col-auto">days</div>
-                                    <div class="col"><input type="number" @bind="a.Hours" /></div>
-                                    <div class="col-auto">hours</div>
-                                    <div class="col"><input type="number" @bind="a.Minutes" /></div>
-                                    <div class="col-auto">minutes</div>
-                                    <div class="col"><input type="number" @bind="a.Seconds" /></div>
-                                    <div class="col-auto">seconds on job</div>
-                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
-                                    break;
+                                    case SetRelativeStartConditionAction a:
+                                        <span>@Loc["SetRelativeTimeTo"] @a.Days @Loc["days"] @a.Hours @Loc["hours"] @a.Minutes @Loc["minutes"] @a.Seconds @Loc["seconds"] @Loc["inJob"] @a.JobId</span>
+                                        break;
 
-                                case StartJobAction a:
-                                    <div class="col-auto">Start job</div>
-                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
-                                    break;
+                                    case StartJobAction a:
+                                        <span>@Loc["StartJob"] @a.JobId</span>
+                                        break;
 
-                                case StopJobAction a:
-                                    <div class="col-auto">Stop job</div>
-                                    <div class="col"><input type="number" @bind="a.JobId" /></div>
-                                    break;
+                                    case StopJobAction a:
+                                        <span>@Loc["StopJob"] @a.JobId</span>
+                                        break;
 
-                                case DiscordWebhookAction a:
-                                    <div class="col-auto">Send</div>
-                                    <div class="col"><input type="text" @bind="a.Message" /></div>
-                                    <div class="col-auto">on webhook</div>
-                                    <div class="col"><input type="text" @bind="a.Webhook" /></div>
-                                    break;
+                                    case DiscordWebhookAction a:
+                                        <span>@Loc["Send"] @a.Message @Loc["onWebhook"] @a.Webhook</span>
+                                        break;
 
-                                case ReloadProxiesAction a:
-                                    <div class="col">Reload Proxies</div>
-                                    break;
-                            }
-                            <div class="col-auto text-right">
+                                    case ReloadProxiesAction a:
+                                        <span>@Loc["ReloadProxies"]</span>
+                                        break;
+                                }
+                            </div>
+                            <div class="col-auto text-right p-0">
+                                <button class="btn-sm btn-primary" @onclick="(() => EditAction(action))">
+                                    <span class="oi oi-pencil" />
+                                </button>
+                            </div>
+                            <div class="col-auto text-right p-0">
                                 <button class="btn-sm btn-danger" @onclick="(() => ta.Actions.Remove(action))">
                                     <span class="oi oi-x" />
                                 </button>

@@ -1,0 +1,61 @@
+﻿@using RuriLib.Models.Jobs.Monitor.Actions
+@inject IModalService ModalService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ActionEdit> Loc
+
+<EditForm Model="Action">
+    @switch (Action)
+    {
+        case SetBotsAction a:
+            <span>@Loc["SetBotsTo"] </span>
+            <InputNumber @bind-Value="a.Amount" />
+            <span>@Loc["inJob"] </span>
+            <InputNumber @bind-Value="a.TargetJobId" />
+            break;
+
+        case WaitAction a:
+            <span>@Loc["Wait"]</span>
+            <InputNumber @bind-Value="a.Days" /> @Loc["days"]
+            <InputNumber @bind-Value="a.Hours" /> @Loc["hours"]
+            <InputNumber @bind-Value="a.Minutes" /> @Loc["minutes"]
+            <InputNumber @bind-Value="a.Seconds" /> @Loc["seconds"]
+            break;
+
+        case SetRelativeStartConditionAction a:
+            <span>@Loc["SetRelativeStartTo"]</span>
+            <InputNumber @bind-Value="a.Days" /> @Loc["days"]
+            <InputNumber @bind-Value="a.Hours" /> @Loc["hours"]
+            <InputNumber @bind-Value="a.Minutes" /> @Loc["minutes"]
+            <InputNumber @bind-Value="a.Seconds" /> @Loc["seconds"]
+            <span>@Loc["inJob"]</span>
+            <InputNumber @bind-Value="a.JobId" />
+            break;
+
+        case StartJobAction a:
+            <span>@Loc["StartJob"]</span>
+            <InputNumber @bind-Value="a.JobId" />
+            break;
+
+        case StopJobAction a:
+            <span>@Loc["StopJob"]</span>
+            <InputNumber @bind-Value="a.JobId" />
+            break;
+
+        case DiscordWebhookAction a:
+            <span>@Loc["Send"]</span>
+            <InputText @bind-Value="a.Message" />
+            <span>@Loc["onWebhook"]</span>
+            <InputText @bind-Value="a.Webhook" />
+            break;
+
+        case ReloadProxiesAction a:
+            <span>@Loc["ReloadProxies"]</span>
+            break;
+    }
+</EditForm>
+
+<button class="btn btn-success" @onclick="(() => BlazoredModal.Close())">@Loc["Ok"]</button>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public RuriLib.Models.Jobs.Monitor.Actions.Action Action { get; set; }
+}

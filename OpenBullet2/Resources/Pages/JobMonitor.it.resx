@@ -126,17 +126,77 @@
   <data name="Active" xml:space="preserve">
     <value>Attiva</value>
   </data>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Proxy funzionanti</value>
+  </data>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Proxy bannati</value>
+  </data>
+  <data name="Bans" xml:space="preserve">
+    <value>Ban</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Credito captcha</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>giorni</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Modifica Azione</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Modifica Condizione</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Errori</value>
+  </data>
   <data name="Executing" xml:space="preserve">
     <value>In esecuzione</value>
   </data>
   <data name="Executions" xml:space="preserve">
     <value>Esecuzioni</value>
   </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Non funzionanti</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Hit</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>ore</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>nel job</value>
+  </data>
   <data name="Job" xml:space="preserve">
     <value>Job</value>
   </data>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Job terminato</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Stato del job</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minuti</value>
+  </data>
   <data name="New" xml:space="preserve">
     <value>Nuova</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>sul webhook</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Ricarica proxy</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
@@ -150,16 +210,52 @@
   <data name="Reset" xml:space="preserve">
     <value>Azzera</value>
   </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Riprovati</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>secondi</value>
+  </data>
   <data name="SelectActionType" xml:space="preserve">
     <value>Seleziona tipo azione</value>
   </data>
   <data name="SelectTriggerType" xml:space="preserve">
     <value>Seleziona tipo condizione</value>
   </data>
+  <data name="Send" xml:space="preserve">
+    <value>Invia</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Imposta i bot a</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Imposta il tempo relativo a</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Inizia job</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Ferma job</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Testati</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tempo trascorso</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tempo rimanente</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>Da controllare</value>
+  </data>
   <data name="Triggers" xml:space="preserve">
     <value>Condizioni</value>
   </data>
   <data name="TriggersDescription" xml:space="preserve">
     <value>Devono essere vere tutte assieme</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Aspetta</value>
   </data>
 </root>
