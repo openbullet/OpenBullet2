@@ -22,6 +22,7 @@ namespace OpenBullet2.Shared
     public partial class MultiRunJobViewer
     {
         [Inject] public IModalService Modal { get; set; }
+        [Inject] public VolatileSettingsService VolatileSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
         [Inject] public JobLoggerService Logger { get; set; }
         [Inject] public IRecordRepository RecordRepo { get; set; }
@@ -306,5 +307,52 @@ namespace OpenBullet2.Shared
                 Job.CustomInputsAnswers[input.VariableName] = answer;
             }
         }
+
+        private async Task CopyHitDataCapture()
+        {
+            if (selectedHit == null)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            await js.CopyToClipboard($"{selectedHit.Data.Data} | {selectedHit.CapturedDataString}");
+        }
+
+        private async Task SendToDebugger()
+        {
+            if (selectedHit == null)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            VolatileSettings.DebuggerOptions.TestData = selectedHit.Data.Data;
+            VolatileSettings.DebuggerOptions.WordlistType = selectedHit.Data.Type.Name;
+            VolatileSettings.DebuggerOptions.UseProxy = selectedHit.Proxy != null;
+
+            if (selectedHit.Proxy != null)
+            {
+                VolatileSettings.DebuggerOptions.ProxyType = selectedHit.Proxy.Type;
+                VolatileSettings.DebuggerOptions.TestProxy = selectedHit.Proxy.ToString();
+            }
+        }
+
+        private async Task ShowFullLog()
+        {
+            if (selectedHit == null)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(BotLoggerViewerModal.BotLogger), selectedHit.BotLogger);
+
+            Modal.Show<BotLoggerViewerModal>(Loc["BotLog"], parameters);
+        }
+
+        private async Task ShowNoHitSelectedWarning()
+            => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
     }
 }

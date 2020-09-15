@@ -1,0 +1,40 @@
+﻿@using RuriLib.Logging 
+@inject IModalService Modal
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BotLoggerViewer> Loc
+
+<h5>@Loc["CompleteLog"]</h5>
+<div class="debugger-log">
+    @foreach (var entry in BotLogger.Entries)
+    {
+        @if (entry.Message.Contains("\n"))
+        {
+            <textarea class="debugger-entry" readonly
+                        style="color: @entry.Color; border: none; height: 500px; overflow: hidden;">@entry.Message</textarea>
+            @if (entry.CanViewAsHtml)
+            {
+                <button class="btn-sm btn-primary" @onclick="@(() => ViewHtml(entry.Message))">@Loc["ViewAsHTML"]</button>
+            }
+        }
+        else
+        {
+            <p style="color: @entry.Color;">@entry.Message</p>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public IBotLogger BotLogger { get; set; }
+
+    public void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void ViewHtml(string html)
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(HTMLView.Html), html);
+
+        Modal.Show<HTMLView>(Loc["HTMLView"], parameters);
+    }
+}

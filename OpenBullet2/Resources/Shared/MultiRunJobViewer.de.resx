@@ -129,6 +129,9 @@
   <data name="Banned" xml:space="preserve">
     <value>Gebannt</value>
   </data>
+  <data name="BotLog" xml:space="preserve">
+    <value>Bot Protokoll</value>
+  </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
   </data>

@@ -44,5 +44,8 @@ namespace OpenBullet2.Helpers
 
             return false;
         }
+
+        public async static Task CopyToClipboard(this IJSRuntime js, string text)
+            => await js.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 }

@@ -201,6 +201,16 @@
 
 <GenericLogger JobId="Job.Id" />
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="list-group list-group-horizontal">
+            <button class="btn-sm btn-primary m-sm-1" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
+            <button class="btn-sm btn-primary m-sm-1" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
+        </div>
+    </div>
+</div>
+
 <RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="false" PageSize="30"
             AllowSorting="true" Data="@Job.Hits" TItem="Hit" ColumnWidth="200px"

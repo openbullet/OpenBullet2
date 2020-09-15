@@ -1,0 +1,9 @@
+﻿@using RuriLib.Logging
+@inject IModalService ModalService
+
+<BotLoggerViewer BotLogger="BotLogger" />
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public IBotLogger BotLogger { get; set; }
+}

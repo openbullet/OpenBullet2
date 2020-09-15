@@ -38,6 +38,7 @@ namespace OpenBullet2.Shared
         private BotLogger logger;
         private CancellationTokenSource cts;
         private DebuggerOptions options;
+        private BotLoggerViewer loggerViewer;
 
         protected override void OnInitialized()
         {
@@ -118,6 +119,7 @@ namespace OpenBullet2.Shared
                 isRunning = false;
             }
 
+            loggerViewer.Refresh();
             await InvokeAsync(StateHasChanged);
             await js.InvokeVoidAsync("adjustTextAreas").ConfigureAwait(false);
         }
@@ -125,14 +127,6 @@ namespace OpenBullet2.Shared
         private void Stop()
         {
             cts.Cancel();
-        }
-
-        private void ViewHtml(string html)
-        {
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(HTMLView.Html), html);
-
-            Modal.Show<HTMLView>("HTML View", parameters);
         }
     }
 }
