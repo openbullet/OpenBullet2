@@ -35,7 +35,7 @@
                     <span style="margin-right: 10px;">@Job.Bots</span>
                     @if (!changingBots)
                     {
-                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> Change</button>
+                        <button class="btn btn-sm btn-primary" type="button" @onclick="ChangeBots"> Change</button>
                     }
                     else
                     {
@@ -52,17 +52,17 @@
     @switch (Job.Status)
     {
         case TaskManagerStatus.Idle:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
             break;
 
         case TaskManagerStatus.Paused:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
             break;
 
         case TaskManagerStatus.Running:
-            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <button class="btn btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
             break;
 
         case TaskManagerStatus.Pausing:
@@ -71,7 +71,7 @@
 
         case TaskManagerStatus.Stopping:
             <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
             break;
     }
 </div>

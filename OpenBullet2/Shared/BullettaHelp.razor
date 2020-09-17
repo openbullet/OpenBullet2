@@ -2,7 +2,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<BullettaHelp> Loc
 
 <img class="bulletta-image" src="images/bulletta-face.png" @onclick="Toggle" />
-<!--<button class="btn-sm btn-primary" @onclick="Toggle"><span class="oi oi-question-mark"></span></button>-->
+<!--<button class="btn btn-sm btn-primary" @onclick="Toggle"><span class="oi oi-question-mark"></span></button>-->
 
 @if (showHelp)
 {
@@ -14,11 +14,11 @@
 
                 @if (index != Messages.Count() - 1)
                 {
-                    <button class="btn-sm btn-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>@Loc["Next"]...</i></button>
+                    <button class="btn btn-sm btn-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>@Loc["Next"]...</i></button>
                 }
                 else
                 {
-                    <button class="btn-sm btn-success" @onclick="Dismiss"><span class="oi oi-task"></span> <i>@Loc["Ok"]!</i></button>
+                    <button class="btn btn-sm btn-success" @onclick="Dismiss"><span class="oi oi-task"></span> <i>@Loc["Ok"]!</i></button>
                 }
             </div>
             <div class="col-auto">

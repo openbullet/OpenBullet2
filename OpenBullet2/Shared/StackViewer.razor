@@ -3,14 +3,14 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<StackViewer> Loc
 
 <div class="list-group list-group-horizontal">
-    <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> @Loc["Delete"]</button>
-    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> @Loc["Up"]</button>
-    <button class="btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> @Loc["Down"]</button>
+    <button class="btn btn-sm btn-danger m-sm-1" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> @Loc["Delete"]</button>
+    <button class="btn btn-sm btn-primary m-sm-1" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> @Loc["Up"]</button>
+    <button class="btn btn-sm btn-primary m-sm-1" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> @Loc["Down"]</button>
 </div>
 <div class="list-group list-group-horizontal">
-    <button class="btn-sm btn-secondary m-sm-1" @onclick="CloneBlock"><span class="oi oi-layers"></span> @Loc["Clone"]</button>
-    <button class="btn-sm btn-secondary m-sm-1" @onclick="DisableBlock"><span class="oi oi-ban"></span> @Loc[selectedBlock != null && selectedBlock.Disabled ? "Enable" : "Disable"]</button>
-    <button class="btn-sm btn-secondary m-sm-1" @onclick="Undo"><span class="oi oi-action-undo"></span> @Loc["Undo"]</button>
+    <button class="btn btn-sm btn-secondary m-sm-1" @onclick="CloneBlock"><span class="oi oi-layers"></span> @Loc["Clone"]</button>
+    <button class="btn btn-sm btn-secondary m-sm-1" @onclick="DisableBlock"><span class="oi oi-ban"></span> @Loc[selectedBlock != null && selectedBlock.Disabled ? "Enable" : "Disable"]</button>
+    <button class="btn btn-sm btn-secondary m-sm-1" @onclick="Undo"><span class="oi oi-action-undo"></span> @Loc["Undo"]</button>
 </div>
 
 @foreach (var block in Stack)

@@ -19,16 +19,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="AddKeychain"><span class="oi oi-plus"></span></button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="AddKeychain"><span class="oi oi-plus"></span></button>
         </div>
     </div>
     @foreach (var keychain in Block.Keychains)
     {
         <KeycheckKeychain Keychain="keychain" >
             <Buttons>
-                <button class="btn-sm btn-primary" @onclick="@(() => MoveUp(keychain))"><span class="oi oi-arrow-top"></span> Move up</button>
-                <button class="btn-sm btn-primary" @onclick="@(() => MoveDown(keychain))"><span class="oi oi-arrow-bottom"></span> Move down</button>
-                <button class="btn-sm btn-danger" @onclick="@(() => Block.Keychains.Remove(keychain))"><span class="oi oi-x"></span></button>
+                <button class="btn btn-sm btn-primary" @onclick="@(() => MoveUp(keychain))"><span class="oi oi-arrow-top"></span> Move up</button>
+                <button class="btn btn-sm btn-primary" @onclick="@(() => MoveDown(keychain))"><span class="oi oi-arrow-bottom"></span> Move down</button>
+                <button class="btn btn-sm btn-danger" @onclick="@(() => Block.Keychains.Remove(keychain))"><span class="oi oi-x"></span></button>
             </Buttons>
         </KeycheckKeychain>
     }

@@ -59,15 +59,15 @@
     <label>@Loc["DataRules"]</label>
     <br />
     <div class="list-group list-group-horizontal">
-        <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new DataRule("", ".*")))">
+        <button type="button" class="btn btn-sm btn-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new DataRule("", ".*")))">
             <span class="oi oi-plus"></span>
             @Loc["AddBlank"]
         </button>
-        <button type="button" class="btn-sm btn-primary"
+        <button type="button" class="btn btn-sm btn-primary"
                 @onclick="@(() => showRegexHelper = !showRegexHelper)">
             <span class="oi oi-plus"></span> @Loc["ToggleRegexHelper"]
         </button>
-        <button type="button" class="btn-sm btn-danger"
+        <button type="button" class="btn btn-sm btn-danger"
                 @onclick="@(() => settings.DataSettings.DataRules.Clear())">
             <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
@@ -93,7 +93,7 @@
                     <InputText @bind-Value="rule.RegexToMatch" />
                 </div>
                 <div class="col-sm-auto ml-0 pr-0">
-                    <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
                         <span class="oi oi-minus"></span> @Loc["Remove"]</button>
                 </div>
             </div>
@@ -109,10 +109,10 @@
     <label>@Loc["CustomInputs"]</label>
     <br />
     <div class="list-group list-group-horizontal">
-        <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
+        <button type="button" class="btn btn-sm btn-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
             <span class="oi oi-plus"></span> @Loc["Add"]
         </button>
-        <button type="button" class="btn-sm btn-danger"
+        <button type="button" class="btn btn-sm btn-danger"
                 @onclick="@(() => settings.InputSettings.CustomInputs.Clear())">
             <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
@@ -140,7 +140,7 @@
                     <InputText @bind-Value="input.DefaultAnswer" />
                 </div>
                 <div class="col-sm-auto ml-0 pr-0">
-                    <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
                         <span class="oi oi-minus"></span>
                         @Loc["Remove"]
                     </button>

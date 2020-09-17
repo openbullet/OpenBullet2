@@ -47,10 +47,10 @@
     <br />
     <p>@Loc["ProxyCheckTargetsDescription"]</p>
     <div class="list-group list-group-horizontal">
-        <button type="button" class="btn-sm btn-success" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Add(new ProxyCheckTarget()))">
+        <button type="button" class="btn btn-sm btn-success" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Add(new ProxyCheckTarget()))">
             <span class="oi oi-plus"></span> @Loc["Add"]
         </button>
-        <button type="button" class="btn-sm btn-danger"
+        <button type="button" class="btn btn-sm btn-danger"
                 @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Clear())">
             <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
@@ -72,7 +72,7 @@
                     <InputText @bind-Value="input.SuccessKey" />
                 </div>
                 <div class="col-sm-auto ml-0 pr-0 pl-0">
-                    <button type="button" class="btn-sm btn-primary" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
                         <span class="oi oi-minus"></span>
                         @Loc["Remove"]
                     </button>
@@ -96,7 +96,7 @@
 
     <label>@Loc["AdminUsername"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminUsername" />
-    <button class="btn-sm btn-primary" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
+    <button class="btn btn-sm btn-primary" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
     <br />
     <br />
 

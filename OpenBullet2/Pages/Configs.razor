@@ -7,15 +7,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> @Loc["New"]</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> @Loc["Delete"]</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="@(() => uploadDisplay = !uploadDisplay)">
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="CreateConfig"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="EditConfig"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="DeleteConfig"><span class="oi oi-x"></span> @Loc["Delete"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="@(() => uploadDisplay = !uploadDisplay)">
                 <span class="oi oi-data-transfer-upload"></span> @Loc["Upload"]
             </button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> @Loc["Download"]</button>
-            <button class="btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> @Loc["Reload"]</button>
-            <button class="btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> @Loc["ToggleView"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="DownloadConfig"><span class="oi oi-data-transfer-download"></span> @Loc["Download"]</button>
+            <button class="btn btn-sm btn-secondary m-sm-1" @onclick="ReloadConfigs"><span class="oi oi-reload"></span> @Loc["Reload"]</button>
+            <button class="btn btn-sm btn-success m-sm-1" style="margin-left: 50px;" @onclick="ToggleView"><span class="oi oi-wrench"></span> @Loc["ToggleView"]</button>
         </div>
     </div>
     @if (uploadDisplay)
