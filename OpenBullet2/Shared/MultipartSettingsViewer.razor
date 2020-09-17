@@ -3,9 +3,9 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-success m-sm-1" @onclick="AddStringContent"><span class="oi oi-plus"></span> String Content</button>
-            <button class="btn btn-sm btn-success m-sm-1" @onclick="AddRawContent"><span class="oi oi-plus"></span> Raw Content</button>
-            <button class="btn btn-sm btn-success m-sm-1" @onclick="AddFileContent"><span class="oi oi-plus"></span> File Content</button>
+            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="AddStringContent"><span class="oi oi-plus"></span> String Content</button>
+            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="AddRawContent"><span class="oi oi-plus"></span> Raw Content</button>
+            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="AddFileContent"><span class="oi oi-plus"></span> File Content</button>
         </div>
     </div>
     @foreach (var content in Contents)
@@ -63,7 +63,7 @@
                 </div>
                 break;
         }
-        <button type="button" class="btn btn-sm btn-danger" @onclick="@(() => Contents.Remove(content))">
+        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Contents.Remove(content))">
         <span class="oi oi-x"></span> Remove</button>
     }
 </div>

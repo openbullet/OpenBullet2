@@ -47,10 +47,10 @@
     <br />
     <p>@Loc["ProxyCheckTargetsDescription"]</p>
     <div class="list-group list-group-horizontal">
-        <button type="button" class="btn btn-sm btn-success" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Add(new ProxyCheckTarget()))">
+        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Add(new ProxyCheckTarget()))">
             <span class="oi oi-plus"></span> @Loc["Add"]
         </button>
-        <button type="button" class="btn btn-sm btn-danger"
+        <button type="button" class="btn btn-sm btn-outline-danger"
                 @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Clear())">
             <span class="oi oi-x"></span> @Loc["Clear"]
         </button>
@@ -72,7 +72,7 @@
                     <InputText @bind-Value="input.SuccessKey" />
                 </div>
                 <div class="col-auto px-1 px-md-2">
-                    <button type="button" class="btn btn-sm btn-danger" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
+                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
                         <span class="oi oi-x"></span></button>
                 </div>
             </div>
@@ -94,7 +94,7 @@
 
     <label>@Loc["AdminUsername"]</label>
     <InputText style="margin-bottom: 15px;" @bind-Value="settings.SecuritySettings.AdminUsername" />
-    <button class="btn btn-sm btn-primary" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
+    <button class="btn btn-sm btn-outline-primary" @onclick="ChangePassword">@Loc["ChangePassword"]</button>
     <br />
     <br />
 
@@ -111,5 +111,5 @@
     <!-- Work in progress -->
 </EditForm>
 
-<button class="btn btn-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
-<button class="btn btn-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
+<button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
+<button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>

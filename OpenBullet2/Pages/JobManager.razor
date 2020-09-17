@@ -8,8 +8,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
-            <button class="btn btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
     @foreach (var job in Manager.Jobs)
@@ -88,15 +88,15 @@
                 </div>
             </div>
             <div class="col-sm-auto d-flex justify-content-around">
-                <button class="btn btn-primary" style="height: 100%; width: 100%;"
+                <button class="btn btn-outline-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
                 </button>
-                <button class="btn btn-primary" style="height: 100%; width: 100%;"
+                <button class="btn btn-outline-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-layers" title="@Loc["Clone"]"></span>
                 </button>
-                <button class="btn btn-danger" style="height: 100%; width: 100%;"
+                <button class="btn btn-outline-danger" style="height: 100%; width: 100%;"
                         @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-x" title="@Loc["Remove"]"></span>
                 </button>

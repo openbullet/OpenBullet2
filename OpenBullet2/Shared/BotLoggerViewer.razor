@@ -12,7 +12,7 @@
                         style="color: @entry.Color; border: none; height: 500px; overflow: hidden;">@entry.Message</textarea>
             @if (entry.CanViewAsHtml)
             {
-                <button class="btn btn-sm btn-primary" @onclick="@(() => ViewHtml(entry.Message))">@Loc["ViewAsHTML"]</button>
+                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => ViewHtml(entry.Message))">@Loc["ViewAsHTML"]</button>
             }
         }
         else

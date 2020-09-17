@@ -11,7 +11,7 @@
     <InputText @bind-Value="user.Username" />
     <label>@Loc["Password"]</label>
     <InputText type="password" @bind-Value="user.Password" />
-    <button type="submit" class="btn btn-primary" @onclick="ValidateUser">@Loc["Login"]</button>
+    <button type="submit" class="btn btn-outline-primary" @onclick="ValidateUser">@Loc["Login"]</button>
 </EditForm>
 
 @code {

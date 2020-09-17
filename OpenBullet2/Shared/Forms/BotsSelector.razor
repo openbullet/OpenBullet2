@@ -6,7 +6,7 @@
     <InputNumber @bind-Value="Bots" />
 </EditForm>
 
-<button class="btn btn-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
+<button class="btn btn-outline-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }

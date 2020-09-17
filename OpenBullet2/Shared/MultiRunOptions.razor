@@ -33,7 +33,7 @@
                     </div>
                     <p>@selectedConfig.Metadata.Name @Loc["by"] @selectedConfig.Metadata.Author</p>
                 }
-                <button class="btn btn-primary" style="margin-bottom: 20px;" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
+                <button class="btn btn-outline-primary" style="margin-bottom: 20px;" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
                 <br />
                 <label style="margin-top: 15px;">@Loc["ProxyMode"]</label>
                 <InputSelect @bind-Value="Options.ProxyMode">

@@ -21,13 +21,13 @@
                 <br />
                 <progress max="@max" value="@value" /><span style="margin-left: 15px;">@(progress.ToString("F"))% @Loc["Uploaded"]</span>
                 <br />
-                <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="Upload">@Loc["Upload"]</button>
+                <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Upload">@Loc["Upload"]</button>
             </RadzenTabsItem>
             <RadzenTabsItem Text="@Loc["FileSystem"]">
                 <label>@Loc["BaseDirectory"]</label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <button class="btn btn-success" style="height: 30px; line-height: 10px;"
+                        <button class="btn btn-outline-success" style="height: 30px; line-height: 10px;"
                                 @onclick="@(() => LoadTree(baseDirectory))">@Loc["Ok"]</button>
                     </div>
                     <div style="width: 80%">
@@ -38,7 +38,7 @@
                     <RadzenTreeLevel Text="@GetTextForNode" Template="@FileOrFolderTemplate" />
                 </RadzenTree>
                 <p>@Loc["SelectedFile"]: @selectedFile</p>
-                <button type="button" class="btn btn-success" style="margin-top: 10px;" @onclick="SelectFile">@Loc["Select"]</button>
+                <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="SelectFile">@Loc["Select"]</button>
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

@@ -7,8 +7,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-success m-sm-1" @onclick="AddNew"><span class="oi oi-plus"></span> @Loc["New"]</button>
-            <button class="btn btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="AddNew"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
     @foreach (var ta in MonitorService.TriggeredActions)
@@ -30,8 +30,8 @@
                     <p>@Loc["TriggersDescription"].</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
-                            <button class="btn btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
-                            <button class="btn btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllTriggers(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+                            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(async () => await AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="(() => RemoveAllTriggers(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
                         </div>
                     </div>
                     @foreach (var trigger in ta.Triggers)
@@ -110,12 +110,12 @@
                                 }
                             </div>
                             <div class="col-auto text-right p-0">
-                                <button class="btn btn-sm btn-primary" @onclick="(() => EditTrigger(trigger))">
+                                <button class="btn btn-sm btn-outline-primary" @onclick="(() => EditTrigger(trigger))">
                                     <span class="oi oi-pencil" />
                                 </button>
                             </div>
                             <div class="col-auto text-right p-0">
-                                <button class="btn btn-sm btn-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
+                                <button class="btn btn-sm btn-outline-danger" @onclick="(() => ta.Triggers.Remove(trigger))">
                                     <span class="oi oi-x" />
                                 </button>
                             </div>
@@ -127,8 +127,8 @@
                     <p>@Loc["ActionsDescription"].</p>
                     <div class="row">
                         <div class="list-group list-group-horizontal">
-                            <button class="btn btn-sm btn-success m-sm-1" @onclick="(async () => await AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
-                            <button class="btn btn-sm btn-danger m-sm-1" @onclick="(() => RemoveAllActions(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+                            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(async () => await AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
+                            <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="(() => RemoveAllActions(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
                         </div>
                     </div>
                     @foreach (var action in ta.Actions)
@@ -167,12 +167,12 @@
                                 }
                             </div>
                             <div class="col-auto text-right p-0">
-                                <button class="btn btn-sm btn-primary" @onclick="(() => EditAction(action))">
+                                <button class="btn btn-sm btn-outline-primary" @onclick="(() => EditAction(action))">
                                     <span class="oi oi-pencil" />
                                 </button>
                             </div>
                             <div class="col-auto text-right p-0">
-                                <button class="btn btn-sm btn-danger" @onclick="(() => ta.Actions.Remove(action))">
+                                <button class="btn btn-sm btn-outline-danger" @onclick="(() => ta.Actions.Remove(action))">
                                     <span class="oi oi-x" />
                                 </button>
                             </div>
@@ -181,12 +181,12 @@
                 </div>
                 <div class="col-2">
                     <div class="row">
-                        <button class="btn btn-danger" style="height: 100%; width: 100%;" @onclick="(() => Remove(ta))">
+                        <button class="btn btn-outline-danger" style="height: 100%; width: 100%;" @onclick="(() => Remove(ta))">
                             @Loc["Remove"]
                         </button>
                     </div>
                     <div class="row">
-                        <button class="btn btn-primary" style="height: 100%; width: 100%;" @onclick="(() => ta.Reset())">
+                        <button class="btn btn-outline-primary" style="height: 100%; width: 100%;" @onclick="(() => ta.Reset())">
                             @Loc["Reset"]
                         </button>
                     </div>

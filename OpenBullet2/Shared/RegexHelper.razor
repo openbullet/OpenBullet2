@@ -32,8 +32,8 @@
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-primary" @onclick="TestRegex"><span class="oi oi-fire"></span> Test Regex</button>
-            <button class="btn btn-sm btn-success" 
+            <button class="btn btn-sm btn-outline-primary" @onclick="TestRegex"><span class="oi oi-fire"></span> Test Regex</button>
+            <button class="btn btn-sm btn-outline-success" 
                     @onclick="@(async () => { BuildRegex(); await BuiltRegex.InvokeAsync(regex); })">
             <span class="oi oi-task"></span> Done</button>
         </div>

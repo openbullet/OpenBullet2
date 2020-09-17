@@ -15,7 +15,7 @@
 }
 else
 {
-    <button type="button" class="btn btn-success" @onclick="GoBack">Back</button>
+    <button type="button" class="btn btn-outline-success" @onclick="GoBack">Back</button>
     <GenericList List="Descriptors.Where(b => b.Category.Name == category.Value.Name).OrderBy(b => b.Name).ToList()">
         <ElementTemplate Context="descriptor">
             <div style="margin-top: 5px" ></div>
