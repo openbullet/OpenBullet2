@@ -449,8 +449,8 @@ progress {
     background-color: var(--bg-secondary);
 }
 
-.job-overview > div > p > span:not(:first-child) {
-    margin-left: 10px;
+.job-overview > span:not(:first-child) {
+    margin-left: 0.5rem;
 }
 /* -- JOB OVERVIEW */
 
