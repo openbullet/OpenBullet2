@@ -15,10 +15,10 @@
     @foreach (var job in Manager.Jobs)
     {
         <div class="row mt-3">
-            <div class="col-md-2 col-xl-1 job-overview-left-col d-flex align-items-center">
+            <div class="col-sm-auto job-overview-left-col d-flex align-items-center">
                 <span>#@job.Id  [@job.Status]</span>
             </div>
-            <div class="col-md-8 col-xl-10 pl-0 job-overview-mid-col d-flex align-items-center">
+            <div class="col-sm align-self-stretch pl-0 job-overview-mid-col d-flex align-items-center">
                 <div class="job-overview px-2" @onclick="@(() => SelectJob(job))">
                     @switch (job)
                     {
@@ -87,7 +87,7 @@
                     }
                 </div>
             </div>
-            <div class="col-md-2 col-xl-1 d-flex justify-content-around">
+            <div class="col-sm-auto d-flex justify-content-around">
                 <button class="btn btn-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
