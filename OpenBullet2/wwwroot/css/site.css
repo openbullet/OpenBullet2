@@ -502,6 +502,7 @@ progress {
 }
 /* -- BULLETTA */
 
+/* BOOTSTRAP BUTTONS OVERRIDES -- */
 .btn-outline-primary {
     color: #6aa8ea;
 }
@@ -509,3 +510,10 @@ progress {
 .btn-outline-secondary {
     color: #bbb;
 }
+/* -- BOOTSTRAP BUTTONS OVERRIDES */
+
+/* BOOTSTRAP LIST GROUP OVERRIDES -- */
+.list-group-horizontal > button:not(:first-child){
+    margin-left: 0.25rem;
+}
+/* -- BOOTSTRAP LIST GROUP OVERRIDES */

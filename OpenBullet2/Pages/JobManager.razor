@@ -8,8 +8,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
-            <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
     @foreach (var job in Manager.Jobs)
@@ -26,7 +26,7 @@
                             <span>
                                 @if (x.Config != null)
                                 {
-                                    <b>Config:</b> @x.Config.Metadata.Name
+                                    <b>Config: </b>@x.Config.Metadata.Name
                                 }
                                 else
                                 {
@@ -34,7 +34,7 @@
                                 }
                             </span>
                             <span>
-                                <b>Data Pool:</b>
+                                <b>Data Pool: </b>
                                 @switch (x.DataPool)
                                 {
                                     case WordlistDataPool p:
@@ -59,45 +59,42 @@
                                 }
                             </span>
                             <span>
-                                <b>Bots:</b> @x.Bots
+                                <b>Bots: </b>@x.Bots
                             </span>
                             <span>
-                                <b>Proxies:</b> @x.ProxyMode
+                                <b>Proxies: </b>@x.ProxyMode
                             </span>
                             <span style="color: yellowgreen;">
-                                <b>Hits:</b> @x.DataHits
+                                <b>Hits: </b>@x.DataHits
                             </span>
                             <span style="color: orange">
-                                <b>Custom:</b> @x.DataCustom
+                                <b>Custom: </b>@x.DataCustom
                             </span>
                             <span style="color: aqua">
-                                <b>ToCheck:</b> @x.DataToCheck 
+                                <b>ToCheck: </b>@x.DataToCheck 
                             </span>
                             @if (x.Manager == null)
                             {
-                                <span><b>Progress:</b> Unknown</span>
-                                <span><b>CPM:</b> Unknown</span>
+                                <span><b>Progress: </b>Unknown</span>
+                                <span><b>CPM: </b>Unknown</span>
                             }
                             else
                             {
-                                <span><b>Progress:</b> @x.DataTested / @x.DataPool.Size (@((x.Manager.Progress * 100).ToString("0.00"))%)</span>
-                                <span><b>CPM:</b> @x.Manager.CPM</span>
+                                <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Manager.Progress * 100).ToString("0.00"))%)</span>
+                                <span><b>CPM: </b>@x.Manager.CPM</span>
                             }
                             break;
                     }
                 </div>
             </div>
             <div class="col-sm-auto d-flex justify-content-around">
-                <button class="btn btn-outline-primary" style="height: 100%; width: 100%;"
-                        @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
+                <button class="btn btn-outline-primary w-100" @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
                 </button>
-                <button class="btn btn-outline-primary" style="height: 100%; width: 100%;"
-                        @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
+                <button class="btn btn-outline-primary ml-1 w-100" @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-layers" title="@Loc["Clone"]"></span>
                 </button>
-                <button class="btn btn-outline-danger" style="height: 100%; width: 100%;"
-                        @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
+                <button class="btn btn-outline-danger ml-1 w-100" @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-x" title="@Loc["Remove"]"></span>
                 </button>
             </div>
