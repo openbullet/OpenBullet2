@@ -182,7 +182,7 @@
                 <span style="font-weight: bold;">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
                 <span style="font-weight: bold;">@Loc["Elapsed"]: </span><span>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
                 <span style="font-weight: bold;">@Loc["Remaining"]: </span><span>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span style="font-weight: bold;">@Loc["Progress"]: </span><span>@((Job.Manager.Progress * 100).ToString("0.00"))%</span>
+                <span style="font-weight: bold;">@Loc["Progress"]: </span><span> @Job.DataTested / @Job.DataPool.Size (@((Job.Manager.Progress * 100).ToString("0.00"))%)</span>
             </div>
         }
         else
