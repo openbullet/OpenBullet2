@@ -1,5 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+/* FONTS -- */
 @font-face {
     font-family: "Roboto";
     src: url("../fonts/Roboto-Regular.ttf");
@@ -24,6 +25,12 @@
     font-style: italic;
 }
 
+:root {
+    --consolas: Consolas, "Lucida Console", Monaco, monospace;
+}
+/* -- FONTS */
+
+/* BUILTIN BLAZOR -- */
 html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
     font-family: Roboto !important;
@@ -211,28 +218,82 @@ app {
         display: block;
     }
 }
+/* -- BUILTIN BLAZOR */
 
-input, textarea {
-    background-color: #111;
-    color: #FFF;
-    border: 1px solid black;
+/* COLORS -- */
+:root {
+    --bg-primary: #222;
+    --bg-secondary: #111;
+    --bg-dark: #000;
+    --bg-light: #333;
+    --fg-primary: #fff;
+    --fg-secondary: #68f;
+    --fg-dark: #888;
+    --fg-light: #fff;
+    --fg-hit: greenyellow;
+    --fg-custom: orange;
+    --fg-fail: tomato;
+    --fg-retry: yellow;
+    --fg-ban: plum;
+    --fg-tocheck: skyblue;
+    --fg-error: red;
+}
+
+.bg-primary { background-color: var(--bg-primary) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-dark { background-color: var(--bg-dark) !important; }
+.bg-light { background-color: var(--bg-light) !important; }
+.fg-primary { color: var(--fg-primary) !important; }
+.fg-secondary { color: var(--fg-secondary) !important; }
+.fg-dark { color: var(--fg-dark) !important; }
+.fg-light { color: var(--fg-light) !important; }
+.fg-hit { color: var(--fg-hit) !important; }
+.fg-custom { color: var(--fg-custom) !important; }
+.fg-fail { color: var(--fg-fail) !important; }
+.fg-retry { color: var(--fg-retry) !important; }
+.fg-ban { color: var(--fg-ban) !important; }
+.fg-tocheck { color: var(--fg-tocheck) !important; }
+.fg-error { color: var(--fg-error) !important; }
+/* -- COLORS */
+
+/* CUSTOM DEFINITIONS -- */
+
+/*  INPUTS -- */
+input:not([type=checkbox]), textarea {
+    background-color: var(--bg-secondary);
+    color: var(--fg-primary);
+    border: 1px solid var(--bg-dark);
     padding: 3px 6px 3px 6px;
-    font-family: Consolas;
+    font-family: var(--consolas);
     margin-bottom: 15px;
-}
-
-input:not([type=checkbox]) {
     width: 100%;
 }
 
-textarea {
-    width: 100%;
+select {
+    margin-left: 5px !important;
+    background-color: var(--bg-secondary);
+    color: var(--fg-primary);
+    border-radius: 5px;
+    border: 1px solid var(--bg-dark);
+    padding: 3px;
 }
+/* -- INPUTS */
 
+/* GENERIC -- */
 hr {
-    background-color: #666;
+    background-color: var(--fg-dark);
 }
 
+a {
+    color: #54a6fb;
+}
+
+a:hover {
+    color: turquoise;
+}
+/* -- GENERIC */
+
+/* STACKER -- */
 .stacker-block {
     width: 100%;
     height: 70px;
@@ -240,18 +301,41 @@ hr {
     display: block;
     text-align: center;
     font-size: 24px;
-    border: 3px solid black;
+    border: 3px solid var(--bg-dark);
     border-radius: 5px;
     cursor: pointer;
     margin-top: 5px;
 }
+/* -- STACKER */
 
+/* LOGS -- */
+.debugger-log {
+    background-color: var(--bg-secondary);
+    font-family: var(--consolas);
+    padding: 20px;
+    height: 500px;
+    overflow-y: auto;
+    max-width: 1000px;
+}
+
+.generic-log {
+    background-color: #111;
+    font-family: var(--consolas);
+    padding: 20px;
+    height: 500px;
+    overflow-y: auto;
+}
+/* -- LOGS */
+
+/* EDITOR -- */
 .fullscreen-editor {
     width: 100%;
     height: 100%;
     display: flex;
 }
+/* -- EDITOR */
 
+/* MULTIPLE SELECTOR -- */
 .multiple-selector {
     display: flex;
 }
@@ -263,18 +347,18 @@ hr {
     width: 170px;
     padding: 0;
     border-radius: 3px;
-    border: 1px solid #666;
+    border: 1px solid var(--fg-dark);
 }
 
 .selectable-ul li {
     cursor: pointer;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid var(--fg-dark);
     padding: 2px 10px;
     font-size: 14px;
 }
 
 .selectable-ul li:hover {
-    background-color: #333;
+    background-color: var(--bg-light);
 }
 
 .multiple-selector-buttons {
@@ -287,41 +371,22 @@ hr {
 .multiple-selector-buttons button {
     margin: 5px;
 }
+/* -- MULTIPLE SELECTOR */
 
-.debugger-log {
-    background-color: #111;
-    font-family: Consolas;
-    padding: 20px;
-    height: 500px;
-    overflow-y: auto;
-    max-width: 1000px;
-}
-
-.generic-log {
-    background-color: #111;
-    font-family: Consolas;
-    padding: 20px;
-    height: 500px;
-    overflow-y: auto;
-}
-
-.no-padding {
-    padding: 0px 0px 0px 0px;
-}
-
-.hidden {
-    display: none;
-}
-
+/* PROGRESS -- */
 progress {
-    background-color: #111;
+    background-color: var(--bg-dark);
 }
+/* -- PROGRESS */
 
+/* HITS CAPTURED DATA -- */
 .grid-column-dynamic-width {
-    font-family: Consolas;
+    font-family: var(--consolas);
     font-size: 12px;
 }
+/* -- HITS CAPTURED DATA */
 
+/* VERTICAL BUTTONS LIST (e.g. job type selector) -- */
 .vertical-buttons-list ul {
     list-style: none;
     padding: unset;
@@ -332,16 +397,9 @@ progress {
     width: 100%;
     margin-bottom: 5px;
 }
+/* -- VERTICAL BUTTONS LIST */
 
-select {
-    margin-left: 5px !important;
-    background-color: #111;
-    color: white;
-    border-radius: 5px;
-    border: 1px solid black;
-    padding: 3px;
-}
-
+/* CULTURE FLAGS -- */
 .culture-flag {
     width: 70px;
     height: 47px;
@@ -357,16 +415,20 @@ select {
 .culture-flag:hover, .culture-flag-small:hover {
     opacity: 0.5;
 }
+/* -- CULTURE FLAGS */
 
+/* CONFIG LIST -- */
 .config-list > div > div.ui-g > div {
     margin: unset;
 }
+/* -- CONFIG LIST */
 
+/* JOB OVERVIEW -- */
 .job-overview-left-col {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: green;
-    color: black;
+    background-color: var(--bg-dark);
+    color: var(--fg-primary);
     text-align: center;
     font-weight: bold;
     font-size: 24px;
@@ -376,46 +438,43 @@ select {
 .job-overview-mid-col {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    border: 1px solid green;
+    border: 1px solid var(--bg-dark);
     cursor: pointer;
 }
 
 .job-overview-mid-col:hover {
-    background-color: #111;
+    background-color: var(--bg-secondary);
 }
 
 .job-overview > div > p > span:not(:first-child) {
     margin-left: 10px;
 }
+/* -- JOB OVERVIEW */
 
+/* TRIGGERED ACTIONS -- */
 .triggered-action-container {
-    color: #fff;
-    border: solid 1px #999;
+    color: var(--fg-primary);
+    border: solid 1px var(--fg-dark);
     padding: 20px;
 }
 
 .triggered-action-row div {
     line-height: 30px !important;
 }
+/* -- TRIGGERED ACTIONS */
 
+/* BULLETTA -- */
 .bulletta-messagebox {
-    background-color: #111;
+    background-color: var(--bg-secondary);
     border: 5px solid #ffc235;
     border-radius: 10px;
     padding: 1rem 1.5rem;
     opacity: 0.8;
 }
 
-a {
-    color: #54a6fb;
-}
-
-a:hover {
-    color: turquoise;
-}
-
 .bulletta-image {
     -webkit-filter: brightness(100%);
+    filter: brightness(100%);
     width: 64px;
     height: 64px;
     cursor: pointer;
@@ -423,10 +482,12 @@ a:hover {
 
 .bulletta-image:hover {
     -webkit-filter: brightness(70%);
+    filter: brightness(70%);
 }
 
 .bulletta-image-sm {
     -webkit-filter: brightness(100%);
+    filter: brightness(100%);
     width: 32px;
     height: 32px;
     cursor: pointer;
@@ -434,4 +495,6 @@ a:hover {
 
 .bulletta-image-sm:hover {
     -webkit-filter: brightness(70%);
+    filter: brightness(70%);
 }
+/* -- BULLETTA */
