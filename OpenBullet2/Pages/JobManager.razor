@@ -8,98 +8,92 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="NewJob"><span class="oi oi-plus"></span> @Loc["New"]</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
     @foreach (var job in Manager.Jobs)
     {
-        <div class="row" style="margin-top: 5px;">
-            <div class="col-1 pl-0 pr-0 mr-0 ml-0 job-overview-left-col">
-                #@job.Id  <span class="oi @TranslateStatus(job.Status)" style="font-size: 20px;"></span>
+        <div class="row mt-3">
+            <div class="col-md-2 col-xl-1 job-overview-left-col d-flex align-items-center">
+                <span>#@job.Id  [@job.Status]</span>
             </div>
-            <div class="col-9 pl-0 job-overview-mid-col">
+            <div class="col-md-8 col-xl-10 px-0 job-overview-mid-col d-flex align-items-center">
                 <div class="job-overview" @onclick="@(() => SelectJob(job))">
-                    <div class="pr-2 pl-2">
+                    <div class="px-2">
                         @switch (job)
                         {
                             case MultiRunJob x:
-                                <p style="margin-bottom: 0.2rem; line-height: 2;">
-                                    <span>
-                                        @if (x.Config != null)
-                                        {
-                                            <b>Config:</b> @x.Config.Metadata.Name
-                                        }
-                                        else
-                                        {
-                                            @Loc["NoConfigSelected"]
-                                        }
-                                    </span>
-                                    <span>
-                                        <b>Data Pool:</b>
-                                        @switch (x.DataPool)
-                                        {
-                                            case WordlistDataPool p:
-                                                @(p.Wordlist.Name + " (Wordlist)") 
-                                                break;
+                                <span>
+                                    @if (x.Config != null)
+                                    {
+                                        <b>Config:</b> @x.Config.Metadata.Name
+                                    }
+                                    else
+                                    {
+                                        @Loc["NoConfigSelected"]
+                                    }
+                                </span>
+                                <span>
+                                    <b>Data Pool:</b>
+                                    @switch (x.DataPool)
+                                    {
+                                        case WordlistDataPool p:
+                                            @(p.Wordlist.Name + " (Wordlist)") 
+                                            break;
 
-                                            case CombinationsDataPool p:
-                                                @("Combinations")
-                                                break;
+                                        case CombinationsDataPool p:
+                                            @("Combinations")
+                                            break;
 
-                                            case InfiniteDataPool p:
-                                                @("Infinite")
-                                                break;
+                                        case InfiniteDataPool p:
+                                            @("Infinite")
+                                            break;
 
-                                            case RangeDataPool p:
-                                                @("Range")
-                                                break;
+                                        case RangeDataPool p:
+                                            @("Range")
+                                            break;
 
-                                            case FileDataPool p:
-                                                @(p.FileName + ("File"))
-                                                break;
-                                        }
-                                    </span>
-                                    <span>
-                                        <b>Bots:</b> @x.Bots
-                                    </span>
-                                    <span>
-                                        <b>Proxies:</b> @x.ProxyMode
-                                    </span>
-                                    <span style="color: yellowgreen;">
-                                        <b>Hits:</b> @x.DataHits
-                                    </span>
-                                    <span style="color: orange">
-                                        <b>Custom:</b> @x.DataCustom
-                                    </span>
-                                    <span style="color: aqua">
-                                        <b>ToCheck:</b> @x.DataToCheck
-                                    </span>
-                                    <span>
-                                        <b>Progress:</b> @(x.Manager != null ? (x.Manager.Progress * 100).ToString("0.00") : "?")%
-                                    </span>
-                                    <span>
-                                        <b>CPM:</b> @(x.Manager != null ? x.Manager.CPM : 0)
-                                    </span>
-                                </p>
+                                        case FileDataPool p:
+                                            @(p.FileName + ("File"))
+                                            break;
+                                    }
+                                </span>
+                                <span>
+                                    <b>Bots:</b> @x.Bots
+                                </span>
+                                <span>
+                                    <b>Proxies:</b> @x.ProxyMode
+                                </span>
+                                <span style="color: yellowgreen;">
+                                    <b>Hits:</b> @x.DataHits
+                                </span>
+                                <span style="color: orange">
+                                    <b>Custom:</b> @x.DataCustom
+                                </span>
+                                <span style="color: aqua">
+                                    <b>ToCheck:</b> @x.DataToCheck
+                                </span>
+                                <span>
+                                    <b>Progress:</b> @(x.Manager != null ? (x.Manager.Progress * 100).ToString("0.00") : "?")%
+                                </span>
+                                <span>
+                                    <b>CPM:</b> @(x.Manager != null ? x.Manager.CPM : 0)
+                                </span>
                                 break;
                         }
                     </div>
                 </div>
             </div>
-            <div class="col-sm-auto pr-0">
+            <div class="col-md-2 col-xl-1 d-flex justify-content-around">
                 <button class="btn btn-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
                 </button>
-            </div>
-            <div class="col-sm-auto pr-0">
                 <button class="btn btn-primary" style="height: 100%; width: 100%;"
                         @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-layers" title="@Loc["Clone"]"></span>
                 </button>
-            </div>
-            <div class="col-sm-auto pr-0">
                 <button class="btn btn-danger" style="height: 100%; width: 100%;"
                         @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
                     <span class="oi oi-x" title="@Loc["Remove"]"></span>

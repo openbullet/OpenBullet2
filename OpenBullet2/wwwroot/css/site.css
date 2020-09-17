@@ -427,19 +427,22 @@ progress {
 .job-overview-left-col {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
-    background-color: var(--bg-dark);
+    background-color: var(--bg-light);
     color: var(--fg-primary);
     text-align: center;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 16px;
+    min-height: 40px;
     min-width: 50px;
+    line-height: 25px;
 }
 
 .job-overview-mid-col {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    border: 1px solid var(--bg-dark);
+    border: 1px solid var(--bg-light);
     cursor: pointer;
+    min-height: 40px;
 }
 
 .job-overview-mid-col:hover {
