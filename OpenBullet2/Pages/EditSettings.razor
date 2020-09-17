@@ -80,21 +80,21 @@
         @foreach (var rule in settings.DataSettings.DataRules)
         {
             <div class="row">
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto px-1 px-md-2">
                     <label style="line-height: 30px;">@Loc["SliceName"]</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="rule.SliceName" />
                 </div>
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto px-1 px-md-2">
                     <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="rule.RegexToMatch" />
                 </div>
-                <div class="col-sm-auto ml-0 pr-0">
-                    <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
-                        <span class="oi oi-minus"></span> @Loc["Remove"]</button>
+                <div class="col-auto px-1 px-md-2">
+                    <button type="button" class="btn btn-sm btn-danger" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
+                        <span class="oi oi-x"></span></button>
                 </div>
             </div>
         }
@@ -121,29 +121,27 @@
         @foreach (var input in settings.InputSettings.CustomInputs)
         {
             <div class="row">
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto px-1 px-md-2">
                     <label style="line-height: 30px;">@Loc["InputDescription"]</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="input.Description" />
                 </div>
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto px-1 px-md-2">
                     <label style="line-height: 30px;">@Loc["VariableName"]</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="input.VariableName" />
                 </div>
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto px-1 px-md-2">
                     <label style="line-height: 30px;">@Loc["DefaultAnswer"]</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="input.DefaultAnswer" />
                 </div>
-                <div class="col-sm-auto ml-0 pr-0">
-                    <button type="button" class="btn btn-sm btn-primary" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
-                        <span class="oi oi-minus"></span>
-                        @Loc["Remove"]
-                    </button>
+                <div class="col-auto px-1 px-md-2">
+                    <button type="button" class="btn btn-sm btn-danger" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
+                        <span class="oi oi-x"></span></button>
                 </div>
             </div>
         }
