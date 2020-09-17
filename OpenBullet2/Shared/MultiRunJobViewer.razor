@@ -105,7 +105,7 @@
                     <span style="margin-right: 10px;">@Job.Bots</span>
                     @if (!changingBots)
                     {
-                        <button class="btn-sm btn-primary" type="button" @onclick="ChangeBots"> @Loc["Change"]</button>
+                        <button class="btn btn-sm btn-primary" type="button" @onclick="ChangeBots"> @Loc["Change"]</button>
                     }
                     else
                     {
@@ -122,17 +122,17 @@
     @switch (Job.Status)
     {
         case TaskManagerStatus.Idle:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             break;
 
         case TaskManagerStatus.Paused:
-            <button class="btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
+            <button class="btn btn-sm btn-success m-sm-1" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
             break;
 
         case TaskManagerStatus.Running:
-            <button class="btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> @Loc["Pause"]</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
+            <button class="btn btn-sm btn-warning m-sm-1" @onclick="Pause"><span class="oi oi-media-pause"></span> @Loc["Pause"]</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
         case TaskManagerStatus.Pausing:
@@ -141,7 +141,7 @@
 
         case TaskManagerStatus.Stopping:
             <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["Stopping message"] </i></span>
-            <button class="btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
+            <button class="btn btn-sm btn-danger m-sm-1" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
     }
 </div>
@@ -204,9 +204,9 @@
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn-sm btn-primary m-sm-1" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
-            <button class="btn-sm btn-primary m-sm-1" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
+            <button class="btn btn-sm btn-primary m-sm-1" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
         </div>
     </div>
 </div>
