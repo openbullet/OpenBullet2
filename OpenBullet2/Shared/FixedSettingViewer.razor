@@ -7,13 +7,13 @@
         {
             case StringSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <InputText @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-sm-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -21,13 +21,13 @@
 
             case BoolSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <InputCheckbox @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-sm-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -35,13 +35,13 @@
 
             case IntSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-sm-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -49,10 +49,10 @@
 
             case EnumSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <InputSelect @bind-Value="@x.Value">
                             @foreach (var name in Enum.GetNames(x.EnumType))
                             {
@@ -65,13 +65,13 @@
 
             case FloatSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-sm-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -79,17 +79,13 @@
 
             case ListOfStringsSetting x:
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <InputListOfStrings @bind-List="x.Value" />
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
+                    <div class="col-12 mb-2">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -97,17 +93,13 @@
 
             case DictionaryOfStringsSetting x:
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
+                    <div class="col-12 mb-2">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -115,17 +107,13 @@
 
             case ByteArraySetting x:
                  <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
+                     <div class="col-12">
                         <InputByteArray @bind-Bytes="x.Value" />
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
+                     <div class="col-12 mb-2">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>

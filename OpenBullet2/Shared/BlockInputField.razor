@@ -7,13 +7,13 @@
     {
         case SettingInputMode.Variable:
             <div class="row">
-                <div class="col-sm-auto mr-0 pr-0">
+                <div class="col-auto mr-0 pr-0">
                     <label style="line-height: 30px;">@Name</label>
                 </div>
-                <div class="col">
+                <div class="col align-self-stretch">
                     <input style="background-color: #112" type="text" @bind="@BlockSetting.InputVariableName" />
                 </div>
-                <div class="col-sm-auto ml-0 pr-0">
+                <div class="col-auto ml-0 pr-0">
                     <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => StateHasChanged())" />
                 </div>
             </div>

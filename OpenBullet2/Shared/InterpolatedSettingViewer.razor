@@ -8,13 +8,13 @@
         {
             case InterpolatedStringSetting x:
                 <div class="row">
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col">
+                    <div class="col align-self-stretch">
                         <input type="text" style="background-color: #121;" @bind="x.Value" />
                     </div>
-                    <div class="col-sm-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -22,17 +22,13 @@
 
             case InterpolatedListOfStringsSetting x:
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <InputListOfStrings @bind-Dictionary="x.Value" />
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
+                    <div class="col-12 mb-2">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -40,17 +36,13 @@
 
             case InterpolatedDictionaryOfStringsSetting x:
                 <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
+                    <div class="col-12">
                         <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
+                    <div class="col-12 mb-2">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
