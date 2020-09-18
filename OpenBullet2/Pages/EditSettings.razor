@@ -8,13 +8,13 @@
 <EditForm Model="settings.GeneralSettings">
 
     <label>@Loc["SuggestedBots"]</label>
-    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SuggestedBots" />
+    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.SuggestedBots" />
 
     <label>@Loc["CPMLimit"]</label>
-    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.MaximumCPM" />
+    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.MaximumCPM" />
 
     <label>@Loc["SaveEmptyCaptures"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
     <br />
 
     <label>@Loc["ContinueStopStatuses"]</label>
@@ -24,21 +24,21 @@
 <h1>@Loc["Requests"]</h1>
 <EditForm Model="settings.RequestsSettings">
     <label>@Loc["IgnoreResponseErrors"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
     <br />
 </EditForm>
 
 <h1>@Loc["Proxies"]</h1>
 <EditForm Model="settings.ProxySettings">
     <label>@Loc["UseProxies"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.UseProxies" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.ProxySettings.UseProxies" />
     <br />
 
     <label>@Loc["MaxUsesPerProxy"]</label>
-    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
+    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
 
     <label>@Loc["BanLoopEvasion"]</label>
-    <InputNumber style="margin-bottom: 15px;" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
+    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
 
     <label>@Loc["BanStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
@@ -53,7 +53,7 @@
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedWordlistTypes" Selected="unallowedWordlistTypes" />
 
     <label>@Loc["UrlEncodeAfterSlicing"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
     <br />
 
     <label>@Loc["DataRules"]</label>
@@ -151,24 +151,24 @@
 <h1>@Loc["Selenium"]</h1>
 <EditForm Model="settings.SeleniumSettings">
     <label>@Loc["AlwaysOpenBrowser"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.AlwaysOpenBrowser" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.AlwaysOpenBrowser" />
     <br />
 
     <label>@Loc["QuitBrowserStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
 
     <label>@Loc["DisableWebpagesNotifications"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.DisableNotifications" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.DisableNotifications" />
     <br />
 
     <label>@Loc["SeleniumCommandLineArguments"]</label>
-    <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.CommandLineArgs" />
+    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.CommandLineArgs" />
 
     <label>@Loc["SeleniumUserAgent"]</label>
-    <InputText style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UserAgent" />
+    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.UserAgent" />
 
     <label>@Loc["RandomUserAgent"]</label>
-    <InputCheckbox style="margin-bottom: 15px;" @bind-Value="settings.SeleniumSettings.UseRandomUserAgent" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.UseRandomUserAgent" />
     <br />
 </EditForm>
 

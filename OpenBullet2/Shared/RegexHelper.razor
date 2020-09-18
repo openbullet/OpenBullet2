@@ -17,18 +17,18 @@
     <div class="row" style="width: 100%">
         <EditForm Model="supportedSymbols">
             <label>Supported Symbols</label>
-            <InputText style="margin-bottom: 15px;" @bind-Value="SupportedSymbols" />
+            <InputText class="mb-3" @bind-Value="SupportedSymbols" />
             <label>Minimum Length (0 is unspecified)</label>
-            <InputNumber style="margin-bottom: 15px;" @bind-Value="MinLength" />
+            <InputNumber class="mb-3" @bind-Value="MinLength" />
             <label>Maximum Length (0 is unspecified)</label>
-            <InputNumber style="margin-bottom: 15px;" @bind-Value="MaxLength" />
+            <InputNumber class="mb-3" @bind-Value="MaxLength" />
         </EditForm>
     </div>
     <div class="row">
         <label>Preview</label>
-        <input style="margin-bottom: 15px;" type="text" readonly @bind-value="regex" />
+        <input class="mb-3" type="text" readonly @bind-value="regex" />
         <label>Test data</label>
-        <input style="margin-bottom: 15px;" type="text" @bind-value="testData" />
+        <input class="mb-3" type="text" @bind-value="testData" />
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">

@@ -7,13 +7,13 @@
 
 <EditForm Model="config">
     <label for="name">@Loc["Name"]</label>
-    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Name" />
+    <InputText class="mb-3" @bind-Value="config.Metadata.Name" />
 
     <label for="author">@Loc["Author"]</label>
-    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Author" />
+    <InputText class="mb-3" @bind-Value="config.Metadata.Author" />
 
     <label for="category">@Loc["Category"]</label>
-    <InputText style="margin-bottom: 15px;" @bind-Value="config.Metadata.Category" />
+    <InputText class="mb-3" @bind-Value="config.Metadata.Category" />
 
     <label for="image">@Loc["Image"]</label>
     <InputImage @bind-Base64="@config.Metadata.Base64Image" />
