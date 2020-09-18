@@ -3,19 +3,19 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<KeycheckBlockSettingsViewer> Loc
 
 <EditForm Model="Block">
-    <h6 class="font-weight-bold text-warning">@Loc["Label"]:</h6>
+    <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
     <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
                ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
 </EditForm>
 
-<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["Settings"]:</h6>
+<h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["Settings"]:</h6>
 @foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />
     <hr />
 }
 
-<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">Keychains:</h6>
+<h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">Keychains:</h6>
 <div class="container-fluid">
     <div class="row">
         <div class="list-group list-group-horizontal">

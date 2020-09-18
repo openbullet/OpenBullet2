@@ -1,7 +1,7 @@
 ﻿@inject JobLoggerService JobLoggerService
 @implements IDisposable
 
-<div class="generic-log" style="margin-bottom: 30px;">
+<div class="generic-log mb-4">
     @foreach (var entry in JobLoggerService.GetLog(JobId).Reverse())
     {
         <span style="color: @entry.color;">[@entry.date.ToLongTimeString()] @entry.message.Replace("\r\n", " ").Replace("\n", " ")</span><br />

@@ -19,9 +19,9 @@
                 <input type="file" @ref=inputTypeFileElement @onchange="ProcessUploadedWordlist" />
                 <br />
                 <br />
-                <progress max="@max" value="@value" /><span style="margin-left: 15px;">@(progress.ToString("F"))% @Loc["Uploaded"]</span>
+                <progress max="@max" value="@value" /><span class="ml-3">@(progress.ToString("F"))% @Loc["Uploaded"]</span>
                 <br />
-                <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Upload">@Loc["Upload"]</button>
+                <button type="button" class="btn btn-outline-success mt-2" @onclick="Upload">@Loc["Upload"]</button>
             </RadzenTabsItem>
             <RadzenTabsItem Text="@Loc["FileSystem"]">
                 <label>@Loc["BaseDirectory"]</label>

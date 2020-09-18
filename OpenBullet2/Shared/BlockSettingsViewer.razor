@@ -2,13 +2,13 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<BlockSettingsViewer> Loc
 
 <EditForm Model="Block">
-    <p style="color: darkseagreen">
+    <p class="fg-secondary">
         <span><b>@Block.ReadableName (@Block.Id)</b></span><br />
         <span style="font-size: 12px;"><i>@Block.Descriptor.Description</i></span><br />
         <span style="font-size: 12px;"><i>@Block.Descriptor.ExtraInfo</i></span>
     </p>
 
-    <h6 class="font-weight-bold text-warning">@Loc["Label"]:</h6>
+    <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
     <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
                ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
 </EditForm>
@@ -16,14 +16,14 @@
 @if (Block.Descriptor.ReturnType.HasValue)
 {
     <EditForm Model="Block">
-        <h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["OutputVariable"] (@Block.Descriptor.ReturnType.Value):</h6>
+        <h6 class="font-weight-bold fg-custom mt-3">@Loc["OutputVariable"] (@Block.Descriptor.ReturnType.Value):</h6>
         <InputText @bind-Value="Block.OutputVariable" />
         <label>@Loc["IsCapture"]</label>
         <InputCheckbox @bind-Value="Block.IsCapture" />
     </EditForm>
 }
 
-<h6 class="font-weight-bold text-warning" style="margin-top: 20px;">@Loc["Settings"]:</h6>
+<h6 class="font-weight-bold fg-custom mt-3">@Loc["Settings"]:</h6>
 @foreach (var setting in Block.Settings)
 {
     <BlockInputField BlockSetting="setting" />

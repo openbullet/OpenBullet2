@@ -4,25 +4,27 @@
 @inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
-<div class="container-fluid" style="overflow-y: auto; width: 1000px;">
-    <div class="row" style="height: 250px; overflow-y: auto;">
-        <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
-                    AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="130px"
-                    RowSelect="Preview" RowDoubleClick="Select">
-            <Columns>
-                <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="@Loc["Purpose"]" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="@Loc["Total"]" Width="100px" />
-                <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="@Loc["FileName"]" Width="300px" />
-            </Columns>
-        </RadzenGrid>
-    </div>
-    <div class="row mt-3" style="height: 250px; overflow-y: auto;">
-        <textarea readonly>@linesPreview</textarea>
-    </div>
+<div class="container-fluid" style="overflow-y: auto;">
     <div class="row">
-        <button class="btn btn-outline-success" @onclick="Select">@Loc["Select"]</button>
+        <div class="col-12 mt-3" style="height: 250px; overflow-y: auto;">
+            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
+                        AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="130px"
+                        RowSelect="Preview" RowDoubleClick="Select">
+                <Columns>
+                    <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
+                    <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />
+                    <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="@Loc["Purpose"]" />
+                    <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="@Loc["Total"]" Width="100px" />
+                    <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="@Loc["FileName"]" Width="300px" />
+                </Columns>
+            </RadzenGrid>
+        </div>
+        <div class="col-12 mt-3" style="height: 250px; overflow-y: auto;">
+            <textarea class="h-100" readonly>@linesPreview</textarea>
+        </div>
+        <div class="col-12 mt-3">
+            <button class="btn btn-outline-success" @onclick="Select">@Loc["Select"]</button>
+        </div>
     </div>
 </div>
 

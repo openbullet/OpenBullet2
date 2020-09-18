@@ -1,7 +1,7 @@
 ﻿@using RuriLib.Models.Variables
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Debugger> Loc
 
-<div class="container-fluid" style="margin-bottom: 50px;">
+<div class="container-fluid my-3">
     <div class="row">
         <div class="list-group list-group-horizontal mb-3">
             @if (!isRunning)
@@ -15,14 +15,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-8">
+        <div class="col-lg-8 col-12 pr-lg-2 px-0">
             <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
         </div>
-        <div class="col-4">
+        <div class="col-lg-4 col-12 pl-lg-2 px-0 mt-3 mt-lg-0">
             <EditForm Model="options">
                 <label>@Loc["TestData"]</label>
                 <InputText @bind-Value="options.TestData" />
-                <label style="margin-top: 15px;">@Loc["WordlistType"]</label>
+                <label class="mt-3">@Loc["WordlistType"]</label>
                 <InputSelect @bind-Value="options.WordlistType">
                     @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
                     {
@@ -30,12 +30,12 @@
                     }
                 </InputSelect>
                 <br />
-                <label style="margin-top: 15px;">@Loc["UseProxy"]</label>
+                <label class="mt-3">@Loc["UseProxy"]</label>
                 <InputCheckbox @bind-Value="options.UseProxy" />
                 <br />
-                <label style="margin-top: 15px;">@Loc["TestProxy"]</label>
+                <label class="mt-3">@Loc["TestProxy"]</label>
                 <InputText @bind-Value="options.TestProxy" />
-                <label style="margin-top: 15px;">@Loc["Type"]</label>
+                <label class="mt-3">@Loc["Type"]</label>
                 <InputSelect @bind-Value="options.ProxyType">
                     @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
                     {
