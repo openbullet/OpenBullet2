@@ -132,6 +132,9 @@
   <data name="CurrentWorkingDirectory" xml:space="preserve">
     <value>Cartella Corrente</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Aiuto</value>
+  </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Un caldo benvenuto da Bulletta</value>
   </data>

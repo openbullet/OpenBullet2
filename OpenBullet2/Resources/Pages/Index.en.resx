@@ -132,6 +132,9 @@
   <data name="CurrentWorkingDirectory" xml:space="preserve">
     <value>Current Working Directory</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
   <data name="Help1x00" xml:space="preserve">
     <value>A warm welcome from Bulletta</value>
   </data>
