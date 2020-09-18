@@ -137,6 +137,10 @@ app {
 
 .navbar-toggler {
     background-color: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    float: right;
+    top: 40px;
+    right: 20px;
 }
 
 .valid.modified:not([type=checkbox]) {
