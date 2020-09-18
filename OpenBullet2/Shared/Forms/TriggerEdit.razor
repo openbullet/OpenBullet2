@@ -76,12 +76,12 @@
 
         case CaptchaCreditTrigger t:
             <span>@Loc["TriggerWhen"]</span>
-            <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+            <InputFloatComparison Label="Captcha Credit" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case ProgressTrigger t:
             <span>@Loc["TriggerWhen"]</span>
-            <InputFloatComparison Label="CPM" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+            <InputFloatComparison Label="Progress" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case TimeElapsedTrigger t:
