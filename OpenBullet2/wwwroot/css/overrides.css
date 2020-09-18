@@ -179,3 +179,11 @@
     width: 1.5rem;
     margin-top: 3px;
 }
+
+.ui-datalist-content.ui-widget-content {
+  width: 100%;
+}
+
+.ui-paginator-bottom.ui-paginator {
+  margin-top: 1.5rem;
+}

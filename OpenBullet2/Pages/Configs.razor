@@ -43,9 +43,9 @@
         }
         else
         {
-            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config">
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config" PageSize="30">
                 <Template Context="config">
-                    <RadzenCard Style="width:130px;">
+                    <RadzenCard Style="width:130px; max-width: 130px;">
                         <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px; margin: -10px;"
                              @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
                             <div class="row">
