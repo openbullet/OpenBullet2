@@ -187,3 +187,7 @@
 .ui-paginator-bottom.ui-paginator {
   margin-top: 1.5rem;
 }
+
+.ui-cell-filter-content label input {
+  margin-top: 15px !important;
+}

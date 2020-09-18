@@ -34,6 +34,11 @@
 html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
     font-family: Roboto !important;
+    color: var(--fg-primary);
+}
+
+.table, .sidebar {
+    color: var(--fg-primary);  
 }
 
 a, .btn-link {
@@ -79,13 +84,13 @@ app {
 }
 
 .sidebar {
-    background-color: #111;
+    background-color: var(--bg-secondary);
     width: 230px;
     min-width: 230px;
 }
 
     .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
+        background-color: var(--bg-dark);
     }
 
     .sidebar .navbar-brand {
@@ -113,7 +118,7 @@ app {
         }
 
         .sidebar .nav-item a {
-            color: #d7d7d7;
+            color: var(--fg-primary);
             border-radius: 4px;
             height: 2rem;
             display: flex;
@@ -123,12 +128,12 @@ app {
 
             .sidebar .nav-item a.active {
                 background-color: rgba(255,255,255,0.25);
-                color: white;
+                color: var(--fg-light);
             }
 
             .sidebar .nav-item a:hover {
                 background-color: rgba(255,255,255,0.1);
-                color: white;
+                color: var(--fg-light);
             }
 
 .content {
