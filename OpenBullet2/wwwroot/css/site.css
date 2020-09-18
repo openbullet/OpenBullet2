@@ -462,6 +462,7 @@ progress {
     color: var(--fg-primary);
     border: solid 1px var(--fg-dark);
     padding: 20px;
+    margin: 0px -15px;
 }
 
 .triggered-action-row div {
