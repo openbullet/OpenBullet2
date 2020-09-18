@@ -1,8 +1,12 @@
 ﻿@using RuriLib.Helpers
-@using RuriLib.Models.Blocks  
+@using RuriLib.Helpers.Blocks
+@using RuriLib.Models.Blocks
+@using OpenBullet2.Shared.Forms
+@inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<StackViewer> Loc
 
 <div class="list-group list-group-horizontal">
+    <button class="btn btn-sm btn-outline-success d-xl-none" @onclick="AddBlock"><span class="oi oi-plus"></span> @Loc["Add"]</button>
     <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> @Loc["Delete"]</button>
     <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> @Loc["Up"]</button>
     <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> @Loc["Down"]</button>
@@ -61,6 +65,19 @@
     {
         selectedBlock = item;
         SelectedBlock.InvokeAsync(item);
+    }
+
+    private async Task AddBlock()
+    {
+        var modal = Modal.Show<AddBlock>(Loc["AddBlock"]);
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            var descriptor = (BlockDescriptor)result.Data;
+            var selectedBlock = new BlockFactory().GetBlock<BlockInstance>(descriptor.Id);
+            Stack.Add(selectedBlock);
+        }
     }
 
     private void DeleteSelectedBlock()

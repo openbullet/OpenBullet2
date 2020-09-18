@@ -6,14 +6,14 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3">
+        <div class="col-xl-3 col-lg-6">
             <div style="height: 700px; overflow-y: auto;">
                 <h5>@Loc["CurrentStack"]</h5>
                 <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
             </div>
         </div>
-        <div class="col-6">
-            <div style="height: 700px; overflow-y: auto; padding-right: 30px;">
+        <div class="col-xl-6 col-lg-6">
+            <div class="pr-4" style="height: 700px; overflow-y: auto;">
                 <h5>@Loc["BlockInformation"]</h5>
                 @if (selectedBlock != null)
                 {
@@ -44,7 +44,7 @@
                 }
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-xl-3 d-xl-block d-none">
             <div style="height: 700px; overflow-y: auto;">
                 <h5>@Loc["AvailableBlocks"]</h5>
                 <AvailableBlocksViewer Descriptors="availableBlocks" SelectedDescriptor="AddBlock" />
