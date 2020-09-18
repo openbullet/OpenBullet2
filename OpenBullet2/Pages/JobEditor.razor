@@ -3,7 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobEditor> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
-<div style="margin-bottom: 20px;">
+<div class="mb-3">
     @switch (jobOptions)
     {
         case MultiRunJobOptions x:

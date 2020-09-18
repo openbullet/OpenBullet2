@@ -12,30 +12,30 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            <label style="color: orange;">@Loc["StartCondition"]</label>
-            <div style="margin-bottom: 20px;">
+            <label class="fg-custom">@Loc["StartCondition"]</label>
+            <div class="mb-3">
                 <StartConditionSelector StartCondition="Options.StartCondition" />
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
             <EditForm Model="Options">
-                <label style="color: orange;">@Loc["Config"]</label>
+                <label class="fg-custom">@Loc["Config"]</label>
                 @if (selectedConfig == null)
                 {
                     <p>@Loc["NoConfigSelected"]</p>
                 }
                 else
                 {
-                    <div style="width: 55px; height: 55px; margin: 0 20px 0 20px;">
-                        <img src="data:image/png;base64,@selectedConfig.Metadata.Base64Image" style="width: 100%; height: 100%;" />
+                    <div style="width: 55px; height: 55px;" class="my-3">
+                        <img src="data:image/png;base64,@selectedConfig.Metadata.Base64Image" class="w-100 h-100" />
                     </div>
                     <p>@selectedConfig.Metadata.Name @Loc["by"] @selectedConfig.Metadata.Author</p>
                 }
-                <button class="btn btn-outline-primary" style="margin-bottom: 20px;" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
+                <button class="btn btn-outline-primary mb-3" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
                 <br />
-                <label style="margin-top: 15px;">@Loc["ProxyMode"]</label>
+                <label class="mt-3">@Loc["ProxyMode"]</label>
                 <InputSelect @bind-Value="Options.ProxyMode">
                     @foreach (var name in Enum.GetNames(typeof(JobProxyMode)))
                     {
@@ -43,29 +43,29 @@
                     }
                 </InputSelect>
                 <br />
-                <div style="width: 100px;">
+                <div style="max-width: 100px;">
                     <label style="margin-top: 15px;">@Loc["Bots"]</label>
                     <InputNumber @bind-Value="Options.Bots" />
                 </div>
-                <div style="width: 100px;">
+                <div style="max-width: 100px;">
                     <label>@Loc["Skip"]</label>
                     <InputNumber @bind-Value="Options.Skip" />
                 </div>
             </EditForm>
         </div>
-        <div class="col">
-            <label style="color: orange; margin-top: 20px;">@Loc["DataPool"]</label>
+        <div class="col-lg-6">
+            <label class="fg-custom mt-3">@Loc["DataPool"]</label>
             <DataPoolSelector Options="Options.DataPool" SetOptions="((options) => Options.DataPool = options)"
                               SetWordlist="(async _ => await TryApplyRecord())"/>
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <label style="color: orange; margin-top: 20px;">@Loc["ProxySources"]</label>
+        <div class="col-lg-6">
+            <label class="fg-custom mt-3">@Loc["ProxySources"]</label>
             <ProxySourceSelector ProxySources="Options.ProxySources" />
         </div>
-        <div class="col">
-            <label style="color: orange; margin-top: 20px;">@Loc["HitOutputs"]</label>
+        <div class="col-lg-6">
+            <label class="fg-custom mt-3">@Loc["HitOutputs"]</label>
             <HitOutputsSelector HitOutputs="Options.HitOutputs" />
         </div>
     </div>

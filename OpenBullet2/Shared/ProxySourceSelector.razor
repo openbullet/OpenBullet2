@@ -21,83 +21,66 @@
 
     @foreach (var source in ProxySources)
     {
-        <div class="row mb-3">
-            <EditForm Model="source">
+        
+        <EditForm Model="source">
+            <div class="row mb-3" style="height: 20px; line-height: 20px;">
                 @switch (source)
                 {
                     case GroupProxySourceOptions x:
-                        <div class="row">
-                            <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: aquamarine;">@Loc["Group"]</label>
-                            </div>
-                            <div class="col">
-                                <InputSelectNumber T="int" @bind-Value="x.GroupId">
-                                    <option value="-1">@Loc["All"]</option>
-                                    @foreach (var group in groups)
-                                    {
-                                        <option value="@group.Id">@group.Name</option>
-                                    }
-                                </InputSelectNumber>
-                            </div>
-                            <div class="col-sm-auto ml-0 pr-0">
-                                <button class="btn btn-sm btn-outline-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> @Loc["Remove"]
-                                </button>
-                            </div>
+                        <div class="col-auto">
+                            <label class="fg-tocheck">@Loc["Group"]</label>
                         </div>
-                        
+                        <div class="col align-self-stretch">
+                            <InputSelectNumber T="int" @bind-Value="x.GroupId">
+                                <option value="-1">@Loc["All"]</option>
+                                @foreach (var group in groups)
+                                {
+                                    <option value="@group.Id">@group.Name</option>
+                                }
+                            </InputSelectNumber>
+                        </div>
                         break;
 
                     case FileProxySourceOptions x:
-                        <div class="row">
-                            <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: greenyellow;">@Loc["FileName"]</label>
-                            </div>
-                            <div class="col">
-                                <InputText @bind-Value="x.FileName" />
-                            </div>
-                            <div class="col-sm-auto ml-0 pr-0">
-                                <InputSelect @bind-Value="x.DefaultType">
-                                    @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
-                                    {
-                                        <option value="@type">@type</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="col-sm-auto ml-0 pr-0">
-                                <button class="btn btn-sm btn-outline-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> @Loc["Remove"]
-                                </button>
-                            </div>
+                        <div class="col-auto">
+                            <label class="fg-hit">@Loc["FileName"]</label>
+                        </div>
+                        <div class="col align-self-stretch">
+                            <InputText @bind-Value="x.FileName" />
+                        </div>
+                        <div class="col-auto">
+                            <InputSelect @bind-Value="x.DefaultType">
+                                @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
                         </div>
                         break;
 
                     case RemoteProxySourceOptions x:
-                        <div class="row">
-                            <div class="col-sm-auto mr-0 pr-0">
-                                <label style="line-height: 30px; color: hotpink;">@Loc["Url"]</label>
-                            </div>
-                            <div class="col">
-                                <InputText @bind-Value="x.Url" />
-                            </div>
-                            <div class="col-sm-auto ml-0 pr-0">
-                                <InputSelect @bind-Value="x.DefaultType">
-                                    @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
-                                    {
-                                        <option value="@type">@type</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="col-sm-auto ml-0 pr-0">
-                                <button class="btn btn-sm btn-outline-danger" @onclick="(() => ProxySources.Remove(source))">
-                                    <span class="oi oi-x"></span> @Loc["Remove"]
-                                </button>
-                            </div>
+                        <div class="col-auto">
+                            <label class="fg-retry">@Loc["Url"]</label>
+                        </div>
+                        <div class="col align-self-stretch">
+                            <InputText @bind-Value="x.Url" />
+                        </div>
+                        <div class="col-auto">
+                            <InputSelect @bind-Value="x.DefaultType">
+                                @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
                         </div>
                         break;
                 }
-            </EditForm>
-        </div>
+                <div class="col-auto">
+                    <button class="btn btn-sm btn-outline-danger" @onclick="(() => ProxySources.Remove(source))">
+                        <span class="oi oi-x"></span></button>
+                </div>
+            </div>
+        </EditForm>
     }
 </div>
 

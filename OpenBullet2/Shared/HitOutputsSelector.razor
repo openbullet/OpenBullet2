@@ -19,36 +19,61 @@
 
     @foreach (var output in HitOutputs)
     {
-        <div class="row mb-3">
-            <EditForm Model="output">
+        <EditForm Model="output">
+            <div class="row mb-3" style="height: 20px; line-height: 20px;">
                 @switch (output)
                 {
                     case DatabaseHitOutputOptions x:
-                        <p style="color: aquamarine;">@Loc["Database"]</p>
-                        <p style="font-style: italic">@Loc["NoSettingsRequired"]</p>
+                        <div class="col-auto">
+                            <span class="fg-tocheck">@Loc["Database"]</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <span class="italic">@Loc["NoSettingsRequired"]</span>
+                        </div>
                         break;
 
                     case FileSystemHitOutputOptions x:
-                        <p style="color: greenyellow;">@Loc["FileSystem"]</p>
-                        <label>@Loc["BaseDirectory"]</label>
-                        <InputText @bind-Value="x.BaseDir" />
+                        <div class="col-auto">
+                            <span class="fg-hit">@Loc["FileSystem"]</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["BaseDirectory"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.BaseDir" />
+                        </div>
                         break;
 
                     case DiscordWebhookHitOutputOptions x:
-                        <p style="color: hotpink;">@Loc["DiscordWebhook"]</p>
-                        <label>@Loc["WebhookURL"]</label>
-                        <InputText @bind-Value="x.Webhook" />
-                        <label>@Loc["Username"]</label>
-                        <InputText @bind-Value="x.Username" />
-                        <label>@Loc["AvatarURL"]</label>
-                        <InputText @bind-Value="x.AvatarUrl" />
+                        <div class="col-auto">
+                            <span class="fg-retry">@Loc["DiscordWebhook"]</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["WebhookURL"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.Webhook" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["Username"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.Username" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["AvatarURL"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.AvatarUrl" />
+                        </div>
                         break;
                 }
-                <button class="btn btn-outline-danger" @onclick="(() => HitOutputs.Remove(output))">
-                    <span class="oi oi-x"></span> @Loc["Remove"]
-                </button>
-            </EditForm>
-        </div>
+                <div class="col-auto">
+                    <button class="btn btn-sm btn-outline-danger" @onclick="(() => HitOutputs.Remove(output))">
+                        <span class="oi oi-x"></span></button>
+                </div>
+            </div>
+        </EditForm>
     }
 </div>
 
