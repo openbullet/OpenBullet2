@@ -1,7 +1,7 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<WordlistAdd> Loc
 
 <EditForm Model="wordlist">
-    <label style="margin-top: 10px;">@Loc["WordlistType"]</label>
+    <label class="mt-2">@Loc["WordlistType"]</label>
     <InputSelect @bind-Value="wordlist.Type">
         @foreach (var type in wordlistTypes)
         {

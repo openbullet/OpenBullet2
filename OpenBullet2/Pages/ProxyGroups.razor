@@ -4,15 +4,11 @@
 @attribute [Authorize(Roles = "Admin,Guest")]
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-2">
         <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-success" @onclick="AddGroup"><span class="oi oi-plus"></span> @Loc["AddGroup"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="EditGroup"><span class="oi oi-pencil"></span> @Loc["EditGroup"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteGroup"><span class="oi oi-x"></span> @Loc["DeleteGroup"]</button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-primary" @onclick="ImportProxies"><span class="oi oi-data-transfer-upload"></span> @Loc["ImportProxies"]</button>
         </div>
     </div>

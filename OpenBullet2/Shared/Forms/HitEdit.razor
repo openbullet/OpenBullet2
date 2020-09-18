@@ -8,7 +8,7 @@
 <EditForm Model="Hit">
     <label>@Loc["Data"]</label>
     <InputText @bind-Value="Hit.Data" />
-    <label style="margin-top: 10px;">@Loc["HitType"]</label>
+    <label class="mt-2">@Loc["HitType"]</label>
     <InputSelect @bind-Value="Hit.Type">
         @foreach (var type in hitTypes)
         {
