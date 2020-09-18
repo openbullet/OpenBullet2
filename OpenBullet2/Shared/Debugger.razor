@@ -6,11 +6,11 @@
         <div class="list-group list-group-horizontal mb-3">
             @if (!isRunning)
             {
-                <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="Run"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="Run"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             }
             else
             {
-                <button class="btn btn-sm btn-outline-danger m-sm-1" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
+                <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
             }
         </div>
     </div>

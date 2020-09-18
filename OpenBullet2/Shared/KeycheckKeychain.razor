@@ -34,11 +34,11 @@
     </div>
     <div class="row">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
-            <button class="btn btn-sm btn-outline-success m-sm-1" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
         </div>
     </div>
     @foreach (var key in Keychain.Keys)
