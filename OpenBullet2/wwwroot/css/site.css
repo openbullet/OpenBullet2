@@ -514,6 +514,10 @@ progress {
 .btn-outline-secondary {
     color: #bbb;
 }
+
+.btn {
+    border-width: 2px;
+}
 /* -- BOOTSTRAP BUTTONS OVERRIDES */
 
 /* BOOTSTRAP LIST GROUP OVERRIDES -- */
