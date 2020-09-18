@@ -101,20 +101,3 @@
         </div>
     }
 </div>
-
-@code {
-    string TranslateStatus(TaskManagerStatus status)
-    {
-        return status switch
-        {
-            TaskManagerStatus.Paused => "oi-media-pause",
-            TaskManagerStatus.Idle => "oi-power-standby",
-            TaskManagerStatus.Stopping => "oi-media-stop",
-            TaskManagerStatus.Running => "oi-media-play",
-            TaskManagerStatus.Resuming => "oi-reload",
-            TaskManagerStatus.Pausing => "oi-reload",
-            TaskManagerStatus.Starting => "oi-reload",
-            _ => string.Empty
-        };
-    }
-}
