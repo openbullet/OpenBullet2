@@ -5,7 +5,7 @@
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-2">
         <span class="text-warning">@Loc["CSharpEditor"]</span>
     </div>
     @if (Config != null && Config.Mode != ConfigMode.CSharp)
