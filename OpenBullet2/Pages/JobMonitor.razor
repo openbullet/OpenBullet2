@@ -5,7 +5,7 @@
 @attribute [Authorize(Roles = "Admin,Guest")]
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mb-2">
         <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-success" @onclick="AddNew"><span class="oi oi-plus"></span> @Loc["New"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
