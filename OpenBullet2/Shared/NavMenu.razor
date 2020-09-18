@@ -120,17 +120,22 @@
                 <span class="oi oi-info" aria-hidden="true"></span> @Loc["About"]
             </NavLink>
         </li>
+        <li class="d-md-none text-center mb-3">
+            <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+            <span class="ml-2" style="font-family: monospace; color: #999; font-size: 12px;">@version</span>
+        </li>
     </ul>
 </div>
 
-<div class="fixed-bottom float-left text-center mb-3" style="width: 230px;">
+<div class="fixed-bottom float-left text-center mb-3 d-none d-md-block" style="width: 230px;">
     <div style="width: 100%; margin-bottom: 10px;">
         <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
     </div>
-    <span style="font-family: monospace; color: #999; font-size: 12px;">v0.0.1 [Pre-Alpha]</span>
+    <span style="font-family: monospace; color: #999; font-size: 12px;">@version</span>
 </div>
 
 @code {
+    private readonly string version = "v0.0.1 [Pre-Alpha]";
     private bool collapseNavMenu = true;
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
