@@ -9,7 +9,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunJobViewer> Loc
 
 <div>
-    <p style="color: orange;"><b>@Loc["JobOptions"]</b></p>
+    <p class="fg-custom"><b>@Loc["JobOptions"]</b></p>
     <table class="table">
         <tbody>
             <tr>
@@ -117,7 +117,7 @@
     </table>
 </div>
 
-<p style="color: orange;"><b>@Loc["Controls"]</b></p>
+<p class="fg-custom"><b>@Loc["Controls"]</b></p>
 <div class="list-group list-group-horizontal">
     @switch (Job.Status)
     {
@@ -157,43 +157,43 @@
 <div class="container-fluid pl-0 pr-0 mt-3 mb-3">
     <div class="row">
         <div class="col">
-            <span style="font-weight: bold; text-decoration: underline;">@Loc["DataStats"]</span><br /><br />
-            <span style="font-weight: bold;">@Loc["Tested"]: </span><span>@Job.DataTested</span><br />
-            <span class="fg-hit" style="font-weight: bold;">@Loc["Hits"]: </span><span style="color: greenyellow;">@Job.DataHits</span><br />
-            <span style="font-weight: bold; color: orange;">@Loc["Custom"]: </span><span style="color: orange;">@Job.DataCustom</span><br />
-            <span style="font-weight: bold; color: tomato;">@Loc["Bad"]: </span><span style="color: tomato;">@Job.DataBad</span><br />
-            <span style="font-weight: bold; color: yellow;">@Loc["Retried"]: </span><span style="color: yellow;">@Job.DataRetried</span><br />
-            <span style="font-weight: bold; color: plum;">@Loc["Banned"]: </span><span style="color: plum;">@Job.DataBanned</span><br />
-            <span style="font-weight: bold; color: skyblue;">@Loc["ToCheck"]: </span><span style="color: skyblue;">@Job.DataToCheck</span><br />
-            <span style="font-weight: bold; color: red;">@Loc["Errors"]: </span><span style="color: red;">@Job.DataErrors</span><br />
+            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["DataStats"]</span><br /><br />
+            <span class="font-weight-bold">@Loc["Tested"]: </span><span>@Job.DataTested</span><br />
+            <span class="font-weight-bold fg-hit">@Loc["Hits"]: </span><span class="fg-hit">@Job.DataHits</span><br />
+            <span class="font-weight-bold fg-custom">@Loc["Custom"]: </span><span class="fg-custom">@Job.DataCustom</span><br />
+            <span class="font-weight-bold fg-fail">@Loc["Bad"]: </span><span class="fg-fail">@Job.DataBad</span><br />
+            <span class="font-weight-bold fg-retry">@Loc["Retried"]: </span><span class="fg-retry">@Job.DataRetried</span><br />
+            <span class="font-weight-bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.DataBanned</span><br />
+            <span class="font-weight-bold fg-tocheck">@Loc["ToCheck"]: </span><span class="fg-tocheck">@Job.DataToCheck</span><br />
+            <span class="font-weight-bold fg-error">@Loc["Errors"]: </span><span class="fg-error">@Job.DataErrors</span><br />
         </div>
         <div class="col">
-            <span style="font-weight: bold; text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
-            <span style="font-weight: bold;">@Loc["Total"]: </span><span>@Job.ProxiesTotal</span><br />
-            <span style="font-weight: bold; color: greenyellow;">@Loc["Alive"]: </span><span style="color: greenyellow;">@Job.ProxiesAlive</span><br />
-            <span style="font-weight: bold; color: tomato;">@Loc["Bad"]: </span><span style="color: tomato;">@Job.ProxiesBad</span><br />
-            <span style="font-weight: bold; color: plum;">@Loc["Banned"]: </span><span style="color: plum;">@Job.ProxiesBanned</span><br />
+            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
+            <span class="font-weight-bold">@Loc["Total"]: </span><span>@Job.ProxiesTotal</span><br />
+            <span class="font-weight-bold fg-hit">@Loc["Alive"]: </span><span class="fg-hit">@Job.ProxiesAlive</span><br />
+            <span class="font-weight bold fg-fail">@Loc["Bad"]: </span><span class="fg-fail">@Job.ProxiesBad</span><br />
+            <span class="font-weight bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.ProxiesBanned</span><br />
         </div>
         @if (Job.Manager != null)
         {
             <div class="col">
-                <span style="font-weight: bold; text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
-                <span style="font-weight: bold;">@Loc["CPM"]: </span><span>@Job.Manager.CPM</span><br />
-                <span style="font-weight: bold;">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
-                <span style="font-weight: bold;">@Loc["Elapsed"]: </span><span>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
-                <span style="font-weight: bold;">@Loc["Remaining"]: </span><span>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span style="font-weight: bold;">@Loc["Progress"]: </span><span> @Job.DataTested / @Job.DataPool.Size (@((Job.Manager.Progress * 100).ToString("0.00"))%)</span>
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.Manager.CPM</span><br />
+                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @Job.DataTested / @Job.DataPool.Size (@((Job.Manager.Progress * 100).ToString("0.00"))%)</span>
             </div>
         }
         else
         {
             <div class="col">
-                <span style="font-weight: bold; text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
-                <span style="font-weight: bold;">@Loc["CPM"]: </span><span>-</span><br />
-                <span style="font-weight: bold;">@Loc["CaptchaCredit"]: </span><span>-</span><br />
-                <span style="font-weight: bold;">@Loc["Elapsed"]: </span><span>-</span><br />
-                <span style="font-weight: bold;">@Loc["Remaining"]: </span><span>-</span><br />
-                <span style="font-weight: bold;">@Loc["Progress"]: </span><span>-</span><br />
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span>-</span><br />
             </div>
         }
     </div>
