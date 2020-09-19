@@ -28,7 +28,7 @@
                 <div class="col-xl-4 col-lg-6 col-12">
                     <h5>@Loc["Triggers"]:</h5>
                     <p>@Loc["TriggersDescription"].</p>
-                    <div class="row pl-2">
+                    <div class="row pl-2 mb-2">
                         <div class="list-group list-group-horizontal">
                             <button class="btn btn-sm btn-outline-success" @onclick="(async () => await AddNewTrigger(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
                             <button class="btn btn-sm btn-outline-danger" @onclick="(() => RemoveAllTriggers(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
@@ -125,7 +125,7 @@
                 <div class="col-xl-4 col-lg-6 col-12 mt-lg-0 mt-3">
                     <h5>@Loc["Actions"]:</h5>
                     <p>@Loc["ActionsDescription"].</p>
-                    <div class="row pl-2">
+                    <div class="row pl-2 mb-2">
                         <div class="list-group list-group-horizontal">
                             <button class="btn btn-sm btn-outline-success" @onclick="(async () => await AddNewAction(ta))"><span class="oi oi-plus"></span> @Loc["New"]</button>
                             <button class="btn btn-sm btn-outline-danger" @onclick="(() => RemoveAllActions(ta))"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>

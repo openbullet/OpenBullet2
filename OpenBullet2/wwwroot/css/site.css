@@ -35,6 +35,7 @@ html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
     font-family: Roboto !important;
     color: var(--fg-primary);
+    background-color: var(--bg-primary);
 }
 
 .table, .sidebar {
