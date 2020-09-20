@@ -191,3 +191,7 @@
 .ui-cell-filter-content label input {
   margin-top: 15px !important;
 }
+
+.ui-treenode, .ui-treenode-content {
+  cursor: unset !important;
+}
