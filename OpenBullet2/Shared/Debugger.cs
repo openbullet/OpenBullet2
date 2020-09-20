@@ -34,7 +34,6 @@ namespace OpenBullet2.Shared
 
         [Parameter] public Config Config { get; set; }
 
-        private List<Variable> variables = new List<Variable>();
         private BotLogger logger;
         private CancellationTokenSource cts;
         private DebuggerOptions options;
@@ -65,7 +64,7 @@ namespace OpenBullet2.Shared
             if (!VolatileSettings.DebuggerOptions.PersistLog)
                 logger.Clear();
 
-            variables.Clear();
+            options.Variables.Clear();
             isRunning = true;
             cts = new CancellationTokenSource();
 
@@ -99,7 +98,7 @@ namespace OpenBullet2.Shared
                         var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
 
                         if (type.HasValue)
-                            variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
+                            options.Variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
                     }
                     catch
                     {

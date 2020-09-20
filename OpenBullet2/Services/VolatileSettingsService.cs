@@ -1,6 +1,8 @@
 ﻿using OpenBullet2.Models.Debugger;
 using RuriLib.Logging;
+using RuriLib.Models.Variables;
 using RuriLib.Services;
+using System.Collections.Generic;
 
 namespace OpenBullet2.Services
 {
