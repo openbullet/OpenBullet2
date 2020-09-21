@@ -1,0 +1,46 @@
+﻿@using RuriLib.Models.Blocks.Custom
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NodeJSBlockSettingsViewer> Loc
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
+    <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
+               ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
+</EditForm>
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["OutputVariable"] (@Block.ReturnType)):</h6>
+    <InputText @bind-Value="Block.OutputVariable" />
+    <label>@Loc["IsCapture"]</label>
+    <InputCheckbox @bind-Value="Block.IsCapture" />
+    <br />
+</EditForm>
+
+<h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["Settings"]:</h6>
+
+<EditForm Model="Block">
+    <label>@Loc["Variables"]</label>
+    <InputText @bind-Value="Block.Variables" />
+    <label>@Loc["ReturnType"]</label>
+    <InputSelect @bind-Value="Block.ReturnType">
+        @foreach (var type in Enum.GetNames(typeof(RuriLib.Models.Variables.VariableType)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect>
+    <br />
+    <label>@Loc["Script"]</label>
+    <InputTextArea @bind-Value="Block.Script" />
+</EditForm>
+
+<label>@Loc["HighlightedScript"]</label>
+<pre><code class="language-js">@Block.Script</code></pre>
+
+@code {
+    [Parameter] public NodeJSBlockInstance Block { get; set; }
+    [Parameter] public EventCallback ChangedLabel { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await js.InvokeVoidAsync("Prism.highlightAll");
+    }
+}

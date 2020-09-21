@@ -29,6 +29,10 @@
                     {
                         <ParseBlockSettingsViewer Block="selectedBlock as ParseBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
                     }
+                    else if (selectedBlock is NodeJSBlockInstance)
+                    {
+                        <NodeJSBlockSettingsViewer Block="selectedBlock as NodeJSBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                    }
                     else if (selectedBlock is LoliCodeBlockInstance)
                     {
                         <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />
