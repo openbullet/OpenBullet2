@@ -1,5 +1,4 @@
 ﻿@page "/config/edit/code"
-@using Blazaco.Editor
 @using RuriLib.Models.Configs
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditCS> Loc
 @attribute [Authorize(Roles = "Admin")]
@@ -19,7 +18,7 @@
     }
     <div class="row">
         <div class="w-100 mt-3" style="height: 500px;">
-            <MonacoEditor @ref="_editor" class="fullscreen-editor" Model="@_editorModel" />
+            <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
         </div>
     </div>
 </div>

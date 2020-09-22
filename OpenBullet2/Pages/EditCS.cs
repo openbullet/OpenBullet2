@@ -1,5 +1,5 @@
-﻿using Blazaco.Editor;
-using Blazaco.Editor.Options;
+﻿using BlazorMonaco;
+using BlazorMonaco.Bridge;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Services;
@@ -15,27 +15,27 @@ namespace OpenBullet2.Pages
         [Inject] ConfigService ConfigService { get; set; }
 
         [Parameter] public Config Config { get; set; }
-        private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
 
         protected override void OnInitialized()
         {
             Config = ConfigService.SelectedConfig;
 
-            var options = new EditorOptions()
-            {
-                Value = Config.CSharpScript,
-                Language = "csharp",
-                Theme = "vs-dark",
-                ReadOnly = Config.Mode != ConfigMode.CSharp,
-                Minimap = new MinimapOptions()
-                {
-                    Enabled = false
-                }
-            };
-
-            _editorModel = new EditorModel(options);
             base.OnInitialized();
+        }
+
+        private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+        {
+            return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Minimap = new MinimapOptions { Enabled = false },
+                ReadOnly = Config.Mode != ConfigMode.CSharp,
+                Theme = "vs-dark",
+                Language = "csharp",
+                MatchBrackets = true,
+                Value = Config.CSharpScript
+            };
         }
 
         private async Task Compile()
@@ -55,6 +55,11 @@ namespace OpenBullet2.Pages
             Config.ChangeMode(ConfigMode.CSharp);
             ConfigService.SelectedConfig = Config;
             Nav.NavigateTo("config/edit/code", true);
+        }
+
+        private async Task SaveScript()
+        {
+            Config.CSharpScript = await _editor.GetValue();
         }
     }
 }

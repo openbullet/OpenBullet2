@@ -1,5 +1,5 @@
-﻿using Blazaco.Editor;
-using Blazaco.Editor.Options;
+﻿using BlazorMonaco;
+using BlazorMonaco.Bridge;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Services;
@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
-    public partial class EditLC : IDisposable
+    public partial class EditLC
     {
         [Inject] ConfigService ConfigService { get; set; }
 
-        private EditorModel _editorModel { get; set; }
         private MonacoEditor _editor { get; set; }
         private Config config;
-        private Timer timer;
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,35 +30,31 @@ namespace OpenBullet2.Pages
                 await js.AlertException(ex);
             }
 
-            var options = new EditorOptions()
-            {
-                Value = config.LoliCodeScript,
-                Language = "lolicode",
-                Theme = "vs-dark",
-                Minimap = new MinimapOptions()
-                {
-                    Enabled = false
-                }
-            };
-
-            _editorModel = new EditorModel(options);
             base.OnInitialized();
-
-            // Save the content of the editor automatically every second
-            timer = new Timer(new TimerCallback(async _ =>
-            {
-                await InvokeAsync(SaveLoliCode);
-            }), null, 1000, 1000);
         }
 
-        private async Task SaveLoliCode()
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+                _editor.SetValue(config.LoliCodeScript);
+        }
+
+        private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+        {
+            return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Minimap = new MinimapOptions { Enabled = false },
+                Theme = "vs-dark",
+                Language = "lolicode",
+                MatchBrackets = true,
+                Value = config.LoliCodeScript
+            };
+        }
+
+        private async Task SaveScript()
         {
             config.LoliCodeScript = await _editor.GetValue();
-        }
-
-        public void Dispose()
-        {
-            timer.Dispose();
         }
     }
 }

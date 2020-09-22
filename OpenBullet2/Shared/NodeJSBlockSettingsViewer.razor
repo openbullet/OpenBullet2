@@ -28,19 +28,30 @@
         }
     </InputSelect>
     <br />
-    <label>@Loc["Script"]</label>
-    <InputTextArea @bind-Value="Block.Script" />
 </EditForm>
 
-<label>@Loc["HighlightedScript"]</label>
-<pre><code class="language-js">@Block.Script</code></pre>
+<MonacoEditor @ref="_editor" Id="js-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
 
 @code {
     [Parameter] public NodeJSBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
+    private MonacoEditor _editor { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
-        await js.InvokeVoidAsync("Prism.highlightAll");
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Minimap = new MinimapOptions { Enabled = false },
+            Theme = "vs-dark",
+            Language = "javascript",
+            Value = Block.Script,
+            MatchBrackets = true
+        };
+    }
+
+    private async Task SaveScript()
+    {
+        Block.Script = await _editor.GetValue();
     }
 }

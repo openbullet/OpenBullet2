@@ -1,9 +1,7 @@
 ﻿@page "/"
 @namespace OpenBullet2.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@{
-    Layout = null;
-}
+@{ Layout = null; }
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +18,7 @@
     <link rel="stylesheet" href="css/overrides.css" />
     <link rel="stylesheet" href="css/custom-theme.css" />
     <link rel="stylesheet" href="~/css/prism.css" />
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="monaco-editor/min/vs/editor/editor.main.css">
+    <link href="monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
     <script src="~/js/sweetalert2.9.js"></script>
     <script src="~/js/fontawesome.js"></script>
     <script src="~/js/jquery-3.3.1.min.js"></script>
@@ -37,11 +35,13 @@
         <component type="typeof(App)" render-mode="Server" />
     </app>
 
-    <script>var require = { paths: { 'vs': 'monaco-editor/min/vs' } };</script>
+    <script type="blazor-boot">
+    </script>
+
     <script src="monaco-editor/min/vs/loader.js"></script>
-    <script src="monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script>require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });</script>
     <script src="monaco-editor/min/vs/editor/editor.main.js"></script>
-    <script type="blazor-boot"></script>
+    <script src="_content/BlazorMonaco/jsInterop.js"></script>
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">

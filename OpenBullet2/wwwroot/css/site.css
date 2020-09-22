@@ -531,3 +531,9 @@ progress {
     margin-left: 0.25rem;
 }
 /* -- BOOTSTRAP LIST GROUP OVERRIDES */
+
+/* MONACO EDITOR -- */
+.monaco-editor-container {
+    height: 100%;
+}
+/* -- MONACO EDITOR */

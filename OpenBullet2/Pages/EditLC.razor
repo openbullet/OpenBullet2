@@ -1,5 +1,4 @@
-﻿@using Blazaco.Editor
-@page "/config/edit/lolicode"
+﻿@page "/config/edit/lolicode"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditLC> Loc
 @attribute [Authorize(Roles = "Admin")]
 
@@ -25,7 +24,7 @@
     }
     <div class="row">
         <div class="w-100 mt-3" style="height: 500px;">
-            <MonacoEditor @ref="_editor" class="fullscreen-editor" Model="@_editorModel" />
+            <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
         </div>
     </div>
     <div class="row">
