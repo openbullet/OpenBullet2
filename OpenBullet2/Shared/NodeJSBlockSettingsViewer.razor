@@ -40,7 +40,8 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        _editor.SetValue(Block.Script);
+        if (firstRender)
+            _editor.SetValue(Block.Script);
     }
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
