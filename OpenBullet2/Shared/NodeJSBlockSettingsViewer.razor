@@ -38,6 +38,11 @@
     private MonacoEditor _editor { get; set; }
     private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _editor.SetValue(Block.Script);
+    }
+
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
         return new StandaloneEditorConstructionOptions
