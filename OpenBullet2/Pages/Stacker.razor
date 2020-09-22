@@ -17,29 +17,31 @@
                 <h5>@Loc["BlockInformation"]</h5>
                 @if (selectedBlock != null)
                 {
-                    @if (selectedBlock is KeycheckBlockInstance)
+                    @switch (selectedBlock)
                     {
-                        <KeycheckBlockSettingsViewer Block="selectedBlock as KeycheckBlockInstance"  ChangedLabel="((args) => stackViewer.RefreshView())" />
-                    }
-                    else if (selectedBlock is HttpRequestBlockInstance)
-                    {
-                        <HttpRequestBlockSettingsViewer Block="selectedBlock as HttpRequestBlockInstance"  ChangedLabel="((args) => stackViewer.RefreshView())" />
-                    }
-                    else if (selectedBlock is ParseBlockInstance)
-                    {
-                        <ParseBlockSettingsViewer Block="selectedBlock as ParseBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
-                    }
-                    else if (selectedBlock is NodeJSBlockInstance)
-                    {
-                        <NodeJSBlockSettingsViewer Block="selectedBlock as NodeJSBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
-                    }
-                    else if (selectedBlock is LoliCodeBlockInstance)
-                    {
-                        <LoliCodeBlockSettingsViewer Block="selectedBlock as LoliCodeBlockInstance" />
-                    }
-                    else
-                    {
-                        <BlockSettingsViewer Block="selectedBlock as AutoBlockInstance" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                        case KeycheckBlockInstance x:
+                            <KeycheckBlockSettingsViewer Block="x"  ChangedLabel="((args) => stackViewer.RefreshView())" />
+                            break;
+
+                        case HttpRequestBlockInstance x:
+                            <HttpRequestBlockSettingsViewer Block="x"  ChangedLabel="((args) => stackViewer.RefreshView())" />
+                            break;
+
+                        case ParseBlockInstance x:
+                            <ParseBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                            break;
+
+                        case NodeJSBlockInstance x:
+                            <NodeJSBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                            break;
+
+                        case LoliCodeBlockInstance x:
+                            <LoliCodeBlockSettingsViewer Block="x" />
+                            break;
+
+                        default:
+                            <BlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                            break;
                     }
                 }
                 else
