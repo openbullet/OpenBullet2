@@ -30,12 +30,13 @@
     <br />
 </EditForm>
 
-<MonacoEditor @ref="_editor" Id="js-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
 
 @code {
     [Parameter] public NodeJSBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
     private MonacoEditor _editor { get; set; }
+    private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
