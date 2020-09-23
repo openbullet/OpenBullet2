@@ -1,0 +1,98 @@
+﻿@using RuriLib.Models.Blocks.Custom
+@using RuriLib.Models.Blocks.Custom.Javascript 
+@using RuriLib.Models.Variables 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<JavascriptBlockSettingsViewer> Loc
+
+<EditForm Model="Block">
+    <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
+    <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
+               ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
+</EditForm>
+
+<h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["Settings"]:</h6>
+
+<EditForm Model="Block">
+    <label>@Loc["InputVariables"]</label>
+    <InputText @bind-Value="Block.InputVariables" />
+    <label>@Loc["Interpreter"]</label>
+    <InputSelect @bind-Value="Block.Interpreter">
+        @foreach (var type in Enum.GetNames(typeof(JsInterpreter)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect>
+    <br />
+    <p>@Loc["OutputVariables"]</p>
+    <div class="list-group list-group-horizontal">
+        <button type="button" class="btn btn-sm btn-outline-success"
+                @onclick="@(() => Block.OutputVariables.Add(new OutputVariable()))">
+            <span class="oi oi-plus"></span> @Loc["Add"]
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                @onclick="@(() => Block.OutputVariables.Clear())">
+            <span class="oi oi-x"></span> @Loc["Clear"]
+        </button>
+    </div>
+    <div class="container-fluid" style="margin-top: 15px;">
+        @foreach (var output in Block.OutputVariables)
+        {
+            <div class="row">
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["Type"]</label>
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <InputSelect @bind-Value="output.Type">
+                        @foreach (var type in Enum.GetNames(typeof(VariableType)))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["Name"]</label>
+                </div>
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputText @bind-Value="output.Name" />
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Block.OutputVariables.Remove(output))">
+                        <span class="oi oi-x"></span>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</EditForm>
+
+<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+
+@code {
+    [Parameter] public JavascriptBlockInstance Block { get; set; }
+    [Parameter] public EventCallback ChangedLabel { get; set; }
+    private MonacoEditor _editor { get; set; }
+    private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            _editor.SetValue(Block.Script);
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Minimap = new MinimapOptions { Enabled = false },
+            Theme = "vs-dark",
+            Language = "javascript",
+            Value = Block.Script,
+            MatchBrackets = true
+        };
+    }
+
+    private async Task SaveScript()
+    {
+        Block.Script = await _editor.GetValue();
+    }
+}

@@ -42,6 +42,7 @@
     <PackageReference Include="DataJuggler.Blazor.FileUpload" Version="1.3.5" />
     <PackageReference Include="HtmlSanitizer" Version="5.0.331" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.3" />
+    <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
     <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.5" />

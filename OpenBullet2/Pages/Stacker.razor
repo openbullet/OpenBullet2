@@ -31,15 +31,15 @@
                             <ParseBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
                             break;
 
-                        case NodeJSBlockInstance x:
-                            <NodeJSBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                        case JavascriptBlockInstance x:
+                            <JavascriptBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
                             break;
 
                         case LoliCodeBlockInstance x:
                             <LoliCodeBlockSettingsViewer Block="x" />
                             break;
 
-                        default:
+                        case AutoBlockInstance x:
                             <BlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
                             break;
                     }
