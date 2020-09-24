@@ -1,7 +1,7 @@
 ﻿@using RuriLib.Models.Blocks.Custom
-@using RuriLib.Models.Blocks.Custom.Javascript 
-@using RuriLib.Models.Variables 
-@inject Microsoft.Extensions.Localization.IStringLocalizer<JavascriptBlockSettingsViewer> Loc
+@using RuriLib.Models.Blocks.Custom.Script
+@using RuriLib.Models.Variables
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ScriptBlockSettingsViewer> Loc
 
 <EditForm Model="Block">
     <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
@@ -16,7 +16,7 @@
     <InputText @bind-Value="Block.InputVariables" />
     <label>@Loc["Interpreter"]</label>
     <InputSelect @bind-Value="Block.Interpreter">
-        @foreach (var type in Enum.GetNames(typeof(JsInterpreter)))
+        @foreach (var type in Enum.GetNames(typeof(Interpreter)))
         {
             <option value="@type">@type</option>
         }
@@ -43,9 +43,9 @@
                 <div class="col-auto px-1 px-md-2">
                     <InputSelect @bind-Value="output.Type">
                         @foreach (var type in Enum.GetNames(typeof(VariableType)))
-                        {
-                            <option value="@type">@type</option>
-                        }
+                            {
+                                <option value="@type">@type</option>
+                            }
                     </InputSelect>
                 </div>
                 <div class="col-auto px-1 px-md-2">
@@ -67,7 +67,7 @@
 <MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
 
 @code {
-    [Parameter] public JavascriptBlockInstance Block { get; set; }
+    [Parameter] public ScriptBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
     private MonacoEditor _editor { get; set; }
     private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
@@ -85,7 +85,7 @@
             AutomaticLayout = true,
             Minimap = new MinimapOptions { Enabled = false },
             Theme = "vs-dark",
-            Language = "javascript",
+            Language = GetLanguage(Block.Interpreter),
             Value = Block.Script,
             MatchBrackets = true
         };
@@ -94,5 +94,16 @@
     private async Task SaveScript()
     {
         Block.Script = await _editor.GetValue();
+    }
+
+    private string GetLanguage(Interpreter interpreter)
+    {
+        return interpreter switch
+        {
+            Interpreter.Jint => "javascript",
+            Interpreter.NodeJS => "javascript",
+            Interpreter.IronPython => "python",
+            _ => "cpp"
+        };
     }
 }

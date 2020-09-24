@@ -6,6 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Modal;
 using Blazored.Modal.Services;
+using IronPython.Compiler;
+using IronPython.Hosting;
+using IronPython.Runtime;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
@@ -75,6 +78,11 @@ namespace OpenBullet2.Shared
             // Build the BotData
             BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy);
             data.Objects.Add("httpClient", new HttpClient());
+            var runtime = Python.CreateRuntime();
+            var pyengine = runtime.GetEngine("py");
+            PythonCompilerOptions pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
+            pco.Module &= ~ModuleOptions.Optimized;
+            data.Objects.Add("ironPyEngine", pyengine);
 
             var script = new ScriptBuilder()
                 .Build(Config.CSharpScript, Config.Settings.ScriptSettings);
@@ -97,7 +105,7 @@ namespace OpenBullet2.Shared
                     {
                         var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
 
-                        if (type.HasValue)
+                        if (type.HasValue && !scriptVar.Name.StartsWith("tmp_"))
                             options.Variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
                     }
                     catch
