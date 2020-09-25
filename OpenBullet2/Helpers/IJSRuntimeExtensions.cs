@@ -20,7 +20,12 @@ namespace OpenBullet2.Helpers
             => await js.InvokeVoidAsync("Swal.fire", title, message, "error");
 
         public async static Task AlertException(this IJSRuntime js, Exception ex)
-            => await js.AlertError(ex.GetType().Name, ex.Message);
+        {
+#if (DEBUG)
+            await js.Log(ex.ToString());
+#endif
+            await js.AlertError(ex.GetType().Name, ex.Message);
+        }
 
         public async static Task<bool> Confirm(this IJSRuntime js, string question, string message, string cancelText = "Cancel")
         {
