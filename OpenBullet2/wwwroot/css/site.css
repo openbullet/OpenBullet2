@@ -279,6 +279,10 @@ input:not([type=checkbox]), textarea {
     width: 100%;
 }
 
+textarea {
+    height: 150px;
+}
+
 select {
     margin-left: 5px !important;
     background-color: var(--bg-secondary);
