@@ -195,3 +195,29 @@
 .ui-treenode, .ui-treenode-content {
   cursor: unset !important;
 }
+
+#debugger-options > div.ui-tree {
+  overflow-x: auto;
+  max-width: 100vw;
+}
+
+@media (min-width: 576px) {
+  #debugger-options > div.ui-tree {
+    overflow-x: auto;
+    max-width: 100vw;
+  }
+}
+
+@media (min-width: 768px) {
+  #debugger-options > div.ui-tree {
+    overflow-x: auto;
+    max-width: 60vw;
+  }
+}
+
+@media (min-width: 992px) {
+  #debugger-options > div.ui-tree {
+    overflow-x: auto;
+    max-width: 40vw;
+  }
+}

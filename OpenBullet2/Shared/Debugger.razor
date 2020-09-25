@@ -18,7 +18,7 @@
         <div class="col-lg-8 col-12 pr-lg-2 px-0">
             <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
         </div>
-        <div class="col-lg-4 col-12 pl-lg-2 px-0 mt-3 mt-lg-0">
+        <div id="debugger-options" class="col-lg-4 col-12 pl-lg-2 px-0 mt-3 mt-lg-0">
             <EditForm Model="options">
                 <label>@Loc["TestData"]</label>
                 <InputText @bind-Value="options.TestData" />
