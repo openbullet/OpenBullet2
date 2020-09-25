@@ -106,7 +106,11 @@ namespace OpenBullet2.Shared
                         var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
 
                         if (type.HasValue && !scriptVar.Name.StartsWith("tmp_"))
-                            options.Variables.Add(DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value));
+                        {
+                            var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
+                            variable.MarkedForCapture = data.MarkedForCapture.Contains(scriptVar.Name);
+                            options.Variables.Add(variable);
+                        }
                     }
                     catch
                     {
