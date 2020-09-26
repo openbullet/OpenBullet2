@@ -135,33 +135,16 @@
     <button class="btn btn-outline-primary" style="margin: 10px 0;" @onclick="CheckBalance">@Loc["CheckBalance"]</button>
 </EditForm>
 
-<h1>@Loc["Selenium"]</h1>
-<EditForm Model="settings.SeleniumSettings">
-    <label>@Loc["SelectedBrowser"]</label>
-    <InputSelect @bind-Value="settings.SeleniumSettings.SelectedBrowser">
-        @foreach (var type in Enum.GetNames(typeof(SeleniumSettings.BrowserType)))
-        {
-            <option value="@type">@type</option>
-        }
-    </InputSelect>
-    <br />
+<h1>@Loc["Puppeteer"]</h1>
+<EditForm Model="settings.PuppeteerSettings">
+    <label>@Loc["ChromeBinaryLocation"]</label>
+    <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.ChromeBinaryLocation" />
 
-    @switch (settings.SeleniumSettings.SelectedBrowser) 
-    {
-        case SeleniumSettings.BrowserType.Chrome:
-            <label>@Loc["ChromeBinaryLocation"]</label>
-            <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.ChromeBinaryLocation" />
-            break;
-
-        case SeleniumSettings.BrowserType.Firefox:
-            <label>@Loc["FirefoxBinaryLocation"]</label>
-            <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.FirefoxBinaryLocation" />
-            break;
-    }
-
+    <!--
     <label>@Loc["DrawMouseMovement"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.DrawMouseMovement" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.DrawMouseMovement" />
     <br />
+    -->
 </EditForm>
 
 <button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>

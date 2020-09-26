@@ -171,6 +171,12 @@
   <data name="General" xml:space="preserve">
     <value>Generali</value>
   </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Ignora errori HTTPS</value>
+  </data>
   <data name="IgnoreResponseErrors" xml:space="preserve">
     <value>Ignora errori nelle risposte</value>
   </data>
@@ -188,6 +194,15 @@
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxy</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Argomenti della riga di comando (es. --headless --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (predefinito se vuoto)</value>
   </data>
   <data name="QuitBrowserStatuses" xml:space="preserve">
     <value>Esci dal browser quando il bot termina con uno di questi stati</value>
@@ -212,15 +227,6 @@
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
     <value>Salva anche le catture vuote</value>
-  </data>
-  <data name="Selenium" xml:space="preserve">
-    <value>Selenium</value>
-  </data>
-  <data name="SeleniumCommandLineArguments" xml:space="preserve">
-    <value>Argomenti della riga di comando (es. --headless --incognito)</value>
-  </data>
-  <data name="SeleniumUserAgent" xml:space="preserve">
-    <value>User Agent (predefinito se vuoto)</value>
   </data>
   <data name="SliceName" xml:space="preserve">
     <value>Nome della parte</value>

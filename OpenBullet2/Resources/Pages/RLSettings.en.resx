@@ -201,6 +201,9 @@
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
     <value>Do you want to restore the default settings?</value>
   </data>
@@ -215,9 +218,6 @@
   </data>
   <data name="SelectedBrowser" xml:space="preserve">
     <value>Selected browser</value>
-  </data>
-  <data name="Selenium" xml:space="preserve">
-    <value>Selenium</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
     <value>The settings were successfully saved.</value>

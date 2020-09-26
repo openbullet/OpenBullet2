@@ -148,27 +148,31 @@
     </div>
 </EditForm>
 
-<h1>@Loc["Selenium"]</h1>
-<EditForm Model="settings.SeleniumSettings">
+<h1>@Loc["Puppeteer"]</h1>
+<EditForm Model="settings.PuppeteerSettings">
     <label>@Loc["AlwaysOpenBrowser"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.AlwaysOpenBrowser" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.AlwaysOpenBrowser" />
     <br />
 
     <label>@Loc["QuitBrowserStatuses"]</label>
     <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
 
-    <label>@Loc["DisableWebpagesNotifications"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.DisableNotifications" />
+    <label>@Loc["Headless"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
     <br />
 
-    <label>@Loc["SeleniumCommandLineArguments"]</label>
-    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.CommandLineArgs" />
+    <label>@Loc["PuppeteerCommandLineArguments"]</label>
+    <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
 
-    <label>@Loc["SeleniumUserAgent"]</label>
-    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.UserAgent" />
+    <label>@Loc["PuppeteerUserAgent"]</label>
+    <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.UserAgent" />
 
     <label>@Loc["RandomUserAgent"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.SeleniumSettings.UseRandomUserAgent" />
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.UseRandomUserAgent" />
+    <br />
+
+    <label>@Loc["IgnoreHttpsErrors"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
     <br />
 </EditForm>
 
