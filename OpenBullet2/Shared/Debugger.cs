@@ -14,6 +14,7 @@ using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
 using OpenBullet2.Services;
+using PuppeteerSharp;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
@@ -41,6 +42,7 @@ namespace OpenBullet2.Shared
         private CancellationTokenSource cts;
         private DebuggerOptions options;
         private BotLoggerViewer loggerViewer;
+        private Browser lastBrowser;
 
         protected override void OnInitialized()
         {
@@ -64,8 +66,12 @@ namespace OpenBullet2.Shared
                 await js.AlertException(ex);
             }
 
-            if (!VolatileSettings.DebuggerOptions.PersistLog)
+            if (!options.PersistLog)
                 logger.Clear();
+
+            // Close any previously opened browser
+            if (lastBrowser != null)
+                await lastBrowser?.CloseAsync();
 
             options.Variables.Clear();
             isRunning = true;
@@ -120,6 +126,10 @@ namespace OpenBullet2.Shared
                 }
 
                 logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");
+
+                lastBrowser = data.Objects.ContainsKey("puppeteer")
+                    ? (Browser)data.Objects["puppeteer"]
+                    : null;
             }
             catch (Exception ex)
             {
