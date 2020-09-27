@@ -82,7 +82,7 @@ namespace OpenBullet2.Shared
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
             // Build the BotData
-            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy);
+            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy, options.UseProxy);
             data.Objects.Add("httpClient", new HttpClient());
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
