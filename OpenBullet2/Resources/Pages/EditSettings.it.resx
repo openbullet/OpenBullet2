@@ -199,7 +199,7 @@
     <value>Puppeteer</value>
   </data>
   <data name="PuppeteerCommandLineArguments" xml:space="preserve">
-    <value>Argomenti della riga di comando (es. --headless --incognito)</value>
+    <value>Argomenti della riga di comando (es. --disable-notifications --incognito)</value>
   </data>
   <data name="PuppeteerUserAgent" xml:space="preserve">
     <value>User Agent (predefinito se vuoto)</value>
