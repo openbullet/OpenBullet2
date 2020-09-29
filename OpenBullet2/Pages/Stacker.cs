@@ -15,7 +15,6 @@ namespace OpenBullet2.Pages
     {
         [Inject] ConfigService ConfigService { get; set; }
 
-        private List<BlockDescriptor> availableBlocks;
         private Config config;
         private BlockInstance selectedBlock;
         private StackViewer stackViewer;
@@ -32,8 +31,6 @@ namespace OpenBullet2.Pages
             {
                 await js.AlertError(ex.GetType().Name, ex.Message);
             }
-
-            availableBlocks = RuriLib.Globals.DescriptorsRepository.Descriptors;
 
             base.OnInitialized();
         }

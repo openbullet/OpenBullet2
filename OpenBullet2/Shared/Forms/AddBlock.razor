@@ -2,18 +2,12 @@
 @inject IModalService ModalService
 
 <div style="height: 500px; overflow-y: auto;">
-    <AvailableBlocksViewer Descriptors="descriptors" SelectedDescriptor="SelectedDescriptor" />
+    <AvailableBlocksViewer SelectedDescriptor="SelectedDescriptor" />
 </div>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    List<BlockDescriptor> descriptors;
-
-    protected override void OnInitialized()
-    {
-        descriptors = RuriLib.Globals.DescriptorsRepository.Descriptors;
-    }
-
+    
     private void SelectedDescriptor(BlockDescriptor descriptor)
     {
         BlazoredModal.Close(ModalResult.Ok(descriptor));
