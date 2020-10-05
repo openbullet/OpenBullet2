@@ -71,7 +71,7 @@ namespace OpenBullet2.Shared
 
             // Close any previously opened browser
             if (lastBrowser != null)
-                await lastBrowser?.CloseAsync();
+                await lastBrowser.CloseAsync();
 
             options.Variables.Clear();
             isRunning = true;
@@ -124,20 +124,21 @@ namespace OpenBullet2.Shared
                         // so we just disregard it
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                data.STATUS = "ERROR";
+                await js.AlertException(ex);
+            }
+            finally
+            {
+                isRunning = false;
 
                 logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");
 
                 lastBrowser = data.Objects.ContainsKey("puppeteer")
                     ? (Browser)data.Objects["puppeteer"]
                     : null;
-            }
-            catch (Exception ex)
-            {
-                await js.AlertException(ex);
-            }
-            finally
-            {
-                isRunning = false;
             }
 
             loggerViewer.Refresh();
