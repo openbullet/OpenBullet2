@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <th scope="row">@Loc["MemoryUsage"]</th>
-            <td>@BytesToString(Metrics.MemoryUsage)</td>
+            <td>@RuriLib.Functions.Conversion.SizeConverter.ToReadableSize(Metrics.MemoryUsage)</td>
         </tr>
         <tr>
             <th scope="row">@Loc["BuildNumber"]</th>
