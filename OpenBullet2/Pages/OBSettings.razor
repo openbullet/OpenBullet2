@@ -38,6 +38,23 @@
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogToFile" />
     <br />
 
+    <label>@Loc["JobManagerUpdateInterval"]</label>
+    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.JobManagerUpdateInterval" />
+    <br />
+
+    <label>@Loc["JobUpdateInterval"]</label>
+    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.JobUpdateInterval" />
+    <br />
+
+    <label>@Loc["DefaultJobDisplayMode"]</label>
+    <InputSelect @bind-Value="settings.GeneralSettings.DefaultJobDisplayMode">
+        @foreach (var mode in Enum.GetNames(typeof(JobDisplayMode)))
+        {
+            <option value="@mode">@mode</option>
+        }
+    </InputSelect>
+    <br />
+
     <!-- Maybe move this to the actual relevant page -->
     <label>@Loc["IgnoreWordlistNameOnHitsDedupe"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe" />

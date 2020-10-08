@@ -10,6 +10,7 @@ using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
 using RuriLib.Services;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace OpenBullet2.Pages
         [Inject] IModalService Modal { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
+        [Inject] public PersistentSettingsService PersistentSettings { get; set; }
 
         private object removeLock = new object();
 
@@ -33,6 +35,8 @@ namespace OpenBullet2.Pages
                 await RestoreJobs();
                 Manager.Initialized = true;
             }
+
+            StartPeriodicRefresh();
         }
 
         private async Task RestoreJobs()
@@ -125,6 +129,15 @@ namespace OpenBullet2.Pages
         public void Clone(Job job)
         {
             Nav.NavigateTo($"jobs/clone/{job.Id}");
+        }
+
+        private async void StartPeriodicRefresh()
+        {
+            while (Manager.Jobs.Any(j => j.Status != TaskManagerStatus.Idle && j.Status != TaskManagerStatus.Paused))
+            {
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval));
+            }
         }
     }
 }

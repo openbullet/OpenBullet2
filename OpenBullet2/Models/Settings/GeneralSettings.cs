@@ -12,6 +12,12 @@ namespace OpenBullet2.Models.Settings
         CSharpCode
     }
 
+    public enum JobDisplayMode
+    {
+        Standard = 0,
+        Detailed = 1
+    }
+
     public class ProxyCheckTarget
     {
         public string Url { get; set; } = "https://google.com";
@@ -30,5 +36,8 @@ namespace OpenBullet2.Models.Settings
         public bool LogToFile { get; set; } = false;
         public bool IgnoreWordlistNameOnHitsDedupe { get; set; } = false;
         public List<ProxyCheckTarget> ProxyCheckTargets { get; set; }
+        public JobDisplayMode DefaultJobDisplayMode { get; set; } = JobDisplayMode.Standard;
+        public int JobUpdateInterval { get; set; } = 1000;
+        public int JobManagerUpdateInterval { get; set; } = 1000;
     }
 }

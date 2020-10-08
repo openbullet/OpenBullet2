@@ -29,7 +29,6 @@ namespace OpenBullet2.Shared
         [Inject] public IJobRepository JobRepo { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
-        int refreshInterval = 1000;
         bool changingBots = false;
         RadzenGrid<Hit> hitsGrid;
         Hit selectedHit;
@@ -60,7 +59,7 @@ namespace OpenBullet2.Shared
 
         protected override void OnInitialized()
         {
-            PeriodicRefresh(refreshInterval);
+            StartPeriodicRefresh();
             TryHookEvents();
         }
 
@@ -218,7 +217,7 @@ namespace OpenBullet2.Shared
                 await Job.Start();
                 TryHookEvents();
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
-                PeriodicRefresh(refreshInterval);
+                StartPeriodicRefresh();
             }
             catch (Exception ex)
             {
@@ -272,7 +271,7 @@ namespace OpenBullet2.Shared
             {
                 await Job.Resume();
                 Logger.LogInfo(Job.Id, Loc["ResumeMessage"]);
-                PeriodicRefresh(refreshInterval);
+                StartPeriodicRefresh();
             }
             catch (Exception ex)
             {
@@ -280,12 +279,12 @@ namespace OpenBullet2.Shared
             }
         }
 
-        private async void PeriodicRefresh(int interval)
+        private async void StartPeriodicRefresh()
         {
             while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
             {
                 await InvokeAsync(StateHasChanged);
-                await Task.Delay(Math.Max(50, interval));
+                await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval));
             }
 
             // A final one to refresh the button status

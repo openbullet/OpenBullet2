@@ -147,6 +147,9 @@
   <data name="DefaultAuthor" xml:space="preserve">
     <value>The default author on newly created configs</value>
   </data>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Default job display mode</value>
+  </data>
   <data name="Done" xml:space="preserve">
     <value>Done</value>
   </data>
@@ -161,6 +164,12 @@
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Ignore the wordlist name when removing duplicates from hits</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Job Manager update interval</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Job update interval</value>
   </data>
   <data name="LogMaxEntries" xml:space="preserve">
     <value>Maximum number of entries in the log</value>

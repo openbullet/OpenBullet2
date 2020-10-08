@@ -198,6 +198,9 @@
   <data name="Errors" xml:space="preserve">
     <value>Errors</value>
   </data>
+  <data name="ExecutionInfo" xml:space="preserve">
+    <value>Execution information</value>
+  </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
@@ -320,6 +323,9 @@
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
+  </data>
+  <data name="WaitingForData" xml:space="preserve">
+    <value>Waiting for data</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
