@@ -5,7 +5,6 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -31,12 +30,6 @@ namespace OpenBullet2.Pages
             }
 
             base.OnInitialized();
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            if (firstRender)
-                _editor.SetValue(config.LoliCodeScript);
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)

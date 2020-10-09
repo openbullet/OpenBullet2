@@ -24,7 +24,8 @@
     }
     <div class="row">
         <div class="w-100 mt-3" style="height: 500px;">
-            <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+            <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions"
+                          OnDidInit="OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
         </div>
     </div>
     <div class="row">

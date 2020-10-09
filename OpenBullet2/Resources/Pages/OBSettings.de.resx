@@ -147,6 +147,9 @@
   <data name="DefaultAuthor" xml:space="preserve">
     <value>Standardautor bei neu erstellten Configs</value>
   </data>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Standard-Anzeigemodus für Jobs</value>
+  </data>
   <data name="Done" xml:space="preserve">
     <value>Erledigt</value>
   </data>
@@ -161,6 +164,12 @@
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
     <value>Den Wordlist Namen beim Entfernen der Duplikate in den Treffern ignorieren</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Job Manager Aktualisierungsintervall</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Job Aktualisierungsintervall</value>
   </data>
   <data name="LogMaxEntries" xml:space="preserve">
     <value>Maximale Anzahl von Einträgen im Protokoll</value>

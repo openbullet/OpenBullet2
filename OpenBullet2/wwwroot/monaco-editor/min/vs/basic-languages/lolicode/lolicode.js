@@ -76,8 +76,7 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
             close: ">",
             token: "delimiter.angle"
         }],
-        keywords: [		"extern", "alias", "using", "bool", "decimal", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "char", "float", "double", "object", "dynamic", "string", "assembly", "is", "as", "ref", "out", "this", "base", "new", "typeof", "void", "checked", "unchecked", "default", "delegate", "var", "const", "if", "else", "switch", "case", "while", "do", "for", "foreach", "in", "break", "continue", "goto", "return", "throw", "try", "catch", "finally", "lock", "yield", "from", "let", "where", "join", "on", "equals", "into", "orderby", "ascending", "descending", "select", "group", "by", "namespace", "partial", "class", "field", "event", "method", "param", "property", "public", "protected", "internal", "private", "abstract", "sealed", "static", "struct", "readonly", "volatile", "virtual", "override", "params", "get", "set", "add", "remove", "operator", "true", "false", "implicit", "explicit", "interface", "enum", "null", "async", "await", "fixed", "sizeof", "stackalloc", "unsafe", "nameof", "when",
-        /*LC SPECIFIC*/	"BLOCK", "ENDBLOCK", "=>", "VAR", "CAP", "KEYCHAIN", "STRINGKEY", "INTKEY", "FLOATKEY", "LISTKEY", "DICTKEY", "BEGIN", "END", "SCRIPT"],
+        keywords: [		"extern", "alias", "using", "bool", "decimal", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "char", "float", "double", "object", "dynamic", "string", "assembly", "is", "as", "ref", "out", "this", "base", "new", "typeof", "void", "checked", "unchecked", "default", "delegate", "var", "const", "if", "else", "switch", "case", "while", "do", "for", "foreach", "in", "break", "continue", "goto", "return", "throw", "try", "catch", "finally", "lock", "yield", "from", "let", "where", "join", "on", "equals", "into", "orderby", "ascending", "descending", "select", "group", "by", "namespace", "partial", "class", "field", "event", "method", "param", "property", "public", "protected", "internal", "private", "abstract", "sealed", "static", "struct", "readonly", "volatile", "virtual", "override", "params", "get", "set", "add", "remove", "operator", "true", "false", "implicit", "explicit", "interface", "enum", "null", "async", "await", "fixed", "sizeof", "stackalloc", "unsafe", "nameof", "when"],
         namespaceFollows: ["namespace", "using"],
         parenFollows: ["if", "for", "while", "switch", "foreach", "using", "catch", "when"],
         operators: ["=", "??", "||", "&&", "|", "^", "&", "==", "!=", "<=", ">=", "<<", "+", "-", "*", "/", "%", "!", "~", "++", "--", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", ">>", "=>"],
@@ -85,6 +84,17 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
         escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
         tokenizer: {
             root: [
+
+                // CUSTOM TOKENS
+                [/^BLOCK:.*/, "block-delimiter"],
+                [/^ENDBLOCK/, "block-delimiter"],
+                [/^DISABLED/, "disabled"],
+                [/^LABEL:.*/, "label"],
+                [/VAR/, "variable"],
+                [/CAP/, "capture"],
+                [/\$/, "interpolated-symbol"],
+                [/\@/, "variable-symbol"],
+                [/=\>/, "arrow"],
                 [/\@?[a-zA-Z_]\w*/, {
                     cases: {
                         "@namespaceFollows": {
