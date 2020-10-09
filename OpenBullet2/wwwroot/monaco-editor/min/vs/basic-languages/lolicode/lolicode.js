@@ -84,17 +84,9 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
         escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
         tokenizer: {
             root: [
-
-                // CUSTOM TOKENS
-                [/^BLOCK:.*/, "block-delimiter"],
-                [/^ENDBLOCK/, "block-delimiter"],
-                [/^DISABLED/, "disabled"],
-                [/^LABEL:.*/, "label"],
-                [/VAR/, "variable"],
-                [/CAP/, "capture"],
-                [/\$/, "interpolated-symbol"],
-                [/\@/, "variable-symbol"],
-                [/=\>/, "arrow"],
+				// Jump to lolicode section
+				[/^BLOCK:.*/, "block", "@lolicode"],
+				
                 [/\@?[a-zA-Z_]\w*/, {
                     cases: {
                         "@namespaceFollows": {
@@ -236,7 +228,25 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 [/[ \t\v\f\r\n]+/, ""],
                 [/\/\*/, "comment", "@comment"],
                 [/\/\/.*$/, "comment"]
-            ]
+			],
+			lolicode: [
+				[/^ENDBLOCK$/, "block.end", "@pop"],
+				[/^DISABLED$/, "block.disabled"],
+                [/^LABEL:.*/, "block.label"],
+                [/\bVAR\b/, "block.var"],
+                [/\bCAP\b/, "block.cap"],
+                [/\$/, "block.interp"],
+                [/\@[A-Za-z0-9_\.]+/, "block.variable"],
+				[/\b=\>\b/, "block.arrow"],
+				[/"/, {
+                    token: "string.quote",
+                    next: "@string"
+				}],
+				[/[0-9_]*\.[0-9_]+([eE][\-+]?\d+)?[fFdD]?/, "number.float"],
+                [/0[xX][0-9a-fA-F_]+/, "number.hex"],
+                [/0[bB][01_]+/, "number.hex"],
+                [/[0-9_]+/, "number"]
+			]
         }
     }
 });

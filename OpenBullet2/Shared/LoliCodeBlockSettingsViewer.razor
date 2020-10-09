@@ -1,9 +1,35 @@
 ﻿@using RuriLib.Models.Blocks 
 
-<EditForm Model="Block">
-    <InputTextArea @bind-Value="Block.Script" style="height: 500px" readonly />
-</EditForm>
+
+<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+
 
 @code {
     [Parameter] public LoliCodeBlockInstance Block { get; set; }
+    private MonacoEditor _editor { get; set; }
+    private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            _editor.SetValue(Block.Script);
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Minimap = new MinimapOptions { Enabled = false },
+            Theme = "vs-dark",
+            Language = "csharp",
+            Value = Block.Script,
+            MatchBrackets = true
+        };
+    }
+
+    private async Task SaveScript()
+    {
+        Block.Script = await _editor.GetValue();
+    }
 }

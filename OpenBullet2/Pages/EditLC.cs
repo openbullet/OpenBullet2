@@ -32,6 +32,12 @@ namespace OpenBullet2.Pages
             base.OnInitialized();
         }
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+                _editor.SetValue(config.LoliCodeScript);
+        }
+
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
         {
             return new StandaloneEditorConstructionOptions
