@@ -177,8 +177,9 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 [/[\/*]/, "comment"]
             ],
             string: [
-                [/[^\\"]+/, "string"],
-                [/@escapes/, "string.escape"],
+                [/[^\\"<]+/, "string"], // Added '<' for Lolicode
+				[/@escapes/, "string.escape"],
+				[/<[^>]+>/, "string.variable"], // Lolicode specific
                 [/\\./, "string.escape.invalid"],
                 [/"/, {
                     token: "string.quote",
@@ -186,18 +187,20 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 }]
             ],
             litstring: [
-                [/[^"]+/, "string"],
-                [/""/, "string.escape"],
+                [/[^"<]+/, "string"], // Added '<' for Lolicode
+				[/""/, "string.escape"],
+				[/<[^>]+>/, "string.variable"], // Lolicode specific
                 [/"/, {
                     token: "string.quote",
                     next: "@pop"
                 }]
             ],
             litinterpstring: [
-                [/[^"{]+/, "string"],
+                [/[^"{<]+/, "string"], // Added '<' for Lolicode
                 [/""/, "string.escape"],
                 [/{{/, "string.escape"],
-                [/}}/, "string.escape"],
+				[/}}/, "string.escape"],
+				[/<[^>]+>/, "string.variable"], // Lolicode specific
                 [/{/, {
                     token: "string.quote",
                     next: "root.litinterpstring"
@@ -208,11 +211,12 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 }]
             ],
             interpolatedstring: [
-                [/[^\\"{]+/, "string"],
+                [/[^\\"{<]+/, "string"], // Added '<' for Lolicode
                 [/@escapes/, "string.escape"],
                 [/\\./, "string.escape.invalid"],
                 [/{{/, "string.escape"],
-                [/}}/, "string.escape"],
+				[/}}/, "string.escape"],
+				[/<[^>]+>/, "string.variable"], // Lolicode specific
                 [/{/, {
                     token: "string.quote",
                     next: "root.interpolatedstring"
