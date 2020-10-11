@@ -281,7 +281,7 @@ namespace OpenBullet2.Shared
 
         private async void StartPeriodicRefresh()
         {
-            while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
+            while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
             {
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval));

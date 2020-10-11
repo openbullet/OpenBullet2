@@ -51,25 +51,25 @@
 <div class="list-group list-group-horizontal">
     @switch (Job.Status)
     {
-        case TaskManagerStatus.Idle:
+        case JobStatus.Idle:
             <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
             break;
 
-        case TaskManagerStatus.Paused:
+        case JobStatus.Paused:
             <button class="btn btn-sm btn-outline-success" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
             break;
 
-        case TaskManagerStatus.Running:
+        case JobStatus.Running:
             <button class="btn btn-sm btn-outline-warning" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
             break;
 
-        case TaskManagerStatus.Pausing:
+        case JobStatus.Pausing:
             <span><i>Pausing... please wait until the current tasks finished processing</i></span>
             break;
 
-        case TaskManagerStatus.Stopping:
+        case JobStatus.Stopping:
             <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
             <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
             break;
@@ -261,7 +261,7 @@
 
     private async void PeriodicRefresh(int interval)
     {
-        while (Job.Status != TaskManagerStatus.Idle && Job.Status != TaskManagerStatus.Paused)
+        while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
         {
             await InvokeAsync(StateHasChanged);
             await Task.Delay(Math.Max(50, interval));

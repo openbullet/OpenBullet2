@@ -73,7 +73,7 @@ namespace OpenBullet2.Pages
 
         public async Task Remove(Job job)
         {
-            if (job.Status != TaskManagerStatus.Idle)
+            if (job.Status != JobStatus.Idle)
             {
                 await js.AlertError(Loc["JobNotIdle"], Loc["JobNotIdleWarning"]);
                 return;
@@ -103,7 +103,7 @@ namespace OpenBullet2.Pages
 
         public async Task RemoveAll()
         {
-            var notIdleJobs = Manager.Jobs.Where(j => j.Status != TaskManagerStatus.Idle);
+            var notIdleJobs = Manager.Jobs.Where(j => j.Status != JobStatus.Idle);
 
             if (notIdleJobs.Count() > 0)
             {
@@ -117,7 +117,7 @@ namespace OpenBullet2.Pages
 
         public async Task Edit(Job job)
         {
-            if (job.Status != TaskManagerStatus.Idle)
+            if (job.Status != JobStatus.Idle)
             {
                 await js.AlertError(Loc["JobNotIdle"], Loc["JobNotIdleWarning"]);
                 return;
@@ -133,7 +133,7 @@ namespace OpenBullet2.Pages
 
         private async void StartPeriodicRefresh()
         {
-            while (Manager.Jobs.Any(j => j.Status != TaskManagerStatus.Idle && j.Status != TaskManagerStatus.Paused))
+            while (Manager.Jobs.Any(j => j.Status != JobStatus.Idle && j.Status != JobStatus.Paused))
             {
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval));

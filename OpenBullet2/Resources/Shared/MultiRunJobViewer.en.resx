@@ -312,6 +312,9 @@
   <data name="Tested" xml:space="preserve">
     <value>Tested</value>
   </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Time left</value>
+  </data>
   <data name="ToCheck" xml:space="preserve">
     <value>To check</value>
   </data>
@@ -323,6 +326,9 @@
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>Waiting</value>
   </data>
   <data name="WaitingForData" xml:space="preserve">
     <value>Waiting for data</value>

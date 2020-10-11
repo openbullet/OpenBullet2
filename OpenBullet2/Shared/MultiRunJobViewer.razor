@@ -1,11 +1,12 @@
-﻿@using RuriLib.Models.Jobs.Threading
+﻿@using RuriLib.Models.Jobs
 @using OpenBullet2.Models.Hits
 @using RuriLib.Models.Hits.HitOutputs 
 @using RuriLib.Models.Proxies.ProxySources 
 @using RuriLib.Models.Data.DataPools 
 @using OpenBullet2.Models.Proxies.Sources 
 @using System.Globalization
-@using RuriLib.Models.Hits; 
+@using RuriLib.Models.Hits
+@using RuriLib.Models.Jobs.StartConditions 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunJobViewer> Loc
 
 <div>
@@ -121,25 +122,46 @@
 <div class="list-group list-group-horizontal">
     @switch (Job.Status)
     {
-        case TaskManagerStatus.Idle:
+        case JobStatus.Idle:
             <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             break;
 
-        case TaskManagerStatus.Paused:
+        case JobStatus.Waiting:
+            <span class="mr-3">@Loc["Waiting"]...  @Loc["TimeLeft"]:</span>
+            @if (Job.StartCondition.Verify(Job)) // If already verified and about to start
+            {
+                <span>00:00:00</span>
+            }
+            else // Otherwise display actual wait
+            {
+                @switch (Job.StartCondition)
+                {
+                    case RelativeTimeStartCondition x:
+                        <span>@(((Job.StartTime + x.StartAfter) - DateTime.Now).ToString(@"hh\:mm\:ss"))</span>
+                        break;
+
+                    case AbsoluteTimeStartCondition x:
+                        <span>@((x.StartAt - DateTime.Now).ToString(@"hh\:mm\:ss"))</span>
+                        break;
+                }
+            }
+            break;
+
+        case JobStatus.Paused:
             <button class="btn btn-sm btn-outline-success" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
             break;
 
-        case TaskManagerStatus.Running:
+        case JobStatus.Running:
             <button class="btn btn-sm btn-outline-warning" @onclick="Pause"><span class="oi oi-media-pause"></span> @Loc["Pause"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
-        case TaskManagerStatus.Pausing:
+        case JobStatus.Pausing:
             <span><i>@Loc["PausingMessage"]</i></span>
             break;
 
-        case TaskManagerStatus.Stopping:
+        case JobStatus.Stopping:
             <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["Stopping message"] </i></span>
             <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;

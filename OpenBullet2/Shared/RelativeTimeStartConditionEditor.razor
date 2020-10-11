@@ -1,9 +1,9 @@
 ﻿@using RuriLib.Models.Jobs.StartConditions
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RelativeTimeStartConditionEditor> Loc
 
-<input type="number" style="width: 50px;" value="@hours" @onchange="SetTimespan" /> @Loc["hours"]
-<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> @Loc["minutes"]
-<input type="number" style="width: 50px; margin-left: 10px;" value="@hours" @onchange="SetTimespan" /> @Loc["seconds"]
+<input type="number" style="width: 50px;" value="@hours" @onchange="ChangeHours" /> @Loc["hours"]
+<input type="number" style="width: 50px; margin-left: 10px;" value="@minutes" @onchange="ChangeMinutes" /> @Loc["minutes"]
+<input type="number" style="width: 50px; margin-left: 10px;" value="@seconds" @onchange="ChangeSeconds" /> @Loc["seconds"]
 
 @code {
     [Parameter] public RelativeTimeStartCondition StartCondition { get; set; }
@@ -16,11 +16,29 @@
         seconds = StartCondition.StartAfter.Seconds;
     }
 
+    void ChangeHours(ChangeEventArgs args)
+    {
+        hours = int.Parse((string)args.Value);
+        SetTimespan();
+    }
+
+    void ChangeMinutes(ChangeEventArgs args)
+    {
+        minutes = int.Parse((string)args.Value);
+        SetTimespan();
+    }
+
+    void ChangeSeconds(ChangeEventArgs args)
+    {
+        seconds = int.Parse((string)args.Value);
+        SetTimespan();
+    }
+
     void SetTimespan()
     {
-        StartCondition.StartAfter = TimeSpan.Zero;
-        StartCondition.StartAfter.Add(TimeSpan.FromHours(hours));
-        StartCondition.StartAfter.Add(TimeSpan.FromMinutes(minutes));
-        StartCondition.StartAfter.Add(TimeSpan.FromSeconds(seconds));
+        StartCondition.StartAfter = TimeSpan.Zero
+            .Add(TimeSpan.FromHours(hours))
+            .Add(TimeSpan.FromMinutes(minutes))
+            .Add(TimeSpan.FromSeconds(seconds));
     }
 }
