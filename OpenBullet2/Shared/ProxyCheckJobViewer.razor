@@ -1,6 +1,7 @@
 ﻿@using RuriLib.Models.Jobs
 @using RuriLib.Models.Jobs.Threading
 @using OpenBullet2.Helpers
+@using RuriLib.Models.Jobs.StartConditions 
 @using RuriLib.Models.Proxies
 @using System.Globalization
 @using OpenBullet2.Services 
@@ -8,6 +9,7 @@
 @inject IModalService Modal
 @inject PersistentSettingsService PersistentSettings
 @inject JobLoggerService Logger
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckJobViewer> Loc
 
 <div>
     <p style="color: orange;"><b>Job Options</b></p>
@@ -53,6 +55,27 @@
     {
         case JobStatus.Idle:
             <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            break;
+
+        case JobStatus.Waiting:
+            <span class="mr-3">@Loc["Waiting"]...  @Loc["TimeLeft"]:</span>
+            @if (Job.StartCondition.Verify(Job)) // If already verified and about to start
+            {
+                <span>00:00:00</span>
+            }
+            else // Otherwise display actual wait
+            {
+                @switch (Job.StartCondition)
+                {
+                    case RelativeTimeStartCondition x:
+                        <span>@(((Job.StartTime + x.StartAfter) - DateTime.Now).ToString(@"hh\:mm\:ss"))</span>
+                        break;
+
+                    case AbsoluteTimeStartCondition x:
+                        <span>@((x.StartAt - DateTime.Now).ToString(@"hh\:mm\:ss"))</span>
+                        break;
+                }
+            }
             break;
 
         case JobStatus.Paused:
