@@ -12,6 +12,10 @@ RuriLibSettings.json
 triggeredActions.json
 ResXTranslator.exe
 
+# RuriLib API Documentation
+RuriLib/_site/
+RuriLib/log.txt
+
 # User-specific files
 *.suo
 *.user
@@ -33,7 +37,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-Configs/
+OpenBullet2/Configs/
 Wordlists/
 Mocks/
 Scripts/
