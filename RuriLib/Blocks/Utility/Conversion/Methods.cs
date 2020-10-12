@@ -1,0 +1,91 @@
+﻿using RuriLib.Attributes;
+using RuriLib.Functions.Conversion;
+using RuriLib.Models.Bots;
+using System;
+using System.Text;
+
+namespace RuriLib.Blocks.Utility.Conversion
+{
+    [BlockCategory("Conversion", "Blocks for converting between different encodings", "#fad6a5")]
+    public static class Methods
+    {
+        [Block("Converts a hex string to a byte array", name = "Hex => Bytes")]
+        public static byte[] HexStringToByteArray(BotData data, [Variable] string hexString, bool addPadding = true)
+        {
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converting {hexString} to a byte array");
+            return HexConverter.ToByteArray(hexString, addPadding);
+        }
+
+        [Block("Converts a byte array to a hex string", name = "Bytes => Hex")]
+        public static string ByteArrayToHexString(BotData data, [Variable] byte[] bytes)
+        {
+            var hex = HexConverter.ToHexString(bytes);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converted the byte array to {hex}");
+            return hex;
+        }
+
+        [Block("Converts a base64 string to a byte array", name = "Base64 => Bytes")]
+        public static byte[] Base64StringToByteArray(BotData data, [Variable] string base64String, bool urlEncoded = false)
+        {
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converting {base64String} to a byte array");
+            return Base64Converter.ToByteArray(base64String, urlEncoded);
+        }
+
+        [Block("Converts a byte array to a base64 string", name = "Bytes => Base64")]
+        public static string ByteArrayToBase64String(BotData data, [Variable] byte[] bytes, bool urlEncoded = false)
+        {
+            var b64 = Base64Converter.ToBase64String(bytes, urlEncoded);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converted the byte array to {b64}");
+            return b64;
+        }
+
+        [Block("Converts a binary string to a byte array", name = "Binary String => Bytes")]
+        public static byte[] BinaryStringToByteArray(BotData data, [Variable] string binaryString, bool addPadding = true)
+        {
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converting {binaryString} to a byte array");
+            return BinaryConverter.ToByteArray(binaryString, addPadding);
+        }
+
+        [Block("Converts a byte array to a binary string", name = "Bytes => Binary String")]
+        public static string ByteArrayToBinaryString(BotData data, [Variable] byte[] bytes)
+        {
+            var bin = BinaryConverter.ToBinaryString(bytes);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converted the byte array to {bin}");
+            return bin;
+        }
+
+        [Block("Converts a UTF8 string to a base64 string", name = "UTF8 => Base64")]
+        public static string UTF8ToBase64(BotData data, [Variable] string input)
+        {
+            var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
+            data.Logger.LogHeader();
+            data.Logger.Log($"Encoded as base64: {base64}");
+            return base64;
+        }
+
+        [Block("Converts a base64 string to a UTF8 string", name = "Base64 => UTF8")]
+        public static string Base64ToUTF8(BotData data, [Variable] string input)
+        {
+            var utf8 = Encoding.UTF8.GetString(Convert.FromBase64String(input));
+            data.Logger.LogHeader();
+            data.Logger.Log($"Encoded as UTF8: {utf8}");
+            return utf8;
+        }
+
+        [Block("Converts a long number representing bytes into a readable string like 4.5 Gbit or 2.14 KiB")]
+        public static string ReadableSize(BotData data, [Variable] string input,
+            bool outputBits = false, bool binaryUnit = false, int decimalPlaces = 2)
+        {
+            var size = SizeConverter.ToReadableSize(long.Parse(input), outputBits, binaryUnit, decimalPlaces);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converted {input} bytes into the string {size}");
+            return size;
+        }
+    }
+}

@@ -68,9 +68,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="RuriLib">
-      <HintPath>..\..\RuriLib\RuriLib\bin\Debug\netcoreapp3.1\RuriLib.dll</HintPath>
-    </Reference>
     <Reference Include="SocksSharp">
       <HintPath>..\..\SocksSharp\src\SocksSharp\bin\Debug\netstandard2.0\SocksSharp.dll</HintPath>
     </Reference>
@@ -86,6 +83,11 @@
     <None Include="Resources\Pages\JobEditor.en.resx" />
     <None Include="Resources\Pages\JobCreator.it.resx" />
     <None Include="Resources\Pages\JobCreator.en.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RuriLib.Tests\RuriLib.Tests.csproj" />
+    <ProjectReference Include="..\RuriLib\RuriLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

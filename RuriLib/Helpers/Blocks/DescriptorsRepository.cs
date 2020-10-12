@@ -1,0 +1,293 @@
+﻿using RuriLib.Extensions;
+using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Custom;
+using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Bots;
+using RuriLib.Models.Trees;
+using RuriLib.Models.Variables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+namespace RuriLib.Helpers.Blocks
+{
+    /// <summary>
+    /// Repository of all block descriptors that are available to create new blocks.
+    /// </summary>
+    public class DescriptorsRepository
+    {
+        public List<BlockDescriptor> Descriptors { get; set; } = new List<BlockDescriptor>();
+
+        public DescriptorsRepository()
+        {
+            AddFromExposedMethods(Assembly.GetExecutingAssembly());
+            
+            // Add custom block descriptors
+            Descriptors.Add(new KeycheckBlockDescriptor());
+            Descriptors.Add(new HttpRequestBlockDescriptor());
+            Descriptors.Add(new ParseBlockDescriptor());
+            Descriptors.Add(new ScriptBlockDescriptor());
+
+            CheckForDuplicates();
+        }
+
+        // Checks for duplicate IDs and throws an exception if it happens
+        public void CheckForDuplicates()
+        {
+            var groups = Descriptors.GroupBy(d => d.Id);
+            if (groups.Any(g => g.Count() > 1))
+            {
+                throw new Exception("Duplicate id: " + groups.First(g => g.Count() > 1).First().Id);
+            }
+        }
+
+        public T GetAs<T>(string id) where T : BlockDescriptor
+        {
+            var descriptor = Descriptors.FirstOrDefault(d => d.Id == id);
+
+            if (descriptor == null)
+                throw new Exception("No descriptor was found with the given id");
+
+            return descriptor as T;
+        }
+
+        /// <summary>
+        /// Adds descriptors to the repository by finding exposed methods in the given
+        /// <paramref name="assembly"/>.
+        /// </summary>
+        public void AddFromExposedMethods(Assembly assembly)
+        {
+            // Get all types of the assembly
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                // Check if the type has a BlockCategory attribute
+                var category = type.GetCustomAttribute<Attributes.BlockCategory>();
+                if (category == null) continue;
+
+                // Get the methods in the type
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    // Check if the methods has a Block attribute
+                    var attribute = method.GetCustomAttribute<Attributes.Block>();
+                    if (attribute == null) continue;
+
+                    // Add the descriptor
+                    Descriptors.Add(new AutoBlockDescriptor
+                    {
+                        Id = method.Name,
+                        Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
+                        // If the name specified in the attribute is null, use the readable method's name
+                        Name = attribute.name ?? method.Name.ToReadableName(),
+                        Description = attribute.description ?? string.Empty,
+                        ExtraInfo = attribute.extraInfo ?? string.Empty,
+                        Parameters = method.GetParameters().Where(p => p.ParameterType != typeof(BotData))
+                            .Select(p => BuildBlockParameter(p)).ToArray(),
+                        ReturnType = ToVariableType(method.ReturnType),
+                        Category = new BlockCategory
+                        {
+                            Name = category.name ?? type.Namespace.Split('.')[2],
+                            Path = $"{type.Namespace}",
+                            Namespace = $"{type.Namespace}.{type.Name}",
+                            Description = category.description,
+                            ForegroundColor = category.foregroundColor,
+                            BackgroundColor = category.backgroundColor
+                        }
+                    });
+                }
+            }
+
+            CheckForDuplicates();
+        }
+
+        private BlockParameter BuildBlockParameter(ParameterInfo info)
+        {
+            var parameter = ToBlockParameter(info);
+            var variableParam = info.GetCustomAttribute<Attributes.Variable>();
+            var interpParam = info.GetCustomAttribute<Attributes.Interpolated>();
+
+            if (variableParam != null)
+            {
+                parameter.InputMode = SettingInputMode.Variable;
+                parameter.DefaultVariableName = variableParam.defaultVariableName;
+            }
+            else if (interpParam != null)
+            {
+                parameter.InputMode = SettingInputMode.Interpolated;
+            }
+
+            return parameter;
+        }
+
+        public static VariableType? ToVariableType(Type type)
+        {
+            if (type == typeof(void))
+                return null;
+
+            var dict = new Dictionary<Type, VariableType>
+            {
+                { typeof(string), VariableType.String },
+                { typeof(int), VariableType.Int },
+                { typeof(float), VariableType.Float },
+                { typeof(bool), VariableType.Bool },
+                { typeof(List<string>), VariableType.ListOfStrings },
+                { typeof(Dictionary<string, string>), VariableType.DictionaryOfStrings },
+                { typeof(byte[]), VariableType.ByteArray }
+            };
+
+            if (dict.ContainsKey(type))
+                return dict[type];
+
+            if (type == typeof(Task))
+                return null;
+
+            var taskDict = new Dictionary<Type, VariableType>
+            {
+                { typeof(Task<string>), VariableType.String },
+                { typeof(Task<int>), VariableType.Int },
+                { typeof(Task<float>), VariableType.Float },
+                { typeof(Task<bool>), VariableType.Bool },
+                { typeof(Task<List<string>>), VariableType.ListOfStrings },
+                { typeof(Task<Dictionary<string, string>>), VariableType.DictionaryOfStrings },
+                { typeof(Task<byte[]>), VariableType.ByteArray }
+            };
+
+            if (taskDict.ContainsKey(type))
+                return taskDict[type];
+
+            throw new InvalidCastException($"The type {type} could not be casted to VariableType");
+        }
+
+        public static Variable ToVariable(string name, Type type, dynamic value)
+        {
+            var t = ToVariableType(type);
+
+            if (!t.HasValue)
+                throw new InvalidCastException($"Cannot cast type {type} to a variable");
+
+            Variable variable = t switch
+            {
+                VariableType.String => new StringVariable(value),
+                VariableType.Bool => new BoolVariable(value),
+                VariableType.ByteArray => new ByteArrayVariable(value),
+                VariableType.DictionaryOfStrings => new DictionaryOfStringsVariable(value),
+                VariableType.Float => new FloatVariable(value),
+                VariableType.Int => new IntVariable(value),
+                VariableType.ListOfStrings => new ListOfStringsVariable(value),
+                _ => throw new NotImplementedException(),
+            };
+
+            variable.Name = name;
+            variable.Type = t.Value;
+            return variable;
+        }
+
+        private static BlockParameter ToBlockParameter(ParameterInfo parameter)
+        {
+            var dict = new Dictionary<Type, Func<BlockParameter>>
+            {
+                { typeof(string), () => new StringParameter
+                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : "" } },
+
+                { typeof(int), () => new IntParameter
+                    { DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue : 0 } },
+
+                { typeof(float), () => new FloatParameter
+                    { DefaultValue = parameter.HasDefaultValue ? (float)parameter.DefaultValue : 0.0f } },
+
+                { typeof(bool), () => new BoolParameter
+                    { DefaultValue = parameter.HasDefaultValue ? (bool)parameter.DefaultValue : false } },
+
+                // TODO: Add defaults for these through parameter attributes
+                { typeof(List<string>), () => new ListOfStringsParameter() },
+                { typeof(Dictionary<string, string>), () => new DictionaryOfStringsParameter() },
+                { typeof(byte[]), () => new ByteArrayParameter() }
+            };
+
+            // If it's one of the standard types
+            if (dict.ContainsKey(parameter.ParameterType))
+            {
+                var blockParam = dict[parameter.ParameterType].Invoke();
+                blockParam.Name = parameter.Name;
+                return blockParam;
+            }
+
+            // If it's an enum type
+            if (parameter.ParameterType.IsEnum)
+            {
+                return new EnumParameter
+                {
+                    Name = parameter.Name,
+                    EnumType = parameter.ParameterType,
+                    DefaultValue = parameter.HasDefaultValue
+                        ? parameter.DefaultValue.ToString()
+                        : Enum.GetNames(parameter.ParameterType).First()
+                };
+            }
+
+            throw new ArgumentException($"Parameter {parameter.Name} has an invalid type ({parameter.ParameterType})");
+        }
+
+        public CategoryTreeNode AsTree()
+        {
+            // This is the root node, all assemblies are direct children of this node
+            CategoryTreeNode root = new CategoryTreeNode { Name = "Root" };
+
+            // Add all descriptors as children of the root node (we need the ToList() in order to have
+            // a new pointer to list and not operate on the same one Descriptors uses, since we will be removing items)
+            root.Descriptors = Descriptors.ToList();
+
+            // Push leaves down
+            PushLeaves(root, 0);
+
+            return root;
+        }
+
+        private void PushLeaves(CategoryTreeNode node, int level)
+        {
+            // Check all descriptors of the node
+            for (int i = 0; i < node.Descriptors.Count; i++)
+            {
+                var d = node.Descriptors[i];
+                var split = d.Category.Path.Split('.'); // Example: RuriLib.Blocks.Http
+
+                // If a descriptor's category has a namespace which (split) is longer than the current tree level
+                if (split.Length > level)
+                {
+                    var subCat = split[level]; // Example: level 0 => RuriLib, level 1 => Http
+
+                    // Try to get an existing subcategory node
+                    var subCatNode = node.SubCategories.FirstOrDefault(s => s.Name == subCat);
+
+                    // Create the subcategory node if it doesn't exist
+                    if (subCatNode == null)
+                    {
+                        subCatNode = new CategoryTreeNode { Parent = node, Name = subCat };
+                        node.SubCategories.Add(subCatNode);
+                    }
+
+                    subCatNode.Descriptors.Add(d);
+                    node.Descriptors.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            // Order them alphabetically
+            node.SubCategories = node.SubCategories.OrderBy(s => s.Name).ToList();
+            node.Descriptors = node.Descriptors.OrderBy(d => d.Name).ToList();
+
+            // Push leaves of subcategories recursively
+            for (int i = 0; i < node.SubCategories.Count; i++)
+            {
+                var s = node.SubCategories[i];
+                PushLeaves(s, level + 1);
+            }
+        }
+    }
+}
