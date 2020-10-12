@@ -11,6 +11,7 @@ OpenBulletSettings.json
 RuriLibSettings.json
 triggeredActions.json
 ResXTranslator.exe
+Environment.ini
 
 # RuriLib API Documentation
 RuriLib/_site/
