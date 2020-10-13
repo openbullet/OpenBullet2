@@ -72,9 +72,12 @@ namespace RuriLib.Helpers.CSharp
 
         public static string SerializeInterpString(string value)
         {
-            StringBuilder sb = new StringBuilder(value);
+            StringBuilder sb = new StringBuilder(value)
+                .Replace("{", "{{")
+                .Replace("}", "}}");
+
             foreach (Match match in Regex.Matches(value, "<([^>]+)>"))
-                sb.Replace(match.Groups[0].Value, $"{{{match.Groups[1].Value}}}");
+                sb.Replace(match.Groups[0].Value, '{' + match.Groups[1].Value + '}');
 
             return $"$\"{sb}\"";
         }
