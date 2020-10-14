@@ -21,7 +21,8 @@
     {
         Dictionary = e.Value.ToString().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
             .Where(v => v.Contains(':'))
-            .ToDictionary(v => v.Split(':')[0], v => v.Split(':')[1]);
+            .Select(v => v.Split(':', 2))
+            .ToDictionary(v => v[0], v => v[1]);
 
         return DictionaryChanged.InvokeAsync(Dictionary);
     }
