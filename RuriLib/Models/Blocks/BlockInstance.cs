@@ -11,12 +11,12 @@ namespace RuriLib.Models.Blocks
 {
     public abstract class BlockInstance
     {
-        public string Id { get; set; }
+        public string Id { get; protected set; }
         public bool Disabled { get; set; } = false;
         public string Label { get; set; }
-        public string ReadableName { get; set; }
-        public List<BlockSetting> Settings { get; set; } = new List<BlockSetting>();
-        public BlockDescriptor Descriptor { get; set; }
+        public string ReadableName { get; protected set; }
+        public List<BlockSetting> Settings { get; protected set; } = new List<BlockSetting>();
+        public BlockDescriptor Descriptor { get; protected set; }
 
         public virtual string ToLC()
         {
