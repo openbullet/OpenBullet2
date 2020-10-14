@@ -11,6 +11,7 @@ namespace RuriLib.Models.Blocks.Settings
             {
                 Name = name,
                 InputMode = mode,
+                InputVariableName = defaultValue,
                 InterpolatedSetting = new InterpolatedStringSetting
                 {
                     Value = defaultValue
