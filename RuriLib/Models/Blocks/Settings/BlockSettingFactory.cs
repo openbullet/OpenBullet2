@@ -5,6 +5,46 @@ namespace RuriLib.Models.Blocks.Settings
 {
     public static class BlockSettingFactory
     {
+        public static BlockSetting CreateBoolSetting(string name, bool defaultValue = false)
+            => new BlockSetting
+            {
+                Name = name,
+                InputMode = SettingInputMode.Fixed,
+                FixedSetting = new BoolSetting { Value = defaultValue }
+            };
+
+        public static BlockSetting CreateIntSetting(string name, int defaultValue = 0)
+            => new BlockSetting
+            {
+                Name = name,
+                InputMode = SettingInputMode.Fixed,
+                FixedSetting = new IntSetting { Value = defaultValue }
+            };
+
+        public static BlockSetting CreateFloatSetting(string name, float defaultValue = 0)
+            => new BlockSetting
+            {
+                Name = name,
+                InputMode = SettingInputMode.Fixed,
+                FixedSetting = new FloatSetting { Value = defaultValue }
+            };
+
+        public static BlockSetting CreateByteArraySetting(string name, byte[] defaultValue = null)
+            => new BlockSetting
+            {
+                Name = name,
+                InputMode = SettingInputMode.Fixed,
+                FixedSetting = new ByteArraySetting { Value = defaultValue ?? new byte[] { } }
+            };
+
+        public static BlockSetting CreateEnumSetting<T>(string name, string defaultValue = "")
+            => new BlockSetting
+            {
+                Name = name,
+                InputMode = SettingInputMode.Fixed,
+                FixedSetting = new EnumSetting { Value = defaultValue, EnumType = typeof(T) }
+            };
+
         public static BlockSetting CreateStringSetting(string name, string defaultValue = "", SettingInputMode mode = SettingInputMode.Fixed)
         {
             return new BlockSetting

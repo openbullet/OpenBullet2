@@ -32,7 +32,7 @@ namespace RuriLib.Models.Blocks.Custom
         // LR
         public BlockSetting LeftDelim { get; set; } = BlockSettingFactory.CreateStringSetting("leftDelim");
         public BlockSetting RightDelim { get; set; } = BlockSettingFactory.CreateStringSetting("rightDelim");
-        public BlockSetting CaseSensitive { get; set; } = new BlockSetting { Name = "caseSensitive", FixedSetting = new BoolSetting { Value = true } };
+        public BlockSetting CaseSensitive { get; set; } = BlockSettingFactory.CreateBoolSetting("caseSensitive", true);
 
         // CSS
         public BlockSetting CssSelector { get; set; } = BlockSettingFactory.CreateStringSetting("cssSelector");
