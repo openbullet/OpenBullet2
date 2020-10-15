@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,27 @@ namespace RuriLib.Extensions
 {
     public static class StringExtensions
     {
+        public static bool AsBool(this string str)
+            => bool.Parse(str);
+
+        public static int AsInt(this string str)
+            => int.Parse(str);
+
+        public static float AsFloat(this string str)
+            => float.Parse(str, NumberStyles.Any, CultureInfo.InvariantCulture);
+
+        public static byte[] AsBytes(this string str)
+            => Encoding.UTF8.GetBytes(str);
+
+        public static string AsString(this string str)
+            => str;
+
+        public static List<string> AsList(this string str)
+            => new List<string> { str };
+
+        public static Dictionary<string, string> AsDict(this string str)
+            => new Dictionary<string, string> { { str, "" } };
+
         /// <summary>
         /// Replaces literal values of \n, \r\n and \t with the actual escape codes.
         /// </summary>
