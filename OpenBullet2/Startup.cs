@@ -127,6 +127,13 @@ namespace OpenBullet2
                 endpoints.MapFallbackToPage("/_Host");
             });
 
+            // Apply DB migrations or create a DB if it doesn't exist
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
+
             // Load the configs
             var configService = app.ApplicationServices.GetService<ConfigService>();
             var configRepo = app.ApplicationServices.GetService<IConfigRepository>();
