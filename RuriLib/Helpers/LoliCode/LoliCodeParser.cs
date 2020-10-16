@@ -47,14 +47,16 @@ namespace RuriLib.Helpers.LoliCode
         {
             // @myVariable
             // $"interp"
-            // "myValue"
-            if (input[0] == '@')
+            // "fixedValue"
+            if (input[0] == '@') // VARIABLE
             {
                 input = input.Substring(1);
                 setting.InputMode = SettingInputMode.Variable;
                 setting.InputVariableName = LineParser.ParseToken(ref input);
+                setting.FixedSetting = new StringSetting { Value = setting.InputVariableName }; // Initialize fixed setting as well, used for type switching
+                setting.InterpolatedSetting = new InterpolatedStringSetting { Value = setting.InputVariableName };
             }
-            else if (input[0] == '$')
+            else if (input[0] == '$') // INTERPOLATED
             {
                 input = input.Substring(1);
                 setting.InputMode = SettingInputMode.Interpolated;
@@ -65,8 +67,15 @@ namespace RuriLib.Helpers.LoliCode
                     DictionaryOfStringsParameter _ => new InterpolatedDictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
                     _ => throw new NotSupportedException()
                 };
+                setting.FixedSetting = param switch // Initialize fixed setting as well, used for type switching
+                {
+                    StringParameter _ => new StringSetting { Value = (setting.InterpolatedSetting as InterpolatedStringSetting).Value },
+                    ListOfStringsParameter _ => new ListOfStringsSetting { Value = (setting.InterpolatedSetting as InterpolatedListOfStringsSetting).Value },
+                    DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting { Value = (setting.InterpolatedSetting as InterpolatedDictionaryOfStringsSetting).Value },
+                    _ => throw new NotSupportedException()
+                };
             }
-            else
+            else // FIXED
             {
                 setting.InputMode = SettingInputMode.Fixed;
                 setting.FixedSetting = param switch

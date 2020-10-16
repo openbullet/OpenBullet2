@@ -81,6 +81,13 @@ namespace RuriLib.Models.Blocks.Settings
             };
         }
 
+        public static BlockSetting CreateListOfStringsSetting(string name, string variableName)
+        {
+            var setting = CreateListOfStringsSetting(name, null, SettingInputMode.Variable);
+            setting.InputVariableName = variableName;
+            return setting;
+        }
+
         public static BlockSetting CreateDictionaryOfStringsSetting(string name, Dictionary<string, string> defaultValue = null,
             SettingInputMode mode = SettingInputMode.Fixed)
         {
@@ -97,6 +104,13 @@ namespace RuriLib.Models.Blocks.Settings
                     Value = defaultValue ?? new Dictionary<string, string>()
                 }
             };
+        }
+
+        public static BlockSetting CreateDictionaryOfStringsSetting(string name, string variableName)
+        {
+            var setting = CreateDictionaryOfStringsSetting(name, null, SettingInputMode.Variable);
+            setting.InputVariableName = variableName;
+            return setting;
         }
     }
 }

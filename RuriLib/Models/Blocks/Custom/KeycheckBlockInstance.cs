@@ -186,6 +186,21 @@ namespace RuriLib.Models.Blocks.Custom
              */
 
             using var writer = new StringWriter();
+            var banIfNoMatch = Settings.First(s => s.Name == "banIfNoMatch");
+
+            // If there are no keychains
+            if (Keychains.Count == 0)
+            {
+                writer.WriteLine($"if ({CSharpWriter.FromSetting(banIfNoMatch)})");
+
+                if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
+                    writer.WriteLine("  data.STATUS = \"BAN\";");
+
+                else
+                    writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
+
+                return writer.ToString();
+            }
 
             // Write all the keychains
             for (int i = 0; i < Keychains.Count; i++)
@@ -218,7 +233,6 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.WriteLine($"  {{ data.STATUS = \"{keychain.ResultStatus}\"; return; }}");
             }
 
-            var banIfNoMatch = Settings.First(s => s.Name == "banIfNoMatch");
             writer.WriteLine($"else if ({CSharpWriter.FromSetting(banIfNoMatch)})");
 
             if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))

@@ -130,6 +130,9 @@ namespace RuriLib.Helpers.CSharp
 
         private static string GetCasting(BlockSetting setting)
         {
+            if (setting.FixedSetting == null)
+                throw new ArgumentNullException(nameof(setting));
+
             return setting.FixedSetting switch
             {
                 BoolSetting _ => ".AsBool()",

@@ -189,28 +189,15 @@ namespace RuriLib.Tests.Models.Blocks.Custom
                     {
                         new StringKey
                         {
-                            Left = new BlockSetting
-                            {
-                                InputMode = SettingInputMode.Variable,
-                                InputVariableName = "myString"
-                            },
+                            Left = BlockSettingFactory.CreateStringSetting("", "myString", SettingInputMode.Variable),
                             Comparison = StrComparison.Contains,
-                            Right = new BlockSetting
-                            {
-                                FixedSetting = new StringSetting { Value = "abc" }
-                            }
+                            Right = BlockSettingFactory.CreateStringSetting("", "abc", SettingInputMode.Fixed)
                         },
                         new FloatKey
                         {
-                            Left = new BlockSetting
-                            {
-                                FixedSetting = new FloatSetting { Value = 3f }
-                            },
+                            Left = BlockSettingFactory.CreateFloatSetting("", 3F),
                             Comparison = NumComparison.GreaterThan,
-                            Right = new BlockSetting
-                            {
-                                FixedSetting = new FloatSetting { Value = 1.5f }
-                            }
+                            Right = BlockSettingFactory.CreateFloatSetting("", 1.5F)
                         }
                     }
                 },
@@ -222,35 +209,41 @@ namespace RuriLib.Tests.Models.Blocks.Custom
                     {
                         new ListKey
                         {
-                            Left = new BlockSetting
-                            {
-                                InputMode = SettingInputMode.Variable,
-                                InputVariableName = "myList"
-                            },
+                            Left = BlockSettingFactory.CreateListOfStringsSetting("", "myList"),
                             Comparison = ListComparison.Contains,
-                            Right = new BlockSetting
-                            {
-                                FixedSetting = new StringSetting { Value = "abc" }
-                            }
+                            Right = BlockSettingFactory.CreateStringSetting("", "abc", SettingInputMode.Fixed)
                         },
                         new DictionaryKey
                         {
-                            Left = new BlockSetting
-                            {
-                                InputMode = SettingInputMode.Variable,
-                                InputVariableName = "myDict"
-                            },
+                            Left = BlockSettingFactory.CreateDictionaryOfStringsSetting("", "myDict"),
                             Comparison = DictComparison.HasKey,
-                            Right = new BlockSetting
-                            {
-                                FixedSetting = new StringSetting { Value = "abc" }
-                            }
+                            Right = BlockSettingFactory.CreateStringSetting("", "abc", SettingInputMode.Fixed)
                         }
                     }
                 }
             };
 
-            string expected = "if (Conditions.Check(myString, StrComparison.Contains, \"abc\") || Conditions.Check(3F, NumComparison.GreaterThan, 1.5F))\r\n  data.STATUS = \"SUCCESS\";\r\nelse if (Conditions.Check(myList, ListComparison.Contains, \"abc\") && Conditions.Check(myDict, DictComparison.HasKey, \"abc\"))\r\n  { data.STATUS = \"FAIL\"; return; }\r\nelse if (myBool)\r\n  { data.STATUS = \"BAN\"; return; }\r\n";
+            string expected = "if (Conditions.Check(myString.AsString(), StrComparison.Contains, \"abc\") || Conditions.Check(3F, NumComparison.GreaterThan, 1.5F))\r\n  data.STATUS = \"SUCCESS\";\r\nelse if (Conditions.Check(myList.AsList(), ListComparison.Contains, \"abc\") && Conditions.Check(myDict.AsDict(), DictComparison.HasKey, \"abc\"))\r\n  { data.STATUS = \"FAIL\"; return; }\r\nelse if (myBool.AsBool())\r\n  { data.STATUS = \"BAN\"; return; }\r\n";
+            Assert.Equal(expected, block.ToCSharp(new List<string>(), new ConfigSettings()));
+        }
+
+        [Fact]
+        public void ToCSharp_NoKeychains_OutputScript()
+        {
+            var repo = new DescriptorsRepository();
+            var descriptor = repo.GetAs<KeycheckBlockDescriptor>("Keycheck");
+            var block = new KeycheckBlockInstance(descriptor);
+
+            var banIfNoMatch = block.Settings.First(s => s.Name == "banIfNoMatch");
+            banIfNoMatch.InputMode = SettingInputMode.Variable;
+            banIfNoMatch.InputVariableName = "myBool";
+
+            block.Disabled = true;
+            block.Label = "My Label";
+
+            block.Keychains = new List<Keychain> { };
+
+            string expected = "if (myBool.AsBool())\r\n  { data.STATUS = \"BAN\"; return; }\r\n";
             Assert.Equal(expected, block.ToCSharp(new List<string>(), new ConfigSettings()));
         }
     }
