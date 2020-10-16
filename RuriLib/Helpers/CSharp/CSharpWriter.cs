@@ -24,7 +24,7 @@ namespace RuriLib.Helpers.CSharp
         public static string FromSetting(BlockSetting setting)
         {
             if (setting.InputMode == SettingInputMode.Variable)
-                return setting.InputVariableName;
+                return $"{setting.InputVariableName}{GetCasting(setting)}";
 
             if (setting.InputMode == SettingInputMode.Interpolated)
             {
@@ -126,6 +126,22 @@ namespace RuriLib.Helpers.CSharp
             writer.Write(string.Join(", ", toWrite));
             writer.Write("}");
             return writer.ToString();
+        }
+
+        private static string GetCasting(BlockSetting setting)
+        {
+            return setting.FixedSetting switch
+            {
+                BoolSetting _ => ".AsBool()",
+                ByteArraySetting _ => ".AsBytes()",
+                DictionaryOfStringsSetting _ => ".AsDict()",
+                FloatSetting _ => ".AsFloat()",
+                IntSetting _ => ".AsInt()",
+                ListOfStringsSetting _ => ".AsList()",
+                StringSetting _ => ".AsString()",
+                EnumSetting _ => string.Empty,
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }
