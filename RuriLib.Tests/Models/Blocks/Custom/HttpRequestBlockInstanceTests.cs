@@ -121,7 +121,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var headers = block.Settings.First(s => s.Name == "customHeaders");
             (headers.FixedSetting as DictionaryOfStringsSetting).Value.Clear(); 
 
-            string expected = "await HttpRequestMultipart(data, \"https://example.com\", RuriLib.Functions.Http.HttpMethod.POST, true, RuriLib.Functions.Http.SecurityProtocol.SystemDefault, myBoundary, new List<MyHttpContent> { new StringHttpContent(\"stringName\", \"stringContent\", \"stringContentType\"), new FileHttpContent(\"fileName\", \"file.txt\", \"fileContentType\") }, new Dictionary<string, string> {}, new Dictionary<string, string> {}, 10000, \"1.1\");\r\n";
+            string expected = "await HttpRequestMultipart(data, \"https://example.com\", RuriLib.Functions.Http.HttpMethod.POST, true, RuriLib.Functions.Http.SecurityProtocol.SystemDefault, myBoundary.AsString(), new List<MyHttpContent> { new StringHttpContent(\"stringName\", \"stringContent\", \"stringContentType\"), new FileHttpContent(\"fileName\", \"file.txt\", \"fileContentType\") }, new Dictionary<string, string> {}, new Dictionary<string, string> {}, 10000, \"1.1\");\r\n";
             Assert.Equal(expected, block.ToCSharp(new List<string>(), new ConfigSettings()));
         }
     }
