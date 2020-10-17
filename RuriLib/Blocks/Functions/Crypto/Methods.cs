@@ -85,13 +85,33 @@ namespace RuriLib.Blocks.Functions.Crypto
         }
 
         [Block("Hashes data using the Scrypt algorithm")]
-        public static string ScryptString(BotData data, string password, int iterationCount = 16384, int blockSize = 8, int threadCount = 1)
+        public static string ScryptString(BotData data, string password, string salt, int iterationCount = 16384, int blockSize = 8, int threadCount = 1)
         {
-            var encoder = new ScryptEncoder(iterationCount, blockSize, threadCount);
+            var rng = new FakeRNG(salt);
+            var encoder = new ScryptEncoder(iterationCount, blockSize, threadCount, rng);
             var hashed = encoder.Encode(password);
             data.Logger.LogHeader();
             data.Logger.Log($"Computed Scrypt: {hashed}", LogColors.YellowGreen);
             return hashed;
+        }
+
+        // Used for Scrypt.NET because it doesn't support a parametrized salt
+        private class FakeRNG : RandomNumberGenerator
+        {
+            private readonly byte[] salt;
+
+            public FakeRNG(string salt)
+            {
+                this.salt = Encoding.UTF8.GetBytes(salt);
+            }
+
+            public override void GetBytes(byte[] data)
+            {
+                for (int i = 0; i < salt.Length; i++)
+                {
+                    data[i] = salt[i];
+                }
+            }
         }
 
         [Block("Encrypts data using RSA", name = "RSA Encrypt")]
