@@ -2,6 +2,7 @@
 using RuriLib.Functions.Crypto;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using Scrypt;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -81,6 +82,16 @@ namespace RuriLib.Blocks.Functions.Crypto
                 HashFunction.SHA512 => RuriLib.Functions.Crypto.Crypto.HMACSHA512(input, key),
                 _ => throw new NotSupportedException()
             };
+        }
+
+        [Block("Hashes data using the Scrypt algorithm")]
+        public static string ScryptString(BotData data, string password, int iterationCount = 16384, int blockSize = 8, int threadCount = 1)
+        {
+            var encoder = new ScryptEncoder(iterationCount, blockSize, threadCount);
+            var hashed = encoder.Encode(password);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Computed Scrypt: {hashed}", LogColors.YellowGreen);
+            return hashed;
         }
 
         [Block("Encrypts data using RSA", name = "RSA Encrypt")]
