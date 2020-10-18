@@ -8,6 +8,7 @@ using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Variables;
 using RuriLib.Models.Conditions;
 using RuriLib.Models.Blocks.Settings.Interpolated;
+using IronPython.Modules;
 
 namespace RuriLib.Helpers.LoliCode
 {
@@ -53,8 +54,25 @@ namespace RuriLib.Helpers.LoliCode
                 input = input.Substring(1);
                 setting.InputMode = SettingInputMode.Variable;
                 setting.InputVariableName = LineParser.ParseToken(ref input);
-                setting.FixedSetting = new StringSetting { Value = setting.InputVariableName }; // Initialize fixed setting as well, used for type switching
-                setting.InterpolatedSetting = new InterpolatedStringSetting { Value = setting.InputVariableName };
+                setting.InterpolatedSetting = param switch
+                {
+                    StringParameter _ => new InterpolatedStringSetting { Value = LineParser.ParseLiteral(ref input) },
+                    ListOfStringsParameter _ => new InterpolatedListOfStringsSetting { Value = LineParser.ParseList(ref input) },
+                    DictionaryOfStringsParameter _ => new InterpolatedDictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
+                    _ => null
+                };
+                setting.FixedSetting = param switch // Initialize fixed setting as well, used for type switching
+                {
+                    BoolParameter _ => new BoolSetting(),
+                    IntParameter _ => new IntSetting(),
+                    FloatParameter _ => new FloatSetting(),
+                    StringParameter _ => new StringSetting(),
+                    ListOfStringsParameter _ => new ListOfStringsSetting(),
+                    DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting(),
+                    ByteArrayParameter _ => new ByteArraySetting(),
+                    EnumParameter _ => new EnumSetting(),
+                    _ => throw new NotSupportedException()
+                };
             }
             else if (input[0] == '$') // INTERPOLATED
             {
