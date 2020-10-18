@@ -56,9 +56,9 @@ namespace RuriLib.Helpers.LoliCode
                 setting.InputVariableName = LineParser.ParseToken(ref input);
                 setting.InterpolatedSetting = param switch
                 {
-                    StringParameter _ => new InterpolatedStringSetting { Value = LineParser.ParseLiteral(ref input) },
-                    ListOfStringsParameter _ => new InterpolatedListOfStringsSetting { Value = LineParser.ParseList(ref input) },
-                    DictionaryOfStringsParameter _ => new InterpolatedDictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
+                    StringParameter _ => new InterpolatedStringSetting(),
+                    ListOfStringsParameter _ => new InterpolatedListOfStringsSetting(),
+                    DictionaryOfStringsParameter _ => new InterpolatedDictionaryOfStringsSetting(),
                     _ => null
                 };
                 setting.FixedSetting = param switch // Initialize fixed setting as well, used for type switching
