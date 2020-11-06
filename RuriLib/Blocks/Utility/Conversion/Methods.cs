@@ -2,6 +2,7 @@
 using RuriLib.Functions.Conversion;
 using RuriLib.Models.Bots;
 using System;
+using System.Numerics;
 using System.Text;
 
 namespace RuriLib.Blocks.Utility.Conversion
@@ -41,6 +42,23 @@ namespace RuriLib.Blocks.Utility.Conversion
             data.Logger.LogHeader();
             data.Logger.Log($"Converted the byte array to {b64}");
             return b64;
+        }
+
+        [Block("Converts a (big) integer to a byte array", name = "Big Integer => Bytes")]
+        public static byte[] BigIntegerToByteArray(BotData data, [Variable] string bigInteger)
+        {
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converting {bigInteger} to a byte array");
+            return BigInteger.Parse(bigInteger).ToByteArray();
+        }
+
+        [Block("Converts a byte array to a (big) integer", name = "Bytes => Big Integer")]
+        public static string ByteArrayToBigInteger(BotData data, [Variable] byte[] bytes)
+        {
+            var bi = new BigInteger(bytes);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Converted the byte array to {bi}");
+            return bi.ToString();
         }
 
         [Block("Converts a binary string to a byte array", name = "Binary String => Bytes")]
