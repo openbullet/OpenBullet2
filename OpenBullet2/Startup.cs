@@ -108,7 +108,10 @@ namespace OpenBullet2
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
+            if (obSettings.SecuritySettings.HttpsRedirect)
+                app.UseHttpsRedirection();
+
             app.UseRequestLocalization();
             app.UseStaticFiles();
 
