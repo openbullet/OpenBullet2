@@ -39,8 +39,6 @@ THIS PROGRAM SHOULD NOT RUN AS ROOT / ADMINISTRATOR.
 This is due to the fact that configs can contain C# code that is not picked up by your antivirus.
 This can lead to information leaks, malware, system takeover and more.
 Please consider creating a user with limited priviledges and running it from there.
-If you REALLY know what you're doing and you COMPLETELY trust the configs you're going to run,
-you can disable this warning by setting AllowRunningAsRoot to true in the OB Security Settings (OpenBulletSettings.json).
 ";
     }
 }

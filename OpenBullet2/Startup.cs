@@ -101,13 +101,8 @@ namespace OpenBullet2
         {
             var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
 
-            if (!obSettings.SecuritySettings.AllowRunningAsRoot && RootChecker.IsRoot())
-            {
+            if (RootChecker.IsRoot())
                 Console.WriteLine(RootChecker.RootWarning);
-                Console.WriteLine("Press any key to quit the application...");
-                Console.ReadKey();
-                Environment.Exit(1);
-            }
 
             if (env.IsDevelopment())
             {
