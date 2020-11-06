@@ -19,6 +19,8 @@ using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Proxies;
 using RuriLib.Models.UserAgents;
+using OpenBullet2.Helpers;
+using System;
 
 namespace OpenBullet2
 {
@@ -97,6 +99,16 @@ namespace OpenBullet2
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
+
+            if (!obSettings.SecuritySettings.AllowRunningAsRoot && RootChecker.IsRoot())
+            {
+                Console.WriteLine(RootChecker.RootWarning);
+                Console.WriteLine("Press any key to quit the application...");
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -108,7 +120,6 @@ namespace OpenBullet2
                 app.UseHsts();
             }
 
-            var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
             if (obSettings.SecuritySettings.HttpsRedirect)
                 app.UseHttpsRedirection();
 

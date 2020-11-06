@@ -12,6 +12,7 @@ namespace OpenBullet2.Models.Settings
         public int AdminSessionLifetimeHours { get; set; } = 24;
         public int GuestSessionLifetimeHours { get; set; } = 24;
         public bool HttpsRedirect { get; set; } = false;
+        public bool AllowRunningAsRoot { get; set; } = false;
 
         public SecuritySettings GenerateJwtKey()
         {
