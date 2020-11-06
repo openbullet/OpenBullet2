@@ -75,14 +75,14 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
 
         public override async Task Execute(int currentJob, IEnumerable<Job> jobs)
         {
-            var http = new HttpClient();
+            using var client = new HttpClient();
 
             var obj = new JObject
             {
                 { "content", JToken.FromObject(Message) }
             };
 
-            await http.PostAsync(Webhook,
+            await client.PostAsync(Webhook,
                 new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
         }
     }

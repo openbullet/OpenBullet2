@@ -136,9 +136,14 @@ namespace OpenBullet2.Shared
 
                 logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");
 
-                lastBrowser = data.Objects.ContainsKey("puppeteer")
-                    ? (Browser)data.Objects["puppeteer"]
+                // Save the browser for later use
+                lastBrowser = data.Objects.ContainsKey("puppeteer") && data.Objects["puppeteer"] is Browser currentBrowser
+                    ? currentBrowser
                     : null;
+
+                // Dispose the default HttpClient if any
+                if (data.Objects["httpClient"] is HttpClient client)
+                    client.Dispose();
             }
 
             loggerViewer.Refresh();

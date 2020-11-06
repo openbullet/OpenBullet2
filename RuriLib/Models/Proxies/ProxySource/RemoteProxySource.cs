@@ -17,7 +17,8 @@ namespace RuriLib.Models.Proxies.ProxySources
 
         public override async Task<IEnumerable<Proxy>> GetAll()
         {
-            var response = await new HttpClient().GetAsync(Url);
+            using var client = new HttpClient();
+            var response = await client.GetAsync(Url);
             var content = await response.Content.ReadAsStringAsync();
             var lines = content.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             return lines.Select(l => Proxy.Parse(l, DefaultType, DefaultUsername, DefaultPassword));

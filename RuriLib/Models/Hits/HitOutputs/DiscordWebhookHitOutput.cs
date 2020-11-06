@@ -21,7 +21,7 @@ namespace RuriLib.Models.Hits.HitOutputs
 
         public async Task Store(Hit hit)
         {
-            var http = new HttpClient();
+            using var client = new HttpClient();
 
             var obj = new JObject
             {
@@ -34,7 +34,7 @@ namespace RuriLib.Models.Hits.HitOutputs
             if (!string.IsNullOrWhiteSpace(AvatarUrl))
                 obj.Add("avatar_url", JToken.FromObject(AvatarUrl));
 
-            await http.PostAsync(Webhook, 
+            await client.PostAsync(Webhook, 
                 new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
         }
     }

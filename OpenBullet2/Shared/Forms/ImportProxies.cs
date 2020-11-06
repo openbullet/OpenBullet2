@@ -54,7 +54,8 @@ namespace OpenBullet2.Shared.Forms
         {
             try
             {
-                var response = await new HttpClient().GetAsync(url);
+                using var client = new HttpClient();
+                var response = await client.GetAsync(url);
                 var text = await response.Content.ReadAsStringAsync();
                 ReturnLines(text);
             }
