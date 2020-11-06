@@ -11,6 +11,7 @@ using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -29,7 +30,7 @@ namespace OpenBullet2.Pages
 
         protected override void OnInitialized()
         {
-            configs = ConfigService.Configs;
+            configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
             selectedConfig = ConfigService.SelectedConfig;
         }
 
