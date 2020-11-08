@@ -65,12 +65,12 @@ namespace OpenBullet2
             services.AddSingleton<PersistentSettingsService>();
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
-            services.AddSingleton<JobManagerService>();
-            services.AddSingleton<JobMonitorService>();
             services.AddSingleton<JwtValidationService>();
             services.AddSingleton<JobLoggerService>();
             services.AddSingleton<ProxyReloadService>();
             services.AddSingleton<JobFactoryService>();
+            services.AddSingleton<JobManagerService>();
+            services.AddSingleton<JobMonitorService>();
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
             services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();

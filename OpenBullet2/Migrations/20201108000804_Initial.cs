@@ -51,6 +51,7 @@ namespace OpenBullet2.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    OwnerId = table.Column<int>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     JobType = table.Column<int>(nullable: false),
                     JobOptions = table.Column<string>(nullable: true)

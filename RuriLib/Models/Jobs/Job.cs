@@ -1,5 +1,4 @@
 ﻿using RuriLib.Models.Jobs.StartConditions;
-using RuriLib.Models.Jobs.Threading;
 using RuriLib.Services;
 using System;
 using System.Threading;
@@ -10,6 +9,7 @@ namespace RuriLib.Models.Jobs
     public abstract class Job
     {
         public int Id { get; set; }
+        public int OwnerId { get; set; } = 0;
         public JobStatus Status { get; protected set; } = JobStatus.Idle;
         public DateTime CreationTime { get; set; } = DateTime.Now;
         public DateTime StartTime { get; set; } = DateTime.Now;

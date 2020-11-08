@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
+using OpenBullet2.Entities;
 using OpenBullet2.Exceptions;
 using OpenBullet2.Extensions;
 using OpenBullet2.Helpers;
@@ -67,6 +69,21 @@ namespace OpenBullet2.Auth
                 }, "anonymous"));
                 return new AuthenticationState(anonymousUser);
             }
+        }
+
+        public async Task<int> GetCurrentUserId()
+        {
+            var user = await GetAuthenticationStateAsync();
+            var claims = user.User.Claims;
+            var role = claims.First(c => c.Type == ClaimTypes.Role).Value;
+            var username = claims.First(c => c.Type == ClaimTypes.Name).Value;
+
+            return role switch
+            {
+                "Admin" => 0,
+                "Guest" => (await guestRepo.GetAll().FirstOrDefaultAsync(g => g.Username == username)).Id,
+                _ => -1
+            };
         }
 
         public async Task AuthenticateUser(string username, string password, IPAddress ip)

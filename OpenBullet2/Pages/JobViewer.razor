@@ -2,10 +2,11 @@
 @using OpenBullet2.Services
 @using RuriLib.Models.Jobs
 @inject JobManagerService Manager
+@inject AuthenticationStateProvider Auth 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobViewer> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
-@if (job == null)
+@if (job == null || !CanSeeJob(job.OwnerId))
 {
     <p>@Loc["NoJob1"] @Id, @Loc["NoJob2"].</p>
 }
@@ -26,9 +27,14 @@ else
 @code {
     [Parameter] public int Id { get; set; }
     Job job;
+    int uid = -1;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        uid = await ((OpenBullet2.Auth.OBAuthenticationStateProvider)Auth).GetCurrentUserId();
         job = Manager.Jobs.FirstOrDefault(j => j.Id == Id);
     }
+
+    private bool CanSeeJob(int ownerId)
+        => uid == 0 || ownerId == uid;
 }

@@ -3,17 +3,20 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobCloner> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
-<div class="mb-3">
-    @switch (jobOptions)
-    {
-        case MultiRunJobOptions x:
-            <MultiRunOptions Options="x" />
-            break;
+@if (jobEntity != null && CanSeeJob(jobEntity.OwnerId))
+{
+    <div class="mb-3">
+        @switch (jobOptions)
+        {
+            case MultiRunJobOptions x:
+                <MultiRunOptions Options="x" />
+                break;
 
-        case ProxyCheckJobOptions x:
-            <ProxyCheckOptions Options="x" />
-            break;
-    }
-</div>
+            case ProxyCheckJobOptions x:
+                <ProxyCheckOptions Options="x" />
+                break;
+        }
+    </div>
 
-<button class="btn btn-outline-success" style="margin-bottom: 30px;" @onclick="Clone">@Loc["CloneJob"]</button>
+    <button class="btn btn-outline-success" style="margin-bottom: 30px;" @onclick="Clone">@Loc["CloneJob"]</button>
+}

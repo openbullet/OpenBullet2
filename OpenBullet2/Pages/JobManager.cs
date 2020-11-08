@@ -1,15 +1,14 @@
 ﻿using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using OpenBullet2.Auth;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
-using RuriLib.Models.Jobs.Threading;
-using RuriLib.Services;
 using System;
 using System.Linq;
 using System.Threading;
@@ -25,32 +24,20 @@ namespace OpenBullet2.Pages
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
-        private object removeLock = new object();
+        private readonly object removeLock = new object();
+        private int uid = -1;
 
         protected override async Task OnInitializedAsync()
         {
-            if (!Manager.Initialized)
-            {
-                await RestoreJobs();
-                Manager.Initialized = true;
-            }
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
 
             StartPeriodicRefresh();
         }
 
-        private async Task RestoreJobs()
-        {
-            var entries = await JobRepo.GetAll().ToListAsync();
-            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-
-            foreach (var entry in entries)
-            {
-                var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entry.JobOptions, jsonSettings).Options;
-                var job = JobFactory.FromOptions(entry.Id, options);
-                Manager.Jobs.Add(job);
-            }
-        }
+        private bool CanSeeJob(int ownerId)
+            => uid == 0 || ownerId == uid;
 
         private void SelectJob(Job job)
         {

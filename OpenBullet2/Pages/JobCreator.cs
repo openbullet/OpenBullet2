@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
@@ -21,6 +23,7 @@ namespace OpenBullet2.Pages
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
         [Parameter] public string Type { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
         JobType jobType;
         JobOptions jobOptions;
@@ -41,6 +44,7 @@ namespace OpenBullet2.Pages
 
             var entity = new JobEntity
             {
+                OwnerId = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId(),
                 CreationDate = DateTime.Now,
                 JobType = jobType,
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
@@ -53,7 +57,7 @@ namespace OpenBullet2.Pages
 
             try
             {
-                var job = JobFactory.FromOptions(entity.Id, jobOptions);
+                var job = JobFactory.FromOptions(entity.Id, entity.OwnerId, jobOptions);
 
                 Manager.Jobs.Add(job);
                 Nav.NavigateTo($"job/{job.Id}");

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
@@ -18,17 +20,23 @@ namespace OpenBullet2.Pages
         [Inject] JobManagerService Manager { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
         [Parameter] public int JobId { get; set; }
         JobEntity jobEntity;
         JobOptions jobOptions;
         JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        int uid = -1;
 
         protected override async Task OnInitializedAsync()
         {
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
             jobEntity = await JobRepo.Get(JobId);
             jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
         }
+
+        private bool CanSeeJob(int ownerId)
+            => uid == 0 || ownerId == uid;
 
         private async Task Edit()
         {
@@ -40,7 +48,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var oldJob = Manager.Jobs.First(j => j.Id == JobId);
-                var newJob = JobFactory.FromOptions(JobId, jobOptions);
+                var newJob = JobFactory.FromOptions(JobId, jobEntity.OwnerId, jobOptions);
 
                 Manager.Jobs.Remove(oldJob);
                 Manager.Jobs.Add(newJob);

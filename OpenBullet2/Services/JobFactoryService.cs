@@ -36,7 +36,7 @@ namespace OpenBullet2.Models.Jobs
             this.randomUAProvider = randomUAProvider;
         }
 
-        public Job FromOptions(int id, JobOptions options)
+        public Job FromOptions(int id, int ownerId, JobOptions options)
         {
             Job job = options switch
             {
@@ -46,6 +46,7 @@ namespace OpenBullet2.Models.Jobs
             };
 
             job.Id = id;
+            job.OwnerId = ownerId;
             return job;
         }
 

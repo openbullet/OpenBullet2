@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Jobs;
@@ -19,26 +21,35 @@ namespace OpenBullet2.Pages
         [Inject] JobManagerService Manager { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
         [Parameter] public int JobId { get; set; }
         JobType jobType;
+        JobEntity jobEntity;
         JobOptions jobOptions;
         JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        int uid = -1;
 
         protected override async Task OnInitializedAsync()
         {
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
             var factory = new JobOptionsFactory();
-            var jobEntity = await JobRepo.Get(JobId);
+            jobEntity = await JobRepo.Get(JobId);
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
             jobOptions = factory.CloneExistant(oldOptions);
             jobType = jobEntity.JobType;
         }
+
+        private bool CanSeeJob(int ownerId)
+            => uid == 0 || ownerId == uid;
 
         private async Task Clone()
         {
             var wrapper = new JobOptionsWrapper { Options = jobOptions };
             var entity = new JobEntity
             {
+                OwnerId = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId(),
                 CreationDate = DateTime.Now,
                 JobType = jobType,
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
@@ -51,7 +62,7 @@ namespace OpenBullet2.Pages
 
             try
             {
-                var job = JobFactory.FromOptions(entity.Id, jobOptions);
+                var job = JobFactory.FromOptions(entity.Id, entity.OwnerId, jobOptions);
 
                 Manager.Jobs.Add(job);
                 Nav.NavigateTo($"job/{job.Id}");

@@ -95,6 +95,9 @@ namespace OpenBullet2.Migrations
                     b.Property<int>("JobType")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Jobs");
