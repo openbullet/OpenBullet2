@@ -204,6 +204,9 @@
   <data name="Puppeteer" xml:space="preserve">
     <value>Puppeteer</value>
   </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Ripristina Predefiniti</value>
+  </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
     <value>Vuoi ripristinare le impostazioni predefinite?</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="RuCaptchaApiKey" xml:space="preserve">
     <value>RuCaptcha API Key</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salva</value>
   </data>
   <data name="Saved" xml:space="preserve">
     <value>Salvataggio eseguito</value>

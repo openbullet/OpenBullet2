@@ -4,6 +4,9 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
 
+<button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
+<button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
+
 <h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">
 
