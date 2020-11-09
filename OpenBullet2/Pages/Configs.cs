@@ -39,8 +39,8 @@ namespace OpenBullet2.Pages
             if (await js.Confirm(Loc["AreYouSure"], Loc["ConfigReloadWarning"], Loc["Cancel"]))
             {
                 ConfigService.Configs = await ConfigRepo.GetAll();
-                configs = ConfigService.Configs;
-                
+                configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
+
                 ConfigService.SelectedConfig = null;
                 selectedConfig = null;
             }
