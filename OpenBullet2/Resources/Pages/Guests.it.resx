@@ -147,6 +147,18 @@
   <data name="EditPassword" xml:space="preserve">
     <value>Modifica Password</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>OpenBullet 2 ti permette di creare account per %ospiti% che possono accedere al tuo server di OpenBullet2. Prima di tutto, ricorda di attivare l'opzione %richiedi login amministratore% nelle %impostazioni di sicurezza% di OB. Questo garantirà che le persone con il link a questo server vedranno una schermata di login. Per fare in modo che le altre persone possano visualizzare questo server, dovrai %aprire le porte% del tuo router e configurare le %regole del firewall%. Queste cose di solito sono configurate in automatico in una VPS, che è il modo suggerito per hostare un'installazione pubblica di OpenBullet 2.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Nelle %impostazioni di sicurezza% puoi anche definire la %validità massima della sessione ospiti%, che è il numero di ore dopo cui gli ospiti dovranno rifare il login. Questo è utile perchè potresti non volere che i tuoi ospiti abbiano accesso indefinito al server. Una volta che il server ha generato un %token% valido per l'ospite, sarà valido finchè non scade, quindi anche se elimini un ospite dalla tabella sopra, l'ospite potrà usare la tua installazione di OpenBullet 2 finché il suo token sarà valido.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Cliccando sul pulsante %Aggiungi% in alto, potrai creare delle %credenziali di accesso% per il nuovo ospite, impostare la %scadenza% (dopo la quale il server non manderà più un token valido all'ospite) e opzionalmente impostare un numero di %indirizzi IP% da cui l'ospite si può connettere. Questo è utile per prevenire la condivisione di un account ospite tra più persone.</value>
+  </data>
   <data name="NewPasswordForGuest" xml:space="preserve">
     <value>Nuova password per ospite</value>
   </data>

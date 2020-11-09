@@ -147,6 +147,18 @@
   <data name="EditPassword" xml:space="preserve">
     <value>Edit Password</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>How does this work?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>OpenBullet 2 allows you to create accounts for %guests% that can access your OpenBullet 2 server. First of all, remember to turn on the %require admin login% option in OB's %security settings%. This will guarantee that people with the link to this server will be welcomed with a login screen. In order for other people to reach this server, you will need to %open the ports% on your router and setup the %firewall rules% on your machine. This is usually already done for you on a VPS, which is the suggested way to host a publicly exposed OpenBullet 2 installation.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>In the %security settings% you will also be able to define the %guest session lifetime%, which is the amount of hours after which guests will be prompted to login once more. This is useful as you might not want guests to have indefinite access to the server. Note that once the server generated a valid %token% for the guest, it will be valid until it expired, so even if you delete a guest from the table above, it will be able to use your OpenBullet 2 installation for as long as the token is valid.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>By clicking on the %Add% button above, you will be able to create %login credentials% for the new guest, set the %access expiration% (after which the server won't send a valid token to the guest anymore) and optionally set up a number of %IP addresses% which the guest is allowed to connect from. This is useful to prevent guests from sharing their account with other people.</value>
+  </data>
   <data name="NewPasswordForGuest" xml:space="preserve">
     <value>New password for guest</value>
   </data>
