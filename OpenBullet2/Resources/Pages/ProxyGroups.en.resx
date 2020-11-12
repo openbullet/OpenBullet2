@@ -153,6 +153,18 @@
   <data name="GroupInUseWarning" xml:space="preserve">
     <value>A job is currently using this proxy group. Please stop and remove the job from the manager and try again.</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>How does this work?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Here you can import your proxies into several %groups%. Groups help keep proxies organized and give you the ability to use different proxies for different jobs. First of all you should create a group by clicking on the %Add Group% button above. Just give it a name. Make sure your new group is selected and then click on %Import Proxies%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>The %Import Proxies% menu will give you 3 ways to import your proxies. You can either %paste% them, %upload a file% or %type the URL% of a remote resource that provides proxies in a text format (usually one per line). You are also able to specify the default %type%, %username% and %password% for the proxies. Alternatively, you can use the %advanced syntax% described in the form in order to specify the type, username and password on a per-proxy basis.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Now you're all set and you will be able to select your proxy group when you create or edit a job. You can create a job of type %Proxy Check% in order to test if your proxies work before using them. The Proxy Check job will update the %country%, %status%, %ping% and %last check date% fields of your proxies in the data table of this page, so you can then %remove% proxies that don't work or have a ping that is too high for your needs. You can even decide to only keep proxies from a specific country!</value>
+  </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
   </data>

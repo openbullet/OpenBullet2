@@ -153,6 +153,18 @@
   <data name="GroupInUseWarning" xml:space="preserve">
     <value>Un job sta utilizzando questo gruppo di proxy. Per favore termina il job, rimuovilo dal manager e riprova.</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Qui puoi importare i tuoi proxy in vari %gruppi%. I gruppi aiutano a mantenere i proxy organizzati e ti permettono di usare proxy diversi per job diversi. Prima di tutto dovresti creare un gruppo cliccando sul pulsante %Aggiungi Gruppo% qui sopra. Dagli semplicemente un nome. Assicurati che il nuovo gruppo sia selezionato e poi clicca su %Importa Proxy%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Il menu %Importa Proxy% ti darà 3 modi di importare i tuoi proxy. Puoi %incollarli%, %caricare un file% o %scrivere l'URL% di una risorsa remota che fornisce i proxy in formato testuale (di solito uno per riga). Puoi anche specificare il %tipo%, %username% e %password% di default per i proxy. Alternativamente, puoi usare la %sintassi avanzata% descritta nel form per specificare il tipo, username e password per ogni singolo proxy.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Ora sei pronto e potrai selezionare il tuo gruppo di proxy quando crei o modifichi un job. Puoi creare un job del tipo %Proxy Check% per testare se i tuoi proxy funzionano prima di usarli. Il job Proxy Check aggiornerà i campi %nazione%, %stato%, %ping% e %ultimo check% dei proxy nella tabella che vedi in questa pagina, così puoi %rimuovere% i proxy che non funzionano o che hanno un ping troppo alto. Puoi persino decidere di tenere soltanto i proxy di una specifica nazione!</value>
+  </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
   </data>
