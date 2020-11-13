@@ -156,6 +156,18 @@
   <data name="FileName" xml:space="preserve">
     <value>Nome File</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Qui puoi importare le tue wordlist. Prima di tutto clicca sul pulsante %Aggiungi% qui sopra. Potrai specificare un %Tipo di wordlist% (più informazioni a seguire), un %Nome% e un %Utilizzo%. Hai due opzioni per caricare il tuo file. La prima opzione è fare l'%upload% sul server che sta eseguendo l'istanza di OpenBullet2. Questo è il metodo da preferire %se la wordlist è sul client% da cui accedi a OB2 tramite il browser, mentre OB2 viene hostato su una macchina diversa. Questo metodo di aggiungere una wordlist aggiunge un po' di ritardo perchè la wordlist deve essere caricata attraverso il browser.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>%Se la wordlist è sul server%, cioè se stai cercando di reperire un file nella stessa macchina che sta eseguendo OB2, puoi usare l'opzione %File System%, che ti permetterà di esplorare le cartelle in cerca del file desiderato. Nota che per accedere a posizioni sul disco che sono fuori dalla cartella di lavoro corrente, dovrai abilitare l'accesso ai file in tutto il sistema nelle opzioni di sicurezza di OB2.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>In quanto ai %Tipi di wordlist% (o Wordlist Types), troverai i Wordlist Types specificati al momento nel file %Settings/Environment.ini% nella cartella di OB2. I Wordlist Types sono caricati quando OB2 viene eseguito. Puoi cambiare questo file e aggiungere/rimuovere/modificare i Wordlist Types a seconda del formato delle tue wordlist. Puoi trovare più informazioni riguardo ai Wordlist Types nella sezione guide del forum ufficiale.</value>
+  </data>
   <data name="KeepFile" xml:space="preserve">
     <value>No, mantieni il file</value>
   </data>
