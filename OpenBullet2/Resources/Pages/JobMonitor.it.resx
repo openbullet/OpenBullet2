@@ -165,6 +165,18 @@
   <data name="Fails" xml:space="preserve">
     <value>Non funzionanti</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Questo è il %Job Monitor%, che contiene una lista di %Azioni Condizionate%. Il compito delle Azioni Condizionate è quello di monitorare un job, controllando le condizioni ed eseguendo delle azioni. Prima di tutto dovresti definire l'%id% del job da monitorare nella casella numerica. Ricordati di togliere la spunta dalla checkbox %attiva% mentre configuri le condizioni e le azioni per evitare che vengano eseguite accidentalmente.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Poi dovresti aggiungere delle %condizioni% e delle %azioni%. Quando tutte le condizioni sono vere, il Job Monitor eseguirà tutte le %azioni% che hai specificato in ordine sequenziale finchè non sono esaurite. Dopo aver eseguito le azioni, il contatore di %esecuzioni% sarà incrementato. Se l'Azione Condizionata è marcata come %ripetibile%, le azioni verranno eseguite ogni volta che le condizioni sono vere, altrimenti l'Azione Condizionata diverrà inattiva e non verrà più eseguita.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Il pulsante %Azzera% riporterà il numero di esecuzioni a 0. Le Azioni Condizionate sono salvate nel file %triggeredActions.json%, quindi se vuoi salvare una copia di backup o trasferirle ad un'altra istanza di OB puoi copiare quel file.</value>
+  </data>
   <data name="Hits" xml:space="preserve">
     <value>Hit</value>
   </data>
