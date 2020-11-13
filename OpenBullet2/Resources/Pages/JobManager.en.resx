@@ -126,6 +126,15 @@
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>How does this work?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>This is the %Job Manager%, here you can %create% new jobs, %edit% or %remove% existing %jobs% and access a specific job's interface. To create a new job, click on the %New% button above. After you created some jobs you will be able to see an overview of their status on this page. You can also create a job by cloning an existing one in order to save time with all the configuration tasks.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>In order to access the interface of a specific job you can just click on it! If you would like the manager to update your jobs' status less frequently in order to save bandwidth, you can find the %Job Manager update interval% option in the OB Settings page.</value>
+  </data>
   <data name="JobNotIdle" xml:space="preserve">
     <value>Job not idle</value>
   </data>
