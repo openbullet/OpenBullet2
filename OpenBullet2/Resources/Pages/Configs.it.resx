@@ -153,6 +153,33 @@
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Cos'è una config?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Una %Config% è un file che contiene istruzioni per automatizzare certe azioni, solitamente verso risorse web. Le config contengono %metadati% (come un nome, un autore e un'icona), un file %leggimi% con le istruzioni per usarla oppure una descrizione del suo utilizzo, alcune impostazioni, ed infine istruzioni che possono essere nel linguaggio di scripting %LoliCode% o in %C#% puro. Sul disco, le config vengono salvate come file con l'estensione %.opk% nella sottocartella %Configs%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Le config possono essere usate in job come il %MultiRun Job% per eseguire alcune azioni in parallelo su un certo set di dati. Per esempio, possono essere usate per controllare se certi sottopercorsi di un certo sito web ritornano una risposta valida, oppure per copiare i link da più pagine di uno shop online.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Come funziona il Config Manager?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Il %Config Manager% tiene traccia di tutte le tue config. Le config vengono caricate dalla sottocartella Configs quando OB2 viene inizializzato, e se nuove config vengono aggiunte nella cartella puoi semplicemente premere il pulsante %Ricarica% per ricominciare il processo di caricamento. Se non hai accesso immediato alla cartella Configs (per esempio se OB2 viene eseguito in un server remoto) puoi %caricare% una config con il pulsante relativo. Puoi anche %scaricare% config esistenti con lo stesso procedimento.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>In cima puoi trovare il pulsante %Nuova% che creerà una nuova config. Per %modificare% una config puoi premere il pulsante Modifica oppure fare doppio click su una config della lista. C'è anche un pulsante per %cambiare la visuale% con una più dettagliata.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Cos'è un file .opk?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Un file %.opk% è un %archivio zip% contenente alcuni file. Il primo file è %metadata.json%, che contiene il nome, l'autore e l'icona della config. L'icona è un'immagine codificata in base64 che può anche essere una GIF. Il file %readme.md% conterrà una descrizione della config e verrà mostrato all'utente quando apre la config nel menu di selezione delle config durante la configurazione di un job. Supporta il linguaggio markdown. Il file %settings.json% conterrà le impostazioni specifiche della config.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Infine, se la tua config utilizza stacker, le istruzioni saranno salvate come uno script LoliCode nel file %script.loli%. Se invece hai deciso di convertire la tua config in una config C#, verrà creato un file chiamato %script.cs% con il codice C# da eseguire.</value>
+  </data>
   <data name="LastModified" xml:space="preserve">
     <value>Ultima Modifica</value>
   </data>

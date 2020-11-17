@@ -71,6 +71,23 @@
     </div>
 </div>
 
+<hr />
+<BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" /><br />
+<BullettaHelp Title="@help2x00" Messages="new string[] { help2x01, help2x02 }" /><br />
+<BullettaHelp Title="@help3x00" Messages="new string[] { help3x01, help3x02 }" />
+
 @code {
     bool uploadDisplay = false;
+
+    string help1x00 => Loc["Help1x00"];
+    string help1x01 => Loc["Help1x01"];
+    string help1x02 => Loc["Help1x02"];
+
+    string help2x00 => Loc["Help2x00"];
+    string help2x01 => Loc["Help2x01"];
+    string help2x02 => Loc["Help2x02"];
+
+    string help3x00 => Loc["Help3x00"];
+    string help3x01 => Loc["Help3x01"];
+    string help3x02 => Loc["Help3x02"];
 }
