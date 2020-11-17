@@ -144,6 +144,18 @@
   <data name="Help1x02" xml:space="preserve">
     <value>Non ti disturbo più ora, ci vediamo in giro. Ciao!</value>
   </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Dove vengono salvate le mie impostazioni?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Ci sono molte impostazioni in OpenBullet 2, e sono salvate in file specifici. Il %database% (SQLite è il predefinito) è il file che contiene i tuoi proxy, job, hit, ospiti e le informazioni sui percorsi dove trovare le wordlist sul disco. Il database predefinito si chiama %OpenBullet.db%. Le %Config% sono nella sottocartella Configs, mentre le %Wordlist% che hai importato attraverso la funzione di upload del browser sono nella sottocartella Wordlists. Fai riferimento alle loro specifiche sezioni per altre informazioni.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Le impostazioni di OpenBullet e RuriLib sono salvate in due file: %OpenBulletSettings.json% e %RuriLibSettings.json%. Questi file sono creati soltanto se ci sono stati cambiamenti rispetto alle impostazioni predefinite. Il file %Environment.ini% specifica i %Tipi di Wordlist%, gli %Stati Personalizzati% e i %Formati di Esportazione% dell'ambiente di OB2. Questo è un file molto importante, più informazioni sui Tipi di Wordlist possono essere trovate in una guida a parte.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>Infine, il file %triggeredActions.json% contiene tutte le %Azioni Condizionate% del Job Monitor. Le azioni condizionate sono salvate automaticamente in questo file ogni 10 secondi.</value>
+  </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Ora Locale</value>
   </data>
