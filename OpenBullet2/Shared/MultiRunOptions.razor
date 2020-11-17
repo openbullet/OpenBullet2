@@ -52,21 +52,29 @@
                     <InputNumber @bind-Value="Options.Skip" />
                 </div>
             </EditForm>
+            <hr />
+            <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />
         </div>
         <div class="col-lg-6">
             <label class="fg-custom mt-3">@Loc["DataPool"]</label>
             <DataPoolSelector Options="Options.DataPool" SetOptions="((options) => Options.DataPool = options)"
                               SetWordlist="(async _ => await TryApplyRecord())"/>
+            <hr />
+            <BullettaHelp Title="@help2x00" Messages="new string[] { help2x01, help2x02, help2x03, help2x04, help2x05 }" />
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
             <label class="fg-custom mt-3">@Loc["ProxySources"]</label>
             <ProxySourceSelector ProxySources="Options.ProxySources" />
+            <hr />
+            <BullettaHelp Title="@help3x00" Messages="new string[] { help3x01, help3x02, help3x03 }" />
         </div>
         <div class="col-lg-6">
             <label class="fg-custom mt-3">@Loc["HitOutputs"]</label>
             <HitOutputsSelector HitOutputs="Options.HitOutputs" />
+            <hr />
+            <BullettaHelp Title="@help4x00" Messages="new string[] { help4x01, help4x02 }" />
         </div>
     </div>
 </div>
@@ -110,4 +118,26 @@
                 Options.Skip = record.Checkpoint;
         }
     }
+
+    string help1x00 => Loc["Help1x00"];
+    string help1x01 => Loc["Help1x01"];
+    string help1x02 => Loc["Help1x02"];
+    string help1x03 => Loc["Help1x03"];
+    string help1x04 => Loc["Help1x04"];
+
+    string help2x00 => Loc["Help2x00"];
+    string help2x01 => Loc["Help2x01"];
+    string help2x02 => Loc["Help2x02"];
+    string help2x03 => Loc["Help2x03"];
+    string help2x04 => Loc["Help2x04"];
+    string help2x05 => Loc["Help2x05"];
+
+    string help3x00 => Loc["Help3x00"];
+    string help3x01 => Loc["Help3x01"];
+    string help3x02 => Loc["Help3x02"];
+    string help3x03 => Loc["Help3x03"];
+
+    string help4x00 => Loc["Help4x00"];
+    string help4x01 => Loc["Help4x01"];
+    string help4x02 => Loc["Help4x02"];
 }

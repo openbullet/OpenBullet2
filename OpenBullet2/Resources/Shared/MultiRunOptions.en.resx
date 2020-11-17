@@ -129,6 +129,60 @@
   <data name="DataPool" xml:space="preserve">
     <value>Data pool</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>What are these options?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>When you create a MultiRun Job you need to provide a %config%. In the %Configs% section you can create your own or import an existing one. Once you tested a config in the debugger of the Configs section, you can select it here in order to execute it with multiple bots running in parallel. Simply click on the %Select Config% button and you will be able to select your config from a list. You will also be shown a preview of the %readme% file of the config.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>The %Proxy mode% decides whether proxies will be used when running the selected config. If you leave it on %Default% it will use whatever is specified in the settings of the config (Proxies section, %Use proxies% option). If you choose %Yes% or %No% it will override the default setting.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Bots% are the number of parallel workers that will execute your config, each with their own data line from the data pool you specified (for example a wordlist). The more bots you put, the more requests will be made at the same time, but be aware that there is a %limit% which depends on your machine's hardware after which increasing the amount of bots actually degrades the performances!</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>The %Skip% defines how many lines are to be skipped from the start of the data pool. This value is set automatically as soon as you select a pair of config and wordlist that you have already run before, since checkpoints of your progress are periodically saved to the database.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>What is a data pool?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>A %Data pool% is the source of all the data lines that will be assigned to the bots. The data pool will be read line by line and whenever there's an available bot, it will be assigned a line to process. There are different ways to initialize a data pool. The most common way is through a %wordlist%. In order to use a wordlist, you first have to import one in the %Wordlists% section. Once you imported a wordlist, simply click on the %Select wordlist% button and select the wordlist you want to use. You will also be able to see a preview of the first few lines of the wordlist.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>If you choose the %File% option, you can bypass the import phase of the wordlist, but mind that this will disable some features such as saving the progress of your wordlist-config pair to the database and the relationship between hits and the wordlist that was used to get them. Wordlists are the preferred way to use data from a file, so I suggest you to go check out the Wordlists section! You also need to specify the %Wordlist type%, refer to the usual Wordlists section for more help on what this option means.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>The %Range% option will just generate a range of numbers, starting from an initial value. For example if you set %Start% = 0, %Amount% = 5 and %Step% = 2 it will generate 5 data lines with the values 0, 2, 4, 6 and 8. If you check the %Pad% box, the number will be zero-padded to the left according to the number of digits of the biggest number that will be generated, for example if the biggest number is 100 you will see values such as 001, 042 etc. in your generated data pool.</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>The %Combinations% option will allow you to generate all the possible combinations of a given %Character set% for a given %Length%. For example if you use ABCD as a Character set and Length = 4 you will get combinations like AAAA, AAAB, ... ACCB ... DDDC, DDDD.</value>
+  </data>
+  <data name="Help2x05" xml:space="preserve">
+    <value>The %Infinite% option will just generate an infinite amount of empty data lines, so the job will continue until you decide to stop it.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>What is a proxy source?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>%Proxy sources% are used to define where proxies will be taken from when they are added to the pool of proxies that are assigned to bots. Proxy sources will be queried at the start of a job, and also whenever all proxies are banned or a condition forces proxies to be reloaded. A proxy source of type %Group% will take proxies from a group defined in the %Proxies% section. In order to use this option, you need to have a group with some proxies in it, refer to the Proxies section for instructions on how to do that.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>A proxy source of the %File% type will load proxies from a given file on the disk. You can type the full path to the file you want and also the proxy %type% that will be used as default if none was specified through advanced syntax. You can edit the contents of the file at any point and the next time a proxy reload happens you will have your brand new proxies parsed from the file.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>A proxy source of the %Remote% type will involve querying a remote resource, for example a proxy provider's API service, in order to retrieve proxies. Again, you will need to specify a proxy %type% to use as the default option. This option can be used to retrieve fresh working proxies that were already checked by an external service.</value>
+  </data>
+  <data name="Help4x00" xml:space="preserve">
+    <value>What is a hit output?</value>
+  </data>
+  <data name="Help4x01" xml:space="preserve">
+    <value>A %Hit output% is a place where hits will be sent after they are found. The %Database% option (there can be only one) will write the hits to the default database of OpenBullet 2. You will be able to explore the hits in the database through the %Hits% section. The %File system% option (there can be only one) will save the hits in an organized folder structure on the disk. Simply write the path to the base directory where you want the folder structure to be created.</value>
+  </data>
+  <data name="Help4x02" xml:space="preserve">
+    <value>Finally, the %Discord webhook% option will allow you to send the hits to a discord webhook using a custom username and avatar (specified via the URL to an image hosted on a public repository). In order to use this option you will need to create a discord webhook for a channel in your server and paste the URL in the appropriate field.</value>
+  </data>
   <data name="HitOutputs" xml:space="preserve">
     <value>Hit outputs</value>
   </data>
