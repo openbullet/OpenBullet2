@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Cos'è LoliCode?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Il %LoliCode% è un linguaggio di scripting custom che agisce come %linguaggio intermedio% tra i blocchi e il codice C# che viene generato dai blocchi. Il LoliCode può essere convertito in blocchi semplicemente cliccando sulla sezione Stacker (qualsiasi cosa non sia un vero e proprio blocco viene messa in un Blocco LoliCode speciale), e i blocchi possono essere convertiti in LoliCode semplicemente cliccando sulla sezione LoliCode. Ogni blocco viene automaticamente tradotto in uno snippet che è identificato tramite il suo id.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Un'ottima feature del LoliCode è che può essere usato per integrare i blocchi con il C# nudo e crudo. Puoi inserire i blocchi dentro statement condizionali come gli `if`, dichiarare variabili e sfruttare le feature del C# usando la sua sintassi originale. Alla fine della fiera, anche i blocchi vengono tradotti in C# quindi otterrai codice C# al 100% quando decidi di eseguire la tua config!</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Se hai bisogno di usare classi ecc. da un %namespace% che non è importato automaticamente da OB2 quando compila lo script, puoi aggiungerlo in cima cliccando sul pulsente %Mostra/Nascondi Usings% e scrivendolo nella textbox. Per esempio, per aggiungere il namespace per la classe `Regex` puoi scrivere `System.Text.RegularExpressions` in una riga della textbox.</value>
+  </data>
   <data name="LoliCodeEditor" xml:space="preserve">
     <value>Editor LoliCode</value>
   </data>

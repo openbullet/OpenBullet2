@@ -21,7 +21,14 @@ namespace OpenBullet2.Pages
         {
             Config = ConfigService.SelectedConfig;
 
-            base.OnInitialized();
+            // Transpile if not in CSharp mode
+            if (Config != null && Config.Mode != ConfigMode.CSharp)
+            {
+                var stack = Config.Mode == ConfigMode.Stack
+                    ? Config.Stack
+                    : new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
+                Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack, Config.Settings);
+            }
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -38,11 +45,19 @@ namespace OpenBullet2.Pages
             };
         }
 
-        private async Task Compile()
+        /*
+        private async Task Transpile()
         {
             var stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
             Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack, Config.Settings);
             await _editor.SetValue(Config.CSharpScript);
+        }
+        */
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+                _editor.SetValue(Config.CSharpScript);
         }
 
         private async Task ConvertConfig()

@@ -129,6 +129,15 @@
   <data name="CSharpEditor" xml:space="preserve">
     <value>C# Editor</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>What is this section for?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>This section serves two purposes. If you plan on using %Stacker/LoliCode% for building your config, you can use this read-only editor to see the what the final code looks like after the blocks get translated to C# instructions for the execution. This helps solve most of the issues you get, especially when the %debugger% gives you %exceptions%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>If instead you decided to code your config using %only C#%, you can click on the %Convert to C# config% button and you will be able to edit the C# code directly. You will be able to use the same API that is used for blocks, so I suggest studying it a little bit by checking either the codebase or how the blocks get translated automatically. Note that C# only configs are meant for %very advanced% users, and everything you can do here can also be done in LoliCode by integrating blocks and C# code which can result in a much more readable script for people who are not well-versed with code.</value>
+  </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
     <value>Transpile from blocks</value>
   </data>

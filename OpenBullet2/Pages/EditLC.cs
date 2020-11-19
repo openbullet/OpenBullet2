@@ -28,8 +28,6 @@ namespace OpenBullet2.Pages
             {
                 await js.AlertException(ex);
             }
-
-            base.OnInitialized();
         }
 
         protected override void OnAfterRender(bool firstRender)
