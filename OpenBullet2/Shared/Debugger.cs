@@ -54,12 +54,16 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                // If we're in LoliCode mode, build the Stack
-                if (Config.Mode == ConfigMode.LoliCode)
-                    Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
+                // Build the C# script if not in CSharp mode
+                if (Config.Mode != ConfigMode.CSharp)
+                {
+                    // If we're in LoliCode mode, build the Stack
+                    if (Config.Mode == ConfigMode.LoliCode)
+                        Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
 
-                // Build the C# script
-                Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
+                    // Transpile the Stack to C#
+                    Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
+                }
             }
             catch (Exception ex)
             {

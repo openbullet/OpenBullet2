@@ -35,7 +35,9 @@ namespace RuriLib.Models.Configs
             {
                 { (ConfigMode.Stack, ConfigMode.LoliCode), () => LoliCodeScript = new Stack2LoliTranspiler().Transpile(Stack) },
                 { (ConfigMode.Stack, ConfigMode.CSharp), () => CSharpScript = new Stack2CSharpTranspiler().Transpile(Stack, Settings) },
-                { (ConfigMode.LoliCode, ConfigMode.Stack), () => Stack = new Loli2StackTranspiler().Transpile(LoliCodeScript) }
+                { (ConfigMode.LoliCode, ConfigMode.Stack), () => Stack = new Loli2StackTranspiler().Transpile(LoliCodeScript) },
+                { (ConfigMode.LoliCode, ConfigMode.CSharp), () => CSharpScript = new Stack2CSharpTranspiler()
+                    .Transpile(new Loli2StackTranspiler().Transpile(LoliCodeScript), Settings) }
             };
 
             if (mappings.ContainsKey((Mode, newMode)))
