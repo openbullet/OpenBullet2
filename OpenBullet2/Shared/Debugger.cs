@@ -100,6 +100,8 @@ namespace OpenBullet2.Shared
             logger.Log($"Sliced {dataLine.Data} into:");
             foreach (var slice in dataLine.GetVariables())
                 logger.Log($"{slice.Name}: {slice.AsString()}");
+
+            logger.NewEntry += OnNewEntry;
             
             try
             {
@@ -159,5 +161,8 @@ namespace OpenBullet2.Shared
         {
             cts.Cancel();
         }
+
+        private void OnNewEntry(object sender, BotLoggerEntry entry)
+            => loggerViewer?.Refresh();
     }
 }
