@@ -56,8 +56,16 @@
     }
 </EditForm>
 
+<br />
+<BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />
+
 @code {
     [Parameter] public ParseBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
 
+    string help1x00 => Loc["Help1x00"];
+    string help1x01 => Loc["Help1x01"];
+    string help1x02 => Loc["Help1x02"];
+    string help1x03 => Loc["Help1x03"];
+    string help1x04 => Loc["Help1x04"];
 }
