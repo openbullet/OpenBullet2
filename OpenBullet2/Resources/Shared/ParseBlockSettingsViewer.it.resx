@@ -132,4 +132,16 @@
   <data name="Help1x04" xml:space="preserve">
     <value>Se selezioni la casella %Recursive%, tutte le sequenze di caratteri per cui sono soddisfatte le condizioni di parsing verranno messe in una variabile List of Strings; altrimenti solo il primo riscontro verrà preso e messo in una variabile String.</value>
   </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Da catturare</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Etichetta</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Variabile di output</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
 </root>

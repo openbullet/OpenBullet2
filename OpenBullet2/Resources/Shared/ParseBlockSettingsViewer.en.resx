@@ -132,4 +132,16 @@
   <data name="Help1x04" xml:space="preserve">
     <value>If you tick the %Recursive% checkbox, all the sequences of characters that meet the parsing criteria will be put inside a List of Strings variable; otherwise only the first match will be taken and put into a String variable.</value>
   </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Is capture</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Output variable</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

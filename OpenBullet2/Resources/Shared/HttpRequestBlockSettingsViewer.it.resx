@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona questo blocco?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Il blocco %HTTP Request% ti permette di effettuare una richiesta HTTP verso un endpoint. Se vuoi inviare un corpo assieme ai tuoi headers e cookies puoi farlo selezionando uno dei modi per mandare i contenuti. La modalità %Standard% semplicemente prenderà una String, la codificherà come UTF-8 e la manderà nel corpo della richiesta. Il campo %Content Type% sarà automaticamente convertito nell'header %Content-Type% e aggiunto alla tua richiesta.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>La modalità %Raw% fa la stessa cosa della modalità Standard se il tuo contenuto è un Byte Array e non una String. La %Basic Auth% è usata per autenticare tramite Basic Access Authentication (il tipico popup con username/password che vedi nel browser quando ti chiede le credenziali). Infine, la modalità %Multipart% manderà un contenuto che può essere fatto di più parti, come stringhe, bytes e files. Questo è utile ad esempio quando si vuole caricare un file su un sito.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>La risposta verrà letta e divisa in parti che verranno assegnati a diverse variabili predefinite. L'%indirizzo% (dopo l'ultimo redirect se hai selezionato %Auto Redirect%) sarà salvato nella variabile `data.ADDRESS` di tipo String. Il %corpo% della risposta (ovvero il sorgente) verrà assegnato alla variabile di tipo String `data.SOURCE` (come stringa UTF-8), e alla variabile di tipo Byte Array `data.RAWSOURCE` (dopo la decompressione ad esempio di gzip).</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Il %codice della risposta% (es. 200) verrà inserito nella variabile `data.RESPONSECODE` di tipo Integer. Gli headers saranno trasformati in un dizionario e messi nella variabile `data.HEADERS` di tipo Dictionary of Strings, e similmente per i cookies nella variabile `data.COOKIES`. Ricorda che puoi ricavare valori dai dizionari molto facilmente data la loro chiave con la sintassi `data.HEADERS["nome-header"]`. Se la richiesta fallisce, alla variabile `data.STATUS` verrà assegnato il valore `ERROR`.</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Etichetta</value>
   </data>
