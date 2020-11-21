@@ -130,7 +130,10 @@
     <value>The response will be parsed and divided into chunks which will be assigned to different default variables. The response %Address% (after the last redirect if you have %Auto Redirect% enabled) will be saved into the String variable `data.ADDRESS`. The response %body% (a.k.a source) will be inside the String variable `data.SOURCE` (as a UTF-8 string), and inside the Byte Array variable `data.RAWSOURCE` (after decompression of e.g. gzip).</value>
   </data>
   <data name="Help1x04" xml:space="preserve">
-    <value>The %Response Code% (e.g. 200) will be inserted in the Integer variable `data.RESPONSECODE`. The headers will be parsed to a dictionary and inserted in the Dictionary of Strings variable `data.HEADERS`, and likewise for cookies in the `data.COOKIES` variable. Remember that you can easily retrieve values from dictionaries by key with the syntax `data.HEADERS["header-name"]`. If the request fails, the `data.STATUS` variable will be set to `ERROR`. One last thing to remember is that previously received cookies will be sent again inside the next requests, in addition to the %Custom Cookies% you can define for each new request.</value>
+    <value>The %Response Code% (e.g. 200) will be inserted in the Integer variable `data.RESPONSECODE`. The headers will be parsed to a dictionary and inserted in the Dictionary of Strings variable `data.HEADERS`, and likewise for cookies in the `data.COOKIES` variable. Remember that you can easily retrieve values from dictionaries by key with the syntax `data.HEADERS["header-name"]`. If the request fails, the `data.STATUS` variable will be set to `ERROR`.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>One last thing to remember is that cookies inside the `data.COOKIES` variable are only added or overwritten, never deleted. This means that previously received cookies (which are inside the `data.COOKIES` variable) will be sent again inside the next requests, in addition to the %Custom Cookies% you can define for each new request. This happens unless `data.COOKIES` is cleared or reinitialized.</value>
   </data>
   <data name="Label" xml:space="preserve">
     <value>Label</value>

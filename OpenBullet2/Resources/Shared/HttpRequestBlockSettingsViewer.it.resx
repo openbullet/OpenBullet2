@@ -130,7 +130,10 @@
     <value>La risposta verrà letta e divisa in parti che verranno assegnati a diverse variabili predefinite. L'%indirizzo% (dopo l'ultimo redirect se hai selezionato %Auto Redirect%) sarà salvato nella variabile `data.ADDRESS` di tipo String. Il %corpo% della risposta (ovvero il sorgente) verrà assegnato alla variabile di tipo String `data.SOURCE` (come stringa UTF-8), e alla variabile di tipo Byte Array `data.RAWSOURCE` (dopo la decompressione ad esempio di gzip).</value>
   </data>
   <data name="Help1x04" xml:space="preserve">
-    <value>Il %codice della risposta% (es. 200) verrà inserito nella variabile `data.RESPONSECODE` di tipo Integer. Gli headers saranno trasformati in un dizionario e messi nella variabile `data.HEADERS` di tipo Dictionary of Strings, e similmente per i cookies nella variabile `data.COOKIES`. Ricorda che puoi ricavare valori dai dizionari molto facilmente data la loro chiave con la sintassi `data.HEADERS["nome-header"]`. Se la richiesta fallisce, alla variabile `data.STATUS` verrà assegnato il valore `ERROR`. Un'ultima cosa da ricordare è che i cookies ricevuti in precedenza verranno inviati nuovamente nelle richieste future, oltre ai %Custom Cookies% che puoi definire per ogni nuova richiesta.</value>
+    <value>Il %codice della risposta% (es. 200) verrà inserito nella variabile `data.RESPONSECODE` di tipo Integer. Gli headers saranno trasformati in un dizionario e messi nella variabile `data.HEADERS` di tipo Dictionary of Strings, e similmente per i cookies nella variabile `data.COOKIES`. Ricorda che puoi ricavare valori dai dizionari molto facilmente data la loro chiave con la sintassi `data.HEADERS["nome-header"]`. Se la richiesta fallisce, alla variabile `data.STATUS` verrà assegnato il valore `ERROR`.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>Un'ultima cosa da ricordare è che i cookies nella variabile `data.COOKIES` vengono solo aggiunti o sovrascritti, mai cancellati. Questo significa che i cookies ricevuti in precedenza verranno inviati nuovamente nelle richieste future, oltre ai %Custom Cookies% che puoi definire per ogni nuova richiesta. Questo accade a meno che `data.COOKIES` venga pulita o reinizializzata.</value>
   </data>
   <data name="Label" xml:space="preserve">
     <value>Etichetta</value>
