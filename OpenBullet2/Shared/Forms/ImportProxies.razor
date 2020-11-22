@@ -7,7 +7,7 @@
         <Tabs>
             <RadzenTabsItem Text="@Loc["Paste"]">
                 <EditForm Model="pasteContent">
-                    <InputTextArea @bind-Value="pasteContent" />
+                    <textarea @bind="pasteContent" @bind:event="oninput" />
                     <button type="submit" class="btn btn-outline-success" @onclick="ImportFromPaste">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>
