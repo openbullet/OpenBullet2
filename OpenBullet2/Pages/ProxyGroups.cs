@@ -29,6 +29,7 @@ namespace OpenBullet2.Pages
         private List<ProxyGroupEntity> groups;
         private int currentGroupId = -1;
         private List<ProxyEntity> proxies;
+        private int maxPing = 5000;
 
         RadzenGrid<ProxyEntity> proxiesGrid;
         private int resultsPerPage = 15;
@@ -172,6 +173,70 @@ namespace OpenBullet2.Pages
 
                 await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Count()}");
             }
+        }
+
+        private async Task DeleteAllProxies()
+        {
+            if (currentGroupId == -1)
+            {
+                await ShowNoGroupSelectedWarning();
+                return;
+            }
+
+            var toDelete = await ProxyRepo.GetAll()
+                .Where(p => p.GroupId == currentGroupId)
+                .ToListAsync();
+            await ProxyRepo.Delete(toDelete);
+            await RefreshList();
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+        }
+
+        private async Task DeleteNotWorking()
+        {
+            if (currentGroupId == -1)
+            {
+                await ShowNoGroupSelectedWarning();
+                return;
+            }
+
+            var toDelete = await ProxyRepo.GetAll()
+                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.NotWorking)
+                .ToListAsync();
+            await ProxyRepo.Delete(toDelete);
+            await RefreshList();
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+        }
+
+        private async Task DeleteUntested()
+        {
+            if (currentGroupId == -1)
+            {
+                await ShowNoGroupSelectedWarning();
+                return;
+            }
+
+            var toDelete = await ProxyRepo.GetAll()
+                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.Untested)
+                .ToListAsync();
+            await ProxyRepo.Delete(toDelete);
+            await RefreshList();
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+        }
+
+        private async Task DeleteSlow()
+        {
+            if (currentGroupId == -1)
+            {
+                await ShowNoGroupSelectedWarning();
+                return;
+            }
+
+            var toDelete = await ProxyRepo.GetAll()
+                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing)
+                .ToListAsync();
+            await ProxyRepo.Delete(toDelete);
+            await RefreshList();
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
         }
 
         private IEnumerable<ProxyEntity> ParseProxies(ProxiesForImportDto dto)

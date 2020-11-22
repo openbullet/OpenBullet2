@@ -138,14 +138,32 @@
   <data name="CreateProxyGroup" xml:space="preserve">
     <value>Crea gruppo proxy</value>
   </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Cancella tutti</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Cancellati</value>
+  </data>
   <data name="DeleteGroup" xml:space="preserve">
     <value>Rimuovi Gruppo</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>Cancella non funzionanti</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Cancella lenti</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Cancella non testati</value>
   </data>
   <data name="EditGroup" xml:space="preserve">
     <value>Modifica Gruppo</value>
   </data>
   <data name="EditProxyGroup" xml:space="preserve">
     <value>Modifica gruppo di proxy</value>
+  </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>Per questo gruppo</value>
   </data>
   <data name="GroupInUse" xml:space="preserve">
     <value>Gruppo in uso</value>
@@ -189,8 +207,14 @@
   <data name="Ping" xml:space="preserve">
     <value>Ping</value>
   </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>ping sopra</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Porta</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Proxy cancellati correttamente</value>
   </data>
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
     <value>Proxy importati correttamente</value>
@@ -209,6 +233,9 @@
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Risultati per pagina</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Lenti</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Stato</value>

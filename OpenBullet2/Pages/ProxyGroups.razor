@@ -9,7 +9,20 @@
             <button class="btn btn-sm btn-outline-success" @onclick="AddGroup"><span class="oi oi-plus"></span> @Loc["AddGroup"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="EditGroup"><span class="oi oi-pencil"></span> @Loc["EditGroup"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteGroup"><span class="oi oi-x"></span> @Loc["DeleteGroup"]</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col px-0">
+            <span>@Loc["ForThisGroup"]:</span>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-primary" @onclick="ImportProxies"><span class="oi oi-data-transfer-upload"></span> @Loc["ImportProxies"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteAllProxies"><span class="oi oi-x"></span> @Loc["DeleteAllProxies"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteNotWorking"><span class="oi oi-x"></span> @Loc["DeleteNotWorking"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteUntested"><span class="oi oi-x"></span> @Loc["DeleteUntested"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSlow"><span class="oi oi-x"></span> @Loc["DeleteSlow"]</button>
         </div>
     </div>
 </div>
@@ -24,6 +37,9 @@
             <option value="@group.Id">@group.Name</option>
         }
     </InputSelectNumber><br />
+    <label>@Loc["Slow"] = @Loc["pingOver"]</label>
+    <InputNumber style="width: 100px" @bind-Value="maxPing" />
+    <br />
     <label>@Loc["ResultsPerPage"]</label>
     <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
                        ValueChanged="(async val => await OnResultsPerPageChanged(val))">
