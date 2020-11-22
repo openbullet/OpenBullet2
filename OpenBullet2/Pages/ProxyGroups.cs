@@ -167,6 +167,7 @@ namespace OpenBullet2.Pages
                 }
 
                 await ProxyRepo.Add(entities);
+                await ProxyRepo.RemoveDuplicates(currentGroupId);
                 await RefreshList();
 
                 await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Count()}");
