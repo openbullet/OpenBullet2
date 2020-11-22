@@ -38,7 +38,9 @@ namespace OpenBullet2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddServerSideBlazor()
+                .AddHubOptions(x => x.MaximumReceiveMessageSize = 102400000)
+                .AddCircuitOptions(options => { options.DetailedErrors = true; });
             services.AddBlazoredModal();
             services.AddFileReaderService();
             services.AddBlazorDownloadFile();
