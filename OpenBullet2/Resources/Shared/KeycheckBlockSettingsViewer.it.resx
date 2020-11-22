@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Come funziona questo blocco?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Il blocco %Keycheck% ti permette di cambiare il valore della variabile predefinita `data.STATUS` in base al risultato di una qualche condizione. Puoi aggiungere dei %Keychains% al blocco, e puoi selezionare come cambierà lo stato quando uno specifico keychain risulta vero. Il keychain ha anche una %modalità% che può essere %AND% o %OR%. Nel primo caso, la condizione del keychain sarà vera se tutte le chiavi al suo interno sono vere. Nel secondo caso, è abbastanza che almeno una chiave sia vera.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Le chiavi possono essere di vari tipi, in base al tipo della variabile che stai cercando di comparare. I keychain sono verificati dal primo all'ultimo, e non appena la condizione di un keychain è vera gli altri verranno saltati. Se nessun keychain è vero, lo stato rimarrà inalterato (nota che lo stato iniziale del bot all'inizio dello script è sempre `NONE`) oppure verrà impostato come `BAN` se l'opzione %Ban if no match% è stata selezionata.</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Etichetta</value>
   </data>
