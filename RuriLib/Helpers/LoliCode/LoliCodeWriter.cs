@@ -117,10 +117,18 @@ namespace RuriLib.Helpers.LoliCode
             => input.ToString(CultureInfo.InvariantCulture);
 
         public static string SerializeList(List<string> input)
-            => "[" + string.Join(", ", input.Select(i => ToLiteral(i))) + "]";
+        {
+            if (input == null)
+                return "[]";
+
+            return "[" + string.Join(", ", input.Select(i => ToLiteral(i))) + "]";
+        }
 
         public static string SerializeDictionary(Dictionary<string, string> input) 
         {
+            if (input == null || input.Keys.Count == 0)
+                return "{}";
+
             var list = input.Select(kvp => $"{ToLiteral(kvp.Key)}, {ToLiteral(kvp.Value)}");
             return "{" + string.Join(", ", list.Select(s => $"({s})")) + "}";
         }
