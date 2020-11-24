@@ -17,10 +17,14 @@ namespace OpenBullet2.Repositories
 
         public async Task RemoveDuplicates(int groupId)
         {
-            var duplicates = GetAll()
+            var proxies = await GetAll()
                 .Where(p => p.GroupId == groupId)
+                .ToListAsync();
+
+            var duplicates = proxies
                 .GroupBy(p => new { p.Type, p.Host, p.Port, p.Username, p.Password })
                 .SelectMany(g => g.Skip(1));
+            
             await Delete(duplicates);
         }
     }
