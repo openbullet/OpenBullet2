@@ -10,10 +10,8 @@ namespace RuriLib.Models.Blocks.Custom.Keycheck
 
         public DictionaryKey()
         {
-            Left = new BlockSetting() { InputMode = SettingInputMode.Variable, FixedSetting = new DictionaryOfStringsSetting(),
-                InterpolatedSetting = new InterpolatedDictionaryOfStringsSetting() };
-            Right = new BlockSetting() { FixedSetting = new DictionaryOfStringsSetting(),
-                InterpolatedSetting = new InterpolatedStringSetting() };
+            Left = BlockSettingFactory.CreateDictionaryOfStringsSetting("", "data.COOKIES");
+            Right = BlockSettingFactory.CreateStringSetting("");
         }
     }
 }
