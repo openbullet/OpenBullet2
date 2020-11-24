@@ -133,6 +133,10 @@ namespace RuriLib.Helpers.CSharp
             if (setting.FixedSetting == null)
                 throw new ArgumentNullException(nameof(setting));
 
+            // Do not cast variables from the expando object (they will give a RuntimeBinderException)
+            if (setting.InputVariableName.StartsWith("input."))
+                return string.Empty;
+
             return setting.FixedSetting switch
             {
                 BoolSetting _ => ".AsBool()",
