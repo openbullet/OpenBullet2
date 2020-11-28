@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using OpenBullet2.Services;
 using System;
-using System.Globalization;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;

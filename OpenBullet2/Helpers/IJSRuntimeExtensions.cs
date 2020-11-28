@@ -10,6 +10,12 @@ namespace OpenBullet2.Helpers
         public async static Task Log(this IJSRuntime js, string message)
             => await js.InvokeVoidAsync("console.log", message);
 
+        public async static Task LogObject(this IJSRuntime js, object obj)
+            => await js.InvokeVoidAsync("console.log", obj);
+
+        public async static Task LogColored(this IJSRuntime js, string message, string foreground = "#000", string background = "#fff")
+            => await js.InvokeVoidAsync("console.log", $"%c {message} ", $"background: {background}; color: {foreground}; padding: 5px 0px");
+
         public async static Task Alert(this IJSRuntime js, string message)
             => await js.InvokeVoidAsync("Swal.fire", message);
 

@@ -2,6 +2,7 @@
 using BlazorMonaco.Bridge;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
+using OpenBullet2.Logging;
 using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using System;
@@ -11,6 +12,7 @@ namespace OpenBullet2.Pages
 {
     public partial class EditLC
     {
+        [Inject] public OBLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
 
         private MonacoEditor _editor { get; set; }
@@ -26,6 +28,7 @@ namespace OpenBullet2.Pages
             }
             catch (Exception ex)
             {
+                await OBLogger.LogException(ex);
                 await js.AlertException(ex);
             }
         }

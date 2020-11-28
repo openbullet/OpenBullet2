@@ -21,6 +21,7 @@ using OpenBullet2.Models.Proxies;
 using RuriLib.Models.UserAgents;
 using OpenBullet2.Helpers;
 using System;
+using OpenBullet2.Logging;
 
 namespace OpenBullet2
 {
@@ -76,6 +77,9 @@ namespace OpenBullet2
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
             services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();
+
+            // Transient
+            services.AddTransient<OBLogger>();
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");

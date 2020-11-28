@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
+using OpenBullet2.Logging;
 using OpenBullet2.Services;
 using OpenBullet2.Shared;
 using RuriLib.Helpers.Blocks;
@@ -13,6 +14,7 @@ namespace OpenBullet2.Pages
 {
     public partial class Stacker
     {
+        [Inject] public OBLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
 
         private Config config;
@@ -29,6 +31,7 @@ namespace OpenBullet2.Pages
             }
             catch (Exception ex)
             {
+                await OBLogger.LogException(ex);
                 await js.AlertError(ex.GetType().Name, ex.Message);
             }
 
@@ -40,16 +43,14 @@ namespace OpenBullet2.Pages
             selectedBlock = block;
 
             if (block != null)
-            {
-                await js.Log($"Selected block {block.Descriptor.Id}");
-            }
+                await OBLogger.LogInfo($"Selected block {block.Descriptor.Id}");
         }
 
         private async Task AddBlock(BlockDescriptor descriptor)
         {
             selectedBlock = new BlockFactory().GetBlock<BlockInstance>(descriptor.Id);
             config.Stack.Add(selectedBlock);
-            await js.Log($"Added block {descriptor.Id}");
+            await OBLogger.LogInfo($"Added block {descriptor.Id}");
         }
     }
 }
