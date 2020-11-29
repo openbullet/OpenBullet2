@@ -51,6 +51,7 @@ namespace RuriLib.Models.Blocks.Custom
                 {
                     (string keyName, string comparison) = key switch
                     {
+                        BoolKey x => ("BOOLKEY", x.Comparison.ToString()),
                         StringKey x => ("STRINGKEY", x.Comparison.ToString()),
                         IntKey x => ("INTKEY", x.Comparison.ToString()),
                         FloatKey x => ("FLOATKEY", x.Comparison.ToString()),
@@ -109,6 +110,7 @@ namespace RuriLib.Models.Blocks.Custom
 
                     Key key = keyType switch
                     {
+                        "BOOLKEY" => ParseBoolKey(ref line),
                         "STRINGKEY" => ParseStringKey(ref line),
                         "INTKEY" => ParseIntKey(ref line),
                         "FLOATKEY" => ParseFloatKey(ref line),
@@ -125,6 +127,15 @@ namespace RuriLib.Models.Blocks.Custom
                     LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
                 }
             }
+        }
+
+        private BoolKey ParseBoolKey(ref string line)
+        {
+            var key = new BoolKey();
+            LoliCodeParser.ParseSettingValue(ref line, key.Left, new BoolParameter());
+            key.Comparison = (BoolComparison)Enum.Parse(typeof(BoolComparison), LineParser.ParseToken(ref line));
+            LoliCodeParser.ParseSettingValue(ref line, key.Right, new BoolParameter());
+            return key;
         }
 
         private StringKey ParseStringKey(ref string line)
@@ -187,7 +198,7 @@ namespace RuriLib.Models.Blocks.Custom
 
             using var writer = new StringWriter();
             var banIfNoMatch = Settings.First(s => s.Name == "banIfNoMatch");
-            var nonEmpty = Keychains.Where(kc => kc.Keys.Count > 1).ToList();
+            var nonEmpty = Keychains.Where(kc => kc.Keys.Count > 0).ToList();
 
             // If there are no keychains
             if (nonEmpty.Count == 0)
@@ -249,6 +260,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             string comparison = key switch
             {
+                BoolKey x => $"BoolComparison.{x.Comparison}",
                 StringKey x => $"StrComparison.{x.Comparison}",
                 IntKey x => $"NumComparison.{x.Comparison}",
                 FloatKey x => $"NumComparison.{x.Comparison}",

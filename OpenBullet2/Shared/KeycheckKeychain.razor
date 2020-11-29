@@ -35,6 +35,7 @@
     <div class="row">
         <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new BoolKey()))"><span class="oi oi-plus"></span> Bool Key</button>
             <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
             <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
             <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
@@ -48,23 +49,27 @@
                 @switch (key)
                 {
                     case StringKey x:
-                        <KeycheckStringKey Key="key as StringKey" />
+                        <KeycheckStringKey Key="x" />
+                        break;
+
+                    case BoolKey x:
+                        <KeycheckBoolKey Key="x" />
                         break;
 
                     case IntKey x:
-                        <KeycheckIntKey Key="key as IntKey" />
+                        <KeycheckIntKey Key="x" />
                         break;
 
                     case FloatKey x:
-                        <KeycheckFloatKey Key="key as FloatKey" />
+                        <KeycheckFloatKey Key="x" />
                         break;
 
                     case ListKey x:
-                        <KeycheckListKey Key="key as ListKey" />
+                        <KeycheckListKey Key="x" />
                         break;
 
                     case DictionaryKey x:
-                        <KeycheckDictionaryKey Key="key as DictionaryKey" />
+                        <KeycheckDictionaryKey Key="x" />
                         break;
                 }
             </div>

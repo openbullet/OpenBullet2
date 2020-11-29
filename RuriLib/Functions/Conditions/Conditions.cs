@@ -7,6 +7,16 @@ namespace RuriLib.Functions.Conditions
 {
     public static class Conditions
     {
+        public static bool Check(bool leftTerm, BoolComparison comparison, bool rightTerm)
+        {
+            return comparison switch
+            {
+                BoolComparison.Is => leftTerm == rightTerm,
+                BoolComparison.IsNot => leftTerm != rightTerm,
+                _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
+            };
+        }
+
         public static bool Check(string leftTerm, StrComparison comparison, string rightTerm)
         {
             return comparison switch
