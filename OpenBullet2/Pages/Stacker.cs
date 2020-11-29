@@ -38,12 +38,9 @@ namespace OpenBullet2.Pages
             base.OnInitialized();
         }
 
-        private async Task SelectedBlock(BlockInstance block)
+        private void SelectedBlock(BlockInstance block)
         {
             selectedBlock = block;
-
-            if (block != null)
-                await OBLogger.LogInfo($"Selected block {block.Descriptor.Id}");
         }
 
         private async Task AddBlock(BlockDescriptor descriptor)
