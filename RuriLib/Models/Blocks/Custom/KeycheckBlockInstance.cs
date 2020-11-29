@@ -187,9 +187,10 @@ namespace RuriLib.Models.Blocks.Custom
 
             using var writer = new StringWriter();
             var banIfNoMatch = Settings.First(s => s.Name == "banIfNoMatch");
+            var nonEmpty = Keychains.Where(kc => kc.Keys.Count > 1).ToList();
 
             // If there are no keychains
-            if (Keychains.Count == 0)
+            if (nonEmpty.Count == 0)
             {
                 writer.WriteLine($"if ({CSharpWriter.FromSetting(banIfNoMatch)})");
 
@@ -203,9 +204,9 @@ namespace RuriLib.Models.Blocks.Custom
             }
 
             // Write all the keychains
-            for (int i = 0; i < Keychains.Count; i++)
+            for (int i = 0; i < nonEmpty.Count; i++)
             {
-                var keychain = Keychains[i];
+                var keychain = nonEmpty[i];
 
                 if (i == 0)
                     writer.Write("if (");
