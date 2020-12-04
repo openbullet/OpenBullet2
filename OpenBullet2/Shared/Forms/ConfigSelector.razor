@@ -52,6 +52,12 @@
             return;
         }
 
+        if (selectedConfig.HasCSharpCode())
+        {
+            if (!await js.Confirm(Loc["Danger"], Loc["DangerousConfig"]))
+                return;
+        }
+
         BlazoredModal.Close(ModalResult.Ok(selectedConfig));
     }
 }

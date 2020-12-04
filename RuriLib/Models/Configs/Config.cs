@@ -2,6 +2,7 @@
 using RuriLib.Models.Blocks;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace RuriLib.Models.Configs
@@ -48,6 +49,27 @@ namespace RuriLib.Models.Configs
             else
             {
                 throw new Exception($"Cannot convert mode from {Mode} to {newMode}");
+            }
+        }
+
+        // Checks if the config has only blocks or also additional C# code
+        public bool HasCSharpCode()
+        {
+            try
+            {
+                return Mode switch
+                {
+                    ConfigMode.CSharp => true,
+                    ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance)),
+                    ConfigMode.LoliCode => new Loli2StackTranspiler()
+                        .Transpile(LoliCodeScript).Any(b => (b is LoliCodeBlockInstance)),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            catch
+            {
+                // We don't know, return false just to be safe
+                return false;
             }
         }
     }

@@ -126,6 +126,12 @@
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
+  <data name="Danger" xml:space="preserve">
+    <value>Pericolo</value>
+  </data>
+  <data name="DangerousConfig" xml:space="preserve">
+    <value>La Config che hai selezionato potrebbe avere del codice C# al suo interno. Anche se il C# può essere utile ai config maker che vogliono usare funzionalità che non sono implementate attraverso i blocchi, può anche essere usato per danneggiare il tuo computer e sottrarre informazioni. E' FORTEMENTE consigliato controllare il codice della config per assicurarsi che non ci sia nulla di sospetto. Hai revisionato la config per assicurarti che sia completamente sicura da eseguire?</value>
+  </data>
   <data name="LastModified" xml:space="preserve">
     <value>Ultima Modifica</value>
   </data>
@@ -134,6 +140,9 @@
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
     <value>Devi prima selezionare una config</value>
+  </data>
+  <data name="NoGoBack" xml:space="preserve">
+    <value>No, torna indietro</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxy</value>
