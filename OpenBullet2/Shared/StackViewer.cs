@@ -141,6 +141,13 @@ namespace OpenBullet2.Shared
                 return;
 
             var newBlock = Cloner.Clone(selectedBlock);
+
+            // HACK: This fixes a bug for which the Cloner will double the elements in the list since
+            // its constructor is called when the json deserializer creates the object and the list is prefilled
+            // with the default values of the block (for custom blocks only)
+            newBlock.Settings.Clear();
+            newBlock.Settings.AddRange(Cloner.Clone(selectedBlock.Settings));
+
             Stack.Insert(Stack.IndexOf(selectedBlock) + 1, newBlock);
             await OBLogger.LogInfo($"Cloned block {selectedBlock.Id}");
         }
