@@ -1,5 +1,6 @@
 ﻿using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Custom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,9 +61,9 @@ namespace RuriLib.Models.Configs
                 return Mode switch
                 {
                     ConfigMode.CSharp => true,
-                    ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance)),
-                    ConfigMode.LoliCode => new Loli2StackTranspiler()
-                        .Transpile(LoliCodeScript).Any(b => (b is LoliCodeBlockInstance)),
+                    ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
+                    ConfigMode.LoliCode => new Loli2StackTranspiler().Transpile(LoliCodeScript)
+                        .Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
                     _ => throw new NotImplementedException(),
                 };
             }
