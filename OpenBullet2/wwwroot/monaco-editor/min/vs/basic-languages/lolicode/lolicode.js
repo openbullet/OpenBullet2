@@ -85,7 +85,7 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
         tokenizer: {
             root: [
 				// Jump to lolicode section
-				[/^BLOCK:.*/, "block", "@lolicode"],
+                [/^[ \t]*BLOCK:.*/, "block", "@lolicode"],
 				
                 [/\@?[a-zA-Z_]\w*/, {
                     cases: {
@@ -234,9 +234,9 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 [/\/\/.*$/, "comment"]
 			],
 			lolicode: [
-				[/^ENDBLOCK$/, "block.end", "@pop"],
-				[/^DISABLED$/, "block.disabled"],
-                [/^LABEL:.*/, "block.label"],
+				[/^[ \t]*ENDBLOCK$/, "block.end", "@pop"],
+                [/^[ \t]*DISABLED$/, "block.disabled"],
+                [/^[ \t]*LABEL:.*/, "block.label"],
                 [/\bVAR\b/, "block.var"],
                 [/\bCAP\b/, "block.cap"],
                 [/\$/, "block.interp"],

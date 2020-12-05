@@ -58,7 +58,7 @@ namespace RuriLib.Helpers.Transpilers
                         trimmedLine = line.Trim();
                         lineNumber++;
 
-                        if (line.StartsWith("ENDBLOCK"))
+                        if (trimmedLine.StartsWith("ENDBLOCK"))
                             break;
 
                         sb.AppendLine(trimmedLine);
@@ -76,12 +76,14 @@ namespace RuriLib.Helpers.Transpilers
                     var descriptor = new LoliCodeBlockDescriptor();
                     var block = new LoliCodeBlockInstance(descriptor);
 
-                    using var writer = new StringWriter();
-                    writer.WriteLine(line);
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.Append(line);
 
                     // As long as we don't find a BLOCK directive, add lines to the StringBuilder
                     while (lineNumber < lines.Length)
                     {
+                        sb.AppendLine();
                         line = lines[lineNumber];
                         trimmedLine = line.Trim();
                         lineNumber++;
@@ -93,10 +95,10 @@ namespace RuriLib.Helpers.Transpilers
                             break;
                         }
 
-                        writer.WriteLine(line);
+                        sb.Append(line);
                     }
 
-                    block.Script = writer.ToString();
+                    block.Script = sb.ToString();
 
                     // Make sure the script is not empty
                     if (!string.IsNullOrWhiteSpace(block.Script.Replace("\n", "").Replace("\r\n", "")))
