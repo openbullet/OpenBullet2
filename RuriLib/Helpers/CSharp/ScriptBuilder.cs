@@ -41,7 +41,7 @@ namespace RuriLib.Helpers.CSharp
         }
 
         /// <summary>
-        /// Gets the basic usings that the C# scripts requires in order to be successfully executed.
+        /// Gets the basic usings that the C# script requires in order to be successfully executed.
         /// </summary>
         public static IEnumerable<string> GetUsings()
         {
