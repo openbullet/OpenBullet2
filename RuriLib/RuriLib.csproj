@@ -9,8 +9,8 @@
     <PackageReference Include="AngleSharp" Version="0.14.0" />
     <PackageReference Include="CaptchaSharp" Version="1.0.4" />
     <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.0" />
-    <PackageReference Include="IronPython" Version="2.7.11-candidate1" />
-    <PackageReference Include="IronPython.StdLib" Version="2.7.11-candidate1" />
+    <PackageReference Include="IronPython" Version="2.7.11" />
+    <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.3" />
     <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.5.0" />
