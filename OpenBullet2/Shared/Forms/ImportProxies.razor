@@ -13,7 +13,7 @@
             </RadzenTabsItem>
             <RadzenTabsItem Text="@Loc["File"]">
                 <EditForm Model="fileName">
-                    <InputFile OnChange="ProcessFile" />
+                    <BlazorInputFile.InputFile OnChange="ProcessFile" />
                     <button type="submit" class="btn btn-outline-success" @onclick="ImportFromFile">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>
