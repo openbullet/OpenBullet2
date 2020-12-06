@@ -21,7 +21,7 @@ namespace RuriLib.Helpers.Transpilers
                 else
                 {
                     // Leave a blank line if the previous block was not a LoliCode block
-                    if (i > 0 && !(blocks[i - 1] is LoliCodeBlockInstance))
+                    if (i > 0 && blocks[i - 1] is not LoliCodeBlockInstance)
                         writer.WriteLine();
 
                     writer.WriteLine($"BLOCK:{block.Id}");
