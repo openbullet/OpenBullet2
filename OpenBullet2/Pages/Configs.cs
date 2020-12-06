@@ -146,7 +146,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var fileName = selectedConfig.Metadata.Name.ToValidFileName() + ".opk";
-                await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.Pack(selectedConfig));
+                await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.Pack(selectedConfig), "application/octet-stream");
             }
             catch (Exception ex)
             {
