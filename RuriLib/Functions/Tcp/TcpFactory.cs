@@ -8,6 +8,10 @@ namespace RuriLib.Functions.Tcp
 {
     public static class TcpFactory
     {
+        /// <summary>
+        /// Creates a socket that talks to the given <paramref name="host"/> on the given <paramref name="port"/>
+        /// (optionally through a proxy) and returns the <see cref="NetworkStream"/>.
+        /// </summary>
         public static NetworkStream GetNetworkStream(string host, int port, TimeSpan timeout, Proxy proxy = null)
         {
             if (proxy == null)

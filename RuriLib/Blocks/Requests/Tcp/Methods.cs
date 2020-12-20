@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Requests.Tcp
                 var sslStream = new SslStream(netStream);
                 await sslStream.AuthenticateAsClientAsync(new SslClientAuthenticationOptions 
                 {
-                    TargetHost = host
+                    TargetHost = host,
                 }, data.CancellationToken);
 
                 data.Objects["sslStream"] = sslStream;

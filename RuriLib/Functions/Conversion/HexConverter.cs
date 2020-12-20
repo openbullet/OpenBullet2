@@ -8,6 +8,10 @@ namespace RuriLib.Functions.Conversion
 {
     public static class HexConverter
     {
+        /// <summary>
+        /// Converts a <see cref="string"/> <paramref name="str"/> of hexadecimal values to a <see cref="byte[]"/>,
+        /// optionally adding a padding to the left if one of the octets is incomplete.
+        /// </summary>
         public static byte[] ToByteArray(string str, bool addPadding = true)
         {
             if (str.Contains(" "))
@@ -24,6 +28,9 @@ namespace RuriLib.Functions.Conversion
                 .ToArray();
         }
 
+        /// <summary>
+        /// Converts a <see cref="byte[]"/> to a hex-encoded string.
+        /// </summary>
         public static string ToHexString(byte[] bytes)
             => string.Concat(bytes.Select(b => Convert.ToString(b, 16).PadLeft(2, '0')));
     }

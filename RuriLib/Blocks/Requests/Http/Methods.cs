@@ -185,7 +185,7 @@ namespace RuriLib.Blocks.Requests.Http
                         break;
 
                     case FileHttpContent x:
-                        lock (FileLocker.GetLock(x.FileName))
+                        lock (FileLocker.GetHandle(x.FileName))
                         {
                             fileStream = new FileStream(x.FileName, FileMode.Open);
                             var fileContent = CreateFileContent(fileStream, x.Name, Path.GetFileName(x.FileName), x.ContentType);

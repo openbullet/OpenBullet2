@@ -26,7 +26,7 @@ namespace RuriLib.Models.Hits.HitOutputs
 
             var fileName = Path.Combine(folderName, $"{hit.Type.ToValidFileName()}.txt");
 
-            lock (FileLocker.GetLock(fileName))
+            lock (FileLocker.GetHandle(fileName))
             {
                 File.AppendAllTextAsync(fileName, $"{hit}\r\n");
             }

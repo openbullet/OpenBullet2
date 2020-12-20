@@ -152,8 +152,8 @@ namespace RuriLib.Blocks.Utility.Files
 
             FileUtils.CreatePath(destinationPath);
 
-            lock (FileLocker.GetLock(originPath))
-                lock (FileLocker.GetLock(destinationPath))
+            lock (FileLocker.GetHandle(originPath))
+                lock (FileLocker.GetHandle(destinationPath))
                     File.Copy(originPath, destinationPath);
 
             data.Logger.LogHeader();
@@ -171,8 +171,8 @@ namespace RuriLib.Blocks.Utility.Files
 
             FileUtils.CreatePath(destinationPath);
 
-            lock (FileLocker.GetLock(originPath))
-                lock (FileLocker.GetLock(destinationPath))
+            lock (FileLocker.GetHandle(originPath))
+                lock (FileLocker.GetHandle(destinationPath))
                     File.Move(originPath, destinationPath);
 
             data.Logger.LogHeader();
@@ -185,7 +185,7 @@ namespace RuriLib.Blocks.Utility.Files
             if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
-            lock (FileLocker.GetLock(path))
+            lock (FileLocker.GetHandle(path))
                 File.Delete(path);
 
             data.Logger.LogHeader();
@@ -237,7 +237,7 @@ namespace RuriLib.Blocks.Utility.Files
             FileUtils.CreatePath(path);
 
             TOut result;
-            var fileLock = FileLocker.GetLock(path);
+            var fileLock = FileLocker.GetHandle(path);
             Monitor.Enter(fileLock);
 
             try

@@ -1,11 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
-using OpenBullet2.Entities;
 using OpenBullet2.Exceptions;
-using OpenBullet2.Extensions;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;

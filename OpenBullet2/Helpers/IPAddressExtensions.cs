@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Extensions
+namespace OpenBullet2.Helpers
 {
     public static class IPAddressExtensions
     {
