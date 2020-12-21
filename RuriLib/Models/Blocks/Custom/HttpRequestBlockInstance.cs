@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Text.RegularExpressions;
 
 namespace RuriLib.Models.Blocks.Custom
@@ -259,7 +260,9 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("customCookies") + ", ");
                     writer.Write(GetSettingValue("customHeaders") + ", ");
                     writer.Write(GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write(GetSettingValue("httpVersion"));
+                    writer.Write(GetSettingValue("httpVersion") + ", ");
+                    writer.Write(GetSettingValue("useCustomCipherSuites") + ", ");
+                    writer.Write(GetSettingValue("customCipherSuites"));
                     break;
 
                 case RawRequestParams x:
@@ -273,7 +276,9 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("customCookies") + ", ");
                     writer.Write(GetSettingValue("customHeaders") + ", ");
                     writer.Write(GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write(GetSettingValue("httpVersion"));
+                    writer.Write(GetSettingValue("httpVersion") + ", ");
+                    writer.Write(GetSettingValue("useCustomCipherSuites") + ", ");
+                    writer.Write(GetSettingValue("customCipherSuites"));
                     break;
 
                 case BasicAuthRequestParams x:
@@ -286,7 +291,9 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("customCookies") + ", ");
                     writer.Write(GetSettingValue("customHeaders") + ", ");
                     writer.Write(GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write(GetSettingValue("httpVersion"));
+                    writer.Write(GetSettingValue("httpVersion") + ", ");
+                    writer.Write(GetSettingValue("useCustomCipherSuites") + ", ");
+                    writer.Write(GetSettingValue("customCipherSuites"));
                     break;
 
                 case MultipartRequestParams x:
@@ -300,7 +307,9 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("customCookies") + ", ");
                     writer.Write(GetSettingValue("customHeaders") + ", ");
                     writer.Write(GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write(GetSettingValue("httpVersion"));
+                    writer.Write(GetSettingValue("httpVersion") + ", ");
+                    writer.Write(GetSettingValue("useCustomCipherSuites") + ", ");
+                    writer.Write(GetSettingValue("customCipherSuites"));
                     break;
             }
 

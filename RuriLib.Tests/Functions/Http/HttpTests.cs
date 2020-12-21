@@ -51,7 +51,7 @@ namespace RuriLib.Tests.Functions.Http
             };
 
             await Methods.HttpRequestStandard(data, httpBin, HttpMethod.GET, true, SecurityProtocol.SystemDefault,
-                "", "", cookies, headers, timeout, "1.1");
+                "", "", cookies, headers, timeout, "1.1", false, null);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("value", response.Headers["Custom"]);
@@ -68,7 +68,7 @@ namespace RuriLib.Tests.Functions.Http
 
             await Methods.HttpRequestStandard(data, httpBin, HttpMethod.POST, true, SecurityProtocol.SystemDefault,
                 "name1=value1&name2=value2", "application/x-www-form-urlencoded",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1");
+                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -84,7 +84,7 @@ namespace RuriLib.Tests.Functions.Http
 
             await Methods.HttpRequestRaw(data, httpBin, HttpMethod.POST, true, SecurityProtocol.SystemDefault,
                 Encoding.UTF8.GetBytes("name1=value1&name2=value2"), "application/x-www-form-urlencoded",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1");
+                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -100,7 +100,7 @@ namespace RuriLib.Tests.Functions.Http
 
             await Methods.HttpRequestBasicAuth(data, httpBin, true, SecurityProtocol.SystemDefault,
                 "myUsername", "myPassword",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1");
+                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("GET", response.Method);
@@ -124,7 +124,7 @@ namespace RuriLib.Tests.Functions.Http
 
             await Methods.HttpRequestMultipart(data, httpBin, HttpMethod.POST, true, SecurityProtocol.SystemDefault,
                 "myBoundary", contents,
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1");
+                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -139,7 +139,7 @@ namespace RuriLib.Tests.Functions.Http
             var data = NewData();
 
             await Methods.HttpRequestStandard(data, "https://http2.golang.org/reqinfo", HttpMethod.GET, true, SecurityProtocol.SystemDefault,
-                "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0");
+                "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0", false, null);
 
             Assert.Contains("Protocol: HTTP/2.0", data.SOURCE);
         }

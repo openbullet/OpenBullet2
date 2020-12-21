@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,13 +26,23 @@ namespace RuriLib.Blocks.Requests.Http
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestStandard(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
             bool autoRedirect, SecurityProtocol securityProtocol, string content, string contentType, Dictionary<string, string> customCookies,
-            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion)
+            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
+            List<string> customCipherSuites)
         {
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, data.CookieContainer,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), autoRedirect, securityProtocol);
+            var factory = new HttpHandlerFactory
+            {
+                Cookies = data.CookieContainer,
+                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                AutoRedirect = autoRedirect,
+                SecurityProtocol = securityProtocol,
+                UseCustomCipherSuites = useCustomCipherSuites,
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+            };
+
+            using var handler = factory.GetHandler(data.Proxy);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -67,13 +78,22 @@ namespace RuriLib.Blocks.Requests.Http
         public static async Task HttpRequestRaw(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
             bool autoRedirect, SecurityProtocol securityProtocol, byte[] content, string contentType,
             Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders,
-            int timeoutMilliseconds, string httpVersion)
+            int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites, List<string> customCipherSuites)
         {
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, data.CookieContainer,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), autoRedirect, securityProtocol);
+            var factory = new HttpHandlerFactory
+            {
+                Cookies = data.CookieContainer,
+                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                AutoRedirect = autoRedirect,
+                SecurityProtocol = securityProtocol,
+                UseCustomCipherSuites = useCustomCipherSuites,
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+            };
+
+            using var handler = factory.GetHandler(data.Proxy);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -110,13 +130,23 @@ namespace RuriLib.Blocks.Requests.Http
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestBasicAuth(BotData data, string url, bool autoRedirect, 
             SecurityProtocol securityProtocol, string username, string password, Dictionary<string, string> customCookies,
-            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion)
+            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
+            List<string> customCipherSuites)
         {
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, data.CookieContainer,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), autoRedirect, securityProtocol);
+            var factory = new HttpHandlerFactory
+            {
+                Cookies = data.CookieContainer,
+                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                AutoRedirect = autoRedirect,
+                SecurityProtocol = securityProtocol,
+                UseCustomCipherSuites = useCustomCipherSuites,
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+            };
+
+            using var handler = factory.GetHandler(data.Proxy);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -153,13 +183,23 @@ namespace RuriLib.Blocks.Requests.Http
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestMultipart(BotData data, string url, RuriLib.Functions.Http.HttpMethod method, bool autoRedirect,
             SecurityProtocol securityProtocol, string boundary, List<MyHttpContent> content, 
-            Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion)
+            Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion,
+            bool useCustomCipherSuites, List<string> customCipherSuites)
         {
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, data.CookieContainer,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), autoRedirect, securityProtocol);
+            var factory = new HttpHandlerFactory
+            {
+                Cookies = data.CookieContainer,
+                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                AutoRedirect = autoRedirect,
+                SecurityProtocol = securityProtocol,
+                UseCustomCipherSuites = useCustomCipherSuites,
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+            };
+
+            using var handler = factory.GetHandler(data.Proxy);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -380,5 +420,24 @@ namespace RuriLib.Blocks.Requests.Http
 
         private static string GetMediaHeaderString(string contentType)
             => new MediaTypeHeaderValue(contentType).ToString();
+
+        private static TlsCipherSuite[] ParseCipherSuites(List<string> cipherSuites)
+        {
+            List<TlsCipherSuite> parsed = new List<TlsCipherSuite>();
+
+            foreach (var suite in cipherSuites)
+            {
+                try
+                {
+                    parsed.Add(Enum.Parse<TlsCipherSuite>(suite));
+                }
+                catch
+                {
+                    throw new NotSupportedException($"Cipher suite not supported: {suite}");
+                }
+            }
+
+            return parsed.ToArray();
+        }
     }
 }

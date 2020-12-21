@@ -4,83 +4,109 @@ using SocksSharp.Proxy;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Security;
 using System.Security.Authentication;
 
 namespace RuriLib.Functions.Http
 {
-    public static class HttpHandlerFactory
+    public class HttpHandlerFactory
     {
-        public static HttpMessageHandler GetHandler(Proxy proxy, CookieContainer cookies, TimeSpan timeout,
-            bool autoRedirect = true, SecurityProtocol securityProtocol = SecurityProtocol.SystemDefault)
+        public CookieContainer Cookies { get; set; }
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(20);
+        public bool AutoRedirect { get; set; } = true;
+        public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
+        public bool UseCustomCipherSuites { get; set; } = false;
+        public TlsCipherSuite[] CustomCipherSuites { get; set; } = new TlsCipherSuite[]
         {
+            // Default Firefox suites
+            TlsCipherSuite.TLS_AES_128_GCM_SHA256,
+            TlsCipherSuite.TLS_CHACHA20_POLY1305_SHA256,
+            TlsCipherSuite.TLS_AES_256_GCM_SHA384,
+            TlsCipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+            TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+            TlsCipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+            TlsCipherSuite.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+            TlsCipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+            TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+            TlsCipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+            TlsCipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+            TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+            TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+            TlsCipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,
+            TlsCipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384,
+            TlsCipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
+            TlsCipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
+            TlsCipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA
+        };
+
+        public HttpMessageHandler GetHandler(Proxy proxy)
+        {
+            HttpMessageHandler handler = null;
+
             if (proxy == null)
             {
-                return new HttpClientHandler
+                handler = new ProxyClientHandler<NoProxy>(new ProxySettings())
                 {
-                    AllowAutoRedirect = autoRedirect,
-                    CookieContainer = cookies,
-                    UseProxy = false,
-                    SslProtocols = securityProtocol.ToSslProtocols()
+                    AllowAutoRedirect = AutoRedirect,
+                    CookieContainer = Cookies,
+                    SslProtocols = ToSslProtocols(SecurityProtocol),
+                    UseCustomCipherSuites = UseCustomCipherSuites,
+                    AllowedCipherSuites = CustomCipherSuites
+                };
+            }
+            else
+            {
+                var settings = new ProxySettings()
+                {
+                    Host = proxy.Host,
+                    Port = proxy.Port,
+                    ConnectTimeout = (int)Timeout.TotalMilliseconds,
+                    ReadWriteTimeOut = (int)Timeout.TotalMilliseconds
+                };
+
+                if (proxy.NeedsAuthentication)
+                    settings.SetCredential(proxy.Username, proxy.Password);
+
+                handler = proxy.Type switch
+                {
+                    ProxyType.Http => new ProxyClientHandler<SocksSharp.Proxy.Http>(settings)
+                    {
+                        AllowAutoRedirect = AutoRedirect,
+                        CookieContainer = Cookies,
+                        SslProtocols = ToSslProtocols(SecurityProtocol),
+                        UseCustomCipherSuites = UseCustomCipherSuites,
+                        AllowedCipherSuites = CustomCipherSuites
+                    },
+
+                    ProxyType.Socks4 => new ProxyClientHandler<Socks4>(settings)
+                    {
+                        AllowAutoRedirect = AutoRedirect,
+                        CookieContainer = Cookies,
+                        SslProtocols = ToSslProtocols(SecurityProtocol),
+                        UseCustomCipherSuites = UseCustomCipherSuites,
+                        AllowedCipherSuites = CustomCipherSuites
+                    },
+
+                    ProxyType.Socks5 => new ProxyClientHandler<Socks5>(settings)
+                    {
+                        AllowAutoRedirect = AutoRedirect,
+                        CookieContainer = Cookies,
+                        SslProtocols = ToSslProtocols(SecurityProtocol),
+                        UseCustomCipherSuites = UseCustomCipherSuites,
+                        AllowedCipherSuites = CustomCipherSuites
+                    },
+
+                    _ => throw new NotImplementedException()
                 };
             }
 
-            var settings = new ProxySettings()
-            {
-                Host = proxy.Host,
-                Port = proxy.Port,
-                ConnectTimeout = (int)timeout.TotalMilliseconds,
-                ReadWriteTimeOut = (int)timeout.TotalMilliseconds
-            };
-
-            if (proxy.NeedsAuthentication)
-                settings.SetCredential(proxy.Username, proxy.Password);
-
-            return proxy.Type switch
-            {
-                ProxyType.Http => MakeHttpHandler(settings, cookies, autoRedirect, securityProtocol),
-                ProxyType.Socks4 => MakeSocks4Handler(settings, cookies, autoRedirect, securityProtocol),
-                ProxyType.Socks5 => MakeSocks5Handler(settings, cookies, autoRedirect, securityProtocol),
-                _ => throw new NotImplementedException()
-            };
-        }
-
-        private static ProxyClientHandler<SocksSharp.Proxy.Http> MakeHttpHandler(ProxySettings settings,
-            CookieContainer cookies, bool autoRedirect, SecurityProtocol securityProtocol)
-        {
-            return new ProxyClientHandler<SocksSharp.Proxy.Http>(settings)
-            {
-                AllowAutoRedirect = autoRedirect,
-                CookieContainer = cookies,
-                SslProtocols = securityProtocol.ToSslProtocols()
-            };
-        }
-
-        private static ProxyClientHandler<Socks4> MakeSocks4Handler(ProxySettings settings,
-            CookieContainer cookies, bool autoRedirect, SecurityProtocol securityProtocol)
-        {
-            return new ProxyClientHandler<Socks4>(settings)
-            {
-                AllowAutoRedirect = autoRedirect,
-                CookieContainer = cookies,
-                SslProtocols = securityProtocol.ToSslProtocols()
-            };
-        }
-
-        private static ProxyClientHandler<Socks5> MakeSocks5Handler(ProxySettings settings,
-            CookieContainer cookies, bool autoRedirect, SecurityProtocol securityProtocol)
-        {
-            return new ProxyClientHandler<Socks5>(settings)
-            {
-                AllowAutoRedirect = autoRedirect,
-                CookieContainer = cookies,
-                SslProtocols = securityProtocol.ToSslProtocols()
-            };
+            return handler;
         }
 
         /// <summary>
         /// Converts the <paramref name="protocol"/> to an SslProtocols enum. Multiple protocols are not supported and SystemDefault is None.
         /// </summary>
-        private static SslProtocols ToSslProtocols(this SecurityProtocol protocol)
+        private SslProtocols ToSslProtocols(SecurityProtocol protocol)
         {
             return protocol switch
             {
