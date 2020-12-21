@@ -33,7 +33,7 @@ namespace OpenBullet2.Pages
             Type ??= JobType.MultiRun.ToString();
 
             var factory = new JobOptionsFactory();
-            jobType = (JobType)Enum.Parse(typeof(JobType), Type);
+            jobType = Enum.Parse<JobType>(Type);
             jobOptions = factory.CreateNew(jobType);
         }
 

@@ -100,7 +100,7 @@ namespace RuriLib.Models.Blocks.Custom
                     var keychain = new Keychain();
                     LineParser.ParseToken(ref line);
                     keychain.ResultStatus = LineParser.ParseToken(ref line);
-                    keychain.Mode = (KeychainMode)Enum.Parse(typeof(KeychainMode), LineParser.ParseToken(ref line));
+                    keychain.Mode = Enum.Parse<KeychainMode>(LineParser.ParseToken(ref line));
                     Keychains.Add(keychain);
                 }
 
@@ -133,7 +133,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new BoolKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new BoolParameter());
-            key.Comparison = (BoolComparison)Enum.Parse(typeof(BoolComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<BoolComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new BoolParameter());
             return key;
         }
@@ -142,7 +142,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new StringKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new StringParameter());
-            key.Comparison = (StrComparison)Enum.Parse(typeof(StrComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<StrComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
             return key;
         }
@@ -151,7 +151,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new IntKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new IntParameter());
-            key.Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new IntParameter());
             return key;
         }
@@ -160,7 +160,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new FloatKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new FloatParameter());
-            key.Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new FloatParameter());
             return key;
         }
@@ -169,7 +169,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new ListKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new ListOfStringsParameter());
-            key.Comparison = (ListComparison)Enum.Parse(typeof(ListComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<ListComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
             return key;
         }
@@ -178,7 +178,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             var key = new DictionaryKey();
             LoliCodeParser.ParseSettingValue(ref line, key.Left, new DictionaryOfStringsParameter());
-            key.Comparison = (DictComparison)Enum.Parse(typeof(DictComparison), LineParser.ParseToken(ref line));
+            key.Comparison = Enum.Parse<DictComparison>(LineParser.ParseToken(ref line));
             LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
             return key;
         }

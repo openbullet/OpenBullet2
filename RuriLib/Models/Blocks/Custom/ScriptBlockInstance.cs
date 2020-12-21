@@ -73,7 +73,7 @@ namespace RuriLib.Models.Blocks.Custom
             using var writer = new StringWriter();
             string line;
 
-            Interpreter = (Interpreter)Enum.Parse(typeof(Interpreter), Regex.Match(reader.ReadLine(), "INTERPRETER:([^ ]+)$").Groups[1].Value);
+            Interpreter = Enum.Parse<Interpreter>(Regex.Match(reader.ReadLine(), "INTERPRETER:([^ ]+)$").Groups[1].Value);
             InputVariables = Regex.Match(reader.ReadLine(), "INPUT ([^ ]+)$").Groups[1].Value;
             
             reader.ReadLine(); // Read BEGIN SCRIPT
@@ -93,7 +93,7 @@ namespace RuriLib.Models.Blocks.Custom
                 OutputVariables.Add(
                     new OutputVariable
                     {
-                        Type = (VariableType)Enum.Parse(typeof(VariableType), match.Groups[1].Value),
+                        Type = Enum.Parse<VariableType>(match.Groups[1].Value),
                         Name = match.Groups[2].Value
                     });
             }

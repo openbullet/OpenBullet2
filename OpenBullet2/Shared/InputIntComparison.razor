@@ -34,7 +34,7 @@
 
     private Task OnComparisonChanged(ChangeEventArgs e)
     {
-        Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), (string)e.Value);
+        Comparison = Enum.Parse<NumComparison>((string)e.Value);
         return ComparisonChanged.InvokeAsync(Comparison);
     }
 }

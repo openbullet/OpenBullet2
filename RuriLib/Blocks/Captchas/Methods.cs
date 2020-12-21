@@ -251,7 +251,7 @@ namespace RuriLib.Blocks.Captchas
                 {
                     Host = data.Proxy.Host,
                     Port = data.Proxy.Port,
-                    Type = (ProxyType)Enum.Parse(typeof(ProxyType), data.Proxy.Type.ToString()),
+                    Type = Enum.Parse<ProxyType>(data.Proxy.Type.ToString()),
                     Username = data.Proxy.Username,
                     Password = data.Proxy.Password,
                     UserAgent = userAgent,

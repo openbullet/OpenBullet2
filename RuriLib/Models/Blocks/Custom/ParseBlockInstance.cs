@@ -144,7 +144,7 @@ namespace RuriLib.Models.Blocks.Custom
                 }
 
                 else if (line.StartsWith("MODE"))
-                    Mode = (ParseMode)Enum.Parse(typeof(ParseMode), Regex.Match(line, "MODE:([A-Za-z]+)").Groups[1].Value);
+                    Mode = Enum.Parse<ParseMode>(Regex.Match(line, "MODE:([A-Za-z]+)").Groups[1].Value);
 
                 // TODO: Refactor
 
