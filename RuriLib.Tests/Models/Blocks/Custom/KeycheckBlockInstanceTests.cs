@@ -19,7 +19,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var descriptor = repo.GetAs<KeycheckBlockDescriptor>("Keycheck");
             var block = new KeycheckBlockInstance(descriptor);
 
-            var banIfNoMatch = block.Settings.First(s => s.Name == "banIfNoMatch");
+            var banIfNoMatch = block.Settings["banIfNoMatch"];
             banIfNoMatch.InputMode = SettingInputMode.Fixed;
             (banIfNoMatch.FixedSetting as BoolSetting).Value = false;
 
@@ -104,7 +104,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         [Fact]
         public void FromLC_NormalScript_BuildBlock()
         {
-            var block = new BlockFactory().GetBlock<KeycheckBlockInstance>("Keycheck");
+            var block = BlockFactory.GetBlock<KeycheckBlockInstance>("Keycheck");
             var script = "DISABLED\r\nLABEL:My Label\r\n  banIfNoMatch = False\r\n  KEYCHAIN SUCCESS OR\r\n    STRINGKEY @myString Contains \"abc\"\r\n    FLOATKEY 3 GreaterThan 1.5\r\n  KEYCHAIN FAIL AND\r\n    LISTKEY @myList Contains \"abc\"\r\n    DICTKEY @myDict HasKey \"abc\"\r\n";
             block.FromLC(ref script);
 
@@ -113,7 +113,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
 
             BlockSetting left, right;
 
-            var banIfNoMatch = block.Settings.First(s => s.Name == "banIfNoMatch");
+            var banIfNoMatch = block.Settings["banIfNoMatch"];
             Assert.False((banIfNoMatch.FixedSetting as BoolSetting).Value);
 
             var kc1 = block.Keychains[0];
@@ -172,7 +172,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var descriptor = repo.GetAs<KeycheckBlockDescriptor>("Keycheck");
             var block = new KeycheckBlockInstance(descriptor);
 
-            var banIfNoMatch = block.Settings.First(s => s.Name == "banIfNoMatch");
+            var banIfNoMatch = block.Settings["banIfNoMatch"];
             banIfNoMatch.InputMode = SettingInputMode.Variable;
             banIfNoMatch.InputVariableName = "myBool";
 
@@ -234,7 +234,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var descriptor = repo.GetAs<KeycheckBlockDescriptor>("Keycheck");
             var block = new KeycheckBlockInstance(descriptor);
 
-            var banIfNoMatch = block.Settings.First(s => s.Name == "banIfNoMatch");
+            var banIfNoMatch = block.Settings["banIfNoMatch"];
             banIfNoMatch.InputMode = SettingInputMode.Variable;
             banIfNoMatch.InputVariableName = "myBool";
 

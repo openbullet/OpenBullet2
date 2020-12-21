@@ -47,7 +47,7 @@ namespace RuriLib.Helpers.Transpilers
                     string blockId = match.Groups[1].Value;
 
                     // Create the block
-                    var block = blockFactory.GetBlock<BlockInstance>(blockId);
+                    var block = BlockFactory.GetBlock<BlockInstance>(blockId);
 
                     StringBuilder sb = new StringBuilder();
 

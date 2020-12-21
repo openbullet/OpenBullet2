@@ -9,10 +9,9 @@
 </EditForm>
 
 <h6 class="font-weight-bold fg-custom mt-3">@Loc["Settings"]:</h6>
-@foreach (var setting in Block.Settings)
-{
-    <BlockInputField BlockSetting="setting" />
-}
+<BlockInputField BlockSetting="@Block.Settings["url"]" />
+<BlockInputField BlockSetting="@Block.Settings["method"]" />
+<BlockInputField BlockSetting="@Block.Settings["autoRedirect"]" />
 
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">
     <Items>
@@ -48,6 +47,16 @@
             break;
     }
 </EditForm>
+
+<BlockInputField BlockSetting="@Block.Settings["customCookies"]" />
+<BlockInputField BlockSetting="@Block.Settings["customHeaders"]" />
+<BlockInputField BlockSetting="@Block.Settings["timeoutMilliseconds"]" />
+
+<h6 class="font-weight-bold fg-custom mt-3">@Loc["AdvancedSettings"]:</h6>
+<BlockInputField BlockSetting="@Block.Settings["httpVersion"]" />
+<BlockInputField BlockSetting="@Block.Settings["securityProtocol"]" />
+<BlockInputField BlockSetting="@Block.Settings["useCustomCipherSuites"]" />
+<BlockInputField BlockSetting="@Block.Settings["customCipherSuites"]" />
 
 <br />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />

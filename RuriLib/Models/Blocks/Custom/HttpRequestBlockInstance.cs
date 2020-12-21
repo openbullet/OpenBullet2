@@ -24,7 +24,8 @@ namespace RuriLib.Models.Blocks.Custom
             Label = descriptor.Name;
             ReadableName = descriptor.Name;
 
-            Settings = Descriptor.Parameters.Select(p => p.ToBlockSetting()).ToList();
+            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
+                .ToDictionary(p => p.Name, p => p);
         }
 
         public override string ToLC()
@@ -336,6 +337,6 @@ namespace RuriLib.Models.Blocks.Custom
         }
 
         private string GetSettingValue(string name)
-            => CSharpWriter.FromSetting(Settings.First(s => s.Name == name));
+            => CSharpWriter.FromSetting(Settings[name]);
     }
 }

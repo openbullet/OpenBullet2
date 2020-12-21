@@ -7,7 +7,7 @@ namespace RuriLib.Models.Blocks.Custom
     {
         public ScriptBlockDescriptor()
         {
-            Id = "script";
+            Id = "Script";
             Name = "Script";
             Description = "This block can invoke a script in a different language, pass some variables and return some results.";
             Category = new BlockCategory

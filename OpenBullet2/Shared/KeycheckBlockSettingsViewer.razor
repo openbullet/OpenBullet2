@@ -9,7 +9,7 @@
 </EditForm>
 
 <h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["Settings"]:</h6>
-@foreach (var setting in Block.Settings)
+@foreach (var setting in Block.Settings.Values)
 {
     <BlockInputField BlockSetting="setting" />
     <hr />

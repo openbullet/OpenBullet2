@@ -21,11 +21,11 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var descriptor = repo.GetAs<HttpRequestBlockDescriptor>("HttpRequest");
             var block = new HttpRequestBlockInstance(descriptor);
 
-            var url = block.Settings.First(s => s.Name == "url");
+            var url = block.Settings["url"];
             url.InputMode = SettingInputMode.Fixed;
             (url.FixedSetting as StringSetting).Value = "https://example.com";
 
-            var method = block.Settings.First(s => s.Name == "method");
+            var method = block.Settings["method"];
             method.InputMode = SettingInputMode.Fixed;
             (method.FixedSetting as EnumSetting).Value = "POST";
 
@@ -46,11 +46,11 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             var descriptor = repo.GetAs<HttpRequestBlockDescriptor>("HttpRequest");
             var block = new HttpRequestBlockInstance(descriptor);
 
-            var url = block.Settings.First(s => s.Name == "url");
+            var url = block.Settings["url"];
             url.InputMode = SettingInputMode.Fixed;
             (url.FixedSetting as StringSetting).Value = "https://example.com";
 
-            var method = block.Settings.First(s => s.Name == "method");
+            var method = block.Settings["method"];
             method.InputMode = SettingInputMode.Fixed;
             (method.FixedSetting as EnumSetting).Value = "POST";
 
@@ -81,14 +81,14 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         [Fact]
         public void FromLC_MultipartPost_BuildBlock()
         {
-            var block = new BlockFactory().GetBlock<HttpRequestBlockInstance>("HttpRequest");
+            var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
             var script = "  url = \"https://example.com\"\r\n  method = POST\r\n  TYPE:MULTIPART\r\n  @myBoundary\r\n  CONTENT:STRING \"stringName\" \"stringContent\" \"stringContentType\"\r\n  CONTENT:FILE \"fileName\" \"file.txt\" \"fileContentType\"\r\n";
             block.FromLC(ref script);
 
-            var url = block.Settings.First(s => s.Name == "url");
+            var url = block.Settings["url"];
             Assert.Equal("https://example.com", (url.FixedSetting as StringSetting).Value);
 
-            var method = block.Settings.First(s => s.Name == "method");
+            var method = block.Settings["method"];
             Assert.Equal("POST", (method.FixedSetting as EnumSetting).Value);
 
             Assert.IsType<MultipartRequestParams>(block.RequestParams);
@@ -115,10 +115,10 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         [Fact]
         public void ToCSharp_MultipartPost_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<HttpRequestBlockInstance>("HttpRequest");
+            var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
             var script = "  url = \"https://example.com\"\r\n  method = POST\r\n  TYPE:MULTIPART\r\n  @myBoundary\r\n  CONTENT:STRING \"stringName\" \"stringContent\" \"stringContentType\"\r\n  CONTENT:FILE \"fileName\" \"file.txt\" \"fileContentType\"\r\n";
             block.FromLC(ref script);
-            var headers = block.Settings.First(s => s.Name == "customHeaders");
+            var headers = block.Settings["customHeaders"];
             (headers.FixedSetting as DictionaryOfStringsSetting).Value.Clear(); 
 
             string expected = "await HttpRequestMultipart(data, \"https://example.com\", RuriLib.Functions.Http.HttpMethod.POST, true, RuriLib.Functions.Http.SecurityProtocol.SystemDefault, myBoundary.AsString(), new List<MyHttpContent> { new StringHttpContent(\"stringName\", \"stringContent\", \"stringContentType\"), new FileHttpContent(\"fileName\", \"file.txt\", \"fileContentType\") }, new Dictionary<string, string> {}, new Dictionary<string, string> {}, 10000, \"1.1\");\r\n";

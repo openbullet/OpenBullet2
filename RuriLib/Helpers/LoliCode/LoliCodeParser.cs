@@ -18,18 +18,19 @@ namespace RuriLib.Helpers.LoliCode
         /// Parses a setting from a LoliCode string and assigns it to the
         /// correct setting given a list of pre-initialized default settings.
         /// </summary>
-        public static void ParseSetting(ref string input, List<BlockSetting> settings, 
+        public static void ParseSetting(ref string input, Dictionary<string, BlockSetting> settings, 
             BlockDescriptor descriptor)
         {
             input = input.TrimStart();
 
             // myParam = "myValue"
             var name = LineParser.ParseToken(ref input);
-            var param = descriptor.Parameters.FirstOrDefault(p => p.Name == name);
-            var setting = settings.FirstOrDefault(s => s.Name == name);
 
-            if (param == null || setting == null)
+            if (!descriptor.Parameters.ContainsKey(name) || !settings.ContainsKey(name))
                 throw new Exception($"Incorrect setting name: {name}");
+
+            var param = descriptor.Parameters[name];
+            var setting = settings[name];
 
             input = input.TrimStart();
 

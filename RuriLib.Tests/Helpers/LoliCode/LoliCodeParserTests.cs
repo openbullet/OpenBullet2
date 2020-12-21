@@ -128,8 +128,8 @@ namespace RuriLib.Tests.Helpers.LoliCode
         [Fact]
         public void ParseSetting_FixedStringSetting_Parse()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("ParseBetweenStrings");
-            var leftDelimSetting = block.Settings.First(s => s.Name == "leftDelim");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("ParseBetweenStrings");
+            var leftDelimSetting = block.Settings["leftDelim"];
 
             string input = "leftDelim = \"myValue\"";
             LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor);
@@ -141,8 +141,8 @@ namespace RuriLib.Tests.Helpers.LoliCode
         [Fact]
         public void ParseSetting_Variable_Parse()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("ParseBetweenStrings");
-            var leftDelimSetting = block.Settings.First(s => s.Name == "leftDelim");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("ParseBetweenStrings");
+            var leftDelimSetting = block.Settings["leftDelim"];
 
             string input = "leftDelim = @myVariable";
             LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor);
@@ -153,8 +153,8 @@ namespace RuriLib.Tests.Helpers.LoliCode
         [Fact]
         public void ParseSetting_InterpolatedString_Parse()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("ParseBetweenStrings");
-            var leftDelimSetting = block.Settings.First(s => s.Name == "leftDelim");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("ParseBetweenStrings");
+            var leftDelimSetting = block.Settings["leftDelim"];
 
             string input = "leftDelim = $\"my <interp> string\"";
             LoliCodeParser.ParseSetting(ref input, block.Settings, block.Descriptor);

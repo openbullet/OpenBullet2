@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RuriLib.Helpers.Blocks
@@ -21,36 +20,22 @@ namespace RuriLib.Helpers.Blocks
     /// </summary>
     public class DescriptorsRepository
     {
-        public List<BlockDescriptor> Descriptors { get; set; } = new List<BlockDescriptor>();
+        public Dictionary<string, BlockDescriptor> Descriptors { get; set; } = new Dictionary<string, BlockDescriptor>();
 
         public DescriptorsRepository()
         {
-            AddFromExposedMethods(Assembly.GetExecutingAssembly());
-            
             // Add custom block descriptors
-            Descriptors.Add(new KeycheckBlockDescriptor());
-            Descriptors.Add(new HttpRequestBlockDescriptor());
-            Descriptors.Add(new ParseBlockDescriptor());
-            Descriptors.Add(new ScriptBlockDescriptor());
+            Descriptors["Keycheck"] = new KeycheckBlockDescriptor();
+            Descriptors["HttpRequest"] = new HttpRequestBlockDescriptor();
+            Descriptors["Parse"] = new ParseBlockDescriptor();
+            Descriptors["Script"] = new ScriptBlockDescriptor();
 
-            CheckForDuplicates();
-        }
-
-        // Checks for duplicate IDs and throws an exception if it happens
-        public void CheckForDuplicates()
-        {
-            var groups = Descriptors.GroupBy(d => d.Id);
-            if (groups.Any(g => g.Count() > 1))
-            {
-                throw new Exception("Duplicate id: " + groups.First(g => g.Count() > 1).First().Id);
-            }
+            AddFromExposedMethods(Assembly.GetExecutingAssembly());
         }
 
         public T GetAs<T>(string id) where T : BlockDescriptor
         {
-            var descriptor = Descriptors.FirstOrDefault(d => d.Id == id);
-
-            if (descriptor == null)
+            if (!Descriptors.TryGetValue(id, out BlockDescriptor descriptor))
                 throw new Exception("No descriptor was found with the given id");
 
             return descriptor as T;
@@ -78,8 +63,12 @@ namespace RuriLib.Helpers.Blocks
                     var attribute = method.GetCustomAttribute<Attributes.Block>();
                     if (attribute == null) continue;
 
+                    // Check if the descriptor already exists
+                    if (Descriptors.ContainsKey(method.Name))
+                        throw new Exception($"Duplicate descriptor id: {method.Name}");
+
                     // Add the descriptor
-                    Descriptors.Add(new AutoBlockDescriptor
+                    Descriptors[method.Name] = new AutoBlockDescriptor
                     {
                         Id = method.Name,
                         Async = method.CustomAttributes.Any(a => a.AttributeType == typeof(AsyncStateMachineAttribute)),
@@ -88,7 +77,7 @@ namespace RuriLib.Helpers.Blocks
                         Description = attribute.description ?? string.Empty,
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
                         Parameters = method.GetParameters().Where(p => p.ParameterType != typeof(BotData))
-                            .Select(p => BuildBlockParameter(p)).ToArray(),
+                            .Select(p => BuildBlockParameter(p)).ToDictionary(p => p.Name, p => p),
                         ReturnType = ToVariableType(method.ReturnType),
                         Category = new BlockCategory
                         {
@@ -99,11 +88,9 @@ namespace RuriLib.Helpers.Blocks
                             ForegroundColor = category.foregroundColor,
                             BackgroundColor = category.backgroundColor
                         }
-                    });
+                    };
                 }
             }
-
-            CheckForDuplicates();
         }
 
         private BlockParameter BuildBlockParameter(ParameterInfo info)
@@ -241,7 +228,7 @@ namespace RuriLib.Helpers.Blocks
 
             // Add all descriptors as children of the root node (we need the ToList() in order to have
             // a new pointer to list and not operate on the same one Descriptors uses, since we will be removing items)
-            root.Descriptors = Descriptors.ToList();
+            root.Descriptors = Descriptors.Values.ToList();
 
             // Push leaves down
             PushLeaves(root, 0);

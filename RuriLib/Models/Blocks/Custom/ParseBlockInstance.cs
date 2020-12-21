@@ -52,8 +52,6 @@ namespace RuriLib.Models.Blocks.Custom
             Label = descriptor.Name;
             ReadableName = descriptor.Name;
             Input.InputVariableName = "data.SOURCE";
-
-            Settings = new List<BlockSetting>();
         }
 
         public override string ToLC()

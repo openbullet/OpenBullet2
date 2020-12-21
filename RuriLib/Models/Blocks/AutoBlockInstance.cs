@@ -33,7 +33,8 @@ namespace RuriLib.Models.Blocks
             OutputVariable = descriptor.Id.Substring(0, 1).ToLower() + descriptor.Id.Substring(1) + "Output";
 
             // Here convert parameters to settings
-            Settings = descriptor.Parameters.Select(p => p.ToBlockSetting()).ToList();
+            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
+                .ToDictionary(p => p.Name, p => p);
         }
 
         public override string ToLC()
@@ -120,7 +121,7 @@ namespace RuriLib.Models.Blocks
 
             // Append MethodName(data, param1, "param2", param3);
             var parameters = new List<string> { "data" }
-                .Concat(Settings.Select(s => CSharpWriter.FromSetting(s)));
+                .Concat(Settings.Values.Select(s => CSharpWriter.FromSetting(s)));
 
             writer.WriteLine($"{Descriptor.Id}({string.Join(", ", parameters)});");
 

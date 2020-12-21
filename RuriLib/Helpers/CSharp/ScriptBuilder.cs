@@ -57,7 +57,7 @@ namespace RuriLib.Helpers.CSharp
                 "Jering.Javascript.NodeJS",
                 "Jint"
             };
-            usings.AddRange(Globals.DescriptorsRepository.Descriptors.Select(d => d.Category.Namespace).Distinct());
+            usings.AddRange(Globals.DescriptorsRepository.Descriptors.Values.Select(d => d.Category.Namespace).Distinct());
             return usings;
         }
     }

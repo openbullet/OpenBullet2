@@ -16,11 +16,9 @@ namespace RuriLib.Helpers.Blocks
         /// <summary>
         /// Gets a block by <paramref name="id"/> and casts it to the requested type.
         /// </summary>
-        public T GetBlock<T>(string id) where T : BlockInstance
+        public static T GetBlock<T>(string id) where T : BlockInstance
         {
-            var descriptor = Globals.DescriptorsRepository.Descriptors.FirstOrDefault(d => d.Id == id);
-
-            if (descriptor == null)
+            if (!Globals.DescriptorsRepository.Descriptors.TryGetValue(id, out BlockDescriptor descriptor))
                 throw new Exception($"Invalid block id: {id}");
 
             BlockInstance instance = descriptor switch

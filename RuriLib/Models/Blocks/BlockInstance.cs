@@ -15,7 +15,7 @@ namespace RuriLib.Models.Blocks
         public bool Disabled { get; set; } = false;
         public string Label { get; set; }
         public string ReadableName { get; protected set; }
-        public List<BlockSetting> Settings { get; protected set; } = new List<BlockSetting>();
+        public Dictionary<string, BlockSetting> Settings { get; protected set; } = new Dictionary<string, BlockSetting>();
         public BlockDescriptor Descriptor { get; protected set; }
 
         public virtual string ToLC()
@@ -35,14 +35,12 @@ namespace RuriLib.Models.Blocks
                 writer.WriteLine($"LABEL:{Label}");
 
             // Write all the settings
-            foreach (var setting in Settings)
+            foreach (var setting in Settings.Values)
             {
-                var param = Descriptor.Parameters.FirstOrDefault(p => p.Name == setting.Name);
-
-                if (param == null)
+                if (!Descriptor.Parameters.ContainsKey(setting.Name))
                     throw new Exception($"This setting is not a valid input parameter: {setting.Name}");
 
-                writer.AppendSetting(setting, param);
+                writer.AppendSetting(setting, Descriptor.Parameters[setting.Name]);
             }
 
             return writer.ToString();

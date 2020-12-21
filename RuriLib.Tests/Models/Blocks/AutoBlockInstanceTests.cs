@@ -14,14 +14,14 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void ToLC_ParseLRBlock_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("Substring");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             block.OutputVariable = "myOutput";
             block.IsCapture = false;
             block.Disabled = true;
             block.Label = "My Label";
-            var input = block.Settings[0];
-            var index = block.Settings[1];
-            var length = block.Settings[2];
+            var input = block.Settings["input"];
+            var index = block.Settings["index"];
+            var length = block.Settings["length"];
 
             input.InputMode = SettingInputMode.Variable;
             input.InputVariableName = "myInput";
@@ -38,7 +38,7 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void FromLC_ParseLRBlock_BuildBlock()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("Substring");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             var script = "DISABLED\r\nLABEL:My Label\r\n  input = @myInput\r\n  index = 3\r\n  => CAP @myOutput\r\n";
             block.FromLC(ref script);
 
@@ -47,9 +47,9 @@ namespace RuriLib.Tests.Models.Blocks
             Assert.Equal("myOutput", block.OutputVariable);
             Assert.True(block.IsCapture);
 
-            var input = block.Settings.First(s => s.Name == "input");
-            var index = block.Settings.First(s => s.Name == "index");
-            var length = block.Settings.First(s => s.Name == "length");
+            var input = block.Settings["input"];
+            var index = block.Settings["index"];
+            var length = block.Settings["length"];
 
             Assert.Equal(SettingInputMode.Variable, input.InputMode);
             Assert.Equal("myInput", input.InputVariableName);
@@ -60,11 +60,11 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void ToCSharp_SyncReturnValue_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("Substring");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             block.OutputVariable = "myOutput";
-            var input = block.Settings[0];
-            var index = block.Settings[1];
-            var length = block.Settings[2];
+            var input = block.Settings["input"];
+            var index = block.Settings["index"];
+            var length = block.Settings["length"];
 
             input.InputMode = SettingInputMode.Variable;
             input.InputVariableName = "myInput";
@@ -84,12 +84,12 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void ToCSharp_SyncReturnValueCapture_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("Substring");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             block.OutputVariable = "myOutput";
             block.IsCapture = true;
-            var input = block.Settings[0];
-            var index = block.Settings[1];
-            var length = block.Settings[2];
+            var input = block.Settings["input"];
+            var index = block.Settings["index"];
+            var length = block.Settings["length"];
 
             input.InputMode = SettingInputMode.Variable;
             input.InputVariableName = "myInput";
@@ -109,11 +109,11 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void ToCSharp_AsyncNoReturnValue_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("TcpConnect");
-            var url = block.Settings[0];
-            var port = block.Settings[1];
-            var ssl = block.Settings[2];
-            var timeout = block.Settings[3];
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("TcpConnect");
+            var url = block.Settings["url"];
+            var port = block.Settings["port"];
+            var ssl = block.Settings["ssl"];
+            var timeout = block.Settings["timeout"];
 
             (url.FixedSetting as StringSetting).Value = "example.com";
             (port.FixedSetting as IntSetting).Value = 80;
@@ -129,11 +129,11 @@ namespace RuriLib.Tests.Models.Blocks
         [Fact]
         public void ToCSharp_SyncReturnValueAlreadyDeclared_OutputScript()
         {
-            var block = new BlockFactory().GetBlock<AutoBlockInstance>("Substring");
+            var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             block.OutputVariable = "myOutput";
-            var input = block.Settings[0];
-            var index = block.Settings[1];
-            var length = block.Settings[2];
+            var input = block.Settings["input"];
+            var index = block.Settings["index"];
+            var length = block.Settings["length"];
 
             input.InputMode = SettingInputMode.Interpolated;
             input.InterpolatedSetting = new InterpolatedStringSetting { Value = "my <interp> string" };

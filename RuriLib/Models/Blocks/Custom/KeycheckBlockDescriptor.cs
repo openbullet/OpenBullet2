@@ -1,4 +1,5 @@
 ﻿using RuriLib.Models.Blocks.Parameters;
+using System.Collections.Generic;
 
 namespace RuriLib.Models.Blocks.Custom
 {
@@ -18,9 +19,9 @@ namespace RuriLib.Models.Blocks.Custom
                 Namespace = "RuriLib.Functions.Conditions",
                 Description = "Blocks that have to do with checking conditions"
             };
-            Parameters = new BlockParameter[]
+            Parameters = new Dictionary<string, BlockParameter>
             {
-                new BoolParameter { Name = "banIfNoMatch", DefaultValue = true }
+                { "banIfNoMatch", new BoolParameter { Name = "banIfNoMatch", DefaultValue = true } }
             };
         }
     }

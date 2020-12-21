@@ -45,7 +45,7 @@ namespace OpenBullet2.Pages
 
         private async Task AddBlock(BlockDescriptor descriptor)
         {
-            selectedBlock = new BlockFactory().GetBlock<BlockInstance>(descriptor.Id);
+            selectedBlock = BlockFactory.GetBlock<BlockInstance>(descriptor.Id);
             config.Stack.Add(selectedBlock);
             await OBLogger.LogInfo($"Added block {descriptor.Id}");
         }
