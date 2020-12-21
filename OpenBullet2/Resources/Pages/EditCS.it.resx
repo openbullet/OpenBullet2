@@ -124,7 +124,7 @@
     <value>Una volta che converti la config in una config C#, non potrai più editarla in Stacker! Sei davvero, DAVVERO sicuro/a di sapere quello che stai facendo?</value>
   </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convert in config C#</value>
+    <value>Converti in config C#</value>
   </data>
   <data name="CSharpEditor" xml:space="preserve">
     <value>Editor C#</value>
