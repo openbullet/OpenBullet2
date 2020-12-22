@@ -83,17 +83,19 @@ namespace RuriLib.Helpers.Transpilers
                     sb.Append(line);
 
                     // As long as we don't find a BLOCK directive, add lines to the StringBuilder
-                    while (lineNumber < lines.Length)
+                    while (localLineNumber < lines.Length)
                     {
-                        sb.AppendLine();
-                        line = lines[lineNumber];
+                        sb.AppendLine(); // Print a newline character
+                        line = lines[localLineNumber];
                         trimmedLine = line.Trim();
                         lineNumber++;
+                        localLineNumber++;
 
                         // If we find a block directive, stop reading lines without consuming it
                         if (trimmedLine.StartsWith("BLOCK:"))
                         {
                             lineNumber--;
+                            localLineNumber--;
                             break;
                         }
 
