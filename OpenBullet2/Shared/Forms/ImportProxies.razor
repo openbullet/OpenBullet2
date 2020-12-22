@@ -1,5 +1,4 @@
-﻿@using BlazorInputFile
-@using RuriLib.Models.Proxies
+﻿@using RuriLib.Models.Proxies
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ImportProxies> Loc
 
 <div class="mb-2">
@@ -13,7 +12,7 @@
             </RadzenTabsItem>
             <RadzenTabsItem Text="@Loc["File"]">
                 <EditForm Model="fileName">
-                    <BlazorInputFile.InputFile OnChange="ProcessFile" />
+                    <InputFile OnChange="@ProcessFile" multiple />
                     <button type="submit" class="btn btn-outline-success" @onclick="ImportFromFile">@Loc["Import"]</button>
                 </EditForm>
             </RadzenTabsItem>

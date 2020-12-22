@@ -1,7 +1,7 @@
 ﻿using Jering.Javascript.NodeJS;
 using Jint;
 using Microsoft.Scripting.Hosting;
-using PluginFramework.Attributes;
+using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System.Diagnostics;

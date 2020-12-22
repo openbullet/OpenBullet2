@@ -22,13 +22,15 @@ namespace OpenBullet2.Models.Jobs
         private readonly DataPoolFactoryService dataPoolFactory;
         private readonly ProxyReloadService proxyReloadService;
         private readonly IRandomUAProvider randomUAProvider;
+        private readonly PluginRepository pluginRepo;
 
-        public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService,
+        public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
             IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
             ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider)
         {
             this.configService = configService;
             this.settingsService = settingsService;
+            this.pluginRepo = pluginRepo;
             this.hitRepo = hitRepo;
             this.proxySourceFactory = proxySourceFactory;
             this.dataPoolFactory = dataPoolFactory;
@@ -60,7 +62,7 @@ namespace OpenBullet2.Models.Jobs
 
             var hitOutputsFactory = new HitOutputFactory(hitRepo);
 
-            var job = new MultiRunJob(settingsService)
+            var job = new MultiRunJob(settingsService, pluginRepo)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
@@ -79,7 +81,7 @@ namespace OpenBullet2.Models.Jobs
 
         private ProxyCheckJob MakeProxyCheckJob(ProxyCheckJobOptions options)
         {
-            var job = new ProxyCheckJob(settingsService)
+            var job = new ProxyCheckJob(settingsService, pluginRepo)
             {
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,

@@ -4,7 +4,7 @@ namespace RuriLib.Models.Jobs
 {
     public class RipJob : Job
     {
-        public RipJob(RuriLibSettingsService settings) : base(settings)
+        public RipJob(RuriLibSettingsService settings, PluginRepository pluginRepo) : base(settings, pluginRepo)
         {
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using PluginFramework.Attributes;
+using RuriLib.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

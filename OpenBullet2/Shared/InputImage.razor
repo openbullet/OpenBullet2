@@ -1,11 +1,10 @@
 ﻿@using OpenBullet2.Helpers
-@using BlazorInputFile
 @using System.IO
 @inject Microsoft.Extensions.Localization.IStringLocalizer<InputImage> Loc
 
 <div>
     <div>
-        <BlazorInputFile.InputFile OnChange="HandleSelection" />
+        <InputFile OnChange="@HandleSelection" />
     </div>
 </div>
 
@@ -27,16 +26,19 @@
     [Parameter] public int MaxHeight { get; set; } = 110;
     [Parameter] public EventCallback<string> Base64Changed { get; set; }
 
-    async Task HandleSelection(IFileListEntry[] files)
+    async Task HandleSelection(InputFileChangeEventArgs e)
     {
-        var file = files.FirstOrDefault();
-        if (file != null)
+        if (e.FileCount == 0)
+            return;
+
+        try
         {
             byte[] buffer = new byte[4 * 1024];
 
             using (var ms = new MemoryStream())
             {
-                await file.Data.CopyToAsync(ms);
+                // Support maximum 5 MB for file upload
+                await e.File.OpenReadStream(5 * 1000 * 1000).CopyToAsync(ms);
                 var bytes = ms.ToArray();
 
                 var resize = false;
@@ -55,6 +57,10 @@
                 await Base64Changed.InvokeAsync(Base64);
                 StateHasChanged();
             }
+        }
+        catch (Exception ex)
+        {
+            await js.AlertError(ex.GetType().Name, ex.Message);
         }
     }
 }

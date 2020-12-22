@@ -78,7 +78,7 @@ namespace OpenBullet2
             services.AddSingleton<JobMonitorService>();
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
-            services.AddSingleton<PluginsRepository>();
+            services.AddSingleton<PluginRepository>();
             services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();
 
             // Transient

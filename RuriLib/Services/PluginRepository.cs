@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace RuriLib.Services
 {
-    public class PluginsRepository
+    public class PluginRepository
     {
         private readonly AppDomain domain = AppDomain.CurrentDomain;
         private readonly string baseFolder = "Plugins";
 
-        public PluginsRepository()
+        public PluginRepository()
         {
             // Create the base folder if it doesn't exist
             Directory.CreateDirectory(baseFolder);
@@ -44,6 +44,16 @@ namespace RuriLib.Services
             => GetPluginNames().Select(p => Path.Combine(baseFolder, p));
 
         /// <summary>
+        /// Retrieves the assemblies of all plugins and their references.
+        /// </summary>
+        public IEnumerable<Assembly> GetPluginsAndReferences()
+            => GetReferences(GetPlugins());
+
+        // Builds a list of assemblies and their references recursively
+        private IEnumerable<Assembly> GetReferences(IEnumerable<Assembly> assemblies)
+            => assemblies.Concat(GetReferences(assemblies.SelectMany(a => a.GetReferencedAssemblies()).Select(n => Assembly.Load(n))));
+
+        /// <summary>
         /// Adds a plugin from a .zip file.
         /// </summary>
         public void AddPlugin(Stream stream)
@@ -51,7 +61,7 @@ namespace RuriLib.Services
             using var archive = new ZipArchive(stream, ZipArchiveMode.Read, false);
 
            // Make sure there's at least one .dll in the root of the archive
-            if (archive.Entries.Any(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".dll")))
+            if (!archive.Entries.Any(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".dll")))
                 throw new FileNotFoundException("No dll file found in the root of the provided archive!");
 
             archive.ExtractToDirectory(baseFolder);

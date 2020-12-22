@@ -32,6 +32,8 @@ namespace RuriLib.Helpers.Blocks
         /// </summary>
         public void Recreate()
         {
+            Descriptors.Clear();
+
             // Add custom block descriptors
             Descriptors["Keycheck"] = new KeycheckBlockDescriptor();
             Descriptors["HttpRequest"] = new HttpRequestBlockDescriptor();
@@ -60,7 +62,7 @@ namespace RuriLib.Helpers.Blocks
             foreach (var type in types)
             {
                 // Check if the type has a BlockCategory attribute
-                var category = type.GetCustomAttribute<PluginFramework.Attributes.BlockCategory>();
+                var category = type.GetCustomAttribute<Attributes.BlockCategory>();
                 if (category == null) continue;
 
                 // Get the methods in the type
@@ -68,7 +70,7 @@ namespace RuriLib.Helpers.Blocks
                 foreach (var method in methods)
                 {
                     // Check if the methods has a Block attribute
-                    var attribute = method.GetCustomAttribute<PluginFramework.Attributes.Block>();
+                    var attribute = method.GetCustomAttribute<Attributes.Block>();
                     if (attribute == null) continue;
 
                     // Check if the descriptor already exists
@@ -104,8 +106,8 @@ namespace RuriLib.Helpers.Blocks
         private static BlockParameter BuildBlockParameter(ParameterInfo info)
         {
             var parameter = ToBlockParameter(info);
-            var variableParam = info.GetCustomAttribute<PluginFramework.Attributes.Variable>();
-            var interpParam = info.GetCustomAttribute<PluginFramework.Attributes.Interpolated>();
+            var variableParam = info.GetCustomAttribute<Attributes.Variable>();
+            var interpParam = info.GetCustomAttribute<Attributes.Interpolated>();
 
             if (variableParam != null)
             {

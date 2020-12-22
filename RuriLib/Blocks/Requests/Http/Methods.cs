@@ -1,4 +1,4 @@
-﻿using PluginFramework.Attributes;
+﻿using RuriLib.Attributes;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
 using RuriLib.Helpers;

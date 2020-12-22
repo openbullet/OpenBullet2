@@ -1,5 +1,5 @@
 ﻿using AngleSharp.Dom;
-using PluginFramework.Attributes;
+using RuriLib.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using PluginFramework.Attributes;
+﻿using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System.Collections.Generic;

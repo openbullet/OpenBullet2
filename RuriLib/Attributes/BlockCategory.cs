@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PluginFramework.Attributes
+namespace RuriLib.Attributes
 {
     /// <summary>
     /// Attribute used to decorate a class that contains methods decorated with the <see cref="Block"/> attribute.

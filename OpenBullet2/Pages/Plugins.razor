@@ -1,0 +1,43 @@
+﻿@page "/plugins"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Plugins> Loc
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-primary" @onclick="@(() => uploadDisplay = !uploadDisplay)"><span class="oi oi-plus"> @Loc["Add"]</span></button>
+        </div>
+    </div>
+
+    @if (uploadDisplay)
+    {
+        <div class="row">
+            <InputFile OnChange="@ProcessUploadedPlugins" multiple />
+        </div>
+    }
+
+    @foreach (var plugin in PluginRepo.GetPluginNames())
+    {
+        <div class="row mt-sm-2 mt-3">
+            <div class="col-sm align-self-stretch d-flex plugin-info align-items-center">
+                <span>@plugin</span>
+            </div>
+            <div class="col-sm-auto d-flex justify-content-around">
+                <button class="btn btn-outline-danger ml-1 w-100" @onclick="(() => PluginRepo.DeletePlugin(plugin))" @onclick:stopPropagation="true">
+                    <span class="oi oi-x" title="@Loc["Remove"]"></span>
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+<BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />
+
+@code {
+    bool uploadDisplay = false;
+
+    string help1x00 => Loc["Help1x00"];
+    string help1x01 => Loc["Help1x01"];
+    string help1x02 => Loc["Help1x02"];
+}

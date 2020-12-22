@@ -117,79 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="AwwYeah" xml:space="preserve">
-    <value>Aww yeah!</value>
+  <data name="AllDone" xml:space="preserve">
+    <value>All done</value>
   </data>
-  <data name="ChooseYourLanguage" xml:space="preserve">
-    <value>Choose your language</value>
+  <data name="Help1x00" xml:space="preserve">
+    <value>How to add and use plugins</value>
   </data>
-  <data name="Configs" xml:space="preserve">
-    <value>Configs</value>
+  <data name="Help1x01" xml:space="preserve">
+    <value>%Plugins% come as %.zip archives% that contain one or more libraries and their dependencies. They allow you to expand the functionalities of OpenBullet by %adding new blocks%. You can upload plugins by clicking on the %Add% button above. Once they are added, plugins reside in the %Plugins% folder inside the base folder of OpenBullet. You can add blocks from plugins to your configs by navigating to the top level category in the %Available Blocks% and selecting the name of the plugin you intend to use.</value>
   </data>
-  <data name="CSharpCode" xml:space="preserve">
-    <value>C# Code</value>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Plugins can be deleted by clicking on the %Remove% button next to them. The files will be deleted from the %Plugins% folder so make sure you have a backup copy! It is recommended that you stop all jobs before removing plugins. Mind that once you remove a plugin, configs that have blocks from that plugin will probably stop working.</value>
   </data>
-  <data name="Guests" xml:space="preserve">
-    <value>Guests</value>
+  <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
+    <value>Plugins successfully uploaded</value>
   </data>
-  <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="InvalidLolicode" xml:space="preserve">
-    <value>Cannot save: invalid LoliCode!</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
-  </data>
-  <data name="LoliCode" xml:space="preserve">
-    <value>LoliCode</value>
-  </data>
-  <data name="Metadata" xml:space="preserve">
-    <value>Metadata</value>
-  </data>
-  <data name="Monitor" xml:space="preserve">
-    <value>Monitor</value>
-  </data>
-  <data name="NoConfigSelected" xml:space="preserve">
-    <value>No config selected</value>
-  </data>
-  <data name="OBSettings" xml:space="preserve">
-    <value>OB Settings</value>
-  </data>
-  <data name="Plugins" xml:space="preserve">
-    <value>Plugins</value>
-  </data>
-  <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
-  </data>
-  <data name="Readme" xml:space="preserve">
-    <value>Readme</value>
-  </data>
-  <data name="RLSettings" xml:space="preserve">
-    <value>RL Settings</value>
-  </data>
-  <data name="SaveConfig" xml:space="preserve">
-    <value>Save Config</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="Stacker" xml:space="preserve">
-    <value>Stacker</value>
-  </data>
-  <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
-  </data>
-  <data name="wasSavedSuccessfully" xml:space="preserve">
-    <value>was saved successfully!</value>
-  </data>
-  <data name="Wordlists" xml:space="preserve">
-    <value>Wordlists</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
   </data>
 </root>

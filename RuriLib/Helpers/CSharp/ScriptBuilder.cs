@@ -6,6 +6,7 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Variables;
+using RuriLib.Services;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
@@ -21,21 +22,28 @@ namespace RuriLib.Helpers.CSharp
         private StringWriter preScript = new StringWriter();
         private StringWriter postScript = new StringWriter();
 
-        public Script Build(string cSharpScript, ScriptSettings settings)
+        public Script Build(string cSharpScript, ScriptSettings settings, PluginRepository pluginRepo)
         {
             var ruriLib = Assembly.GetAssembly(typeof(ScriptBuilder));
-            var references = ruriLib.GetReferencedAssemblies();
-
+            var plugins = pluginRepo.GetPlugins();
+            
             var script =
                 CSharpScript.Create(
                     code: preScript.ToString() + cSharpScript + postScript.ToString(),
                     options: ScriptOptions.Default
-                        .WithReferences(ruriLib)
-                        .WithImports(settings.CustomUsings != null ? GetUsings().Concat(settings.CustomUsings) : GetUsings()),
+                        .WithReferences(new Assembly[] { ruriLib }.Concat(plugins))
+                        .WithImports(settings.CustomUsings == null ? GetUsings() : GetUsings().Concat(settings.CustomUsings)),
                     globalsType: typeof(ScriptGlobals));
 
+            // Add references from RuriLib
+            var ruriLibReferences = ruriLib.GetReferencedAssemblies();
             script.Options.AddReferences(AppDomain.CurrentDomain.GetAssemblies()
-                    .Where(a => references.Any(r => r.FullName == a.FullName)));
+                .Where(a => ruriLibReferences.Any(r => r.FullName == a.FullName)));
+
+            // Add references from plugins
+            var pluginReferences = plugins.SelectMany(p => p.GetReferencedAssemblies());
+            script.Options.AddReferences(AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => pluginReferences.Any(p => p.FullName == a.FullName)));
 
             return script;
         }

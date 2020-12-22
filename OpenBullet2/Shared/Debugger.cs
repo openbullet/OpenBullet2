@@ -34,6 +34,7 @@ namespace OpenBullet2.Shared
         [Inject] IModalService Modal { get; set; }
         [Inject] IRandomUAProvider RandomUAProvider { get; set; }
         [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
+        [Inject] PluginRepository PluginRepo { get; set; }
         [Inject] VolatileSettingsService VolatileSettings { get; set; }
 
         [Parameter] public Config Config { get; set; }
@@ -95,7 +96,7 @@ namespace OpenBullet2.Shared
             data.Objects.Add("ironPyEngine", pyengine);
 
             var script = new ScriptBuilder()
-                .Build(Config.CSharpScript, Config.Settings.ScriptSettings);
+                .Build(Config.CSharpScript, Config.Settings.ScriptSettings, PluginRepo);
 
             logger.Log($"Sliced {dataLine.Data} into:");
             foreach (var slice in dataLine.GetVariables())

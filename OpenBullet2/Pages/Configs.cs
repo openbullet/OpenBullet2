@@ -1,6 +1,6 @@
 ﻿using BlazorDownloadFile;
-using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
@@ -105,22 +105,29 @@ namespace OpenBullet2.Pages
             Nav.NavigateTo(uri);
         }
 
-        private async Task ProcessUploadedConfigs(IFileListEntry[] files)
+        private async Task ProcessUploadedConfigs(InputFileChangeEventArgs e)
         {
-            if (files.Length == 0)
+            if (e.FileCount == 0)
                 return;
 
             try
             {
-                foreach (var file in files)
+                // Support maximum 5000 files at a time
+                foreach (var file in e.GetMultipleFiles(5000))
                 {
-                    using var reader = new StreamReader(file.Data);
+                    // Support maximum 5 MB per file
+                    var stream = file.OpenReadStream(5 * 1000 * 1000);
+
+                    // Copy the content to a MemoryStream
+                    using var reader = new StreamReader(stream);
                     var ms = new MemoryStream();
-                    await file.Data.CopyToAsync(ms);
+                    await stream.CopyToAsync(ms);
+
+                    // Upload it to the repo
                     await ConfigRepo.Upload(ms);
                 }
 
-                await js.AlertSuccess(Loc["AllDone"], $"{Loc["ConfigsSuccessfullyUploaded"]}: {files.Length}");
+                await js.AlertSuccess(Loc["AllDone"], $"{Loc["ConfigsSuccessfullyUploaded"]}: {e.FileCount}");
             }
             catch (Exception ex)
             {

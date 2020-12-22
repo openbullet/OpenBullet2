@@ -1,5 +1,5 @@
 ﻿using IronPython.Runtime;
-using PluginFramework.Attributes;
+using RuriLib.Attributes;
 using RuriLib.Functions.Puppeteer;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
