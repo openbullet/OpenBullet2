@@ -1,4 +1,4 @@
-﻿using RuriLib.Attributes;
+﻿using PluginFramework.Attributes;
 using RuriLib.Extensions;
 using System;
 using System.Linq;

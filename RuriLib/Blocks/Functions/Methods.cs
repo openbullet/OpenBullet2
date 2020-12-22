@@ -1,4 +1,4 @@
-﻿using RuriLib.Attributes;
+﻿using PluginFramework.Attributes;
 using RuriLib.Models.Bots;
 using RuriLib.Models.UserAgents;
 

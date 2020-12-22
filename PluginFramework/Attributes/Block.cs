@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RuriLib.Attributes
+namespace PluginFramework.Attributes
 {
     /// <summary>
     /// Attribute used to decorate a method that can be turned into an auto block.

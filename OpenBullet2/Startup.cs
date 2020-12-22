@@ -22,6 +22,8 @@ using RuriLib.Models.UserAgents;
 using OpenBullet2.Helpers;
 using System;
 using OpenBullet2.Logging;
+using RuriLib.Helpers.Blocks;
+using System.IO;
 
 namespace OpenBullet2
 {
@@ -76,6 +78,7 @@ namespace OpenBullet2
             services.AddSingleton<JobMonitorService>();
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
+            services.AddSingleton<PluginsRepository>();
             services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();
 
             // Transient

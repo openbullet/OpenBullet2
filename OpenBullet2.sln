@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib", "RuriLib\RuriLib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Tests", "RuriLib.Tests\RuriLib.Tests.csproj", "{3FFDD478-98AE-4855-90EF-7A8C9250B004}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginFramework", "PluginFramework\PluginFramework.csproj", "{22D5A8EE-D35D-48A2-BBF6-A61825DDF12A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D5A8EE-D35D-48A2-BBF6-A61825DDF12A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D5A8EE-D35D-48A2-BBF6-A61825DDF12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D5A8EE-D35D-48A2-BBF6-A61825DDF12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D5A8EE-D35D-48A2-BBF6-A61825DDF12A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

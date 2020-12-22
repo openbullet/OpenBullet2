@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RuriLib.Attributes
+namespace PluginFramework.Attributes
 {
     /// <summary>
     /// Attribute used to decorate parameters of a block method to indicate it should be initialized

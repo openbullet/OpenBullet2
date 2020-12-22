@@ -1,4 +1,4 @@
-﻿using RuriLib.Attributes;
+﻿using PluginFramework.Attributes;
 using RuriLib.Functions.Time;
 using RuriLib.Models.Bots;
 using System;

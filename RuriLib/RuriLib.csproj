@@ -33,4 +33,8 @@
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PluginFramework\PluginFramework.csproj" />
+  </ItemGroup>
+
 </Project>

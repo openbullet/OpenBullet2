@@ -1,7 +1,7 @@
 ﻿using CaptchaSharp;
 using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
-using RuriLib.Attributes;
+using PluginFramework.Attributes;
 using RuriLib.Functions.Captchas;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;

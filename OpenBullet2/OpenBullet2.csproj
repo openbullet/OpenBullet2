@@ -65,6 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PluginFramework\PluginFramework.csproj" />
     <ProjectReference Include="..\RuriLib.Tests\RuriLib.Tests.csproj" />
     <ProjectReference Include="..\RuriLib\RuriLib.csproj" />
   </ItemGroup>

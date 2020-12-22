@@ -1,5 +1,5 @@
 ﻿using PuppeteerSharp;
-using RuriLib.Attributes;
+using PluginFramework.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
