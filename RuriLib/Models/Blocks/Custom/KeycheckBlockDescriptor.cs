@@ -21,7 +21,7 @@ namespace RuriLib.Models.Blocks.Custom
             };
             Parameters = new Dictionary<string, BlockParameter>
             {
-                { "banIfNoMatch", new BoolParameter { Name = "banIfNoMatch", DefaultValue = true } }
+                { "banIfNoMatch", new BoolParameter("banIfNoMatch", true) }
             };
         }
     }

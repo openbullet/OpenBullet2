@@ -93,7 +93,7 @@ namespace RuriLib.Helpers.Blocks
             }
         }
 
-        private BlockParameter BuildBlockParameter(ParameterInfo info)
+        private static BlockParameter BuildBlockParameter(ParameterInfo info)
         {
             var parameter = ToBlockParameter(info);
             var variableParam = info.GetCustomAttribute<Attributes.Variable>();

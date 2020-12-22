@@ -31,27 +31,27 @@
 <br />
 
 <EditForm Model="Block">
-    <BlockInputField BlockSetting="Block.Input" />
+    <BlockInputField BlockSetting="@Block.Settings["input"]" />
     @switch (Block.Mode)
     {
         case ParseMode.LR:
-            <BlockInputField BlockSetting="Block.LeftDelim" />
-            <BlockInputField BlockSetting="Block.RightDelim" />
-            <BlockInputField BlockSetting="Block.CaseSensitive" />
+            <BlockInputField BlockSetting="@Block.Settings["leftDelim"]" />
+            <BlockInputField BlockSetting="@Block.Settings["rightDelim"]" />
+            <BlockInputField BlockSetting="@Block.Settings["caseSensitive"]" />
             break;
 
         case ParseMode.CSS:
-            <BlockInputField BlockSetting="Block.CssSelector" />
-            <BlockInputField BlockSetting="Block.AttributeName" />
+            <BlockInputField BlockSetting="@Block.Settings["cssSelector"]" />
+            <BlockInputField BlockSetting="@Block.Settings["attributeName"]" />
             break;
 
         case ParseMode.Json:
-            <BlockInputField BlockSetting="Block.JToken" />
+            <BlockInputField BlockSetting="@Block.Settings["jToken"]" />
             break;
 
         case ParseMode.Regex:
-            <BlockInputField BlockSetting="Block.Pattern" />
-            <BlockInputField BlockSetting="Block.OutputFormat" />
+            <BlockInputField BlockSetting="@Block.Settings["pattern"]" />
+            <BlockInputField BlockSetting="@Block.Settings["outputFormat"]" />
             break;
     }
 </EditForm>

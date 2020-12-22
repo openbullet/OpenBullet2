@@ -40,7 +40,8 @@ namespace RuriLib.Tests.Models.Blocks
         {
             var block = BlockFactory.GetBlock<AutoBlockInstance>("Substring");
             var script = "DISABLED\r\nLABEL:My Label\r\n  input = @myInput\r\n  index = 3\r\n  => CAP @myOutput\r\n";
-            block.FromLC(ref script);
+            int lineNumber = 0;
+            block.FromLC(ref script, ref lineNumber);
 
             Assert.True(block.Disabled);
             Assert.Equal("My Label", block.Label);

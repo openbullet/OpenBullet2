@@ -193,5 +193,20 @@ namespace RuriLib.Extensions
             }
             return count;
         }
+
+        /// <summary>
+        /// Truncates the <paramref name="input"/> to the <paramref name="maxLength"/> and adds [...]
+        /// (only if the string is longer than <paramref name="maxLength"/>).
+        /// </summary>
+        public static string TruncatePretty(this string input, int maxLength)
+            => input.Length <= maxLength
+                ? input
+                : input.Substring(0, maxLength) + " [...]";
+
+        /// <summary>
+        /// Counts the lines (amount of \r\n and \n) in a given string.
+        /// </summary>
+        public static int CountLines(this string input)
+            => input.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
     }
 }

@@ -1,4 +1,6 @@
-﻿using RuriLib.Functions.Conversion;
+﻿using RuriLib.Exceptions;
+using RuriLib.Extensions;
+using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Crypto;
 using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
@@ -32,11 +34,9 @@ namespace RuriLib.Models.Blocks.Custom
         public Interpreter Interpreter { get; set; } = Interpreter.Jint;
 
         public ScriptBlockInstance(ScriptBlockDescriptor descriptor)
+            : base(descriptor)
         {
-            Descriptor = descriptor;
-            Id = descriptor.Id;
-            Label = descriptor.Name;
-            ReadableName = descriptor.Name;
+            
         }
 
         public override string ToLC()
@@ -64,22 +64,47 @@ namespace RuriLib.Models.Blocks.Custom
         }
 
 
-        public override void FromLC(ref string script)
+        public override void FromLC(ref string script, ref int lineNumber)
         {
             // First parse the options that are common to every BlockInstance
-            base.FromLC(ref script);
+            base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
             using var writer = new StringWriter();
             string line;
 
-            Interpreter = Enum.Parse<Interpreter>(Regex.Match(reader.ReadLine(), "INTERPRETER:([^ ]+)$").Groups[1].Value);
-            InputVariables = Regex.Match(reader.ReadLine(), "INPUT ([^ ]+)$").Groups[1].Value;
-            
+            // Parse the interpreter
+            line = reader.ReadLine();
+            lineNumber++;
+
+            try
+            {
+                Interpreter = Enum.Parse<Interpreter>(Regex.Match(reader.ReadLine(), "INTERPRETER:([^ ]+)$").Groups[1].Value);
+            }
+            catch
+            {
+                throw new LoliCodeParsingException(lineNumber, $"Invalid interpreter definition: {line.TruncatePretty(50)}");
+            }
+
+            // Parse the input variables
+            line = reader.ReadLine();
+            lineNumber++;
+
+            try
+            {
+                InputVariables = Regex.Match(reader.ReadLine(), "INPUT ([^ ]+)$").Groups[1].Value;
+            }
+            catch
+            {
+                throw new LoliCodeParsingException(lineNumber, "Invalid input variables definition");
+            }
+
             reader.ReadLine(); // Read BEGIN SCRIPT
+            lineNumber++;
             
             while ((line = reader.ReadLine()) != null && line != "END SCRIPT")
             {
+                lineNumber++;
                 writer.WriteLine(line);
             }
 
@@ -89,6 +114,7 @@ namespace RuriLib.Models.Blocks.Custom
             OutputVariables = new List<OutputVariable>();
             while ((line = reader.ReadLine()) != null)
             {
+                lineNumber++;
                 var match = Regex.Match(line, "OUTPUT ([^ ]+) @([^ ]+)$");
                 OutputVariables.Add(
                     new OutputVariable

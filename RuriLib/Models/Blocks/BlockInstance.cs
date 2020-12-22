@@ -18,6 +18,17 @@ namespace RuriLib.Models.Blocks
         public Dictionary<string, BlockSetting> Settings { get; protected set; } = new Dictionary<string, BlockSetting>();
         public BlockDescriptor Descriptor { get; protected set; }
 
+        public BlockInstance(BlockDescriptor descriptor)
+        {
+            Descriptor = descriptor;
+            Id = descriptor.Id;
+            Label = descriptor.Name;
+            ReadableName = descriptor.Name;
+
+            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
+                .ToDictionary(p => p.Name, p => p);
+        }
+
         public virtual string ToLC()
         {
             /*
@@ -46,7 +57,7 @@ namespace RuriLib.Models.Blocks
             return writer.ToString();
         }
 
-        public virtual void FromLC(ref string script)
+        public virtual void FromLC(ref string script, ref int lineNumber)
         {
             /*
              * DISABLED
@@ -60,13 +71,19 @@ namespace RuriLib.Models.Blocks
 
             while ((line = reader.ReadLine()) != null)
             {
-                if (line.StartsWith("DISABLED"))
-                    Disabled = true;
+                var trimmedLine = line.Trim();
 
-                else if (line.StartsWith("LABEL:"))
+                if (trimmedLine.StartsWith("DISABLED"))
                 {
-                    var match = Regex.Match(line, $"^LABEL:(.*)$");
+                    Disabled = true;
+                    lineNumber++;
+                }
+                    
+                else if (trimmedLine.StartsWith("LABEL:"))
+                {
+                    var match = Regex.Match(trimmedLine, $"^LABEL:(.*)$");
                     Label = match.Groups[1].Value;
+                    lineNumber++;
                 }
 
                 else

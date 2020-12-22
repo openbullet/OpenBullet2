@@ -1,4 +1,5 @@
-﻿using RuriLib.Helpers.LoliCode;
+﻿using RuriLib.Extensions;
+using RuriLib.Helpers.LoliCode;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
@@ -15,15 +16,18 @@ namespace RuriLib.Models.Blocks
         public string Script { get; set; }
         
         public LoliCodeBlockInstance(LoliCodeBlockDescriptor descriptor)
+            : base(descriptor)
         {
-            Descriptor = descriptor;
-            Id = descriptor.Id;
-            Label = descriptor.Name;
-            ReadableName = descriptor.Name;
+            
         }
 
-        public override void FromLC(ref string script) { Script = script; }
         public override string ToLC() => Script;
+
+        public override void FromLC(ref string script, ref int lineNumber) 
+        {
+            Script = script;
+            lineNumber += script.CountLines();
+        }
 
         public override string ToCSharp(List<string> definedVariables, ConfigSettings settings)
         {

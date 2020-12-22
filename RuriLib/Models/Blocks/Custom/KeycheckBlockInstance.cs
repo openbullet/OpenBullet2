@@ -1,4 +1,6 @@
-﻿using RuriLib.Helpers.CSharp;
+﻿using RuriLib.Exceptions;
+using RuriLib.Extensions;
+using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Parameters;
@@ -17,14 +19,9 @@ namespace RuriLib.Models.Blocks.Custom
         public List<Keychain> Keychains { get; set; } = new List<Keychain>();
 
         public KeycheckBlockInstance(KeycheckBlockDescriptor descriptor)
+            : base(descriptor)
         {
-            Descriptor = descriptor;
-            Id = descriptor.Id;
-            Label = descriptor.Name;
-            ReadableName = descriptor.Name;
-
-            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
-                .ToDictionary(p => p.Name, p => p);
+            
         }
 
         public override string ToLC()
@@ -72,7 +69,7 @@ namespace RuriLib.Models.Blocks.Custom
             return writer.ToString();
         }
 
-        public override void FromLC(ref string script)
+        public override void FromLC(ref string script, ref int lineNumber)
         {
             /*
              *   KEYCHAIN SUCCESS OR
@@ -84,48 +81,71 @@ namespace RuriLib.Models.Blocks.Custom
              */
 
             // First parse the options that are common to every BlockInstance
-            base.FromLC(ref script);
+            base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line;
+            string line, lineCopy;
 
             while ((line = reader.ReadLine()) != null)
             {
+                line = line.Trim();
+                lineCopy = line;
+                lineNumber++;
+
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                line = line.Trim();
-
                 if (line.StartsWith("KEYCHAIN"))
                 {
-                    var keychain = new Keychain();
-                    LineParser.ParseToken(ref line);
-                    keychain.ResultStatus = LineParser.ParseToken(ref line);
-                    keychain.Mode = Enum.Parse<KeychainMode>(LineParser.ParseToken(ref line));
-                    Keychains.Add(keychain);
+                    try
+                    {
+                        var keychain = new Keychain();
+                        LineParser.ParseToken(ref line);
+                        keychain.ResultStatus = LineParser.ParseToken(ref line);
+                        keychain.Mode = Enum.Parse<KeychainMode>(LineParser.ParseToken(ref line));
+                        Keychains.Add(keychain);
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Invalid keychain declaration: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
 
                 else if (Regex.IsMatch(line, "^[A-Z]+KEY "))
                 {
-                    var keyType = LineParser.ParseToken(ref line);
-
-                    Key key = keyType switch
+                    try
                     {
-                        "BOOLKEY" => ParseBoolKey(ref line),
-                        "STRINGKEY" => ParseStringKey(ref line),
-                        "INTKEY" => ParseIntKey(ref line),
-                        "FLOATKEY" => ParseFloatKey(ref line),
-                        "LISTKEY" => ParseListKey(ref line),
-                        "DICTKEY" => ParseDictKey(ref line),
-                        _ => throw new NotSupportedException()
-                    };
+                        var keyType = LineParser.ParseToken(ref line);
 
-                    Keychains.Last().Keys.Add(key);
+                        Key key = keyType switch
+                        {
+                            "BOOLKEY" => ParseBoolKey(ref line),
+                            "STRINGKEY" => ParseStringKey(ref line),
+                            "INTKEY" => ParseIntKey(ref line),
+                            "FLOATKEY" => ParseFloatKey(ref line),
+                            "LISTKEY" => ParseListKey(ref line),
+                            "DICTKEY" => ParseDictKey(ref line),
+                            _ => throw new NotSupportedException()
+                        };
+
+                        Keychains.Last().Keys.Add(key);
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Invalid key declaration: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
 
                 else
                 {
-                    LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    try
+                    {
+                        LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
             }
         }

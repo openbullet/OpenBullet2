@@ -20,14 +20,15 @@ namespace RuriLib.Helpers.Transpilers
             var lines = script.Split(new string[] { "\n", "\r\n" }, System.StringSplitOptions.None);
             List<BlockInstance> stack = new List<BlockInstance>();
 
-            var blockFactory = new BlockFactory();
+            int localLineNumber = 0;
             int lineNumber = 0;
             string line, trimmedLine;
 
-            while (lineNumber < lines.Length)
+            while (localLineNumber < lines.Length)
             {
-                line = lines[lineNumber];
+                line = lines[localLineNumber];
                 trimmedLine = line.Trim();
+                localLineNumber++;
                 lineNumber++;
 
                 // If it's a block directive
@@ -52,11 +53,11 @@ namespace RuriLib.Helpers.Transpilers
                     StringBuilder sb = new StringBuilder();
 
                     // As long as we don't find the ENDBLOCK token, add lines to the StringBuilder
-                    while (lineNumber < lines.Length)
+                    while (localLineNumber < lines.Length)
                     {
-                        line = lines[lineNumber];
+                        line = lines[localLineNumber];
                         trimmedLine = line.Trim();
-                        lineNumber++;
+                        localLineNumber++;
 
                         if (trimmedLine.StartsWith("ENDBLOCK"))
                             break;
@@ -65,8 +66,9 @@ namespace RuriLib.Helpers.Transpilers
                     }
 
                     string blockOptions = sb.ToString();
-
-                    block.FromLC(ref blockOptions);
+                    block.FromLC(ref blockOptions, ref lineNumber); // This can throw a LoliCodeParsingException
+                    lineNumber++; // Add one line for the ENDBLOCK statement
+                    
                     stack.Add(block);
                 }
 

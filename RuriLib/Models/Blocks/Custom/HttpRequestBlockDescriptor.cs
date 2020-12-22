@@ -1,5 +1,6 @@
 ﻿using RuriLib.Functions.Http;
 using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
 using System.Collections.Generic;
 
 namespace RuriLib.Models.Blocks.Custom
@@ -22,14 +23,13 @@ namespace RuriLib.Models.Blocks.Custom
             };
             Parameters = new Dictionary<string, BlockParameter>
             {
-                { "url", new StringParameter { Name = "url", DefaultValue = "https://google.com" } },
-                { "method", new EnumParameter { Name = "method", EnumType = typeof(HttpMethod), DefaultValue = HttpMethod.GET.ToString() } },
-                { "autoRedirect", new BoolParameter { Name = "autoRedirect", DefaultValue = true } },
-                { "securityProtocol", new EnumParameter { Name = "securityProtocol",
-                    EnumType = typeof(SecurityProtocol), DefaultValue = SecurityProtocol.SystemDefault.ToString() } },
-                { "useCustomCipherSuites", new BoolParameter { Name = "useCustomCipherSuites", DefaultValue = false } },
-                { "customCipherSuites", new ListOfStringsParameter { Name = "customCipherSuites",
-                    InputMode = Settings.SettingInputMode.Fixed, DefaultValue = new List<string>
+                { "url", new StringParameter("url", "https://google.com") },
+                { "method", new EnumParameter("method", typeof(HttpMethod), HttpMethod.GET.ToString()) },
+                { "autoRedirect", new BoolParameter("autoRedirect", true) },
+                { "securityProtocol", new EnumParameter("securityProtocol", typeof(SecurityProtocol), SecurityProtocol.SystemDefault.ToString()) },
+                { "useCustomCipherSuites", new BoolParameter("useCustomCipherSuites", false) },
+                { "customCipherSuites", new ListOfStringsParameter("customCipherSuites",
+                    new List<string>
                     {
                         "TLS_AES_128_GCM_SHA256",
                         "TLS_CHACHA20_POLY1305_SHA256",
@@ -49,21 +49,20 @@ namespace RuriLib.Models.Blocks.Custom
                         "TLS_RSA_WITH_AES_128_CBC_SHA",
                         "TLS_RSA_WITH_AES_256_CBC_SHA",
                         "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
-                    }
-                }},
-                { "customCookies", new DictionaryOfStringsParameter { Name = "customCookies", InputMode = Settings.SettingInputMode.Interpolated,
-                    DefaultValue = new Dictionary<string, string>() } },
-                { "customHeaders", new DictionaryOfStringsParameter { Name = "customHeaders", InputMode = Settings.SettingInputMode.Interpolated,
-                    DefaultValue = new Dictionary<string, string>
+                    }, 
+                    Settings.SettingInputMode.Fixed) },
+                { "customCookies", new DictionaryOfStringsParameter("customCookies", null, SettingInputMode.Interpolated) },
+                { "customHeaders", new DictionaryOfStringsParameter("customHeaders",
+                    new Dictionary<string, string>
                     {
                         { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36" },
                         { "Pragma", "no-cache" },
                         { "Accept", "*/*" },
                         { "Accept-Language", "en-US,en;q=0.8" }
-                    }
-                }},
-                { "timeoutMilliseconds", new IntParameter { Name = "timeoutMilliseconds", DefaultValue = 10000 } },
-                { "httpVersion", new StringParameter { Name = "httpVersion", DefaultValue = "1.1" } }
+                    },
+                    SettingInputMode.Interpolated) },
+                { "timeoutMilliseconds", new IntParameter("timeoutMilliseconds", 10000) },
+                { "httpVersion", new StringParameter("httpVersion", "1.1") }
             };
         }
     }

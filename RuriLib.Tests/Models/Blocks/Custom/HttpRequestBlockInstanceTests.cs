@@ -83,7 +83,8 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         {
             var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
             var script = "  url = \"https://example.com\"\r\n  method = POST\r\n  TYPE:MULTIPART\r\n  @myBoundary\r\n  CONTENT:STRING \"stringName\" \"stringContent\" \"stringContentType\"\r\n  CONTENT:FILE \"fileName\" \"file.txt\" \"fileContentType\"\r\n";
-            block.FromLC(ref script);
+            int lineNumber = 0;
+            block.FromLC(ref script, ref lineNumber);
 
             var url = block.Settings["url"];
             Assert.Equal("https://example.com", (url.FixedSetting as StringSetting).Value);
@@ -117,7 +118,8 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         {
             var block = BlockFactory.GetBlock<HttpRequestBlockInstance>("HttpRequest");
             var script = "  url = \"https://example.com\"\r\n  method = POST\r\n  TYPE:MULTIPART\r\n  @myBoundary\r\n  CONTENT:STRING \"stringName\" \"stringContent\" \"stringContentType\"\r\n  CONTENT:FILE \"fileName\" \"file.txt\" \"fileContentType\"\r\n";
-            block.FromLC(ref script);
+            int lineNumber = 0;
+            block.FromLC(ref script, ref lineNumber);
             var headers = block.Settings["customHeaders"];
             (headers.FixedSetting as DictionaryOfStringsSetting).Value.Clear(); 
 

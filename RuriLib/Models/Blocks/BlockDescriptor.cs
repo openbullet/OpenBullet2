@@ -13,6 +13,6 @@ namespace RuriLib.Models.Blocks
         
         public VariableType? ReturnType { get; set; }
         public BlockCategory Category { get; set; }
-        public Dictionary<string, BlockParameter> Parameters { get; set; }
+        public Dictionary<string, BlockParameter> Parameters { get; set; } = new Dictionary<string, BlockParameter>();
     }
 }

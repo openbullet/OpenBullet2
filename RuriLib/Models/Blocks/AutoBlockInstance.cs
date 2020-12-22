@@ -1,4 +1,6 @@
-﻿using RuriLib.Helpers;
+﻿using RuriLib.Exceptions;
+using RuriLib.Extensions;
+using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Configs;
@@ -25,16 +27,9 @@ namespace RuriLib.Models.Blocks
         public bool IsCapture { get; set; } = false;
 
         public AutoBlockInstance(AutoBlockDescriptor descriptor)
+            : base(descriptor)
         {
-            Descriptor = descriptor;
-            Id = descriptor.Id;
-            Label = descriptor.Name;
-            ReadableName = descriptor.Name;
-            OutputVariable = descriptor.Id.Substring(0, 1).ToLower() + descriptor.Id.Substring(1) + "Output";
-
-            // Here convert parameters to settings
-            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
-                .ToDictionary(p => p.Name, p => p);
+            OutputVariable = descriptor.Id.Substring(0, 1).ToLower() + descriptor.Id[1..] + "Output";
         }
 
         public override string ToLC()
@@ -56,30 +51,46 @@ namespace RuriLib.Models.Blocks
             return writer.ToString();
         }
 
-        public override void FromLC(ref string script)
+        public override void FromLC(ref string script, ref int lineNumber)
         {
             // First parse the options that are common to every BlockInstance
-            base.FromLC(ref script);
+            base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line;
+            string line, lineCopy;
 
             while ((line = reader.ReadLine()) != null)
             {
+                line = line.Trim();
+                lineNumber++;
+                lineCopy = line;
+
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                line = line.Trim();
-
                 if (line.StartsWith("=>"))
                 {
-                    var match = Regex.Match(line, "^=> ([A-Za-z]{3}) (.*)$");
-                    IsCapture = match.Groups[1].Value.Equals("CAP", StringComparison.OrdinalIgnoreCase);
-                    OutputVariable = match.Groups[2].Value.Trim()[1..];
+                    try
+                    {
+                        var match = Regex.Match(line, "^=> ([A-Za-z]{3}) (.*)$");
+                        IsCapture = match.Groups[1].Value.Equals("CAP", StringComparison.OrdinalIgnoreCase);
+                        OutputVariable = match.Groups[2].Value.Trim()[1..];
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"The output variable declaration is in the wrong format: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
                 else
                 {
-                    LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    try
+                    {
+                        LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
             }
         }

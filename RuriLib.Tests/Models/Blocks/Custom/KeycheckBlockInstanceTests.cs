@@ -106,7 +106,8 @@ namespace RuriLib.Tests.Models.Blocks.Custom
         {
             var block = BlockFactory.GetBlock<KeycheckBlockInstance>("Keycheck");
             var script = "DISABLED\r\nLABEL:My Label\r\n  banIfNoMatch = False\r\n  KEYCHAIN SUCCESS OR\r\n    STRINGKEY @myString Contains \"abc\"\r\n    FLOATKEY 3 GreaterThan 1.5\r\n  KEYCHAIN FAIL AND\r\n    LISTKEY @myList Contains \"abc\"\r\n    DICTKEY @myDict HasKey \"abc\"\r\n";
-            block.FromLC(ref script);
+            int lineNumber = 0;
+            block.FromLC(ref script, ref lineNumber);
 
             Assert.True(block.Disabled);
             Assert.Equal("My Label", block.Label);

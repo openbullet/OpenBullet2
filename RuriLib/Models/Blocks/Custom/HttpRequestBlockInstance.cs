@@ -1,4 +1,6 @@
-﻿using RuriLib.Helpers.CSharp;
+﻿using RuriLib.Exceptions;
+using RuriLib.Extensions;
+using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
@@ -18,14 +20,9 @@ namespace RuriLib.Models.Blocks.Custom
         public RequestParams RequestParams { get; set; } = new StandardRequestParams();
 
         public HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor)
+            : base(descriptor)
         {
-            Descriptor = descriptor;
-            Id = descriptor.Id;
-            Label = descriptor.Name;
-            ReadableName = descriptor.Name;
-
-            Settings = Descriptor.Parameters.Values.Select(p => p.ToBlockSetting())
-                .ToDictionary(p => p.Name, p => p);
+            
         }
 
         public override string ToLC()
@@ -117,7 +114,7 @@ namespace RuriLib.Models.Blocks.Custom
             return writer.ToString();
         }
 
-        public override void FromLC(ref string script)
+        public override void FromLC(ref string script, ref int lineNumber)
         {
             /*
              *   TYPE:STANDARD
@@ -141,17 +138,19 @@ namespace RuriLib.Models.Blocks.Custom
              */
 
             // First parse the options that are common to every BlockInstance
-            base.FromLC(ref script);
+            base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line;
+            string line, lineCopy;
 
             while ((line = reader.ReadLine()) != null)
             {
+                line = line.Trim();
+                lineCopy = line;
+                lineNumber++;
+
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
-
-                line = line.Trim();
 
                 if (line.StartsWith("TYPE:"))
                 {
@@ -161,42 +160,68 @@ namespace RuriLib.Models.Blocks.Custom
                     {
                         case "STANDARD":
                             var standardReqParams = new StandardRequestParams();
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read one line to parse the content
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, standardReqParams.Content, new StringParameter());
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read another line to parse the content-type
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, standardReqParams.ContentType, new StringParameter());
+
                             RequestParams = standardReqParams;
                             break;
 
                         case "RAW":
                             var rawReqParams = new RawRequestParams();
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read one line to parse the content
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, rawReqParams.Content, new ByteArrayParameter());
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+
+                            // Read another line to parse the content-type
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, rawReqParams.ContentType, new StringParameter());
+
                             RequestParams = rawReqParams;
                             break;
 
                         case "BASICAUTH":
                             var basicAuthReqParams = new BasicAuthRequestParams();
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read one line to parse the username
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Username, new StringParameter());
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read another line to parse the password
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Password, new StringParameter());
+
                             RequestParams = basicAuthReqParams;
                             break;
 
                         case "MULTIPART":
                             var multipartReqParams = new MultipartRequestParams();
-                            line = reader.ReadLine();
-                            line = line.Trim();
+
+                            // Read one line to parse the boundary
+                            line = reader.ReadLine().Trim();
+                            lineCopy = line;
+                            lineNumber++;
                             LoliCodeParser.ParseSettingValue(ref line, multipartReqParams.Boundary, new StringParameter());
+
                             RequestParams = multipartReqParams;
                             break;
                     }
@@ -238,7 +263,14 @@ namespace RuriLib.Models.Blocks.Custom
 
                 else
                 {
-                    LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    try
+                    {
+                        LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
+                    }
                 }
             }
         }
