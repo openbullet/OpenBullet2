@@ -154,110 +154,131 @@ namespace RuriLib.Models.Blocks.Custom
 
                 if (line.StartsWith("TYPE:"))
                 {
-                    var reqParams = Regex.Match(line, "TYPE:([A-Z]+)").Groups[1].Value;
-
-                    switch (reqParams)
+                    try
                     {
-                        case "STANDARD":
-                            var standardReqParams = new StandardRequestParams();
+                        var reqParams = Regex.Match(line, "TYPE:([A-Z]+)").Groups[1].Value;
 
-                            // Read one line to parse the content
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, standardReqParams.Content, new StringParameter());
+                        switch (reqParams)
+                        {
+                            case "STANDARD":
+                                var standardReqParams = new StandardRequestParams();
 
-                            // Read another line to parse the content-type
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, standardReqParams.ContentType, new StringParameter());
+                                // Read one line to parse the content
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.Content, new StringParameter());
 
-                            RequestParams = standardReqParams;
-                            break;
+                                // Read another line to parse the content-type
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, standardReqParams.ContentType, new StringParameter());
 
-                        case "RAW":
-                            var rawReqParams = new RawRequestParams();
+                                RequestParams = standardReqParams;
+                                break;
 
-                            // Read one line to parse the content
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, rawReqParams.Content, new ByteArrayParameter());
+                            case "RAW":
+                                var rawReqParams = new RawRequestParams();
+
+                                // Read one line to parse the content
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.Content, new ByteArrayParameter());
 
 
-                            // Read another line to parse the content-type
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, rawReqParams.ContentType, new StringParameter());
+                                // Read another line to parse the content-type
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, rawReqParams.ContentType, new StringParameter());
 
-                            RequestParams = rawReqParams;
-                            break;
+                                RequestParams = rawReqParams;
+                                break;
 
-                        case "BASICAUTH":
-                            var basicAuthReqParams = new BasicAuthRequestParams();
+                            case "BASICAUTH":
+                                var basicAuthReqParams = new BasicAuthRequestParams();
 
-                            // Read one line to parse the username
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Username, new StringParameter());
+                                // Read one line to parse the username
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Username, new StringParameter());
 
-                            // Read another line to parse the password
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Password, new StringParameter());
+                                // Read another line to parse the password
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, basicAuthReqParams.Password, new StringParameter());
 
-                            RequestParams = basicAuthReqParams;
-                            break;
+                                RequestParams = basicAuthReqParams;
+                                break;
 
-                        case "MULTIPART":
-                            var multipartReqParams = new MultipartRequestParams();
+                            case "MULTIPART":
+                                var multipartReqParams = new MultipartRequestParams();
 
-                            // Read one line to parse the boundary
-                            line = reader.ReadLine().Trim();
-                            lineCopy = line;
-                            lineNumber++;
-                            LoliCodeParser.ParseSettingValue(ref line, multipartReqParams.Boundary, new StringParameter());
+                                // Read one line to parse the boundary
+                                line = reader.ReadLine().Trim();
+                                lineCopy = line;
+                                lineNumber++;
+                                LoliCodeParser.ParseSettingValue(ref line, multipartReqParams.Boundary, new StringParameter());
 
-                            RequestParams = multipartReqParams;
-                            break;
+                                RequestParams = multipartReqParams;
+                                break;
+
+                            default:
+                                throw new LoliCodeParsingException(lineNumber, $"Invalid type: {reqParams}");
+                        }
+                    }
+                    catch (NullReferenceException)
+                    {
+                        throw new LoliCodeParsingException(lineNumber, "Missing options for the selected content");
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
                     }
                 }
 
                 else if (line.StartsWith("CONTENT:"))
                 {
-                    var multipart = (MultipartRequestParams)RequestParams;
-                    var token = LineParser.ParseToken(ref line);
-                    var tokenType = Regex.Match(token, "CONTENT:([A-Z]+)").Groups[1].Value;
-
-                    switch (tokenType)
+                    try
                     {
-                        case "STRING":
-                            var stringContent = new StringHttpContentSettingsGroup();
-                            LoliCodeParser.ParseSettingValue(ref line, stringContent.Name, new StringParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, stringContent.Data, new StringParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, stringContent.ContentType, new StringParameter());
-                            multipart.Contents.Add(stringContent);
-                            break;
+                        var multipart = (MultipartRequestParams)RequestParams;
+                        var token = LineParser.ParseToken(ref line);
+                        var tokenType = Regex.Match(token, "CONTENT:([A-Z]+)").Groups[1].Value;
 
-                        case "RAW":
-                            var rawContent = new RawHttpContentSettingsGroup();
-                            LoliCodeParser.ParseSettingValue(ref line, rawContent.Name, new StringParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, rawContent.Data, new ByteArrayParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, rawContent.ContentType, new StringParameter());
-                            multipart.Contents.Add(rawContent);
-                            break;
+                        switch (tokenType)
+                        {
+                            case "STRING":
+                                var stringContent = new StringHttpContentSettingsGroup();
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Name, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.Data, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, stringContent.ContentType, new StringParameter());
+                                multipart.Contents.Add(stringContent);
+                                break;
 
-                        case "FILE":
-                            var fileContent = new FileHttpContentSettingsGroup();
-                            LoliCodeParser.ParseSettingValue(ref line, fileContent.Name, new StringParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, fileContent.FileName, new StringParameter());
-                            LoliCodeParser.ParseSettingValue(ref line, fileContent.ContentType, new StringParameter());
-                            multipart.Contents.Add(fileContent);
-                            break;
+                            case "RAW":
+                                var rawContent = new RawHttpContentSettingsGroup();
+                                LoliCodeParser.ParseSettingValue(ref line, rawContent.Name, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawContent.Data, new ByteArrayParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, rawContent.ContentType, new StringParameter());
+                                multipart.Contents.Add(rawContent);
+                                break;
+
+                            case "FILE":
+                                var fileContent = new FileHttpContentSettingsGroup();
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.Name, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.FileName, new StringParameter());
+                                LoliCodeParser.ParseSettingValue(ref line, fileContent.ContentType, new StringParameter());
+                                multipart.Contents.Add(fileContent);
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the multipart content: {lineCopy.TruncatePretty(50)}");
                     }
                 }
 
