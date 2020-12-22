@@ -16,6 +16,7 @@ namespace OpenBullet2.Pages
     {
         [Inject] public OBLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] NavigationManager Nav { get; set; }
 
         private Config config;
         private BlockInstance selectedBlock;
@@ -33,6 +34,7 @@ namespace OpenBullet2.Pages
             {
                 await OBLogger.LogException(ex);
                 await js.AlertError(ex.GetType().Name, ex.Message);
+                Nav.NavigateTo("config/edit/lolicode");
             }
 
             base.OnInitialized();
