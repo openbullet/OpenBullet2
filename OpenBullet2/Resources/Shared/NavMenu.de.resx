@@ -162,6 +162,9 @@
   <data name="OBSettings" xml:space="preserve">
     <value>OB Einstellungen</value>
   </data>
+  <data name="Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>

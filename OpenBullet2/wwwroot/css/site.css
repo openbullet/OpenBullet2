@@ -436,6 +436,15 @@ progress {
 }
 /* -- CONFIG LIST */
 
+/* PLUGINS -- */
+.plugin-info {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid var(--bg-light);
+    min-height: 40px;
+}
+/* -- PLUGINS */
+
 /* JOB OVERVIEW -- */
 .job-overview-left-col {
     border-top-left-radius: 5px;

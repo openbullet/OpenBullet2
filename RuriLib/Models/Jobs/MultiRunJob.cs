@@ -77,7 +77,7 @@ namespace RuriLib.Models.Jobs
         // -- Misc
         public decimal CaptchaCredit { get; private set; } = 0;
 
-        public MultiRunJob(RuriLibSettingsService settings) : base(settings)
+        public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo) : base(settings, pluginRepo)
         {
             // Create a random basing on the unique job id
             random = new Random(Id);
@@ -177,7 +177,7 @@ namespace RuriLib.Models.Jobs
 
             // Build the C# script
             Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
-            var script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings);
+            var script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
             script.Compile();
 
             // Wait for the start condition to be verified

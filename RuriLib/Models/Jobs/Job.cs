@@ -25,10 +25,12 @@ namespace RuriLib.Models.Jobs
 
         protected CancellationTokenSource cts;
         protected readonly RuriLibSettingsService settings;
+        protected readonly PluginRepository pluginRepo;
 
-        public Job(RuriLibSettingsService settings)
+        public Job(RuriLibSettingsService settings, PluginRepository pluginRepo)
         {
             this.settings = settings;
+            this.pluginRepo = pluginRepo;
         }
 
         public virtual async Task Start()

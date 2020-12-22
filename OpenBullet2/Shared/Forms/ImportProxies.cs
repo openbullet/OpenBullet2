@@ -1,7 +1,7 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
-using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using OpenBullet2.Helpers;
 using RuriLib.Models.Proxies;
 using System;
@@ -34,14 +34,15 @@ namespace OpenBullet2.Shared.Forms
             ReturnLines(fileContent);
         }
 
-        private async Task ProcessFile(IFileListEntry[] files)
+        private async Task ProcessFile(InputFileChangeEventArgs e)
         {
-            if (files.Length == 0)
+            if (e.FileCount == 0)
                 return;
 
             try
             {
-                using var reader = new StreamReader(files.First().Data);
+                // Maximum 10 MB file upload
+                using var reader = new StreamReader(e.File.OpenReadStream(10 * 1000 * 1000));
                 fileContent = await reader.ReadToEndAsync();
             }
             catch (Exception ex)

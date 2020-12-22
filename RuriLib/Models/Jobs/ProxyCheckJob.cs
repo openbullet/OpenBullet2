@@ -33,8 +33,8 @@ namespace RuriLib.Models.Jobs
         public int Working { get; set; }
         public int NotWorking { get; set; }
 
-        public ProxyCheckJob(RuriLibSettingsService settings)
-            : base(settings)
+        public ProxyCheckJob(RuriLibSettingsService settings, PluginRepository pluginRepo)
+            : base(settings, pluginRepo)
         {
             
         }

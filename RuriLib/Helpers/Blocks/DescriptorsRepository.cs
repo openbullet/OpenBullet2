@@ -24,6 +24,16 @@ namespace RuriLib.Helpers.Blocks
 
         public DescriptorsRepository()
         {
+            Recreate();
+        }
+
+        /// <summary>
+        /// Recreates the repository with only the built-in descriptors (no plugins).
+        /// </summary>
+        public void Recreate()
+        {
+            Descriptors.Clear();
+
             // Add custom block descriptors
             Descriptors["Keycheck"] = new KeycheckBlockDescriptor();
             Descriptors["HttpRequest"] = new HttpRequestBlockDescriptor();

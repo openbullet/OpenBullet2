@@ -1,6 +1,5 @@
 ﻿@page "/configs"
 @using RuriLib.Models.Configs
-@using BlazorInputFile
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Configs> Loc
 @attribute [Authorize(Roles = "Admin")]
 
@@ -21,9 +20,7 @@
     @if (uploadDisplay)
     {
         <div class="row">
-            <div class="drag-drop-zone">
-                <BlazorInputFile.InputFile OnChange="ProcessUploadedConfigs" />
-            </div>
+            <InputFile OnChange="@ProcessUploadedConfigs" multiple />
         </div>
     }
     <div class="row config-list" style="margin-top: 30px;">
