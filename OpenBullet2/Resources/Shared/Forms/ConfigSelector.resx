@@ -123,6 +123,9 @@
   <data name="by" xml:space="preserve">
     <value>by</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
@@ -134,6 +137,12 @@
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Last Modified</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Missing Plugin</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>The config was built with this plugin, but it's missing</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>

@@ -2,6 +2,7 @@
 @using RuriLib.Models.Configs
 @using OpenBullet2.Helpers
 @inject ConfigService ConfigService
+@inject PluginRepository PluginRepo
 @inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ConfigSelector> Loc
 
@@ -50,6 +51,20 @@
         {
             await js.AlertError(Loc["Uh-Oh"], Loc["NoConfigSelected"]);
             return;
+        }
+
+        // Check if we have all required plugins
+        var loadedPlugins = PluginRepo.GetPlugins();
+        if (selectedConfig.Metadata.Plugins != null)
+        {
+            foreach (var plugin in selectedConfig.Metadata.Plugins)
+            {
+                if (!loadedPlugins.Any(p => p.FullName == plugin))
+                {
+                    if (!await js.Confirm(Loc["MissingPlugin"], $"{Loc["MissingPluginText"]}: {plugin}", Loc["Cancel"]))
+                        return;
+                }
+            }
         }
 
         if (selectedConfig.HasCSharpCode())

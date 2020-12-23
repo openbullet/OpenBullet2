@@ -86,6 +86,7 @@ namespace RuriLib.Helpers.Blocks
                         Name = attribute.name ?? method.Name.ToReadableName(),
                         Description = attribute.description ?? string.Empty,
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
+                        AssemblyFullName = assembly.FullName,
                         Parameters = method.GetParameters().Where(p => p.ParameterType != typeof(BotData))
                             .Select(p => BuildBlockParameter(p)).ToDictionary(p => p.Name, p => p),
                         ReturnType = ToVariableType(method.ReturnType),

@@ -183,6 +183,12 @@
   <data name="LastModified" xml:space="preserve">
     <value>Last Modified</value>
   </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Missing Plugin</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>The config was built with this plugin, but it's missing</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>

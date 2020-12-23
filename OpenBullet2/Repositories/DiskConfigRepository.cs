@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using RuriLib;
+using RuriLib.Models.Blocks;
+using RuriLib.Helpers.Transpilers;
 
 namespace OpenBullet2.Repositories
 {
@@ -62,7 +65,35 @@ namespace OpenBullet2.Repositories
 
         public async Task Save(Config config)
         {
+            // Update the last modified date
             config.Metadata.LastModified = DateTime.Now;
+
+            // If not a csharp config, try to build the stack to get required plugins
+            if (config.Mode != ConfigMode.CSharp)
+            {
+                try
+                {
+                    List<BlockInstance> stack = null;
+
+                    if (config.Mode == ConfigMode.Stack)
+                    {
+                        stack = config.Stack;
+                    }
+                    else
+                    {
+                        stack = new Loli2StackTranspiler().Transpile(config.LoliCodeScript);
+                    }
+
+                    // Write the required plugins in the config's metadata
+                    config.Metadata.Plugins = stack.Select(b => b.Descriptor.AssemblyFullName)
+                        .Where(n => n != null && !n.Contains("RuriLib")).ToList();
+                }
+                catch
+                {
+                    // Don't do anything, it's not the end of the world if we don't write some metadata ^_^
+                }
+            }
+            
             await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
         }
 

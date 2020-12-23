@@ -8,6 +8,7 @@ using OpenBullet2.Services;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
+using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +20,7 @@ namespace OpenBullet2.Pages
     public partial class Configs
     {
         [Inject] IConfigRepository ConfigRepo { get; set; }
+        [Inject] PluginRepository PluginRepo { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] PersistentSettingsService PersistentSettings { get; set; }
@@ -86,6 +88,19 @@ namespace OpenBullet2.Pages
             {
                 await ShowNoConfigSelectedMessage();
                 return;
+            }
+
+            // Check if we have all required plugins
+            var loadedPlugins = PluginRepo.GetPlugins();
+            if (selectedConfig.Metadata.Plugins != null)
+            {
+                foreach (var plugin in selectedConfig.Metadata.Plugins)
+                {
+                    if (!loadedPlugins.Any(p => p.FullName == plugin))
+                    {
+                        await js.AlertWarning(Loc["MissingPlugin"], $"{Loc["MissingPluginText"]}: {plugin}");
+                    }
+                }
             }
 
             ConfigService.SelectedConfig = selectedConfig;
