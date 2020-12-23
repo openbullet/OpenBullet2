@@ -127,7 +127,7 @@
     <value>Come aggiungere e utilizzare i plugin</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>I %Plugin% sono %archivi .zip% che contengono una o più librerie e le loro dipendenze. Ti permettono di espandere le funzionalità di OpenBullet %aggiungendo nuovi blocchi%. Puoi caricare i plugin premendo sul pulsante %Aggiungi% qui sopra. Dopo averli aggiunti, i plugin risiedono nella cartella %Plugins% nella cartella base di OpenBullet. Puoi aggiungere i blocchi dei plugin alle tue config navigando fino alla categoria più esterna in %Blocchi Disponibili% e selezionando il nome del plugin che vuoi utilizzare.</value>
+    <value>I %Plugin% sono %archivi .zip% che contengono una o più librerie e le loro dipendenze. Ti permettono di espandere le funzionalità di OpenBullet %aggiungendo nuovi blocchi%. Puoi caricare i plugin premendo sul pulsante %Aggiungi% qui sopra. Dopo averli aggiunti, i plugin risiedono nella cartella %Plugins% nella cartella base di OpenBullet. Puoi aggiungere i blocchi dei plugin alle tue config navigando fino alla categoria più esterna (premi Back) in %Blocchi Disponibili% e selezionando il nome del plugin che vuoi utilizzare.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>I plugin possono essere eliminati cliccando sul pulsante %Rimuovi% accanto al loro nome. I file verranno cancellati dalla cartella %Plugins% quindi assicurati di avere una copia di backup! Consiglio di fermare tutti i job prima di rimuovere i plugin. Ricorda che una volta rimosso, le config che utilizzano quel plugin smetteranno probabilmente di funzionare.</value>
