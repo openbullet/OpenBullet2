@@ -87,9 +87,14 @@ namespace RuriLib.Services
         {
             using var archive = new ZipArchive(stream, ZipArchiveMode.Read, false);
 
-           // Make sure there's at least one .dll in the root of the archive
-            if (!archive.Entries.Any(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".dll")))
+            // Make sure there's at least one .dll in the root of the archive
+            var dlls = archive.Entries.Where(e => !e.FullName.Contains('/') && e.FullName.EndsWith(".dll"));
+            if (!dlls.Any())
                 throw new FileNotFoundException("No dll file found in the root of the provided archive!");
+
+            // If we're trying to import a plugin we previously deleted, warn the user to restart first
+            if (dlls.Any(e => toDelete.Contains(Path.GetFileNameWithoutExtension(e.Name))))
+                throw new Exception("Please restart the application and try again");
 
             archive.ExtractToDirectory(baseFolder);
 
