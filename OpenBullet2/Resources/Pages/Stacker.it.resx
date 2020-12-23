@@ -163,7 +163,8 @@
     <value>L'oggetto `data` è una classe con molte proprietà che vengono automaticamente riempite dai blocchi ma che puoi usare anche come variabili di output per altri blocchi. Le più utili sono STATUS, SOURCE, RAWSOURCE, ADDRESS, RESPONSECODE, COOKIES and HEADERS. Per esempio, per usare il sorgente di una risposta HTTP come parametro di input di un blocco Parse, dovrai selezionare la modalità di immissione %variabile% e scrivere `data.SOURCE` nella casella.</value>
   </data>
   <data name="Help3x03" xml:space="preserve">
-    <value>L'oggetto `data` contiene molte altre variabili utile (come il Proxy) che possono essere manipolate attraverso il codice C# per compiere azioni avanzate. Queste saranno esplorate in una guida a parte.</value>
+    <value>L'oggetto `data` contiene molte altre variabili utile (come il Proxy) che possono essere manipolate attraverso il codice C# per compiere azioni avanzate. Queste saranno esplorate in una guida a parte.
+Infine l'oggetto `globals` contiene le variabili globali ed è condiviso tra i bot. Puoi dichiarare variabili globali usando ad es. `globals.Test` come variabile di output, ed ottenere i valori con la medesima sintassi. Se hai in programma di eseguire operazioni lunghe sulle variabili globali, come ad esempio lavorare con liste globali di elementi, è opportuno apporre un %lock% all'oggetto `globals` tramite `lock(globals) { i tuoi blocchi e il tuo codice vanno qui }` in modo da renderlo thread-safe.</value>
   </data>
   <data name="NoBlockSelectedInfo" xml:space="preserve">
     <value>Seleziona un blocco per visualizzarne le impostazioni</value>

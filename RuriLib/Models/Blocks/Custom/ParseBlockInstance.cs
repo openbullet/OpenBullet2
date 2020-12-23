@@ -130,7 +130,7 @@ namespace RuriLib.Models.Blocks.Custom
         {
             using var writer = new StringWriter();
             
-            if (definedVariables.Contains(OutputVariable))
+            if (definedVariables.Contains(OutputVariable) || OutputVariable.StartsWith("globals."))
             {
                 writer.Write($"{OutputVariable} = ");
             }

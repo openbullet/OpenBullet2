@@ -17,6 +17,7 @@ using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -46,6 +47,7 @@ namespace RuriLib.Models.Jobs
         private ProxyPool proxyPool;
         private readonly Random random;
         private Timer tickTimer;
+        private dynamic globalVariables;
 
         // Instance properties and stats
         public List<Hit> Hits { get; private set; } = new List<Hit>();
@@ -112,7 +114,7 @@ namespace RuriLib.Models.Jobs
                         }
                     }
 
-                    var scriptGlobals = new ScriptGlobals(botData);
+                    var scriptGlobals = new ScriptGlobals(botData, input.Globals);
                     
                     // Set custom inputs answers
                     foreach (var answer in input.CustomInputsAnswers)
@@ -184,6 +186,7 @@ namespace RuriLib.Models.Jobs
             // await base.Start();
 
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
+            globalVariables = new ExpandoObject();
 
             if (wordlistType == null)
                 throw new NullReferenceException($"The wordlist type with name {DataPool.WordlistType} was not found in the Environment");
@@ -204,6 +207,7 @@ namespace RuriLib.Models.Jobs
                     ProxyPool = proxyPool,
                     BotData = new BotData(settings.RuriLibSettings, Config.Settings, new BotLogger(), null, random,
                         new DataLine(line, wordlistType), null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
+                    Globals = globalVariables,
                     Script = script,
                     CustomInputsAnswers = CustomInputsAnswers,
                     Index = index++
@@ -393,6 +397,7 @@ namespace RuriLib.Models.Jobs
     {
         public MultiRunJob Job { get; set; }
         public BotData BotData { get; set; }
+        public dynamic Globals { get; set; }
         public ProxyPool ProxyPool { get; set; }
         public Script Script { get; set; }
         public Dictionary<string, string> CustomInputsAnswers { get; set; }

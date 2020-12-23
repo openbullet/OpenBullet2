@@ -113,7 +113,7 @@ namespace RuriLib.Models.Blocks
             // If not void, do variable assignment
             if (Descriptor.ReturnType.HasValue)
             {
-                if (declaredVariables.Contains(OutputVariable))
+                if (declaredVariables.Contains(OutputVariable) || OutputVariable.StartsWith("globals."))
                 {
                     writer.Write($"{OutputVariable} = ");
                 }

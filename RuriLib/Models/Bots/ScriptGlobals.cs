@@ -19,9 +19,15 @@ namespace RuriLib.Models.Bots
         /// </summary>
         public dynamic input;
 
-        public ScriptGlobals(BotData data)
+        /// <summary>
+        /// The expando object where global variables are stored.
+        /// </summary>
+        public dynamic globals;
+
+        public ScriptGlobals(BotData data, dynamic globals)
         {
             this.data = data;
+            this.globals = globals;
 
             input = new ExpandoObject();
             foreach (var variable in data.Line.GetVariables())

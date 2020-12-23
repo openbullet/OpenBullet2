@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -106,7 +107,7 @@ namespace OpenBullet2.Shared
             
             try
             {
-                var scriptGlobals = new ScriptGlobals(data);
+                var scriptGlobals = new ScriptGlobals(data, new ExpandoObject());
                 foreach (var input in Config.Settings.InputSettings.CustomInputs)
                     (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
 
