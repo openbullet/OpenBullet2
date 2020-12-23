@@ -9,8 +9,11 @@ namespace RuriLib.Services
 {
     public class PluginRepository
     {
+        // AppDomains other than AppDomain.CurrentDomain aren't supported in .NET core
         private readonly AppDomain domain = AppDomain.CurrentDomain;
         private readonly string baseFolder = "Plugins";
+        private readonly List<string> toDelete = new();
+        private string ToDeleteFile => Path.Combine(baseFolder, ".toDelete");
 
         public PluginRepository()
         {
@@ -20,6 +23,26 @@ namespace RuriLib.Services
             // Hook the EventHandler for assembly resolution
             domain.AssemblyResolve += ResolveHandler;
 
+            // Delete plugins that were marked for deletion
+            if (File.Exists(ToDeleteFile))
+            {
+                var toDelete = File.ReadAllLines(ToDeleteFile).Where(p => !string.IsNullOrWhiteSpace(p));
+                foreach (var pluginName in toDelete)
+                {
+                    var path = Path.Combine(baseFolder, pluginName);
+                    var filePath = $"{path}.dll";
+
+                    // Delete the dll file if it exists
+                    if (File.Exists(filePath))
+                        File.Delete(filePath);
+
+                    // Delete the directory if it exists
+                    if (Directory.Exists(path))
+                        Directory.Delete(path, true);
+                }
+                File.Delete(ToDeleteFile);
+            }
+                
             // Load all existing plugins and their dependencies in the AppDomain
             LoadAssemblies(GetPlugins());
             ReloadBlockDescriptors();
@@ -29,13 +52,17 @@ namespace RuriLib.Services
         /// Gets assemblies from .dll files in the base folder.
         /// </summary>
         public IEnumerable<Assembly> GetPlugins()
-            => Directory.GetFiles(baseFolder, "*.dll").Select(p => Assembly.LoadFrom(p));
+            => Directory.GetFiles(baseFolder, "*.dll")
+                .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
+                .Select(p => Assembly.LoadFrom(p));
 
         /// <summary>
         /// Retrieves the names of .dll files in the base folder (without extension).
         /// </summary>
         public IEnumerable<string> GetPluginNames()
-            => Directory.GetFiles(baseFolder, "*.dll").Select(p => Path.GetFileNameWithoutExtension(p));
+            => Directory.GetFiles(baseFolder, "*.dll")
+                .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
+                .Select(p => Path.GetFileNameWithoutExtension(p));
 
         /// <summary>
         /// Retrieves the path of folders that contain the dependencies of existing plugins.
@@ -74,17 +101,16 @@ namespace RuriLib.Services
         // Delete a plugin (unload, recreate Descriptors) (also unload all deps from appdomain?)
         public void DeletePlugin(string name)
         {
-            // TODO: Unload the assembly from the AppDomain (leave its dependencies loaded
-            // because maybe they are the same that are being used by RuriLib).
+            // TODO: Loading and unloading through AssemblyLoadContext
+            // https://github.com/dotnet/samples/blob/master/core/tutorials/Unloading/Host/Program.cs
 
-            var folder = Path.Combine(baseFolder, name);
+            // If already marked for deletion, skip
+            if (toDelete.Contains(name))
+                return;
 
-            // Delete the dll file
-            File.Delete($"{folder}.dll");
-
-            // If it exists, delete the directory as well
-            if (Directory.Exists(folder))
-                Directory.Delete(folder, true);
+            // Append the plugin's name to the deletion list
+            File.AppendAllText(ToDeleteFile, name + Environment.NewLine);
+            toDelete.Add(name);
 
             ReloadBlockDescriptors();
         }
@@ -123,13 +149,13 @@ namespace RuriLib.Services
 
         // Checks if an assembly is already loaded in the domain
         private bool IsAlreadyLoaded(AssemblyName assembly)
-            => AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName == assembly.FullName);
+            => domain.GetAssemblies().Any(a => a.FullName == assembly.FullName);
 
         // Handler that resolves assemblies from the Plugins folder and its subdirectories
         private Assembly ResolveHandler(object sender, ResolveEventArgs args)
         {
             // Check if the requested assembly is part of the loaded assemblies
-            var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            var loadedAssembly = domain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             if (loadedAssembly != null)
                 return loadedAssembly;
 
