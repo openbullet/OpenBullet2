@@ -9,6 +9,7 @@ using RuriLib.Models.Variables;
 using RuriLib.Models.Conditions;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using IronPython.Modules;
+using RuriLib.Exceptions;
 
 namespace RuriLib.Helpers.LoliCode
 {
@@ -52,9 +53,14 @@ namespace RuriLib.Helpers.LoliCode
             // "fixedValue"
             if (input[0] == '@') // VARIABLE
             {
-                input = input.Substring(1);
+                input = input[1..];
+                var variableName = LineParser.ParseToken(ref input);
+
+                if (string.IsNullOrWhiteSpace(variableName))
+                    throw new Exception("Variable name cannot be empty");
+
                 setting.InputMode = SettingInputMode.Variable;
-                setting.InputVariableName = LineParser.ParseToken(ref input);
+                setting.InputVariableName = variableName;
                 setting.InterpolatedSetting = param switch
                 {
                     StringParameter _ => new InterpolatedStringSetting(),
