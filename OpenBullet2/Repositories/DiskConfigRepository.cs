@@ -93,7 +93,7 @@ namespace OpenBullet2.Repositories
                     // Don't do anything, it's not the end of the world if we don't write some metadata ^_^
                 }
             }
-            
+
             await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
         }
 

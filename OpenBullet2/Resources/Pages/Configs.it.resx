@@ -213,6 +213,12 @@
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
   </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Modifiche non salvate</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>La config corrente ha modifiche non salvate, continuare comunque?</value>
+  </data>
   <data name="Upload" xml:space="preserve">
     <value>Carica</value>
   </data>

@@ -6,6 +6,7 @@ using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Extensions;
+using RuriLib.Functions.Crypto;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using RuriLib.Services;
@@ -101,6 +102,13 @@ namespace OpenBullet2.Pages
                         await js.AlertWarning(Loc["MissingPlugin"], $"{Loc["MissingPluginText"]}: {plugin}");
                     }
                 }
+            }
+
+            // Check if the previous config was saved
+            if (ConfigService.SelectedConfig != null && ConfigService.SelectedConfig.HasUnsavedChanges())
+            {
+                if (!await js.Confirm(Loc["UnsavedChanges"], Loc["UnsavedChangesText"], Loc["Cancel"]))
+                    return;
             }
 
             ConfigService.SelectedConfig = selectedConfig;

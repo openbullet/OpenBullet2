@@ -1,9 +1,12 @@
-﻿using RuriLib.Helpers.Transpilers;
+﻿using RuriLib.Functions.Conversion;
+using RuriLib.Functions.Crypto;
+using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace RuriLib.Models.Configs
@@ -19,6 +22,10 @@ namespace RuriLib.Models.Configs
         public List<BlockInstance> Stack { get; set; } = new List<BlockInstance>();
         public string LoliCodeScript { get; set; } = "";
         public string CSharpScript { get; set; } = "";
+
+        // Hashes used to check if the config was saved
+        private string loliCodeHash;
+        private string cSharpHash;
 
         [JsonIgnore]
         public List<(BlockInstance, int)> DeletedBlocksHistory { get; set; } = new List<(BlockInstance, int)>();
@@ -53,7 +60,9 @@ namespace RuriLib.Models.Configs
             }
         }
 
-        // Checks if the config has only blocks or also additional C# code
+        /// <summary>
+        /// Checks if the config has only blocks or also additional C# code
+        /// </summary>
         public bool HasCSharpCode()
         {
             try
@@ -73,5 +82,24 @@ namespace RuriLib.Models.Configs
                 return false;
             }
         }
+
+        /// <summary>
+        /// Update the hashes of the current state of LoliCode and C# scripts
+        /// (call this this when you first load the config or when you save changes to the repository).
+        /// </summary>
+        public void UpdateHashes()
+        {
+            loliCodeHash = HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(LoliCodeScript)));
+            cSharpHash = HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(CSharpScript)));
+        }
+
+        /// <summary>
+        /// Checks if the config's LoliCode or C# code have been edited since
+        /// the last call of <see cref="UpdateHashes"/>.
+        /// </summary>
+        public bool HasUnsavedChanges()
+            => Mode == ConfigMode.CSharp
+                ? HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(CSharpScript))) != cSharpHash
+                : HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(LoliCodeScript))) != loliCodeHash;
     }
 }

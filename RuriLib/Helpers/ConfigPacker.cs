@@ -48,6 +48,7 @@ namespace RuriLib.Helpers
                 }
             }
 
+            config.UpdateHashes();
             return packageStream.ToArray();
         }
 
@@ -76,6 +77,7 @@ namespace RuriLib.Helpers
                 }
             }
 
+            config.UpdateHashes();
             return await Task.FromResult(config);
         }
 
