@@ -62,6 +62,17 @@ namespace RuriLib.Blocks.Requests.WebSocket
             return cloned;
         }
 
+        [Block("Disconnects the existing Web Socket", name = "WebSocket Disconnect")]
+        public static void WsDisconnect(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var ws = GetSocket(data);
+            ws.Close();
+
+            data.Logger.Log("Closed the WebSocket", LogColors.MossGreen);
+        }
+
         private static WebSocketSharp.WebSocket GetSocket(BotData data)
         {
             if (!data.Objects.ContainsKey("webSocket"))
