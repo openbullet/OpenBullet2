@@ -1,4 +1,5 @@
-﻿using RuriLib.Functions.Conversion;
+﻿using Newtonsoft.Json;
+using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Crypto;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
@@ -27,7 +28,7 @@ namespace RuriLib.Models.Configs
         private string loliCodeHash;
         private string cSharpHash;
 
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public List<(BlockInstance, int)> DeletedBlocksHistory { get; set; } = new List<(BlockInstance, int)>();
 
         public Config()
@@ -89,8 +90,8 @@ namespace RuriLib.Models.Configs
         /// </summary>
         public void UpdateHashes()
         {
-            loliCodeHash = HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(LoliCodeScript)));
-            cSharpHash = HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(CSharpScript)));
+            loliCodeHash = GetHash(LoliCodeScript + JsonConvert.SerializeObject(Settings));
+            cSharpHash = GetHash(CSharpScript + JsonConvert.SerializeObject(Settings));
         }
 
         /// <summary>
@@ -99,7 +100,10 @@ namespace RuriLib.Models.Configs
         /// </summary>
         public bool HasUnsavedChanges()
             => Mode == ConfigMode.CSharp
-                ? HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(CSharpScript))) != cSharpHash
-                : HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(LoliCodeScript))) != loliCodeHash;
+                ? GetHash(CSharpScript + JsonConvert.SerializeObject(Settings)) != cSharpHash
+                : GetHash(LoliCodeScript + JsonConvert.SerializeObject(Settings)) != loliCodeHash;
+
+        private static string GetHash(string str)
+            => HexConverter.ToHexString(Crypto.SHA1(Encoding.UTF8.GetBytes(str)));
     }
 }
