@@ -105,7 +105,7 @@ namespace OpenBullet2.Pages
             }
 
             // Check if the previous config was saved
-            if (ConfigService.SelectedConfig != null && ConfigService.SelectedConfig.HasUnsavedChanges())
+            if (ConfigService.SelectedConfig != null && ConfigService.SelectedConfig != selectedConfig && ConfigService.SelectedConfig.HasUnsavedChanges())
             {
                 if (!await js.Confirm(Loc["UnsavedChanges"], Loc["UnsavedChangesText"], Loc["Cancel"]))
                     return;
