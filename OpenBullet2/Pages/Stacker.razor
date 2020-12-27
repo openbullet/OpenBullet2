@@ -5,9 +5,9 @@
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xl-3 col-lg-6">
-            <div style="height: 700px; overflow-y: auto;">
+    <div class="row mb-2">
+        <div class="col-xl-3 col-lg-6 px-0">
+            <div>
                 <h5>@Loc["CurrentStack"]</h5>
                 <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
             </div>
@@ -50,7 +50,7 @@
                 }
             </div>
         </div>
-        <div class="col-xl-3 d-xl-block d-none">
+        <div class="col-xl-3 d-xl-block d-none px-0">
             <div style="height: 700px; overflow-y: auto;">
                 <h5>@Loc["AvailableBlocks"]</h5>
                 <AvailableBlocksViewer SelectedDescriptor="AddBlock" />
