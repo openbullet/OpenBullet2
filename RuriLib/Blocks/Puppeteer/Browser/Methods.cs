@@ -1,4 +1,6 @@
-﻿using PuppeteerSharp;
+﻿using PuppeteerExtraSharp;
+using PuppeteerExtraSharp.Plugins.ExtraStealth;
+using PuppeteerSharp;
 using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -24,7 +26,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             // Check if there is already an open browser
             if (!data.Objects.ContainsKey("puppeteer"))
             {
-                // Configure the options and launch the browser
+                // Configure the options
                 var launchOptions = new LaunchOptions
                 {
                     Args = new string[] { args },
@@ -32,8 +34,13 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                     Headless = data.ConfigSettings.PuppeteerSettings.Headless,
                     DefaultViewport = null // This is important
                 };
-                
-                browser = await PuppeteerSharp.Puppeteer.LaunchAsync(launchOptions, null, Product.Chrome);
+
+                // Add the plugins
+                var extra = new PuppeteerExtra();
+                extra.Use(new StealthPlugin());
+
+                // Launch the browser
+                browser = await extra.LaunchAsync(launchOptions);
                 browser.IgnoreHTTPSErrors = data.ConfigSettings.PuppeteerSettings.IgnoreHttpsErrors;
 
                 // Save the browser for further use
