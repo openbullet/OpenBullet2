@@ -18,7 +18,7 @@ namespace OpenBullet2.Services
             foreach (var entry in entries)
             {
                 var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entry.JobOptions, jsonSettings).Options;
-                var job = jobFactory.FromOptions(entry.Id, entry.OwnerId, options);
+                var job = jobFactory.FromOptions(entry.Id, entry.Owner.Id, options);
                 Jobs.Add(job);
             }
         }
