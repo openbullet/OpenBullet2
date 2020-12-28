@@ -31,28 +31,28 @@
     <PackageReference Include="BlazorMonaco" Version="1.5.0" />
     <PackageReference Include="CaptchaSharp" Version="1.0.4" />
     <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.0" />
-    <PackageReference Include="HtmlSanitizer" Version="5.0.355" />
+    <PackageReference Include="HtmlSanitizer" Version="5.0.372" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.3" />
     <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PuppeteerExtraSharp" Version="1.1.0" />
     <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
-    <PackageReference Include="Radzen.Blazor" Version="2.18.2" />
+    <PackageReference Include="Radzen.Blazor" Version="2.18.8" />
     <PackageReference Include="Ruri.SocksSharp" Version="1.2.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
