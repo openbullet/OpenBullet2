@@ -175,7 +175,8 @@ namespace OpenBullet2.Pages
                 var dto = result.Data as ProxiesForImportDto;
 
                 var entities = ParseProxies(dto).ToList();
-                entities.ForEach(e => e.Group.Id = currentGroupId);
+                var currentGroup = await ProxyGroupsRepo.Get(currentGroupId);
+                entities.ForEach(e => e.Group = currentGroup);
 
                 await ProxyRepo.Add(entities);
                 await ProxyRepo.RemoveDuplicates(currentGroupId);
