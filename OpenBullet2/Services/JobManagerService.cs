@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Jobs;
@@ -12,7 +13,7 @@ namespace OpenBullet2.Services
         public JobManagerService(IJobRepository jobRepo, JobFactoryService jobFactory)
         {
             // Restore jobs from the database
-            var entities = jobRepo.GetAll().ToList();
+            var entities = jobRepo.GetAll().Include(j => j.Owner).ToList();
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
             foreach (var entity in entities)
