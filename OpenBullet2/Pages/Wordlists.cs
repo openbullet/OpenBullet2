@@ -73,7 +73,7 @@ namespace OpenBullet2.Pages
                 await js.AlertSuccess(Loc["Added"], Loc["AddedWordlist"]);
             }
 
-            StateHasChanged();
+            await RefreshList();
         }
 
         private async Task EditWordlist()

@@ -1,5 +1,7 @@
-﻿@using OpenBullet2.Entities 
+﻿@using OpenBullet2.Entities
 @using OpenBullet2.Helpers
+@using OpenBullet2.Auth
+@inject AuthenticationStateProvider Auth
 @inject IWordlistRepository WordlistRepo
 @inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
@@ -30,13 +32,18 @@
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    List<WordlistEntity> wordlists;
+    List<WordlistEntity> wordlists = new();
     WordlistEntity selectedWordlist;
     string linesPreview = string.Empty;
+    private int uid = -1;
 
     protected override async Task OnInitializedAsync()
     {
-        wordlists = await WordlistRepo.GetAll().ToListAsync();
+        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
+        wordlists = uid == 0
+            ? await WordlistRepo.GetAll().ToListAsync()
+            : await WordlistRepo.GetAll().Include(w => w.Owner).Where(w => w.Owner.Id == uid).ToListAsync();
     }
 
     void Preview(WordlistEntity wordlist)
