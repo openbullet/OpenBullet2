@@ -30,9 +30,9 @@ namespace OpenBullet2.Pages
         [Inject] public AuthenticationStateProvider Auth { get; set; }
 
         InputSelectNumber<int> groupSelectElement;
-        private List<ProxyGroupEntity> groups;
+        private List<ProxyGroupEntity> groups = new();
         private int currentGroupId = -1;
-        private List<ProxyEntity> proxies;
+        private List<ProxyEntity> proxies = new();
         private int maxPing = 5000;
         private int uid = -1;
 
@@ -76,10 +76,7 @@ namespace OpenBullet2.Pages
             }
             else
             {
-                proxies = uid == 0
-                    ? await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync()
-                    : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
-                        .Where(p => p.Group.Owner.Id == uid && p.Group.Id == currentGroupId).ToListAsync();
+                proxies = await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync();
             }
 
             StateHasChanged();
@@ -92,7 +89,10 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                groups.Add(result.Data as ProxyGroupEntity);
+                var entity = result.Data as ProxyGroupEntity;
+                entity.Owner = await GuestRepo.Get(uid);
+                await ProxyGroupsRepo.Add(entity);
+                groups.Add(entity);
                 await js.AlertSuccess(Loc["Created"], Loc["ProxyGroupCreated"]);
                 currentGroupId = groups.Last().Id;
                 await RefreshList();

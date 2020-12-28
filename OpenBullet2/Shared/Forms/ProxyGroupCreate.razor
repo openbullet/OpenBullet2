@@ -1,9 +1,5 @@
 ﻿@using OpenBullet2.Entities
-@using OpenBullet2.Auth 
 @inject IModalService ModalService
-@inject IProxyGroupRepository ProxyGroupRepo
-@inject IGuestRepository GuestRepo 
-@inject AuthenticationStateProvider Auth
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroupCreate> Loc
 
 <EditForm Model="proxyGroup">
@@ -14,23 +10,10 @@
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    private ProxyGroupEntity proxyGroup;
-    private int uid = -1;
-
-    protected override async Task OnInitializedAsync()
+    private ProxyGroupEntity proxyGroup = new ProxyGroupEntity { Name = "My proxy group" };
+    
+    private void Create()
     {
-        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-
-        proxyGroup = new ProxyGroupEntity
-        {
-            Name = "My proxy group",
-            Owner = await GuestRepo.Get(uid)
-        };
-    }
-
-    private async Task Create()
-    {
-        await ProxyGroupRepo.Add(proxyGroup);
         BlazoredModal.Close(ModalResult.Ok(proxyGroup));
     }
 }
