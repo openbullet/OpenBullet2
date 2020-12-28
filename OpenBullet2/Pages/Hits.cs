@@ -94,6 +94,8 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<HitEdit>(Loc["EditHit"], parameters);
             await modal.Result;
+
+            await RefreshList();
         }
 
         private async Task DeleteHit()
@@ -112,6 +114,8 @@ namespace OpenBullet2.Pages
                 // Delete the hit from the local list
                 hits.Remove(selectedHit);
             }
+
+            await RefreshList();
         }
 
         private async Task PurgeHits()

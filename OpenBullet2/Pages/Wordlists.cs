@@ -1,14 +1,18 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Shared.Forms;
 using Radzen.Blazor;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace OpenBullet2.Pages
 {
@@ -16,15 +20,19 @@ namespace OpenBullet2.Pages
     {
         [Inject] IModalService Modal { get; set; }
         [Inject] IWordlistRepository WordlistRepo { get; set; }
+        [Inject] public IGuestRepository GuestRepo { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
-        private List<WordlistEntity> wordlists;
+        private List<WordlistEntity> wordlists = new();
         private WordlistEntity selectedWordlist;
+        private int uid = -1;
 
         RadzenGrid<WordlistEntity> wordlistsGrid;
         private int resultsPerPage = 15;
 
         protected override async Task OnInitializedAsync()
         {
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
             await RefreshList();
 
             await base.OnInitializedAsync();
@@ -44,7 +52,9 @@ namespace OpenBullet2.Pages
 
         private async Task RefreshList()
         {
-            wordlists = await WordlistRepo.GetAll().ToListAsync();
+            wordlists = uid == 0
+                ? await WordlistRepo.GetAll().ToListAsync()
+                : await WordlistRepo.GetAll().Include(w => w.Owner).Where(w => w.Owner.Id == uid).ToListAsync();
 
             StateHasChanged();
         }
@@ -56,9 +66,14 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                wordlists.Add(result.Data as WordlistEntity);
+                var entity = result.Data as WordlistEntity;
+                entity.Owner = await GuestRepo.Get(uid);
+                await WordlistRepo.Add(entity);
+                wordlists.Add(entity);
                 await js.AlertSuccess(Loc["Added"], Loc["AddedWordlist"]);
             }
+
+            StateHasChanged();
         }
 
         private async Task EditWordlist()
@@ -74,6 +89,8 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<WordlistEdit>(Loc["EditWordlist"], parameters);
             await modal.Result;
+
+            await RefreshList();
         }
 
         private async Task DeleteWordlist()
@@ -91,10 +108,9 @@ namespace OpenBullet2.Pages
 
                 // Delete the wordlist from the DB and disk
                 await WordlistRepo.Delete(selectedWordlist, deleteFile);
-
-                // Delete the wordlist from the local list
-                wordlists.Remove(selectedWordlist);
             }
+
+            await RefreshList();
         }
 
         private async Task ShowNoWordlistSelectedWarning()

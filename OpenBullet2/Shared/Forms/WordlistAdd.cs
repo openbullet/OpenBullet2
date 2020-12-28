@@ -2,8 +2,6 @@
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
@@ -22,12 +20,9 @@ namespace OpenBullet2.Shared.Forms
     public partial class WordlistAdd
     {
         [Inject] public IModalService ModalService { get; set; }
-        [Inject] public IWordlistRepository WordlistRepo { get; set; }
-        [Inject] public IGuestRepository GuestRepo { get; set; }
         [Inject] public IFileReaderService FileReaderService { get; set; }
         [Inject] public RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
-        [Inject] public AuthenticationStateProvider Auth { get; set; }
 
         [CascadingParameter] public BlazoredModalInstance BlazoredModal { get; set; }
         ElementReference inputTypeFileElement;
@@ -41,18 +36,15 @@ namespace OpenBullet2.Shared.Forms
         string selectedFile = "";
         IEnumerable<string> entries = null;
         bool valid = false;
-        private int uid = -1;
 
         protected override async Task OnInitializedAsync()
         {
             wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-
+            
             wordlist = new WordlistEntity
             {
                 Name = "My Wordlist",
-                Type = wordlistTypes.First(),
-                Owner = await GuestRepo.Get(uid)
+                Type = wordlistTypes.First()
             };
 
             baseDirectory = Directory.GetCurrentDirectory();
@@ -165,7 +157,6 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            await WordlistRepo.Add(wordlist, fileStream);
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
 
@@ -179,7 +170,6 @@ namespace OpenBullet2.Shared.Forms
 
             wordlist.FileName = selectedFile;
             wordlist.Total = File.ReadLines(selectedFile).Count();
-            await WordlistRepo.Add(wordlist);
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
     }
