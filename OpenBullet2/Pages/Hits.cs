@@ -64,7 +64,6 @@ namespace OpenBullet2.Pages
         {
             resultsPerPage = value;
             await RefreshList();
-            StateHasChanged();
         }
 
         private void SelectHit(HitEntity hit)
