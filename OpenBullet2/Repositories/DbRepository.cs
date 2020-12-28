@@ -17,6 +17,9 @@ namespace OpenBullet2.Repositories
             this.context = context;
         }
 
+        /// <summary>
+        /// Adds an entity and saves changes.
+        /// </summary>
         public virtual async Task Add(T entity)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -33,6 +36,9 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Adds multiple entities and saves changes.
+        /// </summary>
         public virtual async Task Add(IEnumerable<T> entities)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -49,6 +55,9 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes an entity and saves changes.
+        /// </summary>
         public virtual async Task Delete(T entity)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -65,6 +74,9 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes multiple entities and saves changes.
+        /// </summary>
         public virtual async Task Delete(IEnumerable<T> entities)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -81,6 +93,9 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets the entry with the specified id or null if not found.
+        /// </summary>
         public virtual async Task<T> Get(int id)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -88,7 +103,7 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                return await GetAll().FirstAsync(e => e.Id == id);
+                return await GetAll().FirstOrDefaultAsync(e => e.Id == id);
             }
             finally
             {
@@ -96,11 +111,15 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets an <see cref="IQueryable{T}"/> of all entries for further filtering.
+        /// </summary>
         public virtual IQueryable<T> GetAll()
-        {
-            return context.Set<T>();
-        }
+            => context.Set<T>();
 
+        /// <summary>
+        /// Updates the given entity and saves changes.
+        /// </summary>
         public virtual async Task Update(T entity)
         {
             while (!Monitor.TryEnter(dbLock))
@@ -117,6 +136,9 @@ namespace OpenBullet2.Repositories
             }
         }
 
+        /// <summary>
+        /// Updates multiple entities and saves changes.
+        /// </summary>
         public virtual async Task Update(IEnumerable<T> entities)
         {
             while (!Monitor.TryEnter(dbLock))

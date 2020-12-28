@@ -1,7 +1,9 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Auth;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
 using OpenBullet2.Entities;
@@ -23,20 +25,28 @@ namespace OpenBullet2.Pages
         [Inject] IModalService Modal { get; set; }
         [Inject] IProxyGroupRepository ProxyGroupsRepo { get; set; }
         [Inject] IProxyRepository ProxyRepo { get; set; }
+        [Inject] IGuestRepository GuestRepo { get; set; }
         [Inject] JobManagerService JobManagerService { get; set; }
+        [Inject] public AuthenticationStateProvider Auth { get; set; }
 
         InputSelectNumber<int> groupSelectElement;
-        private List<ProxyGroupEntity> groups;
+        private List<ProxyGroupEntity> groups = new();
         private int currentGroupId = -1;
-        private List<ProxyEntity> proxies;
+        private List<ProxyEntity> proxies = new();
         private int maxPing = 5000;
+        private int uid = -1;
 
         RadzenGrid<ProxyEntity> proxiesGrid;
         private int resultsPerPage = 15;
 
         protected override async Task OnInitializedAsync()
         {
-            groups = await ProxyGroupsRepo.GetAll().ToListAsync();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            
+            groups = uid == 0
+                ? await ProxyGroupsRepo.GetAll().ToListAsync()
+                : await ProxyGroupsRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
+
             await RefreshList();
 
             await base.OnInitializedAsync();
@@ -59,13 +69,14 @@ namespace OpenBullet2.Pages
         {
             if (currentGroupId == -1)
             {
-                proxies = await ProxyRepo.GetAll().ToListAsync();
+                proxies = uid == 0
+                    ? await ProxyRepo.GetAll().ToListAsync()
+                    : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
+                        .Where(p => p.Group.Owner.Id == uid).ToListAsync();
             }
             else
             {
-                proxies = await ProxyRepo.GetAll()
-                    .Where(p => p.GroupId == currentGroupId)
-                    .ToListAsync();
+                proxies = await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync();
             }
 
             StateHasChanged();
@@ -78,7 +89,10 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                groups.Add(result.Data as ProxyGroupEntity);
+                var entity = result.Data as ProxyGroupEntity;
+                entity.Owner = await GuestRepo.Get(uid);
+                await ProxyGroupsRepo.Add(entity);
+                groups.Add(entity);
                 await js.AlertSuccess(Loc["Created"], Loc["ProxyGroupCreated"]);
                 currentGroupId = groups.Last().Id;
                 await RefreshList();
@@ -161,11 +175,8 @@ namespace OpenBullet2.Pages
                 var dto = result.Data as ProxiesForImportDto;
 
                 var entities = ParseProxies(dto).ToList();
-
-                foreach (var entity in entities)
-                {
-                    entity.GroupId = currentGroupId;
-                }
+                var currentGroup = await ProxyGroupsRepo.Get(currentGroupId);
+                entities.ForEach(e => e.Group = currentGroup);
 
                 await ProxyRepo.Add(entities);
                 await ProxyRepo.RemoveDuplicates(currentGroupId);
@@ -184,7 +195,7 @@ namespace OpenBullet2.Pages
             }
 
             var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.GroupId == currentGroupId)
+                .Where(p => p.Group.Id == currentGroupId)
                 .ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
@@ -200,7 +211,7 @@ namespace OpenBullet2.Pages
             }
 
             var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.NotWorking)
+                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.NotWorking)
                 .ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
@@ -216,7 +227,7 @@ namespace OpenBullet2.Pages
             }
 
             var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.Untested)
+                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.Untested)
                 .ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
@@ -232,7 +243,7 @@ namespace OpenBullet2.Pages
             }
 
             var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.GroupId == currentGroupId && p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing)
+                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing)
                 .ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();

@@ -20,7 +20,6 @@ namespace OpenBullet2.Shared.Forms
     public partial class WordlistAdd
     {
         [Inject] public IModalService ModalService { get; set; }
-        [Inject] public IWordlistRepository WordlistRepo { get; set; }
         [Inject] public IFileReaderService FileReaderService { get; set; }
         [Inject] public RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
@@ -41,7 +40,7 @@ namespace OpenBullet2.Shared.Forms
         protected override async Task OnInitializedAsync()
         {
             wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
-
+            
             wordlist = new WordlistEntity
             {
                 Name = "My Wordlist",
@@ -158,7 +157,6 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            await WordlistRepo.Add(wordlist, fileStream);
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
 
@@ -172,7 +170,6 @@ namespace OpenBullet2.Shared.Forms
 
             wordlist.FileName = selectedFile;
             wordlist.Total = File.ReadLines(selectedFile).Count();
-            await WordlistRepo.Add(wordlist);
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
     }

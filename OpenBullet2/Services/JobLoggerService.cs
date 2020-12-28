@@ -62,7 +62,7 @@ namespace OpenBullet2.Services
                 }
             }
 
-            NewLog.Invoke(this, jobId);
+            NewLog?.Invoke(this, jobId);
         }
 
         public void LogInfo(int jobId, string message) => Log(jobId, message, LogKind.Info, "white");

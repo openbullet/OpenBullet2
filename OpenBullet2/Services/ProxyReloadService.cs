@@ -33,7 +33,7 @@ namespace OpenBullet2.Services
             {
                 var group = await proxyGroupsRepo.Get(groupId);
                 entities = await proxyRepo.GetAll()
-                    .Where(p => p.GroupId == groupId)
+                    .Where(p => p.Group.Id == groupId)
                     .ToListAsync();
             }
 

@@ -19,6 +19,7 @@ namespace OpenBullet2.Pages
     public partial class JobCreator
     {
         [Inject] IJobRepository JobRepo { get; set; }
+        [Inject] IGuestRepository GuestRepo { get; set; }
         [Inject] JobManagerService Manager { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] JobFactoryService JobFactory { get; set; }
@@ -27,9 +28,12 @@ namespace OpenBullet2.Pages
 
         JobType jobType;
         JobOptions jobOptions;
+        private int uid = -1;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
+            uid = await((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
             Type ??= JobType.MultiRun.ToString();
 
             var factory = new JobOptionsFactory();
@@ -44,7 +48,7 @@ namespace OpenBullet2.Pages
 
             var entity = new JobEntity
             {
-                OwnerId = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId(),
+                Owner = await GuestRepo.Get(uid),
                 CreationDate = DateTime.Now,
                 JobType = jobType,
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
@@ -53,11 +57,11 @@ namespace OpenBullet2.Pages
             await JobRepo.Add(entity);
 
             // Get the entity that was just added in order to get its ID
-            entity = await JobRepo.GetAll().OrderByDescending(e => e.Id).FirstAsync();
+            // entity = await JobRepo.GetAll().OrderByDescending(e => e.Id).FirstAsync();
 
             try
             {
-                var job = JobFactory.FromOptions(entity.Id, entity.OwnerId, jobOptions);
+                var job = JobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
 
                 Manager.Jobs.Add(job);
                 Nav.NavigateTo($"job/{job.Id}");

@@ -9,14 +9,14 @@ using OpenBullet2;
 namespace OpenBullet2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201108000804_Initial")]
+    [Migration("20201228145119_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("OpenBullet2.Entities.GuestEntity", b =>
                 {
@@ -65,6 +65,9 @@ namespace OpenBullet2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Proxy")
                         .HasColumnType("TEXT");
 
@@ -97,10 +100,12 @@ namespace OpenBullet2.Migrations
                     b.Property<int>("JobType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Jobs");
                 });
@@ -114,7 +119,7 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Host")
@@ -143,6 +148,8 @@ namespace OpenBullet2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Proxies");
                 });
 
@@ -155,7 +162,12 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("ProxyGroups");
                 });
@@ -180,20 +192,6 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Records");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.TriggeredActionEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("TriggeredAction")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TriggeredActions");
-                });
-
             modelBuilder.Entity("OpenBullet2.Entities.WordlistEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -206,6 +204,9 @@ namespace OpenBullet2.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Purpose")
                         .HasColumnType("TEXT");
 
@@ -217,7 +218,45 @@ namespace OpenBullet2.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Wordlists");
+                });
+
+            modelBuilder.Entity("OpenBullet2.Entities.JobEntity", b =>
+                {
+                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("OpenBullet2.Entities.ProxyEntity", b =>
+                {
+                    b.HasOne("OpenBullet2.Entities.ProxyGroupEntity", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("OpenBullet2.Entities.ProxyGroupEntity", b =>
+                {
+                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("OpenBullet2.Entities.WordlistEntity", b =>
+                {
+                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

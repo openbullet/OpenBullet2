@@ -1,7 +1,9 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
@@ -17,9 +19,11 @@ namespace OpenBullet2.Pages
     {
         [Inject] IModalService Modal { get; set; }
         [Inject] IHitRepository HitRepo { get; set; }
+        [Inject] AuthenticationStateProvider Auth { get; set; }
 
-        private List<HitEntity> hits;
+        private List<HitEntity> hits = new();
         private HitEntity selectedHit;
+        private int uid = -1;
 
         RadzenGrid<HitEntity> hitsGrid;
         private int resultsPerPage = 15;
@@ -50,6 +54,7 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
             await RefreshList();
 
             await base.OnInitializedAsync();
@@ -69,7 +74,9 @@ namespace OpenBullet2.Pages
 
         private async Task RefreshList()
         {
-            hits = await HitRepo.GetAll().ToListAsync();
+            hits = uid == 0 
+                ? await HitRepo.GetAll().ToListAsync()
+                : await HitRepo.GetAll().Where(h => h.OwnerId == uid).ToListAsync();
 
             StateHasChanged();
         }
@@ -87,6 +94,8 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<HitEdit>(Loc["EditHit"], parameters);
             await modal.Result;
+
+            await RefreshList();
         }
 
         private async Task DeleteHit()
@@ -105,13 +114,23 @@ namespace OpenBullet2.Pages
                 // Delete the hit from the local list
                 hits.Remove(selectedHit);
             }
+
+            await RefreshList();
         }
 
         private async Task PurgeHits()
         {
             if (await js.Confirm(Loc["AreYouSure"], Loc["ReallyDeleteAllHits"], Loc["Cancel"]))
             {
-                HitRepo.Purge();
+                if (uid == 0)
+                {
+                    HitRepo.Purge();
+                }
+                else
+                {
+                    await HitRepo.Delete(hits);
+                }
+                
                 await RefreshList();
             }
         }

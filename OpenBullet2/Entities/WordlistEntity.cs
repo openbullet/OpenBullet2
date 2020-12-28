@@ -7,5 +7,7 @@
         public string Purpose { get; set; }
         public int Total { get; set; }
         public string Type { get; set; }
+
+        public GuestEntity Owner { get; set; } // The owner of the wordlist (null if admin)
     }
 }

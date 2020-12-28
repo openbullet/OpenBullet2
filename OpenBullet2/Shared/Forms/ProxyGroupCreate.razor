@@ -1,6 +1,5 @@
 ﻿@using OpenBullet2.Entities
 @inject IModalService ModalService
-@inject IProxyGroupRepository repo
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroupCreate> Loc
 
 <EditForm Model="proxyGroup">
@@ -12,10 +11,9 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     private ProxyGroupEntity proxyGroup = new ProxyGroupEntity { Name = "My proxy group" };
-
-    private async Task Create()
+    
+    private void Create()
     {
-        await repo.Add(proxyGroup);
         BlazoredModal.Close(ModalResult.Ok(proxyGroup));
     }
 }

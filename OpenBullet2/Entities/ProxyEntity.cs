@@ -14,6 +14,7 @@ namespace OpenBullet2.Entities
         public ProxyWorkingStatus Status { get; set; }
         public int Ping { get; set; }
         public DateTime LastChecked { get; set; }
-        public int GroupId { get; set; } // TODO: This should be a key
+
+        public ProxyGroupEntity Group { get; set; }
     }
 }
