@@ -26,7 +26,8 @@ namespace OpenBullet2.Models.Hits
                 Type = hit.Type,
                 ConfigId = hit.Config.Id,
                 ConfigName = hit.Config.Metadata.Name,
-                ConfigCategory = hit.Config.Metadata.Category
+                ConfigCategory = hit.Config.Metadata.Category,
+                OwnerId = hit.OwnerId
             };
 
             if (hit.DataPool is WordlistDataPool)

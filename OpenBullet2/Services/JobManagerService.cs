@@ -12,13 +12,13 @@ namespace OpenBullet2.Services
         public JobManagerService(IJobRepository jobRepo, JobFactoryService jobFactory)
         {
             // Restore jobs from the database
-            var entries = jobRepo.GetAll().ToList();
+            var entities = jobRepo.GetAll().ToList();
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
-            foreach (var entry in entries)
+            foreach (var entity in entities)
             {
-                var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entry.JobOptions, jsonSettings).Options;
-                var job = jobFactory.FromOptions(entry.Id, entry.Owner.Id, options);
+                var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
+                var job = jobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, options);
                 Jobs.Add(job);
             }
         }

@@ -24,6 +24,29 @@ namespace OpenBullet2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Hits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Data = table.Column<string>(type: "TEXT", nullable: true),
+                    CapturedData = table.Column<string>(type: "TEXT", nullable: true),
+                    Proxy = table.Column<string>(type: "TEXT", nullable: true),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    OwnerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ConfigId = table.Column<string>(type: "TEXT", nullable: true),
+                    ConfigName = table.Column<string>(type: "TEXT", nullable: true),
+                    ConfigCategory = table.Column<string>(type: "TEXT", nullable: true),
+                    WordlistId = table.Column<int>(type: "INTEGER", nullable: false),
+                    WordlistName = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hits", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Records",
                 columns: table => new
                 {
@@ -36,35 +59,6 @@ namespace OpenBullet2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Records", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hits",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Data = table.Column<string>(type: "TEXT", nullable: true),
-                    CapturedData = table.Column<string>(type: "TEXT", nullable: true),
-                    Proxy = table.Column<string>(type: "TEXT", nullable: true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: true),
-                    OwnerId = table.Column<int>(type: "INTEGER", nullable: true),
-                    ConfigId = table.Column<string>(type: "TEXT", nullable: true),
-                    ConfigName = table.Column<string>(type: "TEXT", nullable: true),
-                    ConfigCategory = table.Column<string>(type: "TEXT", nullable: true),
-                    WordlistId = table.Column<int>(type: "INTEGER", nullable: false),
-                    WordlistName = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hits", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Hits_Guests_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Guests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,11 +154,6 @@ namespace OpenBullet2.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Hits_OwnerId",
-                table: "Hits",
-                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Jobs_OwnerId",

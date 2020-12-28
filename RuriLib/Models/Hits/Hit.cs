@@ -23,6 +23,7 @@ namespace RuriLib.Models.Hits
         public Config Config { get; set; }
         public DataPool DataPool { get; set; }
         public IBotLogger BotLogger { get; set; }
+        public int OwnerId { get; set; } = -1;
 
         public override string ToString() => $"{DataString} | {CapturedDataString}";
 

@@ -9,7 +9,7 @@ using OpenBullet2;
 namespace OpenBullet2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201228011240_Initial")]
+    [Migration("20201228145119_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,7 @@ namespace OpenBullet2.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Proxy")
@@ -81,8 +81,6 @@ namespace OpenBullet2.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Hits");
                 });
@@ -223,15 +221,6 @@ namespace OpenBullet2.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Wordlists");
-                });
-
-            modelBuilder.Entity("OpenBullet2.Entities.HitEntity", b =>
-                {
-                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("OpenBullet2.Entities.JobEntity", b =>

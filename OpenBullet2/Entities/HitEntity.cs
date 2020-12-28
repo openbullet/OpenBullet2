@@ -10,7 +10,7 @@ namespace OpenBullet2.Entities
         public DateTime Date { get; set; }
         public string Type { get; set; } // The hit type like SUCCESS, CUSTOM, NONE
 
-        public GuestEntity Owner { get; set; } // The owner of the hit (null if admin)
+        public int OwnerId { get; set; } // The owner of the hit (0 if admin)
 
         // Config-related fields
         public string ConfigId { get; set; }

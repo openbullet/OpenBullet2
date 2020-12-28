@@ -3,7 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobCloner> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
-@if (jobEntity != null && CanSeeJob(jobEntity.Owner.Id))
+@if (jobEntity != null && CanSeeJob(jobEntity.Owner == null ? 0 : jobEntity.Owner.Id))
 {
     <div class="mb-3">
         @switch (jobOptions)

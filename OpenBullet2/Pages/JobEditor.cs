@@ -48,7 +48,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var oldJob = Manager.Jobs.First(j => j.Id == JobId);
-                var newJob = JobFactory.FromOptions(JobId, jobEntity.Owner.Id, jobOptions);
+                var newJob = JobFactory.FromOptions(JobId, jobEntity.Owner == null ? 0 : jobEntity.Owner.Id, jobOptions);
 
                 Manager.Jobs.Remove(oldJob);
                 Manager.Jobs.Add(newJob);

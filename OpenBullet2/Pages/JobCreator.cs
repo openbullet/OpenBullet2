@@ -61,7 +61,7 @@ namespace OpenBullet2.Pages
 
             try
             {
-                var job = JobFactory.FromOptions(entity.Id, entity.Owner.Id, jobOptions);
+                var job = JobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
 
                 Manager.Jobs.Add(job);
                 Nav.NavigateTo($"job/{job.Id}");

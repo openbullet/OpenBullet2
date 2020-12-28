@@ -358,7 +358,8 @@ namespace RuriLib.Models.Jobs
                 Config = Config,
                 Date = DateTime.Now,
                 Proxy = botData.Proxy,
-                CapturedData = new Dictionary<string, object>()
+                CapturedData = new Dictionary<string, object>(),
+                OwnerId = OwnerId
             };
 
             foreach (var variable in result.ScriptVariables)
