@@ -15,9 +15,9 @@ using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Shared.Forms;
-using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,41 +33,9 @@ namespace OpenBullet2.Pages
         private HitEntity selectedHit;
         private int uid = -1;
 
-        RadzenGrid<HitEntity> hitsGrid;
-        private int resultsPerPage = 15;
-
-        private GridComponent<HitEntity> _gridComponent;
-        private CGrid<HitEntity> _grid;
-        private Task _task;
-
-        private string CaptureWidth
-        {
-            get
-            {
-                if (hits.Count == 0)
-                    return "200px";
-
-                var longest = hits
-                    .Select(h => h.CapturedData.Length)
-                    .OrderBy(l => l)
-                    .Last();
-
-                // The 0.82 value is referred to Consolas font-style
-                // since 2048 units in height correspond to 1126 units in width,
-                // and the 12 is referred to 12px in the css
-                var totalWidth = (int)(longest * 12 * 0.82);
-
-                if (totalWidth < 200)
-                    return "200px";
-
-                return $"{totalWidth}px";
-            }
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            
-        }
+        private GridComponent<HitEntity> gridComponent;
+        private CGrid<HitEntity> grid;
+        private Task gridLoad;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -79,36 +47,40 @@ namespace OpenBullet2.Pages
 
             Action<IGridColumnCollection<HitEntity>> columns = c =>
             {
-                c.Add(h => h.Data).Sortable(true).Filterable(true);
-                c.Add(h => h.Type).Sortable(true).Filterable(true);
-                c.Add(h => h.ConfigName).Sortable(true).Filterable(true);
-                c.Add(h => h.Date).Sortable(true).Filterable(true);
-                c.Add(h => h.WordlistName).Sortable(true).Filterable(true);
-                c.Add(h => h.Proxy).Sortable(true).Filterable(true);
-                c.Add(h => h.CapturedData).Sortable(true).Filterable(true);
+                c.Add(h => h.Data).Titled(Loc["Data"]);
+                c.Add(h => h.Type).Titled(Loc["Type"]);
+                c.Add(h => h.ConfigName).Titled(Loc["Config"]);
+                c.Add(h => h.Date).Titled(Loc["Date"]);
+                c.Add(h => h.WordlistName).Titled(Loc["Wordlist"]);
+                c.Add(h => h.Proxy).Titled(Loc["Proxy"]);
+                c.Add(h => h.CapturedData).Titled(Loc["CapturedData"]);
             };
 
             var query = new QueryDictionary<StringValues>();
             query.Add("grid-page", "2");
 
-            var client = new GridClient<HitEntity>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns)
+            var client = new GridClient<HitEntity>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .ChangePageSize(true)
+                .WithGridItemsCount()
                 .Selectable(true, true, true);
-            _grid = client.Grid;
+            grid = client.Grid;
 
             // Set new items to grid
-            _task = client.UpdateGrid();
-            await _task;
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
         }
 
-        private async Task OnResultsPerPageChanged(int value)
+        private ItemsDTO<HitEntity> GetGridRows(Action<IGridColumnCollection<HitEntity>> columns,
+                QueryDictionary<StringValues> query)
         {
-            resultsPerPage = value;
-            await RefreshList();
-        }
+            var server = new GridServer<HitEntity>(hits, new QueryCollection(query),
+                true, "hitsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
 
-        private void SelectHit(HitEntity hit)
-        {
-            selectedHit = hit;
+            // Return items to displays
+            return server.ItemsToDisplay;
         }
 
         protected void OnHitSelected(object item)
@@ -125,7 +97,7 @@ namespace OpenBullet2.Pages
                 ? await HitRepo.GetAll().ToListAsync()
                 : await HitRepo.GetAll().Where(h => h.OwnerId == uid).ToListAsync();
 
-            await _gridComponent.UpdateGrid();
+            await gridComponent.UpdateGrid();
             StateHasChanged();
         }
 
@@ -148,19 +120,21 @@ namespace OpenBullet2.Pages
 
         private async Task DeleteHit()
         {
-            if (selectedHit == null)
+            var selected = grid.SelectedItems.Cast<HitEntity>().ToList();
+
+            if (selected.Count == 0)
             {
                 await ShowNoHitSelectedWarning();
                 return;
             }
 
-            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedHit.Data}?", Loc["Cancel"]))
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selected.Count} {Loc["hits"]}?", Loc["Cancel"]))
             {
                 // Delete the hit from the db
-                await HitRepo.Delete(selectedHit);
+                await HitRepo.Delete(selected);
 
                 // Delete the hit from the local list
-                hits.Remove(selectedHit);
+                selected.ForEach(h => hits.Remove(h));
             }
 
             await RefreshList();
@@ -185,15 +159,5 @@ namespace OpenBullet2.Pages
 
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
-
-        private ItemsDTO<HitEntity> GetGridRows(Action<IGridColumnCollection<HitEntity>> columns,
-                QueryDictionary<StringValues> query)
-        {
-            var server = new GridServer<HitEntity>(hits, new QueryCollection(query),
-                true, "hitsGrid", columns, resultsPerPage).Sortable().Filterable().WithMultipleFilters();
-
-            // Return items to displays
-            return server.ItemsToDisplay;
-        }
     }
 }

@@ -144,11 +144,14 @@
   <data name="EditHit" xml:space="preserve">
     <value>Modifica hit</value>
   </data>
+  <data name="hits" xml:space="preserve">
+    <value>hit</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Caricamento</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Devi prima selezionare una hit</value>
-  </data>
-  <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>Nessuna hit trovata</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>

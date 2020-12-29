@@ -13,41 +13,11 @@
     </div>
 </div>
 
-<EditForm Model="resultsPerPage">
-    <label>@Loc["ResultsPerPage"]</label>
-    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
-                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
-        <option value="15">15</option>
-        <option value="30">30</option>
-        <option value="100">100</option>
-        <option value="250">250</option>
-    </InputSelectNumber>
-</EditForm>
-
-<p>@hits.Count @Loc["results"]</p>
-
-<!--
-<RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowPaging="true" PageSize="@resultsPerPage"
-            AllowSorting="true" Data="@hits" TItem="HitEntity" ColumnWidth="200px"
-            RowSelect="SelectHit" EmptyText="@Loc["NoRecordsToDisplay"]">
-    <Columns>
-        <RadzenGridColumn TItem="HitEntity" Property="Data" Title="@Loc["Data"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="Type" Title="@Loc["Type"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="ConfigName" Title="@Loc["Config"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="Date" Title="@Loc["Date"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="WordlistName" Title="@Loc["Wordlist"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="Proxy" Title="@Loc["Proxy"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="CapturedData" Title="@Loc["CapturedData"]"
-                          Width="@CaptureWidth" CssClass="grid-column-dynamic-width" />
-    </Columns>
-</RadzenGrid>
--->
-
-@if (_task != null && _task.IsCompleted)
+@if (gridLoad != null && gridLoad.IsCompleted)
 {
-    <GridComponent @ref="_gridComponent" T="HitEntity" Grid="@_grid" OnRowClicked="@OnHitSelected"></GridComponent>}
+    <GridComponent @ref="gridComponent" T="HitEntity" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent>
+}
 else
 {
-    <p><em>Loading...</em></p>
+    <p><em>@Loc["Loading"]...</em></p>
 }
