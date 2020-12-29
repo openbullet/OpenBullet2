@@ -222,6 +222,9 @@
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>
   </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Tema</value>
+  </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>
   </data>
