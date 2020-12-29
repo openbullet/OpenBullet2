@@ -41,7 +41,8 @@ namespace OpenBullet2.Services
             {
                 GeneralSettings = new GeneralSettings { ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() } },
                 RemoteSettings = new RemoteSettings(),
-                SecuritySettings = new SecuritySettings().GenerateJwtKey().SetupAdminPassword("admin")
+                SecuritySettings = new SecuritySettings().GenerateJwtKey().SetupAdminPassword("admin"),
+                AppearanceSettings = new AppearanceSettings()
             };
         }
     }

@@ -16,6 +16,7 @@ namespace OpenBullet2.Pages
         [Inject] NavigationManager Nav { get; set; }
         [Inject] public OBLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] PersistentSettingsService Settings { get; set; }
 
         [Parameter] public Config Config { get; set; }
         private MonacoEditor _editor { get; set; }
@@ -48,7 +49,7 @@ namespace OpenBullet2.Pages
                 AutomaticLayout = true,
                 Minimap = new MinimapOptions { Enabled = false },
                 ReadOnly = Config.Mode != ConfigMode.CSharp,
-                Theme = "vs-dark",
+                Theme = Settings.OpenBulletSettings.AppearanceSettings.MonacoTheme,
                 Language = "csharp",
                 MatchBrackets = true,
                 Value = Config.CSharpScript

@@ -43,7 +43,7 @@ Plugins/
 Wordlists/
 Mocks/
 Scripts/
-*-theme.css
+OpenBullet2/wwwroot/css/themes/*.css
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

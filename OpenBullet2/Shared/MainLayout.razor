@@ -1,4 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
+@inject PersistentSettingsService Settings
+@inherits LayoutComponentBase
+
+@if (Settings.OpenBulletSettings.AppearanceSettings.Theme != "Default")
+{
+    <Link rel="stylesheet" href="@($"css/themes/{Settings.OpenBulletSettings.AppearanceSettings.Theme}.css")" />
+}
 
 <BlazoredModal />
 

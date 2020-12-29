@@ -79,7 +79,7 @@ namespace RuriLib.Models.Blocks.Custom
 
             try
             {
-                Interpreter = Enum.Parse<Interpreter>(Regex.Match(reader.ReadLine(), "INTERPRETER:([^ ]+)$").Groups[1].Value);
+                Interpreter = Enum.Parse<Interpreter>(Regex.Match(line, "INTERPRETER:([^ ]+)$").Groups[1].Value);
             }
             catch
             {
@@ -92,7 +92,7 @@ namespace RuriLib.Models.Blocks.Custom
 
             try
             {
-                InputVariables = Regex.Match(reader.ReadLine(), "INPUT ([^ ]+)$").Groups[1].Value;
+                InputVariables = Regex.Match(line, "INPUT ([^ ]+)$").Groups[1].Value;
             }
             catch
             {

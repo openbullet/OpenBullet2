@@ -174,6 +174,9 @@
   <data name="Lines" xml:space="preserve">
     <value>Lines</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>

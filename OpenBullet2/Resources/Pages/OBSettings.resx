@@ -129,6 +129,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Allow system-wide file access</value>
   </data>
+  <data name="Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
@@ -177,6 +180,9 @@
   <data name="LogToFile" xml:space="preserve">
     <value>Log to a file as well</value>
   </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Monaco Editor Theme</value>
+  </data>
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>When editing a config, navigate to</value>
   </data>
@@ -221,6 +227,9 @@
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>
