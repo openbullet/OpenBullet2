@@ -26,6 +26,7 @@
 
 <p>@hits.Count @Loc["results"]</p>
 
+<!--
 <RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
             AllowPaging="true" PageSize="@resultsPerPage"
             AllowSorting="true" Data="@hits" TItem="HitEntity" ColumnWidth="200px"
@@ -37,7 +38,16 @@
         <RadzenGridColumn TItem="HitEntity" Property="Date" Title="@Loc["Date"]" />
         <RadzenGridColumn TItem="HitEntity" Property="WordlistName" Title="@Loc["Wordlist"]" />
         <RadzenGridColumn TItem="HitEntity" Property="Proxy" Title="@Loc["Proxy"]" />
-        <RadzenGridColumn TItem="HitEntity" Property="CapturedData" Title="@Loc["CapturedData"]" 
+        <RadzenGridColumn TItem="HitEntity" Property="CapturedData" Title="@Loc["CapturedData"]"
                           Width="@CaptureWidth" CssClass="grid-column-dynamic-width" />
     </Columns>
 </RadzenGrid>
+-->
+
+@if (_task != null && _task.IsCompleted)
+{
+    <GridComponent @ref="_gridComponent" T="HitEntity" Grid="@_grid" OnRowClicked="@OnHitSelected"></GridComponent>}
+else
+{
+    <p><em>Loading...</em></p>
+}
