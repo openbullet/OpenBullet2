@@ -26,7 +26,7 @@
         <div class="col px-0">
             <div class="w-100 mt-3" style="height: 500px;">
                 <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions"
-                              OnDidInit="OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+                              OnDidInit="@(() => OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme(Settings))" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
             </div>
             <br />
             <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" />

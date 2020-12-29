@@ -180,6 +180,9 @@
   <data name="LogToFile" xml:space="preserve">
     <value>Logga anche su file</value>
   </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Tema dell'editor Monaco</value>
+  </data>
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>Quando viene scelta una config da modificare, naviga su</value>
   </data>

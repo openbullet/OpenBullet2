@@ -14,6 +14,7 @@ namespace OpenBullet2.Pages
     {
         [Inject] public OBLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] PersistentSettingsService Settings { get; set; }
 
         private MonacoEditor _editor { get; set; }
         private Config config;
@@ -45,7 +46,7 @@ namespace OpenBullet2.Pages
             {
                 AutomaticLayout = true,
                 Minimap = new MinimapOptions { Enabled = false },
-                Theme = "vs-dark",
+                Theme = Settings.OpenBulletSettings.AppearanceSettings.MonacoTheme,
                 Language = "lolicode",
                 MatchBrackets = true,
                 Value = config.LoliCodeScript
