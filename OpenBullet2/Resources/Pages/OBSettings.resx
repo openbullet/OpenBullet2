@@ -129,6 +129,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Allow system-wide file access</value>
   </data>
+  <data name="Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
