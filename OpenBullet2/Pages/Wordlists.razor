@@ -13,31 +13,14 @@
     </div>
 </div>
 
-<EditForm Model="resultsPerPage">
-    <label>@Loc["ResultsPerPage"]</label>
-    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
-                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
-        <option value="15">15</option>
-        <option value="30">30</option>
-        <option value="100">100</option>
-        <option value="250">250</option>
-    </InputSelectNumber>
-</EditForm>
-
-<p>@wordlists.Count @Loc["results"]</p>
-
-<RadzenGrid @ref="wordlistsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowPaging="true" PageSize="@resultsPerPage"
-            AllowSorting="true" Data="@wordlists" TItem="WordlistEntity" ColumnWidth="200px"
-            RowSelect="SelectWordlist" EmptyText="@Loc["NoRecordsToDisplay"]">
-    <Columns>
-        <RadzenGridColumn TItem="WordlistEntity" Property="Name" Title="@Loc["Name"]" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Type" Title="@Loc["Type"]" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Purpose" Title="@Loc["Purpose"]" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="Total" Title="@Loc["Lines"]" Width="100px" />
-        <RadzenGridColumn TItem="WordlistEntity" Property="FileName" Title="@Loc["FileName"]" Width="300px" />
-    </Columns>
-</RadzenGrid>
+@if (gridLoad != null && gridLoad.IsCompleted)
+{
+    <GridComponent @ref="gridComponent" T="WordlistEntity" Grid="@grid" OnRowClicked="@OnWordlistSelected"></GridComponent>
+}
+else
+{
+    <p><em>@Loc["Loading"]...</em></p>
+}
 
 <hr />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" />

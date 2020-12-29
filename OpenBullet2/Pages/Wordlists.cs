@@ -13,6 +13,15 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using System.Linq;
+using GridBlazor.Pages;
+using GridBlazor;
+using GridShared;
+using System;
+using GridShared.Utility;
+using Microsoft.Extensions.Primitives;
+using System.Globalization;
+using GridMvc.Server;
+using Microsoft.AspNetCore.Http;
 
 namespace OpenBullet2.Pages
 {
@@ -27,27 +36,61 @@ namespace OpenBullet2.Pages
         private WordlistEntity selectedWordlist;
         private int uid = -1;
 
-        RadzenGrid<WordlistEntity> wordlistsGrid;
-        private int resultsPerPage = 15;
+        private GridComponent<WordlistEntity> gridComponent;
+        private CGrid<WordlistEntity> grid;
+        private Task gridLoad;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-            await RefreshList();
 
-            await base.OnInitializedAsync();
+            wordlists = uid == 0
+                ? await WordlistRepo.GetAll().ToListAsync()
+                : await WordlistRepo.GetAll().Include(w => w.Owner).Where(w => w.Owner.Id == uid).ToListAsync();
+
+            Action<IGridColumnCollection<WordlistEntity>> columns = c =>
+            {
+                c.Add(h => h.Name).Titled(Loc["Name"]);
+                c.Add(h => h.Type).Titled(Loc["Type"]);
+                c.Add(h => h.Purpose).Titled(Loc["Purpose"]);
+                c.Add(h => h.Total).Titled(Loc["Lines"]);
+                c.Add(h => h.FileName).Titled(Loc["FileName"]);
+            };
+
+            var query = new QueryDictionary<StringValues>();
+            query.Add("grid-page", "2");
+
+            var client = new GridClient<WordlistEntity>(q => GetGridRows(columns, q), query, false, "wordlistsGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .ChangePageSize(true)
+                .WithGridItemsCount()
+                .ExtSortable()
+                .Selectable(true, true, false);
+            grid = client.Grid;
+
+            // Set new items to grid
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
         }
 
-        private async Task OnResultsPerPageChanged(int value)
+        private ItemsDTO<WordlistEntity> GetGridRows(Action<IGridColumnCollection<WordlistEntity>> columns,
+                QueryDictionary<StringValues> query)
         {
-            resultsPerPage = value;
-            await RefreshList();
-            StateHasChanged();
+            var server = new GridServer<WordlistEntity>(wordlists, new QueryCollection(query),
+                true, "wordlistsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+
+            // Return items to displays
+            return server.ItemsToDisplay;
         }
 
-        private void SelectWordlist(WordlistEntity wordlist)
+        protected void OnWordlistSelected(object item)
         {
-            selectedWordlist = wordlist;
+            if (item.GetType() == typeof(WordlistEntity))
+            {
+                selectedWordlist = (WordlistEntity)item;
+            }
         }
 
         private async Task RefreshList()
@@ -56,6 +99,7 @@ namespace OpenBullet2.Pages
                 ? await WordlistRepo.GetAll().ToListAsync()
                 : await WordlistRepo.GetAll().Include(w => w.Owner).Where(w => w.Owner.Id == uid).ToListAsync();
 
+            await gridComponent.UpdateGrid();
             StateHasChanged();
         }
 
