@@ -14,7 +14,7 @@
     </div>
 </div>
 
-@if (gridLoad != null && gridLoad.IsCompleted)
+@if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {
     <GridComponent @ref="gridComponent" T="GuestEntity" Grid="@grid" OnRowClicked="@OnGuestSelected"></GridComponent>
 }

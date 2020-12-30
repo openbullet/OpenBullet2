@@ -13,7 +13,7 @@
 <div class="container-fluid" style="overflow-y: auto;">
     <div class="row">
         <div class="col-12 mt-3" style="height: 250px; overflow-y: auto;">
-            @if (gridLoad != null && gridLoad.IsCompleted)
+            @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
             {
                 <GridComponent @ref="gridComponent" T="WordlistEntity" Grid="@grid" OnRowClicked="@OnWordlistSelected"></GridComponent>
             }

@@ -12,7 +12,7 @@
 
 <div style="overflow-y: auto; width: 1000px;">
     <div style="height: 250px; overflow-y: auto;">
-        @if (gridLoad != null && gridLoad.IsCompleted)
+        @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
         {
             <GridComponent @ref="gridComponent" T="Config" Grid="@grid" OnRowClicked="@OnConfigSelected"></GridComponent>
         }

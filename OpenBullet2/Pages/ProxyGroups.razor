@@ -41,7 +41,7 @@
     <InputNumber style="width: 100px" @bind-Value="maxPing" />
 </EditForm>
 
-@if (gridLoad != null && gridLoad.IsCompleted)
+@if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {
     <GridComponent @ref="gridComponent" T="ProxyEntity" Grid="@grid"></GridComponent>
 }
