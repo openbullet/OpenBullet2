@@ -66,7 +66,7 @@ namespace OpenBullet2.Pages
                 .ChangePageSize(true)
                 .WithGridItemsCount()
                 .ExtSortable()
-                .Selectable(true, true, true);
+                .Selectable(true, false, true);
             grid = client.Grid;
 
             // Set new items to grid
