@@ -50,11 +50,11 @@ namespace OpenBullet2.Pages
 
             Action<IGridColumnCollection<WordlistEntity>> columns = c =>
             {
-                c.Add(h => h.Name).Titled(Loc["Name"]);
-                c.Add(h => h.Type).Titled(Loc["Type"]);
-                c.Add(h => h.Purpose).Titled(Loc["Purpose"]);
-                c.Add(h => h.Total).Titled(Loc["Lines"]);
-                c.Add(h => h.FileName).Titled(Loc["FileName"]);
+                c.Add(w => w.Name).Titled(Loc["Name"]);
+                c.Add(w => w.Type).Titled(Loc["Type"]);
+                c.Add(w => w.Purpose).Titled(Loc["Purpose"]);
+                c.Add(w => w.Total).Titled(Loc["Lines"]);
+                c.Add(w => w.FileName).Titled(Loc["FileName"]);
             };
 
             var query = new QueryDictionary<StringValues>();

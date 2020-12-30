@@ -1,8 +1,15 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using GridBlazor;
+using GridBlazor.Pages;
+using GridMvc.Server;
+using GridShared;
+using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using OpenBullet2.Auth;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
@@ -14,7 +21,9 @@ using OpenBullet2.Shared.Forms;
 using Radzen.Blazor;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,33 +45,61 @@ namespace OpenBullet2.Pages
         private int maxPing = 5000;
         private int uid = -1;
 
-        RadzenGrid<ProxyEntity> proxiesGrid;
-        private int resultsPerPage = 15;
+        private GridComponent<ProxyEntity> gridComponent;
+        private CGrid<ProxyEntity> grid;
+        private Task gridLoad;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-            
+
             groups = uid == 0
                 ? await ProxyGroupsRepo.GetAll().ToListAsync()
                 : await ProxyGroupsRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
 
-            await RefreshList();
+            proxies = uid == 0
+                    ? await ProxyRepo.GetAll().ToListAsync()
+                    : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
+                        .Where(p => p.Group.Owner.Id == uid).ToListAsync();
 
-            await base.OnInitializedAsync();
+            Action<IGridColumnCollection<ProxyEntity>> columns = c =>
+            {
+                c.Add(p => p.Type).Titled(Loc["Type"]);
+                c.Add(p => p.Host).Titled(Loc["Host"]);
+                c.Add(p => p.Port).Titled(Loc["Port"]);
+                c.Add(p => p.Username).Titled(Loc["Username"]);
+                c.Add(p => p.Password).Titled(Loc["Password"]);
+                c.Add(p => p.Country).Titled(Loc["Country"]);
+                c.Add(p => p.Status).Titled(Loc["Status"]);
+                c.Add(p => p.Ping).Titled(Loc["Ping"]);
+                c.Add(p => p.LastChecked).Titled(Loc["LastChecked"]);
+            };
+
+            var query = new QueryDictionary<StringValues>();
+            query.Add("grid-page", "2");
+
+            var client = new GridClient<ProxyEntity>(q => GetGridRows(columns, q), query, false, "proxiesGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .ChangePageSize(true)
+                .WithGridItemsCount()
+                .ExtSortable();
+            grid = client.Grid;
+
+            // Set new items to grid
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
         }
 
-        private async Task OnGroupSelected(int value)
+        private ItemsDTO<ProxyEntity> GetGridRows(Action<IGridColumnCollection<ProxyEntity>> columns,
+                QueryDictionary<StringValues> query)
         {
-            currentGroupId = value;
-            await RefreshList();
-        }
+            var server = new GridServer<ProxyEntity>(proxies, new QueryCollection(query),
+                true, "proxiesGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
 
-        private async Task OnResultsPerPageChanged(int value)
-        {
-            resultsPerPage = value;
-            await RefreshList();
-            StateHasChanged();
+            // Return items to displays
+            return server.ItemsToDisplay;
         }
 
         private async Task RefreshList()
@@ -79,7 +116,14 @@ namespace OpenBullet2.Pages
                 proxies = await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync();
             }
 
+            await gridComponent.UpdateGrid();
             StateHasChanged();
+        }
+
+        private async Task OnGroupSelected(int value)
+        {
+            currentGroupId = value;
+            await RefreshList();
         }
 
         private async Task AddGroup()
