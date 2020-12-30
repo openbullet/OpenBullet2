@@ -15,7 +15,7 @@ namespace OpenBullet2.Helpers
             image.Mutate(x => x
                 .Resize(width, height));
 
-            var ms = new MemoryStream();
+            using var ms = new MemoryStream();
             image.Save(ms, new PngEncoder());
             return Convert.ToBase64String(ms.ToArray());
         }

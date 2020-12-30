@@ -126,6 +126,9 @@
   <data name="AdminUsername" xml:space="preserve">
     <value>Username amministratore</value>
   </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Tutto fatto</value>
+  </data>
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Permetti accesso ai file in tutto il sistema</value>
   </data>
@@ -192,6 +195,12 @@
   <data name="NewPasswordSet" xml:space="preserve">
     <value>La nuova password è stata impostata!</value>
   </data>
+  <data name="NotACssFile" xml:space="preserve">
+    <value>Non è un file css</value>
+  </data>
+  <data name="NotACssFileText" xml:space="preserve">
+    <value>Il tema caricato non è un file css</value>
+  </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Target del Proxy Check</value>
   </data>
@@ -230,6 +239,12 @@
   </data>
   <data name="Theme" xml:space="preserve">
     <value>Tema</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Tema caricato con successo</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Carica tema</value>
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>

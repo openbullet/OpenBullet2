@@ -134,7 +134,9 @@
 <h1>@Loc["Appearance"]</h1>
 <EditForm Model="settings.AppearanceSettings">
     <label>@Loc["Theme"]</label>
-    <InputSelect @bind-Value="settings.AppearanceSettings.Theme">
+    <InputSelect ValueExpression="(() => settings.AppearanceSettings.Theme)"
+                 Value="settings.AppearanceSettings.Theme"
+                 ValueChanged="(string value) => OnThemeChanged(value)">
         <option value="Default">Default</option>
         @foreach (var theme in availableThemes)
         {
@@ -150,6 +152,9 @@
         <option value="hc-black">High Contrast (Dark)</option>
     </InputSelect>
     <br />
+
+    <label>@Loc["UploadTheme"]</label>
+    <InputFile OnChange="@ProcessUploadedTheme"/>
 </EditForm>
 
 <button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>

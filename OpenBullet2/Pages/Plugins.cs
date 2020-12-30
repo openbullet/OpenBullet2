@@ -27,7 +27,7 @@ namespace OpenBullet2.Pages
 
                     // Copy the content to a MemoryStream
                     using var reader = new StreamReader(stream);
-                    var ms = new MemoryStream();
+                    using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
 
                     // Add it to the repo
