@@ -221,3 +221,63 @@
     max-width: 40vw;
   }
 }
+
+/* GRID overrides */
+.grid-change-page-size.form-group {
+    margin: 0px !important;
+}
+
+    .grid-change-page-size.form-group label:first-child {
+        margin-left: 0px !important;
+    }
+
+table.grid-table tr.grid-row-selected td {
+    background: var(--bg-secondary) !important;
+}
+
+.form-control:focus{
+    color: var(--fg-primary) !important;
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--fg-primary) !important;
+}
+
+table.grid-table .grid-header > .grid-header-group > .grid-header-title > button {
+    color: var(--fg-secondary) !important;
+    background-color: var(--bg-primary) !important;
+}
+
+.grid-extsort-column {
+    background-color: var(--bg-secondary) !important;
+}
+
+    .grid-extsort-column button {
+        color: var(--fg-secondary) !important;
+    }
+
+    .grid-extsort-column span button {
+        color: var(--fg-secondary) !important;
+    }
+
+.dropdown.dropdown-menu.grid-dropdown.opened {
+    min-width: 300px;
+}
+
+.page-item .page-link {
+    color: var(--fg-primary) !important;
+    background-color: var(--bg-primary) !important;
+}
+
+.page-item .page-link:hover {
+    color: var(--fg-primary) !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+.page-item.active .page-link {
+    color: var(--fg-primary) !important;
+    background-color: var(--bg-secondary) !important;
+}
+
+.table-wrap {
+    border: 1px solid var(--fg-primary);
+    border-radius: 5px;
+}
