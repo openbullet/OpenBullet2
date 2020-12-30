@@ -247,6 +247,8 @@ app {
     --fg-ban: plum;
     --fg-tocheck: skyblue;
     --fg-error: red;
+    --fg-link: #54a6fb;
+    --fg-linkhover: turquoise;
 }
 
 .bg-primary { background-color: var(--bg-primary) !important; }
@@ -264,6 +266,8 @@ app {
 .fg-ban { color: var(--fg-ban) !important; }
 .fg-tocheck { color: var(--fg-tocheck) !important; }
 .fg-error { color: var(--fg-error) !important; }
+.fg-link { color: var(--fg-link) !important; }
+.fg-link:hover { color: var(--fg-linkhover) !important; }
 /* -- COLORS */
 
 /* CUSTOM DEFINITIONS -- */
@@ -299,13 +303,21 @@ hr {
 }
 
 a {
-    color: #54a6fb;
+    color: var(--fg-link);
 }
 
 a:hover {
-    color: turquoise;
+    color: var(--fg-linkhover);
 }
 /* -- GENERIC */
+
+/* NAVMENU -- */
+.version-label {
+    color: var(--fg-secondary);
+    font-family: var(--consolas);
+    font-size: 12px;
+}
+/* -- NAVMENU */
 
 /* STACKER -- */
 .stacker-block {
