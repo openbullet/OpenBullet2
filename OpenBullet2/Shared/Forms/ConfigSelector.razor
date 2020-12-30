@@ -1,6 +1,10 @@
 ﻿@using OpenBullet2.Services
 @using RuriLib.Models.Configs
 @using OpenBullet2.Helpers
+@using Microsoft.Extensions.Primitives
+@using GridMvc.Server
+@using Microsoft.AspNetCore.Http
+@using System.Globalization
 @inject ConfigService ConfigService
 @inject PluginRepository PluginRepo
 @inject IModalService ModalService
@@ -8,17 +12,14 @@
 
 <div style="overflow-y: auto; width: 1000px;">
     <div style="height: 250px; overflow-y: auto;">
-        <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="15"
-                    AllowSorting="true" Data="@ConfigService.Configs" TItem="Config" ColumnWidth="130px"
-                    RowSelect="Preview" RowDoubleClick="Select">
-            <Columns>
-                <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="@Loc["Name"]" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="@Loc["Author"]" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="@Loc["Category"]" />
-                <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="@Loc["Proxies"]" />
-                <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="@Loc["LastModified"]" />
-            </Columns>
-        </RadzenGrid>
+        @if (gridLoad != null && gridLoad.IsCompleted)
+        {
+            <GridComponent @ref="gridComponent" T="Config" Grid="@grid" OnRowClicked="@OnConfigSelected"></GridComponent>
+        }
+        else
+        {
+            <p><em>@Loc["Loading"]...</em></p>
+        }
     </div>
     <div style="height: 250px; margin-top: 15px; overflow-y: auto;">
         @if (selectedConfig != null)
@@ -37,12 +38,62 @@
 </div>
 
 @code {
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    Config selectedConfig;
+        [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+        List<Config> configs = new();
+        Config selectedConfig;
 
-    void Preview(Config config)
+    private GridComponent<Config> gridComponent;
+    private CGrid<Config> grid;
+    private Task gridLoad;
+
+    protected override async Task OnParametersSetAsync()
     {
-        selectedConfig = config;
+        configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
+
+        Action<IGridColumnCollection<Config>> columns = c =>
+        {
+            c.Add(x => x.Metadata.Name).Titled(Loc["Name"]).Encoded(false).Sanitized(false)
+                .RenderValueAs(x => $"<div class=\"grid-element-with-icon\"><img src=\"data:image/png;base64,{x.Metadata.Base64Image}\"/><span>{x.Metadata.Name}</span></div>");
+            c.Add(x => x.Metadata.Author).Titled(Loc["Author"]);
+            c.Add(x => x.Metadata.Category).Titled(Loc["Category"]);
+            c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
+            c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]);
+            c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"])
+                .Sortable(true).SortInitialDirection(GridShared.Sorting.GridSortDirection.Descending);
+        };
+
+        var query = new QueryDictionary<StringValues>();
+        query.Add("grid-page", "2");
+
+        var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
+            .Sortable()
+            .Filterable()
+            .SetKeyboard(true)
+            .Selectable(true, false, false);
+        grid = client.Grid;
+
+        // Set new items to grid
+        gridLoad = client.UpdateGrid();
+        await gridLoad;
+    }
+
+    private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
+            QueryDictionary<StringValues> query)
+    {
+        var server = new GridServer<Config>(configs, new QueryCollection(query),
+            true, "configsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+
+        // Return items to displays
+        return server.ItemsToDisplay;
+    }
+
+    protected void OnConfigSelected(object item)
+    {
+        if (item.GetType() == typeof(Config))
+        {
+            selectedConfig = (Config)item;
+            StateHasChanged();
+        }
     }
 
     async Task Select()

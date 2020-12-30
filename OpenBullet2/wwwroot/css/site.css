@@ -550,3 +550,11 @@ progress {
     height: 100%;
 }
 /* -- MONACO EDITOR */
+
+/* GRID -- */
+.grid-element-with-icon img {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+/* -- GRID */

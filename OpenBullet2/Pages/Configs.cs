@@ -50,7 +50,8 @@ namespace OpenBullet2.Pages
 
             Action<IGridColumnCollection<Config>> columns = c =>
             {
-                c.Add(x => x.Metadata.Name).Titled(Loc["Name"]);
+                c.Add(x => x.Metadata.Name).Titled(Loc["Name"]).Encoded(false).Sanitized(false)
+                    .RenderValueAs(x => $"<div class=\"grid-element-with-icon\"><img src=\"data:image/png;base64,{x.Metadata.Base64Image}\"/><span>{x.Metadata.Name}</span></div>");
                 c.Add(x => x.Metadata.Author).Titled(Loc["Author"]);
                 c.Add(x => x.Metadata.Category).Titled(Loc["Category"]);
                 c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
