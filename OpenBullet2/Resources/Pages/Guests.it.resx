@@ -159,6 +159,9 @@
   <data name="Help1x03" xml:space="preserve">
     <value>Cliccando sul pulsante %Aggiungi% in alto, potrai creare delle %credenziali di accesso% per il nuovo ospite, impostare la %scadenza% (dopo la quale il server non manderà più un token valido all'ospite) e opzionalmente impostare un numero di %indirizzi IP% da cui l'ospite si può connettere. Questo è utile per prevenire la condivisione di un account ospite tra più persone.</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Caricamento</value>
+  </data>
   <data name="NewPasswordForGuest" xml:space="preserve">
     <value>Nuova password per ospite</value>
   </data>

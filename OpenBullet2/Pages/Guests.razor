@@ -14,29 +14,14 @@
     </div>
 </div>
 
-<EditForm Model="resultsPerPage">
-    <label>@Loc["ResultsPerPage"]</label>
-    <InputSelectNumber T="int" Value="resultsPerPage" ValueExpression="(() => resultsPerPage)"
-                       ValueChanged="(async val => await OnResultsPerPageChanged(val))">
-        <option value="15">15</option>
-        <option value="30">30</option>
-        <option value="100">100</option>
-        <option value="250">250</option>
-    </InputSelectNumber>
-</EditForm>
-
-<p>@guests.Count @Loc["results"]</p>
-
-<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowPaging="true" PageSize="@resultsPerPage"
-            AllowSorting="true" Data="@guests" TItem="GuestEntity" ColumnWidth="200px"
-            RowSelect="SelectGuest" EmptyText="@Loc["NoRecordsToDisplay"]">
-    <Columns>
-        <RadzenGridColumn TItem="GuestEntity" Property="Username" Title="@Loc["Username"]" />
-        <RadzenGridColumn TItem="GuestEntity" Property="AccessExpiration" Title="@Loc["AccessExpiration"]" />
-        <RadzenGridColumn TItem="GuestEntity" Property="AllowedAddresses" Title="@Loc["AllowedAddresses"]" />
-    </Columns>
-</RadzenGrid>
+@if (gridLoad != null && gridLoad.IsCompleted)
+{
+    <GridComponent @ref="gridComponent" T="GuestEntity" Grid="@grid" OnRowClicked="@OnGuestSelected"></GridComponent>
+}
+else
+{
+    <p><em>@Loc["Loading"]...</em></p>
+}
 
 <hr />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" />

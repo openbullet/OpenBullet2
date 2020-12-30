@@ -157,6 +157,7 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<ProxyGroupEdit>(Loc["EditProxyGroup"], parameters);
             await modal.Result;
+            await RefreshList();
         }
 
         private async Task DeleteGroup()

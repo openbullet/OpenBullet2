@@ -1,12 +1,21 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using GridBlazor;
+using GridBlazor.Pages;
+using GridMvc.Server;
+using GridShared;
+using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Shared.Forms;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -19,31 +28,59 @@ namespace OpenBullet2.Pages
         private List<GuestEntity> guests;
         private GuestEntity selectedGuest;
 
-        private int resultsPerPage = 15;
+        private GridComponent<GuestEntity> gridComponent;
+        private CGrid<GuestEntity> grid;
+        private Task gridLoad;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            await RefreshList();
+            guests = await GuestRepo.GetAll().ToListAsync();
 
-            await base.OnInitializedAsync();
+            Action<IGridColumnCollection<GuestEntity>> columns = c =>
+            {
+                c.Add(g => g.Username).Titled(Loc["Username"]);
+                c.Add(g => g.AccessExpiration).Titled(Loc["AccessExpiration"]);
+                c.Add(g => g.AllowedAddresses).Titled(Loc["AllowedAddresses"]);
+            };
+
+            var query = new QueryDictionary<StringValues>();
+            query.Add("grid-page", "2");
+
+            var client = new GridClient<GuestEntity>(q => GetGridRows(columns, q), query, false, "guestsGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .Selectable(true, false, false);
+            grid = client.Grid;
+
+            // Set new items to grid
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
         }
 
-        private async Task OnResultsPerPageChanged(int value)
+        private ItemsDTO<GuestEntity> GetGridRows(Action<IGridColumnCollection<GuestEntity>> columns,
+                QueryDictionary<StringValues> query)
         {
-            resultsPerPage = value;
-            await RefreshList();
-            StateHasChanged();
+            var server = new GridServer<GuestEntity>(guests, new QueryCollection(query),
+                true, "guestsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+
+            // Return items to displays
+            return server.ItemsToDisplay;
         }
 
-        private void SelectGuest(GuestEntity guest)
+        protected void OnGuestSelected(object item)
         {
-            selectedGuest = guest;
+            if (item.GetType() == typeof(GuestEntity))
+            {
+                selectedGuest = (GuestEntity)item;
+            }
         }
 
         private async Task RefreshList()
         {
             guests = await GuestRepo.GetAll().ToListAsync();
 
+            await gridComponent.UpdateGrid();
             StateHasChanged();
         }
 
@@ -116,6 +153,8 @@ namespace OpenBullet2.Pages
                 // Delete the guest from the local list
                 guests.Remove(selectedGuest);
             }
+
+            await RefreshList();
         }
 
         private async Task ShowNoGuestSelectedWarning()
