@@ -23,23 +23,20 @@
             <InputFile OnChange="@ProcessUploadedConfigs" multiple />
         </div>
     }
-    <div class="row config-list" style="margin-top: 30px;">
-        @if (detailedView)
+    @if (detailedView)
+    {
+        @if (gridLoad != null && gridLoad.IsCompleted)
         {
-            <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="30"
-                        AllowSorting="true" Data="@configs" TItem="Config" ColumnWidth="200px" RowSelect="SelectConfig" RowDoubleClick="EditConfig">
-                <Columns>
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Name" Title="@Loc["Name"]" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Author" Title="@Loc["Author"]" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.Category" Title="@Loc["Category"]" />
-                    <RadzenGridColumn TItem="Config" Property="Settings.ProxySettings.UseProxies" Title="@Loc["Proxies"]" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.CreationDate" Title="@Loc["CreationDate"]" />
-                    <RadzenGridColumn TItem="Config" Property="Metadata.LastModified" Title="@Loc["LastModified"]" />
-                </Columns>
-            </RadzenGrid>
+            <GridComponent @ref="gridComponent" T="Config" Grid="@grid" OnRowClicked="@OnConfigSelected"></GridComponent>
         }
         else
         {
+            <p><em>@Loc["Loading"]...</em></p>
+        }
+    }
+    else
+    {
+        <div class="row config-list" style="margin-top: 30px;">
             <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config" PageSize="30">
                 <Template Context="config">
                     <RadzenCard Style="width:130px; max-width: 130px;">
@@ -52,20 +49,20 @@
                             </div>
                             <div class="row mt-3">
                                 <span class="text-center fg-custom margin-left: 5px;margin-right: 5px;"
-                                      style="width: 100%; font-size: 16px;">@config.Metadata.Name</span>
-                                </div>
-                                <div class="row">
-                                    <span class="text-center" style="width: 100%; font-size: 14px;">@Loc["by"] @config.Metadata.Author</span>
-                                </div>
-                                <div class="row">
-                                    <span class="text-center" style="width: 100%; font-size: 14px;">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
-                                </div>
+                                    style="width: 100%; font-size: 16px;">@config.Metadata.Name</span>
                             </div>
-                        </RadzenCard>
-                    </Template>
-                </RadzenDataList>
-            }
-    </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%; font-size: 14px;">@Loc["by"] @config.Metadata.Author</span>
+                            </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%; font-size: 14px;">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                            </div>
+                        </div>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
+        </div>
+    }
 </div>
 
 <hr />

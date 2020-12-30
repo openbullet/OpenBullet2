@@ -1,6 +1,13 @@
 ﻿using BlazorDownloadFile;
+using GridBlazor;
+using GridBlazor.Pages;
+using GridMvc.Server;
+using GridShared;
+using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
 using OpenBullet2.Repositories;
@@ -12,6 +19,7 @@ using RuriLib.Models.Configs;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,10 +39,70 @@ namespace OpenBullet2.Pages
         List<Config> configs;
         bool detailedView = false;
 
-        protected override void OnInitialized()
+        private GridComponent<Config> gridComponent;
+        private CGrid<Config> grid;
+        private Task gridLoad;
+
+        protected override async Task OnParametersSetAsync()
         {
             configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
             selectedConfig = ConfigService.SelectedConfig;
+
+            Action<IGridColumnCollection<Config>> columns = c =>
+            {
+                c.Add(x => x.Metadata.Name).Titled(Loc["Name"]);
+                c.Add(x => x.Metadata.Author).Titled(Loc["Author"]);
+                c.Add(x => x.Metadata.Category).Titled(Loc["Category"]);
+                c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
+                c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]);
+                c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"])
+                    .Sortable(true).SortInitialDirection(GridShared.Sorting.GridSortDirection.Descending);
+            };
+
+            var query = new QueryDictionary<StringValues>();
+            query.Add("grid-page", "2");
+
+            var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .ChangePageSize(true)
+                .WithGridItemsCount()
+                .Selectable(true, false, false);
+            grid = client.Grid;
+
+            // Set new items to grid
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
+        }
+
+        private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
+                QueryDictionary<StringValues> query)
+        {
+            var server = new GridServer<Config>(configs, new QueryCollection(query),
+                true, "configsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+
+            // Return items to displays
+            return server.ItemsToDisplay;
+        }
+
+        private void SelectConfig(Config config)
+        {
+            selectedConfig = config;
+        }
+
+        protected void OnConfigSelected(object item)
+        {
+            if (item.GetType() == typeof(Config))
+            {
+                selectedConfig = (Config)item;
+            }
+        }
+
+        private async Task RefreshGrid()
+        {
+            await gridComponent.UpdateGrid();
+            StateHasChanged();
         }
 
         private async Task ReloadConfigs()
@@ -46,12 +114,12 @@ namespace OpenBullet2.Pages
 
                 ConfigService.SelectedConfig = null;
                 selectedConfig = null;
-            }
-        }
 
-        private void SelectConfig(Config config)
-        {
-            selectedConfig = config;
+                if (detailedView)
+                {
+                    await RefreshGrid();
+                }
+            }
         }
 
         private async Task CreateConfig()
@@ -77,9 +145,16 @@ namespace OpenBullet2.Pages
                 configs.Remove(selectedConfig);
 
                 if (ConfigService.SelectedConfig == selectedConfig)
+                {
                     ConfigService.SelectedConfig = null;
+                }
 
                 selectedConfig = null;
+
+                if (detailedView)
+                {
+                    await RefreshGrid();
+                }
             }
         }
 
