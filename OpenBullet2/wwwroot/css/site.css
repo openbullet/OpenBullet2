@@ -110,6 +110,10 @@ app {
         padding-bottom: 0.5rem;
     }
 
+        .sidebar .nav-item a.active, .sidebar .nav-item a:hover {
+            background-color: var(--bg-light) !important;
+        }
+
         .sidebar .nav-item:first-of-type {
             padding-top: 0.5rem;
         }
@@ -344,7 +348,7 @@ a:hover {
 }
 
 .generic-log {
-    background-color: #111;
+    background-color: var(--bg-secondary);
     font-family: var(--consolas);
     padding: 20px;
     height: 500px;
@@ -446,6 +450,21 @@ progress {
 .config-list > div > div.ui-g > div {
     margin: unset;
 }
+
+.config-item, .config-item-transparent {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    margin: -10px;
+}
+
+.config-item {
+    background-color: var(--bg-secondary) !important;
+}
+
+.config-item-transparent {
+    background-color: unset;
+}
 /* -- CONFIG LIST */
 
 /* PLUGINS -- */
@@ -504,10 +523,14 @@ progress {
 /* BULLETTA -- */
 .bulletta-messagebox {
     background-color: var(--bg-secondary);
-    border: 5px solid #ffc235;
+    border: 2px solid var(--fg-custom);
     border-radius: 10px;
     padding: 1rem 1.5rem;
     opacity: 0.95;
+}
+
+.bulletta-messagebox p span {
+    color: var(--fg-custom);
 }
 
 .bulletta-image {

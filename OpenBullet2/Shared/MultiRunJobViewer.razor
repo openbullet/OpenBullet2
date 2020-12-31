@@ -53,15 +53,15 @@
                             @switch (source)
                             {
                                 case GroupProxySource x:
-                                    <span style="color: aquamarine;">@Loc["Group"]: @x.GroupId</span>
+                                    <span class="fg-tocheck">@Loc["Group"]: @x.GroupId</span>
                                     break;
 
                                 case FileProxySource x:
-                                    <span style="color: greenyellow;">@Loc["File"]: @x.FileName</span>
+                                    <span class="fg-hit">@Loc["File"]: @x.FileName</span>
                                     break;
 
                                 case RemoteProxySource x:
-                                    <span style="color: hotpink;">@Loc["Remote"]: @x.Url</span>
+                                    <span class="fg-retry">@Loc["Remote"]: @x.Url</span>
                                     break;
                             }
                         </p>
@@ -81,15 +81,15 @@
                             @switch (output)
                             {
                                 case DatabaseHitOutput x:
-                                    <span style="color: aquamarine;">@Loc["Database"]</span>
+                                    <span class="fg-tocheck">@Loc["Database"]</span>
                                     break;
 
                                 case FileSystemHitOutput x:
-                                    <span style="color: greenyellow;">@Loc["FileSystem"] (@x.BaseDir)</span>
+                                    <span class="fg-hit">@Loc["FileSystem"] (@x.BaseDir)</span>
                                     break;
 
                                 case DiscordWebhookHitOutput x:
-                                    <span style="color: hotpink;">@Loc["DiscordWebhook"] (@x.Webhook.Substring(0, 70) ...)</span>
+                                    <span class="fg-retry">@Loc["DiscordWebhook"] (@x.Webhook.Substring(0, 70) ...)</span>
                                     break;
                             }
                         </p>

@@ -42,7 +42,7 @@
             var matches = Regex.Matches(Messages[i], @"%([^%]+)%");
             foreach (Match match in matches)
             {
-                Messages[i] = Messages[i].Replace(match.Groups[0].Value, $"<span style=\"color: #ffc235\">{match.Groups[1].Value}</span>");
+                Messages[i] = Messages[i].Replace(match.Groups[0].Value, $"<span>{match.Groups[1].Value}</span>");
             }
         }
     }

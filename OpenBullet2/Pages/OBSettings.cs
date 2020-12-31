@@ -31,6 +31,7 @@ namespace OpenBullet2.Pages
             try
             {
                 availableThemes = Directory.GetFiles("wwwroot/css/themes")
+                    .Where(f => f.EndsWith(".css"))
                     .Select(f => Path.GetFileNameWithoutExtension(f))
                     .ToArray();
             }

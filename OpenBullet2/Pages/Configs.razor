@@ -40,7 +40,7 @@
             <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config" PageSize="30">
                 <Template Context="config">
                     <RadzenCard Style="width:130px; max-width: 130px;">
-                        <div style="background-color: @(config == selectedConfig ? "#111" : "transparent"); cursor: pointer; padding: 10px; border-radius: 10px; margin: -10px;"
+                        <div class="@(config == selectedConfig ? "config-item" : "config-item-transparent")"
                              @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
                             <div class="row">
                                 <div style="margin: 0 auto;">

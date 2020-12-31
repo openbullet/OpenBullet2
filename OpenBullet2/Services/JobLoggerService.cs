@@ -65,10 +65,10 @@ namespace OpenBullet2.Services
             NewLog?.Invoke(this, jobId);
         }
 
-        public void LogInfo(int jobId, string message) => Log(jobId, message, LogKind.Info, "white");
-        public void LogSuccess(int jobId, string message) => Log(jobId, message, LogKind.Success, "greenyellow");
-        public void LogWarning(int jobId, string message) => Log(jobId, message, LogKind.Warning, "orange");
-        public void LogError(int jobId, string message) => Log(jobId, message, LogKind.Error, "tomato");
+        public void LogInfo(int jobId, string message) => Log(jobId, message, LogKind.Info, "var(--fg-primary)");
+        public void LogSuccess(int jobId, string message) => Log(jobId, message, LogKind.Success, "var(--fg-hit)");
+        public void LogWarning(int jobId, string message) => Log(jobId, message, LogKind.Warning, "var(--fg-custom)");
+        public void LogError(int jobId, string message) => Log(jobId, message, LogKind.Error, "var(--fg-fail)");
 
         public void Clear(int jobId)
         {

@@ -239,7 +239,7 @@
 
 table.grid-table tr.grid-row-selected td {
     color: unset;
-    background: var(--bg-secondary) !important;
+    background: var(--bg-light) !important;
 }
 
 .form-control:focus{
@@ -250,7 +250,7 @@ table.grid-table tr.grid-row-selected td {
 
 table.grid-table .grid-header > .grid-header-group > .grid-header-title > button {
     color: var(--fg-secondary) !important;
-    background-color: var(--bg-primary) !important;
+    background-color: var(--bg-secondary) !important;
 }
 
 .grid-extsort-column {
@@ -288,3 +288,13 @@ table.grid-table .grid-header > .grid-header-group > .grid-header-title > button
     border: 1px solid var(--fg-primary);
     border-radius: 5px;
 }
+
+table.grid-table thead tr:first-child {
+    background-color: var(--bg-secondary) !important;
+}
+
+/*
+.grid-cell {
+    border-right: 1px solid black;
+}
+*/
