@@ -403,8 +403,12 @@ a:hover {
 /* -- MULTIPLE SELECTOR */
 
 /* PROGRESS -- */
-progress {
-    background-color: var(--bg-dark);
+.progress {
+    background-color: var(--bg-secondary);
+}
+
+.progress-bar {
+    background-color: var(--fg-secondary);
 }
 /* -- PROGRESS */
 
