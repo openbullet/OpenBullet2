@@ -169,11 +169,11 @@
     }
 </div>
 
-@if (Job.Manager != null)
+@if (Job.Progress >= 0)
 {
     <div class="progress mt-3">
         <div class="progress-bar" role="progressbar"
-                style="width: @((Job.Manager.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+                style="width: @((Job.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
     </div>
 }
 
@@ -235,15 +235,15 @@
             <span class="font-weight bold fg-fail">@Loc["Bad"]: </span><span class="fg-fail">@Job.ProxiesBad</span><br />
             <span class="font-weight bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.ProxiesBanned</span><br />
         </div>
-        @if (Job.Manager != null)
+        @if (Job.Progress >= 0)
         {
             <div class="col">
                 <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
-                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.Manager.CPM</span><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.CPM</span><br />
                 <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
-                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Manager.Elapsed.TotalDays) @Loc["days"] @Job.Manager.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Manager.Remaining.TotalDays) @Loc["days"] @Job.Manager.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @Job.DataTested / @Job.DataPool.Size (@((Job.Manager.Progress * 100).ToString("0.00"))%)</span>
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @Job.DataTested / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span>
             </div>
         }
         else

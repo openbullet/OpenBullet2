@@ -62,15 +62,15 @@
                             <span class="fg-hit"><b>Hits: </b>@x.DataHits</span>
                             <span class="fg-custom"><b>Custom: </b>@x.DataCustom</span>
                             <span class="fg-tocheck"><b>ToCheck: </b>@x.DataToCheck</span>
-                            @if (x.Manager == null)
+                            @if (x.Progress >= 0)
                             {
                                 <span><b>Progress: </b>Unknown</span>
                                 <span><b>CPM: </b>Unknown</span>
                             }
                             else
                             {
-                                <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Manager.Progress * 100).ToString("0.00"))%)</span>
-                                <span><b>CPM: </b>@x.Manager.CPM</span>
+                                <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Progress * 100).ToString("0.00"))%)</span>
+                                <span><b>CPM: </b>@x.CPM</span>
                             }
                             break;
                     }

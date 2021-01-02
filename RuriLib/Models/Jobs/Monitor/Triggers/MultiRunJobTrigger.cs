@@ -15,7 +15,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
     public class JobFinishedTrigger : MultiRunJobTrigger
     {
         public override bool CheckStatus(MultiRunJob job)
-            => job.Manager != null && job.Manager.Status == Threading.TaskManagerStatus.Idle && job.Manager.Progress == 1f;
+            => job.Status == JobStatus.Idle && job.Progress == 1f;
     }
 
     #region Data Numeric Triggers
@@ -119,12 +119,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public int Amount { get; set; }
 
         public override bool CheckStatus(MultiRunJob job)
-        {
-            if (job.Manager == null)
-                return false;
-
-            return Functions.Conditions.Conditions.Check(job.Manager.CPM, Comparison, Amount);
-        }
+            => Functions.Conditions.Conditions.Check(job.CPM, Comparison, Amount);
     }
 
     public class CaptchaCreditTrigger : MultiRunJobTrigger
@@ -142,12 +137,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public float Amount { get; set; }
 
         public override bool CheckStatus(MultiRunJob job)
-        {
-            if (job.Manager == null)
-                return false;
-
-            return Functions.Conditions.Conditions.Check(job.Manager.Progress, Comparison, Amount);
-        }
+            => Functions.Conditions.Conditions.Check(job.Progress, Comparison, Amount);
     }
 
     public class TimeElapsedTrigger : MultiRunJobTrigger
@@ -159,13 +149,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public int Days { get; set; } = 0;
 
         public override bool CheckStatus(MultiRunJob job)
-        {
-            if (job.Manager == null)
-                return false;
-
-            var target = new TimeSpan(Days, Hours, Minutes, Seconds);
-            return Functions.Conditions.Conditions.Check(job.Manager.Elapsed, Comparison, target);
-        }
+            => Functions.Conditions.Conditions.Check(job.Elapsed, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
     }
 
     public class TimeRemainingTrigger : MultiRunJobTrigger
@@ -177,13 +161,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public int Days { get; set; } = 0;
 
         public override bool CheckStatus(MultiRunJob job)
-        {
-            if (job.Manager == null)
-                return false;
-
-            var target = new TimeSpan(Days, Hours, Minutes, Seconds);
-            return Functions.Conditions.Conditions.Check(job.Manager.Remaining, Comparison, target);
-        }
+            => Functions.Conditions.Conditions.Check(job.Remaining, Comparison, new TimeSpan(Days, Hours, Minutes, Seconds));
     }
     #endregion
 }

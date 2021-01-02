@@ -41,9 +41,14 @@ namespace RuriLib.Models.Jobs
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
 
-        public TaskManager<MultiRunInput, CheckResult> Manager { get; private set; }
+        // Getters
+        public override float Progress => taskManager != null ? taskManager.Progress : -1;
+        public TimeSpan Elapsed => taskManager != null ? taskManager.Elapsed : TimeSpan.Zero;
+        public TimeSpan Remaining => taskManager != null ? taskManager.Remaining : Timeout.InfiniteTimeSpan;
+        public int CPM => taskManager != null ? taskManager.CPM : 0;
 
         // Private fields
+        private TaskManager<MultiRunInput, CheckResult> taskManager { get; set; }
         private ProxyPool proxyPool;
         private readonly Random random;
         private Timer tickTimer;
@@ -53,6 +58,12 @@ namespace RuriLib.Models.Jobs
         public List<Hit> Hits { get; private set; } = new List<Hit>();
 
         // Events
+        public event EventHandler<ErrorDetails<MultiRunInput>> OnTaskError;
+        public event EventHandler<ResultDetails<MultiRunInput, CheckResult>> OnResult;
+        public event EventHandler<Exception> OnError;
+        public event EventHandler<float> OnProgress;
+        public event EventHandler<JobStatus> OnStatusChanged;
+        public event EventHandler OnCompleted;
         public event EventHandler OnTimerTick;
 
         /*********
@@ -85,6 +96,7 @@ namespace RuriLib.Models.Jobs
             random = new Random(Id);
         }
 
+        #region Work Function
         private Func<MultiRunInput, CancellationToken, Task<CheckResult>> workFunction =
             new Func<MultiRunInput, CancellationToken, Task<CheckResult>>(async (input, token) =>
             {
@@ -158,7 +170,9 @@ namespace RuriLib.Models.Jobs
                     ScriptVariables = scriptState != null ? scriptState.Variables : new ImmutableArray<ScriptVariable>()
                 };
             });
+        #endregion
 
+        #region Controls
         public override async Task Start()
         {
             if (Config == null)
@@ -219,9 +233,13 @@ namespace RuriLib.Models.Jobs
                 return input;
             }
             );
-            Manager = new TaskManager<MultiRunInput, CheckResult>(workItems, workFunction, Bots, DataPool.Size, Skip);
-            Manager.OnResult += DataProcessed;
-            Manager.OnStatusChanged += StatusChanged;
+            taskManager = new TaskManager<MultiRunInput, CheckResult>(workItems, workFunction, Bots, DataPool.Size, Skip);
+            taskManager.OnResult += DataProcessed;
+            taskManager.OnStatusChanged += StatusChanged;
+            taskManager.OnTaskError += PropagateTaskError;
+            taskManager.OnError += PropagateError;
+            taskManager.OnResult += PropagateResult;
+            taskManager.OnCompleted += PropagateCompleted;
 
             ServicePointManager.DefaultConnectionLimit = 200;
 
@@ -230,14 +248,14 @@ namespace RuriLib.Models.Jobs
 
             ResetStats();
             StartTimer();
-            await Manager.Start();
+            await taskManager.Start();
         }
 
         public override async Task Stop()
         {
             try
             {
-                await Manager?.Stop();
+                await taskManager?.Stop();
             }
             finally
             {
@@ -249,7 +267,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await Manager?.Abort();
+                await taskManager?.Abort();
             }
             finally
             {
@@ -261,7 +279,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await Manager?.Pause();
+                await taskManager?.Pause();
             }
             finally
             {
@@ -271,10 +289,12 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            await Manager?.Resume();
+            await taskManager?.Resume();
             StartTimer();
         }
+        #endregion
 
+        #region Public Methods
         public async Task FetchProxiesFromSources()
         {
             // TODO: Handle exceptions properly
@@ -284,7 +304,34 @@ namespace RuriLib.Models.Jobs
             var proxies = results.SelectMany(r => r);
             proxyPool = new ProxyPool(proxies);
         }
+        #endregion
 
+        #region Wrappers for TaskManager methods
+        public async Task ChangeBots(int amount)
+        {
+            if (taskManager != null)
+                await taskManager.SetConcurrentTasks(amount);
+        }
+        #endregion
+
+        #region Propagation of TaskManager events
+        private void PropagateTaskError(object sender, ErrorDetails<MultiRunInput> details)
+            => OnTaskError?.Invoke(sender, details);
+
+        private void PropagateError(object sender, Exception ex)
+            => OnError?.Invoke(sender, ex);
+
+        private void PropagateResult(object sender, ResultDetails<MultiRunInput, CheckResult> result)
+            => OnResult?.Invoke(sender, result);
+
+        private void PropagateProgress(object sender, float progress)
+            => OnProgress?.Invoke(sender, progress);
+
+        private void PropagateCompleted(object sender, EventArgs e)
+            => OnCompleted?.Invoke(sender, e);
+        #endregion
+
+        #region Private Methods
         private void StartTimer()
         {
             tickTimer = new Timer(new TimerCallback(_ => OnTimerTick?.Invoke(this, EventArgs.Empty)),
@@ -392,6 +439,7 @@ namespace RuriLib.Models.Jobs
 
         private bool IsHitStatus(string status)
             => status != "FAIL" && status != "RETRY" && status != "BAN" && status != "ERROR";
+        #endregion
     }
 
     public struct MultiRunInput

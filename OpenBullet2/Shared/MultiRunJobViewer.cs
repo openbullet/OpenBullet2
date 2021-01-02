@@ -81,8 +81,7 @@ namespace OpenBullet2.Shared
                 var newAmount = (int)result.Data;
                 changingBots = true;
 
-                if (Job.Manager != null)
-                    await Job.Manager.SetConcurrentTasks(newAmount);
+                await Job.ChangeBots(newAmount);
 
                 Job.Bots = newAmount;
                 changingBots = false;
@@ -172,41 +171,38 @@ namespace OpenBullet2.Shared
 
         private void TryHookEvents()
         {
-            if (Job.Manager != null)
+            if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
             {
-                if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+                // TODO: Find a better way to clear previous hooks
+                try { Job.OnResult -= LogResult; } catch { }
+                try { Job.OnTaskError -= LogTaskError; } catch { }
+                try { Job.OnError -= LogError; } catch { }
+                try { Job.OnCompleted -= LogCompleted; } catch { }
+
+                try
                 {
-                    // TODO: Find a better way to clear previous hooks
-                    try { Job.Manager.OnResult -= LogResult; } catch { }
-                    try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
-                    try { Job.Manager.OnError -= LogError; } catch { }
-                    try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
-
-                    try
-                    {
-                        Job.Manager.OnResult += LogResult;
-                        Job.Manager.OnTaskError += LogTaskError;
-                        Job.Manager.OnError += LogError;
-                        Job.Manager.OnCompleted += LogCompleted;
-                        Job.OnTimerTick += SaveRecord;
-                    }
-                    catch { }
+                    Job.OnResult += LogResult;
+                    Job.OnTaskError += LogTaskError;
+                    Job.OnError += LogError;
+                    Job.OnCompleted += LogCompleted;
+                    Job.OnTimerTick += SaveRecord;
                 }
-
-                try 
-                { 
-                    Job.OnTimerTick -= SaveRecord;
-                    Job.OnTimerTick -= SaveJobOptions;
-                } 
-                catch { }
-                
-                try 
-                { 
-                    Job.OnTimerTick += SaveRecord; 
-                    Job.OnTimerTick += SaveJobOptions;
-                } 
                 catch { }
             }
+
+            try
+            {
+                Job.OnTimerTick -= SaveRecord;
+                Job.OnTimerTick -= SaveJobOptions;
+            }
+            catch { }
+
+            try
+            {
+                Job.OnTimerTick += SaveRecord;
+                Job.OnTimerTick += SaveJobOptions;
+            }
+            catch { }
         }
 
         private async Task Start()

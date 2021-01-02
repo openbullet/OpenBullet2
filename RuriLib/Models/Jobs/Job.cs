@@ -8,6 +8,7 @@ namespace RuriLib.Models.Jobs
 {
     public abstract class Job
     {
+        // Public properties
         public int Id { get; set; }
         public int OwnerId { get; set; } = 0;
         public JobStatus Status { get; protected set; } = JobStatus.Idle;
@@ -15,9 +16,14 @@ namespace RuriLib.Models.Jobs
         public DateTime StartTime { get; set; } = DateTime.Now;
         public StartCondition StartCondition { get; set; } = new RelativeTimeStartCondition();
 
+        // Virtual properties
+        public virtual float Progress => throw new NotImplementedException();
+
+        // Protected fields
         protected readonly RuriLibSettingsService settings;
         protected readonly PluginRepository pluginRepo;
 
+        // Private fields
         private bool waitFinished = false;
         private CancellationTokenSource cts; // Cancellation token for cancelling the StartCondition wait
 
