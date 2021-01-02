@@ -282,6 +282,9 @@
   <data name="Skip" xml:space="preserve">
     <value>Skip</value>
   </data>
+  <data name="SkipWait" xml:space="preserve">
+    <value>Skip Wait</value>
+  </data>
   <data name="SoftStopMessage" xml:space="preserve">
     <value>Sending soft stop signal</value>
   </data>

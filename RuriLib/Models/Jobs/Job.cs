@@ -15,17 +15,11 @@ namespace RuriLib.Models.Jobs
         public DateTime StartTime { get; set; } = DateTime.Now;
         public StartCondition StartCondition { get; set; } = new RelativeTimeStartCondition();
 
-        // Events
-        public event EventHandler Finished;
-
-        protected void OnFinished()
-        {
-            Finished.Invoke(this, EventArgs.Empty);
-        }
-
-        protected CancellationTokenSource cts;
         protected readonly RuriLibSettingsService settings;
         protected readonly PluginRepository pluginRepo;
+
+        private bool waitFinished = false;
+        private CancellationTokenSource cts; // Cancellation token for cancelling the StartCondition wait
 
         public Job(RuriLibSettingsService settings, PluginRepository pluginRepo)
         {
@@ -35,9 +29,30 @@ namespace RuriLib.Models.Jobs
 
         public virtual async Task Start()
         {
+            waitFinished = false;
+            cts = new CancellationTokenSource();
+
             StartTime = DateTime.Now;
             Status = JobStatus.Waiting;
-            await StartCondition.WaitUntilVerified(this);
+
+            try
+            {
+                await StartCondition.WaitUntilVerified(this, cts.Token);
+            }
+            catch (TaskCanceledException)
+            {
+                // The token has been cancelled, skip the wait
+            }
+
+            waitFinished = true;
+        }
+
+        public void SkipWait()
+        {
+            if (!waitFinished && !cts.IsCancellationRequested)
+            {
+                cts.Cancel();
+            }
         }
 
         public virtual Task Pause()

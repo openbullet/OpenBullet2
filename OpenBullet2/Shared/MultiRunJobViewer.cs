@@ -214,10 +214,13 @@ namespace OpenBullet2.Shared
             try
             {
                 await AskCustomInputs();
+
+                // Start the periodic refresh after a second (so that the job has time to set its status to Waiting)
+                Task _ = Task.Run(async () => { await Task.Delay(1000); StartPeriodicRefresh(); });
+
                 await Job.Start();
                 TryHookEvents();
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
-                StartPeriodicRefresh();
             }
             catch (Exception ex)
             {

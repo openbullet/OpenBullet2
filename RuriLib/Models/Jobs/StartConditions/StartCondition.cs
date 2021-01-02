@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Models.Jobs.StartConditions
@@ -10,10 +11,15 @@ namespace RuriLib.Models.Jobs.StartConditions
             throw new NotImplementedException(); 
         }
 
-        public async Task WaitUntilVerified(Job job)
+        public async Task WaitUntilVerified(Job job, CancellationToken cancellationToken = default)
         {
             while (!Verify(job))
-                await Task.Delay(1000);
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    throw new TaskCanceledException();
+
+                await Task.Delay(1000, cancellationToken);
+            }
         }
     }
 }

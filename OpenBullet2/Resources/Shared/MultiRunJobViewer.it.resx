@@ -282,6 +282,9 @@
   <data name="Skip" xml:space="preserve">
     <value>Salta</value>
   </data>
+  <data name="SkipWait" xml:space="preserve">
+    <value>Salta Attesa</value>
+  </data>
   <data name="SoftStopMessage" xml:space="preserve">
     <value>Inviando segnale di arresto dolce</value>
   </data>
