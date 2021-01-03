@@ -159,6 +159,9 @@
   <data name="Controls" xml:space="preserve">
     <value>Controls</value>
   </data>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Copy data + capture</value>
+  </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
@@ -228,6 +231,9 @@
   <data name="LineCheckedMessage" xml:space="preserve">
     <value>Line checked ({0}) with status {1}</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>You must select a hit first</value>
   </data>
@@ -264,6 +270,9 @@
   <data name="RageText" xml:space="preserve">
     <value>Range from {0} with amount {1} and step {2} (padding {3})</value>
   </data>
+  <data name="RefreshList" xml:space="preserve">
+    <value>Refresh list</value>
+  </data>
   <data name="Remaining" xml:space="preserve">
     <value>Remaining</value>
   </data>
@@ -279,8 +288,17 @@
   <data name="Retried" xml:space="preserve">
     <value>Retried</value>
   </data>
+  <data name="SendToDebugger" xml:space="preserve">
+    <value>Send to debugger</value>
+  </data>
+  <data name="ShowFullLog" xml:space="preserve">
+    <value>Show full log</value>
+  </data>
   <data name="Skip" xml:space="preserve">
     <value>Skip</value>
+  </data>
+  <data name="SkippedWait" xml:space="preserve">
+    <value>Skipped the wait</value>
   </data>
   <data name="SkipWait" xml:space="preserve">
     <value>Skip Wait</value>
@@ -293,6 +311,9 @@
   </data>
   <data name="StartedChecking" xml:space="preserve">
     <value>Started checking</value>
+  </data>
+  <data name="StartedWaiting" xml:space="preserve">
+    <value>Started waiting</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>

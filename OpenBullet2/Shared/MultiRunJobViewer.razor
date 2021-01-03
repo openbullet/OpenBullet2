@@ -7,6 +7,7 @@
 @using System.Globalization
 @using RuriLib.Models.Hits
 @using RuriLib.Models.Jobs.StartConditions 
+@implements IDisposable 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunJobViewer> Loc
 
 <div>
@@ -145,7 +146,7 @@
                         break;
                 }
             }
-            <button class="btn btn-sm btn-outline-danger" @onclick="Job.SkipWait"><span class="oi oi-x"></span> @Loc["SkipWait"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="SkipWait"><span class="oi oi-x"></span> @Loc["SkipWait"]</button>
             break;
 
         case JobStatus.Paused:
@@ -265,6 +266,7 @@
 <div class="container-fluid mb-2">
     <div class="row">
         <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-primary" @onclick="RefreshHits"><span class="oi oi-reload"></span> @Loc["RefreshList"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
@@ -272,16 +274,11 @@
     </div>
 </div>
 
-<RadzenGrid @ref="hitsGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-            AllowPaging="false" PageSize="30"
-            AllowSorting="true" Data="@Job.Hits" TItem="Hit" ColumnWidth="200px"
-            RowSelect="SelectHit" EmptyText="@Loc["NoRecordsToDisplay"]">
-    <Columns>
-        <RadzenGridColumn TItem="Hit" Property="Date" Title="@Loc["Date"]" />
-        <RadzenGridColumn TItem="Hit" Property="DataString" Title="@Loc["Data"]" />
-        <RadzenGridColumn TItem="Hit" Property="Proxy" Title="@Loc["Proxy"]" />
-        <RadzenGridColumn TItem="Hit" Property="Type" Title="@Loc["Type"]" />
-        <RadzenGridColumn TItem="Hit" Property="CapturedDataString" Title="@Loc["CapturedData"]"
-                          Width="@CaptureWidth" CssClass="grid-column-dynamic-width" />
-    </Columns>
-</RadzenGrid>
+@if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
+{
+    <GridComponent @ref="gridComponent" T="Hit" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent>
+}
+else
+{
+    <p><em>@Loc["Loading"]...</em></p>
+}

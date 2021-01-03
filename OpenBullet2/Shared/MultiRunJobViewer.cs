@@ -1,6 +1,13 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using GridBlazor;
+using GridBlazor.Pages;
+using GridMvc.Server;
+using GridShared;
+using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
@@ -14,12 +21,14 @@ using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Shared
 {
-    public partial class MultiRunJobViewer
+    public partial class MultiRunJobViewer : IDisposable
     {
         [Inject] public IModalService Modal { get; set; }
         [Inject] public VolatileSettingsService VolatileSettings { get; set; }
@@ -30,31 +39,47 @@ namespace OpenBullet2.Shared
 
         [Parameter] public MultiRunJob Job { get; set; }
         bool changingBots = false;
-        RadzenGrid<Hit> hitsGrid;
         Hit selectedHit;
 
-        private string CaptureWidth
+        private GridComponent<Hit> gridComponent;
+        private CGrid<Hit> grid;
+        private Task gridLoad;
+
+        protected override async Task OnParametersSetAsync()
         {
-            get
+            Action<IGridColumnCollection<Hit>> columns = c =>
             {
-                if (Job.Hits.Count == 0)
-                    return "200px";
+                c.Add(h => h.Date).Titled(Loc["Date"]);
+                c.Add(h => h.DataString).Titled(Loc["Data"]);
+                c.Add(h => h.Proxy).Titled(Loc["Proxy"]);
+                c.Add(h => h.Type).Titled(Loc["Type"]);
+                c.Add(h => h.CapturedDataString).Titled(Loc["CapturedData"]);
+            };
 
-                var longest = Job.Hits
-                    .Select(h => h.CapturedDataString.Length)
-                    .OrderBy(l => l)
-                    .Last();
+            var query = new QueryDictionary<StringValues>();
+            query.Add("grid-page", "2");
 
-                // The 0.82 value is referred to Consolas font-style
-                // since 2048 units in height correspond to 1126 units in width,
-                // and the 12 is referred to 12px in the css
-                var totalWidth = (int)(longest * 12 * 0.82);
+            var client = new GridClient<Hit>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
+                .Sortable()
+                .Filterable()
+                .SetKeyboard(true)
+                .ChangePageSize(true)
+                .Selectable(true, false, true);
+            grid = client.Grid;
 
-                if (totalWidth < 200)
-                    return "200px";
+            // Set new items to grid
+            gridLoad = client.UpdateGrid();
+            await gridLoad;
+        }
 
-                return $"{totalWidth}px";
-            }
+        private ItemsDTO<Hit> GetGridRows(Action<IGridColumnCollection<Hit>> columns,
+                QueryDictionary<StringValues> query)
+        {
+            var server = new GridServer<Hit>(Job.Hits, new QueryCollection(query),
+                true, "hitsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+
+            // Return items to displays
+            return server.ItemsToDisplay;
         }
 
         protected override void OnInitialized()
@@ -63,9 +88,12 @@ namespace OpenBullet2.Shared
             TryHookEvents();
         }
 
-        private void SelectHit(Hit hit)
+        protected void OnHitSelected(object item)
         {
-            selectedHit = hit;
+            if (item.GetType() == typeof(Hit))
+            {
+                selectedHit = (Hit)item;
+            }
         }
 
         private async Task ChangeBots()
@@ -173,36 +201,15 @@ namespace OpenBullet2.Shared
         {
             if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
             {
-                // TODO: Find a better way to clear previous hooks
-                try { Job.OnResult -= LogResult; } catch { }
-                try { Job.OnTaskError -= LogTaskError; } catch { }
-                try { Job.OnError -= LogError; } catch { }
-                try { Job.OnCompleted -= LogCompleted; } catch { }
-
-                try
-                {
-                    Job.OnResult += LogResult;
-                    Job.OnTaskError += LogTaskError;
-                    Job.OnError += LogError;
-                    Job.OnCompleted += LogCompleted;
-                    Job.OnTimerTick += SaveRecord;
-                }
-                catch { }
-            }
-
-            try
-            {
-                Job.OnTimerTick -= SaveRecord;
-                Job.OnTimerTick -= SaveJobOptions;
-            }
-            catch { }
-
-            try
-            {
+                Job.OnResult += LogResult;
+                Job.OnTaskError += LogTaskError;
+                Job.OnError += LogError;
+                Job.OnCompleted += LogCompleted;
                 Job.OnTimerTick += SaveRecord;
-                Job.OnTimerTick += SaveJobOptions;
             }
-            catch { }
+
+            Job.OnTimerTick += SaveRecord;
+            Job.OnTimerTick += SaveJobOptions;
         }
 
         private async Task Start()
@@ -214,6 +221,7 @@ namespace OpenBullet2.Shared
                 // Start the periodic refresh after a second (so that the job has time to set its status to Waiting)
                 Task _ = Task.Run(async () => { await Task.Delay(1000); StartPeriodicRefresh(); });
 
+                Logger.LogInfo(Job.Id, Loc["StartedWaiting"]);
                 await Job.Start();
                 TryHookEvents();
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
@@ -278,6 +286,19 @@ namespace OpenBullet2.Shared
             }
         }
 
+        private async Task SkipWait()
+        {
+            try
+            {
+                Job.SkipWait();
+                Logger.LogInfo(Job.Id, Loc["SkippedWait"]);
+            }
+            catch (Exception ex)
+            {
+                await js.AlertException(ex);
+            }
+        }
+
         private async void StartPeriodicRefresh()
         {
             while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
@@ -306,15 +327,26 @@ namespace OpenBullet2.Shared
             }
         }
 
+        private async Task RefreshHits()
+        {
+            await gridComponent.UpdateGrid();
+            StateHasChanged();
+        }
+
         private async Task CopyHitDataCapture()
         {
-            if (selectedHit == null)
+            var selectedItems = grid.SelectedItems.Cast<Hit>().ToList();
+
+            if (selectedItems.Count == 0)
             {
                 await ShowNoHitSelectedWarning();
                 return;
             }
 
-            await js.CopyToClipboard($"{selectedHit.Data.Data} | {selectedHit.CapturedDataString}");
+            var sb = new StringBuilder();
+            selectedItems.ForEach(i => sb.AppendLine($"{i.Data.Data} | {i.CapturedDataString}"));
+
+            await js.CopyToClipboard(sb.ToString());
         }
 
         private async Task SendToDebugger()
@@ -352,5 +384,21 @@ namespace OpenBullet2.Shared
 
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
+
+        public void Dispose()
+        {
+            // Try to unhook each event individually (because maybe they never got hooked)
+            try { Job.OnResult -= LogResult; } catch { }
+            try { Job.OnTaskError -= LogTaskError; } catch { }
+            try { Job.OnError -= LogError; } catch { }
+            try { Job.OnCompleted -= LogCompleted; } catch { }
+            
+            try
+            {
+                Job.OnTimerTick -= SaveRecord;
+                Job.OnTimerTick -= SaveJobOptions;
+            }
+            catch { }
+        }
     }
 }
