@@ -85,7 +85,7 @@ namespace OpenBullet2.Shared
         protected override void OnInitialized()
         {
             StartPeriodicRefresh();
-            TryHookEvents();
+            AddEventHandlers();
         }
 
         protected void OnHitSelected(object item)
@@ -197,21 +197,6 @@ namespace OpenBullet2.Shared
             JobRepo.Update(job).ConfigureAwait(false);
         }
 
-        private void TryHookEvents()
-        {
-            if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
-            {
-                Job.OnResult += LogResult;
-                Job.OnTaskError += LogTaskError;
-                Job.OnError += LogError;
-                Job.OnCompleted += LogCompleted;
-                Job.OnTimerTick += SaveRecord;
-            }
-
-            Job.OnTimerTick += SaveRecord;
-            Job.OnTimerTick += SaveJobOptions;
-        }
-
         private async Task Start()
         {
             try
@@ -223,7 +208,6 @@ namespace OpenBullet2.Shared
 
                 Logger.LogInfo(Job.Id, Loc["StartedWaiting"]);
                 await Job.Start();
-                TryHookEvents();
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
             }
             catch (Exception ex)
@@ -385,14 +369,29 @@ namespace OpenBullet2.Shared
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
 
-        public void Dispose()
+        private void AddEventHandlers()
+        {
+            if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+            {
+                Job.OnResult += LogResult;
+                Job.OnTaskError += LogTaskError;
+                Job.OnError += LogError;
+                Job.OnCompleted += LogCompleted;
+                Job.OnTimerTick += SaveRecord;
+            }
+
+            Job.OnTimerTick += SaveRecord;
+            Job.OnTimerTick += SaveJobOptions;
+        }
+
+        private void RemoveEventHandlers()
         {
             // Try to unhook each event individually (because maybe they never got hooked)
             try { Job.OnResult -= LogResult; } catch { }
             try { Job.OnTaskError -= LogTaskError; } catch { }
             try { Job.OnError -= LogError; } catch { }
             try { Job.OnCompleted -= LogCompleted; } catch { }
-            
+
             try
             {
                 Job.OnTimerTick -= SaveRecord;
@@ -401,9 +400,10 @@ namespace OpenBullet2.Shared
             catch { }
         }
 
+        public void Dispose()
+            => RemoveEventHandlers();
+
         ~MultiRunJobViewer()
-        {
-            Dispose();
-        }
+            => Dispose();
     }
 }
