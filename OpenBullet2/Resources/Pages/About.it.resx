@@ -123,6 +123,12 @@
   <data name="Developer" xml:space="preserve">
     <value>Sviluppatore</value>
   </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Avvertenza</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Eseguire attacchi su siti di cui non sei il proprietario (o sui quali non sei autorizzato a condurre test) è illegale! Lo sviluppatore non potrà essere ritenuto responsabile per un uso improprio di questo software.</value>
+  </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
     <value>Donatori e Supporters</value>
   </data>

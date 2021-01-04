@@ -3,6 +3,9 @@
 @inject IModalService Modal
 @using OpenBullet2.Shared.Forms
 
+<h5 class="fg-fail">@Loc["Disclaimer"]</h5>
+<p class="fg-fail mb-3">@Loc["DisclaimerText"]</p>
+
 <table class="table">
     <tbody>
         <tr>
@@ -37,4 +40,4 @@
     {
         Modal.Show<License>(Loc["License"]);
     }
- }
+}

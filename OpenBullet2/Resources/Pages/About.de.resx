@@ -123,6 +123,12 @@
   <data name="Developer" xml:space="preserve">
     <value>Entwickler</value>
   </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Haftungsausschluss</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Die Durchführung von Angriffen auf Websites, die Ihnen nicht gehören (oder für die Sie keine Erlaubnis zum Testen haben), ist illegal! Der Entwickler übernimmt keine Verantwortung für den unsachgemäßen Gebrauch dieser Software.</value>
+  </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
     <value>Spender und Unterstützer</value>
   </data>
