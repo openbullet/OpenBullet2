@@ -400,5 +400,10 @@ namespace OpenBullet2.Shared
             }
             catch { }
         }
+
+        ~MultiRunJobViewer()
+        {
+            Dispose();
+        }
     }
 }
