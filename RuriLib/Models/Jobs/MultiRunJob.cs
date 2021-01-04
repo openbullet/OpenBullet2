@@ -78,6 +78,7 @@ namespace RuriLib.Models.Jobs
         public int DataRetried { get; private set; } = 0;
         public int DataBanned { get; private set; } = 0;
         public int DataToCheck { get; private set; } = 0;
+        public int DataInvalid { get; private set; } = 0;
         public int DataErrors { get; private set; } = 0;
 
         // -- Proxies
@@ -105,7 +106,7 @@ namespace RuriLib.Models.Jobs
                 // Check if the data respects rules
                 if (!botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))
                 {
-                    botData.STATUS = "FAIL";
+                    botData.STATUS = "INVALID";
 
                     // RETURN THE RESULT
                     return new CheckResult
@@ -400,6 +401,7 @@ namespace RuriLib.Models.Jobs
                 case "SUCCESS": DataHits++; break;
                 case "NONE": DataToCheck++; break;
                 case "FAIL": DataBad++; break;
+                case "INVALID": DataInvalid++; break;
                 default: DataCustom++; break;
             }
 

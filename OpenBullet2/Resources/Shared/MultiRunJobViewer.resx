@@ -225,6 +225,9 @@
   <data name="InfiniteDataPool" xml:space="preserve">
     <value>Infinite data pool</value>
   </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Invalid</value>
+  </data>
   <data name="JobOptions" xml:space="preserve">
     <value>Job options</value>
   </data>

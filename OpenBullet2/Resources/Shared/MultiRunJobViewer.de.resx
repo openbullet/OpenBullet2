@@ -210,6 +210,9 @@
   <data name="InfiniteDataPool" xml:space="preserve">
     <value>Unendlicher Datenpool</value>
   </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Ungültig</value>
+  </data>
   <data name="JobOptions" xml:space="preserve">
     <value>Job Optionen</value>
   </data>
