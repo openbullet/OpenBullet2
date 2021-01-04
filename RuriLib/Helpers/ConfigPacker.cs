@@ -26,8 +26,8 @@ namespace RuriLib.Helpers
             using (var archive = new ZipArchive(packageStream, ZipArchiveMode.Create, false))
             {
                 await CreateZipEntryFromString(archive, "readme.md", config.Readme);
-                await CreateZipEntryFromString(archive, "metadata.json", JsonConvert.SerializeObject(config.Metadata));
-                await CreateZipEntryFromString(archive, "settings.json", JsonConvert.SerializeObject(config.Settings));
+                await CreateZipEntryFromString(archive, "metadata.json", JsonConvert.SerializeObject(config.Metadata, jsonSettings));
+                await CreateZipEntryFromString(archive, "settings.json", JsonConvert.SerializeObject(config.Settings, jsonSettings));
 
                 switch (config.Mode)
                 {
