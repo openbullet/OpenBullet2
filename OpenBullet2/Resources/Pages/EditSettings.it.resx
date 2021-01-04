@@ -144,6 +144,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Annulla</value>
   </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case sensitive</value>
+  </data>
   <data name="Clear" xml:space="preserve">
     <value>Pulisci</value>
   </data>
@@ -189,6 +192,9 @@
   <data name="InputsDescription" xml:space="preserve">
     <value>Gli input personalizzati sono un modo per definire alcuni valori direttamente durante l'esecuzione. L'utente della config riceverà dei popup quando comincia un job e le sue risposte saranno inserite come variabili di tipo stringa che puoi usare a tuo piacimento.</value>
   </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Inverti</value>
+  </data>
   <data name="MaxUsesPerProxy" xml:space="preserve">
     <value>Massimi utilizzi per singolo proxy (0 è infinito)</value>
   </data>
@@ -210,6 +216,9 @@
   <data name="RandomUserAgent" xml:space="preserve">
     <value>User Agent Casuale</value>
   </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Regola regex</value>
+  </data>
   <data name="RegexToMatch" xml:space="preserve">
     <value>Regex da verificare</value>
   </data>
@@ -227,6 +236,9 @@
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
     <value>Salva anche le catture vuote</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Regola semplice</value>
   </data>
   <data name="SliceName" xml:space="preserve">
     <value>Nome della parte</value>

@@ -101,6 +101,20 @@ namespace RuriLib.Models.Jobs
             new Func<MultiRunInput, CancellationToken, Task<CheckResult>>(async (input, token) =>
             {
                 var botData = input.BotData;
+
+                // Check if the data respects rules
+                if (!botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))
+                {
+                    botData.STATUS = "FAIL";
+
+                    // RETURN THE RESULT
+                    return new CheckResult
+                    {
+                        BotData = botData,
+                        ScriptVariables = new ImmutableArray<ScriptVariable>()
+                    };
+                }
+
                 botData.CancellationToken = token;
                 ScriptState scriptState = null;
 

@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Data;
+﻿using RuriLib.Models.Data.Rules;
 using System.Collections.Generic;
 
 namespace RuriLib.Models.Configs.Settings

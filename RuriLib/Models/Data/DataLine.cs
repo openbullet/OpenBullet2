@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Environment;
+﻿using RuriLib.Models.Data.Rules;
+using RuriLib.Models.Environment;
 using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace RuriLib.Models.Data
         /// <summary>
         /// Checks if the data line respects the data rules.
         /// </summary>
-        public bool RespectsRules(DataRule[] rules)
+        public bool RespectsRules(IEnumerable<DataRule> rules)
         {
             var variables = GetVariables();
 
@@ -63,7 +64,7 @@ namespace RuriLib.Models.Data
                 if (slice == null)
                     throw new ArgumentException($"Invalid slice name ({rule.SliceName}) in a data rule");
 
-                if (!Regex.IsMatch(value, rule.RegexToMatch))
+                if (!rule.IsSatisfied(value))
                     return false;
             }
 

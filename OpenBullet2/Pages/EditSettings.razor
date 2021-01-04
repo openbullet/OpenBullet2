@@ -1,5 +1,5 @@
 ﻿@page "/config/edit/settings"
-@using RuriLib.Models.Data
+@using RuriLib.Models.Data.Rules
 @using RuriLib.Models
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
@@ -59,9 +59,13 @@
     <label>@Loc["DataRules"]</label>
     <br />
     <div class="list-group list-group-horizontal">
-        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new DataRule("", ".*")))">
+        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new SimpleDataRule()))">
             <span class="oi oi-plus"></span>
-            @Loc["AddBlank"]
+            @Loc["AddSimpleRule"]
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new RegexDataRule()))">
+            <span class="oi oi-plus"></span>
+            @Loc["AddRegexRule"]
         </button>
         <button type="button" class="btn btn-sm btn-outline-primary"
                 @onclick="@(() => showRegexHelper = !showRegexHelper)">
@@ -74,7 +78,7 @@
     </div>
     @if (showRegexHelper)
     {
-        <RegexHelper BuiltRegex="@((regex) => settings.DataSettings.DataRules.Add(new DataRule("", regex)))" />
+        <RegexHelper BuiltRegex="@((regex) => settings.DataSettings.DataRules.Add(new RegexDataRule { RegexToMatch = regex }))" />
     }
     <div class="container-fluid" style="margin-top: 15px;">
         @foreach (var rule in settings.DataSettings.DataRules)
@@ -86,12 +90,45 @@
                 <div class="col align-self-stretch px-1 px-md-2">
                     <InputText @bind-Value="rule.SliceName" />
                 </div>
-                <div class="col-auto px-1 px-md-2">
-                    <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
+
+                @switch (rule)
+                {
+                    case SimpleDataRule r:
+                        <div class="col-auto px-1 px-md-2">
+                            <InputSelect @bind-Value="r.Comparison">
+                                @foreach (var c in Enum.GetNames(typeof(StringRule)))
+                                {
+                                    <option value="@c">@c</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col align-self-stretch px-1 px-md-2">
+                            <InputText @bind-Value="r.StringToCompare" />
+                        </div>
+                        <div class="col-auto px-1 px-md-2 mt-1">
+                            <span>@Loc["CaseSensitive"]</span>
+                            <InputCheckbox @bind-Value="r.CaseSensitive" />
+                        </div>
+                        break;
+
+                    case RegexDataRule r:
+                        <div class="col-auto px-1 px-md-2">
+                            <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
+                        </div>
+                        <div class="col align-self-stretch px-1 px-md-2">
+                            <InputText @bind-Value="r.RegexToMatch" />
+                        </div>
+                        break;
+
+                    default:
+                        break;
+                }
+
+                <div class="col-auto px-1 px-md-2 mt-1">
+                    <span>@Loc["Invert"]</span>
+                    <InputCheckbox @bind-Value="rule.Invert" />
                 </div>
-                <div class="col align-self-stretch px-1 px-md-2">
-                    <InputText @bind-Value="rule.RegexToMatch" />
-                </div>
+
                 <div class="col-auto px-1 px-md-2">
                     <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
                         <span class="oi oi-x"></span></button>
