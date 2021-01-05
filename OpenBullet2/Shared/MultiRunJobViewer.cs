@@ -34,8 +34,8 @@ namespace OpenBullet2.Shared
         [Inject] public VolatileSettingsService VolatileSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
         [Inject] public JobLoggerService Logger { get; set; }
-        [Inject] public IRecordRepository RecordRepo { get; set; }
         [Inject] public IJobRepository JobRepo { get; set; }
+        [Inject] public JobManagerService JobManager { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
         bool changingBots = false;
@@ -154,26 +154,8 @@ namespace OpenBullet2.Shared
 
         private void SaveRecord(object sender, EventArgs e)
         {
-            if (Job.DataPool is WordlistDataPool pool)
-            {
-                var record = RecordRepo.GetAll()
-                    .FirstOrDefault(r => r.ConfigId == Job.Config.Id && r.WordlistId == pool.Wordlist.Id);
-
-                if (record == null)
-                {
-                    RecordRepo.Add(new RecordEntity
-                    {
-                        ConfigId = Job.Config.Id,
-                        WordlistId = pool.Wordlist.Id,
-                        Checkpoint = Job.Skip + Job.DataTested
-                    });
-                }
-                else
-                {
-                    record.Checkpoint = Job.Skip + Job.DataTested;
-                    RecordRepo.Update(record);
-                }
-            }
+            // Fire and forget
+            JobManager.SaveRecord(Job).ConfigureAwait(false);
         }
 
         private void SaveJobOptions(object sender, EventArgs e)
@@ -377,7 +359,7 @@ namespace OpenBullet2.Shared
                 Job.OnTaskError += LogTaskError;
                 Job.OnError += LogError;
                 Job.OnCompleted += LogCompleted;
-                Job.OnTimerTick += SaveRecord;
+                Job.OnCompleted += SaveRecord;
             }
 
             Job.OnTimerTick += SaveRecord;
@@ -390,6 +372,7 @@ namespace OpenBullet2.Shared
             try { Job.OnResult -= LogResult; } catch { }
             try { Job.OnTaskError -= LogTaskError; } catch { }
             try { Job.OnError -= LogError; } catch { }
+            try { Job.OnCompleted -= SaveRecord; } catch { }
             try { Job.OnCompleted -= LogCompleted; } catch { }
 
             try
