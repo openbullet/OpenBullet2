@@ -2,7 +2,7 @@
 @implements IDisposable
 
 <div class="generic-log mb-4">
-    @foreach (var entry in JobLoggerService.GetLog(JobId).Reverse())
+    @foreach (var entry in entries)
     {
         <span style="color: @entry.color;">[@entry.date.ToLongTimeString()] @entry.message.Replace("\r\n", " ").Replace("\n", " ")</span><br />
     }
@@ -10,6 +10,7 @@
 
 @code {
     [Parameter] public int JobId { get; set; } = 0;
+    JobLogEntry[] entries = Array.Empty<JobLogEntry>();
 
     protected override void OnInitialized()
     {
@@ -21,6 +22,7 @@
         if (id != JobId)
             return;
 
+        entries = JobLoggerService.GetLog(id).Reverse().ToArray();
         InvokeAsync(StateHasChanged);
     }
 
