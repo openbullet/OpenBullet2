@@ -195,12 +195,6 @@
   <data name="NewPasswordSet" xml:space="preserve">
     <value>The new passwords was set!</value>
   </data>
-  <data name="NotACssFile" xml:space="preserve">
-    <value>Not a css file</value>
-  </data>
-  <data name="NotACssFileText" xml:space="preserve">
-    <value>The provided theme is not a css file</value>
-  </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Proxy Check Targets</value>
   </data>
@@ -242,6 +236,9 @@
   </data>
   <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
     <value>Theme successfully uploaded</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Unsupported theme file format. Supported formats: .css, .zip</value>
   </data>
   <data name="UploadTheme" xml:space="preserve">
     <value>Upload theme</value>

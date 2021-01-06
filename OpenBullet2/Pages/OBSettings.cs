@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Scripting.Utils;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
+using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
@@ -16,22 +17,20 @@ namespace OpenBullet2.Pages
     public partial class OBSettings
     {
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] public IThemeRepository ThemeRepo { get; set; }
         [Inject] public NavigationManager Nav { get; set; }
         [Inject] public IModalService Modal { get; set; }
 
         OpenBulletSettings settings;
         string[] availableThemes = Array.Empty<string>();
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             settings = PersistentSettings.OpenBulletSettings;
 
             try
             {
-                availableThemes = Directory.GetFiles("wwwroot/css/themes")
-                    .Where(f => f.EndsWith(".css"))
-                    .Select(f => Path.GetFileNameWithoutExtension(f))
-                    .ToArray();
+                availableThemes = (await ThemeRepo.GetNames()).ToArray();
             }
             catch (Exception ex)
             {
@@ -84,21 +83,28 @@ namespace OpenBullet2.Pages
             if (e.FileCount == 0)
                 return;
 
-            if (!e.File.Name.EndsWith(".css"))
-            {
-                await js.AlertError(Loc["NotACssFile"], Loc["NotACssFileText"]);
-                return;
-            }
-
             try
             {
                 // Support maximum 5 MB per file
                 var stream = e.File.OpenReadStream(5 * 1000 * 1000);
 
-                // Copy the content to a FileStream
+                // Copy the content to a MemoryStream
                 using var reader = new StreamReader(stream);
-                using var fs = new FileStream($"wwwroot/css/themes/{e.File.Name}", FileMode.Create);
-                await stream.CopyToAsync(fs);
+                using var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+
+                if (e.File.Name.EndsWith(".css"))
+                {
+                    await ThemeRepo.AddFromCssFile(e.File.Name, ms);
+                }
+                else if (e.File.Name.EndsWith(".zip"))
+                {
+                    await ThemeRepo.AddFromZipArchive(ms);
+                }
+                else
+                {
+                    throw new NotSupportedException(Loc["UnsupportedThemeFormat"]);
+                }
 
                 await js.AlertSuccess(Loc["AllDone"], $"{Loc["ThemeSuccessfullyUploaded"]}: {e.File.Name}");
             }

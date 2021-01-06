@@ -64,6 +64,7 @@ namespace OpenBullet2
             services.AddScoped<IJobRepository, DbJobRepository>();
             services.AddScoped<IGuestRepository, DbGuestRepository>();
             services.AddScoped<IRecordRepository, DbRecordRepository>();
+            services.AddScoped<IThemeRepository>(_ => new DiskThemeRepository("wwwroot/css/themes"));
 
             // Singletons
             services.AddSingleton<MetricsService>();

@@ -1,10 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
 @inject PersistentSettingsService Settings
+@inject IThemeRepository ThemeRepo
 @inherits LayoutComponentBase
 
-@if (Settings.OpenBulletSettings.AppearanceSettings.Theme != "Default")
+@if (themePath != null)
 {
-    <Link rel="stylesheet" href="@($"css/themes/{Settings.OpenBulletSettings.AppearanceSettings.Theme}.css")" />
+    <Link rel="stylesheet" href="@themePath" />
 }
 
 <BlazoredModal />
@@ -18,3 +19,15 @@
         @Body
     </div>
 </div>
+
+@code {
+    string themePath;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Settings.OpenBulletSettings.AppearanceSettings.Theme != "Default")
+            themePath = (await ThemeRepo.GetPath(Settings.OpenBulletSettings.AppearanceSettings.Theme)).Replace("wwwroot/", "");
+
+        Console.WriteLine(themePath);
+    }
+} 
