@@ -25,7 +25,7 @@ namespace RuriLib.Helpers.CSharp
         public Script Build(string cSharpScript, ScriptSettings settings, PluginRepository pluginRepo)
         {
             var ruriLib = Assembly.GetAssembly(typeof(ScriptBuilder));
-            var plugins = pluginRepo.GetPlugins();
+            var plugins = pluginRepo != null ? pluginRepo.GetPlugins() : Array.Empty<Assembly>();
             
             var script =
                 CSharpScript.Create(
