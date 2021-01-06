@@ -90,8 +90,8 @@ namespace OpenBullet2.Console
             System.Console.WriteLine(@"
 This is a POC (Proof of Concept) implementation of RuriLib as a console application.
 The functionalities supported here don't even come close to the ones of the main implementation.
-Feel free to contribute to the versatility of this project by adding the missing functionalities and submitting a PR."
-);
+Feel free to contribute to the versatility of this project by adding the missing functionalities and submitting a PR.
+");
 
             // Parse the Options
             Parser.Default.ParseArguments<Options>(args)
