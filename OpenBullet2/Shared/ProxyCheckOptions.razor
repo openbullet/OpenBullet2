@@ -17,7 +17,8 @@
 <EditForm Model="Options">
     <div style="width: 100px;">
         <label style="margin-top: 15px;">Bots</label>
-        <InputNumber @bind-Value="Options.Bots" />
+        <InputNumber TValue="int" Value="Options.Bots" ValueExpression="() => Options.Bots"
+                     ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
     </div>
     <label>Timeout (milliseconds)</label>
     <div style="width: 100px;">

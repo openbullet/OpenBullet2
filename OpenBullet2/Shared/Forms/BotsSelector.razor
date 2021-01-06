@@ -3,23 +3,18 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<BotsSelector> Loc
 
 <EditForm Model="Bots">
-    <InputNumber @bind-Value="Bots" />
+    <InputNumber TValue="int" Value="Bots" ValueExpression="() => Bots"
+                 ValueChanged="(value) => Bots = Helpers.Math.Clamp(value, 1, 200)" />
 </EditForm>
 
-<button class="btn btn-outline-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
+<button class="btn btn-outline-success" type="submit" @onclick="Confirm">@Loc["Ok"]</button>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public int Bots { get; set; }
     
-    private async Task Validate()
+    private void Confirm()
     {
-        if (Bots < 1 || Bots > 200)
-        {
-            await js.AlertError(Loc["InvalidAmount"], Loc["InvalidAmountWarning"]);
-            return;
-        }
-
         BlazoredModal.Close(ModalResult.Ok(Bots));
     }
 }

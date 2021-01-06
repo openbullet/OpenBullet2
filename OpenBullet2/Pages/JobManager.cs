@@ -123,7 +123,7 @@ namespace OpenBullet2.Pages
             while (Manager.Jobs.Any(j => j.Status != JobStatus.Idle && j.Status != JobStatus.Paused))
             {
                 await InvokeAsync(StateHasChanged);
-                await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval));
+                await Task.Delay(System.Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval));
             }
         }
     }
