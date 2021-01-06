@@ -22,8 +22,7 @@ using RuriLib.Models.UserAgents;
 using OpenBullet2.Helpers;
 using System;
 using OpenBullet2.Logging;
-using RuriLib.Helpers.Blocks;
-using System.IO;
+using System.Threading;
 
 namespace OpenBullet2
 {
@@ -40,6 +39,8 @@ namespace OpenBullet2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ThreadPool.SetMinThreads(1000, 1000);
+
             services.AddRazorPages();
             services.AddServerSideBlazor()
                 .AddHubOptions(x => x.MaximumReceiveMessageSize = 102400000)
