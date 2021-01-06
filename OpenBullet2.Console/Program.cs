@@ -193,8 +193,8 @@ Feel free to contribute to the versatility of this project by adding the missing
         {
             System.Console.Title = $"OpenBullet 2 (Console POC) - {job.Status} | " +
                 $"Config: {job.Config.Metadata.Name} | " +
-                $"Wordlist {options.WordlistFile} | " +
-                $"Bots {job.Bots} | " +
+                $"Wordlist: {Path.GetFileName(options.WordlistFile)} | " +
+                $"Bots: {job.Bots} | " +
                 $"CPM: {job.CPM} | " +
                 $"Progress: {job.DataTested} / {job.DataPool.Size} ({job.Progress * 100:0.00}%) | " +
                 $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataBad} Retries: {job.DataRetried + job.DataBanned} | " +
