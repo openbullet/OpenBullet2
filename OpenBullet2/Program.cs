@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -16,14 +17,19 @@ namespace OpenBullet2
         public static void Main(string[] args)
         {
             // Write the disclaimer
-            Console.WriteLine(@"Welcome to OpenBullet 2.
-
-==============
-  DISCLAIMER
-==============
+            Console.WriteLine("Welcome to OpenBullet 2!");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"
+----------
+DISCLAIMER
+----------
 Performing attacks on sites you do not own (or you do not have permission to test) is illegal!
 The developer will not be held responsible for improper use of this software.
 ");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                Console.WriteLine("DO NOT CLOSE THIS WINDOW" + Environment.NewLine);
 
             CreateHostBuilder(args).Build().Run();
         }
