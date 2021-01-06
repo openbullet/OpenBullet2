@@ -1,11 +1,12 @@
-﻿using OpenBullet2.Repositories;
+﻿using OpenBullet2.Models.Data;
+using OpenBullet2.Repositories;
 using RuriLib.Models.Data;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Models.Data
+namespace OpenBullet2.Services
 {
     public class DataPoolFactoryService
     {

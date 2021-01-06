@@ -81,7 +81,7 @@ namespace OpenBullet2.Pages
                 QueryDictionary<StringValues> query)
         {
             var server = new GridServer<Config>(configs, new QueryCollection(query),
-                true, "configsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+                true, "configsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

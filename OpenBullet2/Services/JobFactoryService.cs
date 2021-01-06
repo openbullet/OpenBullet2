@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OpenBullet2.Models.Data;
+﻿using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Hits;
+using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
-using OpenBullet2.Services;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.UserAgents;
@@ -11,7 +10,7 @@ using RuriLib.Services;
 using System;
 using System.Linq;
 
-namespace OpenBullet2.Models.Jobs
+namespace OpenBullet2.Services
 {
     public class JobFactoryService
     {

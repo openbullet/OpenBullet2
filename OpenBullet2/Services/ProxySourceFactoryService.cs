@@ -1,12 +1,11 @@
-﻿using OpenBullet2.Models.Proxies.Sources;
-using OpenBullet2.Repositories;
-using OpenBullet2.Services;
+﻿using OpenBullet2.Models.Proxies;
+using OpenBullet2.Models.Proxies.Sources;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
 using System;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Models.Proxies
+namespace OpenBullet2.Services
 {
     public class ProxySourceFactoryService
     {

@@ -76,7 +76,7 @@ namespace OpenBullet2.Shared
                 QueryDictionary<StringValues> query)
         {
             var server = new GridServer<Hit>(Job.Hits, new QueryCollection(query),
-                true, "hitsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+                true, "hitsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

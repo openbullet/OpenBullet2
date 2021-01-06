@@ -96,7 +96,7 @@ namespace OpenBullet2.Pages
                 QueryDictionary<StringValues> query)
         {
             var server = new GridServer<ProxyEntity>(proxies, new QueryCollection(query),
-                true, "proxiesGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+                true, "proxiesGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

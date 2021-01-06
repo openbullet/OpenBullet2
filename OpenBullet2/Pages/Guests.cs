@@ -62,7 +62,7 @@ namespace OpenBullet2.Pages
                 QueryDictionary<StringValues> query)
         {
             var server = new GridServer<GuestEntity>(guests, new QueryCollection(query),
-                true, "guestsGrid", columns, 30).Sortable().Filterable().WithMultipleFilters();
+                true, "guestsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

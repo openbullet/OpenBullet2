@@ -1,5 +1,4 @@
 ﻿using Blazored.Modal.Services;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Scripting.Utils;
@@ -8,7 +7,6 @@ using OpenBullet2.Models.Settings;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
