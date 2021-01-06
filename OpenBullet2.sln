@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib", "RuriLib\RuriLib.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Tests", "RuriLib.Tests\RuriLib.Tests.csproj", "{3FFDD478-98AE-4855-90EF-7A8C9250B004}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBullet2.Console", "OpenBullet2.Console\OpenBullet2.Console.csproj", "{63576932-B89D-4CBD-B59E-E52DBE89B9A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FFDD478-98AE-4855-90EF-7A8C9250B004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63576932-B89D-4CBD-B59E-E52DBE89B9A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63576932-B89D-4CBD-B59E-E52DBE89B9A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63576932-B89D-4CBD-B59E-E52DBE89B9A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63576932-B89D-4CBD-B59E-E52DBE89B9A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
