@@ -1,0 +1,24 @@
+﻿@using OpenBullet2.Models.Sharing 
+@inject IModalService ModalService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EndpointCreate> Loc
+
+<EditForm Model="endpoint">
+    <label>@Loc["Route"]</label>
+    <InputText @bind-Value="endpoint.Route" />
+
+    <label>@Loc["ApiKeys"] (@Loc["onePerLine"])</label>
+    <InputListOfStrings @bind-List="endpoint.ApiKeys" />
+
+    <button type="submit" class="btn btn-outline-success mt-2" @onclick="Create">@Loc["Create"]</button>
+</EditForm>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    private Endpoint endpoint = new();
+
+    private void Create()
+    {
+        BlazoredModal.Close(ModalResult.Ok(endpoint));
+    }
+}

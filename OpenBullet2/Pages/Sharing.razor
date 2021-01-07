@@ -1,0 +1,55 @@
+﻿@page "/sharing"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Sharing> Loc
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-success" @onclick="CreateEndpoint"><span class="oi oi-plus"></span> @Loc["CreateEndpoint"]</button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="EditEndpoint"><span class="oi oi-pencil"></span> @Loc["EditEndpoint"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteEndpoint"><span class="oi oi-x"></span> @Loc["DeleteEndpoint"]</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col px-0">
+            <span>@Loc["ForThisEndpoint"]:</span>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-success" @onclick="AddConfig"><span class="oi oi-plus"></span> @Loc["AddConfig"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="RemoveConfig"><span class="oi oi-x"></span> @Loc["RemoveConfig"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="RemoveAllConfigs"><span class="oi oi-x"></span> @Loc["RemoveAllConfigs"]</button>
+        </div>
+    </div>
+</div>
+
+<EditForm Model="selectedEndpointName">
+    <label>@Loc["Endpoint"]</label>
+    <InputSelect TValue="string" Value="selectedEndpointName" ValueExpression="(() => selectedEndpointName)"
+                       ValueChanged="(async val => await OnEndpointSelected(val))">
+        @foreach (var name in ConfigSharing.Endpoints.Select(e => e.Route))
+        {
+            <option value="@name">@name</option>
+        }
+    </InputSelect><br />
+</EditForm>
+
+@if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
+{
+    <GridComponent @ref="gridComponent" T="RuriLib.Models.Configs.Config" Grid="@grid" OnRowClicked="@OnConfigSelected"></GridComponent>
+}
+else
+{
+    <p><em>@Loc["Loading"]...</em></p>
+}
+
+<hr />
+<BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />
+<br /><br />
+
+@code {
+    string help1x00 => Loc["Help1x00"];
+    string help1x01 => Loc["Help1x01"];
+    string help1x02 => Loc["Help1x02"];
+} 

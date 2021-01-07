@@ -117,82 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
+  <data name="AddConfig" xml:space="preserve">
+    <value>Add config</value>
   </data>
-  <data name="AwwYeah" xml:space="preserve">
-    <value>Aww yeah!</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
   </data>
-  <data name="ChooseYourLanguage" xml:space="preserve">
-    <value>Choose your language</value>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
   </data>
-  <data name="Configs" xml:space="preserve">
-    <value>Configs</value>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
   </data>
-  <data name="CSharpCode" xml:space="preserve">
-    <value>C# Code</value>
+  <data name="ConfigRemovedSuccessfully" xml:space="preserve">
+    <value>Config removed successfully</value>
   </data>
-  <data name="Guests" xml:space="preserve">
-    <value>Guests</value>
+  <data name="ConfigsRemovedSuccessfully" xml:space="preserve">
+    <value>Configs removed successfully</value>
   </data>
-  <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="CreateEndpoint" xml:space="preserve">
+    <value>Create endpoint</value>
   </data>
-  <data name="InvalidLolicode" xml:space="preserve">
-    <value>Cannot save: invalid LoliCode!</value>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Creation date</value>
   </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
+  <data name="DeleteEndpoint" xml:space="preserve">
+    <value>Delete endpoint</value>
   </data>
-  <data name="LoliCode" xml:space="preserve">
-    <value>LoliCode</value>
+  <data name="EditEndpoint" xml:space="preserve">
+    <value>Edit endpoint</value>
   </data>
-  <data name="Metadata" xml:space="preserve">
-    <value>Metadata</value>
+  <data name="Endpoint" xml:space="preserve">
+    <value>Endpoint</value>
   </data>
-  <data name="Monitor" xml:space="preserve">
-    <value>Monitor</value>
+  <data name="EndpointCreated" xml:space="preserve">
+    <value>Endpoint created</value>
+  </data>
+  <data name="ForThisEndpoint" xml:space="preserve">
+    <value>For this endpoint</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>What is this?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>This is where you can set up sharing %endpoints% for your configs so that other people can access them. You can %create% endpoints and %add% configs to them, and also specify the %Api Keys% that are authorized to receive the configs.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>In order to share configs with a friend, you have to create an endpoint, add configs to it, set up at least one api key and send it to your friend, along with the %URL% of your endpoint. For example, if your OpenBullet 2 instance is reachable on `1.1.1.1:5000` your friend needs to type `http://1.1.1.1:5000/api/shared/configs/ROUTE` where %ROUTE% is the name you gave to the endpoint.</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>Last modified</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
     <value>No config selected</value>
   </data>
-  <data name="OBSettings" xml:space="preserve">
-    <value>OB Settings</value>
-  </data>
-  <data name="Plugins" xml:space="preserve">
-    <value>Plugins</value>
+  <data name="NoEndpointSelected" xml:space="preserve">
+    <value>No endpoint selected</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>
-  <data name="Readme" xml:space="preserve">
-    <value>Readme</value>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Really delete</value>
   </data>
-  <data name="RLSettings" xml:space="preserve">
-    <value>RL Settings</value>
+  <data name="RemoveAllConfigs" xml:space="preserve">
+    <value>Remove all configs</value>
   </data>
-  <data name="SaveConfig" xml:space="preserve">
-    <value>Save Config</value>
+  <data name="RemoveConfig" xml:space="preserve">
+    <value>Remove config</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+  <data name="Removed" xml:space="preserve">
+    <value>Removed</value>
   </data>
-  <data name="Sharing" xml:space="preserve">
-    <value>Sharing</value>
-  </data>
-  <data name="Stacker" xml:space="preserve">
-    <value>Stacker</value>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Select config</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
-  </data>
-  <data name="wasSavedSuccessfully" xml:space="preserve">
-    <value>was saved successfully!</value>
-  </data>
-  <data name="Wordlists" xml:space="preserve">
-    <value>Wordlists</value>
   </data>
 </root>

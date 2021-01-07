@@ -180,6 +180,9 @@
   <data name="Settings" xml:space="preserve">
     <value>Impostazioni</value>
   </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Condivisione</value>
+  </data>
   <data name="Stacker" xml:space="preserve">
     <value>Stacker</value>
   </data>
