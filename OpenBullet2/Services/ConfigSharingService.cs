@@ -17,16 +17,16 @@ namespace OpenBullet2.Services
     {
         private readonly IConfigRepository configRepo;
         private readonly JsonSerializerSettings jsonSettings;
-        private string BaseFolder { get; init; }
-        private string EndpointsFile => Path.Combine(BaseFolder, "sharingEndpoints.json");
+        private string SettingsFolder { get; init; }
+        private string EndpointsFile => Path.Combine(SettingsFolder, "sharingEndpoints.json");
 
         public List<Endpoint> Endpoints { get; set; } = new();
 
-        public ConfigSharingService(IConfigRepository configRepo, string baseFolder)
+        public ConfigSharingService(IConfigRepository configRepo, string settingsFolder)
         {
             this.configRepo = configRepo;
-            BaseFolder = baseFolder;
-            Directory.CreateDirectory(baseFolder);
+            SettingsFolder = settingsFolder;
+            Directory.CreateDirectory(settingsFolder);
 
             jsonSettings = new JsonSerializerSettings
             {
