@@ -116,7 +116,7 @@ Feel free to contribute to the versatility of this project by adding the missing
                 Bots = opts.BotsNumber,
                 Config = config,
                 DataPool = new FileDataPool(opts.WordlistFile, opts.WordlistType),
-                HitOutputs = new List<IHitOutput> { new FileSystemHitOutput() },
+                HitOutputs = new List<IHitOutput> { new FileSystemHitOutput("UserData/Hits") },
                 ProxyMode = opts.ProxyMode,
                 ProxySources = new List<ProxySource> { new FileProxySource(opts.ProxyFile) { DefaultType = opts.ProxyType } }
             };

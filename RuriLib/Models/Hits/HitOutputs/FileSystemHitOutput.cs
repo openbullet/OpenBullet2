@@ -16,14 +16,11 @@ namespace RuriLib.Models.Hits.HitOutputs
 
         public Task Store(Hit hit)
         {
-            if (!Directory.Exists(BaseDir))
-                Directory.CreateDirectory(BaseDir);
+            Directory.CreateDirectory(BaseDir);
 
             var folderName = Path.Combine(BaseDir, hit.Config.Metadata.Name.ToValidFileName());
-
-            if (!Directory.Exists(folderName))
-                Directory.CreateDirectory(folderName);
-
+            Directory.CreateDirectory(folderName);
+            
             var fileName = Path.Combine(folderName, $"{hit.Type.ToValidFileName()}.txt");
 
             lock (FileLocker.GetHandle(fileName))
