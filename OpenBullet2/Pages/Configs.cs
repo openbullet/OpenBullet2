@@ -92,7 +92,7 @@ namespace OpenBullet2.Pages
             selectedConfig = config;
         }
 
-        protected void OnConfigSelected(object item)
+        private void OnConfigSelected(object item)
         {
             if (item.GetType() == typeof(Config))
             {

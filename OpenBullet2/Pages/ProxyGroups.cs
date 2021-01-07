@@ -18,7 +18,6 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
-using Radzen.Blazor;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using System;
