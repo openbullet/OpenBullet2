@@ -89,7 +89,7 @@
     void AddFileSystem()
     {
         if (!HitOutputs.Any(o => o is FileSystemHitOutputOptions))
-            HitOutputs.Add(new FileSystemHitOutputOptions("UserData/Hits"));
+            HitOutputs.Add(new FileSystemHitOutputOptions { BaseDir = "UserData/Hits" });
     }
 
     void AddDiscord()
