@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using OpenBullet2.Models.Sharing;
 using OpenBullet2.Repositories;
+using RuriLib.Helpers;
+using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,11 +57,23 @@ namespace OpenBullet2.Services
             {
                 foreach (var configId in endpoint.ConfigIds)
                 {
-                    // Create the file entry and write the file content
-                    var zipArchiveEntry = archive.CreateEntry($"{configId}.opk", CompressionLevel.Fastest);
-                    var fileContent = await configRepo.GetBytes(configId);
-                    using var zipStream = zipArchiveEntry.Open();
-                    zipStream.Write(fileContent, 0, fileContent.Length);
+                    try
+                    {
+                        // Get the config from the repo, convert it to C# and repack it into bytes
+                        var config = await configRepo.Get(configId);
+                        config.ChangeMode(ConfigMode.CSharp);
+                        var bytes = await ConfigPacker.Pack(config);
+
+                        // Create the entry and write the data
+                        var zipArchiveEntry = archive.CreateEntry($"{configId}.opk", CompressionLevel.Fastest);
+                        using var zipStream = zipArchiveEntry.Open();
+                        zipStream.Write(bytes, 0, bytes.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        // If something happens, simply log it and omit the config from the archive
+                        Console.WriteLine($"Error while packing config {configId} for endpoint {endpoint}: {ex.Message}");
+                    }
                 }
             }
 
