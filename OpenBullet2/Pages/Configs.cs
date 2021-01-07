@@ -113,7 +113,6 @@ namespace OpenBullet2.Pages
                 await ConfigService.ReloadConfigs();
                 configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
 
-                ConfigService.SelectedConfig = null;
                 selectedConfig = null;
 
                 if (detailedView)

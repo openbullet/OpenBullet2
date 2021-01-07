@@ -42,6 +42,7 @@ namespace OpenBullet2.Services
         {
             // Load from the main repository
             Configs = await configRepo.GetAll();
+            SelectedConfig = null;
 
             // Load from remotes (fire and forget)
             LoadFromRemotes();
