@@ -1,10 +1,7 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using OpenBullet2.Entities;
-using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Functions.Crypto;
@@ -25,13 +22,13 @@ namespace OpenBullet2.Pages
         [Inject] IModalService Modal { get; set; }
 
         private Timer timer;
-        private readonly string fileName = "triggeredActions.json";
+        private readonly string fileName = "UserData/triggeredActions.json";
         private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings 
         {
             TypeNameHandling = TypeNameHandling.Auto,
             Formatting = Formatting.Indented 
         };
-        private byte[] lastSavedHash = new byte[0];
+        private byte[] lastSavedHash = System.Array.Empty<byte>();
 
         protected override void OnInitialized()
         {

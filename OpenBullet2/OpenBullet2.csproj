@@ -77,7 +77,7 @@
     <None Update="dbip-country-lite.mmdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Environment.ini">
+    <None Update="UserData\Environment.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -103,8 +103,8 @@ Feel free to contribute to the versatility of this project by adding the missing
         {
             options = opts;
 
-            RuriLibSettingsService rlSettings = new RuriLibSettingsService();
-            PluginRepository pluginRepo = new PluginRepository();
+            RuriLibSettingsService rlSettings = new RuriLibSettingsService("UserData");
+            PluginRepository pluginRepo = new PluginRepository("UserData/Plugins");
 
             // Unpack the config
             using var fs = new FileStream(opts.ConfigFile, FileMode.Open);

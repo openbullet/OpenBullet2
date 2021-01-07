@@ -9,12 +9,14 @@ namespace OpenBullet2.Repositories
 {
     public class HybridWordlistRepository : IWordlistRepository
     {
+        private readonly string baseFolder;
         private readonly ApplicationDbContext context;
 
-        public HybridWordlistRepository(ApplicationDbContext context)
+        public HybridWordlistRepository(ApplicationDbContext context, string baseFolder)
         {
             this.context = context;
-            Directory.CreateDirectory("Wordlists");
+            this.baseFolder = baseFolder;
+            Directory.CreateDirectory(baseFolder);
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace OpenBullet2.Repositories
         public async Task Add(WordlistEntity entity, MemoryStream stream)
         {
             // Generate a unique filename
-            entity.FileName = $"Wordlists/{Guid.NewGuid()}.txt";
+            entity.FileName = Path.Combine(baseFolder, $"{Guid.NewGuid()}.txt").Replace('\\', '/');
 
             // Create the file on disk
             await File.WriteAllBytesAsync(entity.FileName, stream.ToArray());

@@ -23,6 +23,7 @@ using OpenBullet2.Helpers;
 using System;
 using OpenBullet2.Logging;
 using System.Threading;
+using System.IO;
 
 namespace OpenBullet2
 {
@@ -56,20 +57,20 @@ namespace OpenBullet2
             services.AddHttpContextAccessor();
 
             // Repositories
-            services.AddScoped<IConfigRepository, DiskConfigRepository>();
             services.AddScoped<IProxyRepository, DbProxyRepository>();
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
-            services.AddScoped<IWordlistRepository, HybridWordlistRepository>();
             services.AddScoped<IHitRepository, DbHitRepository>();
             services.AddScoped<IJobRepository, DbJobRepository>();
             services.AddScoped<IGuestRepository, DbGuestRepository>();
             services.AddScoped<IRecordRepository, DbRecordRepository>();
             services.AddScoped<IThemeRepository>(_ => new DiskThemeRepository("wwwroot/css/themes"));
+            services.AddScoped<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
+            services.AddScoped<IWordlistRepository>(service => 
+                new HybridWordlistRepository((ApplicationDbContext)service.GetService(typeof(ApplicationDbContext)),
+                "UserData/Wordlists"));
 
             // Singletons
             services.AddSingleton<MetricsService>();
-            services.AddSingleton<RuriLibSettingsService>();
-            services.AddSingleton<PersistentSettingsService>();
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JwtValidationService>();
@@ -80,8 +81,10 @@ namespace OpenBullet2
             services.AddSingleton<JobMonitorService>();
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
-            services.AddSingleton<PluginRepository>();
-            services.AddSingleton<IRandomUAProvider, IntoliRandomUAProvider>();
+            services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
+            services.AddSingleton(_ => new PersistentSettingsService("UserData"));
+            services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
+            services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
 
             // Transient
             services.AddTransient<OBLogger>();

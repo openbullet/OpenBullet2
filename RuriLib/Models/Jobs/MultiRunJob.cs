@@ -383,6 +383,8 @@ namespace RuriLib.Models.Jobs
                 TaskManagerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
+
+            OnStatusChanged?.Invoke(this, Status);
         }
 
         private void DataProcessed(object sender, ResultDetails<MultiRunInput, CheckResult> details)

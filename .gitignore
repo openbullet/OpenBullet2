@@ -6,13 +6,8 @@
 # DB file
 OpenBullet.db*
 
-# Settings
-UserData/
-OpenBulletSettings.json
-RuriLibSettings.json
-triggeredActions.json
-ResXTranslator.exe
-Environment.ini
+# Themes
+OpenBullet2/wwwroot/css/themes/*
 
 # RuriLib API Documentation
 RuriLib/_site/
@@ -39,12 +34,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-OpenBullet2/Configs/
-Plugins/
-Wordlists/
 Mocks/
 Scripts/
-OpenBullet2/wwwroot/css/themes/*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

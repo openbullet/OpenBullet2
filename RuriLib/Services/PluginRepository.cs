@@ -11,13 +11,13 @@ namespace RuriLib.Services
     {
         // AppDomains other than AppDomain.CurrentDomain aren't supported in .NET core
         private readonly AppDomain domain = AppDomain.CurrentDomain;
-        private readonly string baseFolder = "Plugins";
+        private readonly string baseFolder;
         private readonly List<string> toDelete = new();
         private string ToDeleteFile => Path.Combine(baseFolder, ".toDelete");
 
-        public PluginRepository()
+        public PluginRepository(string baseFolder)
         {
-            // Create the base folder if it doesn't exist
+            this.baseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
 
             // Hook the EventHandler for assembly resolution

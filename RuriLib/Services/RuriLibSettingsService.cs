@@ -9,32 +9,36 @@ namespace RuriLib.Services
 {
     public class RuriLibSettingsService
     {
+        private readonly string baseFolder;
         private readonly JsonSerializerSettings jsonSettings;
-        private readonly string envFile = "Environment.ini";
-        private readonly string rlSettFile = "RuriLibSettings.json";
+        private string EnvFile => Path.Combine(baseFolder, "Environment.ini");
+        private string RlSettFile => Path.Combine(baseFolder, "RuriLibSettings.json");
 
         public EnvironmentSettings Environment { get; set; }
         public GlobalSettings RuriLibSettings { get; set; }
 
-        public RuriLibSettingsService()
+        public RuriLibSettingsService(string baseFolder)
         {
+            this.baseFolder = baseFolder;
+            Directory.CreateDirectory(baseFolder);
+
             jsonSettings = new JsonSerializerSettings 
             { 
                 Formatting = Formatting.Indented,
                 TypeNameHandling = TypeNameHandling.Auto
             };
 
-            if (File.Exists(envFile)) Environment = EnvironmentSettings.FromIni(envFile);
-            else throw new FileNotFoundException(envFile);
+            if (File.Exists(EnvFile)) Environment = EnvironmentSettings.FromIni(EnvFile);
+            else throw new FileNotFoundException(EnvFile);
 
-            RuriLibSettings = File.Exists(rlSettFile)
-                ? JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(rlSettFile), jsonSettings)
+            RuriLibSettings = File.Exists(RlSettFile)
+                ? JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(RlSettFile), jsonSettings)
                 : new GlobalSettings();
         }
 
         public async Task Save()
         {
-            await File.WriteAllTextAsync(rlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
+            await File.WriteAllTextAsync(RlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
         }
 
         public string[] GetStatuses()

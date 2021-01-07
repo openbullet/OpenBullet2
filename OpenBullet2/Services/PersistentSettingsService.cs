@@ -10,29 +10,36 @@ namespace OpenBullet2.Services
 {
     public class PersistentSettingsService
     {
+        private readonly string baseFolder;
         private readonly JsonSerializerSettings jsonSettings;
-
-        private readonly string obSettFile = "OpenBulletSettings.json";
+        private string ObSettFile => Path.Combine(baseFolder, "OpenBulletSettings.json");
 
         public OpenBulletSettings OpenBulletSettings { get; set; }
 
-        public PersistentSettingsService()
+        public PersistentSettingsService(string baseFolder)
         {
+            this.baseFolder = baseFolder;
+            Directory.CreateDirectory(baseFolder);
+
             jsonSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 TypeNameHandling = TypeNameHandling.Auto
             };
 
-            if (File.Exists(obSettFile))
-                OpenBulletSettings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(obSettFile), jsonSettings);
+            if (File.Exists(ObSettFile))
+            {
+                OpenBulletSettings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(ObSettFile), jsonSettings);
+            }
             else
+            {
                 Recreate();
+            }
         }
 
         public async Task Save()
         {
-            await File.WriteAllTextAsync(obSettFile, JsonConvert.SerializeObject(OpenBulletSettings, jsonSettings));
+            await File.WriteAllTextAsync(ObSettFile, JsonConvert.SerializeObject(OpenBulletSettings, jsonSettings));
         }
 
         public void Recreate()

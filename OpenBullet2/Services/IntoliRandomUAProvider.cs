@@ -12,9 +12,9 @@ namespace OpenBullet2.Services
         private readonly Dictionary<UAPlatform, UserAgent[]> distributions = new Dictionary<UAPlatform, UserAgent[]>();
         private readonly Random rand;
 
-        public IntoliRandomUAProvider()
+        public IntoliRandomUAProvider(string jsonFile)
         {
-            var json = File.ReadAllText("user-agents.json");
+            var json = File.ReadAllText(jsonFile);
             var array = JArray.Parse(json);
 
             List<UserAgent> agents = new List<UserAgent>();

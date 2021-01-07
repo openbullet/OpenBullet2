@@ -13,17 +13,16 @@ namespace OpenBullet2.Repositories
         public DiskThemeRepository(string baseFolder)
         {
             this.baseFolder = baseFolder;
-
             Directory.CreateDirectory(baseFolder);
         }
 
         public async Task AddFromCss(string name, string css)
-            => await File.WriteAllTextAsync($"UserData/Themes/{name}.css", css);
+            => await File.WriteAllTextAsync(Path.Combine(baseFolder, $"{name}.css"), css);
 
         public async Task AddFromCssFile(string fileName, Stream stream)
         {
             using var reader = new StreamReader(stream);
-            using var fs = new FileStream($"UserData/Themes/{fileName}", FileMode.Create);
+            using var fs = new FileStream(Path.Combine(baseFolder, fileName), FileMode.Create);
             await stream.CopyToAsync(fs);
         }
 
