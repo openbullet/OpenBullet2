@@ -154,7 +154,7 @@
     <value>Le impostazioni di OpenBullet e RuriLib sono salvate in due file: %OpenBulletSettings.json% e %RuriLibSettings.json%. Questi file sono creati soltanto se ci sono stati cambiamenti rispetto alle impostazioni predefinite. Il file %Environment.ini% specifica i %Tipi di Wordlist%, gli %Stati Personalizzati% e i %Formati di Esportazione% dell'ambiente di OB2. Questo è un file molto importante, più informazioni sui Tipi di Wordlist possono essere trovate in una guida a parte.</value>
   </data>
   <data name="Help2x03" xml:space="preserve">
-    <value>Infine, il file %triggeredActions.json% contiene tutte le %Azioni Condizionate% del Job Monitor. Le azioni condizionate sono salvate automaticamente in questo file ogni 10 secondi.</value>
+    <value>Il file %sharingEndpoints.json% contiene le informazioni dei tuoi endpoint per la condivisione delle config. Infine, il file %triggeredActions.json% contiene tutte le %Azioni Condizionate% del Job Monitor. Le azioni condizionate sono salvate automaticamente in questo file ogni 10 secondi.</value>
   </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Ora Locale</value>
