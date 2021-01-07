@@ -73,7 +73,7 @@ namespace OpenBullet2.Services
                     catch (Exception ex)
                     {
                         // If something happens, simply log it and omit the config from the archive
-                        Console.WriteLine($"Error while packing config {configId} for endpoint {endpoint}: {ex.Message}");
+                        Console.WriteLine($"Error while packing config {configId} for endpoint {endpoint.Route}: {ex.Message}");
                     }
                 }
             }
