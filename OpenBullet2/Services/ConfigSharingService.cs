@@ -59,9 +59,10 @@ namespace OpenBullet2.Services
                 {
                     try
                     {
-                        // Get the config from the repo, convert it to C# and repack it into bytes
+                        // Get the config from the repo, randomize the id, convert it to C# and repack it into bytes
                         var config = await configRepo.Get(configId);
                         config.ChangeMode(ConfigMode.CSharp);
+                        config.Id = Guid.NewGuid().ToString();
                         var bytes = await ConfigPacker.Pack(config);
 
                         // Create the entry and write the data
