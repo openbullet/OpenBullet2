@@ -86,6 +86,8 @@ namespace OpenBullet2.Console
 
         static void Main(string[] args)
         {
+            ThreadPool.SetMinThreads(1000, 1000);
+
             System.Console.Title = "OpenBullet 2 (Console POC)";
             System.Console.WriteLine(@"
 This is a POC (Proof of Concept) implementation of RuriLib as a console application.
