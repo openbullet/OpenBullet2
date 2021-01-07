@@ -148,7 +148,7 @@
     <value>Where are all my settings saved?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>There are plenty of settings in OpenBullet 2, and they are saved to specific files. The %database% (by default SQLite) is the file that contains your proxies, jobs, hits, guests and also holds records of the location of your wordlists on disk. By default it's called %OpenBullet.db%. %Configs% are inside the Configs subfolder, while %Wordlists% that you imported through the browser's upload feature are inside the Wordlists subfolder. Refer to their specific sections for more information.</value>
+    <value>There are plenty of settings in OpenBullet 2, and they are saved inside the %UserData% folder. The %database% (by default SQLite) is the file that contains your proxies, jobs, hits, guests and also holds records of the location of your wordlists on disk. By default it's called %OpenBullet.db%. %Configs% are inside the Configs subfolder, while %Wordlists% that you imported through the browser's upload feature are inside the Wordlists subfolder. Refer to their specific sections for more information.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>The OpenBullet and RuriLib settings are saved to two files: %OpenBulletSettings.json% and %RuriLibSettings.json%. These files are only created if some changes were made to the default configuration. The %Environment.ini% file specifies the %Wordlist Types%, %Custom Statuses% and %Export Formats% of your OB2 environment. This is a very important file, more information on Wordlists Types can be found in a separate guide.</value>
