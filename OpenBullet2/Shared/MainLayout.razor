@@ -27,7 +27,5 @@
     {
         if (Settings.OpenBulletSettings.AppearanceSettings.Theme != "Default")
             themePath = (await ThemeRepo.GetPath(Settings.OpenBulletSettings.AppearanceSettings.Theme)).Replace("wwwroot/", "");
-
-        Console.WriteLine(themePath);
     }
 } 
