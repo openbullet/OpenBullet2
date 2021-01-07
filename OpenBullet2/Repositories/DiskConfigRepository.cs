@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-using RuriLib;
 using RuriLib.Models.Blocks;
 using RuriLib.Helpers.Transpilers;
 
@@ -13,11 +12,11 @@ namespace OpenBullet2.Repositories
 {
     public class DiskConfigRepository : IConfigRepository
     {
-        private readonly string baseFolder;
+        private string BaseFolder { get; init; }
 
         public DiskConfigRepository(string baseFolder)
         {
-            this.baseFolder = baseFolder;
+            BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
         }
 
@@ -26,7 +25,7 @@ namespace OpenBullet2.Repositories
             List<Config> configs = new List<Config>();
 
             // TODO: Parallelize this for max performance
-            foreach (var file in Directory.GetFiles(baseFolder).Where(file => file.EndsWith(".opk")))
+            foreach (var file in Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".opk")))
             {
                 var config = await Get(Path.GetFileNameWithoutExtension(file));
                 configs.Add(config);
@@ -46,6 +45,22 @@ namespace OpenBullet2.Repositories
                 var config = await ConfigPacker.Unpack(fileStream);
                 config.Id = id;
                 return config;
+            }
+
+            throw new FileNotFoundException();
+        }
+
+        public async Task<byte[]> GetBytes(string id)
+        {
+            var file = GetFileName(id);
+
+            if (File.Exists(file))
+            {
+                using FileStream fileStream = new(file, FileMode.Open, FileAccess.Read);
+                using var ms = new MemoryStream();
+                await fileStream.CopyToAsync(ms);
+
+                return ms.ToArray();
             }
 
             throw new FileNotFoundException();
@@ -110,6 +125,6 @@ namespace OpenBullet2.Repositories
             => GetFileName(config.Id);
 
         private string GetFileName(string id)
-            => $"{baseFolder}/{id}.opk";
+            => $"{BaseFolder}/{id}.opk";
     }
 }

@@ -66,7 +66,7 @@ namespace OpenBullet2
             services.AddScoped<IThemeRepository>(_ => new DiskThemeRepository("wwwroot/css/themes"));
             services.AddScoped<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
             services.AddScoped<IWordlistRepository>(service => 
-                new HybridWordlistRepository((ApplicationDbContext)service.GetService(typeof(ApplicationDbContext)),
+                new HybridWordlistRepository((ApplicationDbContext)service.GetService<ApplicationDbContext>(),
                 "UserData/Wordlists"));
 
             // Singletons
@@ -88,6 +88,9 @@ namespace OpenBullet2
 
             // Transient
             services.AddTransient<OBLogger>();
+            services.AddTransient(service => 
+                new ConfigSharingService((IConfigRepository)service.GetService<IConfigRepository>(),
+                "UserData"));
 
             // Localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");

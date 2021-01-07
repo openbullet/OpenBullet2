@@ -10,15 +10,15 @@ namespace OpenBullet2.Services
 {
     public class PersistentSettingsService
     {
-        private readonly string baseFolder;
+        private string BaseFolder { get; init; }
         private readonly JsonSerializerSettings jsonSettings;
-        private string ObSettFile => Path.Combine(baseFolder, "OpenBulletSettings.json");
+        private string ObSettFile => Path.Combine(BaseFolder, "OpenBulletSettings.json");
 
         public OpenBulletSettings OpenBulletSettings { get; set; }
 
         public PersistentSettingsService(string baseFolder)
         {
-            this.baseFolder = baseFolder;
+            BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
 
             jsonSettings = new JsonSerializerSettings

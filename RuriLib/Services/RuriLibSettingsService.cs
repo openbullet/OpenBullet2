@@ -9,17 +9,17 @@ namespace RuriLib.Services
 {
     public class RuriLibSettingsService
     {
-        private readonly string baseFolder;
         private readonly JsonSerializerSettings jsonSettings;
-        private string EnvFile => Path.Combine(baseFolder, "Environment.ini");
-        private string RlSettFile => Path.Combine(baseFolder, "RuriLibSettings.json");
+        private string BaseFolder { get; init; }
+        private string EnvFile => Path.Combine(BaseFolder, "Environment.ini");
+        private string RlSettFile => Path.Combine(BaseFolder, "RuriLibSettings.json");
 
         public EnvironmentSettings Environment { get; set; }
         public GlobalSettings RuriLibSettings { get; set; }
 
         public RuriLibSettingsService(string baseFolder)
         {
-            this.baseFolder = baseFolder;
+            BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
 
             jsonSettings = new JsonSerializerSettings 

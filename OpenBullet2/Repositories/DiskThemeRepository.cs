@@ -8,21 +8,21 @@ namespace OpenBullet2.Repositories
 {
     public class DiskThemeRepository : IThemeRepository
     {
-        private readonly string baseFolder;
+        private string BaseFolder { get; init; }
 
         public DiskThemeRepository(string baseFolder)
         {
-            this.baseFolder = baseFolder;
+            BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
         }
 
         public async Task AddFromCss(string name, string css)
-            => await File.WriteAllTextAsync(Path.Combine(baseFolder, $"{name}.css"), css);
+            => await File.WriteAllTextAsync(Path.Combine(BaseFolder, $"{name}.css"), css);
 
         public async Task AddFromCssFile(string fileName, Stream stream)
         {
             using var reader = new StreamReader(stream);
-            using var fs = new FileStream(Path.Combine(baseFolder, fileName), FileMode.Create);
+            using var fs = new FileStream(Path.Combine(BaseFolder, fileName), FileMode.Create);
             await stream.CopyToAsync(fs);
         }
 
@@ -35,18 +35,18 @@ namespace OpenBullet2.Repositories
             if (!cssFiles.Any())
                 throw new FileNotFoundException("No css file found in the root of the provided archive!");
 
-            archive.ExtractToDirectory(baseFolder);
+            archive.ExtractToDirectory(BaseFolder);
 
             return Task.CompletedTask;
         }
 
         public Task<IEnumerable<string>> GetNames()
-            => Task.FromResult(Directory.GetFiles(baseFolder)
+            => Task.FromResult(Directory.GetFiles(BaseFolder)
                     .Where(f => f.EndsWith(".css"))
                     .Select(f => Path.GetFileNameWithoutExtension(f)));
 
 
         public Task<string> GetPath(string name)
-            => Task.FromResult(Path.Combine(baseFolder, $"{name}.css").Replace('\\', '/'));
+            => Task.FromResult(Path.Combine(BaseFolder, $"{name}.css").Replace('\\', '/'));
     }
 }

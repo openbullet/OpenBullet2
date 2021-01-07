@@ -11,13 +11,13 @@ namespace RuriLib.Services
     {
         // AppDomains other than AppDomain.CurrentDomain aren't supported in .NET core
         private readonly AppDomain domain = AppDomain.CurrentDomain;
-        private readonly string baseFolder;
         private readonly List<string> toDelete = new();
-        private string ToDeleteFile => Path.Combine(baseFolder, ".toDelete");
+        private string BaseFolder { get; init; }
+        private string ToDeleteFile => Path.Combine(BaseFolder, ".toDelete");
 
         public PluginRepository(string baseFolder)
         {
-            this.baseFolder = baseFolder;
+            BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
 
             // Hook the EventHandler for assembly resolution
@@ -52,7 +52,7 @@ namespace RuriLib.Services
         /// Gets assemblies from .dll files in the base folder.
         /// </summary>
         public IEnumerable<Assembly> GetPlugins()
-            => Directory.GetFiles(baseFolder, "*.dll")
+            => Directory.GetFiles(BaseFolder, "*.dll")
                 .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
                 .Select(p => Assembly.LoadFrom(p));
 
@@ -60,7 +60,7 @@ namespace RuriLib.Services
         /// Retrieves the names of .dll files in the base folder (without extension).
         /// </summary>
         public IEnumerable<string> GetPluginNames()
-            => Directory.GetFiles(baseFolder, "*.dll")
+            => Directory.GetFiles(BaseFolder, "*.dll")
                 .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
                 .Select(p => Path.GetFileNameWithoutExtension(p));
 
@@ -68,7 +68,7 @@ namespace RuriLib.Services
         /// Retrieves the path of folders that contain the dependencies of existing plugins.
         /// </summary>
         private IEnumerable<string> GetDependencyFolders()
-            => GetPluginNames().Select(p => Path.Combine(baseFolder, p));
+            => GetPluginNames().Select(p => Path.Combine(BaseFolder, p));
 
         /// <summary>
         /// Retrieves the assemblies of all plugins and their references.
@@ -96,7 +96,7 @@ namespace RuriLib.Services
             if (dlls.Any(e => toDelete.Contains(Path.GetFileNameWithoutExtension(e.Name))))
                 throw new Exception("Please restart the application and try again");
 
-            archive.ExtractToDirectory(baseFolder);
+            archive.ExtractToDirectory(BaseFolder);
 
             // Load new assemblies into the domain (the ones that are already loaded will be skipped)
             LoadAssemblies(GetPlugins());
@@ -179,7 +179,7 @@ namespace RuriLib.Services
 
             // Get the folders where assemblies of plugins can be found
             List<string> folders = GetDependencyFolders().ToList();
-            folders.Add(baseFolder);
+            folders.Add(BaseFolder);
 
             string assy = null;
 
