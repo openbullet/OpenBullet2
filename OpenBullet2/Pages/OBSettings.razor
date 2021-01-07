@@ -128,7 +128,41 @@
 
 <h1>@Loc["Remote"]</h1>
 <EditForm Model="settings.RemoteSettings">
-    <!-- Work in progress -->
+    <label class="fg-custom font-weight-bold">@Loc["RemoteConfigsEndpoints"]</label>
+    <br />
+    <p>@Loc["RemoteConfigsEndpointsDescription"]</p>
+    <div class="list-group list-group-horizontal">
+        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.RemoteSettings.ConfigsEndpoints.Add(new RemoteConfigsEndpoint()))">
+            <span class="oi oi-plus"></span> @Loc["Add"]
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                @onclick="@(() => settings.RemoteSettings.ConfigsEndpoints.Clear())">
+            <span class="oi oi-x"></span> @Loc["Clear"]
+        </button>
+    </div>
+    <div class="container-fluid" style="margin-top: 15px;">
+        @foreach (var endpoint in settings.RemoteSettings.ConfigsEndpoints)
+        {
+            <div class="row">
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["URL"]</label>
+                </div>
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputText @bind-Value="endpoint.Url" />
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["ApiKey"]</label>
+                </div>
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputText @bind-Value="endpoint.ApiKey" />
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.RemoteSettings.ConfigsEndpoints.Remove(endpoint))">
+                        <span class="oi oi-x"></span></button>
+                </div>
+            </div>
+        }
+    </div>
 </EditForm>
 
 <h1>@Loc["Appearance"]</h1>

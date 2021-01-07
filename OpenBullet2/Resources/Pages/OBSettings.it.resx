@@ -132,6 +132,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Permetti accesso ai file in tutto il sistema</value>
   </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Chiave Api</value>
+  </data>
   <data name="Appearance" xml:space="preserve">
     <value>Aspetto</value>
   </data>
@@ -203,6 +206,12 @@
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remoto</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Endpoint remoti delle config</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>Questi sono gli endpoint remoti che verranno contattati durante l'aggiornamento della repository delle config in modo da ottenere config risiedenti su una macchina remota.</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>

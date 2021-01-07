@@ -129,6 +129,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Systemweiten Dateizugriff erlauben</value>
   </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Chiave Api</value>
+  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Wirklich sicher?</value>
   </data>
@@ -194,6 +197,12 @@
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Endpunkte für Remote Konfigurationen</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>Dies sind die Remote-Endpunkte, die beim Neuladen des Konfigurations-Repositorys abgefragt werden, um Konfigurationen zu erhalten, die auf einem anderen Rechner gehostet werden.</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>

@@ -132,6 +132,9 @@
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Allow system-wide file access</value>
   </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Api Key</value>
+  </data>
   <data name="Appearance" xml:space="preserve">
     <value>Appearance</value>
   </data>
@@ -203,6 +206,12 @@
   </data>
   <data name="Remote" xml:space="preserve">
     <value>Remote</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Remote Configs Endpoints</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>These are the remote endpoints that will be queried upon reload of the config repository in order to get configs hosted on another machine.</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
