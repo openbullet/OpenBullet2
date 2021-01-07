@@ -127,7 +127,7 @@
     <value>Scegli la tua lingua</value>
   </data>
   <data name="Configs" xml:space="preserve">
-    <value>Configs</value>
+    <value>Config</value>
   </data>
   <data name="CSharpCode" xml:space="preserve">
     <value>Codice C#</value>
@@ -136,7 +136,7 @@
     <value>Ospiti</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+    <value>Hit</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
@@ -190,6 +190,6 @@
     <value>è stata salvata correttamente</value>
   </data>
   <data name="Wordlists" xml:space="preserve">
-    <value>Wordlists</value>
+    <value>Wordlist</value>
   </data>
 </root>
