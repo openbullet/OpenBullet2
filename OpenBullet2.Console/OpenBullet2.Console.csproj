@@ -30,4 +30,10 @@
     <ProjectReference Include="..\RuriLib\RuriLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="UserData\Environment.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
