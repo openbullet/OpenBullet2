@@ -163,7 +163,7 @@ namespace OpenBullet2
             // Load the configs
             var configService = app.ApplicationServices.GetService<ConfigService>();
             var configRepo = app.ApplicationServices.GetService<IConfigRepository>();
-            configService.Configs = configRepo.GetAll().Result;
+            configService.ReloadConfigs().Wait();
         }
     }
 }

@@ -8,13 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace RuriLib.Models.Configs
 {
     public class Config
     {
         public string Id { get; set; }
+        public bool IsRemote { get; set; } = false;
         public ConfigMode Mode { get; set; } = ConfigMode.Stack;
         public ConfigMetadata Metadata { get; set; } = new ConfigMetadata();
         public ConfigSettings Settings { get; set; } = new ConfigSettings();

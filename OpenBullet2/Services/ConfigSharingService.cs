@@ -45,9 +45,12 @@ namespace OpenBullet2.Services
             File.WriteAllText(EndpointsFile, JsonConvert.SerializeObject(Endpoints, jsonSettings));
         }
 
+        public Endpoint GetEndpoint(string endpointName)
+            => Endpoints.FirstOrDefault(e => e.Route.Equals(endpointName, StringComparison.OrdinalIgnoreCase));
+
         public async Task<byte[]> GetArchive(string endpointName)
         {
-            var endpoint = Endpoints.FirstOrDefault(e => e.Route.Equals(endpointName, StringComparison.OrdinalIgnoreCase));
+            var endpoint = GetEndpoint(endpointName);
 
             if (endpoint == null)
                 throw new Exception("Invalid endpoint");

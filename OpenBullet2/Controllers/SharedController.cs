@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Controllers
@@ -14,12 +15,20 @@ namespace OpenBullet2.Controllers
             this.configSharingService = configSharingService;
         }
 
-        [HttpGet("configs/{endpoint}")]
-        public async Task<IActionResult> DownloadConfigs(string endpoint)
+        [HttpGet("configs/{endpointName}")]
+        public async Task<IActionResult> DownloadConfigs(string endpointName)
         {
             try
             {
-                return File(await configSharingService.GetArchive(endpoint), "application/octet-stream", $"Configs.zip");
+                var apiKey = Request.Headers["Api-Key"].First();
+                var endpoint = configSharingService.GetEndpoint(endpointName);
+
+                if (!endpoint.ApiKeys.Contains(apiKey))
+                {
+                    return Unauthorized();
+                }
+
+                return File(await configSharingService.GetArchive(endpointName), "application/octet-stream", $"Configs.zip");
             }
             catch
             {
