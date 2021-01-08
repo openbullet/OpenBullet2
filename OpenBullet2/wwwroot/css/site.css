@@ -321,6 +321,19 @@ a:hover {
     font-family: var(--consolas);
     font-size: 12px;
 }
+
+.footer-buttons {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.footer-buttons a {
+    color: var(--fg-primary);
+}
+
+.footer-buttons a:hover {
+    color: var(--fg-secondary);
+}
 /* -- NAVMENU */
 
 /* STACKER -- */
