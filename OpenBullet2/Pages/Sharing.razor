@@ -12,6 +12,20 @@
     </div>
     <div class="row mb-2">
         <div class="col px-0">
+            <EditForm Model="selectedEndpointName">
+                <label>@Loc["Endpoint"]</label>
+                <InputSelect TValue="string" Value="selectedEndpointName" ValueExpression="(() => selectedEndpointName)"
+                             ValueChanged="(async val => await OnEndpointSelected(val))">
+                    @foreach (var name in ConfigSharing.Endpoints.Select(e => e.Route))
+                    {
+                        <option value="@name">@name</option>
+                    }
+                </InputSelect>
+            </EditForm>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col px-0">
             <span>@Loc["ForThisEndpoint"]:</span>
         </div>
     </div>
@@ -23,17 +37,6 @@
         </div>
     </div>
 </div>
-
-<EditForm Model="selectedEndpointName">
-    <label>@Loc["Endpoint"]</label>
-    <InputSelect TValue="string" Value="selectedEndpointName" ValueExpression="(() => selectedEndpointName)"
-                       ValueChanged="(async val => await OnEndpointSelected(val))">
-        @foreach (var name in ConfigSharing.Endpoints.Select(e => e.Route))
-        {
-            <option value="@name">@name</option>
-        }
-    </InputSelect><br />
-</EditForm>
 
 @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {

@@ -13,6 +13,21 @@
     </div>
     <div class="row mb-2">
         <div class="col px-0">
+            <EditForm Model="groups">
+                <label>@Loc["ProxyGroup"]</label>
+                <InputSelectNumber @ref="groupSelectElement" T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)"
+                                   ValueChanged="(async val => await OnGroupSelected(val))">
+                    <option value="-1">@Loc["All"]</option>
+                    @foreach (var group in groups)
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                </InputSelectNumber>
+            </EditForm>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col px-0">
             <span>@Loc["ForThisGroup"]:</span>
         </div>
     </div>
@@ -27,16 +42,7 @@
     </div>
 </div>
 
-<EditForm Model="groups">
-    <label>@Loc["ProxyGroup"]</label>
-    <InputSelectNumber @ref="groupSelectElement" T="int" Value="currentGroupId" ValueExpression="(() => currentGroupId)"
-                       ValueChanged="(async val => await OnGroupSelected(val))">
-        <option value="-1">@Loc["All"]</option>
-        @foreach (var group in groups)
-        {
-            <option value="@group.Id">@group.Name</option>
-        }
-    </InputSelectNumber><br />
+<EditForm Model="maxPing">
     <label>@Loc["Slow"] = @Loc["pingOver"]</label>
     <InputNumber style="width: 100px" @bind-Value="maxPing" />
 </EditForm>
