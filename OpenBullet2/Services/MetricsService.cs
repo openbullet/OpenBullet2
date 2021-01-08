@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Services
 {
     public class MetricsService
     {
-        public string OS => Environment.OSVersion.VersionString;
+        public string OS 
+        { 
+            get
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    return Environment.OSVersion.VersionString;
+
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    return $"OSX {Environment.OSVersion.Version}";
+
+                else
+                    return RuntimeInformation.OSDescription;
+            }
+        }
 
         private DateTime startTime = DateTime.Now;
         public TimeSpan UpTime => DateTime.Now - startTime;
