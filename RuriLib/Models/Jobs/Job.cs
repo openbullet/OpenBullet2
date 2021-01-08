@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Jobs.StartConditions;
+﻿using RuriLib.Logging;
+using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Services;
 using System;
 using System.Threading;
@@ -22,15 +23,17 @@ namespace RuriLib.Models.Jobs
         // Protected fields
         protected readonly RuriLibSettingsService settings;
         protected readonly PluginRepository pluginRepo;
+        protected readonly IJobLogger logger;
 
         // Private fields
         private bool waitFinished = false;
         private CancellationTokenSource cts; // Cancellation token for cancelling the StartCondition wait
 
-        public Job(RuriLibSettingsService settings, PluginRepository pluginRepo)
+        public Job(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
         {
             this.settings = settings;
             this.pluginRepo = pluginRepo;
+            this.logger = logger;
         }
 
         public virtual async Task Start()
@@ -43,11 +46,14 @@ namespace RuriLib.Models.Jobs
 
             try
             {
+                logger?.LogInfo(Id, "Waiting for the start condition to be verified...");
                 await StartCondition.WaitUntilVerified(this, cts.Token);
+                logger?.LogInfo(Id, "Finished waiting");
             }
             catch (TaskCanceledException)
             {
                 // The token has been cancelled, skip the wait
+                logger?.LogInfo(Id, "The wait has been manually skipped");
             }
 
             waitFinished = true;

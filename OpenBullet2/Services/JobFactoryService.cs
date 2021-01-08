@@ -3,6 +3,7 @@ using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
+using RuriLib.Logging;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.UserAgents;
@@ -21,11 +22,12 @@ namespace OpenBullet2.Services
         private readonly DataPoolFactoryService dataPoolFactory;
         private readonly ProxyReloadService proxyReloadService;
         private readonly IRandomUAProvider randomUAProvider;
+        private readonly IJobLogger logger;
         private readonly PluginRepository pluginRepo;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
             IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
-            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider)
+            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IJobLogger logger)
         {
             this.configService = configService;
             this.settingsService = settingsService;
@@ -35,6 +37,7 @@ namespace OpenBullet2.Services
             this.dataPoolFactory = dataPoolFactory;
             this.proxyReloadService = proxyReloadService;
             this.randomUAProvider = randomUAProvider;
+            this.logger = logger;
         }
 
         public Job FromOptions(int id, int ownerId, JobOptions options)
@@ -61,7 +64,7 @@ namespace OpenBullet2.Services
 
             var hitOutputsFactory = new HitOutputFactory(hitRepo);
 
-            var job = new MultiRunJob(settingsService, pluginRepo)
+            var job = new MultiRunJob(settingsService, pluginRepo, logger)
             {
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
@@ -80,7 +83,7 @@ namespace OpenBullet2.Services
 
         private ProxyCheckJob MakeProxyCheckJob(ProxyCheckJobOptions options)
         {
-            var job = new ProxyCheckJob(settingsService, pluginRepo)
+            var job = new ProxyCheckJob(settingsService, pluginRepo, logger)
             {
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,

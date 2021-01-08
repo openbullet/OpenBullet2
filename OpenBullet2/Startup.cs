@@ -21,9 +21,9 @@ using OpenBullet2.Models.Proxies;
 using RuriLib.Models.UserAgents;
 using OpenBullet2.Helpers;
 using System;
-using OpenBullet2.Logging;
 using System.Threading;
 using System.IO;
+using OpenBullet2.Logging;
 
 namespace OpenBullet2
 {
@@ -74,7 +74,6 @@ namespace OpenBullet2
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<JwtValidationService>();
-            services.AddSingleton<JobLoggerService>();
             services.AddSingleton<ProxyReloadService>();
             services.AddSingleton<JobFactoryService>();
             services.AddSingleton<JobManagerService>();
@@ -85,9 +84,13 @@ namespace OpenBullet2
             services.AddSingleton(_ => new PersistentSettingsService("UserData"));
             services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
             services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
+            services.AddSingleton<MemoryJobLogger>();
+            services.AddSingleton(service =>
+                new FileJobLogger(service.GetService<PersistentSettingsService>(),
+                "UserData/Logs/Jobs"));
 
             // Transient
-            services.AddTransient<OBLogger>();
+            services.AddTransient<BrowserConsoleLogger>();
             services.AddTransient(service => 
                 new ConfigSharingService(service.GetService<IConfigRepository>(),
                 "UserData"));

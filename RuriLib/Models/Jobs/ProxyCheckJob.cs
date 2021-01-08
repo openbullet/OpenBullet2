@@ -1,4 +1,5 @@
 ﻿using RuriLib.Functions.Http;
+using RuriLib.Logging;
 using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
@@ -33,8 +34,8 @@ namespace RuriLib.Models.Jobs
         public int Working { get; set; }
         public int NotWorking { get; set; }
 
-        public ProxyCheckJob(RuriLibSettingsService settings, PluginRepository pluginRepo)
-            : base(settings, pluginRepo)
+        public ProxyCheckJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
+            : base(settings, pluginRepo, logger)
         {
             
         }

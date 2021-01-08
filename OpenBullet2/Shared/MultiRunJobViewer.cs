@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
-using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
+using OpenBullet2.Logging;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
-using Radzen.Blazor;
-using RuriLib.Models.Data.DataPools;
+using RuriLib.Logging;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Threading;
@@ -33,7 +32,7 @@ namespace OpenBullet2.Shared
         [Inject] public IModalService Modal { get; set; }
         [Inject] public VolatileSettingsService VolatileSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
-        [Inject] public JobLoggerService Logger { get; set; }
+        [Inject] public MemoryJobLogger Logger { get; set; }
         [Inject] public IJobRepository JobRepo { get; set; }
         [Inject] public JobManagerService JobManager { get; set; }
 
@@ -359,28 +358,37 @@ namespace OpenBullet2.Shared
                 Job.OnTaskError += LogTaskError;
                 Job.OnError += LogError;
                 Job.OnCompleted += LogCompleted;
-                Job.OnCompleted += SaveRecord;
             }
-
+            
+            Job.OnCompleted += SaveRecord;
             Job.OnTimerTick += SaveRecord;
             Job.OnTimerTick += SaveJobOptions;
         }
 
         private void RemoveEventHandlers()
         {
-            // Try to unhook each event individually (because maybe they never got hooked)
-            try { Job.OnResult -= LogResult; } catch { }
-            try { Job.OnTaskError -= LogTaskError; } catch { }
-            try { Job.OnError -= LogError; } catch { }
-            try { Job.OnCompleted -= SaveRecord; } catch { }
-            try { Job.OnCompleted -= LogCompleted; } catch { }
+            try
+            {
+                Job.OnResult -= LogResult;
+                Job.OnTaskError -= LogTaskError;
+                Job.OnError -= LogError;
+                Job.OnCompleted -= LogCompleted;
+            }
+            catch
+            {
+
+            }
 
             try
             {
+                Job.OnCompleted -= SaveRecord;
                 Job.OnTimerTick -= SaveRecord;
                 Job.OnTimerTick -= SaveJobOptions;
             }
-            catch { }
+            catch 
+            {
+
+            }
         }
 
         public void Dispose()

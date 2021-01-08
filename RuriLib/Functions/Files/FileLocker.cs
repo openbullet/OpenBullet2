@@ -7,10 +7,7 @@ namespace RuriLib.Functions.Files
     /// </summary>
     public static class FileLocker
     {
-        /// <summary>
-        /// Maps file names to lockable objects.
-        /// </summary>
-        public static Hashtable Hashtable = new Hashtable();
+        private static readonly Hashtable hashtable = new();
 
         /// <summary>
         /// Gets a lockable handle associated to a file name or creates one if it doesn't exist.
@@ -18,12 +15,12 @@ namespace RuriLib.Functions.Files
         /// <param name="fileName">The name of the file to access</param>
         public static object GetHandle(string fileName)
         {
-            if (!Hashtable.ContainsKey(fileName))
+            if (!hashtable.ContainsKey(fileName))
             {
-                Hashtable.Add(fileName, new object());
+                hashtable.Add(fileName, new object());
             }
 
-            return Hashtable[fileName];
+            return hashtable[fileName];
         }
     }
 }

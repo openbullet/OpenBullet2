@@ -14,7 +14,7 @@ namespace OpenBullet2.Pages
     public partial class EditCS
     {
         [Inject] NavigationManager Nav { get; set; }
-        [Inject] public OBLogger OBLogger { get; set; }
+        [Inject] public BrowserConsoleLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] PersistentSettingsService Settings { get; set; }
 

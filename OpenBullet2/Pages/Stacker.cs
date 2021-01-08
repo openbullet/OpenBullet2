@@ -7,14 +7,13 @@ using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
     public partial class Stacker
     {
-        [Inject] public OBLogger OBLogger { get; set; }
+        [Inject] public BrowserConsoleLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] NavigationManager Nav { get; set; }
 

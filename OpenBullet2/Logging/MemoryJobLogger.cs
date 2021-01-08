@@ -1,17 +1,10 @@
-﻿using System;
+﻿using OpenBullet2.Services;
+using RuriLib.Logging;
+using System;
 using System.Collections.Generic;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Logging
 {
-    public enum LogKind
-    {
-        Custom,
-        Info,
-        Success,
-        Warning,
-        Error
-    }
-
     public struct JobLogEntry
     {
         public LogKind kind;
@@ -28,13 +21,13 @@ namespace OpenBullet2.Services
         }
     }
 
-    public class JobLoggerService
+    public class MemoryJobLogger
     {
         private readonly PersistentSettingsService settings;
         private Dictionary<int, List<JobLogEntry>> logs = new Dictionary<int, List<JobLogEntry>>();
         public event EventHandler<int> NewLog; // The integer is the id of the job for which a new log came
 
-        public JobLoggerService(PersistentSettingsService settings)
+        public MemoryJobLogger(PersistentSettingsService settings)
         {
             this.settings = settings;
         }
@@ -44,6 +37,9 @@ namespace OpenBullet2.Services
 
         public void Log(int jobId, string message, LogKind kind = LogKind.Custom, string color = "white")
         {
+            if (!settings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+                return;
+
             var entry = new JobLogEntry(kind, message, color);
             var maxBufferSize = settings.OpenBulletSettings.GeneralSettings.LogBufferSize;
 

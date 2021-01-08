@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Logging
 {
-    public class OBLogger
+    public class BrowserConsoleLogger
     {
         private readonly IJSRuntime js;
         private readonly string background = "#222";
 
-        public OBLogger(IJSRuntime js)
+        public BrowserConsoleLogger(IJSRuntime js)
         {
             this.js = js;
         }

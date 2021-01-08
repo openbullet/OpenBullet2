@@ -91,7 +91,8 @@ namespace RuriLib.Models.Jobs
         // -- Misc
         public decimal CaptchaCredit { get; private set; } = 0;
 
-        public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo) : base(settings, pluginRepo)
+        public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
+            : base(settings, pluginRepo, logger)
         {
             // Create a random basing on the unique job id
             random = new Random(Id);
@@ -263,6 +264,7 @@ namespace RuriLib.Models.Jobs
 
             ResetStats();
             StartTimer();
+            logger?.LogInfo(Id, "All set, starting the execution");
             await taskManager.Start();
         }
 
@@ -275,6 +277,7 @@ namespace RuriLib.Models.Jobs
             finally
             {
                 StopTimer();
+                logger?.LogInfo(Id, "Execution stopped");
             }
         }
 
@@ -287,6 +290,7 @@ namespace RuriLib.Models.Jobs
             finally
             {
                 StopTimer();
+                logger?.LogInfo(Id, "Execution aborted");
             }
         }
 
@@ -299,6 +303,7 @@ namespace RuriLib.Models.Jobs
             finally
             {
                 StopTimer();
+                logger?.LogInfo(Id, "Execution paused");
             }
         }
 
@@ -306,6 +311,7 @@ namespace RuriLib.Models.Jobs
         {
             await taskManager?.Resume();
             StartTimer();
+            logger?.LogInfo(Id, "Execution resumed");
         }
         #endregion
 
@@ -325,25 +331,43 @@ namespace RuriLib.Models.Jobs
         public async Task ChangeBots(int amount)
         {
             if (taskManager != null)
+            {
                 await taskManager.SetConcurrentTasks(amount);
+                logger?.LogInfo(Id, $"Changed bots to {amount}");
+            }
         }
         #endregion
 
         #region Propagation of TaskManager events
         private void PropagateTaskError(object sender, ErrorDetails<MultiRunInput> details)
-            => OnTaskError?.Invoke(sender, details);
+        {
+            OnTaskError?.Invoke(sender, details);
+            logger?.LogException(Id, details.Exception);
+        }
 
         private void PropagateError(object sender, Exception ex)
-            => OnError?.Invoke(sender, ex);
+        {
+            OnError?.Invoke(sender, ex);
+            logger?.LogException(Id, ex);
+        }
 
         private void PropagateResult(object sender, ResultDetails<MultiRunInput, CheckResult> result)
-            => OnResult?.Invoke(sender, result);
+        {
+            OnResult?.Invoke(sender, result);
+            // We're not logging results to the IJobLogger because they could arrive at a very high rate
+            // and not be very useful, we're mostly interested in errors here.
+        }
 
         private void PropagateProgress(object sender, float progress)
-            => OnProgress?.Invoke(sender, progress);
+        {
+            OnProgress?.Invoke(sender, progress);
+        }
 
         private void PropagateCompleted(object sender, EventArgs e)
-            => OnCompleted?.Invoke(sender, e);
+        {
+            OnCompleted?.Invoke(sender, e);
+            logger?.LogInfo(Id, "Execution completed");
+        }
         #endregion
 
         #region Private Methods
