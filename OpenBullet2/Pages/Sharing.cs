@@ -182,6 +182,13 @@ namespace OpenBullet2.Pages
             if (!result.Cancelled)
             {
                 var config = result.Data as Config;
+                
+                if (config.IsRemote)
+                {
+                    await js.AlertError(Loc["RemoteConfig"], Loc["CannotShareRemoteConfig"]);
+                    return;
+                }
+
                 if (!selectedEndpoint.ConfigIds.Contains(config.Id))
                 {
                     selectedEndpoint.ConfigIds.Add(config.Id);

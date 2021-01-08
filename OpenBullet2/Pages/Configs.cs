@@ -166,6 +166,12 @@ namespace OpenBullet2.Pages
                 return;
             }
 
+            if (selectedConfig.IsRemote)
+            {
+                await js.AlertError(Loc["RemoteConfig"], Loc["CannotEditRemoteConfig"]);
+                return;
+            }
+
             // Check if we have all required plugins
             var loadedPlugins = PluginRepo.GetPlugins();
             if (selectedConfig.Metadata.Plugins != null)
@@ -245,6 +251,12 @@ namespace OpenBullet2.Pages
             if (selectedConfig == null)
             {
                 await ShowNoConfigSelectedMessage();
+                return;
+            }
+
+            if (selectedConfig.IsRemote)
+            {
+                await js.AlertError(Loc["RemoteConfig"], Loc["CannotDownloadRemoteConfig"]);
                 return;
             }
 

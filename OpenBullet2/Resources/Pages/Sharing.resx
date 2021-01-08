@@ -126,6 +126,9 @@
   <data name="Author" xml:space="preserve">
     <value>Author</value>
   </data>
+  <data name="CannotShareRemoteConfig" xml:space="preserve">
+    <value>Cannot share remote config</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
@@ -188,6 +191,9 @@
   </data>
   <data name="ReallyDelete" xml:space="preserve">
     <value>Really delete</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Remote config</value>
   </data>
   <data name="RemoveAllConfigs" xml:space="preserve">
     <value>Remove all configs</value>

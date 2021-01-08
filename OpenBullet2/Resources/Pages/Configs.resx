@@ -132,6 +132,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
+    <value>Cannot download remote config</value>
+  </data>
+  <data name="CannotEditRemoteConfig" xml:space="preserve">
+    <value>Cannot edit remote config</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
@@ -209,6 +215,9 @@
   </data>
   <data name="Reload" xml:space="preserve">
     <value>Reload</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Remote config</value>
   </data>
   <data name="ToggleView" xml:space="preserve">
     <value>Toggle View</value>

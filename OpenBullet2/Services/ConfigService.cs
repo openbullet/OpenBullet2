@@ -80,6 +80,7 @@ namespace OpenBullet2.Services
                         {
                             using var entryStream = entry.Open();
                             var config = await ConfigPacker.Unpack(entryStream);
+                            config.IsRemote = true;
                             remoteConfigs.Add(config);
                         }
                         catch

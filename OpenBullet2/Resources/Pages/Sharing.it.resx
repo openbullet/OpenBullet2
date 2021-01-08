@@ -126,6 +126,9 @@
   <data name="Author" xml:space="preserve">
     <value>Autore</value>
   </data>
+  <data name="CannotShareRemoteConfig" xml:space="preserve">
+    <value>Non è possibile condividere una config remota</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
@@ -188,6 +191,9 @@
   </data>
   <data name="ReallyDelete" xml:space="preserve">
     <value>Vuoi davvero eliminare</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Config remota</value>
   </data>
   <data name="RemoveAllConfigs" xml:space="preserve">
     <value>Rimuovi tutte le config</value>
