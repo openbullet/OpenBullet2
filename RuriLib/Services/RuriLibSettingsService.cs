@@ -60,14 +60,14 @@ namespace RuriLib.Services
 Name=Default
 Regex=^.*$
 Verify=False
-Separator=:
+Separator=
 Slices=DATA
 
 [WORDLIST TYPE]
-Name=Email
+Name=Emails
 Regex=^[^@]+@[^\.]+\..+$
 Verify=True
-Separator=:
+Separator=
 Slices=EMAIL
 
 [WORDLIST TYPE]
@@ -88,7 +88,7 @@ Slices=CODE
 Name=URLs
 Regex=^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$
 Verify=True
-Separator=:
+Separator=
 Slices=URL
 
 [CUSTOM STATUS]
