@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Models.Jobs.Threading
 {
+    /// <summary>
+    /// Manages the parallel execution of a set of operations, while supporting
+    /// pausing, soft and hard aborting, and event notifications.
+    /// </summary>
+    /// <typeparam name="TInput">The type of data that will be passed to each operation.</typeparam>
+    /// <typeparam name="TOutput">The type of data that the operation returns.</typeparam>
     public class TaskManager<TInput, TOutput>
     {
-        private TaskManagerStatus status = TaskManagerStatus.Idle;
+        #region Public Properties
+        /// <summary>Retrieves the current status of the <see cref="TaskManager{TInput, TOutput}"/>.</summary>
         public TaskManagerStatus Status
         {
             get => status;
@@ -20,41 +27,78 @@ namespace RuriLib.Models.Jobs.Threading
             }
         }
 
+        /// <summary>The progress (from 0 to 1) of the execution.</summary>
         public float Progress { get; private set; } = 0;
-        public int CPM { get; private set; } = 0;
-        public DateTime StartTime { get; private set; }
-        public DateTime ETA => CPM > 0 ? StartTime + TimeSpan.FromMinutes((totalAmount * (1 - Progress)) / CPM) : DateTime.MaxValue;
-        public TimeSpan Elapsed => DateTime.Now - StartTime;
-        public TimeSpan Remaining => ETA - DateTime.Now;
 
+        /// <summary>The number of completed operations in the last minute.</summary>
+        public int CPM { get; private set; } = 0;
+
+        /// <summary>The time when the execution started.</summary>
+        public DateTime StartTime { get; private set; }
+
+        /// <summary>The estimated time of arrival.</summary>
+        public DateTime ETA => CPM > 0 ? StartTime + TimeSpan.FromMinutes((totalAmount * (1 - Progress)) / CPM) : DateTime.MaxValue;
+
+        /// <summary>The time elapsed since the start of the execution.</summary>
+        public TimeSpan Elapsed => DateTime.Now - StartTime;
+
+        /// <summary>The estimated remaining time until the end of the execution.</summary>
+        public TimeSpan Remaining => ETA - DateTime.Now;
+        #endregion
+
+        #region Private Fields
+        private TaskManagerStatus status = TaskManagerStatus.Idle;
         private int concurrentTasks;
         private readonly int maximumConcurrentTasks;
         private readonly IEnumerable<TInput> workItems;
         private readonly Func<TInput, CancellationToken, Task<TOutput>> workFunction;
         private readonly Func<TInput, Task> taskFunction;
-        ConcurrentQueue<TInput> queue;
         private readonly int totalAmount;
         private readonly int skip;
         private int current;
-        private List<DateTime> checkedTimestamps = new List<DateTime>();
-        private readonly object cpmLock = new object();
+        private List<DateTime> checkedTimestamps = new();
+        private readonly object cpmLock = new();
         private int BatchSize => maximumConcurrentTasks * 2;
 
-        public event EventHandler<ErrorDetails<TInput>> OnTaskError;
-        public event EventHandler<Exception> OnError;
-        public event EventHandler<ResultDetails<TInput, TOutput>> OnResult;
-        public event EventHandler<float> OnProgress;
-        public event EventHandler OnCompleted;
-        public event EventHandler<TaskManagerStatus> OnStatusChanged;
-
         private SemaphoreSlim semaphore;
+        private ConcurrentQueue<TInput> queue;
 
         private CancellationTokenSource cancellationTokenSource;      // Use this to cancel the WaitAll
         private CancellationTokenSource innerCancellationTokenSource; // Use this to soft cancel tasks
         private CancellationTokenSource workCancellationTokenSource;  // Use this to hard cancel tasks
         private int savedConcurrentTasks;
         private bool concurrentTasksDecreaseRequested;
+        #endregion
 
+        #region Events
+        /// <summary>Called when an operation throws an exception.</summary>
+        public event EventHandler<ErrorDetails<TInput>> OnTaskError;
+
+        /// <summary>Called when the <see cref="TaskManager{TInput, TOutput}"/> itself throws an exception.</summary>
+        public event EventHandler<Exception> OnError;
+
+        /// <summary>Called when an operation is completed successfully.</summary>
+        public event EventHandler<ResultDetails<TInput, TOutput>> OnResult;
+
+        /// <summary>Called when the progress changes.</summary>
+        public event EventHandler<float> OnProgress;
+
+        /// <summary>Called when all operations were completed successfully.</summary>
+        public event EventHandler OnCompleted;
+
+        /// <summary>Called when <see cref="Status"/> changes.</summary>
+        public event EventHandler<TaskManagerStatus> OnStatusChanged;
+        #endregion
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="TaskManager{TInput, TOutput}"/>.
+        /// </summary>
+        /// <param name="workItems">The collection of data to process in parallel</param>
+        /// <param name="workFunction">The work function that must be executed on the data</param>
+        /// <param name="concurrentTasks">The amount of concurrent tasks that can be started</param>
+        /// <param name="totalAmount">The total amount of data that is expected from <paramref name="workItems"/></param>
+        /// <param name="skip">The amount of <paramref name="workItems"/> to skip at the beginning</param>
+        /// <param name="maximumConcurrentTasks">The maximum amount of <paramref name="concurrentTasks"/> that can be set at any point</param>
         public TaskManager(IEnumerable<TInput> workItems, Func<TInput, CancellationToken, Task<TOutput>> workFunction,
             int concurrentTasks, int totalAmount, int skip = 0, int maximumConcurrentTasks = 200)
         {
@@ -120,6 +164,7 @@ namespace RuriLib.Models.Jobs.Threading
             });
         }
 
+        /// <summary>Starts a new execution (without awaiting for completion).</summary>
         public Task Start()
         {
             if (Status != TaskManagerStatus.Idle)
@@ -133,6 +178,7 @@ namespace RuriLib.Models.Jobs.Threading
             return Task.CompletedTask;
         }
 
+        /// <summary>Pauses the execution (waits until the ongoing operations are completed).</summary>
         public async Task Pause()
         {
             if (Status != TaskManagerStatus.Running)
@@ -144,6 +190,7 @@ namespace RuriLib.Models.Jobs.Threading
             Status = TaskManagerStatus.Paused;
         }
 
+        /// <summary>Resumes a paused execution.</summary>
         public async Task Resume()
         {
             if (Status != TaskManagerStatus.Paused)
@@ -154,6 +201,7 @@ namespace RuriLib.Models.Jobs.Threading
             Status = TaskManagerStatus.Running;
         }
 
+        /// <summary>Stops the execution (waits until the ongoing operations are completed).</summary>
         public async Task Stop()
         {
             if (Status != TaskManagerStatus.Running && Status != TaskManagerStatus.Paused)
@@ -164,6 +212,7 @@ namespace RuriLib.Models.Jobs.Threading
             await WaitCompletion().ConfigureAwait(false);
         }
 
+        /// <summary>Aborts the execution (interrupts all ongoing operations).</summary>
         public Task Abort()
         {
             if (Status != TaskManagerStatus.Running && Status != TaskManagerStatus.Paused && Status != TaskManagerStatus.Stopping)
@@ -179,9 +228,10 @@ namespace RuriLib.Models.Jobs.Threading
             return Task.CompletedTask;
         }
 
+        /// <summary>Sets the amount of concurrent tasks to <paramref name="newValue"/>.</summary>
         public async Task SetConcurrentTasks(int newValue)
         {
-            newValue = Clamp(newValue, 0, maximumConcurrentTasks);
+            newValue = Math.Clamp(newValue, 0, maximumConcurrentTasks);
 
             if (newValue == concurrentTasks)
                 return;
@@ -202,6 +252,16 @@ namespace RuriLib.Models.Jobs.Threading
             }
 
             concurrentTasks = newValue;
+        }
+
+        /// <summary>Asynchronously wait until the <see cref="Status"/> becomes <see cref="TaskManagerStatus.Idle"/>.</summary>
+        public async Task WaitCompletion(CancellationToken cancellationToken = default)
+        {
+            while (Status != TaskManagerStatus.Idle) 
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Delay(100, cancellationToken); 
+            }
         }
 
         // Run is executed in fire and forget mode (not awaited)
@@ -286,32 +346,25 @@ namespace RuriLib.Models.Jobs.Threading
             }
         }
 
-        public async Task WaitCompletion()
-        {
-            while (Status != TaskManagerStatus.Idle) { await Task.Delay(100); }
-        }
+        private void RunTask(TInput item)
+            => taskFunction.Invoke(item);
 
-        public static Task AsTask(CancellationToken cancellationToken)
+        /*
+        private static Task AsTask(CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<object>();
             cancellationToken.Register(() => tcs.TrySetCanceled(), useSynchronizationContext: false);
             return tcs.Task;
         }
-
-        private void RunTask(TInput item)
-            => taskFunction.Invoke(item);
-
-        private int Clamp(int a, int min, int max)
-        {
-            if (a < min) return min;
-            else if (a > max) return max;
-            else return a;
-        }
+        */
     }
 
     public class ErrorDetails<TInput>
     {
+        /// <summary>The item that was being processed by the operation.</summary>
         public TInput Item { get; set; }
+
+        /// <summary>The exception thrown by the operation.</summary>
         public Exception Exception { get; set; }
 
         public ErrorDetails(TInput item, Exception ex)
@@ -323,7 +376,10 @@ namespace RuriLib.Models.Jobs.Threading
 
     public class ResultDetails<TInput, TOutput>
     {
+        /// <summary>The item that was being processed by the operation.</summary>
         public TInput Item { get; set; }
+
+        /// <summary>The result returned by the operation.</summary>
         public TOutput Result { get; set; }
 
         public ResultDetails(TInput item, TOutput result)
