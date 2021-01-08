@@ -15,7 +15,7 @@ namespace OpenBullet2.Services
                     return Environment.OSVersion.VersionString;
 
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    return $"OSX {Environment.OSVersion.Version}";
+                    return $"macOS {Environment.OSVersion.Version}";
 
                 else
                     return RuntimeInformation.OSDescription;
