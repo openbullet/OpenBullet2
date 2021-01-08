@@ -28,7 +28,7 @@ namespace OpenBullet2.Services
             set
             {
                 selectedConfig = value;
-                OnConfigSelected.Invoke(this, selectedConfig);
+                OnConfigSelected?.Invoke(this, selectedConfig);
             }
         }
 
