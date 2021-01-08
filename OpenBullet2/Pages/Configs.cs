@@ -102,6 +102,12 @@ namespace OpenBullet2.Pages
             }
         }
 
+        private async Task RefreshList()
+        {
+            configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
+            await RefreshGrid();
+        }
+
         private async Task RefreshGrid()
         {
             await gridComponent.UpdateGrid();
@@ -283,7 +289,7 @@ namespace OpenBullet2.Pages
         }
 
         private void RemotesLoaded(object sender, EventArgs e)
-            => InvokeAsync(RefreshGrid);
+            => InvokeAsync(RefreshList);
 
         private void RemoveEventHandlers()
         {
