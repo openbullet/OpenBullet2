@@ -1,5 +1,6 @@
 ﻿@page "/configs"
 @using RuriLib.Models.Configs
+@implements IDisposable 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Configs> Loc
 @attribute [Authorize(Roles = "Admin")]
 

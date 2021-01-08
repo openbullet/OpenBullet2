@@ -17,6 +17,7 @@ namespace OpenBullet2.Services
     {
         public List<Config> Configs { get; set; } = new();
         public event EventHandler<Config> OnConfigSelected;
+        public event EventHandler OnRemotesLoaded;
 
         private Config selectedConfig = null;
         private readonly IConfigRepository configRepo;
@@ -105,6 +106,8 @@ namespace OpenBullet2.Services
             {
                 Configs.AddRange(remoteConfigs);
             }
+
+            OnRemotesLoaded?.Invoke(this, EventArgs.Empty);
         }
     }
 }

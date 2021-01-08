@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
-    public partial class Configs
+    public partial class Configs : IDisposable
     {
         [Inject] IConfigRepository ConfigRepo { get; set; }
         [Inject] PluginRepository PluginRepo { get; set; }
@@ -45,6 +45,8 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnParametersSetAsync()
         {
+            AddEventHandlers();
+
             configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
             selectedConfig = ConfigService.SelectedConfig;
 
@@ -272,6 +274,33 @@ namespace OpenBullet2.Pages
             }
         }
 
-        private void ToggleView() => detailedView = !detailedView;
+        private void ToggleView()
+            => detailedView = !detailedView;
+
+        private void AddEventHandlers()
+        {
+            ConfigService.OnRemotesLoaded += RemotesLoaded;
+        }
+
+        private void RemotesLoaded(object sender, EventArgs e)
+            => InvokeAsync(RefreshGrid);
+
+        private void RemoveEventHandlers()
+        {
+            try 
+            {
+                ConfigService.OnRemotesLoaded -= RemotesLoaded; 
+            }
+            catch 
+            {
+
+            }
+        }
+
+        public void Dispose()
+            => RemoveEventHandlers();
+
+        ~Configs()
+            => Dispose();
     }
 }
