@@ -69,7 +69,7 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             await manager.WaitCompletion();
             stopwatch.Stop();
 
-            // Make sure it took less than 10 * 100 ms
+            // Make sure it took less than 10 * 100 ms (let's say 800)
             Assert.InRange(stopwatch.ElapsedMilliseconds, 0, 800);
         }
 
@@ -93,8 +93,8 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             await manager.WaitCompletion();
             stopwatch.Stop();
 
-            // Make sure it took more than 12 * 100 / 3 = 400 ms
-            Assert.InRange(stopwatch.ElapsedMilliseconds, 400, 1000);
+            // Make sure it took more than 12 * 100 / 3 = 400 ms (we'll say 600 to make sure)
+            Assert.True(stopwatch.ElapsedMilliseconds > 600);
         }
 
         [Fact]

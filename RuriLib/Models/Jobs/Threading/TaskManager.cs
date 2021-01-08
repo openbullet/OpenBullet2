@@ -90,6 +90,7 @@ namespace RuriLib.Models.Jobs.Threading
         public event EventHandler<TaskManagerStatus> OnStatusChanged;
         #endregion
 
+        #region Constructors
         /// <summary>
         /// Creates a new instance of the <see cref="TaskManager{TInput, TOutput}"/>.
         /// </summary>
@@ -163,7 +164,9 @@ namespace RuriLib.Models.Jobs.Threading
                 }
             });
         }
+        #endregion
 
+        #region Public Methods
         /// <summary>Starts a new execution (without awaiting for completion).</summary>
         public Task Start()
         {
@@ -263,7 +266,9 @@ namespace RuriLib.Models.Jobs.Threading
                 await Task.Delay(100, cancellationToken); 
             }
         }
+        #endregion
 
+        #region Private Methods
         // Run is executed in fire and forget mode (not awaited)
         private async void Run()
         {
@@ -357,6 +362,7 @@ namespace RuriLib.Models.Jobs.Threading
             return tcs.Task;
         }
         */
+        #endregion
     }
 
     public class ErrorDetails<TInput>
