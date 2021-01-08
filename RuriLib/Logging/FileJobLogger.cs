@@ -1,17 +1,16 @@
-﻿using OpenBullet2.Services;
-using RuriLib.Functions.Files;
-using RuriLib.Logging;
+﻿using RuriLib.Functions.Files;
+using RuriLib.Services;
 using System;
 using System.IO;
 
-namespace OpenBullet2.Logging
+namespace RuriLib.Logging
 {
     public class FileJobLogger : IJobLogger
     {
-        private readonly PersistentSettingsService settings;
+        private readonly RuriLibSettingsService settings;
         private readonly string baseFolder;
 
-        public FileJobLogger(PersistentSettingsService settings, string baseFolder)
+        public FileJobLogger(RuriLibSettingsService settings, string baseFolder)
         {
             this.settings = settings;
             this.baseFolder = baseFolder;
@@ -20,7 +19,7 @@ namespace OpenBullet2.Logging
 
         public void Log(int jobId, string message, LogKind kind = LogKind.Info)
         {
-            if (settings.OpenBulletSettings.GeneralSettings.LogToFile)
+            if (settings.RuriLibSettings.GeneralSettings.LogJobActivityToFile)
             {
                 var fileName = Path.Combine(baseFolder, $"job{jobId}.log");
                 lock (FileLocker.GetHandle(fileName))

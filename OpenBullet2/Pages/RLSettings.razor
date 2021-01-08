@@ -10,6 +10,10 @@
 <h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">
 
+    <label>@Loc["LogJobActivityToFile"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogJobActivityToFile" />
+    <br />
+
     <label>@Loc["RestrictBlocksToCWD"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.RestrictBlocksToCWD" />
     <br />

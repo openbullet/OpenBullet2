@@ -198,6 +198,9 @@
   <data name="ImageTyperzApiKey" xml:space="preserve">
     <value>Imagetyperz API Key</value>
   </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Log job activity to file</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>

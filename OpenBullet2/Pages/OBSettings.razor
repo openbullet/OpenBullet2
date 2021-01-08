@@ -1,5 +1,4 @@
 ﻿@page "/settings/openbullet"
-@using OpenBullet2.Services
 @using OpenBullet2.Models.Settings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
@@ -36,10 +35,6 @@
 
     <label>@Loc["LogMaxEntries"]</label>
     <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.LogBufferSize" />
-
-    <label>@Loc["LogToFile"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogToFile" />
-    <br />
 
     <label>@Loc["JobManagerUpdateInterval"]</label>
     <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.JobManagerUpdateInterval" />

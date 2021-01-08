@@ -24,6 +24,7 @@ using System;
 using System.Threading;
 using System.IO;
 using OpenBullet2.Logging;
+using RuriLib.Logging;
 
 namespace OpenBullet2
 {
@@ -85,8 +86,8 @@ namespace OpenBullet2
             services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
             services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
             services.AddSingleton<MemoryJobLogger>();
-            services.AddSingleton(service =>
-                new FileJobLogger(service.GetService<PersistentSettingsService>(),
+            services.AddSingleton<IJobLogger>(service =>
+                new FileJobLogger(service.GetService<RuriLibSettingsService>(),
                 "UserData/Logs/Jobs"));
 
             // Transient

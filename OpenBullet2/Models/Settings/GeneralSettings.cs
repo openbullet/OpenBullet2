@@ -33,7 +33,6 @@ namespace OpenBullet2.Models.Settings
         public string DefaultAuthor { get; set; } = "Anonymous";
         public bool EnableJobLogging { get; set; } = false;
         public int LogBufferSize { get; set; } = 20;
-        public bool LogToFile { get; set; } = false;
         public bool IgnoreWordlistNameOnHitsDedupe { get; set; } = false;
         public List<ProxyCheckTarget> ProxyCheckTargets { get; set; }
         public JobDisplayMode DefaultJobDisplayMode { get; set; } = JobDisplayMode.Standard;
