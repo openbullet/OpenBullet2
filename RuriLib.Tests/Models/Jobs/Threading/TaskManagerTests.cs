@@ -36,7 +36,10 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             manager.OnError += OnException;
 
             await manager.Start();
-            await manager.WaitCompletion();
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+            await manager.WaitCompletion(cts.Token);
 
             Assert.Equal(100, progressCount);
             Assert.True(completedFlag);
@@ -66,7 +69,9 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             await manager.SetConcurrentTasks(4);
 
             // Wait until finished
-            await manager.WaitCompletion();
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+            await manager.WaitCompletion(cts.Token);
             stopwatch.Stop();
 
             // Make sure it took less than 10 * 100 ms (let's say 800)
@@ -90,7 +95,9 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             await manager.SetConcurrentTasks(1);
 
             // Wait until finished
-            await manager.WaitCompletion();
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+            await manager.WaitCompletion(cts.Token);
             stopwatch.Stop();
 
             // Make sure it took more than 12 * 100 / 3 = 400 ms (we'll say 600 to make sure)
@@ -115,7 +122,11 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             await manager.Start();
             await Task.Delay(250);
             await manager.Stop();
-            await manager.WaitCompletion();
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+            await manager.WaitCompletion(cts.Token);
+
             stopwatch.Stop();
 
             Assert.InRange(progressCount, 10, 50);
@@ -150,7 +161,10 @@ namespace RuriLib.Tests.Models.Jobs.Threading
             Assert.Equal(progress, progressCount);
 
             await manager.Resume();
-            await manager.WaitCompletion();
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(5000);
+            await manager.WaitCompletion(cts.Token);
 
             Assert.Equal(count, progressCount);
             Assert.True(completedFlag);
