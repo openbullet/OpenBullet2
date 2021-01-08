@@ -6,7 +6,7 @@ namespace OpenBullet2.Services
 {
     public class MetricsService
     {
-        public string OS => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+        public string OS => Environment.OSVersion.VersionString;
 
         private DateTime startTime = DateTime.Now;
         public TimeSpan UpTime => DateTime.Now - startTime;
