@@ -3,11 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# DB file
-OpenBullet.db*
-
 # Themes
 OpenBullet2/wwwroot/css/themes/*
+
+# User Data
+UserData/
 
 # RuriLib API Documentation
 RuriLib/_site/
