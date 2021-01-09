@@ -70,6 +70,13 @@ namespace RuriLib.Models.Bots
         }
 
         public void ExecutingBlock(string label)
-            => ExecutionInfo = $"Executing block {label}";
+        {
+            ExecutionInfo = $"Executing block {label}";
+            
+            if (Logger != null)
+            {
+                Logger.ExecutingBlock = label;
+            }
+        }
     }
 }

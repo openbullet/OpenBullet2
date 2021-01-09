@@ -7,6 +7,7 @@ namespace RuriLib.Logging
     public interface IBotLogger
     {
         IEnumerable<BotLoggerEntry> Entries { get; }
+        string ExecutingBlock { get; set; }
         event EventHandler<BotLoggerEntry> NewEntry;
         void LogHeader([CallerMemberName] string caller = null);
         void Log(string message, string color = "#fff", bool canViewAsHtml = false);

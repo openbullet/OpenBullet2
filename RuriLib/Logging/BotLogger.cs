@@ -9,7 +9,8 @@ namespace RuriLib.Logging
 {
     public class BotLogger : IBotLogger
     {
-        private readonly List<BotLoggerEntry> entries = new List<BotLoggerEntry>();
+        public string ExecutingBlock { get; set; } = "Unknown";
+        private readonly List<BotLoggerEntry> entries = new();
         public event EventHandler<BotLoggerEntry> NewEntry;
         public IEnumerable<BotLoggerEntry> Entries => entries;
 
@@ -49,7 +50,7 @@ namespace RuriLib.Logging
 
             var entry = new BotLoggerEntry
             {
-                Message = $">> {caller} <<",
+                Message = $">> {ExecutingBlock} ({caller}) <<",
                 Color = LogColors.ChromeYellow
             };
 
