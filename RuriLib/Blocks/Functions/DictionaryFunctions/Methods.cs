@@ -28,7 +28,7 @@ namespace RuriLib.Blocks.Functions.Dictionary
                 data.Logger.Log($"Could not find an item with key {key}", LogColors.YellowGreen);
         }
 
-        [Block("Gets a dictionary key by value")]
+        [Block("Gets a dictionary key by value (old <DICT{value}>)")]
         public static string GetKey(BotData data, [Variable] Dictionary<string, string> dictionary, string value)
         {
             var key = dictionary.FirstOrDefault(kvp => kvp.Value == value).Key;
