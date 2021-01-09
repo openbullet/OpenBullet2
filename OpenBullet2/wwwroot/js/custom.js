@@ -6,3 +6,10 @@
         console.log("RESIZED");
     }
 }
+
+function debuggerScrollToBottom() {
+    var elements = document.getElementsByClassName("debugger-log");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].scrollTop = elements[i].scrollHeight;
+    }
+}

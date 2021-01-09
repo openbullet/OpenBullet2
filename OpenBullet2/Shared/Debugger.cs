@@ -155,9 +155,10 @@ namespace OpenBullet2.Shared
                     client.Dispose();
             }
 
-            loggerViewer.Refresh();
+            await loggerViewer.Refresh();
             await InvokeAsync(StateHasChanged);
-            await js.InvokeVoidAsync("adjustTextAreas").ConfigureAwait(false);
+            await js.InvokeVoidAsync("adjustTextAreas");
+            await js.InvokeVoidAsync("debuggerScrollToBottom");
         }
 
         private void Stop()

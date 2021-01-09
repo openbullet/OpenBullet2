@@ -25,9 +25,10 @@
 @code {
     [Parameter] public IBotLogger BotLogger { get; set; }
 
-    public void Refresh()
+    public async Task Refresh()
     {
-        InvokeAsync(StateHasChanged);
+        await InvokeAsync(StateHasChanged);
+        await js.InvokeVoidAsync("debuggerScrollToBottom");
     }
 
     private void ViewHtml(string html)
