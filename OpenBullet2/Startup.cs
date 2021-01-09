@@ -71,6 +71,7 @@ namespace OpenBullet2
                 "UserData/Wordlists"));
 
             // Singletons
+            services.AddSingleton<AnnouncementService>();
             services.AddSingleton<MetricsService>();
             services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ConfigService>();

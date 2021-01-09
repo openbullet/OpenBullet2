@@ -17,13 +17,17 @@ namespace OpenBullet2.Pages
         [Inject] public NavigationManager Nav { get; set; }
         [Inject] public IModalService Modal { get; set; }
         [Inject] public IHttpContextAccessor HttpAccessor { get; set; }
+        [Inject] public AnnouncementService AnnouncementService { get; set; }
         public IPAddress IP { get; set; } = IPAddress.Parse("127.0.0.1");
         private Timer timer;
         private Timer cpuTimer;
+        private string announcement = string.Empty;
 
         protected override void OnInitialized()
         {
             StartPeriodicRefresh();
+
+            Task.Run(() => announcement = AnnouncementService.FetchAnnouncement().Result);
         }
 
         protected override void OnAfterRender(bool firstRender)
