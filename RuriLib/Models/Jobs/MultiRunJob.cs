@@ -9,6 +9,7 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data;
+using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
@@ -199,6 +200,9 @@ namespace RuriLib.Models.Jobs
 
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings) && (ProxySources == null || ProxySources.Count == 0))
                 throw new NullReferenceException("The list of proxy sources cannot be null or empty when proxies are needed");
+
+            if (!Config.Settings.DataSettings.AllowedWordlistTypes.Contains(DataPool.WordlistType))
+                throw new NotSupportedException("This config does not support the provided Wordlist Type");
 
             // Wait for the start condition to be verified
             await base.Start();
