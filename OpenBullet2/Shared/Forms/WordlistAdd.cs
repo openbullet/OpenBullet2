@@ -51,7 +51,7 @@ namespace OpenBullet2.Shared.Forms
                 Type = wordlistTypes.First()
             };
 
-            baseDirectory = Directory.GetCurrentDirectory();
+            baseDirectory = Directory.Exists("UserData") ? "UserData" : Directory.GetCurrentDirectory();
             await LoadTree(baseDirectory);
         }
 
