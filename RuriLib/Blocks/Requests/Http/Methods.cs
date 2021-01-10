@@ -32,7 +32,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var factory = new HttpHandlerFactory
+            var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
                 Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
@@ -42,7 +42,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = factory.GetHandler(data.Proxy);
+            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -83,7 +83,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var factory = new HttpHandlerFactory
+            var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
                 Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
@@ -93,7 +93,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = factory.GetHandler(data.Proxy);
+            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -136,7 +136,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var factory = new HttpHandlerFactory
+            var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
                 Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
@@ -146,7 +146,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = factory.GetHandler(data.Proxy);
+            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -189,7 +189,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var factory = new HttpHandlerFactory
+            var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
                 Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
@@ -198,8 +198,8 @@ namespace RuriLib.Blocks.Requests.Http
                 UseCustomCipherSuites = useCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
-
-            using var handler = factory.GetHandler(data.Proxy);
+            
+            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
