@@ -10,28 +10,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OpenBullet2</title>
     <base href="~/" />
-    <!--<link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />-->
-    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
-    <link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
-    <link href="_content/GridBlazor/css/gridblazor.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/bootstrap/darkly.min.css" />
+    
+    <!-- CSS FILES -->
+    <!-- Radzen --><link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css">
+    <!-- Blazored Modal --><link href="_content/Blazored.Modal/blazored-modal.css" rel="stylesheet" />
+    <!-- Grid Blazor --><link href="_content/GridBlazor/css/gridblazor.min.css" rel="stylesheet" />
+    <!-- Bootstrap --><link rel="stylesheet" href="css/bootstrap/darkly.min.css" />
+    <!-- Font Awesome --><link href="~/css/fontawesome.css" rel="stylesheet" />
+    <!-- Monaco Editor --><link href="monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
+    <!-- MW Blazor Tree --><link rel="stylesheet" href="_content/MW.Blazor.Tree/styles.css" />
+
+    <!-- MY CSS FILES -->
     <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="css/overrides.css" />
     <link rel="stylesheet" href="css/custom-theme.css" />
-    <link rel="stylesheet" href="~/css/prism.css" />
-    <link href="monaco-editor/min/vs/editor/editor.main.css" rel="stylesheet" />
-    <script src="_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js"></script>
-    <script src="_content/GridBlazor/js/gridblazor.js"></script>
-    <script src="~/js/sweetalert2.9.js"></script>
-    <script src="~/js/fontawesome.js"></script>
-    <script src="~/js/jquery-3.3.1.min.js"></script>
-    <script src="~/js/bootstrap.bundle.min.js"></script>
-    <script src="_content/BlazorInputFile/inputfile.js"></script>
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
-    <script src="~/js/blazaco.interop.js"></script>
+
+    <!-- JS FILES -->
+    <!-- Asp.NET Core --><script src="_content/Microsoft.AspNetCore.Components.Web.Extensions/headManager.js"></script>
+    <!-- Grid Blazor --><script src="_content/GridBlazor/js/gridblazor.js"></script>
+    <!-- Sweet Alert --><script src="~/js/sweetalert2.9.js"></script>
+    <!-- Font Awesome --><script src="~/js/fontawesome.js"></script>
+    <!-- Radzen --><script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+
+    <!-- MY JS FILES -->
     <script src="~/js/custom.js"></script>
     <script src="~/js/custom-theme.js"></script>
-    <script src="~/js/prism.js"></script>
 </head>
 <body>
     <app>
@@ -41,10 +44,14 @@
     <script type="blazor-boot">
     </script>
 
-    <script src="monaco-editor/min/vs/loader.js"></script>
-    <script>require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });</script>
-    <script src="monaco-editor/min/vs/editor/editor.main.js"></script>
-    <script src="_content/BlazorMonaco/jsInterop.js"></script>
+    <!-- Monaco Editor --><script src="monaco-editor/min/vs/loader.js"></script>
+    <!-- Monaco Editor --><script>require.config({ paths: { 'vs': 'monaco-editor/min/vs' } });</script>
+    <!-- Monaco Editor --><script src="monaco-editor/min/vs/editor/editor.main.js"></script>
+    <!-- Monaco Editor --><script src="_content/BlazorMonaco/jsInterop.js"></script>
+
+    <!-- JQuery --><script src="~/js/jquery-3.3.1.min.js"></script>
+    <!-- Popper --><script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap --><script src="~/js/bootstrap.bundle.min.js"></script>
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
