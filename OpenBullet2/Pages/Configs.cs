@@ -163,6 +163,10 @@ namespace OpenBullet2.Pages
                 {
                     await RefreshGrid();
                 }
+                else
+                {
+                    StateHasChanged();
+                }
             }
         }
 
