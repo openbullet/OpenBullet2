@@ -271,7 +271,7 @@ namespace RuriLib.Blocks.Requests.Http
             using StringWriter writer = new StringWriter();
 
             // Log the method, uri and http version
-            writer.WriteLine($"{request.Method.Method} {request.RequestUri.LocalPath} HTTP/{request.Version.Major}.{request.Version.Minor}");
+            writer.WriteLine($"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
 
             // Log the headers
             writer.WriteLine($"Host: {request.RequestUri.Host}");
