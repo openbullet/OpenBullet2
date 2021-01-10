@@ -360,7 +360,7 @@ namespace RuriLib.Blocks.Requests.Http
             data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync();
 
             // Address
-            data.ADDRESS = response.RequestMessage.RequestUri.ToString();
+            data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
             data.Logger.Log($"Address: {data.ADDRESS}", LogColors.Azure);
 
             // Response code
