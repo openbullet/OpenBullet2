@@ -125,6 +125,6 @@ namespace OpenBullet2.Repositories
             => GetFileName(config.Id);
 
         private string GetFileName(string id)
-            => $"{BaseFolder}/{id}.opk";
+            => Path.Combine(BaseFolder, $"{id}.opk").Replace('\\', '/');
     }
 }

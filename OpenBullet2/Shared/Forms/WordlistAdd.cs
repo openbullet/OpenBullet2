@@ -10,6 +10,7 @@ using Radzen;
 using Radzen.Blazor;
 using RuriLib.Extensions;
 using RuriLib.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,18 +18,19 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Shared.Forms
 {
-    public partial class WordlistAdd
+    public partial class WordlistAdd : IDisposable
     {
         [Inject] public IModalService ModalService { get; set; }
         [Inject] public IFileReaderService FileReaderService { get; set; }
         [Inject] public RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] public IWordlistRepository WordlistRepo { get; set; }
 
         [CascadingParameter] public BlazoredModalInstance BlazoredModal { get; set; }
         ElementReference inputTypeFileElement;
         List<string> wordlistTypes;
         WordlistEntity wordlist;
-        MemoryStream fileStream;
+        MemoryStream memoryStream;
         long max;
         long value;
         decimal progress;
@@ -71,7 +73,7 @@ namespace OpenBullet2.Shared.Forms
             using (var fs = await file.OpenReadAsync())
             {
                 var buffer = new byte[20480];
-                fileStream = new MemoryStream();
+                memoryStream = new MemoryStream();
                 int count;
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
@@ -79,7 +81,7 @@ namespace OpenBullet2.Shared.Forms
                     progress = ((decimal)fs.Position * 100) / fs.Length;
                     await InvokeAsync(StateHasChanged);
                     await Task.Delay(1);
-                    await fileStream.WriteAsync(buffer, 0, count);
+                    await memoryStream.WriteAsync(buffer, 0, count);
                 }
             }
             StateHasChanged();
@@ -157,6 +159,14 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            var fileName = Path.Combine("UserData", "Wordlists", Guid.NewGuid().ToString() + ".txt").Replace('\\', '/');
+            FileStream fs = new(fileName, FileMode.Create);
+            memoryStream.CopyTo(fs);
+            fs.Close();
+            wordlist.FileName = fileName;
+            wordlist.Total = File.ReadLines(fileName).Count();
+
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
 
@@ -172,5 +182,11 @@ namespace OpenBullet2.Shared.Forms
             wordlist.Total = File.ReadLines(selectedFile).Count();
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
+
+        public void Dispose()
+            => memoryStream.Close();
+
+        ~WordlistAdd()
+            => Dispose();
     }
 }

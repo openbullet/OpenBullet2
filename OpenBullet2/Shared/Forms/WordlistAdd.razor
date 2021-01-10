@@ -1,4 +1,5 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<WordlistAdd> Loc
+﻿@implements IDisposable
+@inject Microsoft.Extensions.Localization.IStringLocalizer<WordlistAdd> Loc
 
 <EditForm Model="wordlist">
     <label class="mt-2">@Loc["WordlistType"]</label>
