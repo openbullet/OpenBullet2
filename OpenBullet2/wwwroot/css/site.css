@@ -610,3 +610,25 @@ a:hover {
     margin-right: 10px;
 }
 /* -- GRID */
+
+/* TREE VIEW -- */
+.uic-tree .uic-tree {
+    margin-left: 1.25rem;
+}
+
+.uic-tree--hidden {
+    display: none;
+}
+
+.uic-tree__icon {
+    float: left;
+}
+
+.uic-tree__title {
+    margin-left: 1.25rem;
+}
+
+.uic-tree--cursor-pointer {
+    cursor: pointer;
+}
+/* -- TREE VIEW */

@@ -36,13 +36,15 @@ namespace OpenBullet2.Shared.Forms
         decimal progress;
         string baseDirectory = ".";
         string selectedFile = "";
-        IEnumerable<string> entries = null;
         bool valid = false;
+
+        Node selectedNode = null;
+        List<Node> nodes = new() { };
 
         protected override async Task OnInitializedAsync()
         {
             wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
-            
+
             wordlist = new WordlistEntity
             {
                 Name = "My Wordlist",
@@ -50,7 +52,6 @@ namespace OpenBullet2.Shared.Forms
             };
 
             baseDirectory = Directory.GetCurrentDirectory();
-
             await LoadTree(baseDirectory);
         }
 
@@ -103,53 +104,10 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            entries = Directory.GetDirectories(baseDirectory)
-                               .Where(entry =>
-                               {
-                                   var name = Path.GetFileName(entry);
-
-                                   return !name.StartsWith(".") && name != "bin" && name != "obj";
-                               });
+            nodes = Directory.GetFileSystemEntries(baseDirectory).Select(e => new Node(e)).ToList();
+            var paths = nodes.Select(n => n.Path).ToArray();
+            StateHasChanged();
         }
-
-        void LoadFiles(TreeExpandEventArgs args)
-        {
-            var directory = args.Value as string;
-
-            args.Children.Data = Directory.EnumerateFileSystemEntries(directory);
-            args.Children.Text = GetTextForNode;
-            args.Children.HasChildren = (path) => Directory.Exists((string)path);
-            args.Children.Template = FileOrFolderTemplate;
-        }
-
-        void LogChange(TreeEventArgs args)
-        {
-            selectedFile = args.Value as string;
-
-            // Make sure it's a file
-            if (File.Exists(selectedFile))
-                valid = true;
-        }
-
-        string GetTextForNode(object data)
-        {
-            return Path.GetFileName((string)data);
-        }
-
-        RenderFragment<RadzenTreeItem> FileOrFolderTemplate = (context) => builder =>
-        {
-            string path = context.Value as string;
-            bool isDirectory = Directory.Exists(path);
-
-            builder.OpenComponent<RadzenIcon>(0);
-            builder.AddAttribute(1, "Icon", isDirectory ? "folder" : "insert_drive_file");
-            if (!isDirectory)
-            {
-                builder.AddAttribute(2, "Style", "margin-left: 24px");
-            }
-            builder.CloseComponent();
-            builder.AddContent(3, context.Text);
-        };
 
         private async Task Upload()
         {
@@ -184,9 +142,45 @@ namespace OpenBullet2.Shared.Forms
         }
 
         public void Dispose()
-            => memoryStream.Close();
+            => memoryStream?.Close();
 
         ~WordlistAdd()
             => Dispose();
+    }
+
+    public class Node
+    {
+        public string Path { get; }
+        public bool IsDirectory
+        {
+            get
+            {
+                try
+                {
+                    return (File.GetAttributes(Path) & FileAttributes.Directory) == FileAttributes.Directory;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+        public string Name => System.IO.Path.GetFileName(Path);
+        private Node[] children = null;
+        public IEnumerable<Node> Children
+        {
+            get
+            {
+                if (children == null)
+                    children = Directory.GetFileSystemEntries(Path).Select(e => new Node(e)).ToArray();
+
+                return children;
+            }
+        }
+
+        public Node(string path)
+        {
+            Path = path;
+        }
     }
 }

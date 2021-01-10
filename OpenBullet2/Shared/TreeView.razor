@@ -1,0 +1,122 @@
+﻿@typeparam TNode
+
+<div class="uic-tree @(Visible ? "" : "uic-tree--hidden")">
+
+    @foreach (var node in Nodes ?? Enumerable.Empty<TNode>())
+    {
+        var nodeExpanded = ExpandedNodes.Contains(node);
+        var nodeSelected = node.Equals(SelectedNode);
+        var nodeDisabled = NodeDisabled(node);
+        var hasChildren = HasChildren(node);
+
+        <div>
+
+            @if (hasChildren)
+            {
+                <span class="uic-tree__icon" @onclick="@(() => OnToggleNode(node, !nodeExpanded))">
+                    <i class="@(nodeExpanded ? Style.CollapseNodeIconClass : Style.ExpandNodeIconClass)"></i>
+                </span>
+            }
+
+            <div class="uic-tree__title">
+                <span class="@Style.NodeTitleClass @(nodeSelected ? Style.NodeTitleSelectedClass : nodeDisabled ? Style.NodeTitleDisabledClass : Style.NodeTitleSelectableClass)" @onclick="@(() => OnSelectNode(node))">
+                    @TitleTemplate(node)
+                </span>
+            </div>
+
+            @if (hasChildren && nodeExpanded)
+            {
+                <TreeView Nodes="ChildrenSelector(node)"
+                      TitleTemplate="TitleTemplate"
+                      ChildrenSelector="ChildrenSelector"
+                      ExpandedNodes="ExpandedNodes"
+                      ExpandedNodesChanged="ExpandedNodesChanged"
+                      SelectedNode="SelectedNode"
+                      SelectedNodeChanged="SelectedNodeChanged"
+                      Visible="nodeExpanded"
+                      HasChildren="HasChildren"
+                      Style="Style"
+                      NodeDisabled="NodeDisabled" />
+            }
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    /*
+        Credits to https://github.com/mwinkler/Blazor.Components for the original component.
+        I just added lazy loading.
+    */
+
+    [Parameter] public IEnumerable<TNode> Nodes { get; set; }
+
+    [Parameter] public RenderFragment<TNode> TitleTemplate { get; set; }
+
+    [Parameter] public TNode SelectedNode { get; set; }
+    [Parameter] public EventCallback<TNode> SelectedNodeChanged { get; set; }
+
+    [Parameter] public Func<TNode, IEnumerable<TNode>> ChildrenSelector { get; set; } = node => null;
+
+    [Parameter] public IList<TNode> ExpandedNodes { get; set; } = new List<TNode>();
+    [Parameter] public EventCallback<IList<TNode>> ExpandedNodesChanged { get; set; }
+
+    [Parameter] public TreeStyle Style { get; set; } = TreeStyle.Bootstrap;
+
+    [Parameter] public bool Visible { get; set; } = true;
+
+    [Parameter] public Func<TNode, bool> HasChildren { get; set; } = node => true;
+
+    [Parameter] public Func<TNode, bool> NodeDisabled { get; set; } = node => false;
+
+    private void OnToggleNode(TNode node, bool expand)
+    {
+        var expanded = ExpandedNodes.Contains(node);
+
+        if (expanded && !expand)
+        {
+            ExpandedNodes.Remove(node);
+            ExpandedNodesChanged.InvokeAsync(ExpandedNodes);
+        }
+        else if (!expanded && expand)
+        {
+            ExpandedNodes.Add(node);
+            ExpandedNodesChanged.InvokeAsync(ExpandedNodes);
+        }
+
+        StateHasChanged();
+    }
+
+    private void OnSelectNode(TNode node)
+    {
+        if (NodeDisabled(node))
+        {
+            return;
+        }
+
+        SelectedNode = node;
+        SelectedNodeChanged.InvokeAsync(node);
+    }
+
+    public class TreeStyle
+    {
+        public static readonly TreeStyle Bootstrap = new TreeStyle
+        {
+            ExpandNodeIconClass = "far fa-plus-square uic-tree--cursor-pointer",
+            CollapseNodeIconClass = "far fa-minus-square uic-tree--cursor-pointer",
+            NodeTitleClass = "p-1",
+            NodeTitleSelectableClass = "text-body uic-tree--cursor-pointer",
+            NodeTitleSelectedClass = "bg-primary text-white",
+            NodeTitleDisabledClass = "text-black-50"
+        };
+
+        public string ExpandNodeIconClass { get; set; }
+        public string CollapseNodeIconClass { get; set; }
+        public string NodeTitleClass { get; set; }
+        public string NodeTitleSelectableClass { get; set; }
+        public string NodeTitleSelectedClass { get; set; }
+        public string NodeTitleDisabledClass { get; set; }
+    }
+}
