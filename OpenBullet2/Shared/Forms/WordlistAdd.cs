@@ -35,8 +35,7 @@ namespace OpenBullet2.Shared.Forms
         long value;
         decimal progress;
         string baseDirectory = ".";
-        string selectedFile = "";
-        bool valid = false;
+        bool validUpload = false;
 
         Node selectedNode = null;
         List<Node> nodes = new() { };
@@ -86,7 +85,7 @@ namespace OpenBullet2.Shared.Forms
                 }
             }
             StateHasChanged();
-            valid = true;
+            validUpload = true;
         }
 
         async Task LoadTree(string baseDirectory)
@@ -111,7 +110,7 @@ namespace OpenBullet2.Shared.Forms
 
         private async Task Upload()
         {
-            if (!valid)
+            if (!validUpload)
             {
                 await js.AlertError(Loc["Uh-Oh"], Loc["UploadFileFirst"]);
                 return;
@@ -130,14 +129,14 @@ namespace OpenBullet2.Shared.Forms
 
         private async Task SelectFile()
         {
-            if (!valid)
+            if (selectedNode == null || selectedNode.IsDirectory)
             {
                 await js.AlertError(Loc["Uh-Oh"], Loc["SelectFileFirst"]);
                 return;
             }
 
-            wordlist.FileName = selectedFile;
-            wordlist.Total = File.ReadLines(selectedFile).Count();
+            wordlist.FileName = selectedNode.Path;
+            wordlist.Total = File.ReadLines(selectedNode.Path).Count();
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }
 
@@ -151,20 +150,7 @@ namespace OpenBullet2.Shared.Forms
     public class Node
     {
         public string Path { get; }
-        public bool IsDirectory
-        {
-            get
-            {
-                try
-                {
-                    return (File.GetAttributes(Path) & FileAttributes.Directory) == FileAttributes.Directory;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-        }
+        public bool IsDirectory => (File.GetAttributes(Path) & FileAttributes.Directory) == FileAttributes.Directory;
         public string Name => System.IO.Path.GetFileName(Path);
         private Node[] children = null;
         public IEnumerable<Node> Children
