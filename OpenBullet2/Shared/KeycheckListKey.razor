@@ -1,24 +1,20 @@
 ﻿@using RuriLib.Models.Blocks.Custom.Keycheck
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col p-0">
-            <BlockInputField BlockSetting="Key.Left" DisplayLabel="false" />
-        </div>
-        <div class="col-4">
-            <EditForm Model="Key">
-                <InputSelect @bind-Value="Key.Comparison">
-                    @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.ListComparison)))
-                    {
-                        <option value="@name">@name</option>
-                    }
-                </InputSelect>
-            </EditForm>
-        </div>
-        <div class="col">
-            <BlockInputField BlockSetting="Key.Right" DisplayLabel="false" />
-        </div>
-    </div>
+<div class="col align-self-stretch px-0">
+    <BlockInputField BlockSetting="Key.Left" DisplayLabel="false" />
+</div>
+<div class="col-auto pr-0">
+    <EditForm Model="Key">
+        <InputSelect @bind-Value="Key.Comparison">
+            @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.ListComparison)))
+            {
+                <option value="@name">@name</option>
+            }
+        </InputSelect>
+    </EditForm>
+</div>
+<div class="col align-self-stretch px-0">
+    <BlockInputField BlockSetting="Key.Right" DisplayLabel="false" />
 </div>
 
 @code {

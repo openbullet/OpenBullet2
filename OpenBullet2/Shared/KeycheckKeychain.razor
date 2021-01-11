@@ -3,10 +3,10 @@
 @using RuriLib.Services
 @inject RuriLibSettingsService RuriLibSettings 
 
-<div class="container-fluid"
-     style="background-color: @GetBGColor()">
+<div class="container pt-3"
+     style="border: 5px solid @GetColor(); border-radius: 5px;">
     <div class="row">
-        <div class="col mr-0 pr-0 ml-0 pl-0">
+        <div class="col">
             <EditForm Model="Keychain">
                 <label>Result Status:</label>
                 <InputSelect @bind-Value="Keychain.ResultStatus">
@@ -28,52 +28,52 @@
                 </InputSelect>
             </EditForm>
         </div>
-        <div class="col mr-0 pr-0 ml-0 pl-0 text-right">
+        <div class="col ml-0 pl-0 text-right">
             @Buttons
         </div>
     </div>
-    <div class="row">
-        <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new BoolKey()))"><span class="oi oi-plus"></span> Bool Key</button>
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
-            <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
+    <div class="row my-3">
+        <div class="col">
+            <div class="list-group list-group-horizontal">
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new BoolKey()))"><span class="oi oi-plus"></span> Bool Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
+            </div>
         </div>
     </div>
     @foreach (var key in Keychain.Keys)
     {
         <div class="row">
-            <div class="col-11 ml-0 mr-0 pl-0 pr-0">
-                @switch (key)
-                {
-                    case StringKey x:
-                        <KeycheckStringKey Key="x" />
-                        break;
+            @switch (key)
+            {
+                case StringKey x:
+                    <KeycheckStringKey Key="x" />
+                    break;
 
-                    case BoolKey x:
-                        <KeycheckBoolKey Key="x" />
-                        break;
+                case BoolKey x:
+                    <KeycheckBoolKey Key="x" />
+                    break;
 
-                    case IntKey x:
-                        <KeycheckIntKey Key="x" />
-                        break;
+                case IntKey x:
+                    <KeycheckIntKey Key="x" />
+                    break;
 
-                    case FloatKey x:
-                        <KeycheckFloatKey Key="x" />
-                        break;
+                case FloatKey x:
+                    <KeycheckFloatKey Key="x" />
+                    break;
 
-                    case ListKey x:
-                        <KeycheckListKey Key="x" />
-                        break;
+                case ListKey x:
+                    <KeycheckListKey Key="x" />
+                    break;
 
-                    case DictionaryKey x:
-                        <KeycheckDictionaryKey Key="x" />
-                        break;
-                }
-            </div>
-            <div class="col ml-0 mr-0 pl-0 pr-0">
+                case DictionaryKey x:
+                    <KeycheckDictionaryKey Key="x" />
+                    break;
+            }
+            <div class="col-auto text-right ml-2">
                 <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Keychain.Keys.Remove(key))">
                 <span class="oi oi-x"></span></button>
             </div>
@@ -85,16 +85,16 @@
     [Parameter] public Keychain Keychain { get; set; }
     [Parameter] public RenderFragment Buttons { get; set; }
 
-    private string GetBGColor()
+    private string GetColor()
     {
         return Keychain.ResultStatus switch
         {
-            "SUCCESS" => "#006600",
-            "FAIL" => "#660000",
-            "RETRY" => "#666600",
-            "BAN" => "#660066",
-            "NONE" => "000066",
-            _ => "#c04000"
+            "SUCCESS" => "yellowgreen",
+            "FAIL" => "tomato",
+            "RETRY" => "yellow",
+            "BAN" => "plum",
+            "NONE" => "skyblue",
+            _ => "grey"
         };
     }
 }

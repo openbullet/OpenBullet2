@@ -24,13 +24,15 @@
     </div>
     @foreach (var keychain in Block.Keychains)
     {
-        <KeycheckKeychain Keychain="keychain">
-            <Buttons>
-                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => MoveUp(keychain))"><span class="oi oi-arrow-top"></span> Move up</button>
-                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => MoveDown(keychain))"><span class="oi oi-arrow-bottom"></span> Move down</button>
-                <button class="btn btn-sm btn-outline-danger" @onclick="@(() => Block.Keychains.Remove(keychain))"><span class="oi oi-x"></span></button>
-            </Buttons>
-        </KeycheckKeychain>
+        <div class="row my-1">
+            <KeycheckKeychain Keychain="keychain">
+                <Buttons>
+                    <button class="btn btn-sm btn-outline-primary" @onclick="@(() => MoveUp(keychain))"><span class="oi oi-arrow-top"></span> Move up</button>
+                    <button class="btn btn-sm btn-outline-primary" @onclick="@(() => MoveDown(keychain))"><span class="oi oi-arrow-bottom"></span> Move down</button>
+                    <button class="btn btn-sm btn-outline-danger" @onclick="@(() => Block.Keychains.Remove(keychain))"><span class="oi oi-x"></span></button>
+                </Buttons>
+            </KeycheckKeychain>
+        </div>
     }
 </div>
 
