@@ -9,7 +9,7 @@
 {
     <GenericList List="currentNode.SubCategories">
         <ElementTemplate Context="node">
-            <div class="card" style="background-color: @GetCategory(node).BackgroundColor; cursor: pointer; margin-top: 5px; border: solid 3px #000;"
+            <div class="card" style="background-color: @GetCategory(node).BackgroundColor; cursor: pointer; margin-top: 5px; border: solid 3px var(--bg-secondary);"
                  @onclick="@(() => SelectSubCategory(node))">
                 <div class="card-body" style="color: @GetCategory(node).ForegroundColor;">
                     <h5 class="card-text">@GetCategory(node).Name</h5>

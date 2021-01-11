@@ -240,6 +240,8 @@ app {
     --bg-secondary: #111;
     --bg-dark: #000;
     --bg-light: #333;
+    --bg-variable: #112;
+    --bg-interpolated: #121;
     --fg-primary: #fff;
     --fg-secondary: #68f;
     --fg-dark: #888;
@@ -259,6 +261,8 @@ app {
 .bg-secondary { background-color: var(--bg-secondary) !important; }
 .bg-dark { background-color: var(--bg-dark) !important; }
 .bg-light { background-color: var(--bg-light) !important; }
+.bg-variable { background-color: var(--bg-variable) !important; }
+.bg-interpolated { background-color: var(--bg-interpolated) !important; }
 .fg-primary { color: var(--fg-primary) !important; }
 .fg-secondary { color: var(--fg-secondary) !important; }
 .fg-dark { color: var(--fg-dark) !important; }

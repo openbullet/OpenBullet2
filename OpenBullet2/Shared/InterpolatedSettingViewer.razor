@@ -12,7 +12,7 @@
                         <label style="line-height: 30px;">@Name</label>
                     </div>
                     <div class="col align-self-stretch">
-                        <input type="text" style="background-color: #121;" @bind="x.Value" />
+                        <input class="bg-interpolated" type="text" @bind="x.Value" />
                     </div>
                     <div class="col-auto mr-0 pr-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
