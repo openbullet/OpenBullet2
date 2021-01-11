@@ -19,6 +19,7 @@ namespace RuriLib.Functions.Http
                 {
                     AllowAutoRedirect = options.AutoRedirect,
                     CookieContainer = options.Cookies,
+                    UseCookies = options.Cookies != null,
                     SslProtocols = ToSslProtocols(options.SecurityProtocol),
                     UseCustomCipherSuites = options.UseCustomCipherSuites,
                     AllowedCipherSuites = options.CustomCipherSuites
@@ -43,6 +44,7 @@ namespace RuriLib.Functions.Http
                     {
                         AllowAutoRedirect = options.AutoRedirect,
                         CookieContainer = options.Cookies,
+                        UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
                         AllowedCipherSuites = options.CustomCipherSuites
@@ -52,6 +54,7 @@ namespace RuriLib.Functions.Http
                     {
                         AllowAutoRedirect = options.AutoRedirect,
                         CookieContainer = options.Cookies,
+                        UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
                         AllowedCipherSuites = options.CustomCipherSuites
@@ -61,6 +64,7 @@ namespace RuriLib.Functions.Http
                     {
                         AllowAutoRedirect = options.AutoRedirect,
                         CookieContainer = options.Cookies,
+                        UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
                         AllowedCipherSuites = options.CustomCipherSuites
