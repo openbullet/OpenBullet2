@@ -51,8 +51,10 @@ namespace RuriLib.Blocks.Requests.Http
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
                 RequestUri = new Uri(url),
                 Version = Version.Parse(httpVersion),
-                Content = string.IsNullOrEmpty(content) ? null : new StringContent(content, Encoding.UTF8, contentType)
+                Content = new StringContent(content)
             };
+
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             foreach (var header in customHeaders)
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -105,7 +107,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Content = new ByteArrayContent(content)
             };
 
-            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             foreach (var header in customHeaders)
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
