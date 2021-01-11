@@ -145,8 +145,8 @@ namespace OpenBullet2.Shared
         private void LogTaskError(object sender, ErrorDetails<MultiRunInput> details)
         {
             var data = details.Item.BotData.Line.Data;
-            var proxy = botData.Proxy != null
-                ? $"{botData.Proxy.Host}:{botData.Proxy.Port}"
+            var proxy = details.Item.BotData.Proxy != null
+                ? $"{details.Item.BotData.Proxy.Host}:{details.Item.BotData.Proxy.Port}"
                 : string.Empty;
             Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({proxy})({data})! {details.Exception.Message}");
         }
