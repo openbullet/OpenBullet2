@@ -382,8 +382,8 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Goldenrod);
 
             // Unzip the GZipped content if needed (after Content-Length calculation)
-            if ((response.RequestMessage.Headers.Contains("Accept-Encoding") && response.RequestMessage.Headers.AcceptEncoding.First().Value.Contains("gzip")) ||
-                (response.Content.Headers.Contains("Content-Encoding") && response.Content.Headers.GetValues("Content-Encoding").First().Contains("gzip")))
+            if (response.RequestMessage.Headers.Contains("Accept-Encoding") && response.RequestMessage.Headers.AcceptEncoding.First().Value.Contains("gzip") &&
+                response.Content.Headers.Contains("Content-Encoding") && response.Content.Headers.GetValues("Content-Encoding").First().Contains("gzip"))
                 data.RAWSOURCE = GZip.Unzip(data.RAWSOURCE);
 
             // Source
