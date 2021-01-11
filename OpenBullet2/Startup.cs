@@ -25,6 +25,7 @@ using System.Threading;
 using System.IO;
 using OpenBullet2.Logging;
 using RuriLib.Logging;
+using System.Net;
 
 namespace OpenBullet2
 {
@@ -41,6 +42,7 @@ namespace OpenBullet2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            ServicePointManager.DefaultConnectionLimit = 1000;
             ThreadPool.SetMinThreads(1000, 1000);
 
             services.AddRazorPages();
