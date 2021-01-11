@@ -1,60 +1,92 @@
 ﻿@using RuriLib.Models.Blocks.Settings
 @using RuriLib.Models.Blocks.Settings.Interpolated
 
-<button type="button" class="btn btn-sm btn-outline-primary @(BlockSetting.InputMode == SettingInputMode.Variable ? "border-dark" : "")"
-        @onclick="@(() => SwitchMode(SettingInputMode.Variable))"
-        title="Specify a variable as input">
-    <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
-</button>
-<button type="button" class="btn btn-sm btn-outline-primary @(BlockSetting.InputMode == SettingInputMode.Fixed ? "border-dark" : "")"
-        @onclick="@(() => SwitchMode(SettingInputMode.Fixed))"
-        title="Specify a fixed input">
-    <span class="oi oi-text" aria-hidden="true"></span>
-</button>
-@if (BlockSetting.FixedSetting is StringSetting || BlockSetting.FixedSetting is ListOfStringsSetting
-   || BlockSetting.FixedSetting is DictionaryOfStringsSetting)
+@switch (BlockSetting.InputMode)
 {
-    <button type="button" class="btn btn-sm btn-outline-primary @(BlockSetting.InputMode == SettingInputMode.Interpolated ? "border-dark" : "")"
-            @onclick="@(() => SwitchMode(SettingInputMode.Interpolated))"
-            title="Specify an interpolated string as input, the old OpenBullet style">
-        <span class="oi oi-code" aria-hidden="true"></span>
-    </button>
+    case SettingInputMode.Variable:
+        <button type="button" class="btn btn-sm btn-outline-primary"
+                @onclick="CycleMode"
+                title="Specify a variable as input">
+            <span style="font-family: Consolas; font-size: 12px; font-weight: bold" aria-hidden="true">VAR</span>
+        </button>
+        break;
+
+    case SettingInputMode.Interpolated:
+        <button type="button" class="btn btn-sm btn-outline-primary"
+                @onclick="CycleMode"
+                title="Specify an interpolated string as input, the old OpenBullet style">
+            <span class="oi oi-code" aria-hidden="true"></span>
+        </button>
+        break;
+
+    case SettingInputMode.Fixed:
+        <button type="button" class="btn btn-sm btn-outline-primary"
+                @onclick="CycleMode"
+                title="Specify a fixed input">
+            <span class="oi oi-text" aria-hidden="true"></span>
+        </button>
+        break;
 }
 
-@code { 
+@code 
+{ 
     [Parameter] public BlockSetting BlockSetting { get; set; }
     [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
 
-    private void SwitchMode(SettingInputMode newMode)
+    private void CycleMode()
     {
-        // Port the string over from one mode to the other in string settings
-        if (BlockSetting.FixedSetting is StringSetting)
+        SettingInputMode newMode = SettingInputMode.Fixed;
+
+        switch (BlockSetting.InputMode)
         {
-            string value = BlockSetting.InputMode switch
-            {
-                SettingInputMode.Fixed => (BlockSetting.FixedSetting as StringSetting).Value,
-                SettingInputMode.Variable => BlockSetting.InputVariableName,
-                SettingInputMode.Interpolated => (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value,
-                _ => throw new NotImplementedException()
-            };
+            // Cycle from fixed to interpolated or variable
+            case SettingInputMode.Fixed:
+                // If the setting supports interpolated mode, cycle to it
+                if (BlockSetting.FixedSetting is StringSetting or ListOfStringsSetting or DictionaryOfStringsSetting)
+                {
+                    // Port over the string setting's value for ease of use
+                    if (BlockSetting.FixedSetting is StringSetting x1)
+                    {
+                        (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value = x1.Value;
+                    }
 
-            switch (newMode)
-            {
-                case SettingInputMode.Fixed:
-                    (BlockSetting.FixedSetting as StringSetting).Value = value;
-                    break;
+                    newMode = SettingInputMode.Interpolated;
+                }
+                // Otherwise cycle directly to variable mode
+                else
+                {
+                    if (BlockSetting.FixedSetting is StringSetting x2)
+                    {
+                        BlockSetting.InputVariableName = x2.Value;
+                    }
 
-                case SettingInputMode.Variable:
-                    BlockSetting.InputVariableName = value;
-                    break;
+                    newMode = SettingInputMode.Variable;
+                }
+                break;
 
-                case SettingInputMode.Interpolated:
-                    (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value = value;
-                    break;
-            }
+            // Cycle from interpolated to variable
+            case SettingInputMode.Interpolated:
+                if (BlockSetting.InterpolatedSetting is InterpolatedStringSetting x3)
+                {
+                    BlockSetting.InputVariableName = x3.Value;
+                }
+
+                newMode = SettingInputMode.Variable;
+                break;
+
+            // Cycle from variable to fixed
+            case SettingInputMode.Variable:
+                if (BlockSetting.FixedSetting is StringSetting x4)
+                {
+                    x4.Value = BlockSetting.InputVariableName;
+                }
+
+                newMode = SettingInputMode.Fixed;
+                break;
         }
 
         BlockSetting.InputMode = newMode;
+        StateHasChanged();
         SwitchedMode.InvokeAsync(newMode);
     }
 }
