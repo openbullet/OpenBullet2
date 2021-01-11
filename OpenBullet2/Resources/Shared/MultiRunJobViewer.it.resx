@@ -232,7 +232,7 @@
     <value>Opzioni del job</value>
   </data>
   <data name="LineCheckedMessage" xml:space="preserve">
-    <value>Riga controllata ({0}) con stato {1}</value>
+    <value>Riga controllata ({0})({1}) con stato {2}</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Caricamento</value>

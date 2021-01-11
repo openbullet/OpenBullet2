@@ -119,8 +119,11 @@ namespace OpenBullet2.Shared
         {
             var botData = details.Result.BotData;
             var data = botData.Line.Data;
+            var proxy = botData.Proxy != null
+                ? $"{botData.Proxy.Host}:{botData.Proxy.Port}"
+                : string.Empty;
 
-            var message = string.Format(Loc["LineCheckedMessage"], data, botData.STATUS);
+            var message = string.Format(Loc["LineCheckedMessage"], data, proxy, botData.STATUS);
             var color = botData.STATUS switch
             {
                 "SUCCESS" => "yellowgreen",

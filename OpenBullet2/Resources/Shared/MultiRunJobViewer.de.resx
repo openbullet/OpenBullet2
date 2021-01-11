@@ -217,7 +217,7 @@
     <value>Job Optionen</value>
   </data>
   <data name="LineCheckedMessage" xml:space="preserve">
-    <value>Zeile ({0}) mit dem Status {1} überprüft</value>
+    <value>Zeile ({0})({1}) mit dem Status {2} überprüft</value>
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Erst muss ein Treffer ausgewählt werden</value>

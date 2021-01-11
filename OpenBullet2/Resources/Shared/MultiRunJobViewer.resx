@@ -232,7 +232,7 @@
     <value>Job options</value>
   </data>
   <data name="LineCheckedMessage" xml:space="preserve">
-    <value>Line checked ({0}) with status {1}</value>
+    <value>Line checked ({0})({1}) with status {2}</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading</value>
