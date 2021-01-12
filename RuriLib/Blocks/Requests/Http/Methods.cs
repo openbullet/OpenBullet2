@@ -276,7 +276,9 @@ namespace RuriLib.Blocks.Requests.Http
             writer.WriteLine($"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
 
             // Log the headers
-            writer.WriteLine($"Host: {request.RequestUri.Host}");
+            if (!request.Headers.Contains("Host"))
+                writer.WriteLine($"Host: {request.RequestUri.Host}");
+
             foreach (var header in request.Headers)
                 writer.WriteLine($"{header.Key}: {string.Join(' ', header.Value)}");
 
