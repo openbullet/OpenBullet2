@@ -23,7 +23,7 @@
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
+    <ul class="nav flex-column bg-secondary">
         <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> @Loc["Home"]
@@ -140,7 +140,7 @@
     </ul>
 </div>
 
-<div class="float-left text-center mb-3 d-none d-md-block" style="width: 100%; position: absolute; bottom: 0px;">
+<div class="navbar-footer float-left text-center mb-3 d-none d-md-block">
     <div class="footer-buttons">
         <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
         <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>

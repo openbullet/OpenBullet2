@@ -327,6 +327,13 @@ a:hover {
     font-size: 12px;
 }
 
+.navbar-footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    z-index: -1;
+}
+
 .footer-buttons {
     width: 100%;
     margin-bottom: 10px;
