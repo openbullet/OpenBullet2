@@ -368,14 +368,15 @@ a:hover {
     .debugger-log textarea {
         height: 500px;
         overflow: hidden;
-        width: 100%;
+        max-width: 50vw;
         word-wrap: break-word;
         margin-bottom: 2px;
         background-color: black;
+        padding: 0px;
     }
 
     .debugger-log p {
-        width: 100%;
+        max-width: 50vw;
         overflow-wrap: break-word;
         margin-bottom: 2px;
         background-color: black;
