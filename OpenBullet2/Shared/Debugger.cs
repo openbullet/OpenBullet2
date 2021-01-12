@@ -46,10 +46,12 @@ namespace OpenBullet2.Shared
         private BotLoggerViewer loggerViewer;
         private Browser lastBrowser;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             options = VolatileSettings.DebuggerOptions;
             logger = VolatileSettings.DebuggerLog;
+            await js.InvokeVoidAsync("adjustTextAreas");
+            await js.InvokeVoidAsync("debuggerScrollToBottom");
         }
 
         private async Task Run()
