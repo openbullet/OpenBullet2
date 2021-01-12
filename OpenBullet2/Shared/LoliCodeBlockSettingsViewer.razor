@@ -1,8 +1,9 @@
 ﻿@using RuriLib.Models.Blocks 
 @inject PersistentSettingsService Settings 
 
-<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
-
+<div style="height: 700px;">
+    <MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+</div>
 
 @code {
     [Parameter] public LoliCodeBlockInstance Block { get; set; }
