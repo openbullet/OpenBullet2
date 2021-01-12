@@ -318,14 +318,6 @@ a {
 a:hover {
     color: var(--fg-linkhover);
 }
-
-::-webkit-scrollbar {
-    width: 0px; /* Hide scrollbars in Chrome etc. */
-}
-
-* {
-    scrollbar-width: none; /* Hide scrollbars in Firefox */
-}
 /* -- GENERIC */
 
 /* NAVMENU -- */
