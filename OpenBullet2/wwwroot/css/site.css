@@ -88,6 +88,7 @@ app {
     background-color: var(--bg-secondary);
     width: 230px;
     min-width: 230px;
+    transition: 0.5s;
 }
 
     .sidebar .top-row {

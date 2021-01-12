@@ -13,6 +13,9 @@
         <a href="">
             <img src="logohq.png" style="height: 60px; margin-left: 14px;" />
         </a>
+        <div class="text-right" style="position: absolute; height: 20px; width: 20px; right: 15px;">
+            <span class="oi oi-menu text-white" style="cursor: pointer;" @onclick="(() => ToggleSidebar())"></span>
+        </div>
     </div>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -137,7 +140,7 @@
     </ul>
 </div>
 
-<div class="fixed-bottom float-left text-center mb-3 d-none d-md-block" style="width: 230px;">
+<div class="float-left text-center mb-3 d-none d-md-block" style="width: 100%; position: absolute; bottom: 0px;">
     <div class="footer-buttons">
         <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
         <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>
@@ -150,6 +153,7 @@
     private bool collapseNavMenu = true;
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
+    private bool sidebarExpanded = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -202,5 +206,19 @@
     void ChangeLanguage()
     {
         Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"]);
+    }
+
+    async Task ToggleSidebar()
+    {
+        if (sidebarExpanded)
+        {
+            sidebarExpanded = false;
+            await js.InvokeVoidAsync("setSidebarMargin", "-200px");
+        }
+        else
+        {
+            sidebarExpanded = true;
+            await js.InvokeVoidAsync("setSidebarMargin", "0px");
+        }
     }
 }

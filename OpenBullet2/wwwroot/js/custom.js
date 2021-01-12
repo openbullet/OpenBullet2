@@ -13,3 +13,8 @@ function debuggerScrollToBottom() {
         elements[i].scrollTop = elements[i].scrollHeight;
     }
 }
+
+function setSidebarMargin(margin) {
+    var element = document.getElementsByClassName("sidebar")[0];
+    element.style.marginLeft = margin;
+}
