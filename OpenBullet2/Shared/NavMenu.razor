@@ -24,49 +24,49 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> @Loc["Home"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="jobs">
                 <span class="oi oi-pulse" aria-hidden="true"></span> @Loc["Jobs"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="monitor">
                 <span class="oi oi-eye" aria-hidden="true"></span> @Loc["Monitor"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="proxies/groups">
                 <span class="oi oi-shield" aria-hidden="true"></span> @Loc["Proxies"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="wordlists">
                 <span class="oi oi-align-left" aria-hidden="true"></span> @Loc["Wordlists"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="hits">
                 <span class="oi oi-bolt" aria-hidden="true"></span> @Loc["Hits"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="configs">
                 <span class="oi oi-cog" aria-hidden="true"></span> @Loc["Configs"]
             </NavLink>
         </li>
         @if (displayConfigSubmenu)
         {
-            <li class="nav-item px-3">
+            <li class="nav-item pl-3 pr-5">
                 <NavLink class="nav-link" href="config/edit/metadata">
                     <span class="oi oi-ellipses ml-4" aria-hidden="true"></span> @Loc["Metadata"]
                 </NavLink>
             </li>
-            <li class="nav-item px-3">
+            <li class="nav-item pl-3 pr-5">
                 <NavLink class="nav-link" href="config/edit/readme">
                     <span class="oi oi-pencil ml-4" aria-hidden="true"></span> @Loc["Readme"]
                 </NavLink>
@@ -74,61 +74,61 @@
 
             @if (displayStackerSubmenu)
             {
-                <li class="nav-item px-3">
+                <li class="nav-item pl-3 pr-5">
                     <NavLink class="nav-link" href="config/edit/stacker">
                         <span class="oi oi-menu ml-4" aria-hidden="true"></span> @Loc["Stacker"]
                     </NavLink>
                 </li>
-                <li class="nav-item px-3">
+                <li class="nav-item pl-3 pr-5">
                     <NavLink class="nav-link" href="config/edit/lolicode">
                         <span class="oi oi-code ml-4" aria-hidden="true"></span> @Loc["LoliCode"]
                     </NavLink>
                 </li>
             }
 
-            <li class="nav-item px-3">
+            <li class="nav-item pl-3 pr-5">
                 <NavLink class="nav-link" href="config/edit/settings">
                     <span class="oi oi-wrench ml-4" aria-hidden="true"></span> @Loc["Settings"]
                 </NavLink>
             </li>
-            <li class="nav-item px-3">
+            <li class="nav-item pl-3 pr-5">
                 <NavLink class="nav-link" href="config/edit/code">
                     <span class="oi oi-code ml-4" aria-hidden="true"></span> @Loc["CSharpCode"]
                 </NavLink>
             </li>
-            <li class="nav-item px-3" style="width: 100%;">
+            <li class="nav-item pl-3 pr-5" style="width: 100%;">
                 <button type="button" class="btn btn-outline-success" style="width: 100%" @onclick="SaveConfig">
                     <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
                 </button>
             </li>
         }
 
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="settings/rurilib">
                 <span class="oi oi-wrench" aria-hidden="true"></span> @Loc["RLSettings"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="settings/openbullet">
                 <span class="oi oi-wrench" aria-hidden="true"></span> @Loc["OBSettings"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="guests">
                 <span class="oi oi-person" aria-hidden="true"></span> @Loc["Guests"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="plugins">
                 <span class="oi oi-puzzle-piece" aria-hidden="true"></span> @Loc["Plugins"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="sharing">
                 <span class="oi oi-share" aria-hidden="true"></span> @Loc["Sharing"]
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item pl-3 pr-5">
             <NavLink class="nav-link" href="about">
                 <span class="oi oi-info" aria-hidden="true"></span> @Loc["About"]
             </NavLink>
@@ -165,9 +165,12 @@
         OnConfigSelected(this, ConfigService.SelectedConfig);
     }
 
-    private void ToggleNavMenu()
+    private async Task ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+
+        await js.InvokeVoidAsync("setSidebarMargin", "0px");
+        sidebarExpanded = true;
     }
 
     private async void OnConfigSelected(object sender, Config config)
