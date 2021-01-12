@@ -358,12 +358,32 @@ a:hover {
 
 /* LOGS -- */
 .debugger-log {
-    background-color: var(--bg-secondary);
+    background-color: black;
     font-family: var(--consolas);
     padding: 20px;
     height: 500px;
     overflow-y: auto;
 }
+
+    .debugger-log textarea {
+        height: 500px;
+        overflow: hidden;
+        width: 100%;
+        word-wrap: break-word;
+        margin-bottom: 2px;
+        background-color: black;
+    }
+
+    .debugger-log p {
+        width: 100%;
+        overflow-wrap: break-word;
+        margin-bottom: 2px;
+        background-color: black;
+    }
+
+    .debugger-log button {
+        margin-bottom: 2px;
+    }
 
 .generic-log {
     background-color: var(--bg-secondary);

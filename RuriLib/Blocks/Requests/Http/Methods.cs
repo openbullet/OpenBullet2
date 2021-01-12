@@ -363,7 +363,7 @@ namespace RuriLib.Blocks.Requests.Http
 
             // Address
             data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
-            data.Logger.Log($"Address: {data.ADDRESS}", LogColors.Azure);
+            data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
 
             // Response code
             data.RESPONSECODE = (int)response.StatusCode;
@@ -373,13 +373,13 @@ namespace RuriLib.Blocks.Requests.Http
             data.HEADERS = response.Headers.ToDictionary(h => h.Key, h => h.Value.First());
             if (!data.HEADERS.ContainsKey("Content-Length"))
                 data.HEADERS["Content-Length"] = data.RAWSOURCE.Length.ToString();
-            data.Logger.Log("Received Headers:", LogColors.CarmineRed);
-            data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Cherry);
+            data.Logger.Log("Received Headers:", LogColors.MediumPurple);
+            data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
 
             // Cookies
             data.COOKIES = RuriLib.Functions.Http.Http.GetAllCookies(data.CookieContainer).ToDictionary(c => c.Name, c => c.Value);
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
-            data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Goldenrod);
+            data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
             // Unzip the GZipped content if needed (after Content-Length calculation)
             if (response.RequestMessage.Headers.Contains("Accept-Encoding") && response.RequestMessage.Headers.AcceptEncoding.First().Value.Contains("gzip") &&
@@ -389,7 +389,7 @@ namespace RuriLib.Blocks.Requests.Http
             // Source
             data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);
-            data.Logger.Log(data.SOURCE, LogColors.DarkPastelGreen, true);
+            data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }
 
         /// <summary>

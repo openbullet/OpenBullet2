@@ -159,6 +159,7 @@ namespace OpenBullet2.Shared
             await InvokeAsync(StateHasChanged);
             await js.InvokeVoidAsync("adjustTextAreas");
             await js.InvokeVoidAsync("debuggerScrollToBottom");
+            StateHasChanged();
         }
 
         private void Stop()
