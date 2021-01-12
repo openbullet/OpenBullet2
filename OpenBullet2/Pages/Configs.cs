@@ -32,6 +32,7 @@ namespace OpenBullet2.Pages
         [Inject] PluginRepository PluginRepo { get; set; }
         [Inject] NavigationManager Nav { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
+        [Inject] VolatileSettingsService VolatileSettings { get; set; }
         [Inject] PersistentSettingsService PersistentSettings { get; set; }
         [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
@@ -136,6 +137,7 @@ namespace OpenBullet2.Pages
             configs.Add(selectedConfig);
             selectedConfig.Metadata.Author = PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultAuthor;
             ConfigService.SelectedConfig = selectedConfig;
+            VolatileSettings.DebuggerLog = new();
             Nav.NavigateTo("config/edit/metadata");
         }
 
@@ -218,6 +220,7 @@ namespace OpenBullet2.Pages
                 _ => throw new NotImplementedException()
             };
 
+            VolatileSettings.DebuggerLog = new();
             Nav.NavigateTo(uri);
         }
 
