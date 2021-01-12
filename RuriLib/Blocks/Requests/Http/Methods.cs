@@ -54,7 +54,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Content = new StringContent(content)
             };
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -107,7 +107,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Content = new ByteArrayContent(content)
             };
 
-            request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
