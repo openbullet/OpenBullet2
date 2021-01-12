@@ -14,43 +14,55 @@
             }
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-8 col-12 pr-lg-2 px-0">
-            <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
-        </div>
-        <div id="debugger-options" class="col-lg-4 col-12 pl-lg-2 px-0 mt-3 mt-lg-0">
-            <EditForm Model="options">
+    <EditForm Model="options">
+        <div class="row">
+            <div class="col-auto pl-0 ml-0">
                 <label>@Loc["TestData"]</label>
+            </div>
+            <div class="col align-self-stretch">
                 <InputText @bind-Value="options.TestData" />
-                <label class="mt-3">@Loc["WordlistType"]</label>
+            </div>
+            <div class="col-auto">
+                <label>@Loc["WordlistType"]</label>
                 <InputSelect @bind-Value="options.WordlistType">
                     @foreach (var name in RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name))
                     {
                         <option value="@name">@name</option>
                     }
                 </InputSelect>
-                <br />
-                <label class="mt-3">@Loc["UseProxy"]</label>
+                <label class="ml-2">@Loc["PersistLog"]</label>
+                <InputCheckbox @bind-Value="options.PersistLog" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto pl-0 ml-0">
+                <label>@Loc["UseProxy"]</label>
                 <InputCheckbox @bind-Value="options.UseProxy" />
-                <br />
-                <label class="mt-3">@Loc["TestProxy"]</label>
+                <label class="ml-2">@Loc["TestProxy"]</label>
+            </div>
+            <div class="col align-self-stretch">
                 <InputText @bind-Value="options.TestProxy" />
-                <label class="mt-3">@Loc["Type"]</label>
+            </div>
+            <div class="col-auto">
+                <label>@Loc["Type"]</label>
                 <InputSelect @bind-Value="options.ProxyType">
                     @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Proxies.ProxyType)))
                     {
                         <option value="@name">@name</option>
                     }
                 </InputSelect>
-                <br />
-                <label style="margin-top: 15px;">@Loc["PersistLog"]</label>
-                <InputCheckbox @bind-Value="options.PersistLog" />
-                <br />
-            </EditForm>
-
-            <br />
+            </div>
+        </div>
+    </EditForm>
+    <div class="row">
+        <div class="col-12 pl-0 ml-0">
+            <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div id="debugger-options" class="col-auto pl-0 ml-0">
             <h5>@Loc["Variables"]</h5>
-            <RadzenTree Style="width: 100% !important; height: 300px; cursor: default;">
+            <RadzenTree Style="width: 100% !important; cursor: default;">
                 @foreach (var variable in options.Variables)
                 {
                     <RadzenTreeItem Text="@($"{variable.Name} ({variable.Type}){(variable.MarkedForCapture ? " [CAPTURED]" : "")}")">

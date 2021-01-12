@@ -6,7 +6,7 @@
 <div class="container pt-3"
      style="border: 5px solid @GetColor(); border-radius: 5px;">
     <div class="row">
-        <div class="col">
+        <div class="col-auto">
             <EditForm Model="Keychain">
                 <label>Result Status:</label>
                 <InputSelect @bind-Value="Keychain.ResultStatus">
@@ -17,7 +17,7 @@
                 </InputSelect>
             </EditForm>
         </div>
-        <div class="col mr-0 pr-0 ml-0 pl-0">
+        <div class="col-auto mr-0 pr-0 ml-0 pl-0">
             <EditForm Model="Keychain">
                 <label class="ml-3">Mode:</label>
                 <InputSelect @bind-Value="Keychain.Mode">
@@ -28,19 +28,19 @@
                 </InputSelect>
             </EditForm>
         </div>
-        <div class="col ml-0 pl-0 text-right">
+        <div class="col align-self-stretch ml-0 pl-0 text-right">
             @Buttons
         </div>
     </div>
     <div class="row my-3">
         <div class="col">
             <div class="list-group list-group-horizontal">
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String Key</button>
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new BoolKey()))"><span class="oi oi-plus"></span> Bool Key</button>
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int Key</button>
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float Key</button>
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List Key</button>
-                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary Key</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new StringKey()))"><span class="oi oi-plus"></span> String</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new BoolKey()))"><span class="oi oi-plus"></span> Bool</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new IntKey()))"><span class="oi oi-plus"></span> Int</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new FloatKey()))"><span class="oi oi-plus"></span> Float</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new ListKey()))"><span class="oi oi-plus"></span> List</button>
+                <button class="btn btn-sm btn-outline-success" @onclick="(() => Keychain.Keys.Add(new DictionaryKey()))"><span class="oi oi-plus"></span> Dictionary</button>
             </div>
         </div>
     </div>
