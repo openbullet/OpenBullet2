@@ -77,14 +77,14 @@
                 </div>
             </div>
             <div class="col-sm-auto d-flex justify-content-around">
-                <button class="btn btn-outline-primary w-100" @onclick="(() => Edit(job))" @onclick:stopPropagation="true">
-                    <span class="oi oi-pencil" title="@Loc["Edit"]"></span>
+                <button class="btn btn-outline-primary w-100" @onclick="(() => Edit(job))" @onclick:stopPropagation="true" title="@Loc["Edit"]">
+                    <span class="oi oi-pencil"></span>
                 </button>
-                <button class="btn btn-outline-primary ml-1 w-100" @onclick="(() => Clone(job))" @onclick:stopPropagation="true">
-                    <span class="oi oi-layers" title="@Loc["Clone"]"></span>
+                <button class="btn btn-outline-primary ml-1 w-100" @onclick="(() => Clone(job))" @onclick:stopPropagation="true" title="@Loc["Clone"]">
+                    <span class="oi oi-layers"></span>
                 </button>
-                <button class="btn btn-outline-danger ml-1 w-100" @onclick="(() => Remove(job))" @onclick:stopPropagation="true">
-                    <span class="oi oi-x" title="@Loc["Remove"]"></span>
+                <button class="btn btn-outline-danger ml-1 w-100" @onclick="(() => Remove(job))" @onclick:stopPropagation="true" title="@Loc["Remove"]">
+                    <span class="oi oi-x"></span>
                 </button>
             </div>
         </div>

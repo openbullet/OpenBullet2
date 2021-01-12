@@ -1,15 +1,15 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<StackViewer> Loc
 
 <div class="list-group list-group-horizontal mb-1">
-    <button class="btn btn-sm btn-outline-success" @onclick="AddBlock"><span class="oi oi-plus"></span> @Loc["Add"]</button>
-    <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSelectedBlock"><span class="oi oi-x"></span> @Loc["Delete"]</button>
-    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockUp"><span class="oi oi-arrow-top"></span> @Loc["Up"]</button>
-    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockDown"><span class="oi oi-arrow-bottom"></span> @Loc["Down"]</button>
+    <button class="btn btn-sm btn-outline-success" @onclick="AddBlock" title="@Loc["Add"]"><span class="oi oi-plus"></span></button>
+    <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSelectedBlock" title="@Loc["Delete"]"><span class="oi oi-x"></span></button>
+    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockUp" title="@Loc["Up"]"><span class="oi oi-arrow-top"></span></button>
+    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockDown" title="@Loc["Down"]"><span class="oi oi-arrow-bottom"></span></button>
 </div>
 <div class="list-group list-group-horizontal mb-1">
-    <button class="btn btn-sm btn-outline-secondary" @onclick="CloneBlock"><span class="oi oi-layers"></span> @Loc["Clone"]</button>
-    <button class="btn btn-sm btn-outline-secondary" @onclick="DisableBlock"><span class="oi oi-ban"></span> @Loc[selectedBlock != null && selectedBlock.Disabled ? "Enable" : "Disable"]</button>
-    <button class="btn btn-sm btn-outline-secondary" @onclick="Undo"><span class="oi oi-action-undo"></span> @Loc["Undo"]</button>
+    <button class="btn btn-sm btn-outline-secondary" @onclick="CloneBlock" title="@Loc["Clone"]"><span class="oi oi-layers"></span></button>
+    <button class="btn btn-sm btn-outline-secondary" @onclick="DisableBlock" title="@Loc[selectedBlock != null && selectedBlock.Disabled ? "Enable" : "Disable"]"><span class="oi oi-ban"></span></button>
+    <button class="btn btn-sm btn-outline-secondary" @onclick="Undo" title="@Loc["Undo"]"><span class="oi oi-action-undo"></span></button>
 </div>
 
 <div style="height: 700px; overflow-y: auto">
