@@ -42,7 +42,7 @@ namespace OpenBullet2.Services
         public async Task ReloadConfigs()
         {
             // Load from the main repository
-            Configs = await configRepo.GetAll();
+            Configs = (await configRepo.GetAll()).ToList();
             SelectedConfig = null;
 
             // Load from remotes (fire and forget)

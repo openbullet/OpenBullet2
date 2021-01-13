@@ -20,18 +20,12 @@ namespace OpenBullet2.Repositories
             Directory.CreateDirectory(baseFolder);
         }
 
-        public async Task<List<Config>> GetAll()
+        public async Task<IEnumerable<Config>> GetAll()
         {
-            List<Config> configs = new List<Config>();
+            var tasks = Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".opk"))
+                .Select(async file => await Get(Path.GetFileNameWithoutExtension(file)));
 
-            // TODO: Parallelize this for max performance
-            foreach (var file in Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".opk")))
-            {
-                var config = await Get(Path.GetFileNameWithoutExtension(file));
-                configs.Add(config);
-            }
-
-            return configs;
+            return await Task.WhenAll(tasks);
         }
 
         public async Task<Config> Get(string id)
