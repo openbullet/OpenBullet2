@@ -60,6 +60,7 @@ namespace RuriLib.Helpers.CSharp
                 "RuriLib.Models.Bots",
                 "RuriLib.Models.Conditions.Comparisons",
                 "System.Collections.Generic",
+                "System.Linq",
                 "System.Net.Security",
                 "RuriLib.Models.Blocks.Custom.HttpRequest.Multipart",
                 "Jering.Javascript.NodeJS",
