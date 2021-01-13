@@ -1,4 +1,5 @@
 ﻿using RuriLib.Extensions;
+using RuriLib.Helpers;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
@@ -59,16 +60,82 @@ namespace RuriLib.Models.Blocks
         {
             Match match;
 
-            // Code Label
+            // CODE LABEL
+            // #MYLABEL => MYLABEL:
             if ((match = Regex.Match(input, $"^#({validTokenRegex})$")).Success)
             {
                 return $"{match.Groups[1].Value}:";
             }
 
-            // Jump
+            // JUMP
+            // JUMP #MYLABEL => goto MYLABEL;
             if ((match = Regex.Match(input, $"^JUMP #({validTokenRegex})$")).Success)
             {
                 return $"goto {match.Groups[1].Value};";
+            }
+
+            // END
+            // END => }
+            if (input == "END")
+            {
+                return "}";
+            }
+
+            // REPEAT
+            // REPEAT 10 => for (int xyz = 0; xyz < 10; xyz++) {
+            if ((match = Regex.Match(input, $"^REPEAT ([0-9]+)$")).Success)
+            {
+                var i = VariableNames.RandomName();
+                return $"for (var {i} = 0; {i} < {match.Groups[1].Value}; {i}++){System.Environment.NewLine}{{";
+            }
+
+            // FOREACH
+            // FOREACH v IN list => foreach (var v in list) {
+            if ((match = Regex.Match(input, $"^FOREACH ({validTokenRegex}) IN ({validTokenRegex})$")).Success)
+            {
+                return $"foreach (var {match.Groups[1].Value} in {match.Groups[2].Value}){System.Environment.NewLine}{{";
+            }
+
+            // LOG
+            // LOG myVar => data.Logger.Log(myVar);
+            if ((match = Regex.Match(input, $"^LOG (.+)$")).Success)
+            {
+                return $"data.Logger.Log({match.Groups[1].Value});";
+            }
+
+            // CLOG
+            // CLOG Tomato "hello" => data.Logger.Log("hello", LogColors.Tomato);
+            if ((match = Regex.Match(input, $"^CLOG ([A-Za-z]+) (.+)$")).Success)
+            {
+                return $"data.Logger.Log({match.Groups[2].Value}, LogColors.{match.Groups[1].Value});";
+            }
+
+            // WHILE
+            // WHILE a < b => while (a < b) {
+            if ((match = Regex.Match(input, $"^WHILE (.+)$")).Success)
+            {
+                return $"while ({match.Groups[1].Value}){System.Environment.NewLine}{{";
+            }
+
+            // IF
+            // IF a < b => if (a < b) {
+            if ((match = Regex.Match(input, $"^IF (.+)$")).Success)
+            {
+                return $"if ({match.Groups[1].Value}){System.Environment.NewLine}{{";
+            }
+
+            // ELSE
+            // ELSE => } else {
+            if (input == "ELSE")
+            {
+                return $"}}{System.Environment.NewLine}else{System.Environment.NewLine}{{";
+            }
+
+            // ELSE IF
+            // ELSE IF a < b => } else if (a < b) {
+            if ((match = Regex.Match(input, $"ELSE IF (.+)$")).Success)
+            {
+                return $"}}{System.Environment.NewLine}else if ({match.Groups[1].Value}){System.Environment.NewLine}{{";
             }
 
             throw new NotSupportedException();
