@@ -244,7 +244,7 @@ app {
     --bg-variable: #112;
     --bg-interpolated: #121;
     --fg-primary: #fff;
-    --fg-secondary: #68f;
+    --fg-secondary: #fec34d;
     --fg-dark: #888;
     --fg-light: #fff;
     --fg-hit: greenyellow;
@@ -673,5 +673,14 @@ a:hover {
     border-radius: 5px;
     background-color: var(--bg-secondary);
     display: block;
+}
+
+.documentation-content h1,
+.documentation-content h2,
+.documentation-content h3,
+.documentation-content h4,
+.documentation-content h5,
+.documentation-content h6 {
+    color: var(--fg-secondary);
 }
 /* -- DOCUMENTATION */
