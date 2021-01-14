@@ -1,0 +1,30 @@
+﻿@page "/docs"
+@using System.IO
+@using OpenBullet2.Helpers  
+@inject NavigationManager Nav
+
+<div class="mb-3">
+    <h3>Sections:</h3>
+    <ul>
+        @foreach (var s in sections)
+        {
+            <li>
+                <a href="#" @onclick="@(() => Nav.NavigateTo($"docs/{s}/"))">
+                    @s.BeautifyName()
+                </a>
+                <br />
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    private string[] sections = Array.Empty<string>();
+
+    protected override void OnInitialized()
+    {
+        sections = Directory.GetDirectories("Docs/")
+            .Select(f => Path.GetFileNameWithoutExtension(f))
+            .ToArray();
+    }
+} 

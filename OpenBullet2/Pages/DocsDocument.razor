@@ -1,0 +1,51 @@
+﻿@page "/docs/{section}/{id}"
+@using System.IO
+@using OpenBullet2.Helpers 
+@inject NavigationManager Nav
+
+@if (content != null)
+{
+    <div class="documentation-content">
+        <MarkdownRenderer MarkdownContent="@content" />
+    </div>
+}
+
+@if (sectionContents.Length > 0)
+{
+    <div>
+        <h3 class="mt-5">Related documents:</h3>
+        <ul>
+            @foreach (var c in sectionContents)
+            {
+                <li>
+                    <a href="#" @onclick="@(() => Nav.NavigateTo($"docs/{Section}/{c}"))">
+                        @c.BeautifyName()
+                    </a>
+                    <br />
+                </li>
+            }
+        </ul>
+    </div>
+}
+<a class="mb-3" href="#" @onclick="@(() => Nav.NavigateTo("docs"))">All sections</a>
+
+@code {
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Section { get; set; }
+    private string content = string.Empty;
+    private string[] sectionContents = Array.Empty<string>();
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            content = File.ReadAllText($"Docs/{Section}/{Id}.md");
+        }
+
+        sectionContents = Directory.GetFiles($"Docs/{Section}")
+            .Where(f => f.EndsWith(".md"))
+            .Select(f => Path.GetFileNameWithoutExtension(f))
+            .Where(f => f != Id)
+            .ToArray();
+    }
+} 

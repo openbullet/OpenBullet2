@@ -341,6 +341,7 @@ a:hover {
 
 .footer-buttons a {
     color: var(--fg-primary);
+    margin-top: 8px;
 }
 
 .footer-buttons a:hover {
@@ -665,3 +666,12 @@ a:hover {
     cursor: pointer;
 }
 /* -- TREE VIEW */
+
+/* DOCUMENTATION -- */
+.documentation-content pre code {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--bg-secondary);
+    display: block;
+}
+/* -- DOCUMENTATION */

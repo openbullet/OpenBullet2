@@ -142,8 +142,9 @@
 
 <div class="navbar-footer float-left text-center mb-3 d-none d-md-block">
     <div class="footer-buttons">
-        <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+        <img class="culture-flag-small" style="margin-right: 5px;" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
         <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>
+        <a href="docs"><span class="oi oi-book"></span></a>
     </div>
     <span class="version-label">@version</span>
 </div>

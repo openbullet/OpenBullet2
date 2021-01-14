@@ -1,0 +1,34 @@
+﻿@page "/docs/{section}"
+@using System.IO
+@using OpenBullet2.Helpers 
+@inject NavigationManager Nav
+
+<div>
+    <h3>Documents:</h3>
+    <ul>
+        @foreach (var c in sectionContents)
+        {
+            <li>
+                <a href="#" @onclick="@(() => Nav.NavigateTo($"docs/{Section}/{c}"))">
+                    @c.BeautifyName()
+                </a>
+                <br />
+            </li>
+        }
+    </ul>
+</div>
+<a class="mb-3" href="#" @onclick="@(() => Nav.NavigateTo("docs"))">All sections</a>
+
+@code {
+    [Parameter] public string Section { get; set; }
+    private string content = string.Empty;
+    private string[] sectionContents = Array.Empty<string>();
+
+    protected override void OnInitialized()
+    {
+        sectionContents = Directory.GetFiles($"Docs/{Section}")
+            .Where(f => f.EndsWith(".md"))
+            .Select(f => Path.GetFileNameWithoutExtension(f))
+            .ToArray();
+    }
+} 
