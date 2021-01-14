@@ -169,7 +169,7 @@
     <value>Qui è dove puoi impostare degli %endpoint% di condivisione per le tue config, in modo che altre persone vi possano accedere. Puoi %creare% endpoint e %aggiungere% config, e anche specificare le %Chiavi Api% che sono autorizzate a ricevere le config.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Per condividere le config con un amico, devi creare un endpoint, aggiungervi delle config, impostare almeno una chiave epi e mandarla al tuo amico, assieme all'%URL% del tuo endpoint. Per esempio, se la tua istanza di OpenBullet 2 è raggiungibile su `1.1.1.1:5000` il tuo amico deve scrivere `http://1.1.1.1:5000/api/shared/configs/ROUTE` dove %ROUTE% è il nome che hai dato all'endpoint.</value>
+    <value>Per condividere le config con un amico, devi creare un endpoint, aggiungervi delle config, impostare almeno una chiave api e mandarla al tuo amico, assieme all'%URL% del tuo endpoint. Per esempio, se la tua istanza di OpenBullet 2 è raggiungibile su `1.1.1.1:5000` il tuo amico deve scrivere `http://1.1.1.1:5000/api/shared/configs/ROUTE` dove %ROUTE% è il nome che hai dato all'endpoint.</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Ultima modifica</value>
