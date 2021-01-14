@@ -341,11 +341,15 @@ a:hover {
 
 .footer-buttons a {
     color: var(--fg-primary);
-    margin-top: 8px;
 }
 
 .footer-buttons a:hover {
     color: var(--fg-secondary);
+}
+
+.footer-buttons a span{
+    margin-top: 5px !important;
+    top: 0px;
 }
 /* -- NAVMENU */
 
