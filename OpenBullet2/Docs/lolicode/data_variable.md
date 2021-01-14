@@ -1,14 +1,23 @@
 ﻿### The data variable
 This variable contains all data related to the current bot.
-
-##### data.Line
-- `data.Line.Data` (string) gets the data line assigned to the bot.
-- `data.Line.Retries` (int) gets the amount of times the data has been retried.
+##### Useful properties
+- `data.UseProxy` (`bool`) whether to use the proxy assigned to the bot
+- `data.STATUS` (`string`) the current status of the bot
+- `data.RAWSOURCE` (`byte[]`) the content of the last http response received
+- `data.SOURCE` (`string`) same as above but as a string
+- `data.ADDRESS` (`string`) the absolute uri of the last http response (after redirection)
+- `data.RESPONSECODE` (`int`) the status code of the last http response
+- `data.COOKIES` (`Dictionary<string, string>`) the cookies sent or received so far
+- `data.HEADERS` (`Dictionary<string, string>`) the headers of the last http response
+- `data.Objects` (`Dictionary<string, object>`) holds stateful objects for cross-block use
+- `data.MarkedForCapture` (`List<string>`) all the names of variables marked for capture
+- `data.Line.Data` (`string`) the whole (unsplit) data line assigned to the bot
+- `data.Line.Retries` (`int`) the amount of times the data has been retried
+- `data.Proxy.Host` (`string`) note: proxy is null if proxies are off
+- `data.Proxy.Port` (`int`) note: proxy is null if proxies are off
 ---
-##### data.Proxy
-null if no proxy, otherwise
-- `data.Proxy.Host` (string)
-- `data.Proxy.Port` (int)
----
-
-[UNFINISHED]
+##### Useful methods
+- `data.MarkForCapture(string varName)` adds the variable name to the `data.MarkedForCapture` list
+- `data.Logger.Log(string message, string htmlColor, bool canViewAsHtml)` htmlColor must be e.g. `#fff` or `while`
+- `data.Logger.Log(IEnumerable<string> enumerable, string htmlColor, bool canViewAsHtml)`
+- `data.Logger.Clear()` clears the log
