@@ -11,10 +11,18 @@ This variable contains all data related to the current bot.
 - `data.HEADERS` (`Dictionary<string, string>`) the headers of the last http response
 - `data.Objects` (`Dictionary<string, object>`) holds stateful objects for cross-block use
 - `data.MarkedForCapture` (`List<string>`) all the names of variables marked for capture
+
+###### Line
 - `data.Line.Data` (`string`) the whole (unsplit) data line assigned to the bot
 - `data.Line.Retries` (`int`) the amount of times the data has been retried
-- `data.Proxy.Host` (`string`) note: proxy is null if proxies are off
-- `data.Proxy.Port` (`int`) note: proxy is null if proxies are off
+
+###### Proxy
+Note: proxy is null if proxies are off, so always make a null check first
+- `data.Proxy.Host` (`string`)
+- `data.Proxy.Port` (`int`)
+- `data.Proxy.Username` (`string`)
+- `data.Proxy.Password` (`string`)
+- `data.Proxy.Type` (`ProxyType`) can be `Http`/`Socks4`/`Socks5`
 ---
 ##### Useful methods
 - `data.MarkForCapture(string varName)` adds the variable name to the `data.MarkedForCapture` list
