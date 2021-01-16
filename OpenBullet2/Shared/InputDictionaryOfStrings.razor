@@ -1,6 +1,6 @@
 ﻿@using RuriLib.Extensions 
 
-<InputTextArea @oninput="OnDictionaryChanged" @bind-Value="joinedDict" />
+<InputTextArea class="@CssClass" @oninput="OnDictionaryChanged" @bind-Value="joinedDict" />
 
 @code {
     private Dictionary<string, string> dictionary;
@@ -16,6 +16,7 @@
     }
 
     [Parameter] public EventCallback<Dictionary<string, string>> DictionaryChanged { get; set; }
+    [Parameter] public string CssClass { get; set; }
 
     private string joinedDict;
 

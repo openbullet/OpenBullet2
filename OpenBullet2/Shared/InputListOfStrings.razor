@@ -1,4 +1,4 @@
-﻿<InputTextArea @oninput="OnListChanged" @bind-Value="joinedList" />
+﻿<InputTextArea class="@CssClass" @oninput="OnListChanged" @bind-Value="joinedList" />
 
 @code {
     private List<string> list;
@@ -13,6 +13,7 @@
     }
 
     [Parameter] public EventCallback<List<string>> ListChanged { get; set; }
+    [Parameter] public string CssClass { get; set; }
 
     private string joinedList;
 
