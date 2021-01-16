@@ -159,12 +159,14 @@
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         try { ConfigService.OnConfigSelected -= OnConfigSelected; } catch { }
 
         ConfigService.OnConfigSelected += OnConfigSelected;
         OnConfigSelected(this, ConfigService.SelectedConfig);
+
+        await js.InvokeVoidAsync("registerNavMenu", DotNetObjectReference.Create(this));
     }
 
     private async Task ToggleNavMenu()
@@ -183,7 +185,8 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task SaveConfig()
+    [JSInvokable]
+    public async Task SaveConfig()
     {
         if (ConfigService.SelectedConfig == null)
         {

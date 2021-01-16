@@ -23,3 +23,17 @@ function setSidebarMargin(margin) {
     var element = document.getElementsByClassName("sidebar")[0];
     element.style.marginLeft = margin;
 }
+
+function registerNavMenu(navMenu) {
+    this.navMenu = navMenu;
+}
+
+// Bind CTRL+S only for some pages
+document.onkeydown = function (event) {
+    if (window.location.href.includes("config/edit")) {
+        if (event.ctrlKey && event.keyCode == 83) {
+            event.preventDefault();
+            navMenu.invokeMethodAsync('SaveConfig');
+        }
+    }
+};
