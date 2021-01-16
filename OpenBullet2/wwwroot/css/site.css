@@ -109,6 +109,7 @@ app {
     .sidebar .nav-item {
         font-size: 0.9rem;
         padding-bottom: 0.5rem;
+        max-width: 230px;
     }
 
         .sidebar .nav-item a.active, .sidebar .nav-item a:hover {

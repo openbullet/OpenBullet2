@@ -14,6 +14,11 @@ function debuggerScrollToBottom() {
     }
 }
 
+function setSidebarWidth(width) {
+    var element = document.getElementsByClassName("sidebar")[0];
+    element.style.width = width;
+}
+
 function setSidebarMargin(margin) {
     var element = document.getElementsByClassName("sidebar")[0];
     element.style.marginLeft = margin;
