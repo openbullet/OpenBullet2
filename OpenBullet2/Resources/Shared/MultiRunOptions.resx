@@ -129,6 +129,9 @@
   <data name="DataPool" xml:space="preserve">
     <value>Data pool</value>
   </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
   <data name="Help1x00" xml:space="preserve">
     <value>What are these options?</value>
   </data>
@@ -188,6 +191,12 @@
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
     <value>No config selected</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>On</value>
   </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Proxy mode</value>

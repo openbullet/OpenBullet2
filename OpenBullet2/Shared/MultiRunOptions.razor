@@ -39,7 +39,7 @@
                 <InputSelect @bind-Value="Options.ProxyMode">
                     @foreach (var name in Enum.GetNames(typeof(JobProxyMode)))
                     {
-                        <option value="@name">@name</option>
+                        <option value="@name">@Loc[name]</option>
                     }
                 </InputSelect>
                 <br />
