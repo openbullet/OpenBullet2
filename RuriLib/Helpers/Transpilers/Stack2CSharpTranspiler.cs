@@ -19,8 +19,9 @@ namespace RuriLib.Helpers.Transpilers
 
             foreach (var block in blocks.Where(b => !b.Disabled))
             {
+                writer.WriteLine($"// BLOCK: {block.Label}");
                 writer.WriteLine($"data.ExecutingBlock({CSharpWriter.SerializeString(block.Label)});");
-                writer.Write(block.ToCSharp(declaredVariables, settings));
+                writer.WriteLine(block.ToCSharp(declaredVariables, settings));
             }
 
             return writer.ToString();
