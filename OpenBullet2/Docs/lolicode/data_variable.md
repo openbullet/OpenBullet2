@@ -17,7 +17,7 @@ This variable contains all data related to the current bot.
 - `data.Line.Retries` (`int`) the amount of times the data has been retried
 
 ###### Proxy
-Note: proxy is null if proxies are off, so always make a null check first
+Note: `data.Proxy` is null if proxies are off, so always make a null check first
 - `data.Proxy.Host` (`string`)
 - `data.Proxy.Port` (`int`)
 - `data.Proxy.Username` (`string`)
