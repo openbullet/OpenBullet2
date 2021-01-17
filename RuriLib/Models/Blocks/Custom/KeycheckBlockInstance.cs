@@ -4,6 +4,7 @@ using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Conditions.Comparisons;
 using RuriLib.Models.Configs;
 using System;
@@ -266,7 +267,18 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.WriteLine($"  {{ data.STATUS = \"{keychain.ResultStatus}\"; return; }}");
             }
 
-            writer.WriteLine($"else if ({CSharpWriter.FromSetting(banIfNoMatch)})");
+            // The whole purpose of this is to make the code a bit prettier
+            if (banIfNoMatch.InputMode == SettingInputMode.Fixed)
+            {
+                if (((BoolSetting)banIfNoMatch.FixedSetting).Value)
+                {
+                    writer.WriteLine("else");
+                }
+            }
+            else
+            {
+                writer.WriteLine($"else if ({CSharpWriter.FromSetting(banIfNoMatch)})");
+            }
 
             if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
                 writer.WriteLine("  data.STATUS = \"BAN\";");
