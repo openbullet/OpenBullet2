@@ -69,7 +69,7 @@
                             }
                             else
                             {
-                                <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Progress * 100).ToString("0.00"))%)</span>
+                                <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
                                 <span><b>CPM: </b>@x.CPM</span>
                             }
                             break;
