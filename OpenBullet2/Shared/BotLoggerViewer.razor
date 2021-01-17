@@ -28,9 +28,16 @@
 @code {
     [Parameter] public IBotLogger BotLogger { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        await Refresh();
+    }
+
     public async Task Refresh()
     {
         await InvokeAsync(StateHasChanged);
+        await js.InvokeVoidAsync("adjustTextAreas");
         await js.InvokeVoidAsync("debuggerScrollToBottom");
     }
 

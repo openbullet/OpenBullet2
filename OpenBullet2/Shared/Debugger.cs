@@ -46,12 +46,10 @@ namespace OpenBullet2.Shared
         private BotLoggerViewer loggerViewer;
         private Browser lastBrowser;
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             options = VolatileSettings.DebuggerOptions;
             logger = VolatileSettings.DebuggerLog;
-            await js.InvokeVoidAsync("adjustTextAreas");
-            await js.InvokeVoidAsync("debuggerScrollToBottom");
         }
 
         private async Task Run()
@@ -159,8 +157,6 @@ namespace OpenBullet2.Shared
 
             await loggerViewer.Refresh();
             await InvokeAsync(StateHasChanged);
-            await js.InvokeVoidAsync("adjustTextAreas");
-            await js.InvokeVoidAsync("debuggerScrollToBottom");
             StateHasChanged();
         }
 
