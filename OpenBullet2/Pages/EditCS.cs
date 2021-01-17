@@ -30,10 +30,9 @@ namespace OpenBullet2.Pages
             {
                 try
                 {
-                    var stack = Config.Mode == ConfigMode.Stack
-                    ? Config.Stack
-                    : new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
-                    Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack, Config.Settings);
+                    Config.CSharpScript = Config.Mode == ConfigMode.Stack
+                        ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings)
+                        : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
                 }
                 catch (Exception ex)
                 {

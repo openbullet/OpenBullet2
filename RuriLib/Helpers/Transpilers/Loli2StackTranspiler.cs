@@ -2,17 +2,16 @@
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.Transpilers
 {
-    public class Loli2StackTranspiler
+    public static class Loli2StackTranspiler
     {
-        private readonly string validTokenRegex = "[A-Za-z][A-Za-z0-9_]*";
+        private static readonly string validTokenRegex = "[A-Za-z][A-Za-z0-9_]*";
 
-        public List<BlockInstance> Transpile(string script)
+        public static List<BlockInstance> Transpile(string script)
         {
             if (string.IsNullOrWhiteSpace(script))
                 return new List<BlockInstance>();

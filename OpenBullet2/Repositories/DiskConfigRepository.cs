@@ -83,16 +83,9 @@ namespace OpenBullet2.Repositories
             {
                 try
                 {
-                    List<BlockInstance> stack = null;
-
-                    if (config.Mode == ConfigMode.Stack)
-                    {
-                        stack = config.Stack;
-                    }
-                    else
-                    {
-                        stack = new Loli2StackTranspiler().Transpile(config.LoliCodeScript);
-                    }
+                    var stack = config.Mode == ConfigMode.Stack
+                        ? config.Stack
+                        : Loli2StackTranspiler.Transpile(config.LoliCodeScript);
 
                     // Write the required plugins in the config's metadata
                     config.Metadata.Plugins = stack.Select(b => b.Descriptor.AssemblyFullName)

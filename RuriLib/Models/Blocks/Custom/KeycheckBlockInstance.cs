@@ -228,7 +228,7 @@ namespace RuriLib.Models.Blocks.Custom
                 writer.WriteLine($"if ({CSharpWriter.FromSetting(banIfNoMatch)})");
 
                 if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
-                    writer.WriteLine("  data.STATUS = \"BAN\";");
+                    writer.WriteLine(" { data.STATUS = \"BAN\"; }");
 
                 else
                     writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
@@ -260,7 +260,7 @@ namespace RuriLib.Models.Blocks.Custom
 
                 // Continue on this status
                 if (settings.GeneralSettings.ContinueStatuses.Contains(keychain.ResultStatus))
-                    writer.WriteLine($"  data.STATUS = \"{keychain.ResultStatus}\";");
+                    writer.WriteLine($" {{ data.STATUS = \"{keychain.ResultStatus}\"; }}");
                
                 // Do not continue on this status (return)
                 else
@@ -281,7 +281,7 @@ namespace RuriLib.Models.Blocks.Custom
             }
 
             if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
-                writer.WriteLine("  data.STATUS = \"BAN\";");
+                writer.WriteLine(" { data.STATUS = \"BAN\"; }");
 
             else
                 writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
@@ -291,7 +291,7 @@ namespace RuriLib.Models.Blocks.Custom
 
         private string ConvertKey(Key key)
         {
-            string comparison = key switch
+            var comparison = key switch
             {
                 BoolKey x => $"BoolComparison.{x.Comparison}",
                 StringKey x => $"StrComparison.{x.Comparison}",
@@ -302,8 +302,8 @@ namespace RuriLib.Models.Blocks.Custom
                 _ => throw new Exception("Unknown key type")
             };
 
-            string left = CSharpWriter.FromSetting(key.Left);
-            string right = CSharpWriter.FromSetting(key.Right);
+            var left = CSharpWriter.FromSetting(key.Left);
+            var right = CSharpWriter.FromSetting(key.Right);
 
             return $"Conditions.Check({left}, {comparison}, {right})";
         }

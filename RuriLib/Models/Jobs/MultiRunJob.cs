@@ -209,10 +209,10 @@ namespace RuriLib.Models.Jobs
 
             // If we're in LoliCode mode, build the Stack
             if (Config.Mode == ConfigMode.LoliCode)
-                Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
+                Config.Stack = Loli2StackTranspiler.Transpile(Config.LoliCodeScript);
 
             // Build the C# script
-            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
+            Config.CSharpScript = Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings);
             var script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
             script.Compile();
 

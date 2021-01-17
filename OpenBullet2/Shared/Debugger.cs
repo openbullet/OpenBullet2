@@ -59,12 +59,9 @@ namespace OpenBullet2.Shared
                 // Build the C# script if not in CSharp mode
                 if (Config.Mode != ConfigMode.CSharp)
                 {
-                    // If we're in LoliCode mode, build the Stack
-                    if (Config.Mode == ConfigMode.LoliCode)
-                        Config.Stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
-
-                    // Transpile the Stack to C#
-                    Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(Config.Stack, Config.Settings);
+                    Config.CSharpScript = Config.Mode == ConfigMode.Stack
+                        ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings)
+                        : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
                 }
             }
             catch (Exception ex)

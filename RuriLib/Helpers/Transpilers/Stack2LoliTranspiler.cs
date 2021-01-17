@@ -4,13 +4,13 @@ using System.IO;
 
 namespace RuriLib.Helpers.Transpilers
 {
-    public class Stack2LoliTranspiler
+    public static class Stack2LoliTranspiler
     {
-        public string Transpile(List<BlockInstance> blocks)
+        public static string Transpile(List<BlockInstance> blocks)
         {
             using var writer = new StringWriter();
 
-            for (int i = 0; i < blocks.Count; i++)
+            for (var i = 0; i < blocks.Count; i++)
             {
                 var block = blocks[i];
 

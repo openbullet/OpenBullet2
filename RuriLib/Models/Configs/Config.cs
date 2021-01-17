@@ -43,11 +43,10 @@ namespace RuriLib.Models.Configs
 
             var mappings = new Dictionary<(ConfigMode, ConfigMode), Action>
             {
-                { (ConfigMode.Stack, ConfigMode.LoliCode), () => LoliCodeScript = new Stack2LoliTranspiler().Transpile(Stack) },
-                { (ConfigMode.Stack, ConfigMode.CSharp), () => CSharpScript = new Stack2CSharpTranspiler().Transpile(Stack, Settings) },
-                { (ConfigMode.LoliCode, ConfigMode.Stack), () => Stack = new Loli2StackTranspiler().Transpile(LoliCodeScript) },
-                { (ConfigMode.LoliCode, ConfigMode.CSharp), () => CSharpScript = new Stack2CSharpTranspiler()
-                    .Transpile(new Loli2StackTranspiler().Transpile(LoliCodeScript), Settings) }
+                { (ConfigMode.Stack, ConfigMode.LoliCode), () => LoliCodeScript = Stack2LoliTranspiler.Transpile(Stack) },
+                { (ConfigMode.Stack, ConfigMode.CSharp), () => CSharpScript = Stack2CSharpTranspiler.Transpile(Stack, Settings) },
+                { (ConfigMode.LoliCode, ConfigMode.Stack), () => Stack = Loli2StackTranspiler.Transpile(LoliCodeScript) },
+                { (ConfigMode.LoliCode, ConfigMode.CSharp), () => CSharpScript = Loli2CSharpTranspiler.Transpile(LoliCodeScript, Settings) }
             };
 
             if (mappings.ContainsKey((Mode, newMode)))
@@ -72,7 +71,7 @@ namespace RuriLib.Models.Configs
                 {
                     ConfigMode.CSharp => true,
                     ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
-                    ConfigMode.LoliCode => new Loli2StackTranspiler().Transpile(LoliCodeScript)
+                    ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript)
                         .Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
                     _ => throw new NotImplementedException(),
                 };
