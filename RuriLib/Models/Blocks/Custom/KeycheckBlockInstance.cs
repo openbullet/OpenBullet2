@@ -285,7 +285,7 @@ namespace RuriLib.Models.Blocks.Custom
 
             else
                 writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
-            
+
             return writer.ToString();
         }
 
@@ -305,7 +305,7 @@ namespace RuriLib.Models.Blocks.Custom
             var left = CSharpWriter.FromSetting(key.Left);
             var right = CSharpWriter.FromSetting(key.Right);
 
-            return $"Conditions.Check({left}, {comparison}, {right})";
+            return $"CheckCondition(data, {left}, {comparison}, {right})";
         }
     }
 }

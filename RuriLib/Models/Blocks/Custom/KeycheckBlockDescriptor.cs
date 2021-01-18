@@ -16,7 +16,7 @@ namespace RuriLib.Models.Blocks.Custom
                 BackgroundColor = "#1e90ff",
                 ForegroundColor = "#000",
                 Path = "RuriLib.Blocks.Conditions",
-                Namespace = "RuriLib.Functions.Conditions",
+                Namespace = "RuriLib.Blocks.Conditions.Methods",
                 Description = "Blocks that have to do with checking conditions"
             };
             Parameters = new Dictionary<string, BlockParameter>

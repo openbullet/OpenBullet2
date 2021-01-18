@@ -20,7 +20,16 @@
         }
         else
         {
-            <p style="color: @entry.Color;">@entry.Message</p>
+            <p style="color: @entry.Color;">
+                @if (string.IsNullOrWhiteSpace(entry.Message))
+                {
+                    @((MarkupString)"&nbsp;");
+                }
+                else
+                {
+                    @entry.Message
+                }
+            </p>
         }
     }
 </div>

@@ -54,6 +54,7 @@ namespace RuriLib.Logging
                 Color = LogColors.ChromeYellow
             };
 
+            entries.Add(new BotLoggerEntry { Message = string.Empty });
             entries.Add(entry);
             NewEntry?.Invoke(this, entry);
         }
