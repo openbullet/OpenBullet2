@@ -1,6 +1,4 @@
-﻿using RuriLib.Models.UserAgents;
-
-namespace RuriLib.Models.UserAgents
+﻿namespace RuriLib.Providers.UserAgents
 {
     public interface IRandomUAProvider
     {

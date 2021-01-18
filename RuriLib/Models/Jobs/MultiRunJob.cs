@@ -10,11 +10,9 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data;
-using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
-using RuriLib.Models.UserAgents;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
@@ -38,7 +36,7 @@ namespace RuriLib.Models.Jobs
         public List<ProxySource> ProxySources { get; set; } = new List<ProxySource>();
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
-        public IRandomUAProvider RandomUAProvider { get; set; }
+        public Bots.Providers Providers { get; set; }
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
@@ -231,7 +229,7 @@ namespace RuriLib.Models.Jobs
 
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
-            PythonCompilerOptions pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
+            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
 
             long index = 0;
@@ -241,8 +239,8 @@ namespace RuriLib.Models.Jobs
                 {
                     Job = this,
                     ProxyPool = proxyPool,
-                    BotData = new BotData(clonedSettings, Config.Settings, new BotLogger(), RandomUAProvider, random,
-                        new DataLine(line, wordlistType), null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
+                    BotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(line, wordlistType),
+                        null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
                     Globals = globalVariables,
                     Script = script,
                     CustomInputsAnswers = CustomInputsAnswers,

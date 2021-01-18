@@ -5,7 +5,6 @@ using RuriLib.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
-using RuriLib.Models.UserAgents;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

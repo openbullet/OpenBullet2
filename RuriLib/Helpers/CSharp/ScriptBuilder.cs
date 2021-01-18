@@ -1,15 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using RuriLib.Helpers.Blocks;
-using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Bots;
-using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
-using RuriLib.Models.Variables;
 using RuriLib.Services;
 using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,7 +47,7 @@ namespace RuriLib.Helpers.CSharp
         /// </summary>
         public static IEnumerable<string> GetUsings()
         {
-            List<string> usings = new List<string>
+            var usings = new List<string>
             {
                 "RuriLib.Logging",
                 "RuriLib.Extensions",

@@ -18,7 +18,6 @@ using BlazorDownloadFile;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Proxies;
-using RuriLib.Models.UserAgents;
 using OpenBullet2.Helpers;
 using System;
 using System.Threading;
@@ -26,6 +25,8 @@ using System.IO;
 using OpenBullet2.Logging;
 using RuriLib.Logging;
 using System.Net;
+using RuriLib.Providers.UserAgents;
+using RuriLib.Providers.RandomNumbers;
 
 namespace OpenBullet2
 {
@@ -88,6 +89,7 @@ namespace OpenBullet2
             services.AddSingleton(_ => new PersistentSettingsService("UserData"));
             services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
             services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
+            services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
             services.AddSingleton<MemoryJobLogger>();
             services.AddSingleton<IJobLogger>(service =>
                 new FileJobLogger(service.GetService<RuriLibSettingsService>(),

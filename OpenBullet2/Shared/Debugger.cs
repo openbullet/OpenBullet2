@@ -5,16 +5,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazored.Modal;
 using Blazored.Modal.Services;
 using IronPython.Compiler;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
 using OpenBullet2.Services;
+using OpenBullet2.Shared.Forms;
 using PuppeteerSharp;
 using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
@@ -25,8 +24,13 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
-using RuriLib.Models.UserAgents;
 using RuriLib.Models.Variables;
+using RuriLib.Providers.Captchas;
+using RuriLib.Providers.Proxies;
+using RuriLib.Providers.Puppeteer;
+using RuriLib.Providers.RandomNumbers;
+using RuriLib.Providers.Security;
+using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 
 namespace OpenBullet2.Shared
@@ -35,6 +39,7 @@ namespace OpenBullet2.Shared
     {
         [Inject] IModalService Modal { get; set; }
         [Inject] IRandomUAProvider RandomUAProvider { get; set; }
+        [Inject] IRNGProvider RNGProvider { get; set; }
         [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] PluginRepository PluginRepo { get; set; }
         [Inject] VolatileSettingsService VolatileSettings { get; set; }
@@ -81,17 +86,22 @@ namespace OpenBullet2.Shared
             isRunning = true;
             cts = new CancellationTokenSource();
 
-            var clonedSettings = Cloner.Clone(RuriLibSettings.RuriLibSettings);
             var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
             var dataLine = new DataLine(options.TestData, wordlistType);
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
+            var providers = new Providers(RuriLibSettings)
+            {
+                RandomUA = RandomUAProvider,
+                RNG = RNGProvider
+            };
+
             // Build the BotData
-            BotData data = new BotData(clonedSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy, options.UseProxy);
+            var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
             data.Objects.Add("httpClient", new HttpClient());
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
-            PythonCompilerOptions pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
+            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
             data.Objects.Add("ironPyEngine", pyengine);
 

@@ -144,7 +144,7 @@ namespace RuriLib.Blocks.Utility.Files
         [Block("Copies a file to a new location")]
         public static void FileCopy(BotData data, string originPath, string destinationPath)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
             {
                 FileUtils.ThrowIfNotInCWD(originPath);
                 FileUtils.ThrowIfNotInCWD(destinationPath);
@@ -163,7 +163,7 @@ namespace RuriLib.Blocks.Utility.Files
         [Block("Moves a file to a new location")]
         public static void FileMove(BotData data, string originPath, string destinationPath)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
             {
                 FileUtils.ThrowIfNotInCWD(originPath);
                 FileUtils.ThrowIfNotInCWD(destinationPath);
@@ -182,7 +182,7 @@ namespace RuriLib.Blocks.Utility.Files
         [Block("Deletes a file")]
         public static void FileDelete(BotData data, string path)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             lock (FileLocker.GetHandle(path))
@@ -197,7 +197,7 @@ namespace RuriLib.Blocks.Utility.Files
         [Block("Checks if a folder exists")]
         public static bool FolderExists(BotData data, string path)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             var exists = Directory.Exists(path);
@@ -209,7 +209,7 @@ namespace RuriLib.Blocks.Utility.Files
         [Block("Creates a directory in the given path")]
         public static void CreatePath(BotData data, string path)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             FileUtils.CreatePath(path);
@@ -219,7 +219,7 @@ namespace RuriLib.Blocks.Utility.Files
 
         public static void FolderDelete(BotData data, string path)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             Directory.Delete(path);
@@ -231,7 +231,7 @@ namespace RuriLib.Blocks.Utility.Files
 
         private static async Task<TOut> ExecuteFileOperation<TIn, TOut>(BotData data, string path, TIn parameter, Func<string, TIn, Task<TOut>> func)
         {
-            if (data.GlobalSettings.GeneralSettings.RestrictBlocksToCWD)
+            if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             FileUtils.CreatePath(path);

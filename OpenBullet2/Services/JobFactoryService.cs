@@ -6,7 +6,12 @@ using OpenBullet2.Repositories;
 using RuriLib.Logging;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
-using RuriLib.Models.UserAgents;
+using RuriLib.Providers.Captchas;
+using RuriLib.Providers.Proxies;
+using RuriLib.Providers.Puppeteer;
+using RuriLib.Providers.RandomNumbers;
+using RuriLib.Providers.Security;
+using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 using System;
 using System.Linq;
@@ -22,12 +27,13 @@ namespace OpenBullet2.Services
         private readonly DataPoolFactoryService dataPoolFactory;
         private readonly ProxyReloadService proxyReloadService;
         private readonly IRandomUAProvider randomUAProvider;
+        private readonly IRNGProvider rngProvider;
         private readonly IJobLogger logger;
         private readonly PluginRepository pluginRepo;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
             IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
-            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IJobLogger logger)
+            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger)
         {
             this.configService = configService;
             this.settingsService = settingsService;
@@ -37,6 +43,7 @@ namespace OpenBullet2.Services
             this.dataPoolFactory = dataPoolFactory;
             this.proxyReloadService = proxyReloadService;
             this.randomUAProvider = randomUAProvider;
+            this.rngProvider = rngProvider;
             this.logger = logger;
         }
 
@@ -74,7 +81,13 @@ namespace OpenBullet2.Services
                 Skip = options.Skip,
                 HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
                 ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
-                RandomUAProvider = randomUAProvider
+                Providers = new(settingsService)
+                {
+                    RandomUA = settingsService.RuriLibSettings.GeneralSettings.UseCustomUserAgentsList
+                        ? new DefaultRandomUAProvider(settingsService)
+                        : randomUAProvider,
+                    RNG = rngProvider
+                }
             };
 
             job.DataPool = dataPoolFactory.FromOptions(options.DataPool).Result;

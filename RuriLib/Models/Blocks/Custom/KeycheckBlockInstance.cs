@@ -237,7 +237,7 @@ namespace RuriLib.Models.Blocks.Custom
             }
 
             // Write all the keychains
-            for (int i = 0; i < nonEmpty.Count; i++)
+            for (var i = 0; i < nonEmpty.Count; i++)
             {
                 var keychain = nonEmpty[i];
 

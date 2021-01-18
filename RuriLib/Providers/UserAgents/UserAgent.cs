@@ -1,4 +1,4 @@
-﻿namespace RuriLib.Models.UserAgents
+﻿namespace RuriLib.Providers.UserAgents
 {
     public struct UserAgent
     {

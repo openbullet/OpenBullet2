@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using RuriLib.Models.UserAgents;
+using RuriLib.Providers.UserAgents;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,7 @@ namespace OpenBullet2.Services
             var json = File.ReadAllText(jsonFile);
             var array = JArray.Parse(json);
 
-            List<UserAgent> agents = new List<UserAgent>();
+            var agents = new List<UserAgent>();
             foreach (var elem in array)
             {
                 agents.Add(new UserAgent(elem.Value<string>("userAgent"),
@@ -37,7 +37,7 @@ namespace OpenBullet2.Services
         {
             var valid = agents.Where(a => BelongsToPlatform(a.platform, platform));
 
-            List<UserAgent> distribution = new List<UserAgent>();
+            var distribution = new List<UserAgent>();
             double cumulative = 0;
             foreach (var elem in valid)
             {
@@ -48,23 +48,20 @@ namespace OpenBullet2.Services
             return distribution.ToArray();
         }
 
-        private UAPlatform ConvertPlatform(string platform)
+        private UAPlatform ConvertPlatform(string platform) => platform switch
         {
-            return platform switch
-            {
-                "iPad" => UAPlatform.iPad,
-                "iPhone" => UAPlatform.iPhone,
-                "Linux aarch64" => UAPlatform.Android,
-                "Linux armv71" => UAPlatform.Android,
-                "Linux armv81" => UAPlatform.Android,
-                "Linux x86_64" => UAPlatform.Linux,
-                "MacIntel" => UAPlatform.Mac,
-                "Win32" => UAPlatform.Windows,
-                "Win64" => UAPlatform.Windows,
-                "Windows" => UAPlatform.Windows,
-                _ => UAPlatform.Windows
-            };
-        }
+            "iPad" => UAPlatform.iPad,
+            "iPhone" => UAPlatform.iPhone,
+            "Linux aarch64" => UAPlatform.Android,
+            "Linux armv71" => UAPlatform.Android,
+            "Linux armv81" => UAPlatform.Android,
+            "Linux x86_64" => UAPlatform.Linux,
+            "MacIntel" => UAPlatform.Mac,
+            "Win32" => UAPlatform.Windows,
+            "Win64" => UAPlatform.Windows,
+            "Windows" => UAPlatform.Windows,
+            _ => UAPlatform.Windows
+        };
 
         public int Total => distributions[UAPlatform.All].Length;
 
@@ -86,15 +83,12 @@ namespace OpenBullet2.Services
             return distribution.First(u => u.cumulative >= random).userAgentString;
         }
 
-        private bool BelongsToPlatform(UAPlatform current, UAPlatform required)
+        private bool BelongsToPlatform(UAPlatform current, UAPlatform required) => required switch
         {
-            return required switch
-            {
-                UAPlatform.All => true,
-                UAPlatform.Desktop => current == UAPlatform.Linux || current == UAPlatform.Mac || current == UAPlatform.Windows,
-                UAPlatform.Mobile => current == UAPlatform.iPhone || current == UAPlatform.iPad || current == UAPlatform.Android,
-                _ => current == required
-            };
-        }
+            UAPlatform.All => true,
+            UAPlatform.Desktop => current == UAPlatform.Linux || current == UAPlatform.Mac || current == UAPlatform.Windows,
+            UAPlatform.Mobile => current == UAPlatform.iPhone || current == UAPlatform.iPad || current == UAPlatform.Android,
+            _ => current == required
+        };
     }
 }

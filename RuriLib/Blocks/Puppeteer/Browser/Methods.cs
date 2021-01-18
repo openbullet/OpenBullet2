@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                 var launchOptions = new LaunchOptions
                 {
                     Args = new string[] { args },
-                    ExecutablePath = data.GlobalSettings.PuppeteerSettings.ChromeBinaryLocation,
+                    ExecutablePath = data.Providers.PuppeteerBrowser.ChromeBinaryLocation,
                     Headless = data.ConfigSettings.PuppeteerSettings.Headless,
                     DefaultViewport = null // This is important
                 };

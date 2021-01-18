@@ -4,10 +4,8 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Environment;
-using RuriLib.Models.Settings;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 using Xunit;
 using RuriLib.Blocks.Requests.Http;
@@ -22,11 +20,9 @@ namespace RuriLib.Tests.Functions.Http
     public class HttpTests
     {
         private BotData NewData() => new BotData(
-            new GlobalSettings(),
+            new(null),
             new ConfigSettings(),
             new BotLogger(),
-            null,
-            new Random(),
             new DataLine("", new WordlistType()),
             null,
             false);

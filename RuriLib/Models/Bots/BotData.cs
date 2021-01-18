@@ -2,8 +2,6 @@
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
-using RuriLib.Models.Settings;
-using RuriLib.Models.UserAgents;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -18,9 +16,8 @@ namespace RuriLib.Models.Bots
         public bool UseProxy { get; set; }
 
         public CookieContainer CookieContainer { get; set; } = new CookieContainer();
-        public GlobalSettings GlobalSettings { get; }
         public ConfigSettings ConfigSettings { get; }
-        public IRandomUAProvider RandomUAProvider { get; }
+        public Providers Providers { get; }
         public IBotLogger Logger { get; set; }
         public Random Random { get; }
         public CancellationToken CancellationToken { get; set; }
@@ -42,18 +39,17 @@ namespace RuriLib.Models.Bots
         // This list will hold the names of all variables that are marked for capture
         public List<string> MarkedForCapture { get; } = new List<string>();
 
-        public BotData(GlobalSettings globalSettings, ConfigSettings configSettings,
-            IBotLogger logger, IRandomUAProvider randomUAProvider, Random random, DataLine line, Proxy proxy = null, bool useProxy = false)
+        public BotData(Providers providers, ConfigSettings configSettings, IBotLogger logger,
+            DataLine line, Proxy proxy = null, bool useProxy = false)
         {
-            GlobalSettings = globalSettings;
+            Providers = providers;
             ConfigSettings = configSettings;
             Logger = logger;
-            RandomUAProvider = randomUAProvider;
 
             // Create a new local RNG seeded with a random seed from the global RNG
             // This is needed because when multiple threads try to access the same RNG it stops giving
             // random values after a while!
-            Random = new Random(random.Next(0, int.MaxValue));
+            Random = providers.RNG.GetNew();
 
             Line = line;
             Proxy = proxy;
