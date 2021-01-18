@@ -239,7 +239,7 @@ namespace RuriLib.Models.Jobs
                 {
                     Job = this,
                     ProxyPool = proxyPool,
-                    BotData = new BotData(settings.RuriLibSettings, Config.Settings, new BotLogger(), null, random,
+                    BotData = new BotData(settings.RuriLibSettings, Config.Settings, new BotLogger(), RandomUAProvider, random,
                         new DataLine(line, wordlistType), null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
                     Globals = globalVariables,
                     Script = script,
