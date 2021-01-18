@@ -7,116 +7,115 @@
 @using System.Globalization
 @using RuriLib.Models.Hits
 @using RuriLib.Models.Jobs.StartConditions 
+@using RuriLib.Extensions 
 @implements IDisposable 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunJobViewer> Loc
 
-<div>
+<div class="multirun-options-overview mb-3">
+    <!-- Job Options -->
     <p class="fg-custom"><b>@Loc["JobOptions"]</b></p>
-    <table class="table">
-        <tbody>
-            <tr>
-                <th scope="row">@Loc["Config"]</th>
-                <td>@Job.Config.Metadata.Name @Loc["by"] @Job.Config.Metadata.Author</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["DataPool"]</th>
-                <td>
-                    @switch (Job.DataPool)
-                    {
-                        case WordlistDataPool x:
-                            <span>@Loc["Wordlist"]: @x.Wordlist.Name</span>
-                            break;
 
-                        case FileDataPool x:
-                            <span>@Loc["File"]: @x.FileName</span>
-                            break;
+    <!-- Config -->
+    <span><b>@Loc["Config"]: </b>@Job.Config.Metadata.Name @Loc["by"] @Job.Config.Metadata.Author</span>
+    <span>
+        <img src="data:image/png;base64,@Job.Config.Metadata.Base64Image" style="width: 24px; height: 24px;" />
+    </span>
+    <br />
 
-                        case InfiniteDataPool x:
-                            <span>@Loc["InfiniteDataPool"]</span>
-                            break;
+    <!-- Data Pool -->
+    <span><b>@Loc["DataPool"]: </b></span>
+    @switch (Job.DataPool)
+    {
+        case WordlistDataPool x:
+            <span>@Loc["Wordlist"] (@x.Wordlist.Name)</span>
+            break;
 
-                        case CombinationsDataPool x:
-                            <span>@string.Format(Loc["CombinationsText"], x.CharSet, x.Length)</span>
-                            break;
+        case FileDataPool x:
+            <span>@Loc["File"] (@x.FileName)</span>
+            break;
 
-                        case RangeDataPool x:
-                            <span>@string.Format(Loc["RangeText"], x.Start, x.Amount, x.Step, x.Pad)</span>
-                            break;
-                    }
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["ProxySources"]</th>
-                <td>
-                    @foreach (var source in Job.ProxySources)
-                    {
-                        <p>
-                            @switch (source)
-                            {
-                                case GroupProxySource x:
-                                    <span class="fg-tocheck">@Loc["Group"]: @x.GroupId</span>
-                                    break;
+        case InfiniteDataPool x:
+            <span>@Loc["InfiniteDataPool"]</span>
+            break;
 
-                                case FileProxySource x:
-                                    <span class="fg-hit">@Loc["File"]: @x.FileName</span>
-                                    break;
+        case CombinationsDataPool x:
+            <span>@string.Format(Loc["CombinationsText"], x.CharSet, x.Length)</span>
+            break;
 
-                                case RemoteProxySource x:
-                                    <span class="fg-retry">@Loc["Remote"]: @x.Url</span>
-                                    break;
-                            }
-                        </p>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["ProxyMode"]</th>
-                <td>@Job.ProxyMode</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["HitOutputs"]</th>
-                <td>
-                    @foreach (var output in Job.HitOutputs)
-                    {
-                        <p>
-                            @switch (output)
-                            {
-                                case DatabaseHitOutput x:
-                                    <span class="fg-tocheck">@Loc["Database"]</span>
-                                    break;
+        case RangeDataPool x:
+            <span>@string.Format(Loc["RangeText"], x.Start, x.Amount, x.Step, x.Pad)</span>
+            break;
+    }
+    <br />
 
-                                case FileSystemHitOutput x:
-                                    <span class="fg-hit">@Loc["FileSystem"] (@x.BaseDir)</span>
-                                    break;
+    <!-- Proxy Mode -->
+    <span><b>@Loc["ProxyMode"]: </b>@Job.ProxyMode</span>
+    <br />
 
-                                case DiscordWebhookHitOutput x:
-                                    <span class="fg-retry">@Loc["DiscordWebhook"] (@x.Webhook.Substring(0, 70) ...)</span>
-                                    break;
-                            }
-                        </p>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["Skip"]</th>
-                <td>@Job.Skip</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["Bots"]</th>
-                <td>
-                    <span style="margin-right: 10px;">@Job.Bots</span>
-                    @if (!changingBots)
-                    {
-                        <button class="btn btn-sm btn-outline-primary" type="button" @onclick="ChangeBots"> @Loc["Change"]</button>
-                    }
-                    else
-                    {
-                        <span><i>@Loc["ChangingPleaseWait"]</i></span>
-                    }
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Proxy Sources -->
+    <span><b>@Loc["ProxySources"]: </b></span>
+    @foreach (var source in Job.ProxySources)
+    {
+        @switch (source)
+        {
+            case GroupProxySource x:
+                <span class="fg-tocheck ml-1">@Loc["Group"] (@x.GroupId)</span>
+                break;
+
+            case FileProxySource x:
+                <span class="fg-hit ml-1">@Loc["File"] (@x.FileName)</span>
+                break;
+
+            case RemoteProxySource x:
+                <span class="fg-retry ml-1">@Loc["Remote"] (@x.Url)</span>
+                break;
+        }
+
+    }
+    <br />
+
+    <!-- Hit Outputs -->
+    <span><b>@Loc["HitOutputs"]: </b></span>
+    @foreach (var output in Job.HitOutputs)
+    {
+        @switch (output)
+        {
+            case DatabaseHitOutput x:
+                <span class="fg-tocheck ml-1">@Loc["Database"]</span>
+                break;
+
+            case FileSystemHitOutput x:
+                <span class="fg-hit ml-1">@Loc["FileSystem"] (@x.BaseDir)</span>
+                break;
+
+            case DiscordWebhookHitOutput x:
+                <span class="fg-retry ml-1">@Loc["DiscordWebhook"] (@x.Webhook.TruncatePretty(70))</span>
+                break;
+        }
+    }
+    <br />
+
+    <!-- Skip -->
+    <span><b>@Loc["Skip"]: </b>@Job.Skip</span>
+    <br />
+
+    <!-- Bots -->
+    <span class="mr-2"><b>@Loc["Bots"]: </b>@Job.Bots</span>
+    @if (!changingBots)
+    {
+        <span class="oi oi-pencil" style="cursor: pointer;" @onclick="ChangeBots"></span>
+    }
+    else
+    {
+        <span><i>@Loc["ChangingPleaseWait"]</i></span>
+    }
+    <br />
+
+    <!-- Change Options Button -->
+    @if (Job.Status == JobStatus.Idle)
+    {
+        <button class="btn btn-sm btn-outline-primary mt-1" type="button" @onclick="ChangeOptions">@Loc["Change"]</button>
+    }
 </div>
 
 <p class="fg-custom"><b>@Loc["Controls"]</b></p>
@@ -128,7 +127,7 @@
             break;
 
         case JobStatus.Waiting:
-            <span class="mr-3">@Loc["Waiting"]...  @Loc["TimeLeft"]:</span>
+            <span class="mr-3">@Loc["Waiting"]... @Loc["TimeLeft"]:</span>
             @if (Job.StartCondition.Verify(Job)) // If already verified and about to start
             {
                 <span>00:00:00</span>

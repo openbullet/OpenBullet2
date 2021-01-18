@@ -35,6 +35,7 @@ namespace OpenBullet2.Shared
         [Inject] public MemoryJobLogger Logger { get; set; }
         [Inject] public IJobRepository JobRepo { get; set; }
         [Inject] public JobManagerService JobManager { get; set; }
+        [Inject] public NavigationManager Nav { get; set; }
 
         [Parameter] public MultiRunJob Job { get; set; }
         bool changingBots = false;
@@ -113,6 +114,11 @@ namespace OpenBullet2.Shared
                 Job.Bots = newAmount;
                 changingBots = false;
             }
+        }
+
+        private void ChangeOptions()
+        {
+            Nav.NavigateTo($"jobs/edit/{Job.Id}");
         }
 
         private void LogResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
