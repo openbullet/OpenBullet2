@@ -188,7 +188,7 @@ app {
 
 @media (max-width: 767.98px) {
     .sidebar {
-        width: unset;
+        width: unset !important;
     }
 
     .main .top-row:not(.auth) {
