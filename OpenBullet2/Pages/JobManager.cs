@@ -9,7 +9,6 @@ using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +21,6 @@ namespace OpenBullet2.Pages
         [Inject] JobManagerService Manager { get; set; }
         [Inject] IModalService Modal { get; set; }
         [Inject] NavigationManager Nav { get; set; }
-        [Inject] JobFactoryService JobFactory { get; set; }
         [Inject] public PersistentSettingsService PersistentSettings { get; set; }
         [Inject] AuthenticationStateProvider Auth { get; set; }
 
