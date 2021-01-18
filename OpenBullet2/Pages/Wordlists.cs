@@ -147,7 +147,8 @@ namespace OpenBullet2.Pages
 
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedWordlist.Name}?", Loc["Cancel"]))
             {
-                var deleteFile = await js.Confirm(Loc["AlsoDeleteFile"], 
+                // Only prompt this for uploaded lists
+                var deleteFile = selectedWordlist.FileName.StartsWith("UserData/Wordlists/") && await js.Confirm(Loc["AlsoDeleteFile"], 
                     $"{Loc["DeleteFileText1"]} {selectedWordlist.FileName} {Loc["DeleteFileText2"]}", Loc["KeepFile"]);
 
                 // Delete the wordlist from the DB and disk
