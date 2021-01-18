@@ -16,6 +16,7 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
 using OpenBullet2.Services;
 using PuppeteerSharp;
+using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
@@ -80,12 +81,13 @@ namespace OpenBullet2.Shared
             isRunning = true;
             cts = new CancellationTokenSource();
 
+            var clonedSettings = Cloner.Clone(RuriLibSettings.RuriLibSettings);
             var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
             var dataLine = new DataLine(options.TestData, wordlistType);
             var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
 
             // Build the BotData
-            BotData data = new BotData(RuriLibSettings.RuriLibSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy, options.UseProxy);
+            BotData data = new BotData(clonedSettings, Config.Settings, logger, RandomUAProvider, new Random(), dataLine, proxy, options.UseProxy);
             data.Objects.Add("httpClient", new HttpClient());
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
