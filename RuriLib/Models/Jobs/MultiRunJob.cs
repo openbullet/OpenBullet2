@@ -11,9 +11,10 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data;
 using RuriLib.Models.Hits;
-using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
+using RuriLib.Threading;
+using RuriLib.Threading.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -42,13 +43,13 @@ namespace RuriLib.Models.Jobs
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
 
         // Getters
-        public override float Progress => taskManager != null ? taskManager.Progress : -1;
-        public TimeSpan Elapsed => taskManager != null ? taskManager.Elapsed : TimeSpan.Zero;
-        public TimeSpan Remaining => taskManager != null ? taskManager.Remaining : Timeout.InfiniteTimeSpan;
-        public int CPM => taskManager != null ? taskManager.CPM : 0;
+        public override float Progress => threadManager != null ? threadManager.Progress : -1;
+        public TimeSpan Elapsed => threadManager != null ? threadManager.Elapsed : TimeSpan.Zero;
+        public TimeSpan Remaining => threadManager != null ? threadManager.Remaining : Timeout.InfiniteTimeSpan;
+        public int CPM => threadManager != null ? threadManager.CPM : 0;
 
         // Private fields
-        private TaskManager<MultiRunInput, CheckResult> taskManager { get; set; }
+        private ThreadManager<MultiRunInput, CheckResult> threadManager { get; set; }
         private ProxyPool proxyPool;
         private readonly Random random;
         private Timer tickTimer;
@@ -253,13 +254,13 @@ namespace RuriLib.Models.Jobs
                 return input;
             }
             );
-            taskManager = new TaskManager<MultiRunInput, CheckResult>(workItems, workFunction, Bots, DataPool.Size, Skip);
-            taskManager.OnResult += DataProcessed;
-            taskManager.OnStatusChanged += StatusChanged;
-            taskManager.OnTaskError += PropagateTaskError;
-            taskManager.OnError += PropagateError;
-            taskManager.OnResult += PropagateResult;
-            taskManager.OnCompleted += PropagateCompleted;
+            threadManager = new ThreadManager<MultiRunInput, CheckResult>(workItems, workFunction, Bots, DataPool.Size, Skip);
+            threadManager.OnResult += DataProcessed;
+            threadManager.OnStatusChanged += StatusChanged;
+            threadManager.OnTaskError += PropagateTaskError;
+            threadManager.OnError += PropagateError;
+            threadManager.OnResult += PropagateResult;
+            threadManager.OnCompleted += PropagateCompleted;
 
             ServicePointManager.DefaultConnectionLimit = 200;
 
@@ -269,14 +270,14 @@ namespace RuriLib.Models.Jobs
             ResetStats();
             StartTimer();
             logger?.LogInfo(Id, "All set, starting the execution");
-            await taskManager.Start();
+            await threadManager.Start();
         }
 
         public override async Task Stop()
         {
             try
             {
-                await taskManager?.Stop();
+                await threadManager?.Stop();
             }
             finally
             {
@@ -289,7 +290,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await taskManager?.Abort();
+                await threadManager?.Abort();
             }
             finally
             {
@@ -302,7 +303,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await taskManager?.Pause();
+                await threadManager?.Pause();
             }
             finally
             {
@@ -313,7 +314,7 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            await taskManager?.Resume();
+            await threadManager?.Resume();
             StartTimer();
             logger?.LogInfo(Id, "Execution resumed");
         }
@@ -334,9 +335,9 @@ namespace RuriLib.Models.Jobs
         #region Wrappers for TaskManager methods
         public async Task ChangeBots(int amount)
         {
-            if (taskManager != null)
+            if (threadManager != null)
             {
-                await taskManager.SetConcurrentTasks(amount);
+                await threadManager.SetParallelThreads(amount);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
             }
         }
@@ -398,17 +399,17 @@ namespace RuriLib.Models.Jobs
             DataErrors = 0;
         }
 
-        private void StatusChanged(object sender, TaskManagerStatus status)
+        private void StatusChanged(object sender, ThreadManagerStatus status)
         {
             Status = status switch
             {
-                TaskManagerStatus.Idle => JobStatus.Idle,
-                TaskManagerStatus.Starting => JobStatus.Starting,
-                TaskManagerStatus.Running => JobStatus.Running,
-                TaskManagerStatus.Pausing => JobStatus.Pausing,
-                TaskManagerStatus.Paused => JobStatus.Paused,
-                TaskManagerStatus.Stopping => JobStatus.Stopping,
-                TaskManagerStatus.Resuming => JobStatus.Resuming,
+                ThreadManagerStatus.Idle => JobStatus.Idle,
+                ThreadManagerStatus.Starting => JobStatus.Starting,
+                ThreadManagerStatus.Running => JobStatus.Running,
+                ThreadManagerStatus.Pausing => JobStatus.Pausing,
+                ThreadManagerStatus.Paused => JobStatus.Paused,
+                ThreadManagerStatus.Stopping => JobStatus.Stopping,
+                ThreadManagerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
 

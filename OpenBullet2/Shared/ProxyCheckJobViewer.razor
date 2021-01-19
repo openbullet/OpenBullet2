@@ -1,8 +1,8 @@
 ﻿@using RuriLib.Models.Jobs
-@using RuriLib.Models.Jobs.Threading
 @using OpenBullet2.Helpers
 @using RuriLib.Models.Jobs.StartConditions 
 @using RuriLib.Models.Proxies
+@using RuriLib.Threading.Models
 @using System.Globalization
 @using OpenBullet2.Services 
 @using OpenBullet2.Shared.Forms
@@ -160,7 +160,7 @@
             changingBots = true;
 
             if (Job.Manager != null)
-                await Job.Manager.SetConcurrentTasks(newAmount);
+                await Job.Manager.SetParallelThreads(newAmount);
 
             Job.Bots = newAmount;
             changingBots = false;

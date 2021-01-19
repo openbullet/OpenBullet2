@@ -1,8 +1,9 @@
 ﻿using RuriLib.Functions.Http;
 using RuriLib.Logging;
-using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
+using RuriLib.Threading;
+using RuriLib.Threading.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace RuriLib.Models.Jobs
         public IProxyCheckOutput ProxyOutput { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
-        public TaskManager<ProxyCheckerInput, Proxy> Manager { get; private set; }
+        public ThreadManager<ProxyCheckerInput, Proxy> Manager { get; private set; }
 
         // Stats
         public int Total { get; set; }
@@ -131,7 +132,7 @@ namespace RuriLib.Models.Jobs
                 : Proxies;
             
             var workItems = proxies.Select(p => new ProxyCheckerInput(p, Url, SuccessKey, Timeout, GeoProvider));
-            Manager = new TaskManager<ProxyCheckerInput, Proxy>(workItems, workFunction, Bots, Proxies.Count(), 0);
+            Manager = new ThreadManager<ProxyCheckerInput, Proxy>(workItems, workFunction, Bots, Proxies.Count(), 0);
             Manager.OnResult += UpdateProxy;
             Manager.OnStatusChanged += StatusChanged;
 
@@ -160,17 +161,17 @@ namespace RuriLib.Models.Jobs
             await Manager?.Resume();
         }
 
-        private void StatusChanged(object sender, TaskManagerStatus status)
+        private void StatusChanged(object sender, ThreadManagerStatus status)
         {
             Status = status switch
             {
-                TaskManagerStatus.Idle => JobStatus.Idle,
-                TaskManagerStatus.Starting => JobStatus.Starting,
-                TaskManagerStatus.Running => JobStatus.Running,
-                TaskManagerStatus.Pausing => JobStatus.Pausing,
-                TaskManagerStatus.Paused => JobStatus.Paused,
-                TaskManagerStatus.Stopping => JobStatus.Stopping,
-                TaskManagerStatus.Resuming => JobStatus.Resuming,
+                ThreadManagerStatus.Idle => JobStatus.Idle,
+                ThreadManagerStatus.Starting => JobStatus.Starting,
+                ThreadManagerStatus.Running => JobStatus.Running,
+                ThreadManagerStatus.Pausing => JobStatus.Pausing,
+                ThreadManagerStatus.Paused => JobStatus.Paused,
+                ThreadManagerStatus.Stopping => JobStatus.Stopping,
+                ThreadManagerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
         }
