@@ -37,3 +37,16 @@ document.onkeydown = function (event) {
         }
     }
 };
+
+function startRandomSetupEffect() {
+    var rand = Math.floor(Math.random() * 2);
+    switch (rand) {
+        default:
+            startRainbowLines();
+            break;
+
+        case 1:
+            startHexTiles();
+            break;
+    }
+}

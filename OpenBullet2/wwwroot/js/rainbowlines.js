@@ -1,4 +1,6 @@
-﻿var minDist = 10,
+﻿// Credits: https://codepen.io/towc/pens
+
+var minDist = 10,
     maxDist = 30,
     initialWidth = 10,
     maxLines = 100,

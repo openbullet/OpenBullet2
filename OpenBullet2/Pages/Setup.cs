@@ -21,7 +21,7 @@ namespace OpenBullet2.Pages
         {
             if (firstRender)
             {
-                await js.InvokeVoidAsync("startRainbowLines");
+                await js.InvokeVoidAsync("startRandomSetupEffect");
             }
         }
 
