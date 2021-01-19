@@ -7,7 +7,7 @@ var opts = {
       baseTime: 80,
       addedTime: 20,
       
-			colors: [ 'rgba(0,0,55,alp)', 'rgba(11,11,66,alp)', 'rgba(22,22,77,alp)' ],
+			colors: [ 'rgba(28,28,28,alp)', 'rgba(32,32,32,alp)', 'rgba(38,38,38,alp)', 'rgba(42,42,42,alp)' ],
       addedAlpha: 20,
       strokeColor: 'rgb(0,0,0)',
       
