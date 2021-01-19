@@ -319,6 +319,26 @@ a {
 a:hover {
     color: var(--fg-linkhover);
 }
+
+*::-webkit-scrollbar-track {
+    background-color: transparent !important;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+    background-color: transparent !important;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--bg-light) !important;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-light) transparent !important;
+}
 /* -- GENERIC */
 
 /* NAVMENU -- */
