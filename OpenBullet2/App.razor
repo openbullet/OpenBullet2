@@ -1,8 +1,9 @@
 ﻿@using OpenBullet2.Shared.Forms
+@inject PersistentSettingsService Settings
 
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="Settings.SetupComplete ? typeof(MainLayout) : typeof(SetupLayout)">
             <NotAuthorized>
                 <LoginForm />
             </NotAuthorized>

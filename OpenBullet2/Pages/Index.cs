@@ -18,6 +18,7 @@ namespace OpenBullet2.Pages
         [Inject] public IModalService Modal { get; set; }
         [Inject] public IHttpContextAccessor HttpAccessor { get; set; }
         [Inject] public AnnouncementService AnnouncementService { get; set; }
+        [Inject] public PersistentSettingsService PersistentSettings { get; set; }
         public IPAddress IP { get; set; } = IPAddress.Parse("127.0.0.1");
         private Timer timer;
         private Timer cpuTimer;
@@ -25,6 +26,11 @@ namespace OpenBullet2.Pages
 
         protected override void OnInitialized()
         {
+            if (!PersistentSettings.SetupComplete)
+            {
+                Nav.NavigateTo("/setup");
+            }
+
             StartPeriodicRefresh();
 
             Task.Run(() => announcement = AnnouncementService.FetchAnnouncement().Result);

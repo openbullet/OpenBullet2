@@ -1,0 +1,90 @@
+﻿@page "/setup"
+@using System.Globalization 
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Setup> Loc
+@attribute [Authorize(Roles = "Admin")]
+
+<canvas id="setup-canvas"></canvas>
+
+<div class="row vh-100 w-100 align-items-center">
+    <div class="col-6 mx-auto p-5 w-50 setup-options-container text-center">
+        <div class="mb-5">
+            <img class="setup-logo" src="logohq.png" />
+        </div>
+        <div>
+            @switch (step)
+            {
+                case 0:
+                    <span>@Loc["SetupLanguage"]</span>
+                    <div class="mt-5">
+                        <img style="cursor: pointer;" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+                    </div>
+                    <div class="mt-5">
+                        <button class="btn btn-outline-success" @onclick="(() => step++)"><span class="oi oi-task"></span> @Loc["Done"]</button>
+                    </div>
+                    break;
+
+                case 1:
+                    <span>@Loc["WelcomeMessage"]</span>
+                    <div class="mt-5">
+                        <button class="btn btn-outline-success" @onclick="(() => step++)"><span class="oi oi-task"></span> @Loc["Yes"]</button>
+                        <button class="btn btn-outline-danger" @onclick="(() => step = finalStep)"><span class="oi oi-x"></span> @Loc["No"]</button>
+                    </div>
+                    break;
+
+                case 2:
+                    <span>@Loc["AskAccessType"]</span>
+                    <div class="mt-5">
+                        <button class="btn btn-outline-primary" @onclick="(() => step += 2)">@Loc["Locally"]</button>
+                        <button class="btn btn-outline-primary" @onclick="(() => step++)">@Loc["Remotely"]</button>
+                    </div>
+                    break;
+
+                case 3:
+                    <EditForm Model="admin" OnValidSubmit="SetupAdminAccount">
+
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <span><b></b>@Loc["SetupAdminAccount"]</span><br />
+                        <span>@Loc["AdminAccountInfo"]</span>
+                        <br />
+                        <div class="container-fluid my-3">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label>@Loc["Username"]:</label>
+                                </div>
+                                <div class="col align-self-stretch">
+                                    <InputText @bind-Value="admin.Username" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label>@Loc["Password"]:</label>
+                                </div>
+                                <div class="col align-self-stretch">
+                                    <InputText type="password" @bind-Value="admin.Password" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <label>@Loc["ConfirmPassword"]:</label>
+                                </div>
+                                <div class="col align-self-stretch">
+                                    <InputText type="password" @bind-Value="admin.ConfirmPassword" />
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-success"><span class="oi oi-task"></span> @Loc["Done"]</button>
+                    </EditForm>
+                    break;
+
+                case 4:
+                    <span>@Loc["SetupComplete"]</span>
+                    <div class="mt-5">
+                        <button class="btn btn-outline-success" @onclick="CompleteSetup"><span class="oi oi-task"></span> @Loc["LetsStart"]</button>
+                    </div>
+                    break;
+            }
+        </div>
+    </div>
+</div>

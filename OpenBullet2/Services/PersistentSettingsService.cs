@@ -15,6 +15,7 @@ namespace OpenBullet2.Services
         private string ObSettFile => Path.Combine(BaseFolder, "OpenBulletSettings.json");
 
         public OpenBulletSettings OpenBulletSettings { get; set; }
+        public bool SetupComplete => File.Exists(ObSettFile);
 
         public PersistentSettingsService(string baseFolder)
         {

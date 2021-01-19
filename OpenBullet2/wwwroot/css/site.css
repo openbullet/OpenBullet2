@@ -709,3 +709,22 @@ a:hover {
     color: var(--fg-secondary);
 }
 /* -- DOCUMENTATION */
+
+/* SETUP -- */
+#setup-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+}
+
+.setup-options-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    font-family: var(--consolas);
+}
+
+.setup-logo {
+    max-width: 200px;
+}
+/* -- SETUP */
