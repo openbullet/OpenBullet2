@@ -46,8 +46,6 @@ namespace RuriLib.Threading
             : DateTime.MaxValue;
         public TimeSpan Elapsed => DateTime.Now - StartTime;
         public TimeSpan Remaining => ETA - DateTime.Now;
-
-        public long DebugLastBotRuntime = 0;
         #endregion
 
         #region Protected Fields
@@ -120,15 +118,12 @@ namespace RuriLib.Threading
             // Assign the task function
             taskFunction = new Func<TInput, Task>(async item =>
             {
-                var sw = new Stopwatch();
-
                 if (softCTS.IsCancellationRequested)
                     return;
 
                 // Try to execute the work and report the result
                 try
                 {
-                    sw.Start();
                     var workResult = await workFunction.Invoke(item, hardCTS.Token).ConfigureAwait(false);
                     hardCTS.Token.ThrowIfCancellationRequested();
                     OnNewResult(new ResultDetails<TInput, TOutput>(item, workResult));
@@ -141,8 +136,6 @@ namespace RuriLib.Threading
                 // Report the progress, update the CPM and release the semaphore slot
                 finally
                 {
-                    sw.Stop();
-                    DebugLastBotRuntime = sw.ElapsedMilliseconds;
                     Progress = (float)(++current + skip) / totalAmount;
                     OnProgressChanged(Progress);
 

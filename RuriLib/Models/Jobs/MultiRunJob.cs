@@ -47,7 +47,6 @@ namespace RuriLib.Models.Jobs
         public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
         public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : Timeout.InfiniteTimeSpan;
         public int CPM => parallelizer != null ? parallelizer.CPM : 0;
-        public long DebugLastBotRuntime => parallelizer != null ? parallelizer.DebugLastBotRuntime : 0;
 
         // Private fields
         private Parallelizer<MultiRunInput, CheckResult> parallelizer { get; set; }
