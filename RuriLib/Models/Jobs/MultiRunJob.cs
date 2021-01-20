@@ -130,6 +130,9 @@ namespace RuriLib.Models.Jobs
 
                 try
                 {
+                    // This is important! Otherwise we reuse the same proxy
+                    botData.Proxy = null;
+
                     // Get a hold of a proxy
                     if (botData.UseProxy)
                     {
