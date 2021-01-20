@@ -1,6 +1,6 @@
 ﻿namespace RuriLib.Threading
 {
-    public enum ThreadManagerStatus
+    public enum ParallelizerStatus
     {
         Idle,
         Starting,

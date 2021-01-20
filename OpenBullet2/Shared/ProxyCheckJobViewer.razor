@@ -99,11 +99,11 @@
     }
 </div>
 
-@if (Job.Manager != null)
+@if (Job.Parallelizer != null)
 {
     <div class="progress mt-3">
         <div class="progress-bar" role="progressbar"
-            style="width: @((Job.Manager.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+            style="width: @((Job.Parallelizer.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
     </div>
 }
 
@@ -159,8 +159,8 @@
             var newAmount = (int)result.Data;
             changingBots = true;
 
-            if (Job.Manager != null)
-                await Job.Manager.SetParallelThreads(newAmount);
+            if (Job.Parallelizer != null)
+                await Job.Parallelizer.ChangeDegreeOfParallelism(newAmount);
 
             Job.Bots = newAmount;
             changingBots = false;
@@ -195,19 +195,19 @@
 
     private void TryHookLogger()
     {
-        if (Job.Manager != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+        if (Job.Parallelizer != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
         {
-            try { Job.Manager.OnResult -= LogResult; } catch { }
-            try { Job.Manager.OnTaskError -= LogTaskError; } catch { }
-            try { Job.Manager.OnError -= LogError; } catch { }
-            try { Job.Manager.OnCompleted -= LogCompleted; } catch { }
+            try { Job.Parallelizer.NewResult -= LogResult; } catch { }
+            try { Job.Parallelizer.TaskError -= LogTaskError; } catch { }
+            try { Job.Parallelizer.Error -= LogError; } catch { }
+            try { Job.Parallelizer.Completed -= LogCompleted; } catch { }
 
             try
             {
-                Job.Manager.OnResult += LogResult;
-                Job.Manager.OnTaskError += LogTaskError;
-                Job.Manager.OnError += LogError;
-                Job.Manager.OnCompleted += LogCompleted;
+                Job.Parallelizer.NewResult += LogResult;
+                Job.Parallelizer.TaskError += LogTaskError;
+                Job.Parallelizer.Error += LogError;
+                Job.Parallelizer.Completed += LogCompleted;
             }
             catch { }
         }

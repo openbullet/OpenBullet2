@@ -43,13 +43,13 @@ namespace RuriLib.Models.Jobs
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
 
         // Getters
-        public override float Progress => threadManager != null ? threadManager.Progress : -1;
-        public TimeSpan Elapsed => threadManager != null ? threadManager.Elapsed : TimeSpan.Zero;
-        public TimeSpan Remaining => threadManager != null ? threadManager.Remaining : Timeout.InfiniteTimeSpan;
-        public int CPM => threadManager != null ? threadManager.CPM : 0;
+        public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
+        public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
+        public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : Timeout.InfiniteTimeSpan;
+        public int CPM => parallelizer != null ? parallelizer.CPM : 0;
 
         // Private fields
-        private ThreadManager<MultiRunInput, CheckResult> threadManager { get; set; }
+        private Parallelizer<MultiRunInput, CheckResult> parallelizer { get; set; }
         private ProxyPool proxyPool;
         private readonly Random random;
         private Timer tickTimer;
@@ -254,13 +254,14 @@ namespace RuriLib.Models.Jobs
                 return input;
             }
             );
-            threadManager = new ThreadManager<MultiRunInput, CheckResult>(workItems, workFunction, Bots, DataPool.Size, Skip);
-            threadManager.OnResult += DataProcessed;
-            threadManager.OnStatusChanged += StatusChanged;
-            threadManager.OnTaskError += PropagateTaskError;
-            threadManager.OnError += PropagateError;
-            threadManager.OnResult += PropagateResult;
-            threadManager.OnCompleted += PropagateCompleted;
+            parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
+                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, DataPool.Size, Skip);
+            parallelizer.NewResult += DataProcessed;
+            parallelizer.StatusChanged += StatusChanged;
+            parallelizer.TaskError += PropagateTaskError;
+            parallelizer.Error += PropagateError;
+            parallelizer.NewResult += PropagateResult;
+            parallelizer.Completed += PropagateCompleted;
 
             ServicePointManager.DefaultConnectionLimit = 200;
 
@@ -270,14 +271,14 @@ namespace RuriLib.Models.Jobs
             ResetStats();
             StartTimer();
             logger?.LogInfo(Id, "All set, starting the execution");
-            await threadManager.Start();
+            await parallelizer.Start();
         }
 
         public override async Task Stop()
         {
             try
             {
-                await threadManager?.Stop();
+                await parallelizer?.Stop();
             }
             finally
             {
@@ -290,7 +291,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await threadManager?.Abort();
+                await parallelizer?.Abort();
             }
             finally
             {
@@ -303,7 +304,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await threadManager?.Pause();
+                await parallelizer?.Pause();
             }
             finally
             {
@@ -314,7 +315,7 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            await threadManager?.Resume();
+            await parallelizer?.Resume();
             StartTimer();
             logger?.LogInfo(Id, "Execution resumed");
         }
@@ -335,9 +336,9 @@ namespace RuriLib.Models.Jobs
         #region Wrappers for TaskManager methods
         public async Task ChangeBots(int amount)
         {
-            if (threadManager != null)
+            if (parallelizer != null)
             {
-                await threadManager.SetParallelThreads(amount);
+                await parallelizer.ChangeDegreeOfParallelism(amount);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
             }
         }
@@ -399,17 +400,17 @@ namespace RuriLib.Models.Jobs
             DataErrors = 0;
         }
 
-        private void StatusChanged(object sender, ThreadManagerStatus status)
+        private void StatusChanged(object sender, ParallelizerStatus status)
         {
             Status = status switch
             {
-                ThreadManagerStatus.Idle => JobStatus.Idle,
-                ThreadManagerStatus.Starting => JobStatus.Starting,
-                ThreadManagerStatus.Running => JobStatus.Running,
-                ThreadManagerStatus.Pausing => JobStatus.Pausing,
-                ThreadManagerStatus.Paused => JobStatus.Paused,
-                ThreadManagerStatus.Stopping => JobStatus.Stopping,
-                ThreadManagerStatus.Resuming => JobStatus.Resuming,
+                ParallelizerStatus.Idle => JobStatus.Idle,
+                ParallelizerStatus.Starting => JobStatus.Starting,
+                ParallelizerStatus.Running => JobStatus.Running,
+                ParallelizerStatus.Pausing => JobStatus.Pausing,
+                ParallelizerStatus.Paused => JobStatus.Paused,
+                ParallelizerStatus.Stopping => JobStatus.Stopping,
+                ParallelizerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
 

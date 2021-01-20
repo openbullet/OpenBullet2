@@ -201,6 +201,9 @@
   <data name="LogJobActivityToFile" xml:space="preserve">
     <value>Log job activity to file</value>
   </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Parallelizer Type</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>
