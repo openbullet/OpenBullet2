@@ -244,7 +244,8 @@
                 <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
                 <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
                 <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span>
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span><br />
+                <span class="font-weight-bold">Debug last bot runtime: </span><span>@Job.DebugLastBotRuntime ms</span>
             </div>
         }
         else
