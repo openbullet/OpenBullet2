@@ -1,14 +1,15 @@
-﻿using CommandLine;
+using CommandLine;
 using CommandLine.Text;
 using RuriLib.Helpers;
+using RuriLib.Logging;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
 using RuriLib.Models.Jobs;
-using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
 using RuriLib.Services;
+using RuriLib.Threading.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -105,8 +106,8 @@ Feel free to contribute to the versatility of this project by adding the missing
         {
             options = opts;
 
-            RuriLibSettingsService rlSettings = new RuriLibSettingsService("UserData");
-            PluginRepository pluginRepo = new PluginRepository("UserData/Plugins");
+            var rlSettings = new RuriLibSettingsService("UserData");
+            var pluginRepo = new PluginRepository("UserData/Plugins");
 
             // Unpack the config
             using var fs = new FileStream(opts.ConfigFile, FileMode.Open);
@@ -115,6 +116,7 @@ Feel free to contribute to the versatility of this project by adding the missing
             // Setup the job
             job = new MultiRunJob(rlSettings, pluginRepo)
             {
+                Providers = new RuriLib.Models.Bots.Providers(rlSettings),
                 Bots = opts.BotsNumber,
                 Config = config,
                 DataPool = new FileDataPool(opts.WordlistFile, opts.WordlistType),

@@ -134,7 +134,16 @@ namespace RuriLib.Models.Blocks
             var parameters = new List<string> { "data" }
                 .Concat(Settings.Values.Select(s => CSharpWriter.FromSetting(s)));
 
-            writer.WriteLine($"{Descriptor.Id}({string.Join(", ", parameters)});");
+            writer.Write($"{Descriptor.Id}({string.Join(", ", parameters)})");
+
+            if ((Descriptor as AutoBlockDescriptor).Async)
+            {
+                writer.WriteLine(".ConfigureAwait(false);");
+            }
+            else
+            {
+                writer.WriteLine(";");
+            }
 
             if (IsCapture)
                 writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");

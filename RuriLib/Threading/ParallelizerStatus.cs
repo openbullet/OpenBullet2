@@ -1,6 +1,6 @@
-﻿namespace RuriLib.Models.Jobs.Threading
+﻿namespace RuriLib.Threading
 {
-    public enum TaskManagerStatus
+    public enum ParallelizerStatus
     {
         Idle,
         Starting,

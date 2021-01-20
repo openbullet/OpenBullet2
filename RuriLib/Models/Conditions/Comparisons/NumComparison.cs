@@ -3,6 +3,7 @@
     public enum NumComparison
     {
         EqualTo,
+        NotEqualTo,
         LessThan,
         LessThanOrEqualTo,
         GreaterThan,

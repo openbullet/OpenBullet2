@@ -68,6 +68,7 @@ namespace RuriLib.Functions.Conditions
             return comparison switch
             {
                 NumComparison.EqualTo => leftTerm == rightTerm,
+                NumComparison.NotEqualTo => leftTerm != rightTerm,
                 NumComparison.LessThan => leftTerm < rightTerm,
                 NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
                 NumComparison.GreaterThan => leftTerm > rightTerm,
@@ -82,6 +83,7 @@ namespace RuriLib.Functions.Conditions
             return comparison switch
             {
                 NumComparison.EqualTo => leftTerm == rightTerm,
+                NumComparison.NotEqualTo => leftTerm != rightTerm,
                 NumComparison.LessThan => leftTerm < rightTerm,
                 NumComparison.LessThanOrEqualTo => leftTerm <= rightTerm,
                 NumComparison.GreaterThan => leftTerm > rightTerm,

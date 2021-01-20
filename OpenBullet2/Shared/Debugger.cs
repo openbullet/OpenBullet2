@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
@@ -85,6 +86,7 @@ namespace OpenBullet2.Shared
             options.Variables.Clear();
             isRunning = true;
             cts = new CancellationTokenSource();
+            var sw = new Stopwatch();
 
             var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
             var dataLine = new DataLine(options.TestData, wordlistType);
@@ -120,6 +122,7 @@ namespace OpenBullet2.Shared
                 foreach (var input in Config.Settings.InputSettings.CustomInputs)
                     (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
 
+                sw.Start();
                 var state = await script.RunAsync(scriptGlobals, null, cts.Token);
 
                 foreach (var scriptVar in state.Variables)
@@ -150,9 +153,10 @@ namespace OpenBullet2.Shared
             }
             finally
             {
+                sw.Stop();
                 isRunning = false;
 
-                logger.Log($"BOT ENDED WITH STATUS: {data.STATUS}");
+                logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
 
                 // Save the browser for later use
                 lastBrowser = data.Objects.ContainsKey("puppeteer") && data.Objects["puppeteer"] is Browser currentBrowser

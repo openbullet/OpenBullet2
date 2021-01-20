@@ -1,5 +1,4 @@
-﻿using RuriLib.Models.Jobs.Threading;
-using System;
+﻿using System;
 
 namespace RuriLib.Models.Jobs.Monitor.Triggers
 {

@@ -91,19 +91,9 @@ namespace RuriLib.Models.Proxies
 
         public void ReleaseProxy(Proxy proxy, bool ban = false)
         {
+            proxy.TotalUses++;
             proxy.BeingUsedBy--;
             proxy.ProxyStatus = ban ? ProxyStatus.Banned : ProxyStatus.Available;
-        }
-
-        /// <summary>
-        /// Sets the <paramref name="proxy"/>'s status back to Available, reduces the BeingUsedBy counter by 1 and
-        /// increases the TotalUses counter by 1.
-        /// </summary>
-        public void ReleaseProxy(Proxy proxy)
-        {
-            proxy.ProxyStatus = ProxyStatus.Available;
-            proxy.BeingUsedBy--;
-            proxy.TotalUses++;
         }
 
         public void RemoveDuplicates()

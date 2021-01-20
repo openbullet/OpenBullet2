@@ -1,8 +1,9 @@
 ﻿using RuriLib.Functions.Http;
 using RuriLib.Logging;
-using RuriLib.Models.Jobs.Threading;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
+using RuriLib.Threading;
+using RuriLib.Threading.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace RuriLib.Models.Jobs
         public IProxyCheckOutput ProxyOutput { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
-        public TaskManager<ProxyCheckerInput, Proxy> Manager { get; private set; }
+        public Parallelizer<ProxyCheckerInput, Proxy> Parallelizer { get; private set; }
 
         // Stats
         public int Total { get; set; }
@@ -131,46 +132,47 @@ namespace RuriLib.Models.Jobs
                 : Proxies;
             
             var workItems = proxies.Select(p => new ProxyCheckerInput(p, Url, SuccessKey, Timeout, GeoProvider));
-            Manager = new TaskManager<ProxyCheckerInput, Proxy>(workItems, workFunction, Bots, Proxies.Count(), 0);
-            Manager.OnResult += UpdateProxy;
-            Manager.OnStatusChanged += StatusChanged;
+            Parallelizer = ParallelizerFactory<ProxyCheckerInput, Proxy>
+                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, Proxies.Count(), 0);
+            Parallelizer.NewResult += UpdateProxy;
+            Parallelizer.StatusChanged += StatusChanged;
 
             ServicePointManager.DefaultConnectionLimit = 200;
 
-            await Manager.Start();
+            await Parallelizer.Start();
         }
 
         public override async Task Stop()
         {
-            await Manager?.Stop();
+            await Parallelizer?.Stop();
         }
 
         public override async Task Abort()
         {
-            await Manager?.Abort();
+            await Parallelizer?.Abort();
         }
 
         public override async Task Pause()
         {
-            await Manager?.Pause();
+            await Parallelizer?.Pause();
         }
 
         public override async Task Resume()
         {
-            await Manager?.Resume();
+            await Parallelizer?.Resume();
         }
 
-        private void StatusChanged(object sender, TaskManagerStatus status)
+        private void StatusChanged(object sender, ParallelizerStatus status)
         {
             Status = status switch
             {
-                TaskManagerStatus.Idle => JobStatus.Idle,
-                TaskManagerStatus.Starting => JobStatus.Starting,
-                TaskManagerStatus.Running => JobStatus.Running,
-                TaskManagerStatus.Pausing => JobStatus.Pausing,
-                TaskManagerStatus.Paused => JobStatus.Paused,
-                TaskManagerStatus.Stopping => JobStatus.Stopping,
-                TaskManagerStatus.Resuming => JobStatus.Resuming,
+                ParallelizerStatus.Idle => JobStatus.Idle,
+                ParallelizerStatus.Starting => JobStatus.Starting,
+                ParallelizerStatus.Running => JobStatus.Running,
+                ParallelizerStatus.Pausing => JobStatus.Pausing,
+                ParallelizerStatus.Paused => JobStatus.Paused,
+                ParallelizerStatus.Stopping => JobStatus.Stopping,
+                ParallelizerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
         }

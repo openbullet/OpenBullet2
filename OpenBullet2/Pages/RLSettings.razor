@@ -1,5 +1,5 @@
 ﻿@page "/settings/rurilib"
-@using RuriLib.Models.Settings
+@using RuriLib.Threading 
 @using RuriLib.Functions.Captchas
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RLSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
@@ -9,6 +9,15 @@
 
 <h1>@Loc["General"]</h1>
 <EditForm Model="settings.GeneralSettings">
+
+    <label>@Loc["ParallelizerType"]</label>
+    <InputSelect @bind-Value="settings.GeneralSettings.ParallelizerType">
+        @foreach (var type in Enum.GetNames(typeof(ParallelizerType)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect>
+    <br />
 
     <label>@Loc["LogJobActivityToFile"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogJobActivityToFile" />
