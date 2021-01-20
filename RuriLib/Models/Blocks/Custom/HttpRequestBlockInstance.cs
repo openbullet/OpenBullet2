@@ -367,7 +367,7 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
             }
 
-            writer.WriteLine(");");
+            writer.WriteLine(").ConfigureAwait(false);");
 
             return writer.ToString();
         }

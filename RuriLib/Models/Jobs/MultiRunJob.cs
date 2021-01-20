@@ -151,7 +151,7 @@ namespace RuriLib.Models.Jobs
                         (scriptGlobals.input as IDictionary<string, object>).Add(answer.Key, answer.Value);
 
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
-                    scriptState = await input.Script.RunAsync(scriptGlobals, null, token);
+                    scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
                 }
                 catch
