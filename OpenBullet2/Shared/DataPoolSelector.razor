@@ -2,9 +2,13 @@
 @using OpenBullet2.Models.Data
 @using OpenBullet2.Shared.Forms 
 @using RuriLib.Services 
+@using OpenBullet2.Auth 
+@using OpenBullet2.Helpers 
 @inject IModalService Modal
 @inject IWordlistRepository WordlistRepo
+@inject IGuestRepository GuestRepo
 @inject RuriLibSettingsService RuriLibSettings
+@inject AuthenticationStateProvider Auth
 @inject Microsoft.Extensions.Localization.IStringLocalizer<DataPoolSelector> Loc
 
 <RadzenRadioButtonList @bind-Value="type" TValue="DataPoolType" Change="@((args) => Change(args))">
@@ -30,8 +34,10 @@
             {
                 <p>@selectedWordlist.Name (@selectedWordlist.Total @Loc["lines"])</p>
             }
-            <button class="btn btn-outline-primary" style="margin-bottom: 20px;" @onclick="SelectWordlist">@Loc["SelectWordlist"]</button>
-            <br />
+            <div class="mb-2">
+                <button class="btn btn-outline-primary" @onclick="SelectWordlist">@Loc["SelectWordlist"]</button>
+                <button class="btn btn-outline-primary" @onclick="AddWordlist">@Loc["AddWordlist"]</button>
+            </div>
             break;
 
         case FileDataPoolOptions x:
@@ -105,9 +111,11 @@
     DataPoolType type = DataPoolType.Wordlist;
     WordlistEntity selectedWordlist;
     List<string> wordlistTypes;
+    private int uid = -1;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(t => t.Name).ToList();
     }
 
@@ -172,6 +180,23 @@
         if (!result.Cancelled)
         {
             selectedWordlist = result.Data as WordlistEntity;
+            ((WordlistDataPoolOptions)Options).WordlistId = selectedWordlist.Id;
+            await SetWordlist.InvokeAsync(selectedWordlist.Id);
+        }
+    }
+
+    private async Task AddWordlist()
+    {
+        var modal = Modal.Show<WordlistAdd>(Loc["AddWordlist"]);
+        var result = await modal.Result;
+
+        if (!result.Cancelled)
+        {
+            var entity = result.Data as WordlistEntity;
+            entity.Owner = await GuestRepo.Get(uid);
+            await WordlistRepo.Add(entity);
+
+            selectedWordlist = entity;
             ((WordlistDataPoolOptions)Options).WordlistId = selectedWordlist.Id;
             await SetWordlist.InvokeAsync(selectedWordlist.Id);
         }
