@@ -169,7 +169,7 @@
     <value>This is where you can set up sharing %endpoints% for your configs so that other people can access them. You can %create% endpoints and %add% configs to them, and also specify the %Api Keys% that are authorized to receive the configs.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>In order to share configs with a friend, you have to create an endpoint, add configs to it, set up at least one api key and send it to your friend, along with the %URL% of your endpoint. For example, if your OpenBullet 2 instance is reachable on `1.1.1.1:5000` your friend needs to type `http://1.1.1.1:5000/api/shared/configs/ROUTE` where %ROUTE% is the name you gave to the endpoint.</value>
+    <value>In order to share configs with a friend, you have to create an endpoint, add configs to it, set up at least one api key and send it to your friend, along with the %URL% of your endpoint. Your friend will then have to set it up in the %OB Settings &gt; Remote% section. For example, if your OpenBullet 2 instance is reachable on `1.1.1.1:5000` your friend needs to type `http://1.1.1.1:5000/api/shared/configs/ROUTE` where %ROUTE% is the name you gave to the endpoint.</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Last modified</value>
