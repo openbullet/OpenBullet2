@@ -12,6 +12,7 @@ namespace OpenBullet2.Models.Jobs
         public int Bots { get; set; } = 1;
         public int Skip { get; set; } = 0;
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
+        public bool ShuffleProxies { get; set; } = true;
         public DataPoolOptions DataPool { get; set; } = new WordlistDataPoolOptions();
         public List<ProxySourceOptions> ProxySources { get; set; } = new List<ProxySourceOptions>();
         public List<HitOutputOptions> HitOutputs { get; set; } = new List<HitOutputOptions>();

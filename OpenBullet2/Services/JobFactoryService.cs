@@ -76,6 +76,7 @@ namespace OpenBullet2.Services
                 Config = configService.Configs.FirstOrDefault(c => c.Id == options.ConfigId),
                 CreationTime = DateTime.Now,
                 ProxyMode = options.ProxyMode,
+                ShuffleProxies = options.ShuffleProxies,
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
                 Skip = options.Skip,

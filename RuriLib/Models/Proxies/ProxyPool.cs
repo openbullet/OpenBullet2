@@ -20,7 +20,7 @@ namespace RuriLib.Models.Proxies
         }
 
         /// <summary>
-        /// Initializes the proxy pool given a collection of CProxy objects.
+        /// Initializes the proxy pool given a collection of Proxy objects.
         /// If <paramref name="clone"/> is true, the proxies will be first cloned and then stored in the list.
         /// </summary>
         public ProxyPool(IEnumerable<Proxy> proxies, bool clone = true)
@@ -82,6 +82,9 @@ namespace RuriLib.Models.Proxies
             return proxy;
         }
 
+        /// <summary>
+        /// Releases a proxy that was being used, optionally banning it.
+        /// </summary>
         public void ReleaseProxy(Proxy proxy, bool ban = false)
         {
             proxy.TotalUses++;
@@ -89,7 +92,16 @@ namespace RuriLib.Models.Proxies
             proxy.ProxyStatus = ban ? ProxyStatus.Banned : ProxyStatus.Available;
         }
 
+        /// <summary>
+        /// Removes duplicates.
+        /// </summary>
         public void RemoveDuplicates()
             => Proxies = Proxies.Distinct(new GenericComparer<Proxy>()).ToList();
+
+        /// <summary>
+        /// Shuffles proxies.
+        /// </summary>
+        public void Shuffle()
+            => Proxies.Shuffle();
     }
 }

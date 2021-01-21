@@ -207,6 +207,9 @@
   <data name="SelectConfig" xml:space="preserve">
     <value>Select config</value>
   </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Shuffle proxies</value>
+  </data>
   <data name="Skip" xml:space="preserve">
     <value>Skip</value>
   </data>

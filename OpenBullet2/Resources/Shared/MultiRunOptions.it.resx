@@ -207,6 +207,9 @@
   <data name="SelectConfig" xml:space="preserve">
     <value>Seleziona config</value>
   </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Mischia i proxy</value>
+  </data>
   <data name="Skip" xml:space="preserve">
     <value>Salta</value>
   </data>

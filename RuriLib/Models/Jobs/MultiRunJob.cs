@@ -36,6 +36,7 @@ namespace RuriLib.Models.Jobs
         public DataPool DataPool { get; set; }
         public List<ProxySource> ProxySources { get; set; } = new List<ProxySource>();
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
+        public bool ShuffleProxies { get; set; } = true;
         public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
         public Bots.Providers Providers { get; set; }
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
@@ -333,6 +334,11 @@ namespace RuriLib.Models.Jobs
 
             var proxies = results.SelectMany(r => r);
             proxyPool = new ProxyPool(proxies);
+
+            if (ShuffleProxies)
+            {
+                proxyPool.Shuffle();
+            }
         }
         #endregion
 
