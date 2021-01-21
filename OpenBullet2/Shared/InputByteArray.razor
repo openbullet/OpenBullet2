@@ -1,9 +1,23 @@
 ﻿@using RuriLib.Functions.Conversion 
-<span>Byte Array Value (as hex): @(Bytes == null ? "null" : HexConverter.ToHexString(Bytes))</span><br />
-<label>Hex</label>
-<InputText @oninput="OnHexChanged" @bind-Value="hexValue" />
-<label>Base64</label>
-<InputText @oninput="OnBase64Changed" @bind-Value="base64Value" />
+@using RuriLib.Extensions 
+<div class="w-100">
+    <div class="row">
+        <div class="col-auto">
+            <label>Hex</label>
+        </div>
+        <div class="col align-self-stretch">
+            <InputText @oninput="OnHexChanged" @bind-Value="hexValue" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-auto">
+            <label>Base64</label>
+        </div>
+        <div class="col align-self-stretch">
+            <InputText @oninput="OnBase64Changed" @bind-Value="base64Value" />
+        </div>
+    </div>
+</div>
 
 @code { 
     [Parameter] public byte[] Bytes { get; set; }
