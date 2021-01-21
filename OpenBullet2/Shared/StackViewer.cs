@@ -59,8 +59,18 @@ namespace OpenBullet2.Shared
             if (!result.Cancelled)
             {
                 var descriptor = (BlockDescriptor)result.Data;
-                var selectedBlock = BlockFactory.GetBlock<BlockInstance>(descriptor.Id);
-                Stack.Add(selectedBlock);
+                var newBlock = BlockFactory.GetBlock<BlockInstance>(descriptor.Id);
+
+                if (selectedBlock != null)
+                {
+                    Stack.Insert(Stack.IndexOf(selectedBlock) + 1, newBlock);
+                }
+                else
+                {
+                    Stack.Add(newBlock);
+                }
+
+                selectedBlock = newBlock;
                 await OBLogger.LogInfo($"Added block {selectedBlock.Id}");
             }
         }
