@@ -61,7 +61,7 @@ namespace RuriLib.Models.Blocks.Custom
                         { "Accept-Language", "en-US,en;q=0.8" }
                     },
                     SettingInputMode.Interpolated) },
-                { "timeoutMilliseconds", new IntParameter("timeoutMilliseconds", 10000) },
+                { "timeoutMilliseconds", new IntParameter("timeoutMilliseconds", 15000) },
                 { "httpVersion", new StringParameter("httpVersion", "1.1") }
             };
         }
