@@ -107,7 +107,7 @@ namespace RuriLib.Models.Jobs
                 var botData = input.BotData;
 
                 // Check if the data respects rules
-                if (!botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))
+                if (!botData.Line.IsValid || !botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))
                 {
                     botData.STATUS = "INVALID";
 
