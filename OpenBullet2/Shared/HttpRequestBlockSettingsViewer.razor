@@ -89,6 +89,11 @@ else
     [Parameter] public EventCallback ChangedLabel { get; set; }
     private bool showCipherSuites = true;
 
+    private StandardRequestParams cachedStandard = new();
+    private RawRequestParams cachedRaw = new();
+    private BasicAuthRequestParams cachedBasicAuth = new();
+    private MultipartRequestParams cachedMultipart = new();
+
     string help1x00 => Loc["Help1x00"];
     string help1x01 => Loc["Help1x01"];
     string help1x02 => Loc["Help1x02"];
@@ -107,14 +112,31 @@ else
 
     protected override void OnParametersSet()
     {
-        type = Block.RequestParams switch
+        switch (Block.RequestParams)
         {
-            StandardRequestParams _ => RequestParamsType.Standard,
-            RawRequestParams _ => RequestParamsType.Raw,
-            BasicAuthRequestParams _ => RequestParamsType.BasicAuth,
-            MultipartRequestParams _ => RequestParamsType.Multipart,
-            _ => throw new NotImplementedException()
-        };
+            case StandardRequestParams x:
+                cachedStandard = x;
+                type = RequestParamsType.Standard;
+                break;
+
+            case RawRequestParams x:
+                cachedRaw = x;
+                type = RequestParamsType.Raw;
+                break;
+
+            case BasicAuthRequestParams x:
+                cachedBasicAuth = x;
+                type = RequestParamsType.BasicAuth;
+                break;
+
+            case MultipartRequestParams x:
+                cachedMultipart = x;
+                type = RequestParamsType.Multipart;
+                break;
+
+            default:
+                throw new NotImplementedException();
+        }
 
         var useSuites = Block.Settings["useCustomCipherSuites"];
         showCipherSuites = useSuites.InputMode == SettingInputMode.Variable || (useSuites.FixedSetting as BoolSetting).Value;
@@ -126,10 +148,10 @@ else
         {
             Block.RequestParams = value.Value switch
             {
-                RequestParamsType.Standard => new StandardRequestParams(),
-                RequestParamsType.Raw => new RawRequestParams(),
-                RequestParamsType.BasicAuth => new BasicAuthRequestParams(),
-                RequestParamsType.Multipart => new MultipartRequestParams(),
+                RequestParamsType.Standard => cachedStandard,
+                RequestParamsType.Raw => cachedRaw,
+                RequestParamsType.BasicAuth => cachedBasicAuth,
+                RequestParamsType.Multipart => cachedMultipart,
                 _ => throw new NotImplementedException()
             };
         }
