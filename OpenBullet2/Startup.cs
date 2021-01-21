@@ -27,6 +27,7 @@ using RuriLib.Logging;
 using System.Net;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Providers.RandomNumbers;
+using System.Threading.Tasks;
 
 namespace OpenBullet2
 {
@@ -105,17 +106,24 @@ namespace OpenBullet2
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
             {
+                options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(context =>
+                {
+                    var settingsService = context.RequestServices.GetService<PersistentSettingsService>();
+                    return Task.FromResult(new ProviderCultureResult(settingsService.OpenBulletSettings.GeneralSettings.Culture));
+                }));
+
                 var supportedCultures = new[]
                 {
-                new CultureInfo("en"),
-                new CultureInfo("it"),
-                new CultureInfo("fr"),
-                new CultureInfo("de"),
-                new CultureInfo("es"),
-                new CultureInfo("pt"),
-                new CultureInfo("nl"),
-                new CultureInfo("ru"),
-            };
+                    new CultureInfo("en"),
+                    new CultureInfo("it"),
+                    new CultureInfo("fr"),
+                    new CultureInfo("de"),
+                    new CultureInfo("es"),
+                    new CultureInfo("pt"),
+                    new CultureInfo("nl"),
+                    new CultureInfo("ru")
+                };
+
                 options.DefaultRequestCulture = new RequestCulture("en", "en");
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;

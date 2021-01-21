@@ -1,5 +1,7 @@
-﻿@inject NavigationManager NavigationManager
-@inject IModalService ModalService
+﻿@using System.Globalization
+@inject PersistentSettingsService PersistentSettings 
+@inject NavigationManager NavigationManager
+@inject IModalService ModalService 
 
 <div class="container-flex">
     <div class="row">
@@ -42,14 +44,21 @@
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public bool SaveSettings { get; set; } = true;
 
-    private void ChangeCulture(string culture)
+    private async Task ChangeCulture(string culture)
     {
+        PersistentSettings.OpenBulletSettings.GeneralSettings.Culture = culture;
+
+        if (SaveSettings)
+            await PersistentSettings.Save();
+
+        CultureInfo.CurrentCulture = new CultureInfo(culture);
+        CultureInfo.CurrentUICulture = new CultureInfo(culture);
+
         var uri = new Uri(NavigationManager.Uri)
             .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-        var query = $"?culture={Uri.EscapeDataString(culture)}&" +
-            $"redirectUri={Uri.EscapeDataString(uri)}";
 
-        NavigationManager.NavigateTo("/Culture/SetCulture" + query, forceLoad: true);
+        NavigationManager.NavigateTo(uri, true);
     }
 }

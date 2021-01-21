@@ -1,4 +1,5 @@
-﻿using Blazored.Modal.Services;
+﻿using Blazored.Modal;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OpenBullet2.Services;
@@ -27,7 +28,9 @@ namespace OpenBullet2.Pages
 
         private void ChangeLanguage()
         {
-            Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"]);
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(CultureSelector.SaveSettings), false);
+            Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"], parameters);
         }
 
         private class AdminAccount
