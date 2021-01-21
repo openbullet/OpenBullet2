@@ -11,7 +11,7 @@
         set
         {
             dictionary = value ?? new Dictionary<string, string>();
-            joinedDict = string.Join(Environment.NewLine, dictionary.Select(kvp => $"{kvp.Key}:{kvp.Value}"));
+            joinedDict = string.Join(Environment.NewLine, dictionary.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
         }
     }
 
@@ -26,7 +26,7 @@
             .Where(v => v.Contains(':'))
             .Select(v => v.Split(':', 2))
             .DistinctBy(v => v[0])
-            .ToDictionary(v => v[0], v => v[1]);
+            .ToDictionary(v => v[0], v => v[1].StartsWith(' ') ? v[1][1..] : v[1]);
 
         return DictionaryChanged.InvokeAsync(Dictionary);
     }

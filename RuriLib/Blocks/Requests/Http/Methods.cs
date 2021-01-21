@@ -57,7 +57,7 @@ namespace RuriLib.Blocks.Requests.Http
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request);
@@ -110,7 +110,7 @@ namespace RuriLib.Blocks.Requests.Http
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request);
@@ -160,7 +160,7 @@ namespace RuriLib.Blocks.Requests.Http
             };
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             // Add the basic auth header
             request.Headers.Add("Authorization", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
@@ -246,7 +246,7 @@ namespace RuriLib.Blocks.Requests.Http
             };
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request, boundary, content);
