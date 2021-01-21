@@ -154,7 +154,7 @@ namespace OpenBullet2.Shared
             var proxy = details.Item.BotData.Proxy != null
                 ? $"{details.Item.BotData.Proxy.Host}:{details.Item.BotData.Proxy.Port}"
                 : string.Empty;
-            Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({proxy})({data})! {details.Exception.Message}");
+            Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({data})({proxy})! {details.Exception.Message}");
         }
 
         private void LogCompleted(object sender, EventArgs e)
