@@ -1,4 +1,5 @@
 ﻿using RuriLib.Attributes;
+using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
 using RuriLib.Helpers;
@@ -50,7 +51,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
                 RequestUri = new Uri(url),
                 Version = Version.Parse(httpVersion),
-                Content = new StringContent(content)
+                Content = new StringContent(content.Unescape())
             };
 
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
