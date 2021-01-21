@@ -57,7 +57,7 @@ namespace RuriLib.Blocks.Requests.Http
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request);
@@ -110,7 +110,7 @@ namespace RuriLib.Blocks.Requests.Http
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request);
@@ -160,13 +160,13 @@ namespace RuriLib.Blocks.Requests.Http
             };
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-
-            data.Logger.LogHeader();
-            LogHttpRequestData(data, request);
+                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
 
             // Add the basic auth header
             request.Headers.Add("Authorization", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
+
+            data.Logger.LogHeader();
+            LogHttpRequestData(data, request);
 
             try
             {
@@ -246,7 +246,7 @@ namespace RuriLib.Blocks.Requests.Http
             };
 
             foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                request.Headers.TryAddWithoutValidation(header.Key.Trim(), header.Value.Trim());
 
             data.Logger.LogHeader();
             LogHttpRequestData(data, request, boundary, content);
