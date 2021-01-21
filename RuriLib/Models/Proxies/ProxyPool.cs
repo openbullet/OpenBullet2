@@ -29,13 +29,7 @@ namespace RuriLib.Models.Proxies
         }
 
         /// <summary>
-        /// Removes the stored CloudflareCookies in each proxy in the pool.
-        /// </summary>
-        public void ClearCloudflareCookies()
-            => Proxies.ForEach(p => p.CloudflareCookies = null);
-
-        /// <summary>
-        /// Sets all the BANNED and BAD proxies status to AVAILABLE and resets their Uses. It also clears the Cloudflare cookies.
+        /// Sets all the BANNED and BAD proxies status to AVAILABLE and resets their Uses.
         /// </summary>
         public void UnbanAll()
         {
@@ -46,7 +40,6 @@ namespace RuriLib.Models.Proxies
                     p.ProxyStatus = ProxyStatus.Available;
                     p.BeingUsedBy = 0;
                     p.TotalUses = 0;
-                    p.CloudflareCookies = null;
                 }
             });
         }

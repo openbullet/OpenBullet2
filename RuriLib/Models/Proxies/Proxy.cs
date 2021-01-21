@@ -27,8 +27,6 @@ namespace RuriLib.Models.Proxies
 
         public bool NeedsAuthentication => !string.IsNullOrWhiteSpace(Username);
 
-        public CloudflareCookies? CloudflareCookies { get; set; } = null;
-
         public Proxy(string host, int port, ProxyType type = ProxyType.Http, string username = "", string password = "")
         {
             Host = host;
