@@ -225,7 +225,6 @@ namespace RuriLib.Models.Jobs
             // Wait for the start condition to be verified
             // await base.Start();
 
-            var clonedSettings = Cloner.Clone(settings.RuriLibSettings);
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
             globalVariables = new ExpandoObject();
 
