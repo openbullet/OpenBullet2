@@ -1,5 +1,6 @@
 ﻿@using RuriLib.Models.Blocks.Custom
 @using RuriLib.Models.Blocks.Custom.HttpRequest
+@using RuriLib.Models.Blocks.Settings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<HttpRequestBlockSettingsViewer> Loc
 
 <EditForm Model="Block">
@@ -10,7 +11,15 @@
 
 <h6 class="font-weight-bold fg-custom mt-3">@Loc["Settings"]:</h6>
 <BlockInputField BlockSetting="@Block.Settings["url"]" />
-<BlockInputField BlockSetting="@Block.Settings["method"]" />
+
+<div class="row">
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["method"]" />
+    </div>
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["httpVersion"]" />
+    </div>
+</div>
 <BlockInputField BlockSetting="@Block.Settings["autoRedirect"]" />
 
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">
@@ -53,10 +62,24 @@
 <BlockInputField BlockSetting="@Block.Settings["timeoutMilliseconds"]" />
 
 <h6 class="font-weight-bold fg-custom mt-3">@Loc["AdvancedSettings"]:</h6>
-<BlockInputField BlockSetting="@Block.Settings["httpVersion"]" />
 <BlockInputField BlockSetting="@Block.Settings["securityProtocol"]" />
 <BlockInputField BlockSetting="@Block.Settings["useCustomCipherSuites"]" />
-<BlockInputField BlockSetting="@Block.Settings["customCipherSuites"]" />
+
+@if (showCipherSuites)
+{
+    <div>
+        <span class="oi oi-caret-bottom mr-2" style="cursor: pointer;" @onclick="() => showCipherSuites = false"></span>
+        <span style="display: inline;">@Loc["Hide"]</span>
+    </div>
+    <BlockInputField BlockSetting="@Block.Settings["customCipherSuites"]" />
+}
+else
+{
+    <div>
+        <span class="oi oi-caret-right mr-2" style="cursor: pointer;" @onclick="() => showCipherSuites = true"></span>
+        <span style="display: inline;">@Loc["Show"]</span>
+    </div>
+}
 
 <br />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />
@@ -64,6 +87,7 @@
 @code {
     [Parameter] public HttpRequestBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
+    private bool showCipherSuites = true;
 
     string help1x00 => Loc["Help1x00"];
     string help1x01 => Loc["Help1x01"];
@@ -91,9 +115,12 @@
             MultipartRequestParams _ => RequestParamsType.Multipart,
             _ => throw new NotImplementedException()
         };
+
+        var useSuites = Block.Settings["useCustomCipherSuites"];
+        showCipherSuites = useSuites.InputMode == SettingInputMode.Variable || (useSuites.FixedSetting as BoolSetting).Value;
     }
 
-    void Change(RequestParamsType? value)
+    private void Change(RequestParamsType? value)
     {
         if (value.HasValue)
         {

@@ -138,10 +138,16 @@
   <data name="Help1x05" xml:space="preserve">
     <value>Un'ultima cosa da ricordare è che i cookies nella variabile `data.COOKIES` vengono solo aggiunti o sovrascritti, mai cancellati. Questo significa che i cookies ricevuti in precedenza verranno inviati nuovamente nelle richieste future, oltre ai %Custom Cookies% che puoi definire per ogni nuova richiesta. Questo accade a meno che `data.COOKIES` venga pulita o reinizializzata.</value>
   </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Nascondi</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Etichetta</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Impostazioni</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Mostra</value>
   </data>
 </root>

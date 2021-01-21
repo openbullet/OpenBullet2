@@ -138,10 +138,16 @@
   <data name="Help1x05" xml:space="preserve">
     <value>One last thing to remember is that cookies inside the `data.COOKIES` variable are only added or overwritten, never deleted. This means that previously received cookies (which are inside the `data.COOKIES` variable) will be sent again inside the next requests, in addition to the %Custom Cookies% you can define for each new request. This happens unless `data.COOKIES` is cleared or reinitialized.</value>
   </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Label</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
   </data>
 </root>
