@@ -13,7 +13,7 @@
                     <div class="col align-self-stretch">
                         <InputText @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                     <div class="col align-self-stretch mt-1">
                         <InputCheckbox @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                     <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
-                    <div class="col-auto ml-0 pr-0">
+                    <div class="col-auto ml-0 px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -82,10 +82,10 @@
                     <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col-12">
+                    <div class="col align-self-stretch">
                         <InputListOfStrings @bind-List="x.Value" />
                     </div>
-                    <div class="col-12 mb-2">
+                    <div class="col-auto px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -96,10 +96,10 @@
                     <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col-12">
+                    <div class="col align-self-stretch">
                         <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
                     </div>
-                    <div class="col-12 mb-2">
+                    <div class="col-auto px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>

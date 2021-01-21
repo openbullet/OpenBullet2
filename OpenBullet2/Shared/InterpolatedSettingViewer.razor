@@ -14,7 +14,7 @@
                     <div class="col align-self-stretch">
                         <input class="bg-interpolated" type="text" @bind="x.Value" />
                     </div>
-                    <div class="col-auto mr-0 pr-0">
+                    <div class="col-auto mr-0 px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -25,10 +25,10 @@
                     <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col-12">
+                    <div class="col align-self-stretch">
                         <InputListOfStrings CssClass="bg-interpolated" @bind-List="x.Value" />
                     </div>
-                    <div class="col-12 mb-2">
+                    <div class="col-auto px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -39,10 +39,10 @@
                     <div class="col-12">
                         <label style="line-height: 30px;">@Name</label>
                     </div>
-                    <div class="col-12">
+                    <div class="col align-self-stretch">
                         <InputDictionaryOfStrings CssClass="bg-interpolated" @bind-Dictionary="x.Value" />
                     </div>
-                    <div class="col-12 mb-2">
+                    <div class="col-auto px-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
