@@ -175,11 +175,13 @@ namespace RuriLib.Models.Jobs
 
                 if (botData.STATUS == "RETRY")
                 {
+                    Console.WriteLine($"RETRY ({botData.Line.Data})({botData.Proxy})");
                     input.Job.DataRetried++;
                     goto START;
                 }
                 else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
                 {
+                    Console.WriteLine($"BAN ({botData.Line.Data})({botData.Proxy})");
                     input.Job.DataBanned++;
                     goto START;
                 }
