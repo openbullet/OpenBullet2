@@ -148,7 +148,7 @@
     <value>Config caricate con successo</value>
   </data>
   <data name="ConfigWarningMessage" xml:space="preserve">
-    <value>Le config contengono codice C# che viene eseguito senza controlli automatici per individuare comportamenti sospetti. Se usi config fatte da terze parti, è TUA responsabilità assicurarti che le config facciano esattamente quello che dovrebbero e che non c'è nulla di sospetto. Controlla sempre il LoliCode / Codice C# tu stesso prima di eseguirle se non ti fidi ciecamente dell'origine.</value>
+    <value>Le config contengono codice C# che viene eseguito senza controlli automatici per individuare comportamenti sospetti. Se usi config fatte da terze parti, è TUA responsabilità assicurarti che le config facciano esattamente quello che dovrebbero e che non ci sia nulla di sospetto. Controlla sempre il LoliCode / Codice C# tu stesso prima di eseguirle se non ti fidi ciecamente dell'origine.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Data di Creazione</value>
