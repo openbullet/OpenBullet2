@@ -4,72 +4,75 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Stacker> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-xl-2 col-lg-4 px-0">
-            <div>
-                <h5>@Loc["CurrentStack"]</h5>
-                <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+@if (config != null)
+{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-xl-2 col-lg-4 px-0">
+                <div>
+                    <h5>@Loc["CurrentStack"]</h5>
+                    <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
+                </div>
             </div>
-        </div>
-        <div class="col-xl-5 col-lg-8 pr-0 pl-lg-2">
-            <div class="pr-4" style="height: 800px; overflow-y: auto;">
-                <h5>@Loc["BlockInformation"]</h5>
-                @if (selectedBlock != null)
-                {
-                    @switch (selectedBlock)
+            <div class="col-xl-5 col-lg-8 pr-0 pl-lg-2">
+                <div class="pr-4" style="height: 800px; overflow-y: auto;">
+                    <h5>@Loc["BlockInformation"]</h5>
+                    @if (selectedBlock != null)
                     {
-                        case KeycheckBlockInstance x:
-                            <KeycheckBlockSettingsViewer Block="x"  ChangedLabel="((args) => stackViewer.RefreshView())" />
-                            break;
+                        @switch (selectedBlock)
+                        {
+                            case KeycheckBlockInstance x:
+                                <KeycheckBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                                break;
 
-                        case HttpRequestBlockInstance x:
-                            <HttpRequestBlockSettingsViewer Block="x"  ChangedLabel="((args) => stackViewer.RefreshView())" />
-                            break;
+                            case HttpRequestBlockInstance x:
+                                <HttpRequestBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                                break;
 
-                        case ParseBlockInstance x:
-                            <ParseBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
-                            break;
+                            case ParseBlockInstance x:
+                                <ParseBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                                break;
 
-                        case ScriptBlockInstance x:
-                            <ScriptBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
-                            break;
+                            case ScriptBlockInstance x:
+                                <ScriptBlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                                break;
 
-                        case LoliCodeBlockInstance x:
-                            <LoliCodeBlockSettingsViewer Block="x" />
-                            break;
+                            case LoliCodeBlockInstance x:
+                                <LoliCodeBlockSettingsViewer Block="x" />
+                                break;
 
-                        case AutoBlockInstance x:
-                            <BlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
-                            break;
+                            case AutoBlockInstance x:
+                                <BlockSettingsViewer Block="x" ChangedLabel="((args) => stackViewer.RefreshView())" />
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    <text>@Loc["NoBlockSelectedInfo"]</text>
-                }
+                    else
+                    {
+                        <text>@Loc["NoBlockSelectedInfo"]</text>
+                    }
+                </div>
+            </div>
+            <div class="col-xl-5 d-xl-block d-none pr-0 pl-xl-2">
+                <div style="height: 800px; overflow-y: auto;">
+                    <Debugger Config="config" />
+                </div>
             </div>
         </div>
-        <div class="col-xl-5 d-xl-block d-none pr-0 pl-xl-2">
-            <div style="height: 800px; overflow-y: auto;">
+        <div class="row">
+            <div class="col px-0">
+                <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
+                <BullettaHelp Title="@help2x00" Messages="new string[] { help2x01, help2x02, help2x03, help2x04 }" /><br />
+                <BullettaHelp Title="@help3x00" Messages="new string[] { help3x01, help3x02, help3x03 }" />
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-0 mx-0 d-xl-none d-block">
                 <Debugger Config="config" />
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col px-0">
-            <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
-            <BullettaHelp Title="@help2x00" Messages="new string[] { help2x01, help2x02, help2x03, help2x04 }" /><br />
-            <BullettaHelp Title="@help3x00" Messages="new string[] { help3x01, help3x02, help3x03 }" />
-            <hr />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 px-0 mx-0 d-xl-none d-block">
-            <Debugger Config="config" />
-        </div>
-    </div>
-</div>
+}
 
 @code {
     string help1x00 => Loc["Help1x00"];

@@ -24,7 +24,13 @@ namespace OpenBullet2.Pages
         protected override async Task OnInitializedAsync()
         {
             config = ConfigService.SelectedConfig;
-            
+
+            if (config == null)
+            {
+                Nav.NavigateTo("/configs");
+                return;
+            }
+
             try
             {
                 config.ChangeMode(ConfigMode.Stack);

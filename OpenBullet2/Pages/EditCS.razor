@@ -3,55 +3,58 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditCS> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid">
-    <div class="row mb-2">
-        <span class="text-warning">@Loc["CSharpEditor"]</span>
-    </div>
-    <div class="row">
-        <div class="list-group list-group-horizontal">
-            @if (Config.Mode == ConfigMode.CSharp)
-            {
-                <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
-            }
-            else
-            {
-                <!--<button class="btn btn-sm btn-outline-success" @onclick="Transpile"><span class="oi oi-cog"></span> @Loc["TranspileFromBlocks"]</button>-->
-                <button class="btn btn-sm btn-outline-warning" @onclick="ConvertConfig"><span class="oi oi-fire"></span> @Loc["ConvertToCSharpConfig"]</button>
-            }
+@if (Config != null)
+{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <span class="text-warning">@Loc["CSharpEditor"]</span>
         </div>
-    </div>
-    @if (showUsings)
-    {
-        <div class="row mt-3">
-            <p>@Loc["UsingsInfo"]</p><br />
-            <div class="w-100">
-                <EditForm Model="Config.Settings.ScriptSettings">
-                    <InputListOfStrings @bind-List="Config.Settings.ScriptSettings.CustomUsings" />
-                </EditForm>
+        <div class="row">
+            <div class="list-group list-group-horizontal">
+                @if (Config.Mode == ConfigMode.CSharp)
+                {
+                    <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
+                }
+                else
+                {
+                    <!--<button class="btn btn-sm btn-outline-success" @onclick="Transpile"><span class="oi oi-cog"></span> @Loc["TranspileFromBlocks"]</button>-->
+                    <button class="btn btn-sm btn-outline-warning" @onclick="ConvertConfig"><span class="oi oi-fire"></span> @Loc["ConvertToCSharpConfig"]</button>
+                }
             </div>
         </div>
-    }
-    <div class="row">
-        <div class="col-xl-6 col-lg-12 pl-0">
-            <div class="w-100 mt-3" style="height: 800px;">
-                <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+        @if (showUsings)
+        {
+            <div class="row mt-3">
+                <p>@Loc["UsingsInfo"]</p><br />
+                <div class="w-100">
+                    <EditForm Model="Config.Settings.ScriptSettings">
+                        <InputListOfStrings @bind-List="Config.Settings.ScriptSettings.CustomUsings" />
+                    </EditForm>
+                </div>
             </div>
-            <br />
-            <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />
-            <hr />
+        }
+        <div class="row">
+            <div class="col-xl-6 col-lg-12 pl-0">
+                <div class="w-100 mt-3" style="height: 800px;">
+                    <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+                </div>
+                <br />
+                <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />
+                <hr />
+            </div>
+            <div class="col-xl-6 d-xl-block d-none pr-0">
+                <div style="height: 800px; overflow-y: auto;">
+                    <Debugger Config="Config" />
+                </div>
+            </div>
         </div>
-        <div class="col-xl-6 d-xl-block d-none pr-0">
-            <div style="height: 800px; overflow-y: auto;">
+        <div class="row">
+            <div class="col-12 px-0 mx-0 d-xl-none d-block">
                 <Debugger Config="Config" />
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 px-0 mx-0 d-xl-none d-block">
-            <Debugger Config="Config" />
-        </div>
-    </div>
-</div>
+}
 
 @code {
     private bool showUsings = false;

@@ -25,6 +25,12 @@ namespace OpenBullet2.Pages
         {
             Config = ConfigService.SelectedConfig;
 
+            if (Config == null)
+            {
+                Nav.NavigateTo("/configs");
+                return;
+            }
+
             // Transpile if not in CSharp mode
             if (Config != null && Config.Mode != ConfigMode.CSharp)
             {

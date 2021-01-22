@@ -2,49 +2,52 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditLC> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid">
-    <div class="row mb-2">
-        <span class="text-warning">@Loc["LoliCodeEditor"]</span>
-    </div>
-    <div class="row">
-        <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
+@if (config != null)
+{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <span class="text-warning">@Loc["LoliCodeEditor"]</span>
         </div>
-    </div>
-    @if (showUsings)
-    {
-        <div class="row mt-3">
-            <p>@Loc["UsingsInfo"]</p><br />
-            <div class="w-100">
-                <EditForm Model="config.Settings.ScriptSettings">
-                    <InputListOfStrings @bind-List="config.Settings.ScriptSettings.CustomUsings" />
-                </EditForm>
+        <div class="row">
+            <div class="list-group list-group-horizontal">
+                <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
             </div>
         </div>
-    }
-    <div class="row">
-        <div class="col-xl-6 col-lg-12 pl-0">
-            <div class="w-100 mt-3" style="height: 800px;">
-                <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions"
-                              OnDidInit="@(() => OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme(Settings))" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+        @if (showUsings)
+        {
+            <div class="row mt-3">
+                <p>@Loc["UsingsInfo"]</p><br />
+                <div class="w-100">
+                    <EditForm Model="config.Settings.ScriptSettings">
+                        <InputListOfStrings @bind-List="config.Settings.ScriptSettings.CustomUsings" />
+                    </EditForm>
+                </div>
             </div>
-            <br />
-            <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
-            <a href="#" @onclick="@(() => js.InvokeVoidAsync("open", "docs/lolicode/statements", "_blank"))">LoliCode Statements</a>
-            <hr />
+        }
+        <div class="row">
+            <div class="col-xl-6 col-lg-12 pl-0">
+                <div class="w-100 mt-3" style="height: 800px;">
+                    <MonacoEditor @ref="_editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions"
+                                  OnDidInit="@(() => OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme(Settings))" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+                </div>
+                <br />
+                <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
+                <a href="#" @onclick="@(() => js.InvokeVoidAsync("open", "docs/lolicode/statements", "_blank"))">LoliCode Statements</a>
+                <hr />
+            </div>
+            <div class="col-xl-6 d-xl-block d-none pr-0">
+                <div style="height: 800px; overflow-y: auto;">
+                    <Debugger Config="config" />
+                </div>
+            </div>
         </div>
-        <div class="col-xl-6 d-xl-block d-none pr-0">
-            <div style="height: 800px; overflow-y: auto;">
+        <div class="row">
+            <div class="col-12 px-0 mx-0 d-xl-none d-block">
                 <Debugger Config="config" />
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 px-0 mx-0 d-xl-none d-block">
-            <Debugger Config="config" />
-        </div>
-    </div>
-</div>
+}
 
 @code {
     private bool showUsings = false;

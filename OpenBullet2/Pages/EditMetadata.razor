@@ -2,22 +2,26 @@
 @using RuriLib.Models.Configs
 @using OpenBullet2.Services
 @inject ConfigService ConfigService
+@inject NavigationManager Nav
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditMetadata> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<EditForm Model="config">
-    <label for="name">@Loc["Name"]</label>
-    <InputText class="mb-3" @bind-Value="config.Metadata.Name" />
+@if (config != null)
+{
+    <EditForm Model="config">
+        <label for="name">@Loc["Name"]</label>
+        <InputText class="mb-3" @bind-Value="config.Metadata.Name" />
 
-    <label for="author">@Loc["Author"]</label>
-    <InputText class="mb-3" @bind-Value="config.Metadata.Author" />
+        <label for="author">@Loc["Author"]</label>
+        <InputText class="mb-3" @bind-Value="config.Metadata.Author" />
 
-    <label for="category">@Loc["Category"]</label>
-    <InputText class="mb-3" @bind-Value="config.Metadata.Category" />
+        <label for="category">@Loc["Category"]</label>
+        <InputText class="mb-3" @bind-Value="config.Metadata.Category" />
 
-    <label for="image">@Loc["Image"]</label>
-    <InputImage @bind-Base64="@config.Metadata.Base64Image" />
-</EditForm>
+        <label for="image">@Loc["Image"]</label>
+        <InputImage @bind-Base64="@config.Metadata.Base64Image" />
+    </EditForm>
+}
 
 @code {
     private Config config;
@@ -25,5 +29,8 @@
     protected override void OnInitialized()
     {
         config = ConfigService.SelectedConfig;
+
+        if (config == null)
+            Nav.NavigateTo("/configs");
     }
 }

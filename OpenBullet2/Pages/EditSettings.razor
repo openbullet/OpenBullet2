@@ -4,209 +4,214 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<h1>@Loc["General"]</h1>
-<EditForm Model="settings.GeneralSettings">
+@if (settings != null)
+{
+    <h1>@Loc["General"]</h1>
+    <EditForm Model="settings.GeneralSettings">
 
-    <label>@Loc["SuggestedBots"]</label>
-    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.SuggestedBots" />
+        <label>@Loc["SuggestedBots"]</label>
+        <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.SuggestedBots" />
 
-    <label>@Loc["CPMLimit"]</label>
-    <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.MaximumCPM" />
+        <label>@Loc["CPMLimit"]</label>
+        <InputNumber class="mb-3" @bind-Value="settings.GeneralSettings.MaximumCPM" />
 
-    <label>@Loc["SaveEmptyCaptures"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
-    <br />
+        <label>@Loc["SaveEmptyCaptures"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
+        <br />
 
-    <label>@Loc["ContinueStopStatuses"]</label>
-    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
-</EditForm>
+        <label>@Loc["ContinueStopStatuses"]</label>
+        <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
+    </EditForm>
 
-<h1>@Loc["Requests"]</h1>
-<EditForm Model="settings.RequestsSettings">
-    <label>@Loc["IgnoreResponseErrors"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
-    <br />
-</EditForm>
+    <h1>@Loc["Requests"]</h1>
+    <EditForm Model="settings.RequestsSettings">
+        <label>@Loc["IgnoreResponseErrors"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
+        <br />
+    </EditForm>
 
-<h1>@Loc["Proxies"]</h1>
-<EditForm Model="settings.ProxySettings">
-    <label>@Loc["UseProxies"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.ProxySettings.UseProxies" />
-    <br />
+    <h1>@Loc["Proxies"]</h1>
+    <EditForm Model="settings.ProxySettings">
+        <label>@Loc["UseProxies"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.ProxySettings.UseProxies" />
+        <br />
 
-    <label>@Loc["MaxUsesPerProxy"]</label>
-    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
+        <label>@Loc["MaxUsesPerProxy"]</label>
+        <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.MaxUsesPerProxy" />
 
-    <label>@Loc["BanLoopEvasion"]</label>
-    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
+        <label>@Loc["BanLoopEvasion"]</label>
+        <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.BanLoopEvasion" />
 
-    <label>@Loc["BanStatuses"]</label>
-    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
+        <label>@Loc["BanStatuses"]</label>
+        <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="proxyBanStatuses" Selected="proxyContinueStatuses" />
 
-    <label>@Loc["AllowedProxyTypes"]</label>
-    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedProxyTypes" Selected="unallowedProxyTypes" />
-</EditForm>
+        <label>@Loc["AllowedProxyTypes"]</label>
+        <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedProxyTypes" Selected="unallowedProxyTypes" />
+    </EditForm>
 
-<h1>@Loc["Data"]</h1>
-<EditForm Model="settings.DataSettings">
-    <label>@Loc["AllowedWordlistTypes"]</label>
-    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedWordlistTypes" Selected="unallowedWordlistTypes" />
+    <h1>@Loc["Data"]</h1>
+    <EditForm Model="settings.DataSettings">
+        <label>@Loc["AllowedWordlistTypes"]</label>
+        <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="allowedWordlistTypes" Selected="unallowedWordlistTypes" />
 
-    <label>@Loc["UrlEncodeAfterSlicing"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
-    <br />
+        <label>@Loc["UrlEncodeAfterSlicing"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
+        <br />
 
-    <label>@Loc["DataRules"]</label>
-    <br />
-    <div class="list-group list-group-horizontal">
-        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new SimpleDataRule()))">
-            <span class="oi oi-plus"></span>
-            @Loc["AddSimpleRule"]
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new RegexDataRule()))">
-            <span class="oi oi-plus"></span>
-            @Loc["AddRegexRule"]
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-primary"
-                @onclick="@(() => showRegexHelper = !showRegexHelper)">
-            <span class="oi oi-plus"></span> @Loc["ToggleRegexHelper"]
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-danger"
-                @onclick="@(() => settings.DataSettings.DataRules.Clear())">
-            <span class="oi oi-x"></span> @Loc["Clear"]
-        </button>
-    </div>
-    @if (showRegexHelper)
-    {
-        <RegexHelper BuiltRegex="@((regex) => settings.DataSettings.DataRules.Add(new RegexDataRule { RegexToMatch = regex }))" />
-    }
-    <div class="container-fluid" style="margin-top: 15px;">
-        @foreach (var rule in settings.DataSettings.DataRules)
+        <label>@Loc["DataRules"]</label>
+        <br />
+        <div class="list-group list-group-horizontal">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new SimpleDataRule()))">
+                <span class="oi oi-plus"></span>
+                @Loc["AddSimpleRule"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new RegexDataRule()))">
+                <span class="oi oi-plus"></span>
+                @Loc["AddRegexRule"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-primary"
+                    @onclick="@(() => showRegexHelper = !showRegexHelper)">
+                <span class="oi oi-plus"></span> @Loc["ToggleRegexHelper"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    @onclick="@(() => settings.DataSettings.DataRules.Clear())">
+                <span class="oi oi-x"></span> @Loc["Clear"]
+            </button>
+        </div>
+        @if (showRegexHelper)
         {
-            <div class="row">
-                <div class="col-auto px-1 px-md-2">
-                    <label style="line-height: 30px;">@Loc["SliceName"]</label>
-                </div>
-                <div class="col align-self-stretch px-1 px-md-2">
-                    <InputText @bind-Value="rule.SliceName" />
-                </div>
-
-                @switch (rule)
-                {
-                    case SimpleDataRule r:
-                        <div class="col-auto px-1 px-md-2">
-                            <InputSelect @bind-Value="r.Comparison">
-                                @foreach (var c in Enum.GetNames(typeof(StringRule)))
-                                {
-                                    <option value="@c">@c</option>
-                                }
-                            </InputSelect>
-                        </div>
-                        <div class="col align-self-stretch px-1 px-md-2">
-                            <InputText @bind-Value="r.StringToCompare" />
-                        </div>
-                        <div class="col-auto px-1 px-md-2 mt-1">
-                            <span>@Loc["CaseSensitive"]</span>
-                            <InputCheckbox @bind-Value="r.CaseSensitive" />
-                        </div>
-                        break;
-
-                    case RegexDataRule r:
-                        <div class="col-auto px-1 px-md-2">
-                            <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
-                        </div>
-                        <div class="col align-self-stretch px-1 px-md-2">
-                            <InputText @bind-Value="r.RegexToMatch" />
-                        </div>
-                        break;
-
-                    default:
-                        break;
-                }
-
-                <div class="col-auto px-1 px-md-2 mt-1">
-                    <span>@Loc["Invert"]</span>
-                    <InputCheckbox @bind-Value="rule.Invert" />
-                </div>
-
-                <div class="col-auto px-1 px-md-2">
-                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
-                        <span class="oi oi-x"></span></button>
-                </div>
-            </div>
+            <RegexHelper BuiltRegex="@((regex) => settings.DataSettings.DataRules.Add(new RegexDataRule { RegexToMatch = regex }))" />
         }
-    </div>
-</EditForm>
+        <div class="container-fluid" style="margin-top: 15px;">
+            @foreach (var rule in settings.DataSettings.DataRules)
+            {
+                <div class="row">
+                    <div class="col-auto px-1 px-md-2">
+                        <label style="line-height: 30px;">@Loc["SliceName"]</label>
+                    </div>
+                    <div class="col align-self-stretch px-1 px-md-2">
+                        <InputText @bind-Value="rule.SliceName" />
+                    </div>
 
-<h1>@Loc["Inputs"]</h1>
-<EditForm Model="settings.InputSettings">
-    <p>
-        @Loc["InputsDescription"]
-    </p>
-    <label>@Loc["CustomInputs"]</label>
-    <br />
-    <div class="list-group list-group-horizontal">
-        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
-            <span class="oi oi-plus"></span> @Loc["Add"]
-        </button>
-        <button type="button" class="btn btn-sm btn-outline-danger"
-                @onclick="@(() => settings.InputSettings.CustomInputs.Clear())">
-            <span class="oi oi-x"></span> @Loc["Clear"]
-        </button>
-    </div>
-    <div class="container-fluid" style="margin-top: 15px;">
-        @foreach (var input in settings.InputSettings.CustomInputs)
-        {
-            <div class="row">
-                <div class="col-auto px-1 px-md-2">
-                    <label style="line-height: 30px;">@Loc["InputDescription"]</label>
-                </div>
-                <div class="col align-self-stretch px-1 px-md-2">
-                    <InputText @bind-Value="input.Description" />
-                </div>
-                <div class="col-auto px-1 px-md-2">
-                    <label style="line-height: 30px;">@Loc["VariableName"]</label>
-                </div>
-                <div class="col align-self-stretch px-1 px-md-2">
-                    <InputText @bind-Value="input.VariableName" />
-                </div>
-                <div class="col-auto px-1 px-md-2">
-                    <label style="line-height: 30px;">@Loc["DefaultAnswer"]</label>
-                </div>
-                <div class="col align-self-stretch px-1 px-md-2">
-                    <InputText @bind-Value="input.DefaultAnswer" />
-                </div>
-                <div class="col-auto px-1 px-md-2">
-                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
-                        <span class="oi oi-x"></span></button>
-                </div>
-            </div>
-        }
-    </div>
-</EditForm>
+                    @switch (rule)
+                    {
+                        case SimpleDataRule r:
+                            <div class="col-auto px-1 px-md-2">
+                                <InputSelect @bind-Value="r.Comparison">
+                                    @foreach (var c in Enum.GetNames(typeof(StringRule)))
+                                                    {
+                                        <option value="@c">@c</option>
+                                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="col align-self-stretch px-1 px-md-2">
+                                <InputText @bind-Value="r.StringToCompare" />
+                            </div>
+                            <div class="col-auto px-1 px-md-2 mt-1">
+                                <span>@Loc["CaseSensitive"]</span>
+                                <InputCheckbox @bind-Value="r.CaseSensitive" />
+                            </div>
+                            break;
 
-<h1>@Loc["Puppeteer"]</h1>
-<EditForm Model="settings.PuppeteerSettings">
-    <label>@Loc["AlwaysOpenBrowser"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.AlwaysOpenBrowser" />
-    <br />
+                        case RegexDataRule r:
+                            <div class="col-auto px-1 px-md-2">
+                                <label style="line-height: 30px;">@Loc["RegexToMatch"]</label>
+                            </div>
+                            <div class="col align-self-stretch px-1 px-md-2">
+                                <InputText @bind-Value="r.RegexToMatch" />
+                            </div>
+                            break;
 
-    <label>@Loc["QuitBrowserStatuses"]</label>
-    <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
+                        default:
+                            break;
+                    }
 
-    <label>@Loc["Headless"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
-    <br />
+                    <div class="col-auto px-1 px-md-2 mt-1">
+                        <span>@Loc["Invert"]</span>
+                        <InputCheckbox @bind-Value="rule.Invert" />
+                    </div>
 
-    <label>@Loc["PuppeteerCommandLineArguments"]</label>
-    <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
+                    <div class="col-auto px-1 px-md-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </EditForm>
 
-    <label>@Loc["IgnoreHttpsErrors"]</label>
-    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
-    <br />
-</EditForm>
+    <h1>@Loc["Inputs"]</h1>
+    <EditForm Model="settings.InputSettings">
+        <p>
+            @Loc["InputsDescription"]
+        </p>
+        <label>@Loc["CustomInputs"]</label>
+        <br />
+        <div class="list-group list-group-horizontal">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.InputSettings.CustomInputs.Add(new CustomInput()))">
+                <span class="oi oi-plus"></span> @Loc["Add"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    @onclick="@(() => settings.InputSettings.CustomInputs.Clear())">
+                <span class="oi oi-x"></span> @Loc["Clear"]
+            </button>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px;">
+            @foreach (var input in settings.InputSettings.CustomInputs)
+            {
+                <div class="row">
+                    <div class="col-auto px-1 px-md-2">
+                        <label style="line-height: 30px;">@Loc["InputDescription"]</label>
+                    </div>
+                    <div class="col align-self-stretch px-1 px-md-2">
+                        <InputText @bind-Value="input.Description" />
+                    </div>
+                    <div class="col-auto px-1 px-md-2">
+                        <label style="line-height: 30px;">@Loc["VariableName"]</label>
+                    </div>
+                    <div class="col align-self-stretch px-1 px-md-2">
+                        <InputText @bind-Value="input.VariableName" />
+                    </div>
+                    <div class="col-auto px-1 px-md-2">
+                        <label style="line-height: 30px;">@Loc["DefaultAnswer"]</label>
+                    </div>
+                    <div class="col align-self-stretch px-1 px-md-2">
+                        <InputText @bind-Value="input.DefaultAnswer" />
+                    </div>
+                    <div class="col-auto px-1 px-md-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.InputSettings.CustomInputs.Remove(input))">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </EditForm>
 
-<button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
+    <h1>@Loc["Puppeteer"]</h1>
+    <EditForm Model="settings.PuppeteerSettings">
+        <label>@Loc["AlwaysOpenBrowser"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.AlwaysOpenBrowser" />
+        <br />
+
+        <label>@Loc["QuitBrowserStatuses"]</label>
+        <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
+
+        <label>@Loc["Headless"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
+        <br />
+
+        <label>@Loc["PuppeteerCommandLineArguments"]</label>
+        <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
+
+        <label>@Loc["IgnoreHttpsErrors"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
+        <br />
+    </EditForm>
+
+    <button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
+}
 
 @code {
     private bool showRegexHelper = false;

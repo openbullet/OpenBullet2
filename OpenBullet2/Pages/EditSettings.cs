@@ -31,6 +31,12 @@ namespace OpenBullet2.Pages
 
         protected override void OnInitialized()
         {
+            if (ConfigService.SelectedConfig == null)
+            {
+                Nav.NavigateTo("/configs");
+                return;
+            }
+
             settings = ConfigService.SelectedConfig.Settings;
 
             // HACK: I tried binding directly to lists but it would spit out double the amount of values when deserializing the json

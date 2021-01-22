@@ -2,12 +2,16 @@
 @using RuriLib.Models.Configs
 @using OpenBullet2.Services
 @inject ConfigService ConfigService
+@inject NavigationManager Nav 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditReadme> Loc
 @attribute [Authorize(Roles = "Admin")]
 
-<EditForm Model="config">
-    <InputMarkdown Label="@Loc["Readme"]" @bind-Value="config.Readme" For="@(() => config.Readme)" />
-</EditForm>
+@if (config != null)
+{
+    <EditForm Model="config">
+        <InputMarkdown Label="@Loc["Readme"]" @bind-Value="config.Readme" For="@(() => config.Readme)" />
+    </EditForm>
+}
 
 @code {
     private Config config;
@@ -15,5 +19,8 @@
     protected override void OnInitialized()
     {
         config = ConfigService.SelectedConfig;
+
+        if (config == null)
+            Nav.NavigateTo("/configs");
     }
 }

@@ -15,6 +15,7 @@ namespace OpenBullet2.Pages
         [Inject] public BrowserConsoleLogger OBLogger { get; set; }
         [Inject] ConfigService ConfigService { get; set; }
         [Inject] PersistentSettingsService Settings { get; set; }
+        [Inject] NavigationManager Nav { get; set; }
 
         private MonacoEditor _editor { get; set; }
         private Config config;
@@ -22,6 +23,12 @@ namespace OpenBullet2.Pages
         protected override async Task OnInitializedAsync()
         {
             config = ConfigService.SelectedConfig;
+
+            if (config == null)
+            {
+                Nav.NavigateTo("/configs");
+                return;
+            }
 
             try
             {
