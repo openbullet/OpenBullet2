@@ -141,6 +141,9 @@
   <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
     <value>Configs erfolgreich raufgeladen</value>
   </data>
+  <data name="ConfigWarningMessage" xml:space="preserve">
+    <value>Configs enthalten C#-Code, der ohne automatische Überprüfung auf bösartige Verhaltensweisen ausgeführt wird. Wenn du Configs von Drittanbietern verwendest, liegt es in DEINER Verantwortung, sicherzustellen, dass die Configs genau das tun, was sie tun sollen und dass nichts Zwielichtiges vor sich geht. Überprüfe den LoliCode / C#-Code immer selbst, bevor du ihn ausführst, falls du der Quelle nicht vollständig vertraust.</value>
+  </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Ersellungsdatum</value>
   </data>
@@ -182,5 +185,8 @@
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Hochladen</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>WARNUNG</value>
   </data>
 </root>

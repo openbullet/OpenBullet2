@@ -24,6 +24,14 @@
             <InputFile OnChange="@ProcessUploadedConfigs" multiple />
         </div>
     }
+
+    <div class="row mt-3 fg-secondary">
+        <div class="col px-0">
+            <h5>@Loc["WARNING"]!</h5>
+            <p>@Loc["ConfigWarningMessage"]</p>
+        </div>
+    </div>
+
     @if (detailedView)
     {
         @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
