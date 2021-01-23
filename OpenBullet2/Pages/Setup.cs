@@ -50,6 +50,7 @@ namespace OpenBullet2.Pages
 
         private void SetupAdminAccount()
         {
+            Settings.OpenBulletSettings.SecuritySettings.RequireAdminLogin = true;
             Settings.OpenBulletSettings.SecuritySettings.AdminUsername = admin.Username;
             Settings.OpenBulletSettings.SecuritySettings.SetupAdminPassword(admin.Password);
             step++;
