@@ -144,6 +144,9 @@
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
+  <data name="days" xml:space="preserve">
+    <value>giorno/i</value>
+  </data>
   <data name="EditBotsAmount" xml:space="preserve">
     <value>Cambia numero di bot</value>
   </data>
