@@ -29,11 +29,13 @@ namespace OpenBullet2.Services
         private readonly IRandomUAProvider randomUAProvider;
         private readonly IRNGProvider rngProvider;
         private readonly IJobLogger logger;
+        private readonly IProxyRepository proxyRepo;
         private readonly PluginRepository pluginRepo;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
             IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
-            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger)
+            ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger,
+            IProxyRepository proxyRepo)
         {
             this.configService = configService;
             this.settingsService = settingsService;
@@ -45,6 +47,7 @@ namespace OpenBullet2.Services
             this.randomUAProvider = randomUAProvider;
             this.rngProvider = rngProvider;
             this.logger = logger;
+            this.proxyRepo = proxyRepo;
         }
 
         public Job FromOptions(int id, int ownerId, JobOptions options)
@@ -118,6 +121,7 @@ namespace OpenBullet2.Services
             job.Tested = proxies.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
             job.Working = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.Working);
             job.NotWorking = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.NotWorking);
+            job.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepo);
 
             return job;
         }

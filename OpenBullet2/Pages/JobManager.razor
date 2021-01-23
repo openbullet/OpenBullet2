@@ -25,7 +25,7 @@
                             <span>
                                 @if (x.Config != null)
                                 {
-                                    <b>Config: </b>@x.Config.Metadata.Name
+                                    <b>@Loc["Config"]: </b>@x.Config.Metadata.Name
                                 }
                                 else
                                 {
@@ -33,37 +33,45 @@
                                 }
                             </span>
                             <span>
-                                <b>Data Pool: </b>
+                                <b>@Loc["DataPool"]: </b>
                                 @switch (x.DataPool)
                                 {
                                     case WordlistDataPool p:
-                                        @(p.Wordlist.Name + " (Wordlist)") 
+                                        @(p.Wordlist.Name + $" ({Loc["Wordlist"]})") 
                                         break;
 
                                     case CombinationsDataPool p:
-                                        @("Combinations")
+                                        @Loc["Combinations"]
                                         break;
 
                                     case InfiniteDataPool p:
-                                        @("Infinite")
+                                        @Loc["Infinite"]
                                         break;
 
                                     case RangeDataPool p:
-                                        @("Range")
+                                        @Loc["Range"]
                                         break;
 
                                     case FileDataPool p:
-                                        @(p.FileName + ("File"))
+                                        @(p.FileName + Loc["File"])
                                         break;
                                 }
                             </span>
-                            <span><b>Bots: </b>@x.Bots</span>
-                            <span><b>Proxies: </b>@x.ProxyMode</span>
-                            <span class="fg-hit"><b>Hits: </b>@x.DataHits</span>
-                            <span class="fg-custom"><b>Custom: </b>@x.DataCustom</span>
-                            <span class="fg-tocheck"><b>ToCheck: </b>@x.DataToCheck</span>
-                            <span><b>Progress: </b>@x.DataTested / @x.DataPool.Size (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
-                            <span><b>CPM: </b>@x.CPM</span>
+                            <span><b>@Loc["Bots"]: </b>@x.Bots</span>
+                            <span><b>@Loc["Proxies"]: </b>@x.ProxyMode</span>
+                            <span class="fg-hit"><b>@Loc["Hits"]: </b>@x.DataHits</span>
+                            <span class="fg-custom"><b>@Loc["Custom"]: </b>@x.DataCustom</span>
+                            <span class="fg-tocheck"><b>@Loc["ToCheck"]: </b>@x.DataToCheck</span>
+                            <span><b>@Loc["Progress"]: </b>@x.DataTested / @x.DataPool.Size (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
+                            <span><b>@Loc["CPM"]: </b>@x.CPM</span>
+                            break;
+
+                        case ProxyCheckJob x:
+                            <span><b>@Loc["Bots"]: </b>@x.Bots</span>
+                            <span class="fg-hit"><b>@Loc["Working"]: </b>@x.Working</span>
+                            <span class="fg-fail"><b>@Loc["NotWorking"]: </b>@x.NotWorking</span>
+                            <span><b>@Loc["Progress"]: </b>@x.Tested / @x.Total (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
+                            <span><b>@Loc["CPM"]: </b>@x.CPM</span>
                             break;
                     }
                 </div>

@@ -141,8 +141,14 @@
   <data name="Controls" xml:space="preserve">
     <value>Controls</value>
   </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
   <data name="EditBotsAmount" xml:space="preserve">
     <value>Edit bots amount</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Elapsed</value>
   </data>
   <data name="HardStopMessage" xml:space="preserve">
     <value>Sending hard abort signal</value>
@@ -153,6 +159,9 @@
   <data name="NotWorking" xml:space="preserve">
     <value>Not working</value>
   </data>
+  <data name="OtherStats" xml:space="preserve">
+    <value>Other stats</value>
+  </data>
   <data name="Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
@@ -162,8 +171,17 @@
   <data name="PausingMessage" xml:space="preserve">
     <value>Pausing... please wait until the current tasks finished processing</value>
   </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
   <data name="ProxyChecked" xml:space="preserve">
     <value>Proxy checked</value>
+  </data>
+  <data name="ProxyStats" xml:space="preserve">
+    <value>Proxy stats</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Remaining</value>
   </data>
   <data name="Resume" xml:space="preserve">
     <value>Resume</value>
@@ -179,9 +197,6 @@
   </data>
   <data name="StartedChecking" xml:space="preserve">
     <value>Started checking</value>
-  </data>
-  <data name="Stats" xml:space="preserve">
-    <value>Stats</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>

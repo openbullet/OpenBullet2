@@ -280,7 +280,7 @@ namespace OpenBullet2.Shared
             while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
             {
                 await InvokeAsync(StateHasChanged);
-                await Task.Delay(System.Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval));
+                await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval));
             }
 
             // A final one to refresh the button status

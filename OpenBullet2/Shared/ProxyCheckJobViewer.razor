@@ -1,52 +1,46 @@
 ﻿@using RuriLib.Models.Jobs
-@using OpenBullet2.Helpers
 @using RuriLib.Models.Jobs.StartConditions 
-@using RuriLib.Models.Proxies
-@using RuriLib.Threading.Models
 @using System.Globalization
-@using OpenBullet2.Services 
-@using OpenBullet2.Shared.Forms
-@inject IModalService Modal
-@inject PersistentSettingsService PersistentSettings
-@inject MemoryJobLogger Logger
+@implements IDisposable
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckJobViewer> Loc
 
-<div>
-    <p style="color: orange;"><b>@Loc["JobOptions"]</b></p>
-    <table class="table">
-        <tbody>
-            <tr>
-                <th scope="row">@Loc["Url"]</th>
-                <td>@Job.Url</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["SuccessKey"]</th>
-                <td>@Job.SuccessKey</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["CheckOnlyUntested"]</th>
-                <td>@Job.CheckOnlyUntested.ToString()</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["TimeoutMilliseconds"]</th>
-                <td>@Job.Timeout.TotalMilliseconds</td>
-            </tr>
-            <tr>
-                <th scope="row">@Loc["Bots"]</th>
-                <td>
-                    <span style="margin-right: 10px;">@Job.Bots</span>
-                    @if (!changingBots)
-                    {
-                        <button class="btn btn-sm btn-outline-primary" type="button" @onclick="ChangeBots"> Change</button>
-                    }
-                    else
-                    {
-                        <span><i>@Loc["ChangingPleaseWait"]</i></span>
-                    }
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="proxycheck-options-overview mb-3">
+    <!-- Job Options -->
+    <p class="fg-custom"><b>@Loc["JobOptions"]</b></p>
+
+    <!-- Url -->
+    <span><b>@Loc["Url"]: </b>@Job.Url</span>
+    <br />
+
+    <!-- Success Key -->
+    <span><b>@Loc["SuccessKey"]: </b>@Job.SuccessKey</span>
+    <br />
+
+    <!-- Url -->
+    <span><b>@Loc["CheckOnlyUntested"]: </b>@Job.CheckOnlyUntested</span>
+    <br />
+
+    <!-- Url -->
+    <span><b>@Loc["TimeoutMilliseconds"]: </b>@Job.Timeout.TotalMilliseconds</span>
+    <br />
+
+    <!-- Bots -->
+    <span class="mr-2"><b>@Loc["Bots"]: </b>@Job.Bots</span>
+    @if (!changingBots)
+    {
+        <span class="oi oi-pencil" style="cursor: pointer;" @onclick="ChangeBots"></span>
+    }
+    else
+    {
+        <span><i>@Loc["ChangingPleaseWait"]</i></span>
+    }
+    <br />
+
+    <!-- Change Options Button -->
+    @if (Job.Status == JobStatus.Idle)
+    {
+        <button class="btn btn-sm btn-outline-primary mt-1" type="button" @onclick="ChangeOptions">@Loc["Change"]</button>
+    }
 </div>
 
 <p style="color: orange;"><b>@Loc["Controls"]</b></p>
@@ -99,34 +93,44 @@
     }
 </div>
 
-@if (Job.Parallelizer != null)
+@if (Job.Progress >= 0)
 {
     <div class="progress mt-3">
         <div class="progress-bar" role="progressbar"
-            style="width: @((Job.Parallelizer.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
+            style="width: @((Job.Progress * 100).ToString("0", CultureInfo.InvariantCulture))%"></div>
     </div>
 }
 
-<div class="mt-2">
-    <p style="color: orange;"><b>@Loc["Stats"]</b></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">@Loc["Total"]</th>
-                <th scope="col">@Loc["Tested"]</th>
-                <th scope="col" style="color: greenyellow;">@Loc["Working"]</th>
-                <th scope="col" style="color: tomato;">@Loc["NotWorking"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>@Job.Total</td>
-                <td>@Job.Tested</td>
-                <td style="color: greenyellow;">@Job.Working</td>
-                <td style="color: tomato;">@Job.NotWorking</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container-fluid pl-0 pr-0 mt-3 mb-3">
+    <div class="row">
+        <div class="col">
+            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
+            <span class="font-weight-bold">@Loc["Total"]: </span><span>@Job.Total</span><br />
+            <span class="font-weight-bold">@Loc["Tested"]: </span><span>@Job.Tested</span><br />
+            <span class="font-weight-bold fg-hit">@Loc["Working"]: </span><span class="fg-hit">@Job.Working</span><br />
+            <span class="font-weight-bold fg-fail">@Loc["NotWorking"]: </span><span class="fg-fail">@Job.NotWorking</span><br />
+        </div>
+        @if (Job.Progress >= 0)
+        {
+            <div class="col">
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.CPM</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @Job.Tested / @Job.Total (@((Job.Progress * 100).ToString("0.00"))%)</span>
+            </div>
+        }
+        else
+        {
+            <div class="col">
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span>-</span><br />
+            </div>
+        }
+    </div>
 </div>
 
 @if (Job.GeoProvider != null && Job.GeoProvider is OpenBullet2.Models.Proxies.DBIPProxyGeolocationProvider)
@@ -137,160 +141,3 @@
 }
 
 <GenericLogger JobId="Job.Id" />
-
-@code {
-    [Parameter] public ProxyCheckJob Job { get; set; }
-    int refreshInterval = 1000;
-    bool changingBots = false;
-
-    protected override void OnInitialized()
-    {
-        PeriodicRefresh(refreshInterval);
-        TryHookLogger();
-    }
-
-    private async Task ChangeBots()
-    {
-        var modal = Modal.Show<BotsSelector>(Loc["EditBotsAmount"]);
-        var result = await modal.Result;
-
-        if (!result.Cancelled)
-        {
-            var newAmount = (int)result.Data;
-            changingBots = true;
-
-            if (Job.Parallelizer != null)
-                await Job.Parallelizer.ChangeDegreeOfParallelism(newAmount);
-
-            Job.Bots = newAmount;
-            changingBots = false;
-        }
-    }
-
-    private void LogResult(object sender, ResultDetails<ProxyCheckerInput, Proxy> details)
-    {
-        var result = details.Result;
-
-        if (result.WorkingStatus == ProxyWorkingStatus.Working)
-            Logger.LogSuccess(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["withPing"]} {result.Ping} {Loc["andCountry"]} {result.Country}");
-        else
-            Logger.LogWarning(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["asNotWorking"]}");
-    }
-
-    private void LogError(object sender, Exception ex)
-    {
-        Logger.LogError(Job.Id, $"{Loc["TaskManagerError"]} {ex.Message}");
-    }
-
-    private void LogTaskError(object sender, ErrorDetails<ProxyCheckerInput> details)
-    {
-        var proxy = details.Item.Proxy;
-        Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
-    }
-
-    private void LogCompleted(object sender, EventArgs e)
-    {
-        Logger.LogInfo(Job.Id, Loc["CompletedMessage"]);
-    }
-
-    private void TryHookLogger()
-    {
-        if (Job.Parallelizer != null && PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
-        {
-            try { Job.Parallelizer.NewResult -= LogResult; } catch { }
-            try { Job.Parallelizer.TaskError -= LogTaskError; } catch { }
-            try { Job.Parallelizer.Error -= LogError; } catch { }
-            try { Job.Parallelizer.Completed -= LogCompleted; } catch { }
-
-            try
-            {
-                Job.Parallelizer.NewResult += LogResult;
-                Job.Parallelizer.TaskError += LogTaskError;
-                Job.Parallelizer.Error += LogError;
-                Job.Parallelizer.Completed += LogCompleted;
-            }
-            catch { }
-        }
-    }
-
-    private async Task Start()
-    {
-        try
-        {
-            await Job.Start();
-            TryHookLogger();
-            Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
-            PeriodicRefresh(refreshInterval);
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Stop()
-    {
-        try
-        {
-            Logger.LogInfo(Job.Id, Loc["SoftStopMessage"]);
-            await Job.Stop();
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Abort()
-    {
-        try
-        {
-            Logger.LogInfo(Job.Id, Loc["HardStopMessage"]);
-            await Job.Abort();
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Pause()
-    {
-        try
-        {
-            Logger.LogInfo(Job.Id, Loc["PauseMessage"]);
-            await Job.Pause();
-            Logger.LogInfo(Job.Id, Loc["TaskManagerPaused"]);
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async Task Resume()
-    {
-        try
-        {
-            await Job.Resume();
-            Logger.LogInfo(Job.Id, Loc["ResumedMessage"]);
-            PeriodicRefresh(refreshInterval);
-        }
-        catch (Exception ex)
-        {
-            await js.AlertException(ex);
-        }
-    }
-
-    private async void PeriodicRefresh(int interval)
-    {
-        while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
-        {
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(System.Math.Max(50, interval));
-        }
-
-        // A final one to refresh the button status
-        await InvokeAsync(StateHasChanged);
-    }
-}

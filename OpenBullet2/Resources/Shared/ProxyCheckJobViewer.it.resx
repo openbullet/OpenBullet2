@@ -141,8 +141,14 @@
   <data name="Controls" xml:space="preserve">
     <value>Controlli</value>
   </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
   <data name="EditBotsAmount" xml:space="preserve">
     <value>Cambia numero di bot</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Trascorso</value>
   </data>
   <data name="HardStopMessage" xml:space="preserve">
     <value>Inviando segnale di interruzione</value>
@@ -153,6 +159,9 @@
   <data name="NotWorking" xml:space="preserve">
     <value>Non funzionanti</value>
   </data>
+  <data name="OtherStats" xml:space="preserve">
+    <value>Altre statistiche</value>
+  </data>
   <data name="Pause" xml:space="preserve">
     <value>Pausa</value>
   </data>
@@ -162,8 +171,17 @@
   <data name="PausingMessage" xml:space="preserve">
     <value>Mettendo in pausa... per favore attendi che i task correnti finiscano</value>
   </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
   <data name="ProxyChecked" xml:space="preserve">
     <value>Proxy controllato</value>
+  </data>
+  <data name="ProxyStats" xml:space="preserve">
+    <value>Statistiche proxy</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Rimanente</value>
   </data>
   <data name="Resume" xml:space="preserve">
     <value>Riprendi</value>
@@ -179,9 +197,6 @@
   </data>
   <data name="StartedChecking" xml:space="preserve">
     <value>Controllo iniziato</value>
-  </data>
-  <data name="Stats" xml:space="preserve">
-    <value>Statistiche</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Ferma</value>

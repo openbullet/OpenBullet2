@@ -24,10 +24,19 @@ namespace RuriLib.Models.Jobs
         public string SuccessKey { get; set; } = "title>Google";
         public IEnumerable<Proxy> Proxies { get; set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
         public IProxyCheckOutput ProxyOutput { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
-        public Parallelizer<ProxyCheckerInput, Proxy> Parallelizer { get; private set; }
+        // Getters
+        public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
+        public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
+        public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : System.Threading.Timeout.InfiniteTimeSpan;
+        public int CPM => parallelizer != null ? parallelizer.CPM : 0;
+
+        // Private fields
+        private Parallelizer<ProxyCheckInput, Proxy> parallelizer;
+        private Timer tickTimer;
 
         // Stats
         public int Total { get; set; }
@@ -35,14 +44,24 @@ namespace RuriLib.Models.Jobs
         public int Working { get; set; }
         public int NotWorking { get; set; }
 
+        // Events
+        public event EventHandler<ErrorDetails<ProxyCheckInput>> OnTaskError;
+        public event EventHandler<ResultDetails<ProxyCheckInput, Proxy>> OnResult;
+        public event EventHandler<Exception> OnError;
+        public event EventHandler<float> OnProgress;
+        public event EventHandler<JobStatus> OnStatusChanged;
+        public event EventHandler OnCompleted;
+        public event EventHandler OnTimerTick;
+
         public ProxyCheckJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
             : base(settings, pluginRepo, logger)
         {
             
         }
 
-        private Func<ProxyCheckerInput, CancellationToken, Task<Proxy>> workFunction = 
-            new Func<ProxyCheckerInput, CancellationToken, Task<Proxy>>(async (input, token) =>
+        #region Work Function
+        private Func<ProxyCheckInput, CancellationToken, Task<Proxy>> workFunction = 
+            new Func<ProxyCheckInput, CancellationToken, Task<Proxy>>(async (input, token) =>
         {
             var options = new HttpHandlerOptions
             {
@@ -109,7 +128,9 @@ namespace RuriLib.Models.Jobs
 
             return input.Proxy;
         });
+        #endregion
 
+        #region Controls
         public override async Task Start()
         {
             if (Proxies == null)
@@ -125,41 +146,135 @@ namespace RuriLib.Models.Jobs
                 throw new NullReferenceException("The success key cannot be null");
 
             // Wait for the start condition to be verified
-            // await base.Start();
+            await base.Start();
 
             var proxies = CheckOnlyUntested 
                 ? Proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
                 : Proxies;
             
-            var workItems = proxies.Select(p => new ProxyCheckerInput(p, Url, SuccessKey, Timeout, GeoProvider));
-            Parallelizer = ParallelizerFactory<ProxyCheckerInput, Proxy>
+            var workItems = proxies.Select(p => new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider));
+            parallelizer = ParallelizerFactory<ProxyCheckInput, Proxy>
                 .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, Proxies.Count(), 0);
-            Parallelizer.NewResult += UpdateProxy;
-            Parallelizer.StatusChanged += StatusChanged;
+            parallelizer.NewResult += UpdateProxy;
+            parallelizer.StatusChanged += StatusChanged;
+            parallelizer.TaskError += PropagateTaskError;
+            parallelizer.Error += PropagateError;
+            parallelizer.NewResult += PropagateResult;
+            parallelizer.Completed += PropagateCompleted;
 
-            ServicePointManager.DefaultConnectionLimit = 200;
-
-            await Parallelizer.Start();
+            ResetStats();
+            StartTimer();
+            logger?.LogInfo(Id, "All set, starting the execution");
+            await parallelizer.Start();
         }
 
         public override async Task Stop()
         {
-            await Parallelizer?.Stop();
+            try
+            {
+                await parallelizer?.Stop();
+            }
+            finally
+            {
+                StopTimer();
+                logger?.LogInfo(Id, "Execution stopped");
+            }
         }
 
         public override async Task Abort()
         {
-            await Parallelizer?.Abort();
+            try
+            {
+                await parallelizer?.Abort();
+            }
+            finally
+            {
+                StopTimer();
+                logger?.LogInfo(Id, "Execution aborted");
+            }
         }
 
         public override async Task Pause()
         {
-            await Parallelizer?.Pause();
+            try
+            {
+                await parallelizer?.Pause();
+            }
+            finally
+            {
+                StopTimer();
+                logger?.LogInfo(Id, "Execution paused");
+            }
         }
 
         public override async Task Resume()
         {
-            await Parallelizer?.Resume();
+            await parallelizer?.Resume();
+            StartTimer();
+            logger?.LogInfo(Id, "Execution resumed");
+        }
+        #endregion
+
+        #region Wrappers for TaskManager methods
+        public async Task ChangeBots(int amount)
+        {
+            if (parallelizer != null)
+            {
+                await parallelizer.ChangeDegreeOfParallelism(amount);
+                logger?.LogInfo(Id, $"Changed bots to {amount}");
+            }
+        }
+        #endregion
+
+        #region Propagation of TaskManager events
+        private void PropagateTaskError(object sender, ErrorDetails<ProxyCheckInput> details)
+        {
+            OnTaskError?.Invoke(sender, details);
+            logger?.LogException(Id, details.Exception);
+        }
+
+        private void PropagateError(object sender, Exception ex)
+        {
+            OnError?.Invoke(sender, ex);
+            logger?.LogException(Id, ex);
+        }
+
+        private void PropagateResult(object sender, ResultDetails<ProxyCheckInput, Proxy> result)
+        {
+            OnResult?.Invoke(sender, result);
+            // We're not logging results to the IJobLogger because they could arrive at a very high rate
+            // and not be very useful, we're mostly interested in errors here.
+        }
+
+        private void PropagateProgress(object sender, float progress)
+        {
+            OnProgress?.Invoke(sender, progress);
+        }
+
+        private void PropagateCompleted(object sender, EventArgs e)
+        {
+            OnCompleted?.Invoke(sender, e);
+            logger?.LogInfo(Id, "Execution completed");
+        }
+        #endregion
+
+        #region Private Methods
+        private void StartTimer()
+        {
+            tickTimer = new Timer(new TimerCallback(_ => OnTimerTick?.Invoke(this, EventArgs.Empty)),
+                null, (int)TickInterval.TotalMilliseconds, (int)TickInterval.TotalMilliseconds);
+        }
+
+        private void StopTimer()
+        {
+            tickTimer?.Dispose();
+        }
+
+        private void ResetStats()
+        {
+            Tested = 0;
+            Working = 0;
+            NotWorking = 0;
         }
 
         private void StatusChanged(object sender, ParallelizerStatus status)
@@ -175,9 +290,11 @@ namespace RuriLib.Models.Jobs
                 ParallelizerStatus.Resuming => JobStatus.Resuming,
                 _ => throw new NotImplementedException()
             };
+
+            OnStatusChanged?.Invoke(this, Status);
         }
 
-        private void UpdateProxy(object sender, ResultDetails<ProxyCheckerInput, Proxy> details)
+        private void UpdateProxy(object sender, ResultDetails<ProxyCheckInput, Proxy> details)
         {
             var proxy = details.Result;
 
@@ -187,11 +304,12 @@ namespace RuriLib.Models.Jobs
             Tested++;
 
             // This is fire and forget
-            ProxyOutput.Store(proxy);
+            _ = ProxyOutput.Store(proxy);
         }
+        #endregion
     }
 
-    public struct ProxyCheckerInput
+    public struct ProxyCheckInput
     {
         public Proxy Proxy { get; set; }
         public string Url { get; set; }
@@ -199,7 +317,7 @@ namespace RuriLib.Models.Jobs
         public TimeSpan Timeout { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
-        public ProxyCheckerInput(Proxy proxy, string url, string successKey,
+        public ProxyCheckInput(Proxy proxy, string url, string successKey,
             TimeSpan timeout, IProxyGeolocationProvider geoProvider)
         {
             Proxy = proxy;

@@ -117,14 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bots" xml:space="preserve">
+    <value>Bot</value>
+  </data>
   <data name="By" xml:space="preserve">
     <value>di</value>
   </data>
   <data name="Clone" xml:space="preserve">
     <value>Clona</value>
   </data>
+  <data name="Combinations" xml:space="preserve">
+    <value>Combinazioni</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Personalizzati</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Pool di dati</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Modifica</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Come funziona?</value>
@@ -134,6 +155,12 @@
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Per accedere all'interfaccia di uno specifico job puoi semplicemente cliccarci sopra! Se desideri che il manager aggiorni lo stato dei tuoi job meno frequentemente per risparmiare banda, puoi trovare l'opzione %Intervallo di aggiornamento del Job Manager% nelle Impostazioni di OB.</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Hit</value>
+  </data>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infinita</value>
   </data>
   <data name="JobNotIdle" xml:space="preserve">
     <value>Job non idle</value>
@@ -147,6 +174,18 @@
   <data name="NoConfigSelected" xml:space="preserve">
     <value>Nessuna Config selezionata</value>
   </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Non funzionanti</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Intervallo</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
   </data>
@@ -155,5 +194,14 @@
   </data>
   <data name="SelectJobType" xml:space="preserve">
     <value>Seleziona il job</value>
+  </data>
+  <data name="ToCheck" xml:space="preserve">
+    <value>Da controllare</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Funzionanti</value>
   </data>
 </root>

@@ -2,7 +2,6 @@ using IronPython.Compiler;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.CodeAnalysis.Scripting;
-using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Logging;
@@ -50,9 +49,8 @@ namespace RuriLib.Models.Jobs
         public int CPM => parallelizer != null ? parallelizer.CPM : 0;
 
         // Private fields
-        private Parallelizer<MultiRunInput, CheckResult> parallelizer { get; set; }
+        private Parallelizer<MultiRunInput, CheckResult> parallelizer;
         private ProxyPool proxyPool;
-        private readonly Random random;
         private Timer tickTimer;
         private dynamic globalVariables;
 
@@ -96,8 +94,7 @@ namespace RuriLib.Models.Jobs
         public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
             : base(settings, pluginRepo, logger)
         {
-            // Create a random basing on the unique job id
-            random = new Random(Id);
+            
         }
 
         #region Work Function
@@ -267,8 +264,6 @@ namespace RuriLib.Models.Jobs
             parallelizer.Error += PropagateError;
             parallelizer.NewResult += PropagateResult;
             parallelizer.Completed += PropagateCompleted;
-
-            ServicePointManager.DefaultConnectionLimit = 200;
 
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
                 await FetchProxiesFromSources();
