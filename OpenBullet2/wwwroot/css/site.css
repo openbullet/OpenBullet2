@@ -191,6 +191,10 @@ app {
         width: unset !important;
     }
 
+    .sidebar .nav-item {
+        max-width: unset !important;
+    }
+
     .main .top-row:not(.auth) {
         display: none;
     }
