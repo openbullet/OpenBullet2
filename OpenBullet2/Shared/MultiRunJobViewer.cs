@@ -352,6 +352,12 @@ namespace OpenBullet2.Shared
                 return;
             }
 
+            if (selectedHit.BotLogger == null)
+            {
+                await js.AlertError(Loc["Disabled"], Loc["BotLogDisabledError"]);
+                return;
+            }
+
             var parameters = new ModalParameters();
             parameters.Add(nameof(BotLoggerViewerModal.BotLogger), selectedHit.BotLogger);
 

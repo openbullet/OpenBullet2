@@ -183,6 +183,9 @@
   <data name="DrawMouseMovement" xml:space="preserve">
     <value>Draw mouse movement</value>
   </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Enable bot logging</value>
+  </data>
   <data name="FirefoxBinaryLocation" xml:space="preserve">
     <value>Firefox binary location</value>
   </data>

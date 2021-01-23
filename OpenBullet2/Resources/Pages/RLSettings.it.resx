@@ -183,6 +183,9 @@
   <data name="DrawMouseMovement" xml:space="preserve">
     <value>Mostra il movimento del mouse</value>
   </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Abilita il log dei bot</value>
+  </data>
   <data name="FirefoxBinaryLocation" xml:space="preserve">
     <value>Percorso dell'eseguibile di Firefox</value>
   </data>

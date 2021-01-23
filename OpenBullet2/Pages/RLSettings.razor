@@ -23,6 +23,10 @@
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogJobActivityToFile" />
     <br />
 
+    <label>@Loc["EnableBotLogging"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.EnableBotLogging" />
+    <br />
+
     <label>@Loc["RestrictBlocksToCWD"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.RestrictBlocksToCWD" />
     <br />

@@ -9,6 +9,7 @@ namespace RuriLib.Models.Settings
         public bool LogJobActivityToFile { get; set; } = false;
         public bool RestrictBlocksToCWD { get; set; } = true;
         public bool UseCustomUserAgentsList { get; set; } = false;
+        public bool EnableBotLogging { get; set; } = false;
         public List<string> UserAgents { get; set; } = new List<string>
         {
 

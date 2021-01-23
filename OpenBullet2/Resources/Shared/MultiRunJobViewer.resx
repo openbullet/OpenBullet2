@@ -132,6 +132,9 @@
   <data name="BotLog" xml:space="preserve">
     <value>Bot Log</value>
   </data>
+  <data name="BotLogDisabledError" xml:space="preserve">
+    <value>The bot log was disabled in settings, please enable it to be able to see the bot log for future hits</value>
+  </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
   </data>
@@ -188,6 +191,9 @@
   </data>
   <data name="days" xml:space="preserve">
     <value>day(s)</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
   </data>
   <data name="DiscordWebhook" xml:space="preserve">
     <value>Discord webhook</value>

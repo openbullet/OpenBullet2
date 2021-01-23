@@ -457,7 +457,7 @@ namespace RuriLib.Models.Jobs
             var hit = new Hit()
             {
                 Data = botData.Line,
-                BotLogger = botData.Logger,
+                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging ? botData.Logger : null,
                 Type = botData.STATUS,
                 DataPool = DataPool,
                 Config = Config,
