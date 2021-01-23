@@ -12,27 +12,27 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckJobViewer> Loc
 
 <div>
-    <p style="color: orange;"><b>Job Options</b></p>
+    <p style="color: orange;"><b>@Loc["JobOptions"]</b></p>
     <table class="table">
         <tbody>
             <tr>
-                <th scope="row">Url</th>
+                <th scope="row">@Loc["Url"]</th>
                 <td>@Job.Url</td>
             </tr>
             <tr>
-                <th scope="row">Success key</th>
+                <th scope="row">@Loc["SuccessKey"]</th>
                 <td>@Job.SuccessKey</td>
             </tr>
             <tr>
-                <th scope="row">Check only untested</th>
+                <th scope="row">@Loc["CheckOnlyUntested"]</th>
                 <td>@Job.CheckOnlyUntested.ToString()</td>
             </tr>
             <tr>
-                <th scope="row">Timeout (ms)</th>
+                <th scope="row">@Loc["TimeoutMilliseconds"]</th>
                 <td>@Job.Timeout.TotalMilliseconds</td>
             </tr>
             <tr>
-                <th scope="row">Bots</th>
+                <th scope="row">@Loc["Bots"]</th>
                 <td>
                     <span style="margin-right: 10px;">@Job.Bots</span>
                     @if (!changingBots)
@@ -41,7 +41,7 @@
                     }
                     else
                     {
-                        <span><i>Changing... please wait</i></span>
+                        <span><i>@Loc["ChangingPleaseWait"]</i></span>
                     }
                 </td>
             </tr>
@@ -49,12 +49,12 @@
     </table>
 </div>
 
-<p style="color: orange;"><b>Controls</b></p>
+<p style="color: orange;"><b>@Loc["Controls"]</b></p>
 <div class="list-group list-group-horizontal">
     @switch (Job.Status)
     {
         case JobStatus.Idle:
-            <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> Start</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             break;
 
         case JobStatus.Waiting:
@@ -79,22 +79,22 @@
             break;
 
         case JobStatus.Paused:
-            <button class="btn btn-sm btn-outline-success" @onclick="Resume"><span class="oi oi-media-play"></span> Resume</button>
+            <button class="btn btn-sm btn-outline-success" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
             break;
 
         case JobStatus.Running:
-            <button class="btn btn-sm btn-outline-warning" @onclick="Pause"><span class="oi oi-media-pause"></span> Pause</button>
-            <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> Stop</button>
-            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <button class="btn btn-sm btn-outline-warning" @onclick="Pause"><span class="oi oi-media-pause"></span> @Loc["Pause"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
         case JobStatus.Pausing:
-            <span><i>Pausing... please wait until the current tasks finished processing</i></span>
+            <span><i>@Loc["PausingMessage"]</i></span>
             break;
 
         case JobStatus.Stopping:
-            <span style="line-height: 30px; margin-top: 5px;"><i>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always </i></span>
-            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> Abort</button>
+            <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["StoppingMessage"]</i></span>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
     }
 </div>
@@ -108,14 +108,14 @@
 }
 
 <div class="mt-2">
-    <p style="color: orange;"><b>Stats</b></p>
+    <p style="color: orange;"><b>@Loc["Stats"]</b></p>
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">Total</th>
-                <th scope="col">Tested</th>
-                <th scope="col" style="color: greenyellow;">Working</th>
-                <th scope="col" style="color: tomato;">NotWorking</th>
+                <th scope="col">@Loc["Total"]</th>
+                <th scope="col">@Loc["Tested"]</th>
+                <th scope="col" style="color: greenyellow;">@Loc["Working"]</th>
+                <th scope="col" style="color: tomato;">@Loc["NotWorking"]</th>
             </tr>
         </thead>
         <tbody>
@@ -151,7 +151,7 @@
 
     private async Task ChangeBots()
     {
-        var modal = Modal.Show<BotsSelector>("Edit bots amount");
+        var modal = Modal.Show<BotsSelector>(Loc["EditBotsAmount"]);
         var result = await modal.Result;
 
         if (!result.Cancelled)
@@ -172,25 +172,25 @@
         var result = details.Result;
 
         if (result.WorkingStatus == ProxyWorkingStatus.Working)
-            Logger.LogSuccess(Job.Id, $"Proxy checked ({result.Host}:{result.Port}) with ping {result.Ping} and country {result.Country}");
+            Logger.LogSuccess(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["withPing"]} {result.Ping} {Loc["andCountry"]} {result.Country}");
         else
-            Logger.LogWarning(Job.Id, $"Proxy checked ({result.Host}:{result.Port}) as not working");
+            Logger.LogWarning(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["asNotWorking"]}");
     }
 
     private void LogError(object sender, Exception ex)
     {
-        Logger.LogError(Job.Id, $"Task Manager Error! {ex.Message}");
+        Logger.LogError(Job.Id, $"{Loc["TaskManagerError"]} {ex.Message}");
     }
 
     private void LogTaskError(object sender, ErrorDetails<ProxyCheckerInput> details)
     {
         var proxy = details.Item.Proxy;
-        Logger.LogError(Job.Id, $"Task Error ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
+        Logger.LogError(Job.Id, $"{Loc["TaskError"]} ({proxy.Host}:{proxy.Port})! {details.Exception.Message}");
     }
 
     private void LogCompleted(object sender, EventArgs e)
     {
-        Logger.LogInfo(Job.Id, $"The Task Manager completed all of its work");
+        Logger.LogInfo(Job.Id, Loc["CompletedMessage"]);
     }
 
     private void TryHookLogger()
@@ -219,7 +219,7 @@
         {
             await Job.Start();
             TryHookLogger();
-            Logger.LogInfo(Job.Id, "Started checking");
+            Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)
@@ -232,7 +232,7 @@
     {
         try
         {
-            Logger.LogInfo(Job.Id, "Sending soft stop signal");
+            Logger.LogInfo(Job.Id, Loc["SoftStopMessage"]);
             await Job.Stop();
         }
         catch (Exception ex)
@@ -245,7 +245,7 @@
     {
         try
         {
-            Logger.LogInfo(Job.Id, "Sending hard abort signal");
+            Logger.LogInfo(Job.Id, Loc["HardStopMessage"]);
             await Job.Abort();
         }
         catch (Exception ex)
@@ -258,9 +258,9 @@
     {
         try
         {
-            Logger.LogInfo(Job.Id, "Sending pause signal");
+            Logger.LogInfo(Job.Id, Loc["PauseMessage"]);
             await Job.Pause();
-            Logger.LogInfo(Job.Id, "The Task Manager was paused");
+            Logger.LogInfo(Job.Id, Loc["TaskManagerPaused"]);
         }
         catch (Exception ex)
         {
@@ -273,7 +273,7 @@
         try
         {
             await Job.Resume();
-            Logger.LogInfo(Job.Id, "Resumed checking");
+            Logger.LogInfo(Job.Id, Loc["ResumedMessage"]);
             PeriodicRefresh(refreshInterval);
         }
         catch (Exception ex)

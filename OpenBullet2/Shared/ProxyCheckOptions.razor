@@ -1,14 +1,15 @@
 ﻿@using OpenBullet2.Models.Jobs
 @using RuriLib.Services
 @using OpenBullet2.Entities
-@using OpenBullet2.Services 
-@using OpenBullet2.Auth 
+@using OpenBullet2.Services
+@using OpenBullet2.Auth
 @inject RuriLibSettingsService RuriLibSettings
 @inject IProxyGroupRepository ProxyGroupRepo
-@inject AuthenticationStateProvider Auth 
+@inject AuthenticationStateProvider Auth
 @inject PersistentSettingsService PersistentSettings
+@inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckOptions> Loc
 
-<label style="color: orange;">Start Condition</label>
+<label style="color: orange;">@Loc["StartCondition"]</label>
 <br />
 <div style="margin-bottom: 20px;">
     <StartConditionSelector StartCondition="Options.StartCondition" />
@@ -16,27 +17,27 @@
 
 <EditForm Model="Options">
     <div style="width: 100px;">
-        <label style="margin-top: 15px;">Bots</label>
+        <label style="margin-top: 15px;">@Loc["Bots"]</label>
         <InputNumber TValue="int" Value="Options.Bots" ValueExpression="() => Options.Bots"
                      ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
     </div>
-    <label>Timeout (milliseconds)</label>
+    <label>@Loc["TimeoutMilliseconds"]</label>
     <div style="width: 100px;">
         <InputNumber @bind-Value="Options.TimeoutMilliseconds" />
     </div>
-    <label>Proxy Group</label>
+    <label>@Loc["ProxyGroup"]</label>
     <InputSelectNumber T="int" @bind-Value="Options.GroupId">
-        <option value="-1">All</option>
+        <option value="-1">@Loc["All"]</option>
         @foreach (var group in groups)
         {
             <option value="@group.Id">@group.Name</option>
         }
     </InputSelectNumber>
     <br />
-    <label style="margin-top: 15px;">Check only untested</label>
+    <label style="margin-top: 15px;">@Loc["CheckOnlyUntested"]</label>
     <InputCheckbox @bind-Value="Options.CheckOnlyUntested" />
     <br />
-    <label style="margin-top: 15px;">Check on website</label>
+    <label style="margin-top: 15px;">@Loc["CheckOnWebsite"]</label>
     <select value="@Options.Target.Url | @Options.Target.SuccessKey">
         @foreach (var target in PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets)
         {
