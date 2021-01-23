@@ -123,6 +123,9 @@
   <data name="AwwYeah" xml:space="preserve">
     <value>Aww yeah!</value>
   </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
     <value>Choose your language</value>
   </data>

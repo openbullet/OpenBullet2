@@ -135,7 +135,7 @@
         </li>
         <li class="d-md-none text-center mb-3">
             <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
-            <span class="ml-2 version-label">@version</span>
+            <span class="version-label ml-2" @onclick="ShowChangelog">@version [@versionType]</span>
         </li>
     </ul>
 </div>
@@ -147,11 +147,12 @@
         <a href="docs"><span class="oi oi-book"></span></a>
         <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>
     </div>
-    <span class="version-label">@version</span>
+    <span class="version-label" @onclick="ShowChangelog">@version [@versionType]</span>
 </div>
 
 @code {
-    private readonly string version = "v0.0.1 [Alpha]";
+    private readonly string version = "v0.0.1";
+    private readonly string versionType = "Alpha";
     private bool collapseNavMenu = true;
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
@@ -231,5 +232,12 @@
             await js.InvokeVoidAsync("setSidebarWidth", "230px");
             await js.InvokeVoidAsync("setSidebarMargin", "0px");
         }
+    }
+
+    void ShowChangelog()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(ChangelogViewer.Version), version);
+        Modal.Show<ChangelogViewer>(Loc["Changelog"], parameters);
     }
 }

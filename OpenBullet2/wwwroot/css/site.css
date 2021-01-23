@@ -346,6 +346,11 @@ a:hover {
     color: var(--fg-secondary);
     font-family: var(--consolas);
     font-size: 12px;
+    cursor: pointer;
+}
+
+.version-label:hover {
+    text-decoration: underline;
 }
 
 .navbar-footer {
