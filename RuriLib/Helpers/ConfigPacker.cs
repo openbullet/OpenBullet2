@@ -61,7 +61,16 @@ namespace RuriLib.Helpers
 
             using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
             {
-                config.Readme = ReadStringFromZipEntry(archive, "readme.md");
+                try
+                {
+                    // Reading the readme is not essential
+                    config.Readme = ReadStringFromZipEntry(archive, "readme.md");
+                }
+                catch
+                {
+                    Console.WriteLine($"Could not read readme.md in config with id {config.Id}");
+                }
+
                 config.Metadata = JsonConvert.DeserializeObject<ConfigMetadata>(ReadStringFromZipEntry(archive, "metadata.json"), jsonSettings);
                 config.Settings = JsonConvert.DeserializeObject<ConfigSettings>(ReadStringFromZipEntry(archive, "settings.json"), jsonSettings);
 

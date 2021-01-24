@@ -23,9 +23,21 @@ namespace OpenBullet2.Repositories
         public async Task<IEnumerable<Config>> GetAll()
         {
             var tasks = Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".opk"))
-                .Select(async file => await Get(Path.GetFileNameWithoutExtension(file)));
+                .Select(async file => 
+                {
+                    try
+                    {
+                        return await Get(Path.GetFileNameWithoutExtension(file));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Could not unpack {file} properly: {ex.Message}");
+                        return null;
+                    }
+                });
 
-            return await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks);
+            return results.Where(r => r != null);
         }
 
         public async Task<Config> Get(string id)
