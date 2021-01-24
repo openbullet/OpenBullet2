@@ -70,8 +70,8 @@ namespace OpenBullet2.Shared
                     Stack.Add(newBlock);
                 }
 
-                selectedBlock = newBlock;
-                await OBLogger.LogInfo($"Added block {selectedBlock.Id}");
+                await OBLogger.LogInfo($"Added block {newBlock.Id}");
+                await SelectBlock(newBlock);
             }
         }
 
