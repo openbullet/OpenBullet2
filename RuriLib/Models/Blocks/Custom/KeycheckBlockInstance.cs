@@ -273,18 +273,34 @@ namespace RuriLib.Models.Blocks.Custom
                 if (((BoolSetting)banIfNoMatch.FixedSetting).Value)
                 {
                     writer.WriteLine("else");
+
+                    if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
+                    {
+                        writer.WriteLine(" { data.STATUS = \"BAN\"; }");
+                    }
+                    else
+                    {
+                        writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
+                    }
+                }
+                else
+                {
+
                 }
             }
             else
             {
                 writer.WriteLine($"else if ({CSharpWriter.FromSetting(banIfNoMatch)})");
+
+                if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
+                {
+                    writer.WriteLine(" { data.STATUS = \"BAN\"; }");
+                }
+                else
+                {
+                    writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
+                }
             }
-
-            if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
-                writer.WriteLine(" { data.STATUS = \"BAN\"; }");
-
-            else
-                writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
 
             return writer.ToString();
         }
