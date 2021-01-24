@@ -16,7 +16,15 @@ namespace RuriLib.Helpers.Transpilers
 
                 if (block is LoliCodeBlockInstance)
                 {
-                    writer.Write(block.ToLC());
+                    var loliCode = block.ToLC();
+                    if (loliCode.EndsWith("\r\n") || loliCode.EndsWith("\n"))
+                    {
+                        writer.Write(loliCode);
+                    }
+                    else
+                    {
+                        writer.WriteLine(loliCode);
+                    }
                 }
                 else
                 {
