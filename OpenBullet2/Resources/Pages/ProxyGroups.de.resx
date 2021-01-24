@@ -166,7 +166,7 @@
     <value>zuletzt geprüft</value>
   </data>
   <data name="NoGroupSelected" xml:space="preserve">
-    <value>Bitte wählen Sie zunächst eine Gruppe aus</value>
+    <value>Bitte wähle zunächst eine Gruppe aus</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Keine anzuzeigenden Datensätze</value>
