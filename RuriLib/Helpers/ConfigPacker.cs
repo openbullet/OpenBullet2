@@ -61,9 +61,9 @@ namespace RuriLib.Helpers
 
             using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
             {
+                // readme.md (not essential)
                 try
                 {
-                    // Reading the readme is not essential
                     config.Readme = ReadStringFromZipEntry(archive, "readme.md");
                 }
                 catch
@@ -71,18 +71,51 @@ namespace RuriLib.Helpers
                     Console.WriteLine($"Could not read readme.md in config with id {config.Id}");
                 }
 
-                config.Metadata = JsonConvert.DeserializeObject<ConfigMetadata>(ReadStringFromZipEntry(archive, "metadata.json"), jsonSettings);
-                config.Settings = JsonConvert.DeserializeObject<ConfigSettings>(ReadStringFromZipEntry(archive, "settings.json"), jsonSettings);
+                // metadata.json
+                try
+                {
+                    config.Metadata = JsonConvert.DeserializeObject<ConfigMetadata>(ReadStringFromZipEntry(archive, "metadata.json"), jsonSettings);
+                }
+                catch
+                {
+                    throw new FileNotFoundException("File not found inside the opk archive", "metadata.json");
+                }
 
+                // settings.json
+                try
+                {
+                    config.Settings = JsonConvert.DeserializeObject<ConfigSettings>(ReadStringFromZipEntry(archive, "settings.json"), jsonSettings);
+                }
+                catch
+                {
+                    throw new FileNotFoundException("File not found inside the opk archive", "settings.json");
+                }
+                
                 if (archive.Entries.Any(e => e.Name.Contains("script.cs")))
                 {
-                    config.CSharpScript = ReadStringFromZipEntry(archive, "script.cs");
-                    config.Mode = ConfigMode.CSharp;
+                    // script.cs
+                    try
+                    {
+                        config.CSharpScript = ReadStringFromZipEntry(archive, "script.cs");
+                        config.Mode = ConfigMode.CSharp;
+                    }
+                    catch
+                    {
+                        throw new FileNotFoundException("File not found inside the opk archive", "script.cs");
+                    }
                 }
                 else
                 {
-                    config.LoliCodeScript = ReadStringFromZipEntry(archive, "script.loli");
-                    config.Mode = ConfigMode.LoliCode;
+                    // script.loli
+                    try
+                    {
+                        config.LoliCodeScript = ReadStringFromZipEntry(archive, "script.loli");
+                        config.Mode = ConfigMode.LoliCode;
+                    }
+                    catch
+                    {
+                        throw new FileNotFoundException("File not found inside the opk archive", "script.loli");
+                    }
                 }
             }
 
