@@ -20,6 +20,11 @@ namespace OpenBullet2.Pages
         private MonacoEditor _editor { get; set; }
         private Config config;
 
+        // These solve a race condition between OnInitializedAsync and OnAfterRender that make
+        // and old LoliCode get printed
+        private bool initialized = false;
+        private bool rendered = false;
+
         protected override async Task OnInitializedAsync()
         {
             config = ConfigService.SelectedConfig;
@@ -39,12 +44,19 @@ namespace OpenBullet2.Pages
                 await OBLogger.LogException(ex);
                 await js.AlertException(ex);
             }
+            finally
+            {
+                initialized = true;
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)
         {
-            if (firstRender)
+            if (initialized && !rendered)
+            {
                 _editor.SetValue(config.LoliCodeScript);
+                rendered = true;
+            }
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
