@@ -22,7 +22,8 @@ namespace RuriLib.Functions.Http
                     UseCookies = options.Cookies != null,
                     SslProtocols = ToSslProtocols(options.SecurityProtocol),
                     UseCustomCipherSuites = options.UseCustomCipherSuites,
-                    AllowedCipherSuites = options.CustomCipherSuites
+                    AllowedCipherSuites = options.CustomCipherSuites,
+                    CertRevocationMode = options.CertRevocationMode
                 };
             }
             else
@@ -47,7 +48,8 @@ namespace RuriLib.Functions.Http
                         UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites
+                        AllowedCipherSuites = options.CustomCipherSuites,
+                        CertRevocationMode = options.CertRevocationMode
                     },
 
                     ProxyType.Socks4 => new ProxyClientHandler<Socks4>(settings)
@@ -57,7 +59,8 @@ namespace RuriLib.Functions.Http
                         UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites
+                        AllowedCipherSuites = options.CustomCipherSuites,
+                        CertRevocationMode = options.CertRevocationMode
                     },
 
                     ProxyType.Socks5 => new ProxyClientHandler<Socks5>(settings)
@@ -67,7 +70,8 @@ namespace RuriLib.Functions.Http
                         UseCookies = options.Cookies != null,
                         SslProtocols = ToSslProtocols(options.SecurityProtocol),
                         UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites
+                        AllowedCipherSuites = options.CustomCipherSuites,
+                        CertRevocationMode = options.CertRevocationMode
                     },
 
                     _ => throw new NotImplementedException()

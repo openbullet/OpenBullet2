@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RuriLib.Functions.Http
 {
@@ -11,6 +12,7 @@ namespace RuriLib.Functions.Http
         public bool AutoRedirect { get; set; } = true;
         public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
         public bool UseCustomCipherSuites { get; set; } = false;
+        public X509RevocationMode CertRevocationMode { get; set; } = X509RevocationMode.NoCheck;
         public TlsCipherSuite[] CustomCipherSuites { get; set; } = new TlsCipherSuite[]
         {
             // Default Firefox suites
