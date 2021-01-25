@@ -220,6 +220,7 @@ namespace RuriLib.Models.Jobs
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
             {
                 proxyPool = new ProxyPool(ProxySources, Config.Settings.ProxySettings.AllowedProxyTypes);
+                await proxyPool.ReloadAll(ShuffleProxies);
 
                 if (!proxyPool.Proxies.Any())
                 {

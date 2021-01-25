@@ -15,7 +15,7 @@ namespace RuriLib.Models.Proxies
         /// <summary>Checks if all proxies are banned.</summary>
         public bool AllBanned => proxies.All(p => p.ProxyStatus == ProxyStatus.Bad || p.ProxyStatus == ProxyStatus.Banned);
 
-        private List<Proxy> proxies;
+        private List<Proxy> proxies = new();
         private bool isReloadingProxies = false;
         private readonly List<ProxySource> sources;
         private readonly IEnumerable<ProxyType> allowedProxyTypes;
@@ -27,8 +27,6 @@ namespace RuriLib.Models.Proxies
         {
             this.sources = sources.ToList();
             this.allowedProxyTypes = allowedProxyTypes ?? new ProxyType[] { ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5 };
-
-            ReloadAll().Wait();
         }
 
         /// <summary>
