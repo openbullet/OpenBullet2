@@ -1,31 +1,34 @@
 ﻿using RuriLib.Extensions;
+using RuriLib.Models.Proxies.ProxySources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies
 {
     public class ProxyPool
     {
-        /// <summary>The full list of proxies in the pool.</summary>
-        public List<Proxy> Proxies { get; private set; } = new List<Proxy>();
+        /// <summary>All the proxies currently in the pool.</summary>
+        public IEnumerable<Proxy> Proxies => proxies;
+
+        /// <summary>Checks if all proxies are banned.</summary>
+        public bool AllBanned => proxies.All(p => p.ProxyStatus == ProxyStatus.Bad || p.ProxyStatus == ProxyStatus.Banned);
+
+        private List<Proxy> proxies;
+        private bool isReloadingProxies = false;
+        private readonly List<ProxySource> sources;
+        private readonly IEnumerable<ProxyType> allowedProxyTypes;
 
         /// <summary>
-        /// Initializes the proxy pool given a collection of string to be parsed as proxies.
-        /// See <see cref="Proxy.Parse(string, ProxyType, string, string)"/> for format examples.
+        /// Initializes the proxy pool given the proxy sources.
         /// </summary>
-        public ProxyPool(IEnumerable<string> proxies, ProxyType defaultType = ProxyType.Http,
-            string defaultUsername = "", string defaultPassword = "")
+        public ProxyPool(IEnumerable<ProxySource> sources, ProxyType[] allowedProxyTypes = null)
         {
-            Proxies = proxies.Select(p => Proxy.Parse(p, defaultType, defaultUsername, defaultPassword)).ToList();
-        }
+            this.sources = sources.ToList();
+            this.allowedProxyTypes = allowedProxyTypes ?? new ProxyType[] { ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5 };
 
-        /// <summary>
-        /// Initializes the proxy pool given a collection of Proxy objects.
-        /// If <paramref name="clone"/> is true, the proxies will be first cloned and then stored in the list.
-        /// </summary>
-        public ProxyPool(IEnumerable<Proxy> proxies, bool clone = true)
-        {
-            Proxies = clone ? proxies.ToList().Clone().ToList() : proxies.ToList();
+            ReloadAll().Wait();
         }
 
         /// <summary>
@@ -33,23 +36,15 @@ namespace RuriLib.Models.Proxies
         /// </summary>
         public void UnbanAll()
         {
-            Proxies.ForEach(p =>
+            proxies.ForEach(p =>
             { 
-                if (p.ProxyStatus == ProxyStatus.Banned)
+                if (p.ProxyStatus == ProxyStatus.Banned || p.ProxyStatus == ProxyStatus.Bad)
                 {
                     p.ProxyStatus = ProxyStatus.Available;
                     p.BeingUsedBy = 0;
                     p.TotalUses = 0;
                 }
             });
-        }
-
-        /// <summary>See <see cref="GetProxy(bool, int)"/>. Returns false if no proxy
-        /// matching the required parameters was found and <paramref name="proxy"/> will be null.</summary>
-        public bool TryGetProxy(out Proxy proxy, bool evenBusy = false, int maxUses = 0)
-        {
-            proxy = GetProxy(evenBusy, maxUses);
-            return proxy != null;
         }
 
         /// <summary>
@@ -62,7 +57,7 @@ namespace RuriLib.Models.Proxies
         /// </summary>
         public Proxy GetProxy(bool evenBusy = false, int maxUses = 0)
         {
-            IEnumerable<Proxy> possibleProxies = Proxies;
+            IEnumerable<Proxy> possibleProxies = proxies;
 
             possibleProxies = evenBusy
                 ? possibleProxies.Where(p => p.ProxyStatus == ProxyStatus.Available || p.ProxyStatus == ProxyStatus.Busy)
@@ -96,12 +91,69 @@ namespace RuriLib.Models.Proxies
         /// Removes duplicates.
         /// </summary>
         public void RemoveDuplicates()
-            => Proxies = Proxies.Distinct(new GenericComparer<Proxy>()).ToList();
+            => proxies = proxies.Distinct(new GenericComparer<Proxy>()).ToList();
 
         /// <summary>
         /// Shuffles proxies.
         /// </summary>
         public void Shuffle()
-            => Proxies.Shuffle();
+            => proxies.Shuffle();
+
+        /// <summary>
+        /// Reloads all proxies in the pool from the provided sources.
+        /// </summary>
+        public async Task ReloadAll(bool shuffle = true)
+        {
+            if (isReloadingProxies)
+            {
+                return;
+            }
+
+            isReloadingProxies = true;
+
+            var tasks = sources.Select(async source => 
+            {
+                try
+                {
+                    return await source.GetAll();
+                }
+                catch
+                {
+                    switch (source)
+                    {
+                        case FileProxySource x:
+                            Console.WriteLine($"Could not reload proxies from source {x.FileName}");
+                            break;
+
+                        case RemoteProxySource x:
+                            Console.WriteLine($"Could not reload proxies from source {x.Url}");
+                            break;
+
+                        default:
+                            Console.WriteLine("Could not reload proxies from unknown source");
+                            break;
+                    }
+                    
+                    return new List<Proxy>();
+                }
+            });
+
+            try
+            {
+                var results = await Task.WhenAll(tasks);
+                proxies = results.SelectMany(r => r)
+                    .Where(p => allowedProxyTypes.Contains(p.Type)) // Filter by allowed types
+                    .ToList();
+
+                if (shuffle)
+                {
+                    Shuffle();
+                }
+            }
+            finally
+            {
+                isReloadingProxies = false;
+            }
+        }
     }
 }

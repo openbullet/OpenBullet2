@@ -13,6 +13,9 @@ namespace OpenBullet2.Models.Jobs
         public int Skip { get; set; } = 0;
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public bool ShuffleProxies { get; set; } = true;
+        public bool ReloadProxiesWhenAllBanned { get; set; } = true;
+        public bool ConcurrentProxyMode { get; set; } = false;
+        public int PeriodicReloadIntervalSeconds { get; set; } = 0;
         public DataPoolOptions DataPool { get; set; } = new WordlistDataPoolOptions();
         public List<ProxySourceOptions> ProxySources { get; set; } = new List<ProxySourceOptions>();
         public List<HitOutputOptions> HitOutputs { get; set; } = new List<HitOutputOptions>();

@@ -123,6 +123,9 @@
   <data name="by" xml:space="preserve">
     <value>di</value>
   </data>
+  <data name="ConcurrentProxyMode" xml:space="preserve">
+    <value>Modalità proxy contemporanei</value>
+  </data>
   <data name="Config" xml:space="preserve">
     <value>Config</value>
   </data>
@@ -198,11 +201,17 @@
   <data name="On" xml:space="preserve">
     <value>On</value>
   </data>
+  <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
+    <value>Intervallo di ricarica periodico (secondi, 0 per disabilitare)</value>
+  </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Modalità proxy</value>
   </data>
   <data name="ProxySources" xml:space="preserve">
     <value>Fonti di proxy</value>
+  </data>
+  <data name="ReloadProxiesWhenAllBanned" xml:space="preserve">
+    <value>Ricarica proxy quando sono tutti bannati</value>
   </data>
   <data name="SelectConfig" xml:space="preserve">
     <value>Seleziona config</value>

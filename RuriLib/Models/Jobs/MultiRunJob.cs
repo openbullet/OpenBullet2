@@ -2,6 +2,7 @@ using IronPython.Compiler;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.CodeAnalysis.Scripting;
+using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Logging;
@@ -36,6 +37,9 @@ namespace RuriLib.Models.Jobs
         public List<ProxySource> ProxySources { get; set; } = new List<ProxySource>();
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public bool ShuffleProxies { get; set; } = true;
+        public bool ReloadProxiesWhenAllBanned { get; set; } = true;
+        public bool ConcurrentProxyMode { get; set; } = false;
+        public TimeSpan PeriodicReloadInterval { get; set; } = TimeSpan.Zero;
         public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
         public Bots.Providers Providers { get; set; }
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
@@ -53,6 +57,7 @@ namespace RuriLib.Models.Jobs
         private ProxyPool proxyPool;
         private Timer tickTimer;
         private dynamic globalVariables;
+        private Timer proxyReloadTimer;
 
         // Instance properties and stats
         public List<Hit> Hits { get; private set; } = new List<Hit>();
@@ -133,14 +138,19 @@ namespace RuriLib.Models.Jobs
                     // Get a hold of a proxy
                     if (botData.UseProxy)
                     {
-                        while (botData.Proxy == null)
-                        {
-                            token.ThrowIfCancellationRequested();
+                        GETPROXY:
+                        token.ThrowIfCancellationRequested();
 
-                            lock (input.ProxyPool)
-                            {
-                                botData.Proxy = input.ProxyPool.GetProxy();
-                            }
+                        lock (input.ProxyPool)
+                        {
+                            botData.Proxy = input.ProxyPool.GetProxy(input.ConcurrentProxyMode,
+                                input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                        }
+
+                        if (botData.Proxy == null && input.Job.ReloadProxiesWhenAllBanned)
+                        {
+                            await input.ProxyPool.ReloadAll();
+                            goto GETPROXY;
                         }
                     }
 
@@ -207,6 +217,16 @@ namespace RuriLib.Models.Jobs
             if (!Config.Settings.DataSettings.AllowedWordlistTypes.Contains(DataPool.WordlistType))
                 throw new NotSupportedException("This config does not support the provided Wordlist Type");
 
+            if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
+            {
+                proxyPool = new ProxyPool(ProxySources, Config.Settings.ProxySettings.AllowedProxyTypes);
+
+                if (!proxyPool.Proxies.Any())
+                {
+                    throw new Exception("No proxies that respect the allowed types are available, but the job is set to use proxies");
+                }
+            }
+
             // Wait for the start condition to be verified
             await base.Start();
 
@@ -247,6 +267,7 @@ namespace RuriLib.Models.Jobs
                     Globals = globalVariables,
                     Script = script,
                     CustomInputsAnswers = CustomInputsAnswers,
+                    ConcurrentProxyMode = ConcurrentProxyMode,
                     Index = index++
                 };
 
@@ -265,11 +286,8 @@ namespace RuriLib.Models.Jobs
             parallelizer.NewResult += PropagateResult;
             parallelizer.Completed += PropagateCompleted;
 
-            if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
-                await FetchProxiesFromSources();
-
             ResetStats();
-            StartTimer();
+            StartTimers();
             logger?.LogInfo(Id, "All set, starting the execution");
             await parallelizer.Start();
         }
@@ -282,7 +300,7 @@ namespace RuriLib.Models.Jobs
             }
             finally
             {
-                StopTimer();
+                StopTimers();
                 logger?.LogInfo(Id, "Execution stopped");
             }
         }
@@ -295,7 +313,7 @@ namespace RuriLib.Models.Jobs
             }
             finally
             {
-                StopTimer();
+                StopTimers();
                 logger?.LogInfo(Id, "Execution aborted");
             }
         }
@@ -308,7 +326,7 @@ namespace RuriLib.Models.Jobs
             }
             finally
             {
-                StopTimer();
+                StopTimers();
                 logger?.LogInfo(Id, "Execution paused");
             }
         }
@@ -316,26 +334,14 @@ namespace RuriLib.Models.Jobs
         public override async Task Resume()
         {
             await parallelizer?.Resume();
-            StartTimer();
+            StartTimers();
             logger?.LogInfo(Id, "Execution resumed");
         }
         #endregion
 
         #region Public Methods
         public async Task FetchProxiesFromSources()
-        {
-            // TODO: Handle exceptions properly
-            var tasks = ProxySources.Select(async source => await source.GetAll());
-            var results = await Task.WhenAll(tasks);
-
-            var proxies = results.SelectMany(r => r);
-            proxyPool = new ProxyPool(proxies);
-
-            if (ShuffleProxies)
-            {
-                proxyPool.Shuffle();
-            }
-        }
+            => await proxyPool.ReloadAll(ShuffleProxies);
         #endregion
 
         #region Wrappers for TaskManager methods
@@ -382,15 +388,22 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Private Methods
-        private void StartTimer()
+        private void StartTimers()
         {
             tickTimer = new Timer(new TimerCallback(_ => OnTimerTick?.Invoke(this, EventArgs.Empty)),
                 null, (int)TickInterval.TotalMilliseconds, (int)TickInterval.TotalMilliseconds);
+
+            if (PeriodicReloadInterval > TimeSpan.Zero)
+            {
+                proxyReloadTimer = new Timer(new TimerCallback(async _ => await proxyPool.ReloadAll(ShuffleProxies)),
+                    null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
+            }
         }
 
-        private void StopTimer()
+        private void StopTimers()
         {
             tickTimer?.Dispose();
+            proxyReloadTimer?.Dispose();
         }
 
         private void ResetStats()
@@ -504,6 +517,7 @@ namespace RuriLib.Models.Jobs
         public Script Script { get; set; }
         public Dictionary<string, string> CustomInputsAnswers { get; set; }
         public long Index { get; set; }
+        public bool ConcurrentProxyMode { get; set; }
     }
 
     public struct CheckResult

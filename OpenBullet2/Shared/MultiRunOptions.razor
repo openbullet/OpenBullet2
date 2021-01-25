@@ -9,7 +9,7 @@
 @inject IConfigRepository ConfigRepo
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunOptions> Loc
 
-<div class="container-fluid">
+<div class="container-fluid px-0">
     <div class="row">
         <div class="col">
             <label class="fg-custom">@Loc["StartCondition"]</label>
@@ -35,7 +35,14 @@
                 }
                 <button class="btn btn-outline-primary mb-3" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
                 <br />
-                <label class="mt-3">@Loc["ProxyMode"]</label>
+                <label>@Loc["Bots"]</label>
+                    <InputNumber style="max-width: 100px; display: inline;" TValue="int" Value="Options.Bots"
+                                 ValueExpression="() => Options.Bots" ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
+                <br />
+                <label>@Loc["Skip"]</label>
+                    <InputNumber style="max-width: 100px; display: inline;" @bind-Value="Options.Skip" />
+                <br />
+                <label>@Loc["ProxyMode"]</label>
                 <InputSelect @bind-Value="Options.ProxyMode">
                     @foreach (var name in Enum.GetNames(typeof(JobProxyMode)))
                     {
@@ -43,18 +50,17 @@
                     }
                 </InputSelect>
                 <br />
-                <label class="mt-3">@Loc["ShuffleProxies"]</label>
+                <label>@Loc["ShuffleProxies"]</label>
                 <InputCheckbox @bind-Value="Options.ShuffleProxies" />
                 <br />
-                <div style="max-width: 100px;">
-                    <label style="margin-top: 15px;">@Loc["Bots"]</label>
-                    <InputNumber TValue="int" Value="Options.Bots" ValueExpression="() => Options.Bots"
-                                 ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
-                </div>
-                <div style="max-width: 100px;">
-                    <label>@Loc["Skip"]</label>
-                    <InputNumber @bind-Value="Options.Skip" />
-                </div>
+                <label>@Loc["ReloadProxiesWhenAllBanned"]</label>
+                <InputCheckbox @bind-Value="Options.ReloadProxiesWhenAllBanned" />
+                <br />
+                <label>@Loc["ConcurrentProxyMode"]</label>
+                <InputCheckbox @bind-Value="Options.ConcurrentProxyMode" />
+                <br />
+                <label>@Loc["PeriodicReloadIntervalSeconds"]</label>
+                <InputNumber style="max-width: 100px; display: inline;" TValue="int" @bind-Value="Options.PeriodicReloadIntervalSeconds" />
             </EditForm>
             <hr />
             <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />

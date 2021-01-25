@@ -1,4 +1,5 @@
 ﻿using RuriLib.Models.Proxies;
+using RuriLib.Models.Proxies.ProxySources;
 using Xunit;
 
 namespace RuriLib.Tests.Models.Proxies
@@ -8,11 +9,13 @@ namespace RuriLib.Tests.Models.Proxies
         [Fact]
         public void RemoveDuplicates_ListWithDuplicates_ReturnDistinct()
         {
-            ProxyPool pool = new ProxyPool(new Proxy[]
+            ListProxySource source = new(new Proxy[]
             {
                 new Proxy("127.0.0.1", 8000),
                 new Proxy("127.0.0.1", 8000)
-            }, false);
+            });
+
+            var pool = new ProxyPool(new ProxySource[] { source });
 
             pool.RemoveDuplicates();
             Assert.Single(pool.Proxies);
@@ -21,10 +24,12 @@ namespace RuriLib.Tests.Models.Proxies
         [Fact]
         public void GetProxy_Available_ReturnValidProxy()
         {
-            ProxyPool pool = new ProxyPool(new Proxy[]
+            ListProxySource source = new(new Proxy[]
             {
                 new Proxy("127.0.0.1", 8000)
-            }, false);
+            });
+
+            var pool = new ProxyPool(new ProxySource[] { source });
 
             Assert.NotNull(pool.GetProxy());
         }
@@ -32,10 +37,12 @@ namespace RuriLib.Tests.Models.Proxies
         [Fact]
         public void GetProxy_AllBusy_ReturnNull()
         {
-            ProxyPool pool = new ProxyPool(new Proxy[]
+            ListProxySource source = new(new Proxy[]
             {
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
-            }, false);
+            });
+
+            var pool = new ProxyPool(new ProxySource[] { source });
 
             Assert.Null(pool.GetProxy());
         }
@@ -43,10 +50,12 @@ namespace RuriLib.Tests.Models.Proxies
         [Fact]
         public void GetProxy_EvenBusy_ReturnValidProxy()
         {
-            ProxyPool pool = new ProxyPool(new Proxy[]
+            ListProxySource source = new(new Proxy[]
             {
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
-            }, false);
+            });
+
+            var pool = new ProxyPool(new ProxySource[] { source });
 
             Assert.NotNull(pool.GetProxy(true));
         }
@@ -54,10 +63,12 @@ namespace RuriLib.Tests.Models.Proxies
         [Fact]
         public void GetProxy_MaxUses_ReturnNull()
         {
-            ProxyPool pool = new ProxyPool(new Proxy[]
+            ListProxySource source = new(new Proxy[]
             {
                 new Proxy("127.0.0.1", 8000) { TotalUses = 3 }
-            }, false);
+            });
+
+            var pool = new ProxyPool(new ProxySource[] { source });
 
             Assert.Null(pool.GetProxy(true, 3));
         }
