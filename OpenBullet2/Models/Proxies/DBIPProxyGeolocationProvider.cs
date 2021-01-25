@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using MaxMind.GeoIP2;
 using RuriLib.Models.Proxies;
@@ -14,14 +16,21 @@ namespace OpenBullet2.Models.Proxies
             reader = new DatabaseReader(dbFile);
         }
 
-        public void Dispose()
-        {
-            reader.Dispose();
-        }
+        public void Dispose() => reader.Dispose();
 
-        public Task<string> Geolocate(string ip)
+        public Task<string> Geolocate(string host)
         {
-            return Task.FromResult(reader.Country(ip).Country.Name);
+            if (!IPAddress.TryParse(host, out var _))
+            {
+                var addresses = Dns.GetHostAddresses(host);
+                
+                if (addresses.Length > 0)
+                {
+                    host = addresses.First().MapToIPv4().ToString();
+                }
+            }
+
+            return Task.FromResult(reader.Country(host).Country.Name);
         }
     }
 }
