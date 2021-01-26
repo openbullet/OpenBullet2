@@ -170,7 +170,7 @@ namespace RuriLib.Threading
                 }
 
                 // Wait for every task to finish unless aborted
-                while (Progress < 1 && !softCTS.IsCancellationRequested)
+                while (Progress < 1 && !hardCTS.IsCancellationRequested)
                 {
                     await Task.Delay(100);
                 }
