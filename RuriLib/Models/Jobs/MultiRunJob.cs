@@ -191,10 +191,20 @@ namespace RuriLib.Models.Jobs
                         input.ProxyPool.ReleaseProxy(input.BotData.Proxy, false);
                 }
 
-                if (botData.STATUS == "ERROR" && token.IsCancellationRequested && input.Job.MarkAsToCheckOnAbort)
+                // If we aborted
+                if (token.IsCancellationRequested)
                 {
-                    Console.WriteLine($"TO CHECK ({botData.Line.Data})({botData.Proxy})");
-                    botData.STATUS = "NONE";
+                    // Optionally send to tocheck and return the result normally
+                    if (input.Job.MarkAsToCheckOnAbort)
+                    {
+                        Console.WriteLine($"TO CHECK ({botData.Line.Data})({botData.Proxy})");
+                        botData.STATUS = "NONE";
+                    }
+                    // Otherwise just throw
+                    else
+                    {
+                        throw new TaskCanceledException();
+                    }
                 }
                 else if (botData.STATUS == "RETRY")
                 {
