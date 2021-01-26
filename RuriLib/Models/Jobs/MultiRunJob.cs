@@ -37,7 +37,10 @@ namespace RuriLib.Models.Jobs
         public List<ProxySource> ProxySources { get; set; } = new List<ProxySource>();
         public JobProxyMode ProxyMode { get; set; } = JobProxyMode.Default;
         public bool ShuffleProxies { get; set; } = true;
-        public bool ReloadProxiesWhenAllBanned { get; set; } = true;
+        public NoValidProxyBehaviour NoValidProxyBehaviour { get; set; } = NoValidProxyBehaviour.Reload;
+        public TimeSpan ProxyBanTime { get; set; } = TimeSpan.Zero;
+        public bool MarkAsToCheckOnAbort { get; set; } = false;
+        public bool NeverBanProxies { get; set; } = false;
         public bool ConcurrentProxyMode { get; set; } = false;
         public TimeSpan PeriodicReloadInterval { get; set; } = TimeSpan.Zero;
         public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
@@ -143,13 +146,21 @@ namespace RuriLib.Models.Jobs
 
                         lock (input.ProxyPool)
                         {
-                            botData.Proxy = input.ProxyPool.GetProxy(input.ConcurrentProxyMode,
+                            botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
                                 input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
                         }
 
-                        if (botData.Proxy == null && input.Job.ReloadProxiesWhenAllBanned)
+                        if (botData.Proxy == null)
                         {
-                            await input.ProxyPool.ReloadAll();
+                            if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
+                            {
+                                await input.ProxyPool.ReloadAll();
+                            }
+                            else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
+                            {
+                                input.ProxyPool.UnbanAll(input.Job.ProxyBanTime);
+                            }
+                            
                             goto GETPROXY;
                         }
                     }
@@ -173,14 +184,19 @@ namespace RuriLib.Models.Jobs
                 {
                     // If a ban status occurred, ban the proxy
                     if (input.BotData.ConfigSettings.ProxySettings.BanProxyStatuses.Contains(botData.STATUS))
-                        input.ProxyPool.ReleaseProxy(input.BotData.Proxy, true);
+                        input.ProxyPool.ReleaseProxy(input.BotData.Proxy, !input.Job.NeverBanProxies);
 
                     // Otherwise set it to available
                     else if (botData.Proxy.ProxyStatus == ProxyStatus.Busy)
                         input.ProxyPool.ReleaseProxy(input.BotData.Proxy, false);
                 }
 
-                if (botData.STATUS == "RETRY")
+                if (botData.STATUS == "ERROR" && token.IsCancellationRequested && input.Job.MarkAsToCheckOnAbort)
+                {
+                    Console.WriteLine($"TO CHECK ({botData.Line.Data})({botData.Proxy})");
+                    botData.STATUS = "NONE";
+                }
+                else if (botData.STATUS == "RETRY")
                 {
                     Console.WriteLine($"RETRY ({botData.Line.Data})({botData.Proxy})");
                     input.Job.DataRetried++;
@@ -219,7 +235,8 @@ namespace RuriLib.Models.Jobs
 
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
             {
-                proxyPool = new ProxyPool(ProxySources, Config.Settings.ProxySettings.AllowedProxyTypes);
+                var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
+                proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
                 await proxyPool.ReloadAll(ShuffleProxies);
 
                 if (!proxyPool.Proxies.Any())
@@ -268,7 +285,6 @@ namespace RuriLib.Models.Jobs
                     Globals = globalVariables,
                     Script = script,
                     CustomInputsAnswers = CustomInputsAnswers,
-                    ConcurrentProxyMode = ConcurrentProxyMode,
                     Index = index++
                 };
 
@@ -518,7 +534,6 @@ namespace RuriLib.Models.Jobs
         public Script Script { get; set; }
         public Dictionary<string, string> CustomInputsAnswers { get; set; }
         public long Index { get; set; }
-        public bool ConcurrentProxyMode { get; set; }
     }
 
     public struct CheckResult

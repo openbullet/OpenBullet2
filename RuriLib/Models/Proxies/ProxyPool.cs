@@ -18,23 +18,24 @@ namespace RuriLib.Models.Proxies
         private List<Proxy> proxies = new();
         private bool isReloadingProxies = false;
         private readonly List<ProxySource> sources;
-        private readonly IEnumerable<ProxyType> allowedProxyTypes;
+        private readonly ProxyPoolOptions options;
 
         /// <summary>
         /// Initializes the proxy pool given the proxy sources.
         /// </summary>
-        public ProxyPool(IEnumerable<ProxySource> sources, ProxyType[] allowedProxyTypes = null)
+        public ProxyPool(IEnumerable<ProxySource> sources, ProxyPoolOptions options = null)
         {
             this.sources = sources.ToList();
-            this.allowedProxyTypes = allowedProxyTypes ?? new ProxyType[] { ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5 };
+            this.options = options ?? new ProxyPoolOptions();
         }
 
         /// <summary>
         /// Sets all the BANNED and BAD proxies status to AVAILABLE and resets their Uses.
         /// </summary>
-        public void UnbanAll()
+        public void UnbanAll(TimeSpan minimumBanTime)
         {
-            proxies.ForEach(p =>
+            var now = DateTime.Now;
+            proxies.Where(p => now > p.LastBanned + minimumBanTime).ToList().ForEach(p =>
             { 
                 if (p.ProxyStatus == ProxyStatus.Banned || p.ProxyStatus == ProxyStatus.Bad)
                 {
@@ -82,7 +83,16 @@ namespace RuriLib.Models.Proxies
         {
             proxy.TotalUses++;
             proxy.BeingUsedBy--;
-            proxy.ProxyStatus = ban ? ProxyStatus.Banned : ProxyStatus.Available;
+
+            if (ban)
+            {
+                proxy.ProxyStatus = ProxyStatus.Banned;
+                proxy.LastBanned = DateTime.Now;
+            }
+            else
+            {
+                proxy.ProxyStatus = ProxyStatus.Available;
+            }
         }
 
         /// <summary>
@@ -140,7 +150,7 @@ namespace RuriLib.Models.Proxies
             {
                 var results = await Task.WhenAll(tasks);
                 proxies = results.SelectMany(r => r)
-                    .Where(p => allowedProxyTypes.Contains(p.Type)) // Filter by allowed types
+                    .Where(p => options.AllowedTypes.Contains(p.Type)) // Filter by allowed types
                     .ToList();
 
                 if (shuffle)

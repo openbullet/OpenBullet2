@@ -192,8 +192,17 @@
   <data name="HitOutputs" xml:space="preserve">
     <value>Hit outputs</value>
   </data>
+  <data name="MarkAsToCheckOnAbort" xml:space="preserve">
+    <value>Mark as To Check on abort</value>
+  </data>
+  <data name="NeverBanProxies" xml:space="preserve">
+    <value>Never ban proxies</value>
+  </data>
   <data name="NoConfigSelected" xml:space="preserve">
     <value>No config selected</value>
+  </data>
+  <data name="NoValidProxyBehaviour" xml:space="preserve">
+    <value>No valid proxy behaviour</value>
   </data>
   <data name="Off" xml:space="preserve">
     <value>Off</value>
@@ -203,6 +212,9 @@
   </data>
   <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
     <value>Periodic reload interval (seconds, 0 to disable)</value>
+  </data>
+  <data name="ProxyBanTimeSeconds" xml:space="preserve">
+    <value>Proxy ban time (seconds)</value>
   </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Proxy mode</value>

@@ -20,6 +20,7 @@ namespace RuriLib.Models.Proxies
 
         public DateTime LastUsed { get; set; }
         public DateTime LastChecked { get; set; }
+        public DateTime LastBanned { get; set; }
 
         public int TotalUses { get; set; } = 0;
         public int BeingUsedBy { get; set; } = 0;

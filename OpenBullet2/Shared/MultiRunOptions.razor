@@ -1,5 +1,6 @@
 ﻿@using OpenBullet2.Models.Jobs
 @using RuriLib.Models.Jobs
+@using RuriLib.Models.Proxies 
 @using OpenBullet2.Shared.Forms
 @using RuriLib.Models.Configs
 @using RuriLib.Services
@@ -36,11 +37,11 @@
                 <button class="btn btn-outline-primary mb-3" @onclick="SelectConfig">@Loc["SelectConfig"]</button>
                 <br />
                 <label>@Loc["Bots"]</label>
-                    <InputNumber style="max-width: 100px; display: inline;" TValue="int" Value="Options.Bots"
-                                 ValueExpression="() => Options.Bots" ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
+                <InputNumber style="max-width: 100px; display: inline;" TValue="int" Value="Options.Bots"
+                    ValueExpression="() => Options.Bots" ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
                 <br />
                 <label>@Loc["Skip"]</label>
-                    <InputNumber style="max-width: 100px; display: inline;" @bind-Value="Options.Skip" />
+                <InputNumber style="max-width: 100px; display: inline;" @bind-Value="Options.Skip" />
                 <br />
                 <label>@Loc["ProxyMode"]</label>
                 <InputSelect @bind-Value="Options.ProxyMode">
@@ -50,17 +51,31 @@
                     }
                 </InputSelect>
                 <br />
+                <label>@Loc["NoValidProxyBehaviour"]</label>
+                <InputSelect @bind-Value="Options.NoValidProxyBehaviour">
+                    @foreach (var name in Enum.GetNames(typeof(NoValidProxyBehaviour)))
+                    {
+                        <option value="@name">@Loc[name]</option>
+                    }
+                </InputSelect>
+                <br />
                 <label>@Loc["ShuffleProxies"]</label>
                 <InputCheckbox @bind-Value="Options.ShuffleProxies" />
                 <br />
-                <label>@Loc["ReloadProxiesWhenAllBanned"]</label>
-                <InputCheckbox @bind-Value="Options.ReloadProxiesWhenAllBanned" />
+                <label>@Loc["MarkAsToCheckOnAbort"]</label>
+                <InputCheckbox @bind-Value="Options.MarkAsToCheckOnAbort" />
+                <br />
+                <label>@Loc["NeverBanProxies"]</label>
+                <InputCheckbox @bind-Value="Options.NeverBanProxies" />
                 <br />
                 <label>@Loc["ConcurrentProxyMode"]</label>
                 <InputCheckbox @bind-Value="Options.ConcurrentProxyMode" />
                 <br />
                 <label>@Loc["PeriodicReloadIntervalSeconds"]</label>
                 <InputNumber style="max-width: 100px; display: inline;" TValue="int" @bind-Value="Options.PeriodicReloadIntervalSeconds" />
+                <br />
+                <label>@Loc["ProxyBanTimeSeconds"]</label>
+                <InputNumber style="max-width: 100px; display: inline;" @bind-Value="Options.ProxyBanTimeSeconds" />
             </EditForm>
             <hr />
             <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" />
