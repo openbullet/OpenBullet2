@@ -9,29 +9,37 @@ using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
-    public partial class JobManager
+    public partial class JobManager : IDisposable
     {
-        [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] JobManagerService Manager { get; set; }
-        [Inject] IModalService Modal { get; set; }
-        [Inject] NavigationManager Nav { get; set; }
-        [Inject] public PersistentSettingsService PersistentSettings { get; set; }
-        [Inject] AuthenticationStateProvider Auth { get; set; }
+        [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private JobManagerService Manager { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
 
         private readonly object removeLock = new object();
         private int uid = -1;
+        private Timer uiRefreshTimer;
 
-        protected override async Task OnInitializedAsync()
+        protected async override Task OnInitializedAsync()
+            => uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
+        protected override void OnAfterRender(bool firstRender)
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-
-            StartPeriodicRefresh();
+            if (firstRender)
+            {
+                var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval);
+                uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
+                    null, interval, interval);
+            }
         }
 
         private bool CanSeeJob(int ownerId)
@@ -90,7 +98,7 @@ namespace OpenBullet2.Pages
         {
             var notIdleJobs = Manager.Jobs.Where(j => j.Status != JobStatus.Idle);
 
-            if (notIdleJobs.Count() > 0)
+            if (notIdleJobs.Any())
             {
                 await js.AlertError($"{Loc["JobNotIdle"]} #{notIdleJobs.First().Id}", Loc["JobNotIdleWarning"]);
                 return;
@@ -111,18 +119,9 @@ namespace OpenBullet2.Pages
             Nav.NavigateTo($"jobs/edit/{job.Id}");
         }
 
-        public void Clone(Job job)
-        {
-            Nav.NavigateTo($"jobs/clone/{job.Id}");
-        }
+        public void Clone(Job job) => Nav.NavigateTo($"jobs/clone/{job.Id}");
 
-        private async void StartPeriodicRefresh()
-        {
-            while (Manager.Jobs.Any(j => j.Status != JobStatus.Idle && j.Status != JobStatus.Paused))
-            {
-                await InvokeAsync(StateHasChanged);
-                await Task.Delay(System.Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval));
-            }
-        }
+        public void Dispose() => uiRefreshTimer?.Dispose();
+        ~JobManager() => Dispose();
     }
 }

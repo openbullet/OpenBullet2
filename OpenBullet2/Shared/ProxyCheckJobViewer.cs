@@ -9,24 +9,33 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Threading.Models;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Shared
 {
     public partial class ProxyCheckJobViewer : IDisposable
     {
-        [Inject] public IModalService Modal { get; set; }
-        [Inject] public PersistentSettingsService PersistentSettings { get; set; }
-        [Inject] public MemoryJobLogger Logger { get; set; }
-        [Inject] public NavigationManager Nav { get; set; }
-
         [Parameter] public ProxyCheckJob Job { get; set; }
-        bool changingBots = false;
 
-        protected override void OnInitialized()
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private MemoryJobLogger Logger { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+
+        private bool changingBots = false;
+        private Timer uiRefreshTimer;
+
+        protected override void OnInitialized() => AddEventHandlers();
+
+        protected override void OnAfterRender(bool firstRender)
         {
-            StartPeriodicRefresh();
-            AddEventHandlers();
+            if (firstRender)
+            {
+                var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval);
+                uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
+                    null, interval, interval);
+            }
         }
 
         private async Task ChangeBots()
@@ -84,9 +93,6 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                // Start the periodic refresh after a second (so that the job has time to set its status to Waiting)
-                Task _ = Task.Run(async () => { await Task.Delay(1000); StartPeriodicRefresh(); });
-
                 Logger.LogInfo(Job.Id, Loc["StartedWaiting"]);
                 await Job.Start();
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
@@ -143,7 +149,6 @@ namespace OpenBullet2.Shared
             {
                 await Job.Resume();
                 Logger.LogInfo(Job.Id, Loc["ResumeMessage"]);
-                StartPeriodicRefresh();
             }
             catch (Exception ex)
             {
@@ -162,18 +167,6 @@ namespace OpenBullet2.Shared
             {
                 await js.AlertException(ex);
             }
-        }
-
-        private async void StartPeriodicRefresh()
-        {
-            while (Job.Status != JobStatus.Idle && Job.Status != JobStatus.Paused)
-            {
-                await InvokeAsync(StateHasChanged);
-                await Task.Delay(Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval));
-            }
-
-            // A final one to refresh the button status
-            await InvokeAsync(StateHasChanged);
         }
 
         private void AddEventHandlers()
@@ -203,7 +196,10 @@ namespace OpenBullet2.Shared
         }
 
         public void Dispose()
-            => RemoveEventHandlers();
+        {
+            uiRefreshTimer?.Dispose();
+            RemoveEventHandlers();
+        }
 
         ~ProxyCheckJobViewer()
             => Dispose();
