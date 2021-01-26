@@ -48,6 +48,7 @@ namespace RuriLib.Models.Jobs
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
+        public bool DebuggingMode { get; set; } = true;
 
         // Getters
         public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
@@ -142,10 +143,6 @@ namespace RuriLib.Models.Jobs
                     if (botData.UseProxy)
                     {
                         GETPROXY:
-                        if (token.IsCancellationRequested)
-                        {
-                            Console.WriteLine("THROW 1");
-                        }
                         token.ThrowIfCancellationRequested();
 
                         lock (input.ProxyPool)
@@ -201,27 +198,38 @@ namespace RuriLib.Models.Jobs
                     // Optionally send to tocheck and return the result normally
                     if (input.Job.MarkAsToCheckOnAbort)
                     {
-                        Console.WriteLine($"TO CHECK ({botData.Line.Data})({botData.Proxy})");
+                        input.Job.DebugLog($"TO CHECK ON ABORT ({botData.Line.Data})({botData.Proxy})");
                         botData.STATUS = "NONE";
                     }
                     // Otherwise just throw
                     else
                     {
-                        Console.WriteLine("THROW 2");
+                        input.Job.DebugLog("TASK HARD CANCELED");
                         throw new TaskCanceledException();
                     }
                 }
                 else if (botData.STATUS == "RETRY")
                 {
-                    Console.WriteLine($"RETRY ({botData.Line.Data})({botData.Proxy})");
+                    input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
                     input.Job.DataRetried++;
                     goto START;
                 }
                 else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
                 {
-                    Console.WriteLine($"BAN ({botData.Line.Data})({botData.Proxy})");
-                    input.Job.DataBanned++;
-                    goto START;
+                    botData.Line.Retries++;
+                    var evasion = botData.ConfigSettings.ProxySettings.BanLoopEvasion;
+
+                    if (evasion > 0 && botData.Line.Retries > evasion)
+                    {
+                        botData.STATUS = "NONE";
+                        input.Job.DebugLog($"TO CHECK ON BAN LOOP EVASION ({botData.Line.Data})({botData.Proxy})");
+                    }
+                    else
+                    {
+                        input.Job.DebugLog($"BAN ({botData.Line.Data})({botData.Proxy})");
+                        input.Job.DataBanned++;
+                        goto START;
+                    }
                 }
 
                 // RETURN THE RESULT
@@ -537,6 +545,14 @@ namespace RuriLib.Models.Jobs
 
         private bool IsHitStatus(string status)
             => status != "FAIL" && status != "RETRY" && status != "BAN" && status != "ERROR";
+
+        private void DebugLog(string message)
+        {
+            if (DebuggingMode)
+            {
+                Console.WriteLine($"[{DateTime.Now}] {message}");
+            }
+        }
         #endregion
     }
 
