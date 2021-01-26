@@ -24,7 +24,7 @@ namespace RuriLib.Blocks.Parsing
         public static string ParseBetweenStrings(BotData data, string input, 
             string leftDelim, string rightDelim, bool caseSensitive = true)
         {
-            var parsed = LRParser.ParseBetween(input, leftDelim, rightDelim, caseSensitive).FirstOrDefault();
+            var parsed = LRParser.ParseBetween(input, leftDelim, rightDelim, caseSensitive).FirstOrDefault() ?? string.Empty;
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
@@ -44,7 +44,7 @@ namespace RuriLib.Blocks.Parsing
 
         public static string QueryCssSelector(BotData data, string htmlPage, string cssSelector, string attributeName)
         {
-            var parsed = HtmlParser.QueryAttributeAll(htmlPage, cssSelector, attributeName).FirstOrDefault();
+            var parsed = HtmlParser.QueryAttributeAll(htmlPage, cssSelector, attributeName).FirstOrDefault() ?? string.Empty;
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
@@ -63,7 +63,7 @@ namespace RuriLib.Blocks.Parsing
 
         public static string QueryJsonToken(BotData data, string json, string jToken)
         {
-            var parsed = JsonParser.GetValuesByKey(json, jToken).FirstOrDefault();
+            var parsed = JsonParser.GetValuesByKey(json, jToken).FirstOrDefault() ?? string.Empty;
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
@@ -83,7 +83,7 @@ namespace RuriLib.Blocks.Parsing
 
         public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat)
         {
-            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat).FirstOrDefault();
+            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat).FirstOrDefault() ?? string.Empty;
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
