@@ -137,6 +137,9 @@ namespace RuriLib.Threading
                     // Wait for the semaphore
                     await semaphore.WaitAsync(softCTS.Token).ConfigureAwait(false);
 
+                    if (softCTS.IsCancellationRequested)
+                        break;
+
                     if (dopDecreaseRequested)
                     {
                         semaphore.Release();
@@ -177,7 +180,11 @@ namespace RuriLib.Threading
             }
             catch (OperationCanceledException)
             {
-
+                // Wait for every task to finish unless aborted
+                while (Progress < 1 && !hardCTS.IsCancellationRequested)
+                {
+                    await Task.Delay(100);
+                }
             }
             catch (Exception ex)
             {
