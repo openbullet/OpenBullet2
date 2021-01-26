@@ -76,8 +76,8 @@ namespace RuriLib.Threading
             await base.Abort();
 
             Status = ParallelizerStatus.Stopping;
-            softCTS.Cancel();
             hardCTS.Cancel();
+            softCTS.Cancel();
         }
 
         /// <inheritdoc/>
