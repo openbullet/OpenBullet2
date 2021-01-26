@@ -8,6 +8,7 @@ using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
@@ -141,6 +142,14 @@ namespace OpenBullet2.Shared
                 _ => "orange"
             };
             Logger.Log(Job.Id, message, LogKind.Custom, color);
+        }
+
+        private void PlaySoundOnHit(object sender, ResultDetails<MultiRunInput, CheckResult> details)
+        {
+            if (details.Result.BotData.STATUS == "SUCCESS" && PersistentSettings.OpenBulletSettings.CustomizationSettings.PlaySoundOnHit)
+            {
+                _ = js.InvokeVoidAsync("playHitSound");
+            }
         }
 
         private void LogError(object sender, Exception ex)
@@ -372,6 +381,7 @@ namespace OpenBullet2.Shared
             if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
             {
                 Job.OnResult += LogResult;
+                Job.OnResult += PlaySoundOnHit;
                 Job.OnTaskError += LogTaskError;
                 Job.OnError += LogError;
                 Job.OnCompleted += LogCompleted;
@@ -387,6 +397,7 @@ namespace OpenBullet2.Shared
             try
             {
                 Job.OnResult -= LogResult;
+                Job.OnResult -= PlaySoundOnHit;
                 Job.OnTaskError -= LogTaskError;
                 Job.OnError -= LogError;
                 Job.OnCompleted -= LogCompleted;

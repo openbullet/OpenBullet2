@@ -135,9 +135,6 @@
   <data name="ApiKey" xml:space="preserve">
     <value>Chiave Api</value>
   </data>
-  <data name="Appearance" xml:space="preserve">
-    <value>Aspetto</value>
-  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Sei sicuro/a?</value>
   </data>
@@ -152,6 +149,9 @@
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Pulisci</value>
+  </data>
+  <data name="Customization" xml:space="preserve">
+    <value>Personalizzazione</value>
   </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>L'autore predefinito delle config create</value>
@@ -197,6 +197,9 @@
   </data>
   <data name="NewPasswordSet" xml:space="preserve">
     <value>La nuova password è stata impostata!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Riproduci suono delle hit</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Target del Proxy Check</value>

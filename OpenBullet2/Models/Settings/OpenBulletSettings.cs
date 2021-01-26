@@ -5,6 +5,6 @@
         public GeneralSettings GeneralSettings { get; set; } = new GeneralSettings();
         public RemoteSettings RemoteSettings { get; set; } = new RemoteSettings();
         public SecuritySettings SecuritySettings { get; set; } = new SecuritySettings();
-        public AppearanceSettings AppearanceSettings { get; set; } = new AppearanceSettings();
+        public CustomizationSettings CustomizationSettings { get; set; } = new CustomizationSettings();
     }
 }

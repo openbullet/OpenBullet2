@@ -65,7 +65,7 @@ namespace OpenBullet2.Pages
             {
                 AutomaticLayout = true,
                 Minimap = new MinimapOptions { Enabled = false },
-                Theme = Settings.OpenBulletSettings.AppearanceSettings.MonacoTheme,
+                Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
                 Language = "lolicode",
                 MatchBrackets = true,
                 Value = config.LoliCodeScript

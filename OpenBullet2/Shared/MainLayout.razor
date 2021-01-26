@@ -25,7 +25,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Settings.OpenBulletSettings.AppearanceSettings.Theme != "Default")
-            themePath = (await ThemeRepo.GetPath(Settings.OpenBulletSettings.AppearanceSettings.Theme)).Replace("wwwroot/", "");
+        if (Settings.OpenBulletSettings.CustomizationSettings.Theme != "Default")
+            themePath = (await ThemeRepo.GetPath(Settings.OpenBulletSettings.CustomizationSettings.Theme)).Replace("wwwroot/", "");
     }
 } 

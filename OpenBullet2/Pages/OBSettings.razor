@@ -3,6 +3,7 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<OBSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
 
+<audio id="hit-sound" src="/sounds/hit.wav" />
 <button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>
 <button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
 
@@ -160,11 +161,11 @@
     </div>
 </EditForm>
 
-<h1>@Loc["Appearance"]</h1>
-<EditForm Model="settings.AppearanceSettings">
+<h1>@Loc["Customization"]</h1>
+<EditForm Model="settings.CustomizationSettings">
     <label>@Loc["Theme"]</label>
-    <InputSelect ValueExpression="(() => settings.AppearanceSettings.Theme)"
-                 Value="settings.AppearanceSettings.Theme"
+    <InputSelect ValueExpression="(() => settings.CustomizationSettings.Theme)"
+                 Value="settings.CustomizationSettings.Theme"
                  ValueChanged="(string value) => OnThemeChanged(value)">
         <option value="Default">Default</option>
         @foreach (var theme in availableThemes)
@@ -175,7 +176,7 @@
     <br />
 
     <label>@Loc["MonacoTheme"]</label>
-    <InputSelect @bind-Value="settings.AppearanceSettings.MonacoTheme">
+    <InputSelect @bind-Value="settings.CustomizationSettings.MonacoTheme">
         <option value="vs-dark">Visual Studio (Dark)</option>
         <option value="vs">Visual Studio</option>
         <option value="hc-black">High Contrast (Dark)</option>
@@ -184,6 +185,11 @@
 
     <label>@Loc["UploadTheme"]</label>
     <InputFile OnChange="@ProcessUploadedTheme"/>
+    <br />
+
+    <label>@Loc["PlaySoundOnHit"]</label>
+    <InputCheckbox @bind-Value="settings.CustomizationSettings.PlaySoundOnHit"/>
+    <span class="cursor oi oi-volume-high" @onclick="PlayHitSound"></span>
 </EditForm>
 
 <button class="btn btn-outline-success" style="margin: 10px 0;" @onclick="Save">@Loc["Save"]</button>

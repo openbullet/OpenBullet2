@@ -1,6 +1,7 @@
 ﻿using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using Microsoft.Scripting.Utils;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Settings;
@@ -74,7 +75,7 @@ namespace OpenBullet2.Pages
 
         private void OnThemeChanged(string value)
         {
-            settings.AppearanceSettings.Theme = value;
+            settings.CustomizationSettings.Theme = value;
             Nav.NavigateTo("/settings/openbullet", true);
         }
 
@@ -115,5 +116,7 @@ namespace OpenBullet2.Pages
 
             Nav.NavigateTo("/settings/openbullet", true);
         }
+
+        private async Task PlayHitSound() => await js.InvokeVoidAsync("playHitSound");
     }
 }

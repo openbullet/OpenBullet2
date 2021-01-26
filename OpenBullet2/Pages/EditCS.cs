@@ -54,7 +54,7 @@ namespace OpenBullet2.Pages
                 AutomaticLayout = true,
                 Minimap = new MinimapOptions { Enabled = false },
                 ReadOnly = Config.Mode != ConfigMode.CSharp,
-                Theme = Settings.OpenBulletSettings.AppearanceSettings.MonacoTheme,
+                Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
                 Language = "csharp",
                 MatchBrackets = true,
                 Value = Config.CSharpScript

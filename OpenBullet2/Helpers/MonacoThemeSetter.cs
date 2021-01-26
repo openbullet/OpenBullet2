@@ -12,7 +12,7 @@ namespace OpenBullet2.Helpers
         {
 			await MonacoEditorBase.DefineTheme("vs-loli", new StandaloneThemeData
 			{
-				Base = Settings.OpenBulletSettings.AppearanceSettings.MonacoTheme,
+				Base = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
 				Inherit = true,
 				Rules = new List<TokenThemeRule>
 				{

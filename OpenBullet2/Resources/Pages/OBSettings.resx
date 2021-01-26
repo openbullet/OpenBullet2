@@ -135,9 +135,6 @@
   <data name="ApiKey" xml:space="preserve">
     <value>Api Key</value>
   </data>
-  <data name="Appearance" xml:space="preserve">
-    <value>Appearance</value>
-  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Are you sure?</value>
   </data>
@@ -152,6 +149,9 @@
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
+  </data>
+  <data name="Customization" xml:space="preserve">
+    <value>Customization</value>
   </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>The default author on newly created configs</value>
@@ -197,6 +197,9 @@
   </data>
   <data name="NewPasswordSet" xml:space="preserve">
     <value>The new passwords was set!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Play sound on hit</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Proxy Check Targets</value>

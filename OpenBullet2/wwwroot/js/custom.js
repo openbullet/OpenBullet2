@@ -50,3 +50,7 @@ function startRandomSetupEffect() {
             break;
     }
 }
+
+function playHitSound() {
+    document.getElementById('hit-sound').play();
+}
