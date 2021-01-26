@@ -142,6 +142,10 @@ namespace RuriLib.Models.Jobs
                     if (botData.UseProxy)
                     {
                         GETPROXY:
+                        if (token.IsCancellationRequested)
+                        {
+                            Console.WriteLine("THROW 1");
+                        }
                         token.ThrowIfCancellationRequested();
 
                         lock (input.ProxyPool)
@@ -203,6 +207,7 @@ namespace RuriLib.Models.Jobs
                     // Otherwise just throw
                     else
                     {
+                        Console.WriteLine("THROW 2");
                         throw new TaskCanceledException();
                     }
                 }
