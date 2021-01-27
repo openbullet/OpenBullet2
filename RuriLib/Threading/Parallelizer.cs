@@ -125,8 +125,8 @@ namespace RuriLib.Threading
                 try
                 {
                     var workResult = await workFunction.Invoke(item, hardCTS.Token).ConfigureAwait(false);
-                    hardCTS.Token.ThrowIfCancellationRequested();
                     OnNewResult(new ResultDetails<TInput, TOutput>(item, workResult));
+                    hardCTS.Token.ThrowIfCancellationRequested();
                 }
                 // Catch and report any exceptions
                 catch (Exception ex)

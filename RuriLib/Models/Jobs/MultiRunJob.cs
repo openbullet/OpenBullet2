@@ -516,11 +516,14 @@ namespace RuriLib.Models.Jobs
                 OwnerId = OwnerId
             };
 
-            foreach (var variable in result.ScriptVariables)
+            if (!result.ScriptVariables.IsDefault)
             {
-                if (botData.MarkedForCapture.Contains(variable.Name))
+                foreach (var variable in result.ScriptVariables)
                 {
-                    hit.CapturedData.Add(variable.Name, variable.Value);
+                    if (botData.MarkedForCapture.Contains(variable.Name))
+                    {
+                        hit.CapturedData.Add(variable.Name, variable.Value);
+                    }
                 }
             }
 
