@@ -201,7 +201,7 @@ Feel free to contribute to the versatility of this project by adding the missing
                 $"Bots: {job.Bots} | " +
                 $"CPM: {job.CPM} | " +
                 $"Progress: {job.DataTested} / {job.DataPool.Size} ({job.Progress * 100:0.00}%) | " +
-                $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataBad} Retries: {job.DataRetried + job.DataBanned} | " +
+                $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataFails} Retries: {job.DataRetried + job.DataBanned} | " +
                 $"Proxies: {job.ProxiesAlive} / {job.ProxiesTotal}";
         }
     }

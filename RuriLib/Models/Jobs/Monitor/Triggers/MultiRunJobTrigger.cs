@@ -61,7 +61,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public int Amount { get; set; }
 
         public override bool CheckStatus(MultiRunJob job)
-            => Functions.Conditions.Conditions.Check(job.DataBad, Comparison, Amount);
+            => Functions.Conditions.Conditions.Check(job.DataFails, Comparison, Amount);
     }
 
     public class RetryCountTrigger : MultiRunJobTrigger

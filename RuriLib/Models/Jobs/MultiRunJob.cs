@@ -83,7 +83,7 @@ namespace RuriLib.Models.Jobs
         public int DataTested { get; private set; } = 0;
         public int DataHits { get; private set; } = 0;
         public int DataCustom { get; private set; } = 0;
-        public int DataBad { get; private set; } = 0;
+        public int DataFails { get; private set; } = 0;
         public int DataRetried { get; private set; } = 0;
         public int DataBanned { get; private set; } = 0;
         public int DataToCheck { get; private set; } = 0;
@@ -451,7 +451,7 @@ namespace RuriLib.Models.Jobs
             DataTested = 0;
             DataHits = 0;
             DataCustom = 0;
-            DataBad = 0;
+            DataFails = 0;
             DataRetried = 0;
             DataBanned = 0;
             DataToCheck = 0;
@@ -490,7 +490,7 @@ namespace RuriLib.Models.Jobs
             {
                 case "SUCCESS": DataHits++; break;
                 case "NONE": DataToCheck++; break;
-                case "FAIL": DataBad++; break;
+                case "FAIL": DataFails++; break;
                 case "INVALID": DataInvalid++; break;
                 default: DataCustom++; break;
             }
