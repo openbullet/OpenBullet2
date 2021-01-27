@@ -140,8 +140,7 @@
             var record = await RecordRepo.GetAll()
                 .FirstOrDefaultAsync(r => r.ConfigId == Options.ConfigId && r.WordlistId == pool.WordlistId);
 
-            if (record != null)
-                Options.Skip = record.Checkpoint;
+            Options.Skip = record != null ? record.Checkpoint : 0;
         }
     }
 
