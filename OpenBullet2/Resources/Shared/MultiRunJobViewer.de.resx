@@ -123,9 +123,6 @@
   <data name="Alive" xml:space="preserve">
     <value>Aktiv</value>
   </data>
-  <data name="Bad" xml:space="preserve">
-    <value>Bad</value>
-  </data>
   <data name="Banned" xml:space="preserve">
     <value>Gebannt</value>
   </data>
@@ -188,6 +185,9 @@
   </data>
   <data name="Errors" xml:space="preserve">
     <value>Fehler</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>Falsch</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
