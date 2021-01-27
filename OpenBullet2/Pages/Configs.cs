@@ -134,9 +134,12 @@ namespace OpenBullet2.Pages
         private async Task CreateConfig()
         {
             selectedConfig = await ConfigRepo.Create();
-            configs.Add(selectedConfig);
-            selectedConfig.Metadata.Author = PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultAuthor;
+            configs.Insert(0, selectedConfig);
+
             ConfigService.SelectedConfig = selectedConfig;
+            ConfigService.Configs.Add(selectedConfig);
+            
+            selectedConfig.Metadata.Author = PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultAuthor;
             VolatileSettings.DebuggerLog = new();
             Nav.NavigateTo("config/edit/metadata");
         }
