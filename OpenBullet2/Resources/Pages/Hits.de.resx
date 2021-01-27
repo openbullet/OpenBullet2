@@ -138,6 +138,9 @@
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
   </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Lösche gefilterte</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
   </data>

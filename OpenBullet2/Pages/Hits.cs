@@ -141,6 +141,28 @@ namespace OpenBullet2.Pages
             await RefreshList();
         }
 
+        private async Task DeleteFiltered()
+        {
+            var selected = grid.Items.ToList();
+
+            if (selected.Count == 0)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selected.Count} {Loc["hits"]}?", Loc["Cancel"]))
+            {
+                // Delete the hit from the db
+                await HitRepo.Delete(selected);
+
+                // Delete the hit from the local list
+                selected.ForEach(h => hits.Remove(h));
+            }
+
+            await RefreshList();
+        }
+
         private async Task PurgeHits()
         {
             if (await js.Confirm(Loc["AreYouSure"], Loc["ReallyDeleteAllHits"], Loc["Cancel"]))
