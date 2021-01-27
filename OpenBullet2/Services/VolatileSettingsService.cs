@@ -11,6 +11,7 @@ namespace OpenBullet2.Services
         public DebuggerOptions DebuggerOptions { get; set; }
         public BotLogger DebuggerLog { get; set; }
         public List<BlockDescriptor> RecentDescriptors { get; set; }
+        public bool ConfigsDetailedView { get; set; } = false;
 
         public VolatileSettingsService(RuriLibSettingsService ruriLibSettings)
         {

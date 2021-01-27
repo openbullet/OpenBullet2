@@ -38,7 +38,6 @@ namespace OpenBullet2.Pages
 
         Config selectedConfig;
         List<Config> configs;
-        bool detailedView = false;
 
         private GridComponent<Config> gridComponent;
         private CGrid<Config> grid;
@@ -124,7 +123,7 @@ namespace OpenBullet2.Pages
 
                 selectedConfig = null;
 
-                if (detailedView)
+                if (VolatileSettings.ConfigsDetailedView)
                 {
                     await RefreshGrid();
                 }
@@ -164,7 +163,7 @@ namespace OpenBullet2.Pages
 
                 selectedConfig = null;
 
-                if (detailedView)
+                if (VolatileSettings.ConfigsDetailedView)
                 {
                     await RefreshGrid();
                 }
@@ -291,7 +290,7 @@ namespace OpenBullet2.Pages
         }
 
         private void ToggleView()
-            => detailedView = !detailedView;
+            => VolatileSettings.ConfigsDetailedView = !VolatileSettings.ConfigsDetailedView;
 
         private void AddEventHandlers()
         {
