@@ -146,10 +146,10 @@ namespace OpenBullet2.Shared
                     }
                 }
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 data.STATUS = "ERROR";
-                logger.Log($"Task canceled", LogColors.Tomato);
+                logger.Log($"Operation canceled", LogColors.Tomato);
             }
             catch (Exception ex)
             {
