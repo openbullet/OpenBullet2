@@ -100,6 +100,7 @@ namespace OpenBullet2.Shared
 
             // Build the BotData
             var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
+            data.CancellationToken = cts.Token;
             data.Objects.Add("httpClient", new HttpClient());
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
@@ -144,6 +145,11 @@ namespace OpenBullet2.Shared
                         // so we just disregard it
                     }
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                data.STATUS = "ERROR";
+                logger.Log($"Task canceled", LogColors.Tomato);
             }
             catch (Exception ex)
             {

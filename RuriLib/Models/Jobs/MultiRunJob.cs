@@ -111,6 +111,7 @@ namespace RuriLib.Models.Jobs
             new Func<MultiRunInput, CancellationToken, Task<CheckResult>>(async (input, token) =>
             {
                 var botData = input.BotData;
+                botData.CancellationToken = token;
 
                 // Check if the data respects rules
                 if (!botData.Line.IsValid || !botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))

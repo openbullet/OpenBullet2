@@ -65,7 +65,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request, data.CancellationToken);
                 await LogHttpResponseData(data, response);
             }
             finally
@@ -118,7 +118,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request, data.CancellationToken);
                 await LogHttpResponseData(data, response);
             }
             finally
@@ -171,7 +171,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request, data.CancellationToken);
                 await LogHttpResponseData(data, response);
             }
             finally
@@ -254,7 +254,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request, data.CancellationToken);
                 await LogHttpResponseData(data, response);
             }
             finally
@@ -361,7 +361,7 @@ namespace RuriLib.Blocks.Requests.Http
         private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response)
         {
             // Read the raw source for Content-Length calculation
-            data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync();
+            data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
 
             // Address
             data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
