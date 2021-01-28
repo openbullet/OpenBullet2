@@ -77,7 +77,7 @@ namespace RuriLib.Helpers.CSharp
                 .Replace("}", "}}");
 
             foreach (Match match in Regex.Matches(value, "<([^>]+)>"))
-                sb.Replace(match.Groups[0].Value, '{' + match.Groups[1].Value + '}');
+                sb.Replace(match.Groups[0].Value.Replace("\\", "\\\\").Replace("\"", "\\\""), '{' + match.Groups[1].Value + '}');
 
             return '$' + sb.ToString();
         }
@@ -87,7 +87,7 @@ namespace RuriLib.Helpers.CSharp
             if (bytes == null)
                 return "null";
 
-            using StringWriter writer = new StringWriter();
+            using var writer = new StringWriter();
             writer.Write("new byte[] {");
             writer.Write(string.Join(", ", bytes.Select(b => Convert.ToInt32(b).ToString())));
             writer.Write("}");
@@ -99,7 +99,7 @@ namespace RuriLib.Helpers.CSharp
             if (list == null)
                 return "null";
 
-            using StringWriter writer = new StringWriter();
+            using var writer = new StringWriter();
             writer.Write("new List<string> {");
 
             var toWrite = list.Select(e => interpolated
@@ -116,7 +116,7 @@ namespace RuriLib.Helpers.CSharp
             if (dict == null)
                 return "null";
 
-            using StringWriter writer = new StringWriter();
+            using var writer = new StringWriter();
             writer.Write("new Dictionary<string, string> {");
 
             var toWrite = dict.Select(kvp => interpolated
