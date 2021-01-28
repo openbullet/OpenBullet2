@@ -251,8 +251,8 @@ namespace RuriLib.Models.Jobs
             if (DataPool == null)
                 throw new NullReferenceException("The DataPool cannot be null");
 
-            if (Skip > DataPool.Size)
-                throw new ArgumentException("The skip cannot be larger than the total number of lines in the data pool");
+            if (Skip >= DataPool.Size)
+                throw new ArgumentException("The skip must be smaller than the total number of lines in the data pool");
 
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings) && (ProxySources == null || ProxySources.Count == 0))
                 throw new NullReferenceException("The list of proxy sources cannot be null or empty when proxies are needed");
