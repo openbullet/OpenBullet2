@@ -248,15 +248,12 @@ namespace OpenBullet2.Pages
 
         private async Task DeleteNotWorking()
         {
-            if (currentGroupId == -1)
-            {
-                await ShowNoGroupSelectedWarning();
-                return;
-            }
+            var all = ProxyRepo.GetAll();
+            
+            if (currentGroupId != -1)
+                all = all.Where(p => p.Group.Id == currentGroupId);
 
-            var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.NotWorking)
-                .ToListAsync();
+            var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.NotWorking).ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
             await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
@@ -264,15 +261,12 @@ namespace OpenBullet2.Pages
 
         private async Task DeleteUntested()
         {
-            if (currentGroupId == -1)
-            {
-                await ShowNoGroupSelectedWarning();
-                return;
-            }
+            var all = ProxyRepo.GetAll();
 
-            var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.Untested)
-                .ToListAsync();
+            if (currentGroupId != -1)
+                all = all.Where(p => p.Group.Id == currentGroupId);
+
+            var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.Untested).ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
             await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
@@ -280,15 +274,12 @@ namespace OpenBullet2.Pages
 
         private async Task DeleteSlow()
         {
-            if (currentGroupId == -1)
-            {
-                await ShowNoGroupSelectedWarning();
-                return;
-            }
+            var all = ProxyRepo.GetAll();
 
-            var toDelete = await ProxyRepo.GetAll()
-                .Where(p => p.Group.Id == currentGroupId && p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing)
-                .ToListAsync();
+            if (currentGroupId != -1)
+                all = all.Where(p => p.Group.Id == currentGroupId);
+
+            var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing).ToListAsync();
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
             await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
