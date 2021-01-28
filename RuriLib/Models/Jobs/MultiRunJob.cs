@@ -551,7 +551,7 @@ namespace RuriLib.Models.Jobs
             };
         }
 
-        private bool IsHitStatus(string status) => badStatuses.Contains(status);
+        private bool IsHitStatus(string status) => !badStatuses.Contains(status);
 
         private void DebugLog(string message)
         {
