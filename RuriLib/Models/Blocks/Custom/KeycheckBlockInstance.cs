@@ -233,6 +233,9 @@ namespace RuriLib.Models.Blocks.Custom
                 else
                     writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
 
+                writer.WriteLine("CheckGlobalRetryKeys(data);");
+                writer.WriteLine("CheckGlobalBanKeys(data);");
+
                 return writer.ToString();
             }
 
@@ -302,6 +305,9 @@ namespace RuriLib.Models.Blocks.Custom
                 }
             }
 
+            writer.WriteLine("CheckGlobalRetryKeys(data);");
+            writer.WriteLine("CheckGlobalBanKeys(data);");
+            
             return writer.ToString();
         }
 

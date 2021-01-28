@@ -86,5 +86,33 @@ namespace RuriLib.Blocks.Conditions
 
             return result;
         }
+
+        public static bool CheckGlobalBanKeys(BotData data)
+        {
+            var result = data.Providers.GlobalProxyKeys.ContainsBanKey(data.SOURCE);
+            
+            if (result)
+            {
+                data.Logger.LogHeader();
+                data.Logger.Log("Found global ban key");
+                data.STATUS = "BAN";
+            }
+
+            return result;
+        }
+
+        public static bool CheckGlobalRetryKeys(BotData data)
+        {
+            var result = data.Providers.GlobalProxyKeys.ContainsRetryKey(data.SOURCE);
+
+            if (result)
+            {
+                data.Logger.LogHeader();
+                data.Logger.Log("Found global retry key");
+                data.STATUS = "RETRY";
+            }
+
+            return result;
+        }
     }
 }

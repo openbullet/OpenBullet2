@@ -15,11 +15,11 @@ namespace RuriLib.Providers.Proxies
         }
 
         public bool ContainsBanKey(string text, bool caseSensitive = false)
-            => settings.GlobalBanKeys.Any(k => k.Contains(text,
+            => settings.GlobalBanKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
         public bool ContainsRetryKey(string text, bool caseSensitive = false)
-            => settings.GlobalRetryKeys.Any(k => k.Contains(text,
+            => settings.GlobalRetryKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
     }
 }
