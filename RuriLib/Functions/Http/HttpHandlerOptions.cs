@@ -8,7 +8,8 @@ namespace RuriLib.Functions.Http
     public class HttpHandlerOptions
     {
         public CookieContainer Cookies { get; set; }
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
+        public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(5);
+        public TimeSpan ReadWriteTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public bool AutoRedirect { get; set; } = true;
         public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
         public bool UseCustomCipherSuites { get; set; } = false;

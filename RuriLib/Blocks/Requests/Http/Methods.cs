@@ -35,7 +35,8 @@ namespace RuriLib.Blocks.Requests.Http
             var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
-                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                ConnectTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyConnectTimeoutMilliseconds),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyReadWriteTimeoutMilliseconds),
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
@@ -88,7 +89,8 @@ namespace RuriLib.Blocks.Requests.Http
             var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
-                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                ConnectTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyConnectTimeoutMilliseconds),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyReadWriteTimeoutMilliseconds),
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
@@ -141,7 +143,8 @@ namespace RuriLib.Blocks.Requests.Http
             var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
-                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                ConnectTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyConnectTimeoutMilliseconds),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyReadWriteTimeoutMilliseconds),
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
@@ -194,7 +197,8 @@ namespace RuriLib.Blocks.Requests.Http
             var options = new HttpHandlerOptions
             {
                 Cookies = data.CookieContainer,
-                Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds),
+                ConnectTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyConnectTimeoutMilliseconds),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(data.Providers.ProxySettings.Settings.ProxyReadWriteTimeoutMilliseconds),
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,

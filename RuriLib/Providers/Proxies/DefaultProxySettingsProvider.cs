@@ -5,21 +5,21 @@ using System.Linq;
 
 namespace RuriLib.Providers.Proxies
 {
-    public class DefaultGlobalProxyKeysProvider : IGlobalProxyKeysProvider
+    public class DefaultProxySettingsProvider : IProxySettingsProvider
     {
-        private readonly ProxySettings settings;
+        public ProxySettings Settings { get; }
 
-        public DefaultGlobalProxyKeysProvider(RuriLibSettingsService settings)
+        public DefaultProxySettingsProvider(RuriLibSettingsService settings)
         {
-            this.settings = settings.RuriLibSettings.ProxySettings;
+            Settings = settings.RuriLibSettings.ProxySettings;
         }
 
         public bool ContainsBanKey(string text, bool caseSensitive = false)
-            => settings.GlobalBanKeys.Any(k => text.Contains(k,
+            => Settings.GlobalBanKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
         public bool ContainsRetryKey(string text, bool caseSensitive = false)
-            => settings.GlobalRetryKeys.Any(k => text.Contains(k,
+            => Settings.GlobalRetryKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
     }
 }

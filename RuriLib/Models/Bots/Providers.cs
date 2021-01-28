@@ -18,7 +18,7 @@ namespace RuriLib.Models.Bots
         public ICaptchaProvider Captcha { get; set; }
         public IRNGProvider RNG { get; set; }
         public IPuppeteerBrowserProvider PuppeteerBrowser { get; set; }
-        public IGlobalProxyKeysProvider GlobalProxyKeys { get; set; }
+        public IProxySettingsProvider ProxySettings { get; set; }
         public ISecurityProvider Security { get; set; }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace RuriLib.Models.Bots
                 RandomUA = new DefaultRandomUAProvider(settings);
                 Captcha = new CaptchaSharpProvider(settings);
                 PuppeteerBrowser = new DefaultPuppeteerBrowserProvider(settings);
-                GlobalProxyKeys = new DefaultGlobalProxyKeysProvider(settings);
+                ProxySettings = new DefaultProxySettingsProvider(settings);
                 Security = new DefaultSecurityProvider(settings);
             }
 

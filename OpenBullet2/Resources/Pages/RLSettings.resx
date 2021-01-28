@@ -156,6 +156,9 @@
   <data name="ChromeBinaryLocation" xml:space="preserve">
     <value>Chrome binary location</value>
   </data>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Connect timeout (milliseconds)</value>
+  </data>
   <data name="CurrentService" xml:space="preserve">
     <value>Current service</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="Puppeteer" xml:space="preserve">
     <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Read/Write timeout (milliseconds)</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>

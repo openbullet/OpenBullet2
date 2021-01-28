@@ -89,7 +89,7 @@ namespace RuriLib.Blocks.Conditions
 
         public static bool CheckGlobalBanKeys(BotData data)
         {
-            var result = data.Providers.GlobalProxyKeys.ContainsBanKey(data.SOURCE);
+            var result = data.Providers.ProxySettings.ContainsBanKey(data.SOURCE);
             
             if (result)
             {
@@ -103,7 +103,7 @@ namespace RuriLib.Blocks.Conditions
 
         public static bool CheckGlobalRetryKeys(BotData data)
         {
-            var result = data.Providers.GlobalProxyKeys.ContainsRetryKey(data.SOURCE);
+            var result = data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE);
 
             if (result)
             {

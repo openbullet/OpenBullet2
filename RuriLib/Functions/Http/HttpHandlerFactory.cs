@@ -32,8 +32,8 @@ namespace RuriLib.Functions.Http
                 {
                     Host = proxy.Host,
                     Port = proxy.Port,
-                    ConnectTimeout = (int)options.Timeout.TotalMilliseconds,
-                    ReadWriteTimeOut = (int)options.Timeout.TotalMilliseconds
+                    ConnectTimeout = (int)options.ConnectTimeout.TotalMilliseconds,
+                    ReadWriteTimeOut = (int)options.ReadWriteTimeout.TotalMilliseconds
                 };
 
                 if (proxy.NeedsAuthentication)

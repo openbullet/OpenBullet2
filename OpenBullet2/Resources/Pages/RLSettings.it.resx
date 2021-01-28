@@ -156,6 +156,9 @@
   <data name="ChromeBinaryLocation" xml:space="preserve">
     <value>Percorso dell'eseguibile di Chrome</value>
   </data>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Timeout connessione (millisecondi)</value>
+  </data>
   <data name="CurrentService" xml:space="preserve">
     <value>Servizio selezionato</value>
   </data>
@@ -212,6 +215,9 @@
   </data>
   <data name="Puppeteer" xml:space="preserve">
     <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Timeout lettura/scrittura (millisecondi)</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Ripristina Predefiniti</value>

@@ -41,6 +41,14 @@
 
 <h1>@Loc["Proxies"]</h1>
 <EditForm Model="settings.ProxySettings">
+    <label>@Loc["ConnectTimeoutMilliseconds"]</label>
+    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.ProxyConnectTimeoutMilliseconds" />
+    <br />
+
+    <label>@Loc["ReadWriteTimeoutMilliseconds"]</label>
+    <InputNumber class="mb-3" @bind-Value="settings.ProxySettings.ProxyReadWriteTimeoutMilliseconds" />
+    <br />
+
     <label>@Loc["GlobalBanKeys"]</label>
     <InputListOfStrings @bind-List="settings.ProxySettings.GlobalBanKeys" />
 

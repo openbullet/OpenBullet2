@@ -66,7 +66,7 @@ namespace RuriLib.Models.Jobs
             var options = new HttpHandlerOptions
             {
                 Cookies = new CookieContainer(),
-                Timeout = input.Timeout
+                ConnectTimeout = input.Timeout
             };
 
             using var handler = HttpHandlerFactory.GetHandler(input.Proxy, options);
