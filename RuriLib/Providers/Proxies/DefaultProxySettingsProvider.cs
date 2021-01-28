@@ -7,19 +7,23 @@ namespace RuriLib.Providers.Proxies
 {
     public class DefaultProxySettingsProvider : IProxySettingsProvider
     {
-        public ProxySettings Settings { get; }
+        private readonly ProxySettings settings;
 
         public DefaultProxySettingsProvider(RuriLibSettingsService settings)
         {
-            Settings = settings.RuriLibSettings.ProxySettings;
+            this.settings = settings.RuriLibSettings.ProxySettings;
         }
 
+        public TimeSpan ConnectTimeout => TimeSpan.FromMilliseconds(settings.ProxyConnectTimeoutMilliseconds);
+
+        public TimeSpan ReadWriteTimeout => TimeSpan.FromMilliseconds(settings.ProxyReadWriteTimeoutMilliseconds);
+
         public bool ContainsBanKey(string text, bool caseSensitive = false)
-            => Settings.GlobalBanKeys.Any(k => text.Contains(k,
+            => settings.GlobalBanKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
 
         public bool ContainsRetryKey(string text, bool caseSensitive = false)
-            => Settings.GlobalRetryKeys.Any(k => text.Contains(k,
+            => settings.GlobalRetryKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
     }
 }
