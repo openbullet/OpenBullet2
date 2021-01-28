@@ -45,9 +45,17 @@
                 if (BlockSetting.FixedSetting is StringSetting or ListOfStringsSetting or DictionaryOfStringsSetting)
                 {
                     // Port over the string setting's value for ease of use
-                    if (BlockSetting.FixedSetting is StringSetting x1)
+                    if (BlockSetting.FixedSetting is StringSetting stringSetting)
                     {
-                        (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value = x1.Value;
+                        (BlockSetting.InterpolatedSetting as InterpolatedStringSetting).Value = stringSetting.Value;
+                    }
+                    else if (BlockSetting.FixedSetting is ListOfStringsSetting listSetting)
+                    {
+                        (BlockSetting.InterpolatedSetting as InterpolatedListOfStringsSetting).Value = listSetting.Value;
+                    }
+                    else if (BlockSetting.FixedSetting is DictionaryOfStringsSetting dictSetting)
+                    {
+                        (BlockSetting.InterpolatedSetting as InterpolatedDictionaryOfStringsSetting).Value = dictSetting.Value;
                     }
 
                     newMode = SettingInputMode.Interpolated;
@@ -55,9 +63,9 @@
                 // Otherwise cycle directly to variable mode
                 else
                 {
-                    if (BlockSetting.FixedSetting is StringSetting x2)
+                    if (BlockSetting.FixedSetting is StringSetting x)
                     {
-                        BlockSetting.InputVariableName = x2.Value;
+                        BlockSetting.InputVariableName = x.Value;
                     }
 
                     newMode = SettingInputMode.Variable;
@@ -66,9 +74,9 @@
 
             // Cycle from interpolated to variable
             case SettingInputMode.Interpolated:
-                if (BlockSetting.InterpolatedSetting is InterpolatedStringSetting x3)
+                if (BlockSetting.InterpolatedSetting is InterpolatedStringSetting interpStringSetting)
                 {
-                    BlockSetting.InputVariableName = x3.Value;
+                    BlockSetting.InputVariableName = interpStringSetting.Value;
                 }
 
                 newMode = SettingInputMode.Variable;
@@ -76,9 +84,9 @@
 
             // Cycle from variable to fixed
             case SettingInputMode.Variable:
-                if (BlockSetting.FixedSetting is StringSetting x4)
+                if (BlockSetting.FixedSetting is StringSetting y)
                 {
-                    x4.Value = BlockSetting.InputVariableName;
+                    y.Value = BlockSetting.InputVariableName;
                 }
 
                 newMode = SettingInputMode.Fixed;
