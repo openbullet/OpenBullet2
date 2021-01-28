@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
 using System.IO;
@@ -32,8 +33,9 @@ namespace RuriLib.Helpers
                 switch (config.Mode)
                 {
                     case ConfigMode.Stack:
-                        config.ChangeMode(ConfigMode.LoliCode);
-                        goto case ConfigMode.LoliCode;
+                        config.LoliCodeScript = Stack2LoliTranspiler.Transpile(config.Stack);
+                        await CreateZipEntryFromString(archive, "script.loli", config.LoliCodeScript);
+                        break;
 
                     case ConfigMode.LoliCode:
                         await CreateZipEntryFromString(archive, "script.loli", config.LoliCodeScript);
