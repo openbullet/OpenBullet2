@@ -57,6 +57,7 @@ namespace RuriLib.Models.Jobs
         public int CPM => parallelizer != null ? parallelizer.CPM : 0;
 
         // Private fields
+        private readonly string[] badStatuses = new string[] { "FAIL", "RETRY", "BAN", "ERROR", "INVALID" };
         private Parallelizer<MultiRunInput, CheckResult> parallelizer;
         private ProxyPool proxyPool;
         private Timer tickTimer;
@@ -550,8 +551,7 @@ namespace RuriLib.Models.Jobs
             };
         }
 
-        private bool IsHitStatus(string status)
-            => status != "FAIL" && status != "RETRY" && status != "BAN" && status != "ERROR";
+        private bool IsHitStatus(string status) => badStatuses.Contains(status);
 
         private void DebugLog(string message)
         {
