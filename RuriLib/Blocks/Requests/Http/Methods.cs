@@ -66,7 +66,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                await LogHttpResponseData(data, response);
+                await LogHttpResponseData(data, response, request);
             }
             finally
             {
@@ -119,7 +119,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                await LogHttpResponseData(data, response);
+                await LogHttpResponseData(data, response, request);
             }
             finally
             {
@@ -172,7 +172,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                await LogHttpResponseData(data, response);
+                await LogHttpResponseData(data, response, request);
             }
             finally
             {
@@ -255,7 +255,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                await LogHttpResponseData(data, response);
+                await LogHttpResponseData(data, response, request);
             }
             finally
             {
@@ -358,12 +358,15 @@ namespace RuriLib.Blocks.Requests.Http
             return writer.ToString();
         }
 
-        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response)
+        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response, HttpRequestMessage request)
         {
             // Read the raw source for Content-Length calculation
             data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
 
             // Address
+            var uri = response.RequestMessage.RequestUri;
+            if (!uri.IsAbsoluteUri)
+                uri = new Uri(request.RequestUri, uri);
             data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
             data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
 
