@@ -16,6 +16,20 @@ namespace RuriLib.Blocks.Requests.WebSocket
             data.Logger.LogHeader();
 
             var ws = new WebSocketSharp.WebSocket(url);
+
+            // Set the proxy
+            if (data.UseProxy)
+            {
+                if (data.Proxy.Type != Models.Proxies.ProxyType.Http)
+                {
+                    throw new NotSupportedException("Only http proxies are supported");
+                }
+                else
+                {
+                    ws.SetProxy($"http://{data.Proxy.Host}:{data.Proxy.Port}", data.Proxy.Username, data.Proxy.Password);
+                }
+            }
+
             data.Objects["webSocket"] = ws;
 
             var wsMessages = new List<string>();
