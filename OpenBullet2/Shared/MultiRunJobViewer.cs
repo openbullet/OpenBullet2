@@ -431,8 +431,5 @@ namespace OpenBullet2.Shared
             uiRefreshTimer?.Dispose();
             RemoveEventHandlers();
         }
-
-        ~MultiRunJobViewer()
-            => Dispose();
     }
 }

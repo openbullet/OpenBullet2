@@ -1,4 +1,4 @@
-﻿using Blazored.Modal.Services;
+using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,13 +12,12 @@ namespace OpenBullet2.Pages
 {
     public partial class Index : IDisposable
     {
-        [Inject] public MetricsService Metrics { get; set; }
-        [Inject] public AuthenticationStateProvider Auth { get; set; }
-        [Inject] public NavigationManager Nav { get; set; }
-        [Inject] public IModalService Modal { get; set; }
-        [Inject] public IHttpContextAccessor HttpAccessor { get; set; }
-        [Inject] public AnnouncementService AnnouncementService { get; set; }
-        [Inject] public PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private MetricsService Metrics { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private IHttpContextAccessor HttpAccessor { get; set; }
+        [Inject] private AnnouncementService AnnouncementService { get; set; }
+        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
         public IPAddress IP { get; set; } = IPAddress.Parse("127.0.0.1");
         private Timer timer;
         private Timer cpuTimer;

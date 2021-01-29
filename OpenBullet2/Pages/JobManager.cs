@@ -122,6 +122,5 @@ namespace OpenBullet2.Pages
         public void Clone(Job job) => Nav.NavigateTo($"jobs/clone/{job.Id}");
 
         public void Dispose() => uiRefreshTimer?.Dispose();
-        ~JobManager() => Dispose();
     }
 }
