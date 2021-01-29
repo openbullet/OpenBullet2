@@ -69,3 +69,14 @@ ELSE
 LOG "yep"
 END
 ```
+---
+##### TRY / CATCH
+Executes something. If it fails, execute something else.
+Example:
+```
+TRY
+// request to an unreliable URL
+CATCH
+// fallback request to a reliable URL
+END
+```

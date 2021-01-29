@@ -138,6 +138,20 @@ namespace RuriLib.Models.Blocks
                 return $"}}{System.Environment.NewLine}else if ({match.Groups[1].Value}){System.Environment.NewLine}{{";
             }
 
+            // TRY
+            // TRY => try {
+            if (input == "TRY")
+            {
+                return $"try{System.Environment.NewLine}{{";
+            }
+
+            // CATCH
+            // CATCH => } catch {
+            if (input == "CATCH")
+            {
+                return $"}}{System.Environment.NewLine}catch{System.Environment.NewLine}{{";
+            }
+
             throw new NotSupportedException();
         }
     }
