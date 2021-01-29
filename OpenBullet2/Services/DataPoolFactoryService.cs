@@ -4,6 +4,7 @@ using RuriLib.Models.Data;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Services;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Services
@@ -34,9 +35,16 @@ namespace OpenBullet2.Services
             return pool;
         }
 
-        private async Task<WordlistDataPool> MakeWordlistDataPool(WordlistDataPoolOptions options)
+        private async Task<DataPool> MakeWordlistDataPool(WordlistDataPoolOptions options)
         {
             var entity = await wordlistRepo.Get(options.WordlistId);
+
+            if (!File.Exists(entity.FileName))
+            {
+                Console.WriteLine($"Wordlist file not found: {entity.FileName}");
+                return new InfiniteDataPool();
+            }
+
             var factory = new WordlistFactory(ruriLibSettings);
             return new WordlistDataPool(factory.FromEntity(entity));
         }
