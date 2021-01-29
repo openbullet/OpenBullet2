@@ -16,7 +16,7 @@ namespace RuriLib.Models.Variables
                 int x => new IntVariable(x),
                 List<string> x => new ListOfStringsVariable(x),
                 string x => new StringVariable(x),
-                _ => throw new NotSupportedException()
+                _ => throw new NotSupportedException("Type: " + obj.GetType().FullName)
             };
         }
     }

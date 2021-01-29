@@ -12,6 +12,7 @@ using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
+using OpenBullet2.Models.Data;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
@@ -196,6 +197,19 @@ namespace OpenBullet2.Shared
             var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(job.JobOptions, settings);
             var options = ((MultiRunJobOptions)wrapper.Options);
             
+            // Check if it's valid
+            if (string.IsNullOrEmpty(options.ConfigId))
+            {
+                Console.WriteLine("Skipped job options save because ConfigId was null");
+                return;
+            }
+
+            if (options.DataPool is WordlistDataPoolOptions x && x.WordlistId == -1)
+            {
+                Console.WriteLine("Skipped job options save because WordlistId was -1");
+                return;
+            }
+
             // Update the skip
             options.Skip = Job.Skip + Job.DataTested;
             
