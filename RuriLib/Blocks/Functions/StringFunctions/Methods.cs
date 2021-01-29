@@ -120,14 +120,14 @@ namespace RuriLib.Blocks.Functions.String
             
             foreach (var entry in translations.OrderBy(e => e.Key.Length).Reverse())
             {
+                replacements += input.CountOccurrences(entry.Key);
                 sb.Replace(entry.Key, entry.Value);
-                replacements++;
                 if (replaceOne) break;
             }
 
             var translated = sb.ToString();
             data.Logger.LogHeader();
-            data.Logger.Log($"Translated {replacements} texts. Translated string: {translated}", LogColors.YellowGreen);
+            data.Logger.Log($"Translated {replacements} occurrence(s). Translated string: {translated}", LogColors.YellowGreen);
 
             return translated;
         }
