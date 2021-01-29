@@ -22,6 +22,8 @@ namespace RuriLib.Blocks.Requests.Http
     [BlockCategory("Http", "Blocks for performing Http requests", "#32cd32")]
     public static class Methods
     {
+        private static readonly string[] commaHeaders = new[] { "Accept", "Accept-Encoding" };
+
         // STANDARD REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestStandard(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
@@ -284,7 +286,10 @@ namespace RuriLib.Blocks.Requests.Http
                 writer.WriteLine($"Host: {request.RequestUri.Host}");
 
             foreach (var header in request.Headers)
-                writer.WriteLine($"{header.Key}: {string.Join(' ', header.Value)}");
+            {
+                var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
+                writer.WriteLine($"{header.Key}: {string.Join(separator, header.Value)}");
+            }
 
             // Log the cookie header
             var cookies = RuriLib.Functions.Http.Http.GetAllCookies(data.CookieContainer)
