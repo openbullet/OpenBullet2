@@ -71,7 +71,7 @@ END
 ```
 ---
 ##### TRY / CATCH
-Executes something. If it fails, execute something else.
+Executes something. If it fails, executes something else.
 Example:
 ```
 TRY
