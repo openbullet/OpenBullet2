@@ -61,7 +61,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Read the response
             byte[] buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length);
+            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
@@ -99,7 +99,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Read the response
             byte[] buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length);
+            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"The server says\r\n{response}", LogColors.Mauve);
@@ -129,7 +129,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Read the headers (4096 bytes should be enough for anything)
             byte[] buffer = new byte[4096];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length);
+            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
             var headers = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             // Try to parse the Content-Length of the payload
@@ -140,7 +140,7 @@ namespace RuriLib.Blocks.Requests.Tcp
             await Task.Delay(100);
 
             // Read the payload
-            rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length);
+            rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
             var payload = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             var response = $"{headers}\r\n{payload}";
