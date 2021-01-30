@@ -4,6 +4,7 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
@@ -124,26 +125,36 @@ namespace RuriLib.Blocks.Requests.Tcp
                 message += "\r\n";
 
             // Send the message
-            byte[] txBytes = Encoding.ASCII.GetBytes(message);
+            var txBytes = Encoding.ASCII.GetBytes(message);
             await netStream.WriteAsync(txBytes, 0, txBytes.Length, data.CancellationToken);
 
-            // Read the headers (4096 bytes should be enough for anything)
-            byte[] buffer = new byte[4096];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
-            var headers = Encoding.ASCII.GetString(buffer, 0, rxBytes);
+            // Receive data
+            var payload = string.Empty;
+            using var ms = new MemoryStream();
+            await netStream.CopyToAsync(ms); // Read the whole response stream
+            ms.Position = 0;
+            var rxBytes = ms.ToArray();
 
-            // Try to parse the Content-Length of the payload
-            var contentLength = Regex.Match(headers, $"Content-Length: ([0-9]+)");
-            var bufferSize = contentLength.Success ? int.Parse(contentLength.Groups[1].Value) : 4096;
+            // Find where the headers are finished
+            var index = BinaryMatch(rxBytes, Encoding.ASCII.GetBytes("\r\n\r\n")) + 4;
+            var headers = Encoding.UTF8.GetString(rxBytes, 0, index);
+            ms.Position = index;
 
-            buffer = new byte[bufferSize];
-            await Task.Delay(100);
+            // If gzip, decompress
+            if (headers.IndexOf("Content-Encoding: gzip") > 0)
+            {
+                using var decompressionStream = new GZipStream(ms, CompressionMode.Decompress);
+                using var decompressedMemory = new MemoryStream();
+                decompressionStream.CopyTo(decompressedMemory);
+                decompressedMemory.Position = 0;
+                payload = Encoding.UTF8.GetString(decompressedMemory.ToArray());
+            }
+            else
+            {
+                payload = Encoding.UTF8.GetString(rxBytes, index, rxBytes.Length - index);
+            }
 
-            // Read the payload
-            rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
-            var payload = Encoding.ASCII.GetString(buffer, 0, rxBytes);
-
-            var response = $"{headers}\r\n{payload}";
+            var response = $"{headers}{payload}";
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
             data.Logger.Log($"The server says\r\n{response}", LogColors.Mauve);
@@ -174,6 +185,28 @@ namespace RuriLib.Blocks.Requests.Tcp
                 return (NetworkStream)data.Objects["netStream"];
 
             throw new NullReferenceException("You have to create a connection first!");
+        }
+
+        private static int BinaryMatch(byte[] input, byte[] pattern)
+        {
+            int sLen = input.Length - pattern.Length + 1;
+            for (int i = 0; i < sLen; ++i)
+            {
+                bool match = true;
+                for (int j = 0; j < pattern.Length; ++j)
+                {
+                    if (input[i + j] != pattern[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }
