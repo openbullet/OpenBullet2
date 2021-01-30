@@ -131,7 +131,7 @@ namespace RuriLib.Blocks.Requests.Tcp
             // Receive data
             var payload = string.Empty;
             using var ms = new MemoryStream();
-            await netStream.CopyToAsync(ms); // Read the whole response stream
+            await netStream.CopyToAsync(ms, data.CancellationToken); // Read the whole response stream
             ms.Position = 0;
             var rxBytes = ms.ToArray();
 
