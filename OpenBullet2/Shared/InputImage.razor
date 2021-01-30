@@ -2,9 +2,23 @@
 @using System.IO
 @inject Microsoft.Extensions.Localization.IStringLocalizer<InputImage> Loc
 
-<div>
-    <div>
-        <InputFile OnChange="@HandleSelection" />
+<div class="container-fluid">
+    <div class="row">
+        <label>@Loc["FromUrl"]:</label>
+        <div class="col align-self-stretch">
+            <EditForm Model="imageUrl">
+                <InputText @bind-Value="imageUrl" />
+            </EditForm>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-sm btn-success" @onclick="FromUrl">@Loc["Ok"]</button>
+        </div>
+    </div>
+    <div class="row">
+        <label>@Loc["FromFile"]:</label>
+        <div class="col">
+            <InputFile OnChange="@HandleSelection" />
+        </div>
     </div>
 </div>
 
@@ -25,6 +39,7 @@
     [Parameter] public int MaxWidth { get; set; } = 110;
     [Parameter] public int MaxHeight { get; set; } = 110;
     [Parameter] public EventCallback<string> Base64Changed { get; set; }
+    private string imageUrl = string.Empty;
 
     async Task HandleSelection(InputFileChangeEventArgs e)
     {
@@ -60,7 +75,37 @@
         }
         catch (Exception ex)
         {
-            await js.AlertError(ex.GetType().Name, ex.Message);
+            await js.AlertException(ex);
+        }
+    }
+
+    async Task FromUrl()
+    {
+        try
+        {
+            using var client = new HttpClient();
+            var response = await client.GetAsync(imageUrl);
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+
+            var resize = false;
+
+            if (bytes.Length > MaxKilobytes * 1024)
+            {
+                resize = await js.Confirm(Loc["ImageTooBig"],
+                    $"{Loc["ImageTooBigText1"]} {MaxKilobytes}KB. {Loc["ImageTooBigText2"]}", Loc["No"]);
+            }
+
+            Base64 = Convert.ToBase64String(bytes);
+
+            if (resize)
+                Base64 = ImageEditor.ResizeBase64(Base64, MaxWidth, MaxHeight);
+
+            await Base64Changed.InvokeAsync(Base64);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await js.AlertException(ex);
         }
     }
 }
