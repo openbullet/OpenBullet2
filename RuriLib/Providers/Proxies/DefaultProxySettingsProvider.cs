@@ -19,11 +19,21 @@ namespace RuriLib.Providers.Proxies
         public TimeSpan ReadWriteTimeout => TimeSpan.FromMilliseconds(settings.ProxyReadWriteTimeoutMilliseconds);
 
         public bool ContainsBanKey(string text, bool caseSensitive = false)
-            => settings.GlobalBanKeys.Any(k => text.Contains(k,
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            return settings.GlobalBanKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
+        }
 
         public bool ContainsRetryKey(string text, bool caseSensitive = false)
-            => settings.GlobalRetryKeys.Any(k => text.Contains(k,
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            return settings.GlobalRetryKeys.Any(k => text.Contains(k,
                 caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
