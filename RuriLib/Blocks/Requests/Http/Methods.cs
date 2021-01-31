@@ -426,7 +426,16 @@ namespace RuriLib.Blocks.Requests.Http
             // Unzip the GZipped content if needed (after Content-Length calculation)
             if (response.RequestMessage.Headers.Contains("Accept-Encoding") && response.RequestMessage.Headers.AcceptEncoding.First().Value.Contains("gzip") &&
                 response.Content.Headers.Contains("Content-Encoding") && response.Content.Headers.GetValues("Content-Encoding").First().Contains("gzip"))
-                data.RAWSOURCE = GZip.Unzip(data.RAWSOURCE);
+            {
+                try
+                {
+                    data.RAWSOURCE = GZip.Unzip(data.RAWSOURCE);
+                }
+                catch
+                {
+                    data.Logger.Log("Tried to unzip but failed", LogColors.DarkOrange);
+                }
+            }
 
             // Source
             data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
