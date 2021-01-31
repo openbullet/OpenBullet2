@@ -416,7 +416,10 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
 
             // Cookies
-            data.COOKIES = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"]).ToDictionary(c => c.Name, c => c.Value);
+            var allCookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"]);
+            data.COOKIES.Clear();
+            foreach (Cookie cookie in allCookies)
+                data.COOKIES[cookie.Name] = cookie.Value;
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
