@@ -15,7 +15,6 @@ namespace RuriLib.Models.Bots
         public Proxy Proxy { get; set; }
         public bool UseProxy { get; set; }
 
-        public CookieContainer CookieContainer { get; set; } = new CookieContainer();
         public ConfigSettings ConfigSettings { get; }
         public Providers Providers { get; }
         public IBotLogger Logger { get; set; }

@@ -1,7 +1,6 @@
 ﻿using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Utility
@@ -12,7 +11,7 @@ namespace RuriLib.Blocks.Utility
         [Block("Clears the cookie jar used for HTTP requests")]
         public static void ClearCookies(BotData data)
         {
-            data.CookieContainer = new CookieContainer();
+            data.COOKIES = new();
             data.Logger.LogHeader();
             data.Logger.Log($"Cleared the HTTP cookie jar", LogColors.DeepChampagne);
         }

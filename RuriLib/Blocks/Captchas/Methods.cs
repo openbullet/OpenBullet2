@@ -8,6 +8,7 @@ using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Captchas
@@ -236,7 +237,8 @@ namespace RuriLib.Blocks.Captchas
                     Username = data.Proxy.Username,
                     Password = data.Proxy.Password,
                     UserAgent = userAgent,
-                    Cookies = RuriLib.Functions.Http.Http.GetAllCookies(data.CookieContainer).Select(c => (c.Name, c.Value)).ToArray()
+                    Cookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"])
+                        .Select(c => (c.Name, c.Value)).ToArray()
                 }
                 : null;
         }

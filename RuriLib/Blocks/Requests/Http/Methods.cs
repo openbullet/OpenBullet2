@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -31,12 +32,18 @@ namespace RuriLib.Blocks.Requests.Http
             Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
             List<string> customCipherSuites)
         {
+            var cookies = new CookieContainer();
+            data.Objects["cookieContainer"] = cookies;
+
+            foreach (var cookie in data.COOKIES)
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
+
             foreach (var cookie in customCookies)
-                data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpHandlerOptions
             {
-                Cookies = data.CookieContainer,
+                Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
@@ -85,12 +92,18 @@ namespace RuriLib.Blocks.Requests.Http
             Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders,
             int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites, List<string> customCipherSuites)
         {
+            var cookies = new CookieContainer();
+            data.Objects["cookieContainer"] = cookies;
+
+            foreach (var cookie in data.COOKIES)
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
+
             foreach (var cookie in customCookies)
-                data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpHandlerOptions
             {
-                Cookies = data.CookieContainer,
+                Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
@@ -139,12 +152,18 @@ namespace RuriLib.Blocks.Requests.Http
             Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
             List<string> customCipherSuites)
         {
+            var cookies = new CookieContainer();
+            data.Objects["cookieContainer"] = cookies;
+
+            foreach (var cookie in data.COOKIES)
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
+
             foreach (var cookie in customCookies)
-                data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpHandlerOptions
             {
-                Cookies = data.CookieContainer,
+                Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
@@ -193,12 +212,18 @@ namespace RuriLib.Blocks.Requests.Http
             Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion,
             bool useCustomCipherSuites, List<string> customCipherSuites)
         {
+            var cookies = new CookieContainer();
+            data.Objects["cookieContainer"] = cookies;
+
+            foreach (var cookie in data.COOKIES)
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
+
             foreach (var cookie in customCookies)
-                data.CookieContainer.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpHandlerOptions
             {
-                Cookies = data.CookieContainer,
+                Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
@@ -292,10 +317,10 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             // Log the cookie header
-            var cookies = RuriLib.Functions.Http.Http.GetAllCookies(data.CookieContainer)
+            var cookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"])
                 .Select(c => $"{c.Name}={c.Value}");
             
-            if (cookies.Count() > 0)
+            if (cookies.Any())
                 writer.WriteLine($"Cookie: {string.Join("; ", cookies)}");
 
             if (request.Content != null)
@@ -391,7 +416,7 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
 
             // Cookies
-            data.COOKIES = RuriLib.Functions.Http.Http.GetAllCookies(data.CookieContainer).ToDictionary(c => c.Name, c => c.Value);
+            data.COOKIES = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"]).ToDictionary(c => c.Name, c => c.Value);
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
@@ -411,10 +436,10 @@ namespace RuriLib.Blocks.Requests.Http
         /// </summary>
         private static string GenerateMultipartBoundary()
         {
-            StringBuilder builder = new StringBuilder();
-            Random random = new Random();
+            var builder = new StringBuilder();
+            var random = new Random();
             char ch;
-            for (int i = 0; i < 16; i++)
+            for (var i = 0; i < 16; i++)
             {
                 ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                 builder.Append(ch);
@@ -439,7 +464,7 @@ namespace RuriLib.Blocks.Requests.Http
 
         private static TlsCipherSuite[] ParseCipherSuites(List<string> cipherSuites)
         {
-            List<TlsCipherSuite> parsed = new List<TlsCipherSuite>();
+            var parsed = new List<TlsCipherSuite>();
 
             foreach (var suite in cipherSuites)
             {
