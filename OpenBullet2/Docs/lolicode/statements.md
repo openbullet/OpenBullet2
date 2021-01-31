@@ -52,7 +52,7 @@ END
 Executes something while a condition is true.
 Example:
 ```
-WHILE 1 < 2
+WHILE INTKEY 1 LessThan 2
 ...
 END
 ```
@@ -61,9 +61,9 @@ END
 Executes something, or something else.
 Example:
 ```
-IF 5 < 1
+IF INTKEY 5 LessThan 1
 LOG "nope"
-ELSE IF 5 < 3
+ELSE IF INTKEY 5 LessThan 3
 LOG "nope again"
 ELSE
 LOG "yep"

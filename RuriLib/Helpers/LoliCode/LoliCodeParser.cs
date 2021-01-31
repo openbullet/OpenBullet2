@@ -10,6 +10,8 @@ using RuriLib.Models.Conditions;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using IronPython.Modules;
 using RuriLib.Exceptions;
+using RuriLib.Models.Blocks.Custom.Keycheck;
+using RuriLib.Models.Conditions.Comparisons;
 
 namespace RuriLib.Helpers.LoliCode
 {
@@ -152,6 +154,76 @@ namespace RuriLib.Helpers.LoliCode
                 return VariableType.ByteArray;
 
             throw new Exception("Could not detect the token type");
+        }
+
+        public static string[] KeyTypes => new[] { "BOOLKEY", "STRINGKEY", "INTKEY", "FLOATKEY", "LISTKEY", "DICTKEY" };
+
+        public static Key ParseKey(ref string line, string keyType)
+        {
+            return keyType switch
+            {
+                "BOOLKEY" => ParseBoolKey(ref line),
+                "STRINGKEY" => ParseStringKey(ref line),
+                "INTKEY" => ParseIntKey(ref line),
+                "FLOATKEY" => ParseFloatKey(ref line),
+                "LISTKEY" => ParseListKey(ref line),
+                "DICTKEY" => ParseDictKey(ref line),
+                _ => throw new NotSupportedException()
+            };
+        }
+
+        public static BoolKey ParseBoolKey(ref string line)
+        {
+            var key = new BoolKey();
+            ParseSettingValue(ref line, key.Left, new BoolParameter());
+            key.Comparison = Enum.Parse<BoolComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new BoolParameter());
+            return key;
+        }
+
+        public static StringKey ParseStringKey(ref string line)
+        {
+            var key = new StringKey();
+            ParseSettingValue(ref line, key.Left, new StringParameter());
+            key.Comparison = Enum.Parse<StrComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new StringParameter());
+            return key;
+        }
+
+        public static IntKey ParseIntKey(ref string line)
+        {
+            var key = new IntKey();
+            ParseSettingValue(ref line, key.Left, new IntParameter());
+            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new IntParameter());
+            return key;
+        }
+
+        public static FloatKey ParseFloatKey(ref string line)
+        {
+            var key = new FloatKey();
+            ParseSettingValue(ref line, key.Left, new FloatParameter());
+            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new FloatParameter());
+            return key;
+        }
+
+        public static ListKey ParseListKey(ref string line)
+        {
+            var key = new ListKey();
+            ParseSettingValue(ref line, key.Left, new ListOfStringsParameter());
+            key.Comparison = Enum.Parse<ListComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new StringParameter());
+            return key;
+        }
+
+        public static DictionaryKey ParseDictKey(ref string line)
+        {
+            var key = new DictionaryKey();
+            ParseSettingValue(ref line, key.Left, new DictionaryOfStringsParameter());
+            key.Comparison = Enum.Parse<DictComparison>(LineParser.ParseToken(ref line));
+            ParseSettingValue(ref line, key.Right, new StringParameter());
+            return key;
         }
     }
 }

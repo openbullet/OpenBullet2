@@ -1,11 +1,14 @@
-﻿using RuriLib.Extensions;
+﻿using AngleSharp.Text;
+using RuriLib.Extensions;
 using RuriLib.Helpers;
+using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -114,14 +117,34 @@ namespace RuriLib.Models.Blocks
             // WHILE a < b => while (a < b) {
             if ((match = Regex.Match(input, $"^WHILE (.+)$")).Success)
             {
-                return $"while ({match.Groups[1].Value}){System.Environment.NewLine}{{";
+                var line = match.Groups[1].Value.Trim();
+                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                {
+                    var keyType = LineParser.ParseToken(ref line);
+                    var key = LoliCodeParser.ParseKey(ref line, keyType);
+                    return $"while ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
+                }
+                else
+                {
+                    return $"while ({line}){System.Environment.NewLine}{{";
+                }
             }
 
             // IF
             // IF a < b => if (a < b) {
             if ((match = Regex.Match(input, $"^IF (.+)$")).Success)
             {
-                return $"if ({match.Groups[1].Value}){System.Environment.NewLine}{{";
+                var line = match.Groups[1].Value.Trim();
+                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                {
+                    var keyType = LineParser.ParseToken(ref line);
+                    var key = LoliCodeParser.ParseKey(ref line, keyType);
+                    return $"if ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
+                }
+                else
+                {
+                    return $"if ({line}){System.Environment.NewLine}{{";
+                }
             }
 
             // ELSE
@@ -135,7 +158,17 @@ namespace RuriLib.Models.Blocks
             // ELSE IF a < b => } else if (a < b) {
             if ((match = Regex.Match(input, $"ELSE IF (.+)$")).Success)
             {
-                return $"}}{System.Environment.NewLine}else if ({match.Groups[1].Value}){System.Environment.NewLine}{{";
+                var line = match.Groups[1].Value.Trim();
+                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                {
+                    var keyType = LineParser.ParseToken(ref line);
+                    var key = LoliCodeParser.ParseKey(ref line, keyType);
+                    return $"}}{System.Environment.NewLine}else if ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
+                }
+                else
+                {
+                    return $"}}{System.Environment.NewLine}else if ({line}){System.Environment.NewLine}{{";
+                }
             }
 
             // TRY

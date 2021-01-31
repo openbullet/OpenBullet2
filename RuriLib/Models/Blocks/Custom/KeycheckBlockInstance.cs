@@ -117,19 +117,7 @@ namespace RuriLib.Models.Blocks.Custom
                     try
                     {
                         var keyType = LineParser.ParseToken(ref line);
-
-                        Key key = keyType switch
-                        {
-                            "BOOLKEY" => ParseBoolKey(ref line),
-                            "STRINGKEY" => ParseStringKey(ref line),
-                            "INTKEY" => ParseIntKey(ref line),
-                            "FLOATKEY" => ParseFloatKey(ref line),
-                            "LISTKEY" => ParseListKey(ref line),
-                            "DICTKEY" => ParseDictKey(ref line),
-                            _ => throw new NotSupportedException()
-                        };
-
-                        Keychains.Last().Keys.Add(key);
+                        Keychains.Last().Keys.Add(LoliCodeParser.ParseKey(ref line, keyType));
                     }
                     catch
                     {
@@ -149,60 +137,6 @@ namespace RuriLib.Models.Blocks.Custom
                     }
                 }
             }
-        }
-
-        private BoolKey ParseBoolKey(ref string line)
-        {
-            var key = new BoolKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new BoolParameter());
-            key.Comparison = Enum.Parse<BoolComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new BoolParameter());
-            return key;
-        }
-
-        private StringKey ParseStringKey(ref string line)
-        {
-            var key = new StringKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new StringParameter());
-            key.Comparison = Enum.Parse<StrComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
-            return key;
-        }
-
-        private IntKey ParseIntKey(ref string line)
-        {
-            var key = new IntKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new IntParameter());
-            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new IntParameter());
-            return key;
-        }
-
-        private FloatKey ParseFloatKey(ref string line)
-        {
-            var key = new FloatKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new FloatParameter());
-            key.Comparison = Enum.Parse<NumComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new FloatParameter());
-            return key;
-        }
-
-        private ListKey ParseListKey(ref string line)
-        {
-            var key = new ListKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new ListOfStringsParameter());
-            key.Comparison = Enum.Parse<ListComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
-            return key;
-        }
-
-        private DictionaryKey ParseDictKey(ref string line)
-        {
-            var key = new DictionaryKey();
-            LoliCodeParser.ParseSettingValue(ref line, key.Left, new DictionaryOfStringsParameter());
-            key.Comparison = Enum.Parse<DictComparison>(LineParser.ParseToken(ref line));
-            LoliCodeParser.ParseSettingValue(ref line, key.Right, new StringParameter());
-            return key;
         }
 
         public override string ToCSharp(List<string> definedVariables, ConfigSettings settings)
@@ -249,7 +183,7 @@ namespace RuriLib.Models.Blocks.Custom
                 else
                     writer.Write("else if (");
 
-                var conditions = keychain.Keys.Select(k => ConvertKey(k));
+                var conditions = keychain.Keys.Select(k => CSharpWriter.ConvertKey(k));
 
                 var chainedCondition = keychain.Mode switch
                 {
@@ -309,25 +243,6 @@ namespace RuriLib.Models.Blocks.Custom
             writer.WriteLine("CheckGlobalBanKeys(data);");
             
             return writer.ToString();
-        }
-
-        private string ConvertKey(Key key)
-        {
-            var comparison = key switch
-            {
-                BoolKey x => $"BoolComparison.{x.Comparison}",
-                StringKey x => $"StrComparison.{x.Comparison}",
-                IntKey x => $"NumComparison.{x.Comparison}",
-                FloatKey x => $"NumComparison.{x.Comparison}",
-                ListKey x => $"ListComparison.{x.Comparison}",
-                DictionaryKey x => $"DictComparison.{x.Comparison}",
-                _ => throw new Exception("Unknown key type")
-            };
-
-            var left = CSharpWriter.FromSetting(key.Left);
-            var right = CSharpWriter.FromSetting(key.Right);
-
-            return $"CheckCondition(data, {left}, {comparison}, {right})";
         }
     }
 }

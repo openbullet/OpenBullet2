@@ -42,6 +42,10 @@ namespace RuriLib.Logging
 
         public void LogHeader([CallerMemberName] string caller = null)
         {
+            // Do not log if called by lolicode
+            if (ExecutingBlock == "LoliCode")
+                return;
+
             var callingMethod = new StackFrame(1).GetMethod();
             var attribute = callingMethod.GetCustomAttribute<Block>();
 

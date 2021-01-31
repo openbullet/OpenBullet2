@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Blocks.Settings;
+﻿using RuriLib.Models.Blocks.Custom.Keycheck;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using System;
 using System.CodeDom;
@@ -149,6 +150,25 @@ namespace RuriLib.Helpers.CSharp
                 EnumSetting _ => string.Empty,
                 _ => throw new NotImplementedException()
             };
+        }
+
+        public static string ConvertKey(Key key)
+        {
+            var comparison = key switch
+            {
+                BoolKey x => $"BoolComparison.{x.Comparison}",
+                StringKey x => $"StrComparison.{x.Comparison}",
+                IntKey x => $"NumComparison.{x.Comparison}",
+                FloatKey x => $"NumComparison.{x.Comparison}",
+                ListKey x => $"ListComparison.{x.Comparison}",
+                DictionaryKey x => $"DictComparison.{x.Comparison}",
+                _ => throw new Exception("Unknown key type")
+            };
+
+            var left = FromSetting(key.Left);
+            var right = FromSetting(key.Right);
+
+            return $"CheckCondition(data, {left}, {comparison}, {right})";
         }
     }
 }
