@@ -104,11 +104,20 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            var entities = await JobRepo.GetAll().Include(j => j.Owner)
+            // If admin, just purge all
+            if (uid == 0)
+            {
+                JobRepo.Purge();
+                Manager.Jobs.Clear();
+            }
+            else
+            {
+                var entities = await JobRepo.GetAll().Include(j => j.Owner)
                 .Where(j => j.Owner.Id == uid).ToListAsync();
 
-            await JobRepo.Delete(entities);
-            Manager.Jobs.RemoveAll(j => j.OwnerId == uid);
+                await JobRepo.Delete(entities);
+                Manager.Jobs.RemoveAll(j => j.OwnerId == uid);
+            }
         }
 
         public async Task Edit(Job job)
