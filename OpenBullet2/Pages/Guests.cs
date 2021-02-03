@@ -1,6 +1,5 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
-using DocumentFormat.OpenXml.EMMA;
 using GridBlazor;
 using GridBlazor.Pages;
 using GridMvc.Server;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
+using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace OpenBullet2.Pages
         [Inject] private IModalService Modal { get; set; }
         [Inject] private IGuestRepository GuestRepo { get; set; }
         [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private JobManagerService JobManager { get; set; }
         [Inject] private IWordlistRepository WordlistRepo { get; set; }
         [Inject] private IProxyGroupRepository ProxyGroupRepo { get; set; }
         [Inject] private IProxyRepository ProxyRepo { get; set; }
@@ -162,6 +163,9 @@ namespace OpenBullet2.Pages
                         .Where(j => j.Owner.Id == selectedGuest.Id).ToListAsync();
 
                     await JobRepo.Delete(jobsToDelete);
+
+                    // Delete jobs from the service
+                    JobManager.Jobs.RemoveAll(j => j.OwnerId == selectedGuest.Id);
 
                     // Delete proxy groups and their proxies
                     var proxyGroupsToDelete = await ProxyGroupRepo.GetAll().Include(g => g.Owner)
