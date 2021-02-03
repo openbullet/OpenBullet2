@@ -40,6 +40,15 @@ The developer will not be held responsible for improper use of this software.
                 {
                     webBuilder.UseStartup<Startup>()
                         .UseDefaultServiceProvider(options => options.ValidateScopes = false);
+                })
+                .ConfigureAppConfiguration((hostingContext, config) => 
+                {
+                    config
+#if RELEASE
+                        .AddJsonFile("appsettings.Release.json");
+#else
+                        .AddJsonFile("appsettings.Development.json");
+#endif
                 });
     }
 }
