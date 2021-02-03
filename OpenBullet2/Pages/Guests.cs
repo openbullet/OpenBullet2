@@ -1,5 +1,6 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
+using DocumentFormat.OpenXml.EMMA;
 using GridBlazor;
 using GridBlazor.Pages;
 using GridMvc.Server;
@@ -23,11 +24,12 @@ namespace OpenBullet2.Pages
 {
     public partial class Guests
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] IGuestRepository GuestRepo { get; set; }
-        [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] IWordlistRepository WordlistRepo { get; set; }
-        [Inject] IProxyGroupRepository ProxyGroupRepo { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private IWordlistRepository WordlistRepo { get; set; }
+        [Inject] private IProxyGroupRepository ProxyGroupRepo { get; set; }
+        [Inject] private IProxyRepository ProxyRepo { get; set; }
 
         private List<GuestEntity> guests;
         private GuestEntity selectedGuest;
@@ -151,7 +153,7 @@ namespace OpenBullet2.Pages
 
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedGuest.Username}?", Loc["Cancel"]))
             {
-                // We have to delete all the guest's jobs, proxy groups and wordlists first
+                // We have to delete all the guest's jobs, proxies and wordlists first
                 // otherwise we get a FOREIGN KEY CONSTRAINT FAILED exception.
                 if (await js.Confirm(Loc["DeleteEverything"], Loc["DeleteEverythingMessage"], Loc["Cancel"]))
                 {
@@ -161,9 +163,18 @@ namespace OpenBullet2.Pages
 
                     await JobRepo.Delete(jobsToDelete);
 
-                    // Delete proxy groups
+                    // Delete proxy groups and their proxies
                     var proxyGroupsToDelete = await ProxyGroupRepo.GetAll().Include(g => g.Owner)
                         .Where(g => g.Owner.Id == selectedGuest.Id).ToListAsync();
+
+                    foreach (var group in proxyGroupsToDelete)
+                    {
+                        var toDelete = await ProxyRepo.GetAll()
+                            .Where(p => p.Group.Id == group.Id)
+                            .ToListAsync();
+                        
+                        await ProxyRepo.Delete(toDelete);
+                    }
 
                     await ProxyGroupRepo.Delete(proxyGroupsToDelete);
 
