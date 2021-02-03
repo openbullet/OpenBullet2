@@ -16,6 +16,7 @@ using OpenBullet2.Shared.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -24,6 +25,9 @@ namespace OpenBullet2.Pages
     {
         [Inject] IModalService Modal { get; set; }
         [Inject] IGuestRepository GuestRepo { get; set; }
+        [Inject] IJobRepository JobRepo { get; set; }
+        [Inject] IWordlistRepository WordlistRepo { get; set; }
+        [Inject] IProxyGroupRepository ProxyGroupRepo { get; set; }
 
         private List<GuestEntity> guests;
         private GuestEntity selectedGuest;
@@ -147,11 +151,37 @@ namespace OpenBullet2.Pages
 
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedGuest.Username}?", Loc["Cancel"]))
             {
-                // Delete the guest from the db
-                await GuestRepo.Delete(selectedGuest);
+                // We have to delete all the guest's jobs, proxy groups and wordlists first
+                // otherwise we get a FOREIGN KEY CONSTRAINT FAILED exception.
+                if (await js.Confirm(Loc["DeleteEverything"], Loc["DeleteEverythingMessage"], Loc["Cancel"]))
+                {
+                    // Delete jobs
+                    var jobsToDelete = await JobRepo.GetAll().Include(j => j.Owner)
+                        .Where(j => j.Owner.Id == selectedGuest.Id).ToListAsync();
 
-                // Delete the guest from the local list
-                guests.Remove(selectedGuest);
+                    await JobRepo.Delete(jobsToDelete);
+
+                    // Delete proxy groups
+                    var proxyGroupsToDelete = await ProxyGroupRepo.GetAll().Include(g => g.Owner)
+                        .Where(g => g.Owner.Id == selectedGuest.Id).ToListAsync();
+
+                    await ProxyGroupRepo.Delete(proxyGroupsToDelete);
+
+                    // Delete wordlists
+                    var wordlistsToDelete = await WordlistRepo.GetAll().Include(w => w.Owner)
+                        .Where(w => w.Owner.Id == selectedGuest.Id).ToListAsync();
+
+                    foreach (var w in wordlistsToDelete)
+                    {
+                        await WordlistRepo.Delete(w, false);
+                    }
+
+                    // Delete the guest from the db
+                    await GuestRepo.Delete(selectedGuest);
+
+                    // Delete the guest from the local list
+                    guests.Remove(selectedGuest);
+                }
             }
 
             await RefreshList();
