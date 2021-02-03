@@ -28,7 +28,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="PuppeteerExtraSharp" Version="1.1.0" />
     <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
-    <PackageReference Include="Ruri.SocksSharp" Version="1.5.2" />
+    <PackageReference Include="Ruri.SocksSharp" Version="1.6.0" />
     <PackageReference Include="Scrypt.NET" Version="1.3.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
