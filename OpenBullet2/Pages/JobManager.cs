@@ -96,7 +96,7 @@ namespace OpenBullet2.Pages
 
         public async Task RemoveAll()
         {
-            var notIdleJobs = Manager.Jobs.Where(j => j.Status != JobStatus.Idle);
+            var notIdleJobs = Manager.Jobs.Where(j => CanSeeJob(j.Id) && j.Status != JobStatus.Idle);
 
             if (notIdleJobs.Any())
             {
@@ -104,8 +104,11 @@ namespace OpenBullet2.Pages
                 return;
             }
 
-            JobRepo.Purge();
-            Manager.Jobs.Clear();
+            var entities = await JobRepo.GetAll().Include(j => j.Owner)
+                .Where(j => j.Owner.Id == uid).ToListAsync();
+
+            await JobRepo.Delete(entities);
+            Manager.Jobs.RemoveAll(j => j.OwnerId == uid);
         }
 
         public async Task Edit(Job job)
