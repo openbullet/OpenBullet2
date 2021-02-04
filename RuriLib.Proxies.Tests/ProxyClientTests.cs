@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using RuriLib.Proxies.Clients;
 using System.Threading;
+using RuriLib.Proxies.Exceptions;
 
 namespace RuriLib.Proxies.Tests
 {
@@ -35,6 +36,17 @@ namespace RuriLib.Proxies.Tests
 
             var response = await GetResponseAsync(client, BuildSampleGetRequest(), cts.Token);
             Assert.Contains("Example Domain", response);
+        }
+
+        [Fact]
+        public async Task ConnectAsync_HttpProxyClient_Invalid()
+        {
+            // Set an invalid proxy
+            var settings = new ProxySettings() { Host = "example.com", Port = 80 };
+            var proxy = new HttpProxyClient(settings);
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            await Assert.ThrowsAsync<ProxyException>(async () => await proxy.ConnectAsync("example.com", 80, null, cts.Token));
         }
 
         private static async Task<string> GetResponseAsync(TcpClient client, string request,
