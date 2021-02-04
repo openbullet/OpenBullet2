@@ -55,7 +55,7 @@ namespace RuriLib.Proxies.Clients
                 throw new ArgumentException(null, nameof(destinationHost));
             }
 
-            if (!ExceptionHelper.ValidateTcpPort(destinationPort))
+            if (!PortHelper.ValidateTcpPort(destinationPort))
             {
                 throw new ArgumentOutOfRangeException(nameof(destinationPort));
             }
