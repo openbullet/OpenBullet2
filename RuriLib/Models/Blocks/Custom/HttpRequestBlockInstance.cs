@@ -317,7 +317,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("httpVersion") + ", ");
                     writer.Write(GetSettingValue("useCustomCipherSuites") + ", ");
                     writer.Write(GetSettingValue("customCipherSuites") + ", ");
-                    writer.Write(GetSettingValue("sendEmptyContent"));
+                    writer.Write(GetSettingValue("alwaysSendContent"));
                     break;
 
                 case RawRequestParams x:
