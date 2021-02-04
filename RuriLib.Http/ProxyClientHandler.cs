@@ -22,7 +22,7 @@ namespace RuriLib.Http
     public class ProxyClientHandler : HttpMessageHandler, IDisposable
     {
         private readonly ProxyClient proxyClient;
-
+        
         private Stream connectionCommonStream;
         private NetworkStream connectionNetworkStream;
 
@@ -31,6 +31,11 @@ namespace RuriLib.Http
         /// The underlying proxy client.
         /// </summary>
         public ProxyClient ProxyClient => proxyClient;
+
+        /// <summary>
+        /// Gets the raw bytes of the last request that was sent.
+        /// </summary>
+        public byte[] LastRequestBytes { get; private set; }
 
         /// <summary>
         /// Allow automatic redirection on 3xx reply.
@@ -105,10 +110,6 @@ namespace RuriLib.Http
         public X509RevocationMode CertRevocationMode { get; set; }
         #endregion
 
-        #region Events
-        public event EventHandler<byte[]> SentRequest;
-        #endregion
-
         /// <summary>
         /// Creates a new instance of <see cref="ProxyClientHandler"/> given a <paramref name="proxyClient"/>.
         /// </summary>
@@ -179,7 +180,7 @@ namespace RuriLib.Http
             }
 
             ms.Seek(0, SeekOrigin.Begin);
-            SentRequest?.Invoke(this, ms.ToArray());
+            LastRequestBytes = ms.ToArray();
         }
 
         private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequestMessage request,

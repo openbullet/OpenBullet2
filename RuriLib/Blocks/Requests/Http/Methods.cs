@@ -52,7 +52,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -70,13 +70,17 @@ namespace RuriLib.Blocks.Requests.Http
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
-            LogHttpRequestData(data, request);
             
             try
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
+                LogHttpRequestData(data, handler.LastRequestBytes);
                 await LogHttpResponseData(data, response, request);
+            }
+            catch
+            {
+                LogHttpRequestData(data, request);
             }
             finally
             {
@@ -112,7 +116,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -130,13 +134,17 @@ namespace RuriLib.Blocks.Requests.Http
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
-            LogHttpRequestData(data, request);
 
             try
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
+                LogHttpRequestData(data, handler.LastRequestBytes);
                 await LogHttpResponseData(data, response, request);
+            }
+            catch
+            {
+                LogHttpRequestData(data, request);
             }
             finally
             {
@@ -172,7 +180,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
 
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -190,13 +198,17 @@ namespace RuriLib.Blocks.Requests.Http
             request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
 
             data.Logger.LogHeader();
-            LogHttpRequestData(data, request);
-
+            
             try
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
+                LogHttpRequestData(data, handler.LastRequestBytes);
                 await LogHttpResponseData(data, response, request);
+            }
+            catch
+            {
+                LogHttpRequestData(data, request);
             }
             finally
             {
@@ -232,7 +244,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites)
             };
             
-            using var handler = HttpHandlerFactory.GetHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -280,13 +292,17 @@ namespace RuriLib.Blocks.Requests.Http
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             data.Logger.LogHeader();
-            LogHttpRequestData(data, request, boundary, content);
 
             try
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
+                LogHttpRequestData(data, handler.LastRequestBytes);
                 await LogHttpResponseData(data, response, request);
+            }
+            catch
+            {
+                LogHttpRequestData(data, request, boundary, content);
             }
             finally
             {
@@ -353,6 +369,9 @@ namespace RuriLib.Blocks.Requests.Http
 
             data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
         }
+
+        private static void LogHttpRequestData(BotData data, byte[] requestBytes)
+            => data.Logger.Log(Encoding.ASCII.GetString(requestBytes), LogColors.NonPhotoBlue);
 
         private static string SerializeMultipart(string boundary, List<MyHttpContent> contents)
         {

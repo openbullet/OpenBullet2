@@ -4,14 +4,13 @@ using RuriLib.Proxies;
 using RuriLib.Proxies.Clients;
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Security.Authentication;
 
 namespace RuriLib.Functions.Http
 {
     public class HttpHandlerFactory
     {
-        public static HttpMessageHandler GetHandler(Proxy proxy, HttpHandlerOptions options)
+        public static ProxyClientHandler GetProxiedHandler(Proxy proxy, HttpHandlerOptions options)
         {
             ProxyClient client;
 

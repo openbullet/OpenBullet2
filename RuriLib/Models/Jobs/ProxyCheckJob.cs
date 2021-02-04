@@ -69,7 +69,7 @@ namespace RuriLib.Models.Jobs
                 ConnectTimeout = input.Timeout
             };
 
-            using var handler = HttpHandlerFactory.GetHandler(input.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(input.Proxy, options);
             using var http = new HttpClient(handler) { Timeout = input.Timeout };
             
             try
