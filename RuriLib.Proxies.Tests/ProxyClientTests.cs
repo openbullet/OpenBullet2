@@ -60,6 +60,9 @@ namespace RuriLib.Proxies.Tests
             {
                 "GET / HTTP/1.1",
                 "Host: example.com",
+
+                // We need this otherwise the server will default to Keep-Alive and
+                // not close the stream leaving us hanging...
                 "Connection: Close",
                 "Accept: */*",
                 string.Empty,
