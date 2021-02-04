@@ -76,6 +76,12 @@ namespace OpenBullet2.Shared
                 await js.AlertException(ex);
             }
 
+            if (options.UseProxy && !options.TestProxy.Contains(':'))
+            {
+                await js.AlertError(Loc["InvalidProxy"], Loc["InvalidProxyMessage"]);
+                return;
+            }
+
             if (!options.PersistLog)
                 logger.Clear();
 

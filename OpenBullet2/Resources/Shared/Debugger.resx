@@ -120,6 +120,12 @@
   <data name="CompleteLog" xml:space="preserve">
     <value>Complete log</value>
   </data>
+  <data name="InvalidProxy" xml:space="preserve">
+    <value>Invalid proxy</value>
+  </data>
+  <data name="InvalidProxyMessage" xml:space="preserve">
+    <value>The test proxy you provided is invalid and cannot be parsed</value>
+  </data>
   <data name="PersistLog" xml:space="preserve">
     <value>Persist log</value>
   </data>
