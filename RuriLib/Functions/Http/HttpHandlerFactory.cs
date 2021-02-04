@@ -1,7 +1,9 @@
-﻿using RuriLib.Models.Proxies;
-using SocksSharp;
-using SocksSharp.Proxy;
+﻿using RuriLib.Http;
+using RuriLib.Models.Proxies;
+using RuriLib.Proxies;
+using RuriLib.Proxies.Clients;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Security.Authentication;
 
@@ -11,20 +13,11 @@ namespace RuriLib.Functions.Http
     {
         public static HttpMessageHandler GetHandler(Proxy proxy, HttpHandlerOptions options)
         {
-            HttpMessageHandler handler;
+            ProxyClient client;
 
             if (proxy == null)
             {
-                handler = new ProxyClientHandler<NoProxy>(new ProxySettings())
-                {
-                    AllowAutoRedirect = options.AutoRedirect,
-                    CookieContainer = options.Cookies,
-                    UseCookies = options.Cookies != null,
-                    SslProtocols = ToSslProtocols(options.SecurityProtocol),
-                    UseCustomCipherSuites = options.UseCustomCipherSuites,
-                    AllowedCipherSuites = options.CustomCipherSuites,
-                    CertRevocationMode = options.CertRevocationMode
-                };
+                client = new NoProxyClient(new ProxySettings());
             }
             else
             {
@@ -32,53 +25,35 @@ namespace RuriLib.Functions.Http
                 {
                     Host = proxy.Host,
                     Port = proxy.Port,
-                    ConnectTimeout = (int)options.ConnectTimeout.TotalMilliseconds,
-                    ReadWriteTimeOut = (int)options.ReadWriteTimeout.TotalMilliseconds
+                    ConnectTimeout = options.ConnectTimeout,
+                    ReadWriteTimeOut = options.ReadWriteTimeout
                 };
 
                 if (proxy.NeedsAuthentication)
-                    settings.SetCredential(proxy.Username, proxy.Password);
-
-                handler = proxy.Type switch
                 {
-                    ProxyType.Http => new ProxyClientHandler<SocksSharp.Proxy.Http>(settings)
-                    {
-                        AllowAutoRedirect = options.AutoRedirect,
-                        CookieContainer = options.Cookies,
-                        UseCookies = options.Cookies != null,
-                        SslProtocols = ToSslProtocols(options.SecurityProtocol),
-                        UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites,
-                        CertRevocationMode = options.CertRevocationMode
-                    },
+                    settings.Credentials = new NetworkCredential(proxy.Username, proxy.Password);
+                }
 
-                    ProxyType.Socks4 => new ProxyClientHandler<Socks4>(settings)
-                    {
-                        AllowAutoRedirect = options.AutoRedirect,
-                        CookieContainer = options.Cookies,
-                        UseCookies = options.Cookies != null,
-                        SslProtocols = ToSslProtocols(options.SecurityProtocol),
-                        UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites,
-                        CertRevocationMode = options.CertRevocationMode
-                    },
-
-                    ProxyType.Socks5 => new ProxyClientHandler<Socks5>(settings)
-                    {
-                        AllowAutoRedirect = options.AutoRedirect,
-                        CookieContainer = options.Cookies,
-                        UseCookies = options.Cookies != null,
-                        SslProtocols = ToSslProtocols(options.SecurityProtocol),
-                        UseCustomCipherSuites = options.UseCustomCipherSuites,
-                        AllowedCipherSuites = options.CustomCipherSuites,
-                        CertRevocationMode = options.CertRevocationMode
-                    },
-
+                client = proxy.Type switch
+                {
+                    ProxyType.Http => new HttpProxyClient(settings),
+                    ProxyType.Socks4 => new Socks4ProxyClient(settings),
+                    ProxyType.Socks4a => new Socks4aProxyClient(settings),
+                    ProxyType.Socks5 => new Socks5ProxyClient(settings),
                     _ => throw new NotImplementedException()
                 };
             }
 
-            return handler;
+            return new ProxyClientHandler(client)
+            {
+                AllowAutoRedirect = options.AutoRedirect,
+                CookieContainer = options.Cookies,
+                UseCookies = options.Cookies != null,
+                SslProtocols = ToSslProtocols(options.SecurityProtocol),
+                UseCustomCipherSuites = options.UseCustomCipherSuites,
+                AllowedCipherSuites = options.CustomCipherSuites,
+                CertRevocationMode = options.CertRevocationMode
+            };
         }
 
         /// <summary>

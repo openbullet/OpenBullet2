@@ -21,8 +21,10 @@ namespace RuriLib.Blocks.Requests.Tcp
         {
             data.Logger.LogHeader();
 
-            var netStream = await Task.Run(() => TcpFactory.GetNetworkStream(host, port,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.Proxy), data.CancellationToken);
+            var tcpClient = await TcpClientFactory.GetClientAsync(host, port,
+                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.Proxy, data.CancellationToken);
+
+            var netStream = tcpClient.GetStream();
 
             data.Objects["netStream"] = netStream;
 
