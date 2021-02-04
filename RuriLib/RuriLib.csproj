@@ -38,4 +38,9 @@
     <Folder Include="Models\Captchas\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RuriLib.Http\RuriLib.Http.csproj" />
+    <ProjectReference Include="..\RuriLib.Proxies\RuriLib.Proxies.csproj" />
+  </ItemGroup>
+
 </Project>
