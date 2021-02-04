@@ -143,7 +143,10 @@ namespace RuriLib.Http
             // Optionally perform auto redirection on 3xx response
             if (((int)responseMessage.StatusCode) / 100 == 3 && AllowAutoRedirect)
             {
-                var redirectUri = responseMessage.Headers.Location;
+                // Compute the redirection URI
+                var redirectUri = responseMessage.Headers.Location.IsAbsoluteUri
+                    ? responseMessage.Headers.Location
+                    : new Uri(request.RequestUri, responseMessage.Headers.Location);
 
                 // If not 307, change the method to GET
                 if (responseMessage.StatusCode != HttpStatusCode.RedirectKeepVerb)
@@ -152,10 +155,20 @@ namespace RuriLib.Http
                     request.Content = null;
                 }
 
-                request.RequestUri = redirectUri.IsAbsoluteUri
-                    ? redirectUri
-                    : new Uri(request.RequestUri, redirectUri);
+                // Port over the cookies if the domains are different
+                if (request.RequestUri.Host != redirectUri.Host)
+                {
+                    var cookies = CookieContainer.GetCookies(request.RequestUri);
+                    foreach (Cookie cookie in cookies)
+                    {
+                        CookieContainer.Add(redirectUri, new Cookie(cookie.Name, cookie.Value));
+                    }
+                }
 
+                // Set the new URI
+                request.RequestUri = redirectUri;
+
+                // Perform a new request
                 return await SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
 
