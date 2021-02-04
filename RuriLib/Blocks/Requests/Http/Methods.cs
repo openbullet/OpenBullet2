@@ -3,6 +3,7 @@ using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
 using RuriLib.Helpers;
+using RuriLib.Http;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
@@ -78,7 +79,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler.LastRequestBytes);
+                LogHttpRequestData(data, handler);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -143,7 +144,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler.LastRequestBytes);
+                LogHttpRequestData(data, handler);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -208,7 +209,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler.LastRequestBytes);
+                LogHttpRequestData(data, handler);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -303,7 +304,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler.LastRequestBytes);
+                LogHttpRequestData(data, handler);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -324,7 +325,7 @@ namespace RuriLib.Blocks.Requests.Http
         private static void LogHttpRequestData(BotData data, HttpRequestMessage request,
             string boundary = null, List<MyHttpContent> multipartContents = null)
         {
-            using StringWriter writer = new StringWriter();
+            using var writer = new StringWriter();
 
             // Log the method, uri and http version
             writer.WriteLine($"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
@@ -377,12 +378,22 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
         }
 
-        private static void LogHttpRequestData(BotData data, byte[] requestBytes)
-            => data.Logger.Log(Encoding.ASCII.GetString(requestBytes), LogColors.NonPhotoBlue);
+        private static void LogHttpRequestData(BotData data, ProxyClientHandler handler)
+        {
+            for (var i = 0; i < handler.RawRequests.Count; i++)
+            {
+                if (i > 0)
+                {
+                    data.Logger.Log($"Redirect {i}", LogColors.Beige);
+                }
+
+                data.Logger.Log(Encoding.ASCII.GetString(handler.RawRequests[i]), LogColors.NonPhotoBlue);
+            }
+        }
 
         private static string SerializeMultipart(string boundary, List<MyHttpContent> contents)
         {
-            using StringWriter writer = new StringWriter();
+            using var writer = new StringWriter();
 
             foreach (var content in contents)
             {

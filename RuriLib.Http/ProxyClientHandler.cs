@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using RuriLib.Proxies;
 using System.Text;
 using RuriLib.Proxies.Exceptions;
+using System.Collections.Generic;
 
 namespace RuriLib.Http
 {
@@ -35,7 +36,7 @@ namespace RuriLib.Http
         /// <summary>
         /// Gets the raw bytes of the last request that was sent.
         /// </summary>
-        public byte[] LastRequestBytes { get; private set; }
+        public List<byte[]> RawRequests { get; } = new();
 
         /// <summary>
         /// Allow automatic redirection on 3xx reply.
@@ -185,7 +186,7 @@ namespace RuriLib.Http
             }
 
             ms.Seek(0, SeekOrigin.Begin);
-            LastRequestBytes = ms.ToArray();
+            RawRequests.Add(ms.ToArray());
         }
 
         private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequestMessage request,
