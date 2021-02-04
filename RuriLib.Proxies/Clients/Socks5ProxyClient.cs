@@ -69,8 +69,9 @@ namespace RuriLib.Proxies.Clients
             {
                 var nStream = client.GetStream();
 
-                await NegotiateAsync(nStream, cancellationToken);
-                await RequestConnectionAsync(nStream, CommandConnect, destinationHost, destinationPort, cancellationToken);
+                await NegotiateAsync(nStream, cancellationToken).ConfigureAwait(false);
+                await RequestConnectionAsync(nStream, CommandConnect, destinationHost, destinationPort, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -103,7 +104,7 @@ namespace RuriLib.Proxies.Clients
             request[1] = 1;
             request[2] = authMethod;
 
-            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken);
+            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken).ConfigureAwait(false);
 
             // READ RESPONSE
             // +----+--------+
@@ -113,13 +114,13 @@ namespace RuriLib.Proxies.Clients
             // +----+--------+
             var response = new byte[2];
 
-            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken);
+            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken).ConfigureAwait(false);
 
             var reply = response[1];
 
             if (authMethod == AuthMethodUsernamePassword && reply == AuthMethodUsernamePassword)
             {
-                await SendUsernameAndPasswordAsync(nStream, cancellationToken);
+                await SendUsernameAndPasswordAsync(nStream, cancellationToken).ConfigureAwait(false);
             }
             else if (reply != CommandReplySucceeded)
             {
@@ -151,7 +152,7 @@ namespace RuriLib.Proxies.Clients
             request[2 + uname.Length] = (byte)passwd.Length;
             passwd.CopyTo(request, 3 + uname.Length);
 
-            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken);
+            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken).ConfigureAwait(false);
 
             // READ RESPONSE
             // +----+--------+
@@ -161,7 +162,7 @@ namespace RuriLib.Proxies.Clients
             // +----+--------+
             var response = new byte[2];
 
-            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken);
+            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken).ConfigureAwait(false);
 
             var reply = response[1];
 
@@ -193,7 +194,7 @@ namespace RuriLib.Proxies.Clients
             dstAddr.CopyTo(request, 4);
             dstPort.CopyTo(request, 4 + dstAddr.Length);
 
-            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken);
+            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken).ConfigureAwait(false);
 
             // READ RESPONSE
             // +----+-----+-------+------+----------+----------+
@@ -203,7 +204,7 @@ namespace RuriLib.Proxies.Clients
             // +----+-----+-------+------+----------+----------+
             var response = new byte[255];
 
-            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken);
+            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken).ConfigureAwait(false);
 
             var reply = response[1];
             if (reply != CommandReplySucceeded)

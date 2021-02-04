@@ -49,7 +49,8 @@ namespace RuriLib.Proxies.Clients
 
             try
             {
-                await RequestConnectionAsync(client.GetStream(), CommandConnect, destinationHost, destinationPort, cancellationToken);
+                await RequestConnectionAsync(client.GetStream(), CommandConnect, destinationHost, destinationPort, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -92,7 +93,7 @@ namespace RuriLib.Proxies.Clients
             userId.CopyTo(request, 8);
             request[8 + userId.Length] = 0x00;
 
-            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken);
+            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken).ConfigureAwait(false);
 
             // READ RESPONSE
             // +----+----+----+----+----+----+----+----+
@@ -101,7 +102,7 @@ namespace RuriLib.Proxies.Clients
             //   1    1       2              4
             var response = new byte[8];
 
-            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken);
+            await nStream.ReadAsync(response.AsMemory(0, response.Length), cancellationToken).ConfigureAwait(false);
 
             var reply = response[1];
 

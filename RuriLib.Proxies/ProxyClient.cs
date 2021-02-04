@@ -52,7 +52,7 @@ namespace RuriLib.Proxies
             // Try to connect to the proxy (or directly to the server in the NoProxy case)
             try
             {
-                await client.ConnectAsync(host, port, cancellationToken);
+                await client.ConnectAsync(host, port, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -66,10 +66,8 @@ namespace RuriLib.Proxies
                 throw;
             }
 
-            await CreateConnectionAsync(client,
-                destinationHost,
-                destinationPort,
-                cancellationToken);
+            await CreateConnectionAsync(client, destinationHost, destinationPort, cancellationToken)
+                .ConfigureAwait(false);
 
             return client;
         }

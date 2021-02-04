@@ -45,7 +45,7 @@ namespace RuriLib.Proxies.Clients
             dstAddr.CopyTo(request, 9 + userId.Length);
             request[9 + userId.Length + dstAddr.Length] = 0x00;
 
-            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken);
+            await nStream.WriteAsync(request.AsMemory(0, request.Length), cancellationToken).ConfigureAwait(false);
 
             // READ RESPONSE
             // +----+----+----+----+----+----+----+----+
@@ -54,7 +54,7 @@ namespace RuriLib.Proxies.Clients
             //    1    1      2              4
             var response = new byte[8];
 
-            await nStream.ReadAsync(response.AsMemory(0, 8), cancellationToken);
+            await nStream.ReadAsync(response.AsMemory(0, 8), cancellationToken).ConfigureAwait(false);
 
             var reply = response[1];
 

@@ -49,8 +49,8 @@ namespace RuriLib.Proxies.Clients
             {
                 var nStream = client.GetStream();
 
-                await RequestConnectionAsync(nStream, destinationHost, destinationPort, cancellationToken);
-                statusCode = await ReceiveResponseAsync(nStream, cancellationToken);
+                await RequestConnectionAsync(nStream, destinationHost, destinationPort, cancellationToken).ConfigureAwait(false);
+                statusCode = await ReceiveResponseAsync(nStream, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -82,7 +82,7 @@ namespace RuriLib.Proxies.Clients
 
             var buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
 
-            await nStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
+            await nStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
         }
 
         private string GenerateAuthorizationHeader()
@@ -114,12 +114,12 @@ namespace RuriLib.Proxies.Clients
                 if (waitCts.Token.IsCancellationRequested)
                     throw new ProxyException("Timed out while waiting for data from proxy");
 
-                await Task.Delay(100, cancellationToken);
+                await Task.Delay(100, cancellationToken).ConfigureAwait(false);
             }
 
             do
             {
-                var bytesRead = await nStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken);
+                var bytesRead = await nStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
                 responseBuilder.Append(Encoding.ASCII.GetString(buffer, 0, bytesRead));
             }
             while (nStream.DataAvailable);
