@@ -148,6 +148,7 @@ namespace RuriLib.Http
                 if (responseMessage.StatusCode != HttpStatusCode.RedirectKeepVerb)
                 {
                     request.Method = HttpMethod.Get;
+                    request.Content = null;
                 }
 
                 request.RequestUri = redirectUri.IsAbsoluteUri
