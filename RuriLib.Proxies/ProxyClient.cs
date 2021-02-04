@@ -39,9 +39,6 @@ namespace RuriLib.Proxies
                 SendTimeout = (int)Settings.ReadWriteTimeOut.TotalMilliseconds
             };
 
-            Exception connectException = null;
-            var connectDoneEvent = new ManualResetEventSlim();
-
             var host = Settings.Host;
             var port = Settings.Port;
 
@@ -55,68 +52,19 @@ namespace RuriLib.Proxies
             // Try to connect to the proxy (or directly to the server in the NoProxy case)
             try
             {
-                client.BeginConnect(host, port, new AsyncCallback(
-                    (ar) =>
-                    {
-                        if (client.Client != null)
-                        {
-                            try
-                            {
-                                client.EndConnect(ar);
-                            }
-                            catch (Exception ex)
-                            {
-                                connectException = ex;
-                            }
-
-                            connectDoneEvent.Set();
-                        }
-                    }), client
-                );
+                await client.ConnectAsync(host, port, cancellationToken);
             }
             catch (Exception ex)
             {
                 client.Close();
 
-                if (ex is SocketException || ex is SecurityException)
+                if (ex is SocketException or SecurityException)
                 {
                     throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}", ex);
                 }
 
                 throw;
             }
-
-            // Wait until the connection is completed. If it cannot be completed, throw.
-            if (!connectDoneEvent.Wait(Settings.ConnectTimeout, cancellationToken))
-            {
-                client.Close();
-                throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}");
-            }
-
-            // If the connection was completed with an exception, throw.
-            if (connectException != null)
-            {
-                client.Close();
-
-                if (connectException is SocketException)
-                {
-                    throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}", connectException);
-                }
-                else
-                {
-                    throw connectException;
-                }
-            }
-
-            // If the client isn't connected, throw.
-            if (!client.Connected)
-            {
-                client.Close();
-                throw new ProxyException($"Failed to connect to {(this is NoProxyClient ? "server" : "proxy-server")}");
-            }
-
-            client.SendTimeout = (int)Settings.ReadWriteTimeOut.TotalMilliseconds;
-            client.ReceiveTimeout = (int)Settings.ReadWriteTimeOut.TotalMilliseconds;
 
             await CreateConnectionAsync(client,
                 destinationHost,
