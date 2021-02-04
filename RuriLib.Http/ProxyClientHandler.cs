@@ -163,14 +163,18 @@ namespace RuriLib.Http
                     {
                         CookieContainer.Add(redirectUri, new Cookie(cookie.Name, cookie.Value));
                     }
+
+                    // This is needed otherwise if the Host header was set manually
+                    // it will keep the previous one after a domain switch
+                    request.Headers.Host = string.Empty;
+
+                    // Remove additional headers that could cause trouble
+                    request.Headers.Remove("Origin");
+                    request.Headers.Remove("Content-Length");
                 }
 
                 // Set the new URI
                 request.RequestUri = redirectUri;
-
-                // This is needed otherwise if the Host header was set manually
-                // it will keep the previous one even on a domain switch
-                request.Headers.Host = string.Empty;
 
                 // Perform a new request
                 return await SendAsync(request, cancellationToken).ConfigureAwait(false);
