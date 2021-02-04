@@ -143,6 +143,9 @@ namespace RuriLib.Http
             // Optionally perform auto redirection on 3xx response
             if (((int)responseMessage.StatusCode) / 100 == 3 && AllowAutoRedirect)
             {
+                Console.WriteLine($"Location URI: {responseMessage.Headers.Location}");
+                Console.WriteLine($"Is absolute? {responseMessage.Headers.Location.IsAbsoluteUri}");
+
                 // Compute the redirection URI
                 var redirectUri = responseMessage.Headers.Location.IsAbsoluteUri
                     ? responseMessage.Headers.Location
