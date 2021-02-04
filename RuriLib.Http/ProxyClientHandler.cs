@@ -139,12 +139,16 @@ namespace RuriLib.Http
             await SendDataAsync(request, cancellationToken).ConfigureAwait(false);
             var responseMessage = await ReceiveDataAsync(request, cancellationToken).ConfigureAwait(false);
 
-            // Optionally perform auto redirection
-            if ((responseMessage.StatusCode == HttpStatusCode.Moved ||
-                 responseMessage.StatusCode == HttpStatusCode.MovedPermanently ||
-                 responseMessage.StatusCode == HttpStatusCode.Redirect) && AllowAutoRedirect)
+            // Optionally perform auto redirection on 3xx response
+            if (((int)responseMessage.StatusCode) / 100 == 3 && AllowAutoRedirect)
             {
                 var redirectUri = responseMessage.Headers.Location;
+
+                // If not 307, change the method to GET
+                if (responseMessage.StatusCode != HttpStatusCode.RedirectKeepVerb)
+                {
+                    request.Method = HttpMethod.Get;
+                }
 
                 request.RequestUri = redirectUri.IsAbsoluteUri
                     ? redirectUri
