@@ -170,7 +170,6 @@ namespace RuriLib.Http
 
                     // Remove additional headers that could cause trouble
                     request.Headers.Remove("Origin");
-                    request.Headers.Remove("Content-Length");
                 }
 
                 // Set the new URI
