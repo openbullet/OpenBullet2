@@ -84,6 +84,7 @@ namespace RuriLib.Blocks.Requests.Http
             catch
             {
                 LogHttpRequestData(data, request);
+                throw;
             }
             finally
             {
@@ -148,6 +149,7 @@ namespace RuriLib.Blocks.Requests.Http
             catch
             {
                 LogHttpRequestData(data, request);
+                throw;
             }
             finally
             {
@@ -212,6 +214,7 @@ namespace RuriLib.Blocks.Requests.Http
             catch
             {
                 LogHttpRequestData(data, request);
+                throw;
             }
             finally
             {
@@ -306,6 +309,7 @@ namespace RuriLib.Blocks.Requests.Http
             catch
             {
                 LogHttpRequestData(data, request, boundary, content);
+                throw;
             }
             finally
             {
