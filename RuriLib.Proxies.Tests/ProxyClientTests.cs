@@ -20,7 +20,7 @@ namespace RuriLib.Proxies.Tests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var client = await proxy.ConnectAsync("example.com", 80, null, cts.Token);
 
-            var response = await GetResponseAsync(client, BuildSampleGetRequest());
+            var response = await GetResponseAsync(client, BuildSampleGetRequest(), cts.Token);
             Assert.Contains("Example Domain", response);
         }
 
@@ -33,21 +33,22 @@ namespace RuriLib.Proxies.Tests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var client = await proxy.ConnectAsync("example.com", 80, null, cts.Token);
 
-            var response = await GetResponseAsync(client, BuildSampleGetRequest());
+            var response = await GetResponseAsync(client, BuildSampleGetRequest(), cts.Token);
             Assert.Contains("Example Domain", response);
         }
 
-        private static async Task<string> GetResponseAsync(TcpClient client, string request)
+        private static async Task<string> GetResponseAsync(TcpClient client, string request,
+            CancellationToken cancellationToken = default)
         {
             using var netStream = client.GetStream();
             using var memory = new MemoryStream();
 
             // Send the data
             var requestBytes = Encoding.ASCII.GetBytes(request);
-            await netStream.WriteAsync(requestBytes.AsMemory(0, requestBytes.Length));
+            await netStream.WriteAsync(requestBytes.AsMemory(0, requestBytes.Length), cancellationToken);
 
             // Read the response
-            await netStream.CopyToAsync(memory);
+            await netStream.CopyToAsync(memory, cancellationToken);
             memory.Position = 0;
             var data = memory.ToArray();
             return Encoding.UTF8.GetString(data);
