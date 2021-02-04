@@ -16,6 +16,7 @@ namespace RuriLib.Models.Configs.Settings
         {
             ProxyType.Http,
             ProxyType.Socks4,
+            ProxyType.Socks4a,
             ProxyType.Socks5
         };
     }

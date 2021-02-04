@@ -2,9 +2,9 @@
 {
     public enum ProxyType
     {
-        Http,
-        Socks4,
-        Socks4a,
-        Socks5
+        Http = 0,
+        Socks4 = 1,
+        Socks5 = 2,
+        Socks4a = 3
     }
 }
