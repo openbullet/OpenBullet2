@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Requests.Http
         public static async Task HttpRequestStandard(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
             bool autoRedirect, SecurityProtocol securityProtocol, string content, string contentType, Dictionary<string, string> customCookies,
             Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
-            List<string> customCipherSuites)
+            List<string> customCipherSuites, bool sendEmptyContent)
         {
             var cookies = new CookieContainer();
             data.Objects["cookieContainer"] = cookies;
@@ -60,11 +60,14 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
                 RequestUri = new Uri(url),
-                Version = Version.Parse(httpVersion),
-                Content = new StringContent(content.Unescape())
+                Version = Version.Parse(httpVersion)
             };
 
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+            if (!string.IsNullOrEmpty(content) || sendEmptyContent)
+            {
+                request.Content = new StringContent(content.Unescape());
+                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+            }
 
             foreach (var header in customHeaders)
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);

@@ -28,6 +28,7 @@ namespace RuriLib.Models.Blocks.Custom
                 { "autoRedirect", new BoolParameter("autoRedirect", true) },
                 { "securityProtocol", new EnumParameter("securityProtocol", typeof(SecurityProtocol), SecurityProtocol.SystemDefault.ToString()) },
                 { "useCustomCipherSuites", new BoolParameter("useCustomCipherSuites", false) },
+                { "sendEmptyContent", new BoolParameter("sendEmptyContent", false) },
                 { "customCipherSuites", new ListOfStringsParameter("customCipherSuites",
                     new List<string>
                     {

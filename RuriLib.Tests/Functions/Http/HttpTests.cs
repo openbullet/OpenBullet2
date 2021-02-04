@@ -47,7 +47,7 @@ namespace RuriLib.Tests.Functions.Http
             };
 
             await Methods.HttpRequestStandard(data, httpBin, HttpMethod.GET, true, SecurityProtocol.SystemDefault,
-                "", "", cookies, headers, timeout, "1.1", false, null);
+                "", "", cookies, headers, timeout, "1.1", false, null, false);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("value", response.Headers["Custom"]);
@@ -64,7 +64,7 @@ namespace RuriLib.Tests.Functions.Http
 
             await Methods.HttpRequestStandard(data, httpBin, HttpMethod.POST, true, SecurityProtocol.SystemDefault,
                 "name1=value1&name2=value2", "application/x-www-form-urlencoded",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
+                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null, false);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -135,7 +135,7 @@ namespace RuriLib.Tests.Functions.Http
             var data = NewData();
 
             await Methods.HttpRequestStandard(data, "https://http2.golang.org/reqinfo", HttpMethod.GET, true, SecurityProtocol.SystemDefault,
-                "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0", false, null);
+                "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0", false, null, false);
 
             Assert.Contains("Protocol: HTTP/2.0", data.SOURCE);
         }

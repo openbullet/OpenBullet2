@@ -20,7 +20,15 @@
         <BlockInputField BlockSetting="@Block.Settings["httpVersion"]" />
     </div>
 </div>
-<BlockInputField BlockSetting="@Block.Settings["autoRedirect"]" />
+
+<div class="row">
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["autoRedirect"]" />
+    </div>
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["sendEmptyContent"]" />
+    </div>
+</div>
 
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">
     <Items>
