@@ -271,6 +271,11 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
+                if (input.IsDLL)
+                {
+                    botData.Logger.Clear();
+                }
+
                 // RETURN THE RESULT
                 return new CheckResult 
                 {
@@ -340,6 +345,7 @@ namespace RuriLib.Models.Jobs
                 var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
                 var type = assembly.GetType("RuriLib.CompiledConfig");
                 method = type.GetMember("Execute").First() as MethodInfo;
+                Providers.Security.X509RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.Online;
             }
 
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);

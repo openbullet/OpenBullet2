@@ -50,7 +50,8 @@ namespace RuriLib.Blocks.Requests.Http
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
+                CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
             using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
@@ -118,7 +119,8 @@ namespace RuriLib.Blocks.Requests.Http
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
+                CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
             using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
@@ -183,7 +185,8 @@ namespace RuriLib.Blocks.Requests.Http
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
+                CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
             using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
@@ -248,7 +251,8 @@ namespace RuriLib.Blocks.Requests.Http
                 AutoRedirect = autoRedirect,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites)
+                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
+                CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
             
             using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
