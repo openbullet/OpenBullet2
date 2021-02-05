@@ -19,9 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -123,12 +126,13 @@ namespace RuriLib.Models.Jobs
                     return new CheckResult
                     {
                         BotData = botData,
-                        ScriptVariables = new ImmutableArray<ScriptVariable>()
+                        OutputVariables = new()
                     };
                 }
 
                 botData.CancellationToken = token;
                 ScriptState scriptState = null;
+                Dictionary<string, object> outputVariables = new();
 
                 // Add this BotData to the array for detailed MultiRunJob display mode
                 input.Job.CurrentBotDatas[(int)(input.Index++ % input.Job.Bots)] = botData;
@@ -169,13 +173,34 @@ namespace RuriLib.Models.Jobs
                     }
 
                     var scriptGlobals = new ScriptGlobals(botData, input.Globals);
-                    
+
                     // Set custom inputs answers
                     foreach (var answer in input.CustomInputsAnswers)
                         (scriptGlobals.input as IDictionary<string, object>).Add(answer.Key, answer.Value);
 
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
-                    scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
+
+                    // If it's not a DLL config, run the compiled script
+                    if (!input.IsDLL)
+                    {
+                        scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
+                        
+                    }
+                    // Otherwise invoke the method
+                    else
+                    {
+                        var task = (Task)input.DLLMethod.Invoke(null, new object[] 
+                        { 
+                            botData,
+                            scriptGlobals.input,
+                            scriptGlobals.globals,
+                            outputVariables,
+                            token
+                        });
+
+                        await task.ConfigureAwait(false);
+                    }
+
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
                 }
                 catch
@@ -234,11 +259,26 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
+                // If not a DLL config, retrieve the output variables from the script
+                if (!input.IsDLL)
+                {
+                    if (scriptState != null && !scriptState.Variables.IsDefault)
+                    {
+                        foreach (var variable in scriptState.Variables)
+                        {
+                            if (botData.MarkedForCapture.Contains(variable.Name))
+                            {
+                                outputVariables[variable.Name] = variable.Value;
+                            }
+                        }
+                    }
+                }
+
                 // RETURN THE RESULT
                 return new CheckResult 
                 {
-                    BotData = botData, 
-                    ScriptVariables = scriptState != null ? scriptState.Variables : new ImmutableArray<ScriptVariable>()
+                    BotData = botData,
+                    OutputVariables = outputVariables
                 };
             });
         #endregion
@@ -276,17 +316,34 @@ namespace RuriLib.Models.Jobs
             // Wait for the start condition to be verified
             await base.Start();
 
-            // If we're in LoliCode mode, build the Stack
-            if (Config.Mode == ConfigMode.LoliCode)
-                Config.Stack = Loli2StackTranspiler.Transpile(Config.LoliCodeScript);
+            Script script = null;
+            MethodInfo method = null;
 
-            // Build the C# script
-            Config.CSharpScript = Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings);
-            var script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-            script.Compile();
+            // If not in DLL mode, build the C# script and compile it
+            if (Config.Mode != ConfigMode.DLL)
+            {
+                switch (Config.Mode)
+                {
+                    case ConfigMode.Stack:
+                        Config.CSharpScript = Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings);
+                        break;
 
-            // Wait for the start condition to be verified
-            // await base.Start();
+                    case ConfigMode.LoliCode:
+                        Config.CSharpScript = Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
+                        break;
+                }
+
+                script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
+                script.Compile();
+            }
+            // Otherwise load the method from the assembly
+            else
+            {
+                using var ms = new MemoryStream(Config.DLLBytes);
+                var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
+                var type = assembly.GetType("RuriLib.CompiledConfig");
+                method = type.GetMember("Execute").First() as MethodInfo;
+            }
 
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
             globalVariables = new ExpandoObject();
@@ -312,6 +369,8 @@ namespace RuriLib.Models.Jobs
                         null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
                     Globals = globalVariables,
                     Script = script,
+                    IsDLL = Config.Mode == ConfigMode.DLL,
+                    DLLMethod = method,
                     CustomInputsAnswers = CustomInputsAnswers,
                     Index = index++
                 };
@@ -320,8 +379,8 @@ namespace RuriLib.Models.Jobs
                 input.BotData.Objects.Add("ironPyEngine", pyengine); // Add the IronPython engine
 
                 return input;
-            }
-            );
+            });
+
             parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                 .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, DataPool.Size, Skip);
             parallelizer.NewResult += DataProcessed;
@@ -520,17 +579,6 @@ namespace RuriLib.Models.Jobs
                 OwnerId = OwnerId
             };
 
-            if (!result.ScriptVariables.IsDefault)
-            {
-                foreach (var variable in result.ScriptVariables)
-                {
-                    if (botData.MarkedForCapture.Contains(variable.Name))
-                    {
-                        hit.CapturedData.Add(variable.Name, variable.Value);
-                    }
-                }
-            }
-
             // Add it to the local list of hits
             Hits.Add(hit);
 
@@ -570,6 +618,8 @@ namespace RuriLib.Models.Jobs
         public dynamic Globals { get; set; }
         public ProxyPool ProxyPool { get; set; }
         public Script Script { get; set; }
+        public bool IsDLL { get; set; }
+        public MethodInfo DLLMethod { get; set; }
         public Dictionary<string, string> CustomInputsAnswers { get; set; }
         public long Index { get; set; }
     }
@@ -577,6 +627,6 @@ namespace RuriLib.Models.Jobs
     public struct CheckResult
     {
         public BotData BotData { get; set; }
-        public ImmutableArray<ScriptVariable> ScriptVariables { get; set; }
+        public Dictionary<string, object> OutputVariables { get; set; }
     }
 }
