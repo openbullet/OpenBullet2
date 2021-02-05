@@ -345,8 +345,11 @@ namespace RuriLib.Models.Jobs
                 var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
                 var type = assembly.GetType("RuriLib.CompiledConfig");
                 method = type.GetMember("Execute").First() as MethodInfo;
-                Providers.Security.X509RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.Online;
             }
+
+            Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
+                ? System.Security.Cryptography.X509Certificates.X509RevocationMode.Online
+                : System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck;
 
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
             globalVariables = new ExpandoObject();
