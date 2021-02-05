@@ -260,16 +260,13 @@ namespace RuriLib.Models.Jobs
                 }
 
                 // If not a DLL config, retrieve the output variables from the script
-                if (!input.IsDLL)
+                if (!input.IsDLL && scriptState != null && !scriptState.Variables.IsDefault)
                 {
-                    if (scriptState != null && !scriptState.Variables.IsDefault)
+                    foreach (var variable in scriptState.Variables)
                     {
-                        foreach (var variable in scriptState.Variables)
+                        if (botData.MarkedForCapture.Contains(variable.Name))
                         {
-                            if (botData.MarkedForCapture.Contains(variable.Name))
-                            {
-                                outputVariables[variable.Name] = variable.Value;
-                            }
+                            outputVariables[variable.Name] = variable.Value;
                         }
                     }
                 }
@@ -575,7 +572,7 @@ namespace RuriLib.Models.Jobs
                 Config = Config,
                 Date = DateTime.Now,
                 Proxy = botData.Proxy,
-                CapturedData = new Dictionary<string, object>(),
+                CapturedData = result.OutputVariables,
                 OwnerId = OwnerId
             };
 
