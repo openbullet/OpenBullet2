@@ -22,7 +22,7 @@ namespace RuriLib.Blocks.Requests.Tcp
             data.Logger.LogHeader();
 
             var tcpClient = await TcpClientFactory.GetClientAsync(host, port,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.Proxy, data.CancellationToken);
+                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.UseProxy ? data.Proxy : null, data.CancellationToken);
 
             var netStream = tcpClient.GetStream();
 
@@ -59,12 +59,12 @@ namespace RuriLib.Blocks.Requests.Tcp
                 message += "\r\n";
             
             // Send the message
-            byte[] txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes, 0, txBytes.Length, data.CancellationToken);
+            var txBytes = Encoding.ASCII.GetBytes(message);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), data.CancellationToken);
 
             // Read the response
-            byte[] buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
+            var buffer = new byte[bytesToRead];
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), data.CancellationToken);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
@@ -87,8 +87,8 @@ namespace RuriLib.Blocks.Requests.Tcp
             if (terminateWithCRLF && !message.EndsWith("\r\n"))
                 message += "\r\n";
 
-            byte[] bytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(bytes, 0, bytes.Length, data.CancellationToken);
+            var bytes = Encoding.ASCII.GetBytes(message);
+            await netStream.WriteAsync(bytes.AsMemory(0, bytes.Length), data.CancellationToken);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
         }
@@ -101,8 +101,8 @@ namespace RuriLib.Blocks.Requests.Tcp
             var netStream = GetStream(data);
 
             // Read the response
-            byte[] buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer, 0, buffer.Length, data.CancellationToken);
+            var buffer = new byte[bytesToRead];
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), data.CancellationToken);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"The server says\r\n{response}", LogColors.Mauve);
@@ -128,7 +128,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Send the message
             var txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes, 0, txBytes.Length, data.CancellationToken);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), data.CancellationToken);
 
             // Receive data
             var payload = string.Empty;
@@ -191,11 +191,11 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         private static int BinaryMatch(byte[] input, byte[] pattern)
         {
-            int sLen = input.Length - pattern.Length + 1;
-            for (int i = 0; i < sLen; ++i)
+            var sLen = input.Length - pattern.Length + 1;
+            for (var i = 0; i < sLen; ++i)
             {
-                bool match = true;
-                for (int j = 0; j < pattern.Length; ++j)
+                var match = true;
+                for (var j = 0; j < pattern.Length; ++j)
                 {
                     if (input[i + j] != pattern[j])
                     {

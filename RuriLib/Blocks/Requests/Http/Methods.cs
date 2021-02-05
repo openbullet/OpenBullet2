@@ -54,7 +54,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -123,7 +123,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -189,7 +189,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
@@ -255,7 +255,7 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
             
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.Proxy, options);
+            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
 
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
 
