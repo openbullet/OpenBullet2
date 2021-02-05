@@ -58,7 +58,10 @@ namespace RuriLib.Helpers.CSharp
                 "System.Net.Security",
                 "RuriLib.Models.Blocks.Custom.HttpRequest.Multipart",
                 "Jering.Javascript.NodeJS",
-                "Jint"
+                "Jint",
+                "System.Threading",
+                "System.Threading.Tasks",
+                "System"
             };
             usings.AddRange(Globals.DescriptorsRepository.Descriptors.Values.Select(d => d.Category.Namespace).Distinct());
             return usings;
