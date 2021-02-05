@@ -4,6 +4,7 @@
     {
         Stack,
         LoliCode,
-        CSharp
+        CSharp,
+        DLL
     }
 }

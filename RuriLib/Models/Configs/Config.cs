@@ -23,12 +23,13 @@ namespace RuriLib.Models.Configs
         public List<BlockInstance> Stack { get; set; } = new List<BlockInstance>();
         public string LoliCodeScript { get; set; } = "";
         public string CSharpScript { get; set; } = "";
+        public byte[] DLLBytes { get; set; } = Array.Empty<byte>();
 
         // Hashes used to check if the config was saved
         private string loliCodeHash;
         private string cSharpHash;
 
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public List<(BlockInstance, int)> DeletedBlocksHistory { get; set; } = new List<(BlockInstance, int)>();
 
         public Config()
@@ -70,6 +71,7 @@ namespace RuriLib.Models.Configs
                 return Mode switch
                 {
                     ConfigMode.CSharp => true,
+                    ConfigMode.DLL => true,
                     ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
                     ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript)
                         .Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
@@ -78,7 +80,7 @@ namespace RuriLib.Models.Configs
             }
             catch
             {
-                // We don't know, return false just to be safe
+                // We don't know, return false just to avoid false positives
                 return false;
             }
         }

@@ -45,6 +45,10 @@ namespace RuriLib.Helpers
                         await CreateZipEntryFromString(archive, "script.cs", config.CSharpScript);
                         break;
 
+                    case ConfigMode.DLL:
+                        await CreateZipEntryFromBytes(archive, "build.dll", config.DLLBytes);
+                        break;
+
                     default:
                         throw new NotSupportedException();
                 }
@@ -103,7 +107,20 @@ namespace RuriLib.Helpers
                     }
                     catch
                     {
-                        throw new FileNotFoundException("File not found inside the opk archive", "script.cs");
+                        throw new FileLoadException("Could not load the file from the opk archive", "script.cs");
+                    }
+                }
+                else if (archive.Entries.Any(e => e.Name.Contains("build.dll")))
+                {
+                    // build.dll
+                    try
+                    {
+                        config.DLLBytes = ReadBytesFromZipEntry(archive, "build.dll");
+                        config.Mode = ConfigMode.DLL;
+                    }
+                    catch
+                    {
+                        throw new FileLoadException("Could not load the file from the opk archive", "build.dll");
                     }
                 }
                 else
@@ -116,7 +133,7 @@ namespace RuriLib.Helpers
                     }
                     catch
                     {
-                        throw new FileNotFoundException("File not found inside the opk archive", "script.loli");
+                        throw new FileLoadException("Could not load the file from the opk archive", "script.loli");
                     }
                 }
             }
@@ -130,6 +147,15 @@ namespace RuriLib.Helpers
             var zipFile = archive.CreateEntry(path);
 
             using var sourceFileStream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+            using var zipEntryStream = zipFile.Open();
+            await sourceFileStream.CopyToAsync(zipEntryStream);
+        }
+
+        private static async Task CreateZipEntryFromBytes(ZipArchive archive, string path, byte[] content)
+        {
+            var zipFile = archive.CreateEntry(path);
+
+            using var sourceFileStream = new MemoryStream(content);
             using var zipEntryStream = zipFile.Open();
             await sourceFileStream.CopyToAsync(zipEntryStream);
         }
