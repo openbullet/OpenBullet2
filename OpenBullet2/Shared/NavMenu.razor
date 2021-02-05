@@ -91,11 +91,16 @@
                     <span class="oi oi-wrench ml-4" aria-hidden="true"></span> @Loc["Settings"]
                 </NavLink>
             </li>
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="config/edit/code">
-                    <span class="oi oi-code ml-4" aria-hidden="true"></span> @Loc["CSharpCode"]
-                </NavLink>
-            </li>
+            
+            @if (displayCSharpSubmenu)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="config/edit/code">
+                        <span class="oi oi-code ml-4" aria-hidden="true"></span> @Loc["CSharpCode"]
+                    </NavLink>
+                </li>
+            }
+            
             <li class="nav-item px-3" style="width: 100%;">
                 <button type="button" class="btn btn-outline-success" style="width: 100%" @onclick="SaveConfig">
                     <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
@@ -156,6 +161,7 @@
     private bool collapseNavMenu = true;
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
+    private bool displayCSharpSubmenu = true;
     private bool sidebarExpanded = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -182,7 +188,8 @@
     private async void OnConfigSelected(object sender, Config config)
     {
         displayConfigSubmenu = config != null;
-        displayStackerSubmenu = config != null && config.Mode != ConfigMode.CSharp;
+        displayStackerSubmenu = config != null && config.Mode != ConfigMode.CSharp && config.Mode != ConfigMode.DLL;
+        displayCSharpSubmenu = config != null && config.Mode != ConfigMode.DLL;
         await InvokeAsync(StateHasChanged);
     }
 

@@ -211,16 +211,25 @@ namespace OpenBullet2.Pages
             ConfigService.SelectedConfig = selectedConfig;
 
             var section = PersistentSettings.OpenBulletSettings.GeneralSettings.ConfigSectionOnLoad;
-            var uri = section switch
+            var uri = string.Empty;
+
+            if (selectedConfig.Mode == ConfigMode.DLL)
             {
-                ConfigSection.Metadata => "config/edit/metadata",
-                ConfigSection.Readme => "config/edit/readme",
-                ConfigSection.Stacker => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/stacker",
-                ConfigSection.LoliCode => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/lolicode",
-                ConfigSection.Settings => "config/edit/settings",
-                ConfigSection.CSharpCode => "config/edit/code",
-                _ => throw new NotImplementedException()
-            };
+                uri = "config/edit/metadata";
+            }
+            else
+            {
+                uri = section switch
+                {
+                    ConfigSection.Metadata => "config/edit/metadata",
+                    ConfigSection.Readme => "config/edit/readme",
+                    ConfigSection.Stacker => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/stacker",
+                    ConfigSection.LoliCode => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/lolicode",
+                    ConfigSection.Settings => "config/edit/settings",
+                    ConfigSection.CSharpCode => "config/edit/code",
+                    _ => throw new NotImplementedException()
+                };
+            }
 
             VolatileSettings.DebuggerLog = new();
             Nav.NavigateTo(uri);
