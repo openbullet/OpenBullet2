@@ -4,7 +4,6 @@ using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 
 namespace RuriLib.Models.Bots
@@ -26,7 +25,7 @@ namespace RuriLib.Models.Bots
         // Fixed properties
         public string STATUS { get; set; } = "NONE";
         public string SOURCE { get; set; } = string.Empty;
-        public byte[] RAWSOURCE { get; set; } = new byte[0];
+        public byte[] RAWSOURCE { get; set; } = Array.Empty<byte>();
         public string ADDRESS { get; set; } = string.Empty;
         public int RESPONSECODE { get; set; } = 0;
         public Dictionary<string, string> COOKIES { get; set; } = new Dictionary<string, string>();
