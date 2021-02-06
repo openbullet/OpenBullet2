@@ -2,6 +2,7 @@
 using RuriLib.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace RuriLib.Functions.Parsing
@@ -33,7 +34,17 @@ namespace RuriLib.Functions.Parsing
                 throw new ArgumentException("The provided json is not a valid object or array");
             
             return container.SelectTokens(path, false)
-                    .Select(token => token.ToString());
+                    .Select(token => ConvertToken(token));
+        }
+
+        private static string ConvertToken(JToken token)
+        {
+            if (token.Type == JTokenType.Float)
+            {
+                return token.ToObject<double>().ToString(CultureInfo.InvariantCulture);
+            }
+
+            return token.ToString();
         }
     }
 }
