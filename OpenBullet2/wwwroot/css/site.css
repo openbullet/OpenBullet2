@@ -733,6 +733,13 @@ a:hover {
     font-family: var(--consolas);
 }
 
+@media (max-width: 767.98px) {
+    .setup-options-container {
+        width: 100% !important;
+        margin-left: 15px;
+    }
+}
+
 .setup-logo {
     max-width: 200px;
 }
