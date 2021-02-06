@@ -2,13 +2,13 @@
 
 <div class="list-group list-group-horizontal mb-1">
     <button class="btn btn-sm btn-outline-success" @onclick="AddBlock" title="@Loc["Add"]"><span class="oi oi-plus"></span></button>
-    <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSelectedBlock" title="@Loc["Delete"]"><span class="oi oi-x"></span></button>
-    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockUp" title="@Loc["Up"]"><span class="oi oi-arrow-top"></span></button>
-    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlockDown" title="@Loc["Down"]"><span class="oi oi-arrow-bottom"></span></button>
+    <button class="btn btn-sm btn-outline-danger" @onclick="DeleteSelectedBlocks" title="@Loc["Delete"]"><span class="oi oi-x"></span></button>
+    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlocksUp" title="@Loc["Up"]"><span class="oi oi-arrow-top"></span></button>
+    <button class="btn btn-sm btn-outline-primary" @onclick="MoveBlocksDown" title="@Loc["Down"]"><span class="oi oi-arrow-bottom"></span></button>
 </div>
 <div class="list-group list-group-horizontal mb-1">
-    <button class="btn btn-sm btn-outline-secondary" @onclick="CloneBlock" title="@Loc["Clone"]"><span class="oi oi-layers"></span></button>
-    <button class="btn btn-sm btn-outline-secondary" @onclick="DisableBlock" title="@Loc[selectedBlock != null && selectedBlock.Disabled ? "Enable" : "Disable"]"><span class="oi oi-ban"></span></button>
+    <button class="btn btn-sm btn-outline-secondary" @onclick="CloneBlocks" title="@Loc["Clone"]"><span class="oi oi-layers"></span></button>
+    <button class="btn btn-sm btn-outline-secondary" @onclick="DisableBlocks" title="@Loc["Enable"]/@Loc["Disable"]"><span class="oi oi-ban"></span></button>
     <button class="btn btn-sm btn-outline-secondary" @onclick="Undo" title="@Loc["Undo"]"><span class="oi oi-action-undo"></span></button>
 </div>
 
@@ -18,12 +18,12 @@
         <div draggable="true" class="card"
              style="background-color: @(block.Disabled ? "#666" : block.Descriptor.Category.BackgroundColor);
              color: @block.Descriptor.Category.ForegroundColor; 
-             cursor: pointer; border: solid 3px @(block == selectedBlock ? "var(--fg-primary)" : "var(--bg-secondary)"); text-align: center; font-size: 20px;"
+             cursor: pointer; border: solid 3px @(selectedBlocks.Contains(block) ? "var(--fg-primary)" : "var(--bg-secondary)"); text-align: center; font-size: 20px;"
              @ondragstart="@(() => HandleDragStart(block))"
              @ondragover="@(() => HandleDragOver(block))"
-             @onclick="@(() => SelectBlock(block))">
+             @onclick="@((e) => SelectBlock(block, e))">
             <div class="card-body">
-                <span class="card-text @(block == selectedBlock ? "font-weight-bold" : "")"
+                <span class="card-text @(selectedBlocks.Contains(block) ? "font-weight-bold" : "")"
                       style="color: @block.Descriptor.Category.ForegroundColor;">
                     @block.Label
                 </span>

@@ -1,5 +1,6 @@
 ﻿using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using OpenBullet2.Logging;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Helpers;
@@ -19,7 +20,7 @@ namespace OpenBullet2.Shared
         [Inject] public IModalService Modal { get; set; }
         [Inject] public BrowserConsoleLogger OBLogger { get; set; }
         private BlockInstance draggedItem;
-        private BlockInstance selectedBlock;
+        private List<BlockInstance> selectedBlocks = new();
 
         public void RefreshView()
         {
@@ -40,15 +41,38 @@ namespace OpenBullet2.Shared
             }
         }
 
-        private async Task SelectBlock(BlockInstance item)
+        private async Task SelectBlock(BlockInstance item, MouseEventArgs e)
         {
-            selectedBlock = item;
-            await SelectedBlock.InvokeAsync(item);
-
-            if (selectedBlock == null)
-                await OBLogger.LogInfo("Deselected blocks");
+            // If we click while holding down CTRL
+            if (e != null && e.CtrlKey)
+            {
+                // If it was already selected, remove it
+                if (selectedBlocks.Contains(item))
+                {
+                    selectedBlocks.Remove(item);
+                }
+                // Otherwise, add it
+                else
+                {
+                    selectedBlocks.Add(item);
+                    await SelectedBlock.InvokeAsync(item);
+                }
+            }
+            // Otherwise if we simply clicked on a block
             else
-                await OBLogger.LogInfo($"Selected block {item.Id}");
+            {
+                // If we called this from code passing null, simply clear the list
+                if (item == null)
+                {
+                    selectedBlocks.Clear();
+                }
+                else
+                {
+                    selectedBlocks.Clear();
+                    selectedBlocks.Add(item);
+                    await SelectedBlock.InvokeAsync(item);
+                }
+            }
         }
 
         private async Task AddBlock()
@@ -61,29 +85,32 @@ namespace OpenBullet2.Shared
                 var descriptor = (BlockDescriptor)result.Data;
                 var newBlock = BlockFactory.GetBlock<BlockInstance>(descriptor.Id);
 
-                if (selectedBlock != null)
+                // If there are selected blocks, insert it after the last
+                if (selectedBlocks.Any())
                 {
-                    Stack.Insert(Stack.IndexOf(selectedBlock) + 1, newBlock);
+                    Stack.Insert(Stack.IndexOf(selectedBlocks.Last()) + 1, newBlock);
                 }
+                // Otherwise just add it at the end
                 else
                 {
                     Stack.Add(newBlock);
                 }
 
                 await OBLogger.LogInfo($"Added block {newBlock.Id}");
-                await SelectBlock(newBlock);
+                await SelectBlock(newBlock, null);
             }
         }
 
-        private async Task DeleteSelectedBlock()
+        private async Task DeleteSelectedBlocks()
         {
-            if (selectedBlock == null)
-                return;
-
-            DeletedBlocks.Add((selectedBlock, Stack.IndexOf(selectedBlock)));
-            Stack.Remove(selectedBlock);
-            await OBLogger.LogInfo($"Deleted block {selectedBlock.Id}");
-            await SelectBlock(null);
+            foreach (var block in selectedBlocks)
+            {
+                DeletedBlocks.Add((block, Stack.IndexOf(block)));
+                Stack.Remove(block);
+                await OBLogger.LogInfo($"Deleted block {block.Id}");
+            }
+            
+            await SelectBlock(null, null);
         }
 
         private async Task Undo()
@@ -106,54 +133,56 @@ namespace OpenBullet2.Shared
             await OBLogger.LogInfo($"Restored block {toRestore.Item1.Id}");
         }
 
-        private async Task DisableBlock()
+        private async Task DisableBlocks()
         {
-            if (selectedBlock == null)
-                return;
-
-            selectedBlock.Disabled = !selectedBlock.Disabled;
-            await OBLogger.LogInfo($"Toggled disabled for block {selectedBlock.Id}");
+            foreach (var block in selectedBlocks)
+            {
+                block.Disabled = !block.Disabled;
+                await OBLogger.LogInfo($"Toggled disabled for block {block.Id}");
+            }
         }
 
-        private async Task MoveBlockUp()
+        private async Task MoveBlocksUp()
         {
-            if (selectedBlock == null)
-                return;
+            // Start from the top and move the selected blocks up
+            for (var i = 0; i < Stack.Count; i++)
+            {
+                var block = Stack[i];
 
-            var index = Stack.IndexOf(selectedBlock);
-
-            if (index == 0)
-                return;
-
-            Stack.Remove(selectedBlock);
-            Stack.Insert(index - 1, selectedBlock);
-            await OBLogger.LogInfo($"Moved up block {selectedBlock.Id}");
+                if (selectedBlocks.Contains(block) && i > 0)
+                {
+                    Stack.RemoveAt(i);
+                    Stack.Insert(i - 1, block);
+                    await OBLogger.LogInfo($"Moved up block {block.Id}");
+                }
+            }
         }
 
-        private async Task MoveBlockDown()
+        private async Task MoveBlocksDown()
         {
-            if (selectedBlock == null)
-                return;
+            // Start from the bottom and move the selected blocks down
+            for (var i = Stack.Count - 1; i >= 0; i--)
+            {
+                var block = Stack[i];
 
-            var index = Stack.IndexOf(selectedBlock);
-
-            if (index == Stack.Count - 1)
-                return;
-
-            Stack.Remove(selectedBlock);
-            Stack.Insert(index + 1, selectedBlock);
-            await OBLogger.LogInfo($"Moved down block {selectedBlock.Id}");
+                if (selectedBlocks.Contains(block) && i < Stack.Count - 1)
+                {
+                    Stack.RemoveAt(i);
+                    Stack.Insert(i + 1, block);
+                    await OBLogger.LogInfo($"Moved down block {block.Id}");
+                }
+            }
         }
 
-        private async Task CloneBlock()
+        private async Task CloneBlocks()
         {
-            if (selectedBlock == null)
-                return;
+            foreach (var block in selectedBlocks)
+            {
+                var newBlock = Cloner.Clone(block);
 
-            var newBlock = Cloner.Clone(selectedBlock);
-
-            Stack.Insert(Stack.IndexOf(selectedBlock) + 1, newBlock);
-            await OBLogger.LogInfo($"Cloned block {selectedBlock.Id}");
+                Stack.Insert(Stack.IndexOf(block) + 1, newBlock);
+                await OBLogger.LogInfo($"Cloned block {block.Id}");
+            }
         }
     }
 }
