@@ -50,8 +50,8 @@ namespace RuriLib.Models.Blocks.Custom
                         "TLS_RSA_WITH_AES_128_CBC_SHA",
                         "TLS_RSA_WITH_AES_256_CBC_SHA",
                         "TLS_RSA_WITH_3DES_EDE_CBC_SHA"
-                    }, 
-                    Settings.SettingInputMode.Fixed) },
+                    },
+                    SettingInputMode.Fixed) },
                 { "customCookies", new DictionaryOfStringsParameter("customCookies", null, SettingInputMode.Interpolated) },
                 { "customHeaders", new DictionaryOfStringsParameter("customHeaders",
                     new Dictionary<string, string>

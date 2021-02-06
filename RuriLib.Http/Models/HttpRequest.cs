@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Http.Models
 {
-    public class HttpRequest
+    public class HttpRequest : IDisposable
     {
         public Version Version { get; set; } = new(1, 1);
         public HttpMethod Method { get; set; } = HttpMethod.Get;
@@ -150,5 +150,7 @@ namespace RuriLib.Http.Models
             actualName = key;
             return key != null;
         }
+
+        public void Dispose() => Content?.Dispose();
     }
 }

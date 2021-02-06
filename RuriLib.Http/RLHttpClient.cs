@@ -33,6 +33,11 @@ namespace RuriLib.Http
         public ProxyClient ProxyClient => proxyClient;
 
         /// <summary>
+        /// Gets the raw bytes of the last request that was sent.
+        /// </summary>
+        public List<byte[]> RawRequests { get; } = new();
+
+        /// <summary>
         /// Allow automatic redirection on 3xx reply.
         /// </summary>
         public bool AllowAutoRedirect { get; set; } = true;
@@ -183,13 +188,16 @@ namespace RuriLib.Http
         {
             var buffer = await request.GetBytesAsync(CookieContainer, cancellationToken);
             await connectionCommonStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
+
+            RawRequests.Add(buffer);
         }
 
         private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequest request,
             CancellationToken cancellationToken)
         {
             var responseBuilder = new ResponseBuilder(1024, CookieContainer, request.Uri);
-            return await responseBuilder.GetResponseAsync(null, connectionCommonStream, cancellationToken);
+            var dummyRequest = new HttpRequestMessage() { RequestUri = request.Uri };
+            return await responseBuilder.GetResponseAsync(dummyRequest, connectionCommonStream, cancellationToken);
         }
 
         private async Task CreateConnection(HttpRequest request, CancellationToken cancellationToken)

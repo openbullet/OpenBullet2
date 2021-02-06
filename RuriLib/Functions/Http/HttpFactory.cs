@@ -8,9 +8,41 @@ using System.Security.Authentication;
 
 namespace RuriLib.Functions.Http
 {
-    public class HttpHandlerFactory
+    public class HttpFactory
     {
-        public static ProxyClientHandler GetProxiedHandler(Proxy proxy, HttpHandlerOptions options)
+        public static ProxyClientHandler GetProxiedHandler(Proxy proxy, HttpOptions options)
+        {
+            var client = GetProxyClient(proxy, options);
+
+            return new ProxyClientHandler(client)
+            {
+                AllowAutoRedirect = options.AutoRedirect,
+                CookieContainer = options.Cookies,
+                UseCookies = options.Cookies != null,
+                SslProtocols = ToSslProtocols(options.SecurityProtocol),
+                UseCustomCipherSuites = options.UseCustomCipherSuites,
+                AllowedCipherSuites = options.CustomCipherSuites,
+                CertRevocationMode = options.CertRevocationMode
+            };
+        }
+
+        public static RLHttpClient GetRLHttpClient(Proxy proxy, HttpOptions options)
+        {
+            var client = GetProxyClient(proxy, options);
+
+            return new RLHttpClient(client)
+            {
+                AllowAutoRedirect = options.AutoRedirect,
+                CookieContainer = options.Cookies,
+                UseCookies = options.Cookies != null,
+                SslProtocols = ToSslProtocols(options.SecurityProtocol),
+                UseCustomCipherSuites = options.UseCustomCipherSuites,
+                AllowedCipherSuites = options.CustomCipherSuites,
+                CertRevocationMode = options.CertRevocationMode
+            };
+        }
+
+        private static ProxyClient GetProxyClient(Proxy proxy, HttpOptions options)
         {
             ProxyClient client;
 
@@ -43,16 +75,7 @@ namespace RuriLib.Functions.Http
                 };
             }
 
-            return new ProxyClientHandler(client)
-            {
-                AllowAutoRedirect = options.AutoRedirect,
-                CookieContainer = options.Cookies,
-                UseCookies = options.Cookies != null,
-                SslProtocols = ToSslProtocols(options.SecurityProtocol),
-                UseCustomCipherSuites = options.UseCustomCipherSuites,
-                AllowedCipherSuites = options.CustomCipherSuites,
-                CertRevocationMode = options.CertRevocationMode
-            };
+            return client;
         }
 
         /// <summary>

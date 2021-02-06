@@ -63,13 +63,13 @@ namespace RuriLib.Models.Jobs
         private Func<ProxyCheckInput, CancellationToken, Task<Proxy>> workFunction = 
             new Func<ProxyCheckInput, CancellationToken, Task<Proxy>>(async (input, token) =>
         {
-            var options = new HttpHandlerOptions
+            var options = new HttpOptions
             {
                 Cookies = new CookieContainer(),
                 ConnectTimeout = input.Timeout
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(input.Proxy, options);
+            using var handler = HttpFactory.GetProxiedHandler(input.Proxy, options);
             using var http = new HttpClient(handler) { Timeout = input.Timeout };
             
             try

@@ -5,6 +5,7 @@ using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
 using RuriLib.Helpers;
 using RuriLib.Http;
+using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
@@ -43,7 +44,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
-            var options = new HttpHandlerOptions
+            var options = new HttpOptions
             {
                 Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
@@ -55,15 +56,14 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
 
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
-
-            using var request = new HttpRequestMessage 
+            using var request = new HttpRequest
             {
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
-                RequestUri = new Uri(url),
-                Version = Version.Parse(httpVersion)
+                Uri = new Uri(url),
+                Version = Version.Parse(httpVersion),
+                Headers = customHeaders
             };
 
             if (!string.IsNullOrEmpty(content) || alwaysSendContent)
@@ -72,15 +72,13 @@ namespace RuriLib.Blocks.Requests.Http
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
             }
 
-            SetHeaders(request, customHeaders);
-
             data.Logger.LogHeader();
             
             try
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler);
+                LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -111,7 +109,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var options = new HttpHandlerOptions
+            var options = new HttpOptions
             {
                 Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
@@ -123,21 +121,18 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
 
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
-
-            using var request = new HttpRequestMessage
+            using var request = new HttpRequest
             {
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
-                RequestUri = new Uri(url),
+                Uri = new Uri(url),
                 Version = Version.Parse(httpVersion),
+                Headers = customHeaders,
                 Content = new ByteArrayContent(content)
             };
 
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
-
-            SetHeaders(request, customHeaders);
 
             data.Logger.LogHeader();
 
@@ -145,7 +140,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler);
+                LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -176,7 +171,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var options = new HttpHandlerOptions
+            var options = new HttpOptions
             {
                 Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
@@ -188,21 +183,18 @@ namespace RuriLib.Blocks.Requests.Http
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
 
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
 
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
-
-            using var request = new HttpRequestMessage
+            using var request = new HttpRequest
             {
-                Method = new System.Net.Http.HttpMethod("GET"),
-                RequestUri = new Uri(url),
-                Version = Version.Parse(httpVersion)
+                Method = System.Net.Http.HttpMethod.Get,
+                Uri = new Uri(url),
+                Version = Version.Parse(httpVersion),
+                Headers = customHeaders
             };
 
-            SetHeaders(request, customHeaders);
-
             // Add the basic auth header
-            request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
+            request.AddHeader("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
 
             data.Logger.LogHeader();
             
@@ -210,7 +202,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler);
+                LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -241,7 +233,7 @@ namespace RuriLib.Blocks.Requests.Http
             foreach (var cookie in customCookies)
                 cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
 
-            var options = new HttpHandlerOptions
+            var options = new HttpOptions
             {
                 Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
@@ -252,10 +244,8 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites),
                 CertRevocationMode = data.Providers.Security.X509RevocationMode
             };
-            
-            using var handler = HttpHandlerFactory.GetProxiedHandler(data.UseProxy ? data.Proxy : null, options);
 
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds) };
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
 
             if (string.IsNullOrWhiteSpace(boundary))
                 boundary = GenerateMultipartBoundary();
@@ -289,15 +279,14 @@ namespace RuriLib.Blocks.Requests.Http
                 }
             }
 
-            using var request = new HttpRequestMessage
+            using var request = new HttpRequest
             {
                 Method = new System.Net.Http.HttpMethod(method.ToString()),
-                RequestUri = new Uri(url),
+                Uri = new Uri(url),
                 Version = Version.Parse(httpVersion),
+                Headers = customHeaders,
                 Content = multipartContent
             };
-
-            SetHeaders(request, customHeaders);
 
             data.Logger.LogHeader();
 
@@ -305,7 +294,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 Activity.Current = null;
                 var response = await client.SendAsync(request, data.CancellationToken);
-                LogHttpRequestData(data, handler);
+                LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
             catch
@@ -323,17 +312,17 @@ namespace RuriLib.Blocks.Requests.Http
             }
         }
 
-        private static void LogHttpRequestData(BotData data, HttpRequestMessage request,
+        private static void LogHttpRequestData(BotData data, HttpRequest request,
             string boundary = null, List<MyHttpContent> multipartContents = null)
         {
             using var writer = new StringWriter();
 
             // Log the method, uri and http version
-            writer.WriteLine($"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
+            writer.WriteLine($"{request.Method.Method} {request.Uri.PathAndQuery} HTTP/{request.Version.Major}.{request.Version.Minor}");
 
             // Log the headers
-            if (!request.Headers.Contains("Host"))
-                writer.WriteLine($"Host: {request.RequestUri.Host}");
+            if (!request.HeaderExists("Host", out _))
+                writer.WriteLine($"Host: {request.Uri.Host}");
 
             foreach (var header in request.Headers)
             {
@@ -379,16 +368,16 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
         }
 
-        private static void LogHttpRequestData(BotData data, ProxyClientHandler handler)
+        private static void LogHttpRequestData(BotData data, RLHttpClient client)
         {
-            for (var i = 0; i < handler.RawRequests.Count; i++)
+            for (var i = 0; i < client.RawRequests.Count; i++)
             {
                 if (i > 0)
                 {
                     data.Logger.Log($"Redirect {i}", LogColors.Beige);
                 }
 
-                data.Logger.Log(Encoding.ASCII.GetString(handler.RawRequests[i]), LogColors.NonPhotoBlue);
+                data.Logger.Log(Encoding.ASCII.GetString(client.RawRequests[i]), LogColors.NonPhotoBlue);
             }
         }
 
@@ -430,7 +419,7 @@ namespace RuriLib.Blocks.Requests.Http
             return writer.ToString();
         }
 
-        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response, HttpRequestMessage request)
+        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response, HttpRequest request)
         {
             // Read the raw source for Content-Length calculation
             data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
@@ -438,7 +427,7 @@ namespace RuriLib.Blocks.Requests.Http
             // Address
             var uri = response.RequestMessage.RequestUri;
             if (!uri.IsAbsoluteUri)
-                uri = new Uri(request.RequestUri, uri);
+                uri = new Uri(request.Uri, uri);
             data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
             data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
 
@@ -529,24 +518,6 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             return parsed.ToArray();
-        }
-        
-        private static void SetHeaders(HttpRequestMessage request, Dictionary<string, string> headers)
-        {
-            foreach (var header in headers)
-            {
-                if (header.Key.Equals("Content-MD5", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (request.Content != null)
-                    {
-                        request.Content.Headers.ContentMD5 = HexConverter.ToByteArray(header.Value);
-                    }
-                }
-                else
-                {
-                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-                }
-            }
         }
     }
 }

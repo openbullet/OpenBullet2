@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace RuriLib.Functions.Http
 {
-    public class HttpHandlerOptions
+    public class HttpOptions
     {
         public CookieContainer Cookies { get; set; }
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(5);
