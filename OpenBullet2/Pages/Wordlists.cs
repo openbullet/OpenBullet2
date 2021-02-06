@@ -63,6 +63,7 @@ namespace OpenBullet2.Pages
             var client = new GridClient<WordlistEntity>(q => GetGridRows(columns, q), query, false, "wordlistsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
+                .WithMultipleFilters()
                 .SetKeyboard(true)
                 .ChangePageSize(true)
                 .WithGridItemsCount()

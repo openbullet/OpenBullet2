@@ -56,6 +56,7 @@ namespace OpenBullet2.Pages
             var client = new GridClient<GuestEntity>(q => GetGridRows(columns, q), query, false, "guestsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
+                .WithMultipleFilters()
                 .SetKeyboard(true)
                 .Selectable(true, false, false);
             grid = client.Grid;

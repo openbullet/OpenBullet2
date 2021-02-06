@@ -80,6 +80,7 @@ namespace OpenBullet2.Pages
             var client = new GridClient<ProxyEntity>(q => GetGridRows(columns, q), query, false, "proxiesGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
+                .WithMultipleFilters()
                 .SetKeyboard(true)
                 .ChangePageSize(true)
                 .WithGridItemsCount()

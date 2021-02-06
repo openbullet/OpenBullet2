@@ -67,6 +67,7 @@ namespace OpenBullet2.Shared
             var client = new GridClient<Hit>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
+                .WithMultipleFilters()
                 .SetKeyboard(true)
                 .ChangePageSize(true)
                 .Selectable(true, false, true);

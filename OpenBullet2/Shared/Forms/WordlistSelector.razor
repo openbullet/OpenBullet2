@@ -65,6 +65,7 @@
         var client = new GridClient<WordlistEntity>(q => GetGridRows(columns, q), query, false, "wordlistsGrid", columns, CultureInfo.CurrentCulture)
             .Sortable()
             .Filterable()
+            .WithMultipleFilters()
             .SetKeyboard(true)
             .Selectable(true, false, false);
         grid = client.Grid;

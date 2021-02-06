@@ -62,6 +62,7 @@ namespace OpenBullet2.Pages
             var client = new GridClient<HitEntity>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
+                .WithMultipleFilters()
                 .SetKeyboard(true)
                 .ChangePageSize(true)
                 .WithGridItemsCount()

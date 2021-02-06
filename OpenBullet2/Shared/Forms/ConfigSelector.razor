@@ -68,6 +68,7 @@
         var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
             .Sortable()
             .Filterable()
+            .WithMultipleFilters()
             .SetKeyboard(true)
             .Selectable(true, false, false);
         grid = client.Grid;
