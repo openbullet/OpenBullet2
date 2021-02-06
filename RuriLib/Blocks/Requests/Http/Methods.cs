@@ -1,5 +1,6 @@
 ﻿using RuriLib.Attributes;
 using RuriLib.Extensions;
+using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
 using RuriLib.Helpers;
@@ -71,8 +72,7 @@ namespace RuriLib.Blocks.Requests.Http
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
             }
 
-            foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            SetHeaders(request, customHeaders);
 
             data.Logger.LogHeader();
             
@@ -137,8 +137,7 @@ namespace RuriLib.Blocks.Requests.Http
 
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
 
-            foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            SetHeaders(request, customHeaders);
 
             data.Logger.LogHeader();
 
@@ -200,8 +199,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Version = Version.Parse(httpVersion)
             };
 
-            foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            SetHeaders(request, customHeaders);
 
             // Add the basic auth header
             request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
@@ -299,8 +297,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Content = multipartContent
             };
 
-            foreach (var header in customHeaders)
-                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            SetHeaders(request, customHeaders);
 
             data.Logger.LogHeader();
 
@@ -532,6 +529,24 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             return parsed.ToArray();
+        }
+        
+        private static void SetHeaders(HttpRequestMessage request, Dictionary<string, string> headers)
+        {
+            foreach (var header in headers)
+            {
+                if (header.Key.Equals("Content-MD5", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (request.Content != null)
+                    {
+                        request.Content.Headers.ContentMD5 = HexConverter.ToByteArray(header.Value);
+                    }
+                }
+                else
+                {
+                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+                }
+            }
         }
     }
 }
