@@ -143,7 +143,7 @@ namespace RuriLib.Blocks.Requests.Tcp
             ms.Position = index;
 
             // If gzip, decompress
-            if (headers.IndexOf("Content-Encoding: gzip") > 0)
+            if (headers.IndexOf("Content-Encoding: gzip", StringComparison.OrdinalIgnoreCase) > 0)
             {
                 using var decompressionStream = new GZipStream(ms, CompressionMode.Decompress);
                 using var decompressedMemory = new MemoryStream();
