@@ -177,6 +177,19 @@
   }
 }
 
+.ui-paginator-page, .ui-paginator-first, .ui-paginator-prev,
+.ui-paginator-last, .ui-paginator-next {
+    color: var(--fg-primary);
+    background-color: var(--bg-secondary);
+    border-color: var(--fg-dark);
+}
+
+.ui-paginator-page.ui-state-active {
+  color: var(--fg-secondary);
+  background-color: var(--bg-secondary);
+  border-color: var(--fg-dark);
+}
+
 /* BLAZORED MODAL */
 .blazored-modal {
     background-color: var(--bg-primary);
