@@ -450,9 +450,8 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
-            // Unzip the GZipped content if needed (after Content-Length calculation)
-            if (response.RequestMessage.Headers.Contains("Accept-Encoding") && response.RequestMessage.Headers.AcceptEncoding.First().Value.Contains("gzip") &&
-                response.Content.Headers.Contains("Content-Encoding") && response.Content.Headers.GetValues("Content-Encoding").First().Contains("gzip"))
+            // Unzip the GZipped content if still gzipped (after Content-Length calculation)
+            if (data.RAWSOURCE.Length > 1 && data.RAWSOURCE[0] == 0x1F && data.RAWSOURCE[1] == 0x8B)
             {
                 try
                 {
