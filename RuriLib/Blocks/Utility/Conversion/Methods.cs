@@ -90,7 +90,15 @@ namespace RuriLib.Blocks.Utility.Conversion
         [Block("Converts a base64 string to a UTF8 string", name = "Base64 => UTF8")]
         public static string Base64ToUTF8(BotData data, [Variable] string input)
         {
-            var utf8 = Encoding.UTF8.GetString(Convert.FromBase64String(input));
+            // Pad the input if the length is not a multiple of 4
+            var toDecode = input.Replace(".", "");
+            var remainder = toDecode.Length % 4;
+            if (remainder != 0)
+            {
+                toDecode = toDecode.PadRight(toDecode.Length + (4 - remainder), '=');
+            }
+
+            var utf8 = Encoding.UTF8.GetString(Convert.FromBase64String(toDecode));
             data.Logger.LogHeader();
             data.Logger.Log($"Encoded as UTF8: {utf8}");
             return utf8;
