@@ -125,6 +125,8 @@ namespace Updater
             }
 
             Console.WriteLine("The update was completed successfully. You may now restart your OpenBullet 2 instance!");
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
             Environment.Exit(0);
         }
     }
