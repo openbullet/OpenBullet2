@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Proxies.Tests", "Ru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http.Tests", "RuriLib.Http.Tests\RuriLib.Http.Tests.csproj", "{84E251A1-9F3E-45F7-AD66-AEB254093572}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{84E251A1-9F3E-45F7-AD66-AEB254093572}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84E251A1-9F3E-45F7-AD66-AEB254093572}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84E251A1-9F3E-45F7-AD66-AEB254093572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D82CA559-25C3-484F-8E18-22F0B2EC0322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D82CA559-25C3-484F-8E18-22F0B2EC0322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D82CA559-25C3-484F-8E18-22F0B2EC0322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D82CA559-25C3-484F-8E18-22F0B2EC0322}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
