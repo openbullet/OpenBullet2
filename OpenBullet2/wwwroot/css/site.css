@@ -552,6 +552,21 @@ a:hover {
 }
 /* -- CONFIG LIST */
 
+/* CONFIGS -- */
+.add-block-modal {
+    height: 500px;
+    width: 800px;
+    overflow-y: auto;
+}
+
+@media (max-width: 800px) {
+    .add-block-modal {
+        width: unset;
+        min-width: 300px;
+    }
+}
+/* -- CONFIGS */
+
 /* PLUGINS -- */
 .plugin-info {
     border-top-right-radius: 5px;
