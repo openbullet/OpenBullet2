@@ -119,7 +119,13 @@ namespace OpenBullet2.Shared
 
             logger.Log($"Sliced {dataLine.Data} into:");
             foreach (var slice in dataLine.GetVariables())
-                logger.Log($"{slice.Name}: {slice.AsString()}");
+            {
+                var sliceValue = data.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
+                    ? Uri.EscapeDataString(slice.AsString())
+                    : slice.AsString();
+
+                logger.Log($"{slice.Name}: {sliceValue}");
+            }
 
             logger.NewEntry += OnNewEntry;
             

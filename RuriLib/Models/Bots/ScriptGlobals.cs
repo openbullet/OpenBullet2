@@ -1,4 +1,5 @@
 ﻿using RuriLib.Models.Variables;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 
@@ -31,7 +32,10 @@ namespace RuriLib.Models.Bots
 
             input = new ExpandoObject();
             foreach (var variable in data.Line.GetVariables())
-                ((IDictionary<string, object>)input).Add(variable.Name, variable.AsString());
+                ((IDictionary<string, object>)input).Add(variable.Name,
+                    data.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
+                    ? Uri.EscapeDataString(variable.AsString())
+                    : variable.AsString());
         }
     }
 }
