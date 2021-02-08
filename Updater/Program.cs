@@ -21,7 +21,7 @@ namespace Updater
             client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
 
             // Fetch info from remote
-            Console.Write("[0] Fetching version info from remote... ");
+            Console.Write("[1/6] Fetching version info from remote... ");
             try
             {
                 // Query the github api to get a list of the latest releases
@@ -38,12 +38,11 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed! {ex.Message}");
-                Environment.Exit(1);
+                LogError(ex);
             }
 
             // Read version.txt to get the current version
-            Console.Write("[1] Reading the current version... ");
+            Console.Write("[2/6] Reading the current version... ");
             try
             {
                 var content = File.ReadLines("version.txt").First();
@@ -56,7 +55,7 @@ namespace Updater
             }
 
             // Compare versions
-            Console.Write("[2] Comparing versions... ");
+            Console.Write("[3/6] Comparing versions... ");
             if (remoteVersion > currentVersion)
             {
                 Console.WriteLine("Update available!");
@@ -70,7 +69,7 @@ namespace Updater
             // Download the remote resource
             var size = release["assets"].First["size"].ToObject<double>();
             var megaBytes = size / (1 * 1000 * 1000);
-            Console.Write($"[3] Downloading the updated build ({megaBytes:0.00} MB)... ");
+            Console.Write($"[4/6] Downloading the updated build ({megaBytes:0.00} MB)... ");
             try
             {
                 var downloadUrl = release["assets"].First["browser_download_url"].ToString();
@@ -81,12 +80,11 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed! {ex.Message}");
-                Environment.Exit(1);
+                LogError(ex);
             }
 
             // Extract it
-            Console.Write("[4] Extracting the archive... ");
+            Console.Write("[5/6] Extracting the archive... ");
             try
             {
                 using var archive = new ZipArchive(stream);
@@ -107,12 +105,11 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed! {ex.Message}");
-                Environment.Exit(1);
+                LogError(ex);
             }
 
             // Write the new version
-            Console.Write("[5] Changing the current version number... ");
+            Console.Write("[6/6] Changing the current version number... ");
             try
             {
                 File.WriteAllText("version.txt", remoteVersion.ToString());
@@ -120,14 +117,21 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed! {ex.Message}");
-                Environment.Exit(1);
+                LogError(ex);
             }
 
             Console.WriteLine("The update was completed successfully. You may now restart your OpenBullet 2 instance!");
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
             Environment.Exit(0);
+        }
+
+        private static void LogError(Exception ex)
+        {
+            Console.WriteLine($"Failed! {ex.Message}");
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+            Environment.Exit(1);
         }
     }
 }
