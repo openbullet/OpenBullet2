@@ -70,7 +70,7 @@ namespace Updater
             // Download the remote resource
             var size = release["assets"].First["size"].ToObject<double>();
             var megaBytes = size / (1 * 1000 * 1000);
-            Console.WriteLine($"[3] Downloading the updated build ({megaBytes:0.00} MB)... ");
+            Console.Write($"[3] Downloading the updated build ({megaBytes:0.00} MB)... ");
             try
             {
                 var downloadUrl = release["assets"].First["browser_download_url"].ToString();
@@ -86,7 +86,7 @@ namespace Updater
             }
 
             // Extract it
-            Console.WriteLine("[4] Extracting the archive... ");
+            Console.Write("[4] Extracting the archive... ");
             try
             {
                 using var archive = new ZipArchive(stream);
@@ -112,7 +112,7 @@ namespace Updater
             }
 
             // Write the new version
-            Console.WriteLine("[5] Changing the current version number");
+            Console.Write("[5] Changing the current version number... ");
             try
             {
                 File.WriteAllText("version.txt", remoteVersion.ToString());
