@@ -44,9 +44,10 @@ namespace OpenBullet2.Services
             try
             {
                 // Query the github api to get a list of the latest releases
-                var url = $"https://api.github.com/repos/openbullet/OpenBullet2/releases";
                 using HttpClient client = new();
-                var response = await client.GetAsync(url);
+                client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+                var response = await client.GetAsync("releases");
 
                 // Take the first and get its name
                 var json = await response.Content.ReadAsStringAsync();
