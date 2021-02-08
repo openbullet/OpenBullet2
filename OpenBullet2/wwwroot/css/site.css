@@ -759,3 +759,15 @@ a:hover {
     max-width: 200px;
 }
 /* -- SETUP */
+
+/* LOGO -- */
+.logo {
+    height: 60px;
+    margin-left: 14px;
+    background-image: url('../logohq.png');
+    cursor: pointer;
+    width: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+/* -- LOGO */

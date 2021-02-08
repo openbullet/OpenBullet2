@@ -5,15 +5,14 @@
 @using OpenBullet2.Shared.Forms 
 @inject IConfigRepository ConfigRepo
 @inject UpdateService UpdateService
+@inject NavigationManager NavigationManager 
 @inject OpenBullet2.Services.ConfigService ConfigService
 @inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 
 <div class="top-row pl-4 navbar navbar-dark" style="padding-left: 0.5rem !important;">
     <div class="container-fluid" style="margin-left: -5px;">
-        <a href="">
-            <img src="logohq.png" style="height: 60px; margin-left: 14px;" />
-        </a>
+        <div class="logo" @onclick="NavigateToHome"></div>
         <div class="text-right d-none d-md-block" style="position: absolute; height: 20px; width: 20px; right: 15px;">
             <span class="oi oi-menu text-white" style="cursor: pointer;" @onclick="(() => ToggleSidebar())"></span>
         </div>
@@ -257,4 +256,6 @@
             await js.InvokeVoidAsync("setSidebarMargin", "0px");
         }
     }
+
+    void NavigateToHome() => NavigationManager.NavigateTo("/", true);
 }
