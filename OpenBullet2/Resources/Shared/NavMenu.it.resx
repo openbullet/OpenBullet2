@@ -192,6 +192,12 @@
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
   </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Aggiornamento Disponibile</value>
+  </data>
+  <data name="UpdateInstructions" xml:space="preserve">
+    <value>Istruzioni per aggiornare</value>
+  </data>
   <data name="wasSavedSuccessfully" xml:space="preserve">
     <value>è stata salvata correttamente</value>
   </data>

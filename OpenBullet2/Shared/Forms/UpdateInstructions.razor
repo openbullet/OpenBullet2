@@ -1,0 +1,8 @@
+﻿@inject UpdateService UpdateService
+@inject Microsoft.Extensions.Localization.IStringLocalizer<UpdateInstructions> Loc
+
+<div style="font-family: Consolas; max-width: 500px;">
+    <p>@Loc["CurrentVersion"]: @UpdateService.CurrentVersion</p>
+    <p>@Loc["RemoteVersion"]: @UpdateService.RemoteVersion</p>
+    <MarkdownRenderer MarkdownContent="@Loc["UpdateInstructionsMarkdown"]" />
+</div>

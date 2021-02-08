@@ -4,6 +4,7 @@
 @using OpenBullet2.Repositories
 @using OpenBullet2.Shared.Forms 
 @inject IConfigRepository ConfigRepo
+@inject UpdateService UpdateService
 @inject OpenBullet2.Services.ConfigService ConfigService
 @inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
@@ -138,9 +139,17 @@
                 <span class="oi oi-info" aria-hidden="true"></span> @Loc["About"]
             </NavLink>
         </li>
+        @if (UpdateService.IsUpdateAvailable)
+        {
+            <li class="nav-item px-3" style="width: 100%;">
+                <button type="button" class="btn btn-outline-warning" style="width: 100%" @onclick="ShowUpdateInstructions">
+                    <span class="oi oi-warning" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["UpdateAvailable"]
+                </button>
+            </li>
+        }
         <li class="d-md-none text-center mb-3">
             <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
-            <span class="version-label ml-2" @onclick="ShowChangelog">@version [@versionType]</span>
+            <span class="version-label ml-2" @onclick="ShowChangelog">@UpdateService.CurrentVersion [@UpdateService.CurrentVersionType]</span>
         </li>
     </ul>
 </div>
@@ -152,12 +161,10 @@
         <a href="docs"><span class="oi oi-book"></span></a>
         <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>
     </div>
-    <span class="version-label" @onclick="ShowChangelog">@version [@versionType]</span>
+    <span class="version-label" @onclick="ShowChangelog">@UpdateService.CurrentVersion [@UpdateService.CurrentVersionType]</span>
 </div>
 
 @code {
-    private readonly string version = "v0.0.1";
-    private readonly string versionType = "Alpha";
     private bool collapseNavMenu = true;
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
@@ -225,6 +232,16 @@
         Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"]);
     }
 
+    void ShowUpdateInstructions()
+    {
+        Modal.Show<UpdateInstructions>(Loc["UpdateInstructions"]);
+    }
+
+    void ShowChangelog()
+    {
+        Modal.Show<ChangelogViewer>(Loc["Changelog"]);
+    }
+
     async Task ToggleSidebar()
     {
         if (sidebarExpanded)
@@ -239,12 +256,5 @@
             await js.InvokeVoidAsync("setSidebarWidth", "230px");
             await js.InvokeVoidAsync("setSidebarMargin", "0px");
         }
-    }
-
-    void ShowChangelog()
-    {
-        var parameters = new ModalParameters();
-        parameters.Add(nameof(ChangelogViewer.Version), version);
-        Modal.Show<ChangelogViewer>(Loc["Changelog"], parameters);
     }
 }

@@ -1,11 +1,12 @@
-﻿<div style="height: 500px; min-width: 250px; max-width: 800px; overflow-y: auto;">
+﻿@inject UpdateService UpdateService
+
+<div style="height: 500px; min-width: 250px; max-width: 800px; overflow-y: auto;">
     <div style="width: 100%">
         <MarkdownRenderer MarkdownContent="@changelog" />
     </div>
 </div>
 
 @code {
-    [Parameter] public string Version { get; set; }
     private string changelog = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -14,7 +15,7 @@
 
         try
         {
-            var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{Version}.md");
+            var response = await client.GetAsync($"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{UpdateService.CurrentVersion}.md");
             changelog = await response.Content.ReadAsStringAsync();
         }
         catch

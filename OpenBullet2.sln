@@ -16,13 +16,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Http", "RuriLib.Http\RuriLib.Http.csproj", "{6A010C2B-192B-400E-8E36-7EEA10A79328}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http", "RuriLib.Http\RuriLib.Http.csproj", "{6A010C2B-192B-400E-8E36-7EEA10A79328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Proxies", "RuriLib.Proxies\RuriLib.Proxies.csproj", "{FAF39867-A6C8-4889-BE37-BBB6DFDC97FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Proxies", "RuriLib.Proxies\RuriLib.Proxies.csproj", "{FAF39867-A6C8-4889-BE37-BBB6DFDC97FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Proxies.Tests", "RuriLib.Proxies.Tests\RuriLib.Proxies.Tests.csproj", "{BBF0A594-DFAB-46F5-B990-C73C0CDB921A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Proxies.Tests", "RuriLib.Proxies.Tests\RuriLib.Proxies.Tests.csproj", "{BBF0A594-DFAB-46F5-B990-C73C0CDB921A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Http.Tests", "RuriLib.Http.Tests\RuriLib.Http.Tests.csproj", "{84E251A1-9F3E-45F7-AD66-AEB254093572}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http.Tests", "RuriLib.Http.Tests\RuriLib.Http.Tests.csproj", "{84E251A1-9F3E-45F7-AD66-AEB254093572}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

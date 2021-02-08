@@ -117,91 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>Current version</value>
   </data>
-  <data name="AwwYeah" xml:space="preserve">
-    <value>Aww yeah!</value>
+  <data name="RemoteVersion" xml:space="preserve">
+    <value>Remote version</value>
   </data>
-  <data name="Changelog" xml:space="preserve">
-    <value>Changelog</value>
-  </data>
-  <data name="ChooseYourLanguage" xml:space="preserve">
-    <value>Choose your language</value>
-  </data>
-  <data name="Configs" xml:space="preserve">
-    <value>Configs</value>
-  </data>
-  <data name="CSharpCode" xml:space="preserve">
-    <value>C# Code</value>
-  </data>
-  <data name="Guests" xml:space="preserve">
-    <value>Guests</value>
-  </data>
-  <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="InvalidLolicode" xml:space="preserve">
-    <value>Cannot save: invalid LoliCode!</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
-  </data>
-  <data name="LoliCode" xml:space="preserve">
-    <value>LoliCode</value>
-  </data>
-  <data name="Metadata" xml:space="preserve">
-    <value>Metadata</value>
-  </data>
-  <data name="Monitor" xml:space="preserve">
-    <value>Monitor</value>
-  </data>
-  <data name="NoConfigSelected" xml:space="preserve">
-    <value>No config selected</value>
-  </data>
-  <data name="OBSettings" xml:space="preserve">
-    <value>OB Settings</value>
-  </data>
-  <data name="Plugins" xml:space="preserve">
-    <value>Plugins</value>
-  </data>
-  <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
-  </data>
-  <data name="Readme" xml:space="preserve">
-    <value>Readme</value>
-  </data>
-  <data name="RLSettings" xml:space="preserve">
-    <value>RL Settings</value>
-  </data>
-  <data name="SaveConfig" xml:space="preserve">
-    <value>Save Config</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="Sharing" xml:space="preserve">
-    <value>Sharing</value>
-  </data>
-  <data name="Stacker" xml:space="preserve">
-    <value>Stacker</value>
-  </data>
-  <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
-  </data>
-  <data name="UpdateAvailable" xml:space="preserve">
-    <value>Update Available</value>
-  </data>
-  <data name="UpdateInstructions" xml:space="preserve">
-    <value>Update instructions</value>
-  </data>
-  <data name="wasSavedSuccessfully" xml:space="preserve">
-    <value>was saved successfully!</value>
-  </data>
-  <data name="Wordlists" xml:space="preserve">
-    <value>Wordlists</value>
+  <data name="UpdateInstructionsMarkdown" xml:space="preserve">
+    <value>To update OpenBullet 2, quit the current instance and then start the updater by typing `dotnet ./Updater.dll` (or by clicking on the `Updater.exe` file on Windows). Once the updater finishes its work, you can start OpenBullet 2 again.</value>
   </data>
 </root>
