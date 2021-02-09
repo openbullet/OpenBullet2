@@ -31,6 +31,7 @@ namespace OpenBullet2.Pages
         [Inject] private IWordlistRepository WordlistRepo { get; set; }
         [Inject] private IProxyGroupRepository ProxyGroupRepo { get; set; }
         [Inject] private IProxyRepository ProxyRepo { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         private List<GuestEntity> guests;
         private GuestEntity selectedGuest;
@@ -61,6 +62,12 @@ namespace OpenBullet2.Pages
                 .Selectable(true, false, false);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("guestsGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["guestsGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -69,6 +76,8 @@ namespace OpenBullet2.Pages
         private ItemsDTO<GuestEntity> GetGridRows(Action<IGridColumnCollection<GuestEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["guestsGrid"] = query;
+
             var server = new GridServer<GuestEntity>(guests, new QueryCollection(query),
                 true, "guestsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

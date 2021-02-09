@@ -30,12 +30,13 @@ namespace OpenBullet2.Pages
 {
     public partial class ProxyGroups
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] IProxyGroupRepository ProxyGroupsRepo { get; set; }
-        [Inject] IProxyRepository ProxyRepo { get; set; }
-        [Inject] IGuestRepository GuestRepo { get; set; }
-        [Inject] JobManagerService JobManagerService { get; set; }
-        [Inject] public AuthenticationStateProvider Auth { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private IProxyGroupRepository ProxyGroupsRepo { get; set; }
+        [Inject] private IProxyRepository ProxyRepo { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private JobManagerService JobManagerService { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups = new();
@@ -87,6 +88,12 @@ namespace OpenBullet2.Pages
                 .ExtSortable();
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("proxiesGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["proxiesGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -95,6 +102,8 @@ namespace OpenBullet2.Pages
         private ItemsDTO<ProxyEntity> GetGridRows(Action<IGridColumnCollection<ProxyEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["proxiesGrid"] = query;
+
             var server = new GridServer<ProxyEntity>(proxies, new QueryCollection(query),
                 true, "proxiesGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

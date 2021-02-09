@@ -22,9 +22,10 @@ namespace OpenBullet2.Pages
 {
     public partial class Sharing
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] ConfigSharingService ConfigSharing { get; set; }
-        [Inject] ConfigService ConfigService { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private ConfigSharingService ConfigSharing { get; set; }
+        [Inject] private ConfigService ConfigService { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         private string selectedEndpointName = string.Empty;
         private Endpoint selectedEndpoint;
@@ -64,7 +65,7 @@ namespace OpenBullet2.Pages
             var query = new QueryDictionary<StringValues>();
             query.Add("grid-page", "2");
 
-            var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
+            var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "sharingGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
                 .WithMultipleFilters()
@@ -74,6 +75,12 @@ namespace OpenBullet2.Pages
                 .Selectable(true, false, false);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("sharingGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["sharingGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -82,8 +89,10 @@ namespace OpenBullet2.Pages
         private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["sharingGrid"] = query;
+
             var server = new GridServer<Config>(configs, new Microsoft.AspNetCore.Http.QueryCollection(query),
-                true, "configsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
+                true, "sharingGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

@@ -22,15 +22,17 @@ using Microsoft.Extensions.Primitives;
 using System.Globalization;
 using GridMvc.Server;
 using Microsoft.AspNetCore.Http;
+using OpenBullet2.Services;
 
 namespace OpenBullet2.Pages
 {
     public partial class Wordlists
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] IWordlistRepository WordlistRepo { get; set; }
-        [Inject] public IGuestRepository GuestRepo { get; set; }
-        [Inject] AuthenticationStateProvider Auth { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private IWordlistRepository WordlistRepo { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         private List<WordlistEntity> wordlists = new();
         private WordlistEntity selectedWordlist;
@@ -71,6 +73,12 @@ namespace OpenBullet2.Pages
                 .Selectable(true, false, false);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("wordlistsGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["wordlistsGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -79,6 +87,8 @@ namespace OpenBullet2.Pages
         private ItemsDTO<WordlistEntity> GetGridRows(Action<IGridColumnCollection<WordlistEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["wordlistsGrid"] = query;
+
             var server = new GridServer<WordlistEntity>(wordlists, new QueryCollection(query),
                 true, "wordlistsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

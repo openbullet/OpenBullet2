@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider Auth
 @inject IWordlistRepository WordlistRepo
 @inject IModalService ModalService
+@inject VolatileSettingsService VolatileSettings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
 <div class="container-fluid" style="overflow-y: auto;">
@@ -70,6 +71,12 @@
             .Selectable(true, false, false);
         grid = client.Grid;
 
+        // Try to set a previous filter
+        if (VolatileSettings.GridQueries.ContainsKey("wordlistsGrid"))
+        {
+            grid.Query = VolatileSettings.GridQueries["wordlistsGrid"];
+        }
+
         // Set new items to grid
         gridLoad = client.UpdateGrid();
         await gridLoad;
@@ -78,6 +85,8 @@
     private ItemsDTO<WordlistEntity> GetGridRows(Action<IGridColumnCollection<WordlistEntity>> columns,
             QueryDictionary<StringValues> query)
     {
+        VolatileSettings.GridQueries["wordlistsGrid"] = query;
+
         var server = new GridServer<WordlistEntity>(wordlists, new QueryCollection(query),
             true, "wordlistsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

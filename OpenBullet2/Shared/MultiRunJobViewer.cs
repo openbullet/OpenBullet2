@@ -73,6 +73,12 @@ namespace OpenBullet2.Shared
                 .Selectable(true, false, true);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("hitsGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["hitsGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -81,6 +87,8 @@ namespace OpenBullet2.Shared
         private ItemsDTO<Hit> GetGridRows(Action<IGridColumnCollection<Hit>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["hitsGrid"] = query;
+
             var server = new GridServer<Hit>(Job.Hits, new QueryCollection(query),
                 true, "hitsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

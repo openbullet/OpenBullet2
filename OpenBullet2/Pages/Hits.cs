@@ -14,6 +14,7 @@ using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
+using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
 using System.Collections.Generic;
@@ -25,9 +26,10 @@ namespace OpenBullet2.Pages
 {
     public partial class Hits
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] IHitRepository HitRepo { get; set; }
-        [Inject] AuthenticationStateProvider Auth { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private IHitRepository HitRepo { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         private List<HitEntity> hits = new();
         private HitEntity selectedHit;
@@ -70,6 +72,12 @@ namespace OpenBullet2.Pages
                 .Selectable(true, false, true);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("hitsGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["hitsGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -78,6 +86,8 @@ namespace OpenBullet2.Pages
         private ItemsDTO<HitEntity> GetGridRows(Action<IGridColumnCollection<HitEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["hitsGrid"] = query;
+
             var server = new GridServer<HitEntity>(hits, new QueryCollection(query),
                 true, "hitsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 

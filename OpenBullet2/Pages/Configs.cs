@@ -76,6 +76,12 @@ namespace OpenBullet2.Pages
                 .Selectable(true, false, false);
             grid = client.Grid;
 
+            // Try to set a previous filter
+            if (VolatileSettings.GridQueries.ContainsKey("configsGrid"))
+            {
+                grid.Query = VolatileSettings.GridQueries["configsGrid"];
+            }
+
             // Set new items to grid
             gridLoad = client.UpdateGrid();
             await gridLoad;
@@ -84,6 +90,8 @@ namespace OpenBullet2.Pages
         private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
                 QueryDictionary<StringValues> query)
         {
+            VolatileSettings.GridQueries["configsGrid"] = query;
+
             var server = new GridServer<Config>(configs, new QueryCollection(query),
                 true, "configsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
 
