@@ -159,6 +159,9 @@
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>

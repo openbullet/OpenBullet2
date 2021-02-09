@@ -56,6 +56,7 @@ namespace OpenBullet2.Pages
                     .RenderValueAs(x => $"<div class=\"grid-element-with-icon\"><img src=\"data:image/png;base64,{x.Metadata.Base64Image}\"/><span>{x.Metadata.Name}</span></div>");
                 c.Add(x => x.Metadata.Author).Titled(Loc["Author"]);
                 c.Add(x => x.Metadata.Category).Titled(Loc["Category"]);
+                c.Add(x => x.IsRemote).Titled(Loc["Remote"]);
                 c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
                 c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]);
                 c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"])

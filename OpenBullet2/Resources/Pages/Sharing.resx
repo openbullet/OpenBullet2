@@ -192,6 +192,9 @@
   <data name="ReallyDelete" xml:space="preserve">
     <value>Really delete</value>
   </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
   <data name="RemoteConfig" xml:space="preserve">
     <value>Remote config</value>
   </data>

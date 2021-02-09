@@ -219,6 +219,9 @@
   <data name="Reload" xml:space="preserve">
     <value>Ricarica</value>
   </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remota</value>
+  </data>
   <data name="RemoteConfig" xml:space="preserve">
     <value>Config remota</value>
   </data>
