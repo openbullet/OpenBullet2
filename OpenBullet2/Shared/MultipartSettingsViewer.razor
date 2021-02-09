@@ -17,14 +17,21 @@
                     <p style="color: orange;">String Content</p>
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-6 pl-0">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
-                    <div class="col-3">
+                    <div class="col-6 pr-0">
+                        <BlockInputField BlockSetting="x.ContentType" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col align-self-stretch pl-0">
                         <BlockInputField BlockSetting="x.Data" />
                     </div>
-                    <div class="col-3">
-                        <BlockInputField BlockSetting="x.ContentType" />
+                    <div class="col-auto pr-0">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Contents.Remove(content))">
+                            <span class="oi oi-x"></span> Remove
+                        </button>
                     </div>
                 </div>
                 break;
@@ -34,16 +41,23 @@
                     <p style="color: orange;">Raw Content</p>
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-6 pl-0">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
-                    <div class="col-3">
-                        <BlockInputField BlockSetting="x.Data" />
-                    </div>
-                    <div class="col-3">
+                    <div class="col-6 pr-0">
                         <BlockInputField BlockSetting="x.ContentType" />
                     </div>
-                </div>                    
+                </div>
+                <div class="row">
+                    <div class="col align-self-stretch pl-0">
+                        <BlockInputField BlockSetting="x.Data" />
+                    </div>
+                    <div class="col-auto pr-0">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Contents.Remove(content))">
+                            <span class="oi oi-x"></span> Remove
+                        </button>
+                    </div>
+                </div>
                 break;
 
             case FileHttpContentSettingsGroup x:
@@ -51,20 +65,25 @@
                     <p style="color: orange;">File Content</p>
                 </div>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-6 pl-0">
                         <BlockInputField BlockSetting="x.Name" />
                     </div>
-                    <div class="col-3">
+                    <div class="col-6 pr-0">
+                        <BlockInputField BlockSetting="x.ContentType" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col align-self-stretch pl-0">
                         <BlockInputField BlockSetting="x.FileName" />
                     </div>
-                    <div class="col-3">
-                        <BlockInputField BlockSetting="x.ContentType" />
+                    <div class="col-auto pr-0">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Contents.Remove(content))">
+                            <span class="oi oi-x"></span> Remove
+                        </button>
                     </div>
                 </div>
                 break;
         }
-        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => Contents.Remove(content))">
-        <span class="oi oi-x"></span> Remove</button>
     }
 </div>
 @code {
