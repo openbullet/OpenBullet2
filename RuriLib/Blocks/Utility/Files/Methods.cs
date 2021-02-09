@@ -1,4 +1,5 @@
 ﻿using RuriLib.Attributes;
+using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -75,7 +76,7 @@ namespace RuriLib.Blocks.Utility.Files
         {
             await ExecuteFileOperation(data, path, content, async (p, c) => 
             { 
-                await File.WriteAllTextAsync(p, c, data.CancellationToken);
+                await File.WriteAllTextAsync(p, c.Unescape(), data.CancellationToken);
                 return true; 
             });
 
@@ -118,7 +119,7 @@ namespace RuriLib.Blocks.Utility.Files
         {
             await ExecuteFileOperation(data, path, content, async (p, c) =>
             {
-                await File.AppendAllTextAsync(p, c, data.CancellationToken);
+                await File.AppendAllTextAsync(p, c.Unescape(), data.CancellationToken);
                 return true;
             });
 
