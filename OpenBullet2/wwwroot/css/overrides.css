@@ -302,15 +302,15 @@ table.grid-table .grid-header > .grid-header-group > .grid-header-title > button
     border-radius: 5px;
 }
 
-.table th {
+table.grid-table th {
     border-top: unset;
 }
 
-.table thead th {
+table.grid-table thead th {
     border-bottom: unset;
 }
 
-.table td {
+table.grid-table td {
     border-top: 1px solid var(--bg-secondary);
 }
 
