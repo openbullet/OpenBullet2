@@ -298,8 +298,20 @@ table.grid-table .grid-header > .grid-header-group > .grid-header-title > button
 }
 
 .table-wrap {
-    border: 1px solid var(--fg-primary);
+    border: 2px solid var(--bg-secondary);
     border-radius: 5px;
+}
+
+.table th {
+    border-top: unset;
+}
+
+.table thead th {
+    border-bottom: unset;
+}
+
+.table td {
+    border-top: 1px solid var(--bg-secondary);
 }
 
 table.grid-table thead tr:first-child {
