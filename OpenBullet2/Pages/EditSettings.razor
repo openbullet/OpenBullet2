@@ -23,13 +23,6 @@
         <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
     </EditForm>
 
-    <h1>@Loc["Requests"]</h1>
-    <EditForm Model="settings.RequestsSettings">
-        <label>@Loc["IgnoreResponseErrors"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.RequestsSettings.IgnoreResponseErrors" />
-        <br />
-    </EditForm>
-
     <h1>@Loc["Proxies"]</h1>
     <EditForm Model="settings.ProxySettings">
         <label>@Loc["UseProxies"]</label>
