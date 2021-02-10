@@ -308,6 +308,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("url") + ", ");
                     writer.Write(GetSettingValue("method") + ", ");
                     writer.Write(GetSettingValue("autoRedirect") + ", ");
+                    writer.Write(GetSettingValue("maxNumberOfRedirects") + ", ");
                     writer.Write(GetSettingValue("securityProtocol") + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.Content) + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.ContentType) + ", ");
@@ -325,6 +326,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("url") + ", ");
                     writer.Write(GetSettingValue("method") + ", ");
                     writer.Write(GetSettingValue("autoRedirect") + ", ");
+                    writer.Write(GetSettingValue("maxNumberOfRedirects") + ", ");
                     writer.Write(GetSettingValue("securityProtocol") + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.Content) + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.ContentType) + ", ");
@@ -340,6 +342,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write("HttpRequestBasicAuth(data, ");
                     writer.Write(GetSettingValue("url") + ", ");
                     writer.Write(GetSettingValue("autoRedirect") + ", ");
+                    writer.Write(GetSettingValue("maxNumberOfRedirects") + ", ");
                     writer.Write(GetSettingValue("securityProtocol") + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.Username) + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.Password) + ", ");
@@ -356,6 +359,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write(GetSettingValue("url") + ", ");
                     writer.Write(GetSettingValue("method") + ", ");
                     writer.Write(GetSettingValue("autoRedirect") + ", ");
+                    writer.Write(GetSettingValue("maxNumberOfRedirects") + ", ");
                     writer.Write(GetSettingValue("securityProtocol") + ", ");
                     writer.Write(CSharpWriter.FromSetting(x.Boundary) + ", ");
                     writer.Write(SerializeMultipart(x.Contents) + ", ");

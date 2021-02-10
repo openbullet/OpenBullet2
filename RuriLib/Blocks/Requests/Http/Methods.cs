@@ -31,7 +31,7 @@ namespace RuriLib.Blocks.Requests.Http
         // STANDARD REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestStandard(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
-            bool autoRedirect, SecurityProtocol securityProtocol, string content, string contentType, Dictionary<string, string> customCookies,
+            bool autoRedirect, int maxNumberOfRedirects, SecurityProtocol securityProtocol, string content, string contentType, Dictionary<string, string> customCookies,
             Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
             List<string> customCipherSuites, bool alwaysSendContent)
         {
@@ -50,6 +50,7 @@ namespace RuriLib.Blocks.Requests.Http
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
+                MaxNumberOfRedirects = maxNumberOfRedirects,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites),
@@ -96,7 +97,7 @@ namespace RuriLib.Blocks.Requests.Http
         // RAW REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestRaw(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
-            bool autoRedirect, SecurityProtocol securityProtocol, byte[] content, string contentType,
+            bool autoRedirect, int maxNumberOfRedirects, SecurityProtocol securityProtocol, byte[] content, string contentType,
             Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders,
             int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites, List<string> customCipherSuites)
         {
@@ -115,6 +116,7 @@ namespace RuriLib.Blocks.Requests.Http
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
+                MaxNumberOfRedirects = maxNumberOfRedirects,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites),
@@ -157,7 +159,7 @@ namespace RuriLib.Blocks.Requests.Http
 
         // BASIC AUTH
         // This method is accessed via a custom descriptor so it must not be an auto block
-        public static async Task HttpRequestBasicAuth(BotData data, string url, bool autoRedirect, 
+        public static async Task HttpRequestBasicAuth(BotData data, string url, bool autoRedirect, int maxNumberOfRedirects,
             SecurityProtocol securityProtocol, string username, string password, Dictionary<string, string> customCookies,
             Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
             List<string> customCipherSuites)
@@ -177,6 +179,7 @@ namespace RuriLib.Blocks.Requests.Http
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
+                MaxNumberOfRedirects = maxNumberOfRedirects,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites),
@@ -220,7 +223,7 @@ namespace RuriLib.Blocks.Requests.Http
         // MULTIPART
         // This method is accessed via a custom descriptor so it must not be an auto block
         public static async Task HttpRequestMultipart(BotData data, string url, RuriLib.Functions.Http.HttpMethod method, bool autoRedirect,
-            SecurityProtocol securityProtocol, string boundary, List<MyHttpContent> content, 
+            int maxNumberOfRedirects, SecurityProtocol securityProtocol, string boundary, List<MyHttpContent> content, 
             Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion,
             bool useCustomCipherSuites, List<string> customCipherSuites)
         {
@@ -239,6 +242,7 @@ namespace RuriLib.Blocks.Requests.Http
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = autoRedirect,
+                MaxNumberOfRedirects = maxNumberOfRedirects,
                 SecurityProtocol = securityProtocol,
                 UseCustomCipherSuites = useCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(customCipherSuites),
