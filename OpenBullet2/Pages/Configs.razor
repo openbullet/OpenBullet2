@@ -45,8 +45,40 @@
     }
     else
     {
+        <div class="row">
+            <h5>@Loc["LocalConfigs"]</h5>
+        </div>
         <div class="row config-list">
-            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs" TItem="Config" PageSize="36">
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs.Where(c => !c.IsRemote)" TItem="Config" PageSize="36">
+                <Template Context="config">
+                    <RadzenCard Style="width:130px; max-width: 130px;">
+                        <div class="@(config == selectedConfig ? "config-item" : "config-item-transparent")"
+                             @onclick="@(() => SelectConfig(config))" @ondblclick="EditConfig">
+                            <div class="row">
+                                <div style="margin: 0 auto;">
+                                    <img src="data:image/png;base64,@config.Metadata.Base64Image" style="width: 80px; height:80px;" />
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <span class="text-center fg-custom margin-left: 5px;margin-right: 5px;"
+                                    style="width: 100%; font-size: 16px;">@config.Metadata.Name</span>
+                            </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%; font-size: 14px;">@Loc["by"] @config.Metadata.Author</span>
+                            </div>
+                            <div class="row">
+                                <span class="text-center" style="width: 100%; font-size: 14px;">@config.Metadata.LastModified.ToString("dd MMM yyyy")</span>
+                            </div>
+                        </div>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
+        </div>
+        <div class="row">
+            <h5>@Loc["RemoteConfigs"]</h5>
+        </div>
+        <div class="row config-list">
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@configs.Where(c => c.IsRemote)" TItem="Config" PageSize="36">
                 <Template Context="config">
                     <RadzenCard Style="width:130px; max-width: 130px;">
                         <div class="@(config == selectedConfig ? "config-item" : "config-item-transparent")"
