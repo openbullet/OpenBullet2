@@ -33,6 +33,7 @@ namespace RuriLib.Functions.Http
             return new RLHttpClient(client)
             {
                 AllowAutoRedirect = options.AutoRedirect,
+                MaxNumberOfRedirects = options.MaxNumberOfRedirects,
                 CookieContainer = options.Cookies,
                 UseCookies = options.Cookies != null,
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),

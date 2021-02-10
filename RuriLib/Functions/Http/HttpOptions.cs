@@ -11,6 +11,7 @@ namespace RuriLib.Functions.Http
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(5);
         public TimeSpan ReadWriteTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public bool AutoRedirect { get; set; } = true;
+        public int MaxNumberOfRedirects { get; set; } = 8;
         public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
         public bool UseCustomCipherSuites { get; set; } = false;
         public X509RevocationMode CertRevocationMode { get; set; } = X509RevocationMode.NoCheck;

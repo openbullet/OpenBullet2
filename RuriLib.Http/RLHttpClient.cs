@@ -43,6 +43,11 @@ namespace RuriLib.Http
         public bool AllowAutoRedirect { get; set; } = true;
 
         /// <summary>
+        /// The maximum number of times a request will be redirected.
+        /// </summary>
+        public int MaxNumberOfRedirects { get; set; }
+
+        /// <summary>
         /// The allowed SSL or TLS protocols.
         /// </summary>
         public SslProtocols SslProtocols { get; set; } = SslProtocols.None;
@@ -123,8 +128,13 @@ namespace RuriLib.Http
         /// </summary>
         /// <param name="cancellationToken">A cancellation token to cancel the operation</param>
         public async Task<HttpResponseMessage> SendAsync(HttpRequest request,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default, int redirects = 0)
         {
+            if (redirects > MaxNumberOfRedirects)
+            {
+                throw new Exception("Maximum number of redirects exceeded");
+            }
+
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
@@ -178,7 +188,7 @@ namespace RuriLib.Http
                 request.Uri = redirectUri;
 
                 // Perform a new request
-                return await SendAsync(request, cancellationToken).ConfigureAwait(false);
+                return await SendAsync(request, cancellationToken, redirects++).ConfigureAwait(false);
             }
 
             return responseMessage;
