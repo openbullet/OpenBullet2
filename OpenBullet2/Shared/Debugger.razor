@@ -12,6 +12,14 @@
             {
                 <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
             }
+            @if (showVariables)
+            {
+                <button class="btn btn-sm btn-outline-primary" @onclick="ToggleView">@Loc["ShowLog"]</button>
+            }
+            else
+            {
+                <button class="btn btn-sm btn-outline-primary" @onclick="ToggleView">@Loc["ShowVariables"]</button>
+            }
         </div>
     </div>
     <EditForm Model="options">
@@ -56,9 +64,17 @@
     </EditForm>
     <div class="row">
         <div class="col-12 pl-0 ml-0" style="font-size: 13px;">
-            <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
+            @if (!showVariables)
+            {
+                <BotLoggerViewer BotLogger="logger" @ref="loggerViewer" />
+            }
+            else
+            {
+                <VariablesViewer @ref="variablesViewer" />
+            }
         </div>
     </div>
+    <!--
     <div class="row mt-2">
         <div id="debugger-options" class="col-auto pl-0 ml-0">
             @if (variablesCollapsed)
@@ -108,6 +124,7 @@
             }
         </div>
     </div>
+    -->
 </div>
 
 @code {

@@ -129,6 +129,12 @@
   <data name="PersistLog" xml:space="preserve">
     <value>Persist log</value>
   </data>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Show log</value>
+  </data>
+  <data name="ShowVariables" xml:space="preserve">
+    <value>Show variables</value>
+  </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
   </data>

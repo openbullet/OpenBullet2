@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Proxies.Tests", "Ru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http.Tests", "RuriLib.Http.Tests\RuriLib.Http.Tests.csproj", "{84E251A1-9F3E-45F7-AD66-AEB254093572}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

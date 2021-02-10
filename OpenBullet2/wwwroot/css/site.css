@@ -403,7 +403,7 @@ a:hover {
     background-color: black;
     font-family: var(--consolas);
     padding: 20px;
-    height: 500px;
+    height: 600px;
     overflow-y: auto;
 }
 

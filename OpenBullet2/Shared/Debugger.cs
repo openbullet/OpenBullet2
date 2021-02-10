@@ -14,9 +14,7 @@ using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Debugger;
 using OpenBullet2.Services;
-using OpenBullet2.Shared.Forms;
 using PuppeteerSharp;
-using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
@@ -25,12 +23,7 @@ using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
 using RuriLib.Models.Proxies;
-using RuriLib.Models.Variables;
-using RuriLib.Providers.Captchas;
-using RuriLib.Providers.Proxies;
-using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
-using RuriLib.Providers.Security;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 
@@ -38,12 +31,12 @@ namespace OpenBullet2.Shared
 {
     public partial class Debugger
     {
-        [Inject] IModalService Modal { get; set; }
-        [Inject] IRandomUAProvider RandomUAProvider { get; set; }
-        [Inject] IRNGProvider RNGProvider { get; set; }
-        [Inject] RuriLibSettingsService RuriLibSettings { get; set; }
-        [Inject] PluginRepository PluginRepo { get; set; }
-        [Inject] VolatileSettingsService VolatileSettings { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private IRandomUAProvider RandomUAProvider { get; set; }
+        [Inject] private IRNGProvider RNGProvider { get; set; }
+        [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
+        [Inject] private PluginRepository PluginRepo { get; set; }
+        [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
         [Parameter] public Config Config { get; set; }
 
@@ -51,7 +44,9 @@ namespace OpenBullet2.Shared
         private CancellationTokenSource cts;
         private DebuggerOptions options;
         private BotLoggerViewer loggerViewer;
+        private VariablesViewer variablesViewer;
         private Browser lastBrowser;
+        private bool showVariables = false;
 
         protected override void OnInitialized()
         {
@@ -186,17 +181,17 @@ namespace OpenBullet2.Shared
                     client.Dispose();
             }
 
-            await loggerViewer.Refresh();
+            await loggerViewer?.Refresh();
+            variablesViewer?.Refresh();
             await InvokeAsync(StateHasChanged);
-            StateHasChanged();
         }
 
-        private void Stop()
-        {
-            cts.Cancel();
-        }
+        private void Stop() => cts.Cancel();
 
         private void OnNewEntry(object sender, BotLoggerEntry entry)
             => loggerViewer?.Refresh();
+
+        private void ToggleView()
+            => showVariables = !showVariables;
     }
 }
