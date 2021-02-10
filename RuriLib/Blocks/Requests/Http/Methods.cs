@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Requests.Http
@@ -78,7 +79,9 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request, data.CancellationToken);
+                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -108,7 +111,7 @@ namespace RuriLib.Blocks.Requests.Http
                 cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpOptions
             {
@@ -141,7 +144,9 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request, data.CancellationToken);
+                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -171,7 +176,7 @@ namespace RuriLib.Blocks.Requests.Http
                 cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpOptions
             {
@@ -204,7 +209,9 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request, data.CancellationToken);
+                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -234,7 +241,7 @@ namespace RuriLib.Blocks.Requests.Http
                 cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new System.Net.Cookie(cookie.Key, cookie.Value));
+                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
 
             var options = new HttpOptions
             {
@@ -297,7 +304,9 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var response = await client.SendAsync(request, data.CancellationToken);
+                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
