@@ -12,7 +12,7 @@
     <button class="btn btn-sm btn-outline-secondary" @onclick="Undo" title="@Loc["Undo"]"><span class="oi oi-action-undo"></span></button>
 </div>
 
-<div style="overflow-y: auto">
+<div style="overflow-y: auto; max-height: 700px;">
     @foreach (var block in Stack)
     {
         <div draggable="true" class="card"
