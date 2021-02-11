@@ -1,13 +1,7 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
-using GridBlazor;
-using GridBlazor.Pages;
-using GridMvc.Server;
-using GridShared;
-using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using OpenBullet2.Helpers;
@@ -22,7 +16,7 @@ using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
 using RuriLib.Threading.Models;
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -43,58 +37,9 @@ namespace OpenBullet2.Shared
         [Inject] private NavigationManager Nav { get; set; }
 
         private bool changingBots = false;
-        private Hit selectedHit;
+        private List<Hit> selectedHits = new();
+        private Hit lastSelectedHit;
         private Timer uiRefreshTimer;
-
-        private GridComponent<Hit> gridComponent;
-        private CGrid<Hit> grid;
-        private Task gridLoad;
-
-        protected override async Task OnParametersSetAsync()
-        {
-            Action<IGridColumnCollection<Hit>> columns = c =>
-            {
-                c.Add(h => h.Date).Titled(Loc["Date"]);
-                c.Add(h => h.DataString).Titled(Loc["Data"]);
-                c.Add(h => h.Proxy).Titled(Loc["Proxy"]).RenderValueAs(h => h.Proxy != null ? $"{h.Proxy.Host}:{h.Proxy.Port}" : "-");
-                c.Add(h => h.Type).Titled(Loc["Type"]);
-                c.Add(h => h.CapturedDataString).Titled(Loc["CapturedData"]);
-            };
-
-            var query = new QueryDictionary<StringValues>();
-            query.Add("grid-page", "2");
-
-            var client = new GridClient<Hit>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
-                .Sortable()
-                .Filterable()
-                .WithMultipleFilters()
-                .SetKeyboard(true)
-                .ChangePageSize(true)
-                .Selectable(true, false, true);
-            grid = client.Grid;
-
-            // Try to set a previous filter
-            if (VolatileSettings.GridQueries.ContainsKey("hitsGrid"))
-            {
-                grid.Query = VolatileSettings.GridQueries["hitsGrid"];
-            }
-
-            // Set new items to grid
-            gridLoad = client.UpdateGrid();
-            await gridLoad;
-        }
-
-        private ItemsDTO<Hit> GetGridRows(Action<IGridColumnCollection<Hit>> columns,
-                QueryDictionary<StringValues> query)
-        {
-            VolatileSettings.GridQueries["hitsGrid"] = query;
-
-            var server = new GridServer<Hit>(Job.Hits, new QueryCollection(query),
-                true, "hitsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
-
-            // Return items to displays
-            return server.ItemsToDisplay;
-        }
 
         protected override void OnInitialized() => AddEventHandlers();
 
@@ -105,14 +50,6 @@ namespace OpenBullet2.Shared
                 var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval);
                 uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
                     null, interval, interval);
-            }
-        }
-
-        protected void OnHitSelected(object item)
-        {
-            if (item.GetType() == typeof(Hit))
-            {
-                selectedHit = (Hit)item;
             }
         }
 
@@ -328,63 +265,110 @@ namespace OpenBullet2.Shared
             }
         }
 
-        private async Task RefreshHits()
+        private static string GetHitColor(Hit hit) => hit.Type switch
         {
-            await gridComponent.UpdateGrid();
-            StateHasChanged();
+            "SUCCESS" => "var(--fg-hit)",
+            "NONE" => "var(--fg-tocheck)",
+            _ => "var(--fg-custom)"
+        };
+
+        private void HitClicked(Hit hit, MouseEventArgs e)
+        {
+            // If we held down CTRL
+            if (e.CtrlKey)
+            {
+                // If already selected, deselect
+                if (selectedHits.Contains(hit))
+                {
+                    selectedHits.Remove(hit);
+                }
+                // Otherwise add to selected list
+                else
+                {
+                    selectedHits.Add(hit);
+                    lastSelectedHit = hit;
+                }
+            }
+            // If we held down SHIFT
+            else if (e.ShiftKey)
+            {
+                // If we never clicked anything, treat as normal click
+                if (lastSelectedHit == null)
+                {
+                    lastSelectedHit = hit;
+                    selectedHits.Clear();
+                    selectedHits.Add(hit);
+                }
+                // Otherwise select the range from last selected hit
+                else
+                {
+                    selectedHits.Clear();
+                    var lastIndex = Job.Hits.IndexOf(lastSelectedHit);
+                    var currentIndex = Job.Hits.IndexOf(hit);
+                    var rangeStartIndex = Math.Min(lastIndex, currentIndex);
+                    var rangeEndIndex = Math.Max(lastIndex, currentIndex);
+
+                    selectedHits.AddRange(Job.Hits.Skip(rangeStartIndex).Take(rangeEndIndex - rangeStartIndex + 1));
+                    lastSelectedHit = hit;
+                }
+            }
+            else
+            {
+                lastSelectedHit = hit;
+                selectedHits.Clear();
+                selectedHits.Add(hit);
+            }
         }
 
         private async Task CopyHitDataCapture()
         {
-            var selectedItems = grid.SelectedItems.Cast<Hit>().ToList();
-
-            if (selectedItems.Count == 0)
+            if (selectedHits.Count == 0)
             {
                 await ShowNoHitSelectedWarning();
                 return;
             }
 
             var sb = new StringBuilder();
-            selectedItems.ForEach(i => sb.AppendLine($"{i.Data.Data} | {i.CapturedDataString}"));
+            selectedHits.ForEach(i => sb.AppendLine($"{i.Data.Data} | {i.CapturedDataString}"));
 
             await js.CopyToClipboard(sb.ToString());
         }
 
         private async Task SendToDebugger()
         {
-            if (selectedHit == null)
+            if (lastSelectedHit == null)
             {
                 await ShowNoHitSelectedWarning();
                 return;
             }
 
-            VolatileSettings.DebuggerOptions.TestData = selectedHit.Data.Data;
-            VolatileSettings.DebuggerOptions.WordlistType = selectedHit.Data.Type.Name;
-            VolatileSettings.DebuggerOptions.UseProxy = selectedHit.Proxy != null;
+            VolatileSettings.DebuggerOptions.TestData = lastSelectedHit.Data.Data;
+            VolatileSettings.DebuggerOptions.WordlistType = lastSelectedHit.Data.Type.Name;
+            VolatileSettings.DebuggerOptions.UseProxy = lastSelectedHit.Proxy != null;
 
-            if (selectedHit.Proxy != null)
+            if (lastSelectedHit.Proxy != null)
             {
-                VolatileSettings.DebuggerOptions.ProxyType = selectedHit.Proxy.Type;
-                VolatileSettings.DebuggerOptions.TestProxy = selectedHit.Proxy.ToString();
+                VolatileSettings.DebuggerOptions.ProxyType = lastSelectedHit.Proxy.Type;
+                VolatileSettings.DebuggerOptions.TestProxy = lastSelectedHit.Proxy.ToString();
             }
         }
 
         private async Task ShowFullLog()
         {
-            if (selectedHit == null)
+            if (lastSelectedHit == null)
             {
                 await ShowNoHitSelectedWarning();
                 return;
             }
 
-            if (selectedHit.BotLogger == null)
+            if (lastSelectedHit.BotLogger == null)
             {
                 await js.AlertError(Loc["Disabled"], Loc["BotLogDisabledError"]);
                 return;
             }
 
             var parameters = new ModalParameters();
-            parameters.Add(nameof(BotLoggerViewerModal.BotLogger), selectedHit.BotLogger);
+            parameters.Add(nameof(BotLoggerViewerModal.BotLogger), lastSelectedHit.BotLogger);
 
             Modal.Show<BotLoggerViewerModal>(Loc["BotLog"], parameters);
         }

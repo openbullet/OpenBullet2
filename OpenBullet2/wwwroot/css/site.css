@@ -635,6 +635,28 @@ a:hover {
     height: 100px;
     width: 100px;
 }
+
+@media (min-width: 800px) {
+    .job-viewer-hits-wrapper {
+        max-width: 50vw;
+    }
+}
+
+.job-viewer-hits {
+    font-family: var(--consolas);
+    width: 2000px;
+    overflow-x: auto;
+}
+
+.job-viewer-hit {
+    padding: 5px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
 /* -- JOB VIEWER */
 
 /* TRIGGERED ACTIONS -- */
