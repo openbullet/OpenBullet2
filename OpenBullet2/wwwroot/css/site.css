@@ -613,7 +613,7 @@ a:hover {
 
 /* JOB VIEWER -- */
 .job-viewer-log-container {
-    height: 650px;
+    height: 530px;
     overflow-y: auto;
 }
 /* -- JOB VIEWER */
