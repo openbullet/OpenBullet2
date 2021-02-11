@@ -89,6 +89,7 @@ app {
     width: 230px;
     min-width: 230px;
     transition: 0.5s;
+    overflow-y: auto;
 }
 
     .sidebar .top-row {
