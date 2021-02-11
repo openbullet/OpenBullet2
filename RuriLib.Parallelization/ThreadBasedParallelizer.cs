@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Parallelization
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Parallelizer that expoits a custom pool of threads.
+    /// </summary>
     public class ThreadBasedParallelizer<TInput, TOutput> : Parallelizer<TInput, TOutput>
     {
         #region Private Fields
