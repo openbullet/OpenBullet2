@@ -8,14 +8,12 @@
 {
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-xl-2 col-lg-4 px-0">
-                <div>
-                    <h5>@Loc["CurrentStack"]</h5>
-                    <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
-                </div>
+            <div class="col-xl-2 col-lg-4 px-0" style="max-height: 800px;">
+                <h5>@Loc["CurrentStack"]</h5>
+                <StackViewer @ref="stackViewer" Stack="config.Stack" DeletedBlocks="config.DeletedBlocksHistory" SelectedBlock="SelectedBlock" />
             </div>
-            <div class="col-xl-5 col-lg-8 pr-0 pl-lg-2">
-                <div class="pr-4" style="height: 800px; overflow-y: auto;">
+            <div class="col-xl-5 col-lg-8 px-0 pl-lg-2 mt-3 mt-lg-0">
+                <div class="pr-4" style="max-height: 800px; overflow-y: auto;">
                     <h5>@Loc["BlockInformation"]</h5>
                     @if (selectedBlock != null)
                     {
@@ -53,7 +51,7 @@
                 </div>
             </div>
             <div class="col-xl-5 d-xl-block d-none pr-0 pl-xl-2">
-                <div style="height: 800px; overflow-y: auto;">
+                <div style="max-height: 800px; overflow-y: auto;">
                     <Debugger Config="config" />
                 </div>
             </div>
