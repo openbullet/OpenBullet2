@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RuriLib.Http\RuriLib.Http.csproj" />
+    <ProjectReference Include="..\RuriLib.Parallelization\RuriLib.Parallelization.csproj" />
     <ProjectReference Include="..\RuriLib.Proxies\RuriLib.Proxies.csproj" />
   </ItemGroup>
 

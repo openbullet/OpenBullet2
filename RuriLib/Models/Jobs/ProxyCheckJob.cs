@@ -2,8 +2,8 @@
 using RuriLib.Logging;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
-using RuriLib.Threading;
-using RuriLib.Threading.Models;
+using RuriLib.Parallelization;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

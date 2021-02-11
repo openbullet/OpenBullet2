@@ -62,7 +62,7 @@
         case JobStatusTrigger t:
             <span>@Loc["TriggerWhen"] @Loc["JobStatus"]</span>
             <InputSelect @bind-Value="t.Status">
-                @foreach (var status in Enum.GetNames(typeof(RuriLib.Threading.ParallelizerStatus)))
+                @foreach (var status in Enum.GetNames(typeof(RuriLib.Parallelization.ParallelizerStatus)))
                         {
                     <option value="@status">@status</option>
                         }

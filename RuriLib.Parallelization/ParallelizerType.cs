@@ -1,4 +1,4 @@
-﻿namespace RuriLib.Threading
+﻿namespace RuriLib.Parallelization
 {
     public enum ParallelizerType
     {

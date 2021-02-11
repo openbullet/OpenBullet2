@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Threading
+namespace RuriLib.Parallelization
 {
     /// <inheritdoc/>
     public class ThreadBasedParallelizer<TInput, TOutput> : Parallelizer<TInput, TOutput>

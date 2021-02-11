@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RuriLib.Threading.Exceptions
+namespace RuriLib.Parallelization.Exceptions
 {
     public class RequiredStatusException : Exception
     {

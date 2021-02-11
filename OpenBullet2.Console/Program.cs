@@ -9,7 +9,7 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
 using RuriLib.Services;
-using RuriLib.Threading.Models;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

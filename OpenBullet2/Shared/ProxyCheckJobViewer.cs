@@ -7,7 +7,7 @@ using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
-using RuriLib.Threading.Models;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

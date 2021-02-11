@@ -1,5 +1,5 @@
-﻿using RuriLib.Threading.Exceptions;
-using RuriLib.Threading.Models;
+﻿using RuriLib.Parallelization.Exceptions;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Threading
+namespace RuriLib.Parallelization
 {
     /// <summary>
     /// Provides a managed way to execute parallelized work.

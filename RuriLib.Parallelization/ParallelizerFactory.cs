@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Threading
+namespace RuriLib.Parallelization
 {
     public static class ParallelizerFactory<TInput, TOutput>
     {

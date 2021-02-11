@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RuriLib.Threading.Models
+namespace RuriLib.Parallelization.Models
 {
     public class ErrorDetails<TInput>
     {

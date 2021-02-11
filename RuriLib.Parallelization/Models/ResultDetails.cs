@@ -1,4 +1,4 @@
-﻿namespace RuriLib.Threading.Models
+﻿namespace RuriLib.Parallelization.Models
 {
     public class ResultDetails<TInput, TOutput>
     {

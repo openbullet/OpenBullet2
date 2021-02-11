@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RuriLib.Threading
+namespace RuriLib.Parallelization
 {
     /// <summary>
     /// Parallelizer that expoits batches of multiple tasks and the WaitAll function.

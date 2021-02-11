@@ -14,7 +14,7 @@ using OpenBullet2.Shared.Forms;
 using RuriLib.Logging;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
-using RuriLib.Threading.Models;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
