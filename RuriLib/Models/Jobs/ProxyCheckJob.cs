@@ -145,13 +145,22 @@ namespace RuriLib.Models.Jobs
             if (SuccessKey == null)
                 throw new NullReferenceException("The success key cannot be null");
 
-            // Wait for the start condition to be verified
-            await base.Start();
-
             var proxies = CheckOnlyUntested 
                 ? Proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
                 : Proxies;
-            
+
+            // Update the stats
+            Total = proxies.Count();
+            Tested = proxies.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
+            Working = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.Working);
+            NotWorking = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.NotWorking);
+
+            if (!proxies.Any())
+                throw new Exception("No proxies provided to check");
+
+            // Wait for the start condition to be verified
+            await base.Start();
+
             var workItems = proxies.Select(p => new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider));
             parallelizer = ParallelizerFactory<ProxyCheckInput, Proxy>
                 .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, Proxies.Count(), 0);

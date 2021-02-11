@@ -68,7 +68,7 @@ namespace OpenBullet2.Shared
             var result = details.Result;
 
             if (result.WorkingStatus == ProxyWorkingStatus.Working)
-                Logger.LogSuccess(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["withPing"]} {result.Ping} {Loc["andCountry"]} {result.Country}");
+                Logger.LogSuccess(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["withPing"]} {result.Ping} ms {Loc["andCountry"]} {result.Country}");
             else
                 Logger.LogWarning(Job.Id, $"{Loc["ProxyChecked"]} ({result.Host}:{result.Port}) {Loc["asNotWorking"]}");
         }

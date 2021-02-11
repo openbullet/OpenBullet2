@@ -117,11 +117,12 @@ namespace OpenBullet2.Services
             };
 
             job.GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb");
-
-            var proxies = proxyReloadService.Reload(options.GroupId).Result;
-            job.Proxies = options.CheckOnlyUntested
-                ? proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
-                : proxies;
+            job.Proxies = proxyReloadService.Reload(options.GroupId).Result;
+            
+            // Update the stats
+            var proxies = options.CheckOnlyUntested
+                ? job.Proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
+                : job.Proxies;
 
             job.Total = proxies.Count();
             job.Tested = proxies.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
