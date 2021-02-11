@@ -1,5 +1,6 @@
 ﻿using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RuriLib.Tests.Models.Proxies
@@ -7,7 +8,7 @@ namespace RuriLib.Tests.Models.Proxies
     public class ProxyPoolTests
     {
         [Fact]
-        public void RemoveDuplicates_ListWithDuplicates_ReturnDistinct()
+        public async Task RemoveDuplicates_ListWithDuplicates_ReturnDistinct()
         {
             ListProxySource source = new(new Proxy[]
             {
@@ -17,12 +18,13 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
+            await pool.ReloadAll();
             pool.RemoveDuplicates();
             Assert.Single(pool.Proxies);
         }
 
         [Fact]
-        public void GetProxy_Available_ReturnValidProxy()
+        public async Task GetProxy_Available_ReturnValidProxy()
         {
             ListProxySource source = new(new Proxy[]
             {
@@ -31,11 +33,12 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
+            await pool.ReloadAll();
             Assert.NotNull(pool.GetProxy());
         }
 
         [Fact]
-        public void GetProxy_AllBusy_ReturnNull()
+        public async Task GetProxy_AllBusy_ReturnNull()
         {
             ListProxySource source = new(new Proxy[]
             {
@@ -44,11 +47,12 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
+            await pool.ReloadAll();
             Assert.Null(pool.GetProxy());
         }
 
         [Fact]
-        public void GetProxy_EvenBusy_ReturnValidProxy()
+        public async Task GetProxy_EvenBusy_ReturnValidProxy()
         {
             ListProxySource source = new(new Proxy[]
             {
@@ -57,11 +61,12 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
+            await pool.ReloadAll();
             Assert.NotNull(pool.GetProxy(true));
         }
 
         [Fact]
-        public void GetProxy_MaxUses_ReturnNull()
+        public async Task GetProxy_MaxUses_ReturnNull()
         {
             ListProxySource source = new(new Proxy[]
             {
@@ -70,6 +75,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
+            await pool.ReloadAll();
             Assert.Null(pool.GetProxy(true, 3));
         }
     }

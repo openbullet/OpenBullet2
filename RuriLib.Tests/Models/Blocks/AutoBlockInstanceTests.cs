@@ -4,7 +4,6 @@ using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Configs;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace RuriLib.Tests.Models.Blocks
@@ -111,10 +110,10 @@ namespace RuriLib.Tests.Models.Blocks
         public void ToCSharp_AsyncNoReturnValue_OutputScript()
         {
             var block = BlockFactory.GetBlock<AutoBlockInstance>("TcpConnect");
-            var url = block.Settings["url"];
+            var url = block.Settings["host"];
             var port = block.Settings["port"];
-            var ssl = block.Settings["ssl"];
-            var timeout = block.Settings["timeout"];
+            var ssl = block.Settings["useSSL"];
+            var timeout = block.Settings["timeoutMilliseconds"];
 
             (url.FixedSetting as StringSetting).Value = "example.com";
             (port.FixedSetting as IntSetting).Value = 80;
@@ -123,7 +122,7 @@ namespace RuriLib.Tests.Models.Blocks
 
             var declaredVariables = new List<string> { };
 
-            var expected = "await TcpConnect(data, \"example.com\", 80, false, 1000);\r\n";
+            var expected = "await TcpConnect(data, \"example.com\", 80, false, 1000).ConfigureAwait(false);\r\n";
             Assert.Equal(expected, block.ToCSharp(declaredVariables, new ConfigSettings()));
         }
 

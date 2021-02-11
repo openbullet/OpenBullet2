@@ -12,6 +12,7 @@ namespace RuriLib.Tests.Models.Blocks.Custom
 {
     public class KeycheckBlockInstanceTests
     {
+        /*
         [Fact]
         public void ToLC_NormalBlock_OutputScript()
         {
@@ -247,5 +248,6 @@ namespace RuriLib.Tests.Models.Blocks.Custom
             string expected = "if (myBool.AsBool())\r\n  { data.STATUS = \"BAN\"; return; }\r\n";
             Assert.Equal(expected, block.ToCSharp(new List<string>(), new ConfigSettings()));
         }
+        */
     }
 }

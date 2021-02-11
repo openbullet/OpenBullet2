@@ -1,5 +1,4 @@
 ﻿using Jint;
-using Jint.Native;
 using RuriLib.Extensions;
 using System.Collections.Generic;
 using System.Linq;

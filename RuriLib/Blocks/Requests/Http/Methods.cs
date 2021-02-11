@@ -515,6 +515,11 @@ namespace RuriLib.Blocks.Requests.Http
 
         private static TlsCipherSuite[] ParseCipherSuites(List<string> cipherSuites)
         {
+            if (cipherSuites == null)
+            {
+                return Array.Empty<TlsCipherSuite>();
+            }
+
             var parsed = new List<TlsCipherSuite>();
 
             foreach (var suite in cipherSuites)

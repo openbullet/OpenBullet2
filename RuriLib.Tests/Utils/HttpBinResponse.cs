@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RuriLib.Tests.HttpBin
+namespace RuriLib.Tests.Utils
 {
     /// <summary>
     /// The deserialized data of a httpbin.org/anything response.

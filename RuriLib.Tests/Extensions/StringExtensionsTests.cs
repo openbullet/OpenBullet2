@@ -8,7 +8,7 @@ namespace RuriLib.Tests.Extensions
         [Fact]
         public void PadLeftToNearestMultiple_NormalTest_Pad()
         {
-            string padded = "ABCD".PadLeftToNearestMultiple(8, 'E');
+            var padded = "ABCD".PadLeftToNearestMultiple(8, 'E');
             Assert.Equal("EEEEABCD", padded);
         }
 

@@ -11,16 +11,21 @@ using Xunit;
 using RuriLib.Blocks.Requests.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using RuriLib.Tests.HttpBin;
+using RuriLib.Tests.Utils;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using System.IO;
+using RuriLib.Tests.Utils.Mockup;
 
 namespace RuriLib.Tests.Functions.Http
 {
     public class HttpTests
     {
-        private BotData NewData() => new BotData(
-            new(null),
+        private static BotData NewBotData() => new(
+            new(null) 
+            {
+                ProxySettings = new MockedProxySettingsProvider(),
+                Security = new MockedSecurityProvider()
+            },
             new ConfigSettings(),
             new BotLogger(),
             new DataLine("", new WordlistType()),
@@ -33,7 +38,7 @@ namespace RuriLib.Tests.Functions.Http
         [Fact]
         public async Task HttpRequestStandard_Get_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             var cookies = new Dictionary<string, string>
             {
@@ -52,7 +57,7 @@ namespace RuriLib.Tests.Functions.Http
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("value", response.Headers["Custom"]);
             Assert.Equal("httpbin.org", response.Headers["Host"]);
-            Assert.Equal("name1=value1; name2=value2", response.Headers["Cookie"]);
+            Assert.Equal("name1=value1; name2=value2;", response.Headers["Cookie"]);
             Assert.Equal("GET", response.Method);
             Assert.Equal(httpBin, response.Url);
         }
@@ -60,7 +65,7 @@ namespace RuriLib.Tests.Functions.Http
         [Fact]
         public async Task HttpRequestStandard_Post_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             await Methods.HttpRequestStandard(data, httpBin, HttpMethod.POST, true, 8, SecurityProtocol.SystemDefault,
                 "name1=value1&name2=value2", "application/x-www-form-urlencoded",
@@ -70,13 +75,13 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal("POST", response.Method);
             Assert.Equal("value1", response.Form["name1"]);
             Assert.Equal("value2", response.Form["name2"]);
-            Assert.Equal("application/x-www-form-urlencoded; charset=utf-8", response.Headers["Content-Type"]);
+            Assert.Equal("application/x-www-form-urlencoded", response.Headers["Content-Type"]);
         }
 
         [Fact]
         public async Task HttpRequestRaw_Post_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             await Methods.HttpRequestRaw(data, httpBin, HttpMethod.POST, true, 8, SecurityProtocol.SystemDefault,
                 Encoding.UTF8.GetBytes("name1=value1&name2=value2"), "application/x-www-form-urlencoded",
@@ -92,7 +97,7 @@ namespace RuriLib.Tests.Functions.Http
         [Fact]
         public async Task HttpRequestBasicAuth_Normal_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             await Methods.HttpRequestBasicAuth(data, httpBin, true, 8, SecurityProtocol.SystemDefault,
                 "myUsername", "myPassword",
@@ -100,13 +105,13 @@ namespace RuriLib.Tests.Functions.Http
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("GET", response.Method);
-            Assert.Equal(Convert.ToBase64String(Encoding.UTF8.GetBytes("myUsername:myPassword")), response.Headers["Authorization"]);
+            Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("myUsername:myPassword")), response.Headers["Authorization"]);
         }
 
         [Fact]
         public async Task HttpRequestMultipart_Post_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             var tempFile = Path.GetTempFileName();
             File.WriteAllText(tempFile, "fileContent");
@@ -132,7 +137,7 @@ namespace RuriLib.Tests.Functions.Http
         [Fact]
         public async Task HttpRequestStandard_Http2_Verify()
         {
-            var data = NewData();
+            var data = NewBotData();
 
             await Methods.HttpRequestStandard(data, "https://http2.golang.org/reqinfo", HttpMethod.GET, true, 8, SecurityProtocol.SystemDefault,
                 "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0", false, null, false);
