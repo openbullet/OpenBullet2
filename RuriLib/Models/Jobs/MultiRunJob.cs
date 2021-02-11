@@ -524,6 +524,7 @@ namespace RuriLib.Models.Jobs
             DataBanned = 0;
             DataToCheck = 0;
             DataErrors = 0;
+            Hits = new();
         }
 
         private void StatusChanged(object sender, ParallelizerStatus status)
