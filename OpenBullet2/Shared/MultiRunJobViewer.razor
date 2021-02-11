@@ -13,112 +13,157 @@
 
 <audio id="hit-sound" src="/sounds/hit.wav" />
 
-<div class="multirun-options-overview mb-3">
-    <!-- Job Options -->
-    <p class="fg-custom"><b>@Loc["JobOptions"]</b></p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-xl-3 px-0">
+            <div class="multirun-options-overview mb-3">
+                <!-- Job Options -->
+                <p class="fg-custom"><b>@Loc["JobOptions"]</b></p>
 
-    <!-- Config -->
-    <span class="mb-1">
-        <img src="data:image/png;base64,@Job.Config.Metadata.Base64Image" style="width: 50px; height: 50px;" />
-    </span>
-    <br />
-    <span><b>@Loc["Config"]: </b>@Job.Config.Metadata.Name @Loc["by"] @Job.Config.Metadata.Author</span>
-    <br />
+                <!-- Config -->
+                <span class="mb-1">
+                    <img src="data:image/png;base64,@Job.Config.Metadata.Base64Image" style="width: 50px; height: 50px;" />
+                </span>
+                <br />
+                <span><b>@Loc["Config"]: </b>@Job.Config.Metadata.Name @Loc["by"] @Job.Config.Metadata.Author</span>
+                <br />
 
-    <!-- Data Pool -->
-    <span><b>@Loc["DataPool"]: </b></span>
-    @switch (Job.DataPool)
-    {
-        case WordlistDataPool x:
-            <span>@Loc["Wordlist"] (@x.Wordlist.Name)</span>
-            break;
+                <!-- Data Pool -->
+                <span><b>@Loc["DataPool"]: </b></span>
+                @switch (Job.DataPool)
+                {
+                    case WordlistDataPool x:
+                        <span>@Loc["Wordlist"] (@x.Wordlist.Name)</span>
+                        break;
 
-        case FileDataPool x:
-            <span>@Loc["File"] (@x.FileName)</span>
-            break;
+                    case FileDataPool x:
+                        <span>@Loc["File"] (@x.FileName)</span>
+                        break;
 
-        case InfiniteDataPool x:
-            <span>@Loc["InfiniteDataPool"]</span>
-            break;
+                    case InfiniteDataPool x:
+                        <span>@Loc["InfiniteDataPool"]</span>
+                        break;
 
-        case CombinationsDataPool x:
-            <span>@string.Format(Loc["CombinationsText"], x.CharSet, x.Length)</span>
-            break;
+                    case CombinationsDataPool x:
+                        <span>@string.Format(Loc["CombinationsText"], x.CharSet, x.Length)</span>
+                        break;
 
-        case RangeDataPool x:
-            <span>@string.Format(Loc["RangeText"], x.Start, x.Amount, x.Step, x.Pad)</span>
-            break;
-    }
-    <br />
+                    case RangeDataPool x:
+                        <span>@string.Format(Loc["RangeText"], x.Start, x.Amount, x.Step, x.Pad)</span>
+                        break;
+                }
+                <br />
 
-    <!-- Proxy Mode -->
-    <span><b>@Loc["ProxyMode"]: </b>@Job.ProxyMode</span>
-    <br />
+                <!-- Proxy Mode -->
+                <span><b>@Loc["ProxyMode"]: </b>@Job.ProxyMode</span>
+                <br />
 
-    <!-- Proxy Sources -->
-    <span><b>@Loc["ProxySources"]: </b></span>
-    @foreach (var source in Job.ProxySources)
-    {
-        @switch (source)
-        {
-            case GroupProxySource x:
-                <span class="fg-tocheck ml-1">@Loc["Group"] (@x.GroupId)</span>
-                break;
+                <!-- Proxy Sources -->
+                <span><b>@Loc["ProxySources"]: </b></span>
+                @foreach (var source in Job.ProxySources)
+                {
+                    @switch (source)
+                    {
+                        case GroupProxySource x:
+                            <span class="fg-tocheck ml-1">@Loc["Group"] (@x.GroupId)</span>
+                            break;
 
-            case FileProxySource x:
-                <span class="fg-hit ml-1">@Loc["File"] (@x.FileName)</span>
-                break;
+                        case FileProxySource x:
+                            <span class="fg-hit ml-1">@Loc["File"] (@x.FileName)</span>
+                            break;
 
-            case RemoteProxySource x:
-                <span class="fg-retry ml-1">@Loc["Remote"] (@x.Url)</span>
-                break;
-        }
+                        case RemoteProxySource x:
+                            <span class="fg-retry ml-1">@Loc["Remote"] (@x.Url)</span>
+                            break;
+                    }
 
-    }
-    <br />
+                }
+                <br />
 
-    <!-- Hit Outputs -->
-    <span><b>@Loc["HitOutputs"]: </b></span>
-    @foreach (var output in Job.HitOutputs)
-    {
-        @switch (output)
-        {
-            case DatabaseHitOutput x:
-                <span class="fg-tocheck ml-1">@Loc["Database"]</span>
-                break;
+                <!-- Hit Outputs -->
+                <span><b>@Loc["HitOutputs"]: </b></span>
+                @foreach (var output in Job.HitOutputs)
+                {
+                    @switch (output)
+                    {
+                        case DatabaseHitOutput x:
+                            <span class="fg-tocheck ml-1">@Loc["Database"]</span>
+                            break;
 
-            case FileSystemHitOutput x:
-                <span class="fg-hit ml-1">@Loc["FileSystem"] (@x.BaseDir)</span>
-                break;
+                        case FileSystemHitOutput x:
+                            <span class="fg-hit ml-1">@Loc["FileSystem"] (@x.BaseDir)</span>
+                            break;
 
-            case DiscordWebhookHitOutput x:
-                <span class="fg-retry ml-1">@Loc["DiscordWebhook"] (@x.Webhook.TruncatePretty(70))</span>
-                break;
-        }
-    }
-    <br />
+                        case DiscordWebhookHitOutput x:
+                            <span class="fg-retry ml-1">@Loc["DiscordWebhook"] (@x.Webhook.TruncatePretty(70))</span>
+                            break;
+                    }
+                }
+                <br />
 
-    <!-- Skip -->
-    <span><b>@Loc["Skip"]: </b>@Job.Skip</span>
-    <br />
+                <!-- Skip -->
+                <span><b>@Loc["Skip"]: </b>@Job.Skip</span>
+                <br />
 
-    <!-- Bots -->
-    <span class="mr-2"><b>@Loc["Bots"]: </b>@Job.Bots</span>
-    @if (!changingBots)
-    {
-        <span class="oi oi-pencil" style="cursor: pointer;" @onclick="ChangeBots"></span>
-    }
-    else
-    {
-        <span><i>@Loc["ChangingPleaseWait"]</i></span>
-    }
-    <br />
+                <!-- Bots -->
+                <span class="mr-2"><b>@Loc["Bots"]: </b>@Job.Bots</span>
+                @if (!changingBots)
+                {
+                    <span class="oi oi-pencil" style="cursor: pointer;" @onclick="ChangeBots"></span>
+                }
+                else
+                {
+                    <span><i>@Loc["ChangingPleaseWait"]</i></span>
+                }
+                <br />
 
-    <!-- Change Options Button -->
-    @if (Job.Status == JobStatus.Idle)
-    {
-        <button class="btn btn-sm btn-outline-primary mt-1" type="button" @onclick="ChangeOptions">@Loc["Change"]</button>
-    }
+                <!-- Change Options Button -->
+                @if (Job.Status == JobStatus.Idle)
+                {
+                    <button class="btn btn-sm btn-outline-primary mt-1" type="button" @onclick="ChangeOptions">@Loc["Change"]</button>
+                }
+            </div>
+        </div>
+        <div class="col-4 col-xl-3 px-0">
+            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["DataStats"]</span><br /><br />
+            <span class="font-weight-bold">@Loc["Tested"]: </span><span>@Job.DataTested</span><br />
+            <span class="font-weight-bold fg-hit">@Loc["Hits"]: </span><span class="fg-hit">@Job.DataHits</span><br />
+            <span class="font-weight-bold fg-custom">@Loc["Custom"]: </span><span class="fg-custom">@Job.DataCustom</span><br />
+            <span class="font-weight-bold fg-fail">@Loc["Fails"]: </span><span class="fg-fail">@Job.DataFails</span><br />
+            <span class="font-weight-bold fg-fail">@Loc["Invalid"]: </span><span class="fg-fail">@Job.DataInvalid</span><br />
+            <span class="font-weight-bold fg-retry">@Loc["Retried"]: </span><span class="fg-retry">@Job.DataRetried</span><br />
+            <span class="font-weight-bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.DataBanned</span><br />
+            <span class="font-weight-bold fg-tocheck">@Loc["ToCheck"]: </span><span class="fg-tocheck">@Job.DataToCheck</span><br />
+            <span class="font-weight-bold fg-error">@Loc["Errors"]: </span><span class="fg-error">@Job.DataErrors</span><br />
+        </div>
+        <div class="col-4 col-xl-3 px-0">
+            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
+            <span class="font-weight-bold">@Loc["Total"]: </span><span>@Job.ProxiesTotal</span><br />
+            <span class="font-weight-bold fg-hit">@Loc["Alive"]: </span><span class="fg-hit">@Job.ProxiesAlive</span><br />
+            <span class="font-weight bold fg-fail">@Loc["Bad"]: </span><span class="fg-fail">@Job.ProxiesBad</span><br />
+            <span class="font-weight bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.ProxiesBanned</span><br />
+        </div>
+        <div class="col-4 col-xl-3 px-0">
+            @if (Job.Progress >= 0)
+            {
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.CPM</span><br />
+                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span>
+            }
+            else
+            {
+                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
+                <span class="font-weight-bold">@Loc["CPM"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>-</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span>-</span><br />
+            }
+        </div>
+    </div>
 </div>
 
 <p class="fg-custom"><b>@Loc["Controls"]</b></p>
@@ -218,70 +263,34 @@
     </table>
 }
 
-<div class="container-fluid pl-0 pr-0 mt-3 mb-3">
+<div class="container-fluid mt-3">
     <div class="row">
-        <div class="col">
-            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["DataStats"]</span><br /><br />
-            <span class="font-weight-bold">@Loc["Tested"]: </span><span>@Job.DataTested</span><br />
-            <span class="font-weight-bold fg-hit">@Loc["Hits"]: </span><span class="fg-hit">@Job.DataHits</span><br />
-            <span class="font-weight-bold fg-custom">@Loc["Custom"]: </span><span class="fg-custom">@Job.DataCustom</span><br />
-            <span class="font-weight-bold fg-fail">@Loc["Fails"]: </span><span class="fg-fail">@Job.DataFails</span><br />
-            <span class="font-weight-bold fg-fail">@Loc["Invalid"]: </span><span class="fg-fail">@Job.DataInvalid</span><br />
-            <span class="font-weight-bold fg-retry">@Loc["Retried"]: </span><span class="fg-retry">@Job.DataRetried</span><br />
-            <span class="font-weight-bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.DataBanned</span><br />
-            <span class="font-weight-bold fg-tocheck">@Loc["ToCheck"]: </span><span class="fg-tocheck">@Job.DataToCheck</span><br />
-            <span class="font-weight-bold fg-error">@Loc["Errors"]: </span><span class="fg-error">@Job.DataErrors</span><br />
+        <div class="col-12 col-xl-6 pl-0 job-viewer-log-container">
+            <GenericLogger JobId="Job.Id" />
         </div>
-        <div class="col">
-            <span class="font-weight-bold" style="text-decoration: underline;">@Loc["ProxyStats"]</span><br /><br />
-            <span class="font-weight-bold">@Loc["Total"]: </span><span>@Job.ProxiesTotal</span><br />
-            <span class="font-weight-bold fg-hit">@Loc["Alive"]: </span><span class="fg-hit">@Job.ProxiesAlive</span><br />
-            <span class="font-weight bold fg-fail">@Loc["Bad"]: </span><span class="fg-fail">@Job.ProxiesBad</span><br />
-            <span class="font-weight bold fg-ban">@Loc["Banned"]: </span><span class="fg-ban">@Job.ProxiesBanned</span><br />
-        </div>
-        @if (Job.Progress >= 0)
-        {
-            <div class="col">
-                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
-                <span class="font-weight-bold">@Loc["CPM"]: </span><span>@Job.CPM</span><br />
-                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
-                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span>
+        <div class="col-12 col-xl-6 mt-3 mt-xl-0 job-viewer-log-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="list-group list-group-horizontal">
+                        <button class="btn btn-sm btn-outline-primary" @onclick="RefreshHits"><span class="oi oi-reload"></span> @Loc["RefreshList"]</button>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col px-0">
+                        @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
+                        {
+                            <GridComponent @ref="gridComponent" T="Hit" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent>
+                        }
+                        else
+                        {
+                            <p><em>@Loc["Loading"]...</em></p>
+                        }
+                    </div>
+                </div>
             </div>
-        }
-        else
-        {
-            <div class="col">
-                <span class="font-weight-bold" style="text-decoration: underline;">@Loc["OtherStats"]</span><br /><br />
-                <span class="font-weight-bold">@Loc["CPM"]: </span><span>-</span><br />
-                <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>-</span><br />
-                <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>-</span><br />
-                <span class="font-weight-bold">@Loc["Remaining"]: </span><span>-</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span>-</span><br />
-            </div>
-        }
-    </div>
-</div>
-
-<GenericLogger JobId="Job.Id" />
-
-<div class="container-fluid mb-2">
-    <div class="row">
-        <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-primary" @onclick="RefreshHits"><span class="oi oi-reload"></span> @Loc["RefreshList"]</button>
-            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
-            <button class="btn btn-sm btn-outline-primary" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
-            <button class="btn btn-sm btn-outline-primary" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
         </div>
     </div>
 </div>
-
-@if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
-{
-    <GridComponent @ref="gridComponent" T="Hit" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent>
-}
-else
-{
-    <p><em>@Loc["Loading"]...</em></p>
-}

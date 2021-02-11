@@ -1,7 +1,7 @@
 ﻿@inject MemoryJobLogger JobLoggerService
 @implements IDisposable
 
-<div class="generic-log mb-4">
+<div class="generic-log">
     @foreach (var entry in entries)
     {
         <span style="color: @entry.color;">[@entry.date.ToLongTimeString()] @entry.message.Replace("\r\n", " ").Replace("\n", " ")</span><br />

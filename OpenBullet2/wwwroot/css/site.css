@@ -432,7 +432,7 @@ a:hover {
     background-color: var(--bg-secondary);
     font-family: var(--consolas);
     padding: 20px;
-    height: 500px;
+    height: 100%;
     overflow-y: auto;
 }
 /* -- LOGS */
@@ -486,10 +486,14 @@ a:hover {
 /* PROGRESS -- */
 .progress {
     background-color: var(--bg-secondary);
+    border: 5px solid var(--bg-secondary);
+    border-radius: 5px;
+    height: 1rem;
 }
 
 .progress-bar {
     background-color: var(--fg-secondary);
+    border-radius: 5px;
 }
 /* -- PROGRESS */
 
@@ -606,6 +610,13 @@ a:hover {
     margin-left: 0.5rem;
 }
 /* -- JOB OVERVIEW */
+
+/* JOB VIEWER -- */
+.job-viewer-log-container {
+    height: 650px;
+    overflow-y: auto;
+}
+/* -- JOB VIEWER */
 
 /* TRIGGERED ACTIONS -- */
 .triggered-action-container {
