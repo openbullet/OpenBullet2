@@ -20,10 +20,8 @@
 @code {
     [Parameter] public int Amount { get; set; }
     [Parameter] public EventCallback<int> AmountChanged { get; set; }
-
     [Parameter] public NumComparison Comparison { get; set; }
     [Parameter] public EventCallback<NumComparison> ComparisonChanged { get; set; }
-
     [Parameter] public string Label { get; set; }
 
     private Task OnAmountChanged(ChangeEventArgs e)

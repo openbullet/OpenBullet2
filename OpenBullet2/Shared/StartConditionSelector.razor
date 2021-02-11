@@ -26,8 +26,9 @@
 
 @code {
     [Parameter] public StartCondition StartCondition { get; set; }
-    StartConditionType type = StartConditionType.StartIn;
-    DateTime? dateTime = DateTime.Now;
+    
+    private StartConditionType type = StartConditionType.StartIn;
+    private DateTime? dateTime = DateTime.Now;
 
     enum StartConditionType
     {
@@ -40,7 +41,7 @@
         type = GetCurrentType();
     }
 
-    void Change(StartConditionType? value)
+    private void Change(StartConditionType? value)
     {
         if (value.HasValue)
         {
@@ -53,7 +54,7 @@
         }
     }
 
-    StartConditionType GetCurrentType()
+    private StartConditionType GetCurrentType()
     {
         return StartCondition switch
         {
@@ -63,7 +64,7 @@
         };
     }
 
-    void AbsoluteChange(AbsoluteTimeStartCondition condition, DateTime? value)
+    private void AbsoluteChange(AbsoluteTimeStartCondition condition, DateTime? value)
     {
         if (value.HasValue)
         {

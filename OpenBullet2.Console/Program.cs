@@ -1,7 +1,6 @@
 using CommandLine;
 using CommandLine.Text;
 using RuriLib.Helpers;
-using RuriLib.Logging;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
@@ -81,9 +80,9 @@ namespace OpenBullet2.Console
             }
         }
 
-        static MultiRunJob job;
-        static Options options;
-        static bool completed = false;
+        private static MultiRunJob job;
+        private static Options options;
+        private static bool completed = false;
 
         static void Main(string[] args)
         {

@@ -10,7 +10,7 @@ namespace OpenBullet2.Pages
 {
     public partial class Plugins
     {
-        [Inject] PluginRepository PluginRepo { get; set; }
+        [Inject] private PluginRepository PluginRepo { get; set; }
 
         private async Task ProcessUploadedPlugins(InputFileChangeEventArgs e)
         {

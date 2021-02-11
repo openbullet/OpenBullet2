@@ -34,9 +34,9 @@
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    List<WordlistEntity> wordlists = new();
-    WordlistEntity selectedWordlist;
-    string linesPreview = string.Empty;
+    private List<WordlistEntity> wordlists = new();
+    private WordlistEntity selectedWordlist;
+    private string linesPreview = string.Empty;
     private int uid = -1;
 
     private GridComponent<WordlistEntity> gridComponent;
@@ -103,7 +103,7 @@
         }
     }
 
-    void PreviewSelected()
+    private void PreviewSelected()
     {
         var previewAmount = System.Math.Min(selectedWordlist.Total, 10);
 
@@ -120,7 +120,7 @@
         StateHasChanged();
     }
 
-    async Task Select()
+    private async Task Select()
     {
         if (selectedWordlist == null)
         {

@@ -31,7 +31,7 @@
 @code { 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
-    class GuestCreateModel
+    private class GuestCreateModel
     {
         [Required]
         [StringLength(32, ErrorMessage = "The username must be between 3 and 32 characters.", MinimumLength = 3)]
@@ -50,7 +50,7 @@
         public string AllowedAddresses { get; set; } = string.Empty;
     }
 
-    GuestCreateModel guest = new GuestCreateModel();
+    private GuestCreateModel guest = new GuestCreateModel();
 
     private async Task HandleValidSubmit()
     {

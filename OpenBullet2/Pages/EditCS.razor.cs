@@ -13,12 +13,13 @@ namespace OpenBullet2.Pages
 {
     public partial class EditCS
     {
-        [Inject] NavigationManager Nav { get; set; }
-        [Inject] public BrowserConsoleLogger OBLogger { get; set; }
-        [Inject] ConfigService ConfigService { get; set; }
-        [Inject] PersistentSettingsService Settings { get; set; }
-
         [Parameter] public Config Config { get; set; }
+
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private BrowserConsoleLogger OBLogger { get; set; }
+        [Inject] private ConfigService ConfigService { get; set; }
+        [Inject] private PersistentSettingsService Settings { get; set; }
+
         private MonacoEditor _editor { get; set; }
 
         protected override async Task OnInitializedAsync()

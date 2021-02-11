@@ -40,8 +40,8 @@
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-    List<Config> configs = new();
-    Config selectedConfig;
+    private List<Config> configs = new();
+    private Config selectedConfig;
 
     private GridComponent<Config> gridComponent;
     private CGrid<Config> grid;
@@ -107,7 +107,7 @@
         }
     }
 
-    async Task Select()
+    private async Task Select()
     {
         if (selectedConfig == null)
         {

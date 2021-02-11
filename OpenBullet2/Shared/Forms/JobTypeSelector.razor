@@ -15,7 +15,7 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
 
-    void Select(JobType type)
+    private void Select(JobType type)
     {
         BlazoredModal.Close(ModalResult.Ok(type));
     }

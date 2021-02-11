@@ -229,22 +229,22 @@
         await js.AlertSuccess(Loc["AwwYeah"], $"{ConfigService.SelectedConfig.Metadata.Name} {Loc["wasSavedSuccessfully"]}");
     }
 
-    void ChangeLanguage()
+    private void ChangeLanguage()
     {
         Modal.Show<CultureSelector>(Loc["ChooseYourLanguage"]);
     }
 
-    void ShowUpdateInstructions()
+    private void ShowUpdateInstructions()
     {
         Modal.Show<UpdateInstructions>(Loc["UpdateInstructions"]);
     }
 
-    void ShowChangelog()
+    private void ShowChangelog()
     {
         Modal.Show<ChangelogViewer>(Loc["Changelog"]);
     }
 
-    async Task ToggleSidebar()
+    private async Task ToggleSidebar()
     {
         if (sidebarExpanded)
         {
@@ -260,5 +260,5 @@
         }
     }
 
-    void NavigateToHome() => NavigationManager.NavigateTo("/", true);
+    private void NavigateToHome() => NavigationManager.NavigateTo("/", true);
 }

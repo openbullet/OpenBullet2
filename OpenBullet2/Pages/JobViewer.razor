@@ -26,8 +26,9 @@ else
 
 @code {
     [Parameter] public int Id { get; set; }
-    Job job;
-    int uid = -1;
+    
+    private Job job;
+    private int uid = -1;
 
     protected override async Task OnInitializedAsync()
     {

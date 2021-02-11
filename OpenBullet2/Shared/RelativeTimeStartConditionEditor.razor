@@ -7,7 +7,7 @@
 
 @code {
     [Parameter] public RelativeTimeStartCondition StartCondition { get; set; }
-    int hours, minutes, seconds;
+    private int hours, minutes, seconds;
 
     protected override void OnInitialized()
     {
@@ -16,25 +16,25 @@
         seconds = StartCondition.StartAfter.Seconds;
     }
 
-    void ChangeHours(ChangeEventArgs args)
+    private void ChangeHours(ChangeEventArgs args)
     {
         hours = int.Parse((string)args.Value);
         SetTimespan();
     }
 
-    void ChangeMinutes(ChangeEventArgs args)
+    private void ChangeMinutes(ChangeEventArgs args)
     {
         minutes = int.Parse((string)args.Value);
         SetTimespan();
     }
 
-    void ChangeSeconds(ChangeEventArgs args)
+    private void ChangeSeconds(ChangeEventArgs args)
     {
         seconds = int.Parse((string)args.Value);
         SetTimespan();
     }
 
-    void SetTimespan()
+    private void SetTimespan()
     {
         StartCondition.StartAfter = TimeSpan.Zero
             .Add(TimeSpan.FromHours(hours))

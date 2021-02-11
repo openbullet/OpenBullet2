@@ -31,14 +31,13 @@ namespace OpenBullet2.Shared
 {
     public partial class Debugger
     {
-        [Inject] private IModalService Modal { get; set; }
+        [Parameter] public Config Config { get; set; }
+
         [Inject] private IRandomUAProvider RandomUAProvider { get; set; }
         [Inject] private IRNGProvider RNGProvider { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private PluginRepository PluginRepo { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
-
-        [Parameter] public Config Config { get; set; }
 
         private BotLogger logger;
         private CancellationTokenSource cts;

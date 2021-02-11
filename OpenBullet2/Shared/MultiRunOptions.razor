@@ -106,7 +106,8 @@
 
 @code {
     [Parameter] public MultiRunJobOptions Options { get; set; }
-    Config selectedConfig;
+    
+    private Config selectedConfig;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -119,7 +120,7 @@
         // Refresh the radio buttons
     }
 
-    async Task SelectConfig()
+    private async Task SelectConfig()
     {
         var modal = Modal.Show<ConfigSelector>(Loc["SelectConfig"]);
         var result = await modal.Result;
@@ -133,7 +134,7 @@
         }
     }
 
-    async Task TryApplyRecord()
+    private async Task TryApplyRecord()
     {
         if (Options.DataPool is OpenBullet2.Models.Data.WordlistDataPoolOptions pool)
         {
@@ -144,25 +145,25 @@
         }
     }
 
-    string help1x00 => Loc["Help1x00"];
-    string help1x01 => Loc["Help1x01"];
-    string help1x02 => Loc["Help1x02"];
-    string help1x03 => Loc["Help1x03"];
-    string help1x04 => Loc["Help1x04"];
+    private string help1x00 => Loc["Help1x00"];
+    private string help1x01 => Loc["Help1x01"];
+    private string help1x02 => Loc["Help1x02"];
+    private string help1x03 => Loc["Help1x03"];
+    private string help1x04 => Loc["Help1x04"];
 
-    string help2x00 => Loc["Help2x00"];
-    string help2x01 => Loc["Help2x01"];
-    string help2x02 => Loc["Help2x02"];
-    string help2x03 => Loc["Help2x03"];
-    string help2x04 => Loc["Help2x04"];
-    string help2x05 => Loc["Help2x05"];
+    private string help2x00 => Loc["Help2x00"];
+    private string help2x01 => Loc["Help2x01"];
+    private string help2x02 => Loc["Help2x02"];
+    private string help2x03 => Loc["Help2x03"];
+    private string help2x04 => Loc["Help2x04"];
+    private string help2x05 => Loc["Help2x05"];
 
-    string help3x00 => Loc["Help3x00"];
-    string help3x01 => Loc["Help3x01"];
-    string help3x02 => Loc["Help3x02"];
-    string help3x03 => Loc["Help3x03"];
+    private string help3x00 => Loc["Help3x00"];
+    private string help3x01 => Loc["Help3x01"];
+    private string help3x02 => Loc["Help3x02"];
+    private string help3x03 => Loc["Help3x03"];
 
-    string help4x00 => Loc["Help4x00"];
-    string help4x01 => Loc["Help4x01"];
-    string help4x02 => Loc["Help4x02"];
+    private string help4x00 => Loc["Help4x00"];
+    private string help4x01 => Loc["Help4x01"];
+    private string help4x02 => Loc["Help4x02"];
 }

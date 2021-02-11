@@ -39,9 +39,10 @@
     [Parameter] public int MaxWidth { get; set; } = 110;
     [Parameter] public int MaxHeight { get; set; } = 110;
     [Parameter] public EventCallback<string> Base64Changed { get; set; }
+
     private string imageUrl = string.Empty;
 
-    async Task HandleSelection(InputFileChangeEventArgs e)
+    private async Task HandleSelection(InputFileChangeEventArgs e)
     {
         if (e.FileCount == 0)
             return;
@@ -79,7 +80,7 @@
         }
     }
 
-    async Task FromUrl()
+    private async Task FromUrl()
     {
         try
         {

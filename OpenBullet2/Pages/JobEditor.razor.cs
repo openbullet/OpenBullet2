@@ -16,17 +16,18 @@ namespace OpenBullet2.Pages
 {
     public partial class JobEditor
     {
-        [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] JobManagerService Manager { get; set; }
-        [Inject] NavigationManager Nav { get; set; }
-        [Inject] JobFactoryService JobFactory { get; set; }
-        [Inject] AuthenticationStateProvider Auth { get; set; }
-
         [Parameter] public int JobId { get; set; }
-        JobEntity jobEntity;
-        JobOptions jobOptions;
-        JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-        int uid = -1;
+
+        [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private JobManagerService Manager { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private JobFactoryService JobFactory { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+
+        private JobEntity jobEntity;
+        private JobOptions jobOptions;
+        private JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        private int uid = -1;
 
         protected override async Task OnInitializedAsync()
         {

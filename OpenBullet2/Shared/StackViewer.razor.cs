@@ -17,8 +17,10 @@ namespace OpenBullet2.Shared
         [Parameter] public List<BlockInstance> Stack { get; set; }
         [Parameter] public List<(BlockInstance, int)> DeletedBlocks { get; set; }
         [Parameter] public EventCallback<BlockInstance> SelectedBlock { get; set; }
-        [Inject] public IModalService Modal { get; set; }
-        [Inject] public BrowserConsoleLogger OBLogger { get; set; }
+        
+        [Inject] private IModalService Modal { get; set; }
+        [Inject] private BrowserConsoleLogger OBLogger { get; set; }
+        
         private BlockInstance draggedItem;
         private List<BlockInstance> selectedBlocks = new();
 

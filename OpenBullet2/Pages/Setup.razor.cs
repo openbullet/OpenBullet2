@@ -11,9 +11,10 @@ namespace OpenBullet2.Pages
 {
     public partial class Setup
     {
-        [Inject] public NavigationManager Nav { get; set; }
-        [Inject] public PersistentSettingsService Settings { get; set; }
-        [Inject] public IModalService Modal { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private PersistentSettingsService Settings { get; set; }
+        [Inject] private IModalService Modal { get; set; }
+        
         private readonly int finalStep = 5;
         private int step = 0;
         private readonly AdminAccount admin = new();

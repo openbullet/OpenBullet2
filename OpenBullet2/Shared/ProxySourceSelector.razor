@@ -88,7 +88,7 @@
 
 @code {
     [Parameter] public List<ProxySourceOptions> ProxySources { get; set; }
-    List<ProxyGroupEntity> groups = new();
+    private List<ProxyGroupEntity> groups = new();
     private int uid = -1;
 
     protected override async Task OnInitializedAsync()
@@ -100,17 +100,17 @@
             : await ProxyGroupRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
     }
 
-    void AddGroup()
+    private void AddGroup()
     {
         ProxySources.Add(new GroupProxySourceOptions());
     }
 
-    void AddFile()
+    private void AddFile()
     {
         ProxySources.Add(new FileProxySourceOptions());
     }
 
-    void AddRemote()
+    private void AddRemote()
     {
         ProxySources.Add(new RemoteProxySourceOptions());
     }

@@ -42,24 +42,24 @@
 </div>
 
 @code {
-    List<string> allowedCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
-    List<string> unallowedCharacters = new List<string>();
-    List<string> compulsoryCharacters = new List<string> { "Letters" };
-    List<string> optionalCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
-
-    string supportedSymbols = "@$!%*#?&";
-    string SupportedSymbols { get => supportedSymbols; set { supportedSymbols = value; BuildRegex(); } }
-
-    int minLength = 0;
-    int MinLength { get => minLength; set { minLength = value; BuildRegex(); } }
-
-    int maxLength = 0;
-    int MaxLength { get => maxLength; set { maxLength = value; BuildRegex(); } }
-
-    string regex = "";
-    string testData = "";
-
     [Parameter] public EventCallback<string> BuiltRegex { get; set; }
+
+    private List<string> allowedCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
+    private List<string> unallowedCharacters = new List<string>();
+    private List<string> compulsoryCharacters = new List<string> { "Letters" };
+    private List<string> optionalCharacters = new List<string> { "Lowercase", "Uppercase", "Numbers", "Symbols" };
+
+    private string supportedSymbols = "@$!%*#?&";
+    private string SupportedSymbols { get => supportedSymbols; set { supportedSymbols = value; BuildRegex(); } }
+
+    private int minLength = 0;
+    private int MinLength { get => minLength; set { minLength = value; BuildRegex(); } }
+
+    private int maxLength = 0;
+    private int MaxLength { get => maxLength; set { maxLength = value; BuildRegex(); } }
+
+    private string regex = "";
+    private string testData = "";
 
     protected override void OnInitialized()
     {

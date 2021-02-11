@@ -38,7 +38,7 @@ namespace OpenBullet2.Pages
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
-        InputSelectNumber<int> groupSelectElement;
+        private InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups = new();
         private int currentGroupId = -1;
         private List<ProxyEntity> proxies = new();

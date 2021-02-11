@@ -7,6 +7,7 @@
 
 @code {
     [Parameter] public LoliCodeBlockInstance Block { get; set; }
+    
     private MonacoEditor _editor { get; set; }
     private string id = $"js-editor-{(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds}";
 

@@ -80,19 +80,19 @@
 @code {
     [Parameter] public List<HitOutputOptions> HitOutputs { get; set; }
 
-    void AddDatabase()
+    private void AddDatabase()
     {
         if (!HitOutputs.Any(o => o is DatabaseHitOutputOptions))
             HitOutputs.Add(new DatabaseHitOutputOptions());
     }
 
-    void AddFileSystem()
+    private void AddFileSystem()
     {
         if (!HitOutputs.Any(o => o is FileSystemHitOutputOptions))
             HitOutputs.Add(new FileSystemHitOutputOptions { BaseDir = "UserData/Hits" });
     }
 
-    void AddDiscord()
+    private void AddDiscord()
     {
         HitOutputs.Add(new DiscordWebhookHitOutputOptions());
     }

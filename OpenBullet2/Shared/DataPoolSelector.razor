@@ -3,7 +3,6 @@
 @using OpenBullet2.Shared.Forms 
 @using RuriLib.Services 
 @using OpenBullet2.Auth 
-@using OpenBullet2.Helpers 
 @inject IModalService Modal
 @inject IWordlistRepository WordlistRepo
 @inject IGuestRepository GuestRepo
@@ -108,9 +107,10 @@
     [Parameter] public DataPoolOptions Options { get; set; }
     [Parameter] public EventCallback<DataPoolOptions> SetOptions { get; set; }
     [Parameter] public EventCallback<int> SetWordlist { get; set; }
-    DataPoolType type = DataPoolType.Wordlist;
-    WordlistEntity selectedWordlist;
-    List<string> wordlistTypes;
+    
+    private DataPoolType type = DataPoolType.Wordlist;
+    private WordlistEntity selectedWordlist;
+    private List<string> wordlistTypes;
     private int uid = -1;
 
     protected override async Task OnInitializedAsync()
@@ -159,7 +159,7 @@
         }
     }
 
-    DataPoolType GetCurrentType()
+    private DataPoolType GetCurrentType()
     {
         return Options switch
         {

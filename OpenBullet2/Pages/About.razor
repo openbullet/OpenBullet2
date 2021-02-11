@@ -1,7 +1,7 @@
 ﻿@page "/about"
+@using OpenBullet2.Shared.Forms
 @inject Microsoft.Extensions.Localization.IStringLocalizer<About> Loc
 @inject IModalService Modal
-@using OpenBullet2.Shared.Forms
 
 <h5 class="fg-fail">@Loc["Disclaimer"]</h5>
 <p class="fg-fail mb-3">@Loc["DisclaimerText"]</p>
@@ -48,7 +48,7 @@
 
 @code {
 
-    void ShowLicense()
+    private void ShowLicense()
     {
         Modal.Show<License>(Loc["License"]);
     }

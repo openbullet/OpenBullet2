@@ -10,14 +10,14 @@
 
 @code {
     [Parameter] public int JobId { get; set; } = 0;
-    JobLogEntry[] entries = Array.Empty<JobLogEntry>();
+    private JobLogEntry[] entries = Array.Empty<JobLogEntry>();
 
     protected override void OnInitialized()
     {
         JobLoggerService.NewLog += OnNewLog;
     }
 
-    void OnNewLog(object sender, int id)
+    private void OnNewLog(object sender, int id)
     {
         if (id != JobId)
             return;

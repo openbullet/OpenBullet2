@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenBullet2.Auth;
 using OpenBullet2.Entities;
@@ -9,25 +8,24 @@ using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Jobs;
-using RuriLib.Services;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
 {
     public partial class JobCreator
     {
-        [Inject] IJobRepository JobRepo { get; set; }
-        [Inject] IGuestRepository GuestRepo { get; set; }
-        [Inject] JobManagerService Manager { get; set; }
-        [Inject] NavigationManager Nav { get; set; }
-        [Inject] JobFactoryService JobFactory { get; set; }
         [Parameter] public string Type { get; set; }
-        [Inject] AuthenticationStateProvider Auth { get; set; }
 
-        JobType jobType;
-        JobOptions jobOptions;
+        [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private JobManagerService Manager { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private JobFactoryService JobFactory { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+
+        private JobType jobType;
+        private JobOptions jobOptions;
         private int uid = -1;
 
         protected override async Task OnInitializedAsync()

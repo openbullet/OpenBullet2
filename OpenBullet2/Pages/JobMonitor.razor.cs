@@ -18,8 +18,8 @@ namespace OpenBullet2.Pages
 {
     public partial class JobMonitor : System.IDisposable
     {
-        [Inject] JobMonitorService MonitorService { get; set; }
-        [Inject] IModalService Modal { get; set; }
+        [Inject] private JobMonitorService MonitorService { get; set; }
+        [Inject] private IModalService Modal { get; set; }
 
         private Timer timer;
         private readonly string fileName = "UserData/triggeredActions.json";
