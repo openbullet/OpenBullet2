@@ -613,8 +613,13 @@ a:hover {
 
 /* JOB VIEWER -- */
 .job-viewer-log-container {
-    height: 530px;
+    height: 480px;
     overflow-y: auto;
+}
+
+.job-viewer-config-image {
+    height: 100px;
+    width: 100px;
 }
 /* -- JOB VIEWER */
 
@@ -778,6 +783,7 @@ a:hover {
     background-image: url('../logohq.png');
     cursor: pointer;
     width: 100%;
+    max-width: 150px;
     background-size: contain;
     background-repeat: no-repeat;
 }

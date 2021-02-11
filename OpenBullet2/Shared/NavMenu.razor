@@ -146,8 +146,11 @@
                 </button>
             </li>
         }
-        <li class="d-md-none text-center mb-3">
+        <li class="d-md-none text-center mb-3 footer-buttons">
             <img class="culture-flag-small" @onclick="ChangeLanguage" src="images/flags/@(CultureInfo.CurrentCulture.Name).png" />
+            <a href="https://discourse.openbullet.dev"><span class="oi oi-globe"></span></a>
+            <a href="docs"><span class="oi oi-book"></span></a>
+            <a href="https://github.com/openbullet/OpenBullet2/issues"><span class="oi oi-bug"></span></a>
             <span class="version-label ml-2" @onclick="ShowChangelog">@UpdateService.CurrentVersion [@UpdateService.CurrentVersionType]</span>
         </li>
     </ul>
