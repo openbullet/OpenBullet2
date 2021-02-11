@@ -3,7 +3,7 @@
 <div class="col align-self-stretch px-0">
     <BlockInputField BlockSetting="Key.Left" DisplayLabel="false" />
 </div>
-<div class="col-auto pr-0">
+<div class="col-auto px-0">
     <EditForm Model="Key">
         <InputSelect @bind-Value="Key.Comparison">
             @foreach (var name in Enum.GetNames(typeof(RuriLib.Models.Conditions.Comparisons.NumComparison)))

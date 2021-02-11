@@ -15,14 +15,14 @@
 <div style="overflow-y: auto; max-height: 700px;">
     @foreach (var block in Stack)
     {
-        <div draggable="true" class="card"
+        <div draggable="true" class="card stacker-block"
              style="background-color: @(block.Disabled ? "#666" : block.Descriptor.Category.BackgroundColor);
              color: @block.Descriptor.Category.ForegroundColor; 
-             cursor: pointer; border: solid 3px @(selectedBlocks.Contains(block) ? "var(--fg-primary)" : "var(--bg-secondary)"); text-align: center; font-size: 20px;"
+             border: solid 3px @(selectedBlocks.Contains(block) ? "var(--fg-primary)" : "var(--bg-secondary)");"
              @ondragstart="@(() => HandleDragStart(block))"
              @ondragover="@(() => HandleDragOver(block))"
              @onclick="@((e) => SelectBlock(block, e))">
-            <div class="card-body">
+            <div class="card-body stacker-block-body">
                 <span class="card-text @(selectedBlocks.Contains(block) ? "font-weight-bold" : "")"
                       style="color: @block.Descriptor.Category.ForegroundColor;">
                     @block.Label

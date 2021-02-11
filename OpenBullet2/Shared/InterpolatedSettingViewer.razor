@@ -14,7 +14,7 @@
                     <div class="col align-self-stretch">
                         <input class="bg-interpolated" type="text" @bind="x.Value" />
                     </div>
-                    <div class="col-auto mr-0 px-0">
+                    <div class="col-auto mr-0 pl-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <div class="col align-self-stretch">
                         <InputListOfStrings CssClass="bg-interpolated" @bind-List="x.Value" />
                     </div>
-                    <div class="col-auto px-0">
+                    <div class="col-auto pl-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                     <div class="col align-self-stretch">
                         <InputDictionaryOfStrings CssClass="bg-interpolated" @bind-Dictionary="x.Value" />
                     </div>
-                    <div class="col-auto px-0">
+                    <div class="col-auto pl-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
                     </div>
                 </div>
