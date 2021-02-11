@@ -56,7 +56,7 @@ namespace OpenBullet2.Shared
             {
                 c.Add(h => h.Date).Titled(Loc["Date"]);
                 c.Add(h => h.DataString).Titled(Loc["Data"]);
-                c.Add(h => h.Proxy).Titled(Loc["Proxy"]);
+                c.Add(h => h.Proxy).Titled(Loc["Proxy"]).RenderValueAs(h => h.Proxy != null ? $"{h.Proxy.Host}:{h.Proxy.Port}" : "-");
                 c.Add(h => h.Type).Titled(Loc["Type"]);
                 c.Add(h => h.CapturedDataString).Titled(Loc["CapturedData"]);
             };
