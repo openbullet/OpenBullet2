@@ -10,15 +10,20 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
+using OpenBullet2.Models.Data;
+using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
+using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,8 +33,15 @@ namespace OpenBullet2.Pages
     {
         [Inject] private IModalService Modal { get; set; }
         [Inject] private IHitRepository HitRepo { get; set; }
+        [Inject] private IJobRepository JobRepo { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private JobManagerService JobManager { get; set; }
+        [Inject] private JobFactoryService JobFactory { get; set; }
+        [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
+        [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
+        [Inject] private NavigationManager Nav { get; set; }
 
         private List<HitEntity> hits = new();
         private HitEntity selectedHit;
@@ -188,6 +200,76 @@ namespace OpenBullet2.Pages
                 }
                 
                 await RefreshList();
+            }
+        }
+
+        private async Task SendToRecheck()
+        {
+            var selected = grid.SelectedItems.Cast<HitEntity>().ToList();
+
+            if (selected.Count == 0)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            // If the hits refer to multiple configs, error
+            if (selected.GroupBy(h => h.ConfigId).Count() > 1)
+            {
+                await js.AlertError(Loc["Uh-Oh"], Loc["HitsFromMultipleConfigsSelected"]);
+                return;
+            }
+
+            var jobOptions = new MultiRunJobOptions();
+            var wordlistType = RuriLibSettings.Environment.WordlistTypes.First().Name;
+
+            // Get the config
+            var config = ConfigService.Configs.FirstOrDefault(c => c.Id == selected.First().ConfigId);
+
+            // If we cannot find a config with that id anymore, don't set it
+            if (config == null)
+            {
+                await js.AlertError(Loc["Uh-Oh"], $"{(Loc["ConfigMissing"])} {selected.First().ConfigId} ({selected.First().ConfigName})");
+            }
+
+            jobOptions.ConfigId = config.Id;
+            jobOptions.Bots = config.Settings.GeneralSettings.SuggestedBots;
+            wordlistType = config.Settings.DataSettings.AllowedWordlistTypes.First();
+
+            // Write the temporary file
+            var tempFile = Path.GetTempFileName();
+            File.WriteAllLines(tempFile, selected.Select(h => h.Data));
+            var dataPoolOptions = new FileDataPoolOptions
+            {
+                FileName = tempFile,
+                WordlistType = wordlistType
+            };
+            jobOptions.DataPool = dataPoolOptions;
+
+            // Create the job entity and add it to the database
+            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var jobOptionsWrapper = new JobOptionsWrapper { Options = jobOptions };
+
+            var entity = new JobEntity
+            {
+                Owner = await GuestRepo.Get(uid),
+                CreationDate = DateTime.Now,
+                JobType = JobType.MultiRun,
+                JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
+            };
+
+            await JobRepo.Add(entity);
+
+            try
+            {
+                var job = JobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
+
+                JobManager.Jobs.Add(job);
+                Nav.NavigateTo($"job/{job.Id}");
+            }
+            catch (Exception ex)
+            {
+                await js.AlertException(ex);
             }
         }
 

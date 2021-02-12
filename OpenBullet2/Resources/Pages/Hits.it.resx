@@ -129,6 +129,9 @@
   <data name="Config" xml:space="preserve">
     <value>Config</value>
   </data>
+  <data name="ConfigMissing" xml:space="preserve">
+    <value>Impossibile trovare la config con id</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Dati</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="hits" xml:space="preserve">
     <value>hit</value>
+  </data>
+  <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
+    <value>Selezionate hit da config diverse, per favore seleziona hit ottenute con la stessa config</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Caricamento</value>
@@ -173,6 +179,9 @@
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Risultati per pagina</value>
+  </data>
+  <data name="SendToRecheck" xml:space="preserve">
+    <value>Ricontrolla</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo</value>
