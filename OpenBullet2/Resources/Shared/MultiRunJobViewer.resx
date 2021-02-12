@@ -159,6 +159,9 @@
   <data name="Controls" xml:space="preserve">
     <value>Controls</value>
   </data>
+  <data name="CopyData" xml:space="preserve">
+    <value>Copy data</value>
+  </data>
   <data name="CopyDataCapture" xml:space="preserve">
     <value>Copy data + capture</value>
   </data>

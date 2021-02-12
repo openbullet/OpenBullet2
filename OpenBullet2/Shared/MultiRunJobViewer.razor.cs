@@ -334,6 +334,20 @@ namespace OpenBullet2.Shared
             await js.CopyToClipboard(sb.ToString());
         }
 
+        private async Task CopyHitData()
+        {
+            if (selectedHits.Count == 0)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            var sb = new StringBuilder();
+            selectedHits.ForEach(i => sb.AppendLine(i.Data.Data));
+
+            await js.CopyToClipboard(sb.ToString());
+        }
+
         private async Task SendToDebugger()
         {
             if (lastSelectedHit == null)
