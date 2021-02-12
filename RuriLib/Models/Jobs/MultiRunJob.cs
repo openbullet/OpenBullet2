@@ -580,7 +580,8 @@ namespace RuriLib.Models.Jobs
                 Config = Config,
                 Date = DateTime.Now,
                 Proxy = botData.Proxy,
-                CapturedData = result.OutputVariables,
+                CapturedData = Config.Settings.GeneralSettings.SaveEmptyCaptures
+                    ? result.OutputVariables : CleanEmptyCaptures(result.OutputVariables),
                 OwnerId = OwnerId
             };
 
@@ -591,6 +592,30 @@ namespace RuriLib.Models.Jobs
             {
                 await hitOutput.Store(hit).ConfigureAwait(false);
             }
+        }
+
+        private static Dictionary<string, object> CleanEmptyCaptures(Dictionary<string, object> capturedData)
+        {
+            var newCaptures = new Dictionary<string, object>();
+
+            foreach (var item in capturedData)
+            {
+                if (item.Value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
+                    continue;
+
+                if (item.Value is byte[] bytesValue && bytesValue.Length == 0)
+                    continue;
+
+                if (item.Value is List<string> listValue && listValue.Count == 0)
+                    continue;
+
+                if (item.Value is Dictionary<string, string> dictValue && dictValue.Count == 0)
+                    continue;
+
+                newCaptures.Add(item.Key, item.Value);
+            }
+
+            return newCaptures;
         }
 
         private bool ShouldUseProxies(JobProxyMode mode, ProxySettings settings)
