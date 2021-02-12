@@ -57,6 +57,7 @@ namespace RuriLib.Helpers.CSharp
                 "System.Linq",
                 "System.Net.Security",
                 "RuriLib.Models.Blocks.Custom.HttpRequest.Multipart",
+                "RuriLib.Functions.Http.Options",
                 "Jering.Javascript.NodeJS",
                 "Jint",
                 "System.Threading",

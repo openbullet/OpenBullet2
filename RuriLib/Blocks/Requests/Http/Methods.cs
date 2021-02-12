@@ -1,8 +1,8 @@
 ﻿using RuriLib.Attributes;
 using RuriLib.Extensions;
-using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http;
+using RuriLib.Functions.Http.Options;
 using RuriLib.Helpers;
 using RuriLib.Http;
 using RuriLib.Http.Models;
@@ -31,47 +31,23 @@ namespace RuriLib.Blocks.Requests.Http
 
         // STANDARD REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block
-        public static async Task HttpRequestStandard(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
-            bool autoRedirect, int maxNumberOfRedirects, SecurityProtocol securityProtocol, string content, string contentType, Dictionary<string, string> customCookies,
-            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
-            List<string> customCipherSuites, bool alwaysSendContent)
+        public static async Task HttpRequestStandard(BotData data, StandardHttpRequestOptions options)
         {
-            var cookies = new CookieContainer();
-            data.Objects["cookieContainer"] = cookies;
-
-            foreach (var cookie in data.COOKIES)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            var options = new HttpOptions
-            {
-                Cookies = cookies,
-                ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-                ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-                AutoRedirect = autoRedirect,
-                MaxNumberOfRedirects = maxNumberOfRedirects,
-                SecurityProtocol = securityProtocol,
-                UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
-                CertRevocationMode = data.Providers.Security.X509RevocationMode
-            };
-
-            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
+            var clientOptions = GetClientOptions(data, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
             using var request = new HttpRequest
             {
-                Method = new System.Net.Http.HttpMethod(method.ToString()),
-                Uri = new Uri(url),
-                Version = Version.Parse(httpVersion),
-                Headers = customHeaders
+                Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
+                Uri = new Uri(options.Url),
+                Version = Version.Parse(options.HttpVersion),
+                Headers = options.CustomHeaders
             };
 
-            if (!string.IsNullOrEmpty(content) || alwaysSendContent)
+            if (!string.IsNullOrEmpty(options.Content) || options.AlwaysSendContent)
             {
-                request.Content = new StringContent(content.Unescape());
-                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+                request.Content = new StringContent(options.Content.Unescape());
+                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(options.ContentType);
             }
 
             data.Logger.LogHeader();
@@ -79,7 +55,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
@@ -99,52 +75,28 @@ namespace RuriLib.Blocks.Requests.Http
 
         // RAW REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block
-        public static async Task HttpRequestRaw(BotData data, string url, RuriLib.Functions.Http.HttpMethod method,
-            bool autoRedirect, int maxNumberOfRedirects, SecurityProtocol securityProtocol, byte[] content, string contentType,
-            Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders,
-            int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites, List<string> customCipherSuites)
+        public static async Task HttpRequestRaw(BotData data, RawHttpRequestOptions options)
         {
-            var cookies = new CookieContainer();
-            data.Objects["cookieContainer"] = cookies;
-
-            foreach (var cookie in data.COOKIES)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            var options = new HttpOptions
-            {
-                Cookies = cookies,
-                ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-                ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-                AutoRedirect = autoRedirect,
-                MaxNumberOfRedirects = maxNumberOfRedirects,
-                SecurityProtocol = securityProtocol,
-                UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
-                CertRevocationMode = data.Providers.Security.X509RevocationMode
-            };
-
-            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
+            var clientOptions = GetClientOptions(data, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
             using var request = new HttpRequest
             {
-                Method = new System.Net.Http.HttpMethod(method.ToString()),
-                Uri = new Uri(url),
-                Version = Version.Parse(httpVersion),
-                Headers = customHeaders,
-                Content = new ByteArrayContent(content)
+                Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
+                Uri = new Uri(options.Url),
+                Version = Version.Parse(options.HttpVersion),
+                Headers = options.CustomHeaders,
+                Content = new ByteArrayContent(options.Content)
             };
 
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(options.ContentType);
 
             data.Logger.LogHeader();
 
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
@@ -164,52 +116,29 @@ namespace RuriLib.Blocks.Requests.Http
 
         // BASIC AUTH
         // This method is accessed via a custom descriptor so it must not be an auto block
-        public static async Task HttpRequestBasicAuth(BotData data, string url, bool autoRedirect, int maxNumberOfRedirects,
-            SecurityProtocol securityProtocol, string username, string password, Dictionary<string, string> customCookies,
-            Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion, bool useCustomCipherSuites,
-            List<string> customCipherSuites)
+        public static async Task HttpRequestBasicAuth(BotData data, BasicAuthHttpRequestOptions options)
         {
-            var cookies = new CookieContainer();
-            data.Objects["cookieContainer"] = cookies;
-
-            foreach (var cookie in data.COOKIES)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            var options = new HttpOptions
-            {
-                Cookies = cookies,
-                ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-                ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-                AutoRedirect = autoRedirect,
-                MaxNumberOfRedirects = maxNumberOfRedirects,
-                SecurityProtocol = securityProtocol,
-                UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
-                CertRevocationMode = data.Providers.Security.X509RevocationMode
-            };
-
-            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
+            var clientOptions = GetClientOptions(data, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
             using var request = new HttpRequest
             {
                 Method = System.Net.Http.HttpMethod.Get,
-                Uri = new Uri(url),
-                Version = Version.Parse(httpVersion),
-                Headers = customHeaders
+                Uri = new Uri(options.Url),
+                Version = Version.Parse(options.HttpVersion),
+                Headers = options.CustomHeaders
             };
 
             // Add the basic auth header
-            request.AddHeader("Authorization", "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}")));
+            request.AddHeader("Authorization", "Basic " + Convert.ToBase64String(
+                Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}")));
 
             data.Logger.LogHeader();
             
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
@@ -229,43 +158,19 @@ namespace RuriLib.Blocks.Requests.Http
 
         // MULTIPART
         // This method is accessed via a custom descriptor so it must not be an auto block
-        public static async Task HttpRequestMultipart(BotData data, string url, RuriLib.Functions.Http.HttpMethod method, bool autoRedirect,
-            int maxNumberOfRedirects, SecurityProtocol securityProtocol, string boundary, List<MyHttpContent> content, 
-            Dictionary<string, string> customCookies, Dictionary<string, string> customHeaders, int timeoutMilliseconds, string httpVersion,
-            bool useCustomCipherSuites, List<string> customCipherSuites)
+        public static async Task HttpRequestMultipart(BotData data, MultipartHttpRequestOptions options)
         {
-            var cookies = new CookieContainer();
-            data.Objects["cookieContainer"] = cookies;
+            var clientOptions = GetClientOptions(data, options);
+            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
-            foreach (var cookie in data.COOKIES)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            foreach (var cookie in customCookies)
-                cookies.Add(new Uri(url), new Cookie(cookie.Key, cookie.Value));
-
-            var options = new HttpOptions
-            {
-                Cookies = cookies,
-                ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
-                ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
-                AutoRedirect = autoRedirect,
-                MaxNumberOfRedirects = maxNumberOfRedirects,
-                SecurityProtocol = securityProtocol,
-                UseCustomCipherSuites = useCustomCipherSuites,
-                CustomCipherSuites = ParseCipherSuites(customCipherSuites),
-                CertRevocationMode = data.Providers.Security.X509RevocationMode
-            };
-
-            using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, options);
-
-            if (string.IsNullOrWhiteSpace(boundary))
-                boundary = GenerateMultipartBoundary();
+            if (string.IsNullOrWhiteSpace(options.Boundary))
+                options.Boundary = GenerateMultipartBoundary();
             
-            var multipartContent = new MultipartFormDataContent(boundary);
+            var multipartContent = new MultipartFormDataContent(options.Boundary);
 
             FileStream fileStream = null;
 
-            foreach (var c in content)
+            foreach (var c in options.Contents)
             {
                 switch (c)
                 {
@@ -292,10 +197,10 @@ namespace RuriLib.Blocks.Requests.Http
 
             using var request = new HttpRequest
             {
-                Method = new System.Net.Http.HttpMethod(method.ToString()),
-                Uri = new Uri(url),
-                Version = Version.Parse(httpVersion),
-                Headers = customHeaders,
+                Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
+                Uri = new Uri(options.Url),
+                Version = Version.Parse(options.HttpVersion),
+                Headers = options.CustomHeaders,
                 Content = multipartContent
             };
 
@@ -304,7 +209,7 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(timeoutMilliseconds);
+                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
@@ -312,7 +217,7 @@ namespace RuriLib.Blocks.Requests.Http
             }
             catch
             {
-                LogHttpRequestData(data, request, boundary, content);
+                LogHttpRequestData(data, request, options.Boundary, options.Contents);
                 throw;
             }
             finally
@@ -535,6 +440,32 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             return parsed.ToArray();
+        }
+
+        private static HttpOptions GetClientOptions(BotData data,
+            RuriLib.Functions.Http.Options.HttpRequestOptions options)
+        {
+            var cookies = new CookieContainer();
+            data.Objects["cookieContainer"] = cookies;
+
+            foreach (var cookie in data.COOKIES)
+                cookies.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
+
+            foreach (var cookie in options.CustomCookies)
+                cookies.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
+
+            return new()
+            {
+                Cookies = cookies,
+                ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
+                ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
+                AutoRedirect = options.AutoRedirect,
+                MaxNumberOfRedirects = options.MaxNumberOfRedirects,
+                SecurityProtocol = options.SecurityProtocol,
+                UseCustomCipherSuites = options.UseCustomCipherSuites,
+                CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
+                CertRevocationMode = data.Providers.Security.X509RevocationMode
+            };
         }
     }
 }
