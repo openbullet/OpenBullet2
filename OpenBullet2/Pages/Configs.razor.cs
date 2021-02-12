@@ -37,6 +37,7 @@ namespace OpenBullet2.Pages
 
         private Config selectedConfig;
         private List<Config> configs;
+        private DateTime lastRowClickTime;
 
         private GridComponent<Config> gridComponent;
         private CGrid<Config> grid;
@@ -108,8 +109,18 @@ namespace OpenBullet2.Pages
         {
             if (item.GetType() == typeof(Config))
             {
-                selectedConfig = (Config)item;
-                StateHasChanged();
+                // If the row was double clicked, edit the config
+                if (selectedConfig == (Config)item && (DateTime.Now - lastRowClickTime).TotalMilliseconds < 500)
+                {
+                    lastRowClickTime = DateTime.Now;
+                    _ = EditConfig();
+                }
+                else
+                {
+                    selectedConfig = (Config)item;
+                    lastRowClickTime = DateTime.Now;
+                    StateHasChanged();
+                }
             }
         }
 
