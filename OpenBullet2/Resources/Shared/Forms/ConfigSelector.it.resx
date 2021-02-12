@@ -168,4 +168,7 @@
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
   </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
 </root>
