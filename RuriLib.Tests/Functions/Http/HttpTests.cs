@@ -15,6 +15,7 @@ using RuriLib.Tests.Utils;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using System.IO;
 using RuriLib.Tests.Utils.Mockup;
+using RuriLib.Functions.Http.Options;
 
 namespace RuriLib.Tests.Functions.Http
 {
@@ -33,7 +34,6 @@ namespace RuriLib.Tests.Functions.Http
             false);
 
         private readonly string httpBin = "https://httpbin.org/anything";
-        private readonly int timeout = 5000;
 
         [Fact]
         public async Task HttpRequestStandard_Get_Verify()
@@ -51,8 +51,15 @@ namespace RuriLib.Tests.Functions.Http
                 { "Custom", "value" }
             };
 
-            await Methods.HttpRequestStandard(data, httpBin, HttpMethod.GET, true, 8, SecurityProtocol.SystemDefault,
-                "", "", cookies, headers, timeout, "1.1", false, null, false);
+            var options = new StandardHttpRequestOptions
+            {
+                Url = httpBin,
+                Method = HttpMethod.GET,
+                CustomHeaders = headers,
+                CustomCookies = cookies
+            };
+
+            await Methods.HttpRequestStandard(data, options);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("value", response.Headers["Custom"]);
@@ -67,9 +74,15 @@ namespace RuriLib.Tests.Functions.Http
         {
             var data = NewBotData();
 
-            await Methods.HttpRequestStandard(data, httpBin, HttpMethod.POST, true, 8, SecurityProtocol.SystemDefault,
-                "name1=value1&name2=value2", "application/x-www-form-urlencoded",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null, false);
+            var options = new StandardHttpRequestOptions
+            {
+                Url = httpBin,
+                Method = HttpMethod.POST,
+                Content = "name1=value1&name2=value2",
+                ContentType = "application/x-www-form-urlencoded"
+            };
+
+            await Methods.HttpRequestStandard(data, options);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -83,9 +96,15 @@ namespace RuriLib.Tests.Functions.Http
         {
             var data = NewBotData();
 
-            await Methods.HttpRequestRaw(data, httpBin, HttpMethod.POST, true, 8, SecurityProtocol.SystemDefault,
-                Encoding.UTF8.GetBytes("name1=value1&name2=value2"), "application/x-www-form-urlencoded",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
+            var options = new RawHttpRequestOptions
+            {
+                Url = httpBin,
+                Method = HttpMethod.POST,
+                Content = Encoding.UTF8.GetBytes("name1=value1&name2=value2"),
+                ContentType = "application/x-www-form-urlencoded"
+            };
+
+            await Methods.HttpRequestRaw(data, options);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -99,9 +118,15 @@ namespace RuriLib.Tests.Functions.Http
         {
             var data = NewBotData();
 
-            await Methods.HttpRequestBasicAuth(data, httpBin, true, 8, SecurityProtocol.SystemDefault,
-                "myUsername", "myPassword",
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
+            var options = new BasicAuthHttpRequestOptions
+            {
+                Url = httpBin,
+                Method = HttpMethod.GET,
+                Username = "myUsername",
+                Password = "myPassword"
+            };
+
+            await Methods.HttpRequestBasicAuth(data, options);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("GET", response.Method);
@@ -123,9 +148,15 @@ namespace RuriLib.Tests.Functions.Http
                 new FileHttpContent("fileName", tempFile, "application/octet-stream")
             };
 
-            await Methods.HttpRequestMultipart(data, httpBin, HttpMethod.POST, true, 8, SecurityProtocol.SystemDefault,
-                "myBoundary", contents,
-                new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "1.1", false, null);
+            var options = new MultipartHttpRequestOptions
+            {
+                Url = httpBin,
+                Method = HttpMethod.POST,
+                Boundary = "myBoundary",
+                Contents = contents
+            };
+
+            await Methods.HttpRequestMultipart(data, options);
 
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("POST", response.Method);
@@ -139,8 +170,14 @@ namespace RuriLib.Tests.Functions.Http
         {
             var data = NewBotData();
 
-            await Methods.HttpRequestStandard(data, "https://http2.golang.org/reqinfo", HttpMethod.GET, true, 8, SecurityProtocol.SystemDefault,
-                "", "", new Dictionary<string, string>(), new Dictionary<string, string>(), timeout, "2.0", false, null, false);
+            var options = new StandardHttpRequestOptions
+            {
+                Url = "https://http2.golang.org/reqinfo",
+                Method = HttpMethod.GET,
+                HttpVersion = "2.0"
+            };
+
+            await Methods.HttpRequestStandard(data, options);
 
             Assert.Contains("Protocol: HTTP/2.0", data.SOURCE);
         }

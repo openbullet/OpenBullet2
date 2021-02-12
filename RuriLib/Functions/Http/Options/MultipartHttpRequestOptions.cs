@@ -5,7 +5,7 @@ namespace RuriLib.Functions.Http.Options
 {
     public class MultipartHttpRequestOptions : HttpRequestOptions
     {
-        public string Boundary { get; set; }
-        public List<MyHttpContent> Contents { get; set; }
+        public string Boundary { get; set; } = string.Empty;
+        public List<MyHttpContent> Contents { get; set; } = new();
     }
 }

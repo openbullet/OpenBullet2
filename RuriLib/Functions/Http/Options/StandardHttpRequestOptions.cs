@@ -2,7 +2,7 @@
 {
     public class StandardHttpRequestOptions : HttpRequestOptions
     {
-        public string Content { get; set; }
-        public string ContentType { get; set; }
+        public string Content { get; set; } = string.Empty;
+        public string ContentType { get; set; } = string.Empty;
     }
 }

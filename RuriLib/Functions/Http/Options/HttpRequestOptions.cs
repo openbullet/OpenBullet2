@@ -1,21 +1,20 @@
-﻿using RuriLib.Models.Bots;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RuriLib.Functions.Http.Options
 {
     public class HttpRequestOptions
     {
-        public string Url { get; set; }
-        public HttpMethod Method { get; set; }
-        public bool AutoRedirect { get; set; }
-        public int MaxNumberOfRedirects { get; set; }
-        public SecurityProtocol SecurityProtocol { get; set; }
-        public Dictionary<string, string> CustomCookies { get; set; }
-        public Dictionary<string, string> CustomHeaders { get; set; }
-        public int TimeoutMilliseconds { get; set; }
-        public string HttpVersion { get; set; }
-        public bool UseCustomCipherSuites { get; set; }
-        public List<string> CustomCipherSuites { get; set; }
-        public bool AlwaysSendContent { get; set; }
+        public string Url { get; set; } = string.Empty;
+        public HttpMethod Method { get; set; } = HttpMethod.GET;
+        public bool AutoRedirect { get; set; } = true;
+        public int MaxNumberOfRedirects { get; set; } = 8;
+        public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
+        public Dictionary<string, string> CustomCookies { get; set; } = new();
+        public Dictionary<string, string> CustomHeaders { get; set; } = new();
+        public int TimeoutMilliseconds { get; set; } = 10000;
+        public string HttpVersion { get; set; } = "1.1";
+        public bool UseCustomCipherSuites { get; set; } = false;
+        public List<string> CustomCipherSuites { get; set; } = new();
+        public bool AlwaysSendContent { get; set; } = false;
     }
 }
