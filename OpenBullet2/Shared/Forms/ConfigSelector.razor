@@ -25,10 +25,10 @@
     <div style="height: 250px; margin-top: 15px; overflow-y: auto;">
         @if (selectedConfig != null)
         {
-            <div style="width: 100%">
+            <div class="w-100">
                 <p style="color: orange;">@selectedConfig.Metadata.Name @Loc["by"] @selectedConfig.Metadata.Author</p>
             </div>
-            <div style="width: 100%">
+            <div class="w-100">
                 <MarkdownRenderer MarkdownContent="@selectedConfig.Readme" />
             </div>
         }

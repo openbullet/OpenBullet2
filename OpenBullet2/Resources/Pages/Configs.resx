@@ -148,7 +148,7 @@
     <value>Configs successfully uploaded</value>
   </data>
   <data name="ConfigWarningMessage" xml:space="preserve">
-    <value>Configs contain C# code that is executed without any automatic checks for malicious behaviours. If you use configs made by 3rd parties, it is YOUR responsibility to make sure that configs do exactly what they are supposed to do and that nothing shady is going on. Always check the LoliCode / C# code yourself before running them if you don't completely trust the origin.</value>
+    <value>WARNING! Configs contain C# code that is executed without any automatic checks for malicious behaviours. If you use configs made by 3rd parties, it is YOUR responsibility to make sure that configs do exactly what they are supposed to do and that nothing shady is going on. Always check the LoliCode / C# code yourself before running them if you don't completely trust the origin.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Creation Date</value>
@@ -248,5 +248,8 @@
   </data>
   <data name="WARNING" xml:space="preserve">
     <value>WARNING</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlists</value>
   </data>
 </root>

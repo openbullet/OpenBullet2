@@ -57,6 +57,7 @@ namespace OpenBullet2.Pages
                 c.Add(x => x.Metadata.Category).Titled(Loc["Category"]);
                 c.Add(x => x.IsRemote).Titled(Loc["Remote"]);
                 c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
+                c.Add(x => x.Settings.DataSettings.AllowedWordlistTypesString).Titled(Loc["Wordlists"]);
                 c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]);
                 c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"])
                     .Sortable(true).SortInitialDirection(GridShared.Sorting.GridSortDirection.Descending);
@@ -92,7 +93,7 @@ namespace OpenBullet2.Pages
             VolatileSettings.GridQueries["configsGrid"] = query;
 
             var server = new GridServer<Config>(configs, new QueryCollection(query),
-                true, "configsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
+                true, "configsGrid", columns, 10).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;
@@ -108,6 +109,7 @@ namespace OpenBullet2.Pages
             if (item.GetType() == typeof(Config))
             {
                 selectedConfig = (Config)item;
+                StateHasChanged();
             }
         }
 
