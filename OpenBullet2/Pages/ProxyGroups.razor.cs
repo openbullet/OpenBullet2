@@ -105,7 +105,7 @@ namespace OpenBullet2.Pages
             VolatileSettings.GridQueries["proxiesGrid"] = query;
 
             var server = new GridServer<ProxyEntity>(proxies, new QueryCollection(query),
-                true, "proxiesGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
+                true, "proxiesGrid", columns, 10).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;

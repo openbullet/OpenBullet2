@@ -8,7 +8,6 @@ using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Shared.Forms;
-using Radzen.Blazor;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
@@ -90,7 +89,7 @@ namespace OpenBullet2.Pages
             VolatileSettings.GridQueries["wordlistsGrid"] = query;
 
             var server = new GridServer<WordlistEntity>(wordlists, new QueryCollection(query),
-                true, "wordlistsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
+                true, "wordlistsGrid", columns, 10).Sortable().Filterable().WithMultipleFilters();
 
             // Return items to displays
             return server.ItemsToDisplay;
