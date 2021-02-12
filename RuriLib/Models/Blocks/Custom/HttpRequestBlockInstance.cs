@@ -322,7 +322,7 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case RawRequestParams x:
-                    writer.Write("HttpRequestStandard(data, new RawHttpRequestOptions { ");
+                    writer.Write("HttpRequestRaw(data, new RawHttpRequestOptions { ");
                     writer.Write("Url = " + GetSettingValue("url") + ", ");
                     writer.Write("Method = " + GetSettingValue("method") + ", ");
                     writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
@@ -339,7 +339,7 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case BasicAuthRequestParams x:
-                    writer.Write("HttpRequestStandard(data, new BasicAuthHttpRequestOptions { ");
+                    writer.Write("HttpRequestBasicAuth(data, new BasicAuthHttpRequestOptions { ");
                     writer.Write("Url = " + GetSettingValue("url") + ", ");
                     writer.Write("Method = " + GetSettingValue("method") + ", ");
                     writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
@@ -356,7 +356,7 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case MultipartRequestParams x:
-                    writer.Write("HttpRequestStandard(data, new MultipartHttpRequestOptions { ");
+                    writer.Write("HttpRequestMultipart(data, new MultipartHttpRequestOptions { ");
                     writer.Write("Url = " + GetSettingValue("url") + ", ");
                     writer.Write("Method = " + GetSettingValue("method") + ", ");
                     writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
