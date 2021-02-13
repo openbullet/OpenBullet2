@@ -600,7 +600,7 @@ namespace RuriLib.Models.Jobs
 
             foreach (var item in capturedData)
             {
-                if (item.Value is string stringValue && !string.IsNullOrWhiteSpace(stringValue))
+                if (item.Value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
                     continue;
 
                 if (item.Value is byte[] bytesValue && bytesValue.Length == 0)
