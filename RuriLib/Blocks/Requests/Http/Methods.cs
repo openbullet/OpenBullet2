@@ -41,7 +41,8 @@ namespace RuriLib.Blocks.Requests.Http
                 Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
-                Headers = options.CustomHeaders
+                Headers = options.CustomHeaders,
+                AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine
             };
 
             if (!string.IsNullOrEmpty(options.Content) || options.AlwaysSendContent)
@@ -86,6 +87,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine,
                 Content = new ByteArrayContent(options.Content)
             };
 
@@ -126,7 +128,8 @@ namespace RuriLib.Blocks.Requests.Http
                 Method = System.Net.Http.HttpMethod.Get,
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
-                Headers = options.CustomHeaders
+                Headers = options.CustomHeaders,
+                AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine
             };
 
             // Add the basic auth header
@@ -201,6 +204,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine,
                 Content = multipartContent
             };
 
@@ -464,7 +468,7 @@ namespace RuriLib.Blocks.Requests.Http
                 SecurityProtocol = options.SecurityProtocol,
                 UseCustomCipherSuites = options.UseCustomCipherSuites,
                 CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
-                CertRevocationMode = data.Providers.Security.X509RevocationMode
+                CertRevocationMode = data.Providers.Security.X509RevocationMode,
             };
         }
     }

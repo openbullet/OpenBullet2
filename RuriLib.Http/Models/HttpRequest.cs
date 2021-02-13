@@ -13,6 +13,7 @@ namespace RuriLib.Http.Models
 {
     public class HttpRequest : IDisposable
     {
+        public bool AbsoluteUriInFirstLine { get; set; } = false;
         public Version Version { get; set; } = new(1, 1);
         public HttpMethod Method { get; set; } = HttpMethod.Get;
         public Uri Uri { get; set; }
@@ -55,7 +56,7 @@ namespace RuriLib.Http.Models
         // Builds the first line, for example
         // GET /resource HTTP/1.1
         private string BuildFirstLine()
-            => $"{Method.Method} {Uri.PathAndQuery} HTTP/{Version}{newLine}";
+            => $"{Method.Method} {(AbsoluteUriInFirstLine ? Uri.AbsoluteUri : Uri.PathAndQuery)} HTTP/{Version}{newLine}";
 
         // Builds the headers, for example
         // Host: example.com

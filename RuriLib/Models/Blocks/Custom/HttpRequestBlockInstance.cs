@@ -305,73 +305,41 @@ namespace RuriLib.Models.Blocks.Custom
             {
                 case StandardRequestParams x:
                     writer.Write("HttpRequestStandard(data, new StandardHttpRequestOptions { ");
-                    writer.Write("Url = " + GetSettingValue("url") + ", ");
-                    writer.Write("Method = " + GetSettingValue("method") + ", ");
-                    writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
-                    writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
-                    writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
                     writer.Write("Content = " + CSharpWriter.FromSetting(x.Content) + ", ");
                     writer.Write("ContentType = " + CSharpWriter.FromSetting(x.ContentType) + ", ");
-                    writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");
-                    writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
-                    writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
-                    writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
-                    writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + ", ");
-                    writer.Write("AlwaysSendContent = " + GetSettingValue("alwaysSendContent") + " ");
                     break;
 
                 case RawRequestParams x:
                     writer.Write("HttpRequestRaw(data, new RawHttpRequestOptions { ");
-                    writer.Write("Url = " + GetSettingValue("url") + ", ");
-                    writer.Write("Method = " + GetSettingValue("method") + ", ");
-                    writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
-                    writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
-                    writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
                     writer.Write("Content = " + CSharpWriter.FromSetting(x.Content) + ", ");
                     writer.Write("ContentType = " + CSharpWriter.FromSetting(x.ContentType) + ", ");
-                    writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");
-                    writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
-                    writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
-                    writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
-                    writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
                     break;
 
                 case BasicAuthRequestParams x:
                     writer.Write("HttpRequestBasicAuth(data, new BasicAuthHttpRequestOptions { ");
-                    writer.Write("Url = " + GetSettingValue("url") + ", ");
-                    writer.Write("Method = " + GetSettingValue("method") + ", ");
-                    writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
-                    writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
-                    writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
                     writer.Write("Username = " + CSharpWriter.FromSetting(x.Username) + ", ");
                     writer.Write("Password = " + CSharpWriter.FromSetting(x.Password) + ", ");
-                    writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");
-                    writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
-                    writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
-                    writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
-                    writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
                     break;
 
                 case MultipartRequestParams x:
                     writer.Write("HttpRequestMultipart(data, new MultipartHttpRequestOptions { ");
-                    writer.Write("Url = " + GetSettingValue("url") + ", ");
-                    writer.Write("Method = " + GetSettingValue("method") + ", ");
-                    writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
-                    writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
-                    writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
                     writer.Write("Boundary = " + CSharpWriter.FromSetting(x.Boundary) + ", ");
                     writer.Write("Contents = " + SerializeMultipart(x.Contents) + ", ");
-                    writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");
-                    writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
-                    writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
-                    writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
-                    writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
-                    writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
                     break;
             }
+
+            writer.Write("Url = " + GetSettingValue("url") + ", ");
+            writer.Write("Method = " + GetSettingValue("method") + ", ");
+            writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
+            writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
+            writer.Write("AbsoluteUriInFirstLine = " + GetSettingValue("absoluteUriInFirstLine") + ", ");
+            writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
+            writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");
+            writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
+            writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
+            writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
+            writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
+            writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
 
             writer.WriteLine("}).ConfigureAwait(false);");
 

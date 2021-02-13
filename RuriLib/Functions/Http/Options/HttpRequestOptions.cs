@@ -8,6 +8,7 @@ namespace RuriLib.Functions.Http.Options
         public HttpMethod Method { get; set; } = HttpMethod.GET;
         public bool AutoRedirect { get; set; } = true;
         public int MaxNumberOfRedirects { get; set; } = 8;
+        public bool AbsoluteUriInFirstLine { get; set; } = false;
         public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
         public Dictionary<string, string> CustomCookies { get; set; } = new();
         public Dictionary<string, string> CustomHeaders { get; set; } = new();

@@ -27,6 +27,7 @@ namespace RuriLib.Models.Blocks.Custom
                 { "method", new EnumParameter("method", typeof(HttpMethod), HttpMethod.GET.ToString()) },
                 { "autoRedirect", new BoolParameter("autoRedirect", true) },
                 { "maxNumberOfRedirects", new IntParameter("maxNumberOfRedirects", 8) },
+                { "absoluteUriInFirstLine", new BoolParameter("absoluteUriInFirstLine", false) },
                 { "securityProtocol", new EnumParameter("securityProtocol", typeof(SecurityProtocol), SecurityProtocol.SystemDefault.ToString()) },
                 { "useCustomCipherSuites", new BoolParameter("useCustomCipherSuites", false) },
                 { "alwaysSendContent", new BoolParameter("alwaysSendContent", false) },
