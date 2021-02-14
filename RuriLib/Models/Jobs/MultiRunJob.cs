@@ -405,6 +405,7 @@ namespace RuriLib.Models.Jobs
             try
             {
                 await parallelizer?.Stop();
+                Skip += DataTested;
             }
             finally
             {
@@ -418,6 +419,7 @@ namespace RuriLib.Models.Jobs
             try
             {
                 await parallelizer?.Abort();
+                Skip += DataTested;
             }
             finally
             {
