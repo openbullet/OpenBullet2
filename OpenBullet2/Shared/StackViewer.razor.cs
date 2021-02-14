@@ -31,12 +31,15 @@ namespace OpenBullet2.Shared
 
         private void HandleDragStart(BlockInstance item)
         {
-            draggedItem = item;
+            if (item != null)
+            {
+                draggedItem = item;
+            }
         }
 
         private void HandleDragOver(BlockInstance item)
         {
-            if (!item.Equals(draggedItem))
+            if (item != null && draggedItem != null && !item.Equals(draggedItem))
             {
                 Stack.Remove(draggedItem);
                 Stack.Insert(Stack.IndexOf(item) + 1, draggedItem);
