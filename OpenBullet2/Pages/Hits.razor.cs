@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -271,6 +272,38 @@ namespace OpenBullet2.Pages
             {
                 await js.AlertException(ex);
             }
+        }
+
+        private async Task CopyHitDataCapture()
+        {
+            var selectedHits = grid.SelectedItems.Cast<HitEntity>().ToList();
+
+            if (selectedHits.Count == 0)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            var sb = new StringBuilder();
+            selectedHits.ForEach(i => sb.AppendLine($"{i.Data} | {i.CapturedData}"));
+
+            await js.CopyToClipboard(sb.ToString());
+        }
+
+        private async Task CopyHitData()
+        {
+            var selectedHits = grid.SelectedItems.Cast<HitEntity>().ToList();
+
+            if (selectedHits.Count == 0)
+            {
+                await ShowNoHitSelectedWarning();
+                return;
+            }
+
+            var sb = new StringBuilder();
+            selectedHits.ForEach(i => sb.AppendLine(i.Data));
+
+            await js.CopyToClipboard(sb.ToString());
         }
 
         private async Task ShowNoHitSelectedWarning()

@@ -132,6 +132,12 @@
   <data name="ConfigMissing" xml:space="preserve">
     <value>Cannot find config with id</value>
   </data>
+  <data name="CopyData" xml:space="preserve">
+    <value>Copy data</value>
+  </data>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Copy data + capture</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Data</value>
   </data>

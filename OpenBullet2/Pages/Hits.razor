@@ -6,6 +6,8 @@
 <div class="container-fluid">
     <div class="row mb-2">
         <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitData"><span class="oi oi-layers"></span> @Loc["CopyData"]</button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="EditHit"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="SendToRecheck"><span class="oi oi-action-redo"></span> @Loc["SendToRecheck"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteHit"><span class="oi oi-x"></span> @Loc["Delete"]</button>
