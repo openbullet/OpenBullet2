@@ -97,7 +97,7 @@ namespace OpenBullet2.Shared.Forms
             }
 
             // If for example C: and not C:/ add the /
-            if (Regex.Match(baseDirectory, "^[A-Z]:$").Success)
+            if (Regex.Match(baseDirectory, "^[A-Za-z]:$").Success)
             {
                 baseDirectory += '/';
             }
