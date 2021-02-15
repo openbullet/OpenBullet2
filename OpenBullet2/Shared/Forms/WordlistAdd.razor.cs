@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Shared.Forms
@@ -93,6 +94,12 @@ namespace OpenBullet2.Shared.Forms
             {
                 await js.AlertError(Loc["Uh-Oh"], Loc["DirectoryNonExistant"]);
                 return;
+            }
+
+            // If for example C: and not C:/ add the /
+            if (Regex.Match(baseDirectory, "^[A-Z]:$").Success)
+            {
+                baseDirectory += '/';
             }
 
             if (!PersistentSettings.OpenBulletSettings.SecuritySettings.AllowSystemWideFileAccess &&
