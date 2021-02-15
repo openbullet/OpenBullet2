@@ -4,8 +4,9 @@
 
 <h5>@Loc["CompleteLog"]</h5>
 <div class="debugger-log">
-    @foreach (var entry in BotLogger.Entries)
+    @foreach (var entry in BotLogger.Entries.ToList())
     {
+        // Cast the IEnumerable to a new list otherwise it throws when the collection is modified
         @if (entry.Message.Contains("\n"))
         {
             <textarea class="border-0" readonly
