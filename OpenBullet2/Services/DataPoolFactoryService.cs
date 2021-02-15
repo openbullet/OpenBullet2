@@ -39,6 +39,13 @@ namespace OpenBullet2.Services
         {
             var entity = await wordlistRepo.Get(options.WordlistId);
 
+            // If the entity was deleted
+            if (entity == null)
+            {
+                Console.WriteLine($"Wordlist entity not found: {options.WordlistId}");
+                return new InfiniteDataPool();
+            }
+
             if (!File.Exists(entity.FileName))
             {
                 Console.WriteLine($"Wordlist file not found: {entity.FileName}");
