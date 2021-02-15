@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using Helpers
+@using RuriLib.Functions.Conversion 
 @using System.Globalization
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
@@ -45,7 +46,12 @@
         </tr>
         <tr>
             <th scope="row">@Loc["MemoryUsage"]</th>
-            <td>@RuriLib.Functions.Conversion.SizeConverter.ToReadableSize(Metrics.MemoryUsage)</td>
+            <td>@SizeConverter.ToReadableSize(Metrics.MemoryUsage)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["NetworkUsage"]</th>
+            <td>@SizeConverter.ToReadableSize(Metrics.NetUpload, true, false, 0) @Loc["UP"] / 
+                @SizeConverter.ToReadableSize(Metrics.NetDownload, true, false, 0) @Loc["DOWN"]</td>
         </tr>
         <tr>
             <th scope="row">@Loc["BuildNumber"]</th>

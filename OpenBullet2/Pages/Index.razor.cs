@@ -1,4 +1,3 @@
-using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +22,7 @@ namespace OpenBullet2.Pages
 
         private Timer timer;
         private Timer cpuTimer;
+        private Timer netTimer;
         private string announcement = string.Empty;
 
         protected override void OnInitialized()
@@ -40,7 +40,9 @@ namespace OpenBullet2.Pages
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
+            {
                 IP = HttpAccessor.HttpContext.Connection?.RemoteIpAddress;
+            }
         }
 
         private void StartPeriodicRefresh()
@@ -54,6 +56,11 @@ namespace OpenBullet2.Pages
             {
                 await Metrics.UpdateCpuUsage();
             }), null, 500, 500);
+
+            netTimer = new Timer(new TimerCallback(async _ =>
+            {
+                await Metrics.UpdateNetworkUsage();
+            }), null, 1000, 1000);
         }
 
         private async Task Logout()
@@ -64,8 +71,9 @@ namespace OpenBullet2.Pages
 
         public void Dispose()
         {
-            timer.Dispose();
-            cpuTimer.Dispose();
+            timer?.Dispose();
+            cpuTimer?.Dispose();
+            netTimer?.Dispose();
         }
     }
 }

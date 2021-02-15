@@ -165,6 +165,9 @@
   <data name="MemoryUsage" xml:space="preserve">
     <value>Utilizzo Memoria</value>
   </data>
+  <data name="NetworkUsage" xml:space="preserve">
+    <value>Utilizzo Rete</value>
+  </data>
   <data name="OperatingSystem" xml:space="preserve">
     <value>Sistema Operativo</value>
   </data>

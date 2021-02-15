@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Scripting.Utils;
+using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -29,8 +32,14 @@ namespace OpenBullet2.Services
         
         public long MemoryUsage => Process.GetCurrentProcess().WorkingSet64;
 
-        public double cpuUsage = 0;
+        private double cpuUsage = 0;
         public double CpuUsage => cpuUsage;
+
+        private long netUpload = 0;
+        public long NetUpload => netUpload;
+
+        private long netDownload = 0;
+        public long NetDownload => netDownload;
 
         public DateTime ServerTime => DateTime.Now;
 
@@ -39,7 +48,7 @@ namespace OpenBullet2.Services
 
         public MetricsService()
         {
-            Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             BuildDate = new DateTime(2000, 1, 1)
                                     .AddDays(version.Build).AddSeconds(version.Revision * 2);
             BuildNumber = $"{version.Build}.{version.Revision}";
@@ -58,5 +67,25 @@ namespace OpenBullet2.Services
             var cpuUsageTotal = cpuUsedMs / (Environment.ProcessorCount * totalMsPassed);
             cpuUsage = cpuUsageTotal * 100;
         }
+
+        public async Task UpdateNetworkUsage()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                return;
+
+            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
+            var startUpload = GetCurrentNetUpload(interfaces);
+            var startDownload = GetCurrentNetDownload(interfaces);
+
+            await Task.Delay(1000);
+            netUpload = GetCurrentNetUpload(interfaces) - startUpload;
+            netDownload = GetCurrentNetDownload(interfaces) - startDownload;
+        }
+
+        private long GetCurrentNetUpload(NetworkInterface[] interfaces)
+            => interfaces.Select(i => i.GetIPv4Statistics().BytesSent).Sum();
+
+        private long GetCurrentNetDownload(NetworkInterface[] interfaces)
+            => interfaces.Select(i => i.GetIPv4Statistics().BytesReceived).Sum();
     }
 }
