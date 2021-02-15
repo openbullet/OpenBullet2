@@ -1,14 +1,33 @@
 ﻿@using RuriLib.Models.Variables
 @inject VolatileSettingsService VolatileSettings
+@inject PersistentSettingsService PersistentSettings 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<VariablesViewer> Loc
 
 <h5>@Loc["Variables"]</h5>
 <div class="debugger-log">
-    @foreach (var variable in variables)
+    @if (PersistentSettings.OpenBulletSettings.GeneralSettings.GroupCapturesInDebugger)
     {
-        <p style="color: @(variable.MarkedForCapture ? "tomato" : "yellow");">
-            @variable.Name (@variable.Type) = @variable.AsString();
-        </p>
+        @foreach (var variable in variables.Where(v => !v.MarkedForCapture))
+        {
+            <p style="color: yellow">
+                @variable.Name (@variable.Type) = @variable.AsString();
+            </p>
+        }
+        @foreach (var variable in variables.Where(v => v.MarkedForCapture))
+        {
+            <p style="color: tomato">
+                @variable.Name (@variable.Type) = @variable.AsString();
+            </p>
+        }
+    }
+    else
+    {
+        @foreach (var variable in variables)
+        {
+            <p style="color: @(variable.MarkedForCapture ? "tomato" : "yellow");">
+                @variable.Name (@variable.Type) = @variable.AsString();
+            </p>
+        }
     }
 </div>
 

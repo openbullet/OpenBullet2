@@ -168,6 +168,9 @@
   <data name="General" xml:space="preserve">
     <value>General</value>
   </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Group captures in debugger</value>
+  </data>
   <data name="GuestSessionLifetimeHours" xml:space="preserve">
     <value>Guest session lifetime (hours)</value>
   </data>

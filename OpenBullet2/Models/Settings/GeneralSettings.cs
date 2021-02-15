@@ -38,6 +38,7 @@ namespace OpenBullet2.Models.Settings
         public JobDisplayMode DefaultJobDisplayMode { get; set; } = JobDisplayMode.Standard;
         public int JobUpdateInterval { get; set; } = 1000;
         public int JobManagerUpdateInterval { get; set; } = 1000;
+        public bool GroupCapturesInDebugger { get; set; } = false;
         public string Culture { get; set; } = "en";
     }
 }

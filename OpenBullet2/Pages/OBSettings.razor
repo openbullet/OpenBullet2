@@ -54,6 +54,10 @@
     </InputSelect>
     <br />
 
+    <label>@Loc["GroupCapturesInDebugger"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.GroupCapturesInDebugger" />
+    <br />
+
     <!-- Maybe move this to the actual relevant page -->
     <label>@Loc["IgnoreWordlistNameOnHitsDedupe"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe" />

@@ -168,6 +168,9 @@
   <data name="General" xml:space="preserve">
     <value>Generali</value>
   </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Raggruppa catture nel debugger</value>
+  </data>
   <data name="GuestSessionLifetimeHours" xml:space="preserve">
     <value>Validità massima della sessione ospite (in ore)</value>
   </data>
