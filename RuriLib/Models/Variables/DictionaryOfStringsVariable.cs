@@ -5,7 +5,7 @@ namespace RuriLib.Models.Variables
 {
     public class DictionaryOfStringsVariable : Variable
     {
-        private Dictionary<string, string> value = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> value = new();
 
         public DictionaryOfStringsVariable(Dictionary<string, string> value)
         {
@@ -13,8 +13,9 @@ namespace RuriLib.Models.Variables
             Type = VariableType.DictionaryOfStrings;
         }
 
-        public override string AsString() => 
-            "{" + string.Join(", ", AsListOfStrings().Select(s => $"({s})")) + "}";
+        public override string AsString() => value == null
+            ? "null"
+            : "{" + string.Join(", ", AsListOfStrings().Select(s => $"({s})")) + "}";
 
         public override List<string> AsListOfStrings() =>
             value.Select(kvp => $"{kvp.Key}, {kvp.Value}").ToList();
