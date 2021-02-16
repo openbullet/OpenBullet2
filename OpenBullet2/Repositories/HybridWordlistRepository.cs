@@ -47,14 +47,10 @@ namespace OpenBullet2.Repositories
         }
 
         public IQueryable<WordlistEntity> GetAll()
-        {
-            return context.Wordlists;
-        }
+            => context.Wordlists;
 
         public async Task<WordlistEntity> Get(int id)
-        {
-            return await GetAll().FirstAsync(e => e.Id == id);
-        }
+            => await GetAll().FirstOrDefaultAsync(e => e.Id == id);
 
         public async Task Update(WordlistEntity entity)
         {
