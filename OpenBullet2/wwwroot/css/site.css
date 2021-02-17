@@ -215,7 +215,7 @@ app {
     }
 
     .sidebar {
-        height: 100vh;
+        height: calc(100vh - 50px);
         position: sticky;
         top: 0;
     }
@@ -359,10 +359,12 @@ a:hover {
 }
 
 .navbar-footer {
-    width: 100%;
-    position: absolute;
+    position: fixed;
     bottom: 0px;
-    z-index: -1;
+    height: 62px;
+    width: 230px;
+    z-index: 1;
+    background: var(--bg-secondary);
 }
 
 .footer-buttons {
