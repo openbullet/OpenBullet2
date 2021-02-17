@@ -92,7 +92,7 @@ namespace RuriLib.Models.Blocks.Custom
 
             try
             {
-                InputVariables = Regex.Match(line, "INPUT ([^ ]+)$").Groups[1].Value;
+                InputVariables = Regex.Match(line, "INPUT (.*)$").Groups[1].Value;
             }
             catch
             {
