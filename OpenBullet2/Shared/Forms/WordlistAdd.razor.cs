@@ -4,7 +4,6 @@ using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Extensions;
 using RuriLib.Services;
@@ -21,11 +20,9 @@ namespace OpenBullet2.Shared.Forms
     {
         [CascadingParameter] public BlazoredModalInstance BlazoredModal { get; set; }
 
-        [Inject] private IModalService ModalService { get; set; }
         [Inject] private IFileReaderService FileReaderService { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private PersistentSettingsService PersistentSettings { get; set; }
-        [Inject] private IWordlistRepository WordlistRepo { get; set; }
 
         private ElementReference inputTypeFileElement;
         private List<string> wordlistTypes;
@@ -109,7 +106,9 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            nodes = Directory.GetFileSystemEntries(baseDirectory).Select(e => new Node(e)).ToList();
+            var folders = Directory.GetDirectories(baseDirectory);
+            var files = Directory.GetFiles(baseDirectory);
+            nodes = folders.Concat(files).Select(e => new Node(e)).ToList();
             var paths = nodes.Select(n => n.Path).ToArray();
             StateHasChanged();
         }
