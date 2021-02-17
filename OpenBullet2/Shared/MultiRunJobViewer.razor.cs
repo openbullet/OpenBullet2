@@ -37,6 +37,7 @@ namespace OpenBullet2.Shared
         [Inject] private NavigationManager Nav { get; set; }
 
         private bool changingBots = false;
+        private string hitsFilter = "SUCCESS";
         private List<Hit> selectedHits = new();
         private Hit lastSelectedHit;
         private Timer uiRefreshTimer;
@@ -385,6 +386,12 @@ namespace OpenBullet2.Shared
             parameters.Add(nameof(BotLoggerViewerModal.BotLogger), lastSelectedHit.BotLogger);
 
             Modal.Show<BotLoggerViewerModal>(Loc["BotLog"], parameters);
+        }
+
+        private void OnHitsFilterChanged(string value)
+        {
+            hitsFilter = value;
+            StateHasChanged();
         }
 
         private async Task ShowNoHitSelectedWarning()

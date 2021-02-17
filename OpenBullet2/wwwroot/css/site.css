@@ -637,8 +637,13 @@ a:hover {
     width: 100px;
 }
 
+.job-viewer-hits-container {
+    height: 440px;
+    overflow-y: auto;
+}
+
 @media (min-width: 800px) {
-    .job-viewer-hits-wrapper {
+    .job-viewer-hits-container {
         max-width: 50vw;
     }
 }

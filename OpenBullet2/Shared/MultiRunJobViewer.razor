@@ -271,7 +271,7 @@
             <div class="col-12 col-xl-6 px-0 pr-xl-2 job-viewer-log-container">
                 <GenericLogger JobId="Job.Id" />
             </div>
-            <div class="col-12 col-xl-6 mt-3 mt-xl-0 pl-0 pl-xl-2 job-viewer-log-container">
+            <div class="col-12 col-xl-6 mt-3 mt-xl-0 pl-0 pl-xl-2">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="list-group list-group-horizontal">
@@ -279,20 +279,33 @@
                             <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
                             <button class="btn btn-sm btn-outline-primary" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
                             <button class="btn btn-sm btn-outline-primary" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
+                            <EditForm Model="hitsFilter">
+                                <InputSelect ValueExpression="(() => hitsFilter)" Value="hitsFilter"
+                                             ValueChanged="(string value) => OnHitsFilterChanged(value)">
+                                    <option value="SUCCESS">@Loc["Hits"]</option>
+                                    <option value="CUSTOM">@Loc["Custom"]</option>
+                                    <option value="NONE">@Loc["ToCheck"]</option>
+                                </InputSelect>
+                            </EditForm>
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col px-0 job-viewer-hits-wrapper">
+                        <div class="col px-0 job-viewer-hits-container">
                             <!-- HITS -->
                             <div class="job-viewer-hits">
                                 <Virtualize Items="Job.Hits" Context="hit" ItemSize="1000">
-                                    <span class="job-viewer-hit" style="color: @GetHitColor(hit); background-color: @(selectedHits.Contains(hit) ? "var(--bg-secondary)" : "invisible")"
-                                          @onclick="e => HitClicked(hit, e)">
-                                        [@hit.Date] [@hit.Type] @hit.Data.Data |
-                                        @(hit.Proxy != null ? $"{hit.Proxy.Host}:{hit.Proxy.Port}" : "-") |
-                                        @hit.CapturedDataString
-                                    </span>
-                                    <br />
+                                    @if ((hitsFilter == "SUCCESS" && hit.Type == "SUCCESS") ||
+                                      (hitsFilter == "NONE" && hit.Type == "NONE") ||
+                                      (hitsFilter == "CUSTOM" && hit.Type != "SUCCESS" && hit.Type != "NONE"))
+                                    {
+                                        <span class="job-viewer-hit" style="color: @GetHitColor(hit); background-color: @(selectedHits.Contains(hit) ? "var(--bg-secondary)" : "invisible")"
+                                              @onclick="e => HitClicked(hit, e)">
+                                            [@hit.Date] [@hit.Type] @hit.Data.Data |
+                                            @(hit.Proxy != null ? $"{hit.Proxy.Host}:{hit.Proxy.Port}" : "-") |
+                                            @hit.CapturedDataString
+                                        </span>
+                                        <br />
+                                    }
                                 </Virtualize>
                             </div>
                         </div>
@@ -302,7 +315,7 @@
         }
         else
         {
-            <div class="col-12 mt-3 pl-0 job-viewer-log-container">
+            <div class="col-12 mt-3 pl-0">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="list-group list-group-horizontal">
@@ -310,20 +323,33 @@
                             <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
                             <button class="btn btn-sm btn-outline-primary" @onclick="SendToDebugger"><span class="oi oi-chevron-right"></span> @Loc["SendToDebugger"]</button>
                             <button class="btn btn-sm btn-outline-primary" @onclick="ShowFullLog"><span class="oi oi-excerpt"></span> @Loc["ShowFullLog"]</button>
+                            <EditForm Model="hitsFilter">
+                                <InputSelect ValueExpression="(() => hitsFilter)" Value="hitsFilter"
+                                             ValueChanged="(string value) => OnHitsFilterChanged(value)">
+                                    <option value="SUCCESS">@Loc["Hits"]</option>
+                                    <option value="CUSTOM">@Loc["Custom"]</option>
+                                    <option value="NONE">@Loc["ToCheck"]</option>
+                                </InputSelect>
+                            </EditForm>
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col px-0 job-viewer-hits-wrapper">
+                        <div class="col px-0 job-viewer-hits-container">
                             <!-- HITS -->
                             <div class="job-viewer-hits">
                                 <Virtualize Items="Job.Hits" Context="hit" ItemSize="1000">
-                                    <span class="job-viewer-hit" style="color: @GetHitColor(hit); background-color: @(selectedHits.Contains(hit) ? "var(--bg-secondary)" : "invisible")"
-                                          @onclick="e => HitClicked(hit, e)">
-                                        [@hit.Date] [@hit.Type] @hit.Data.Data |
-                                        @(hit.Proxy != null ? $"{hit.Proxy.Host}:{hit.Proxy.Port}" : "-") |
-                                        @hit.CapturedDataString
-                                    </span>
-                                    <br />
+                                    @if ((hitsFilter == "SUCCESS" && hit.Type == "SUCCESS") ||
+                                     (hitsFilter == "NONE" && hit.Type == "NONE") ||
+                                     (hitsFilter == "CUSTOM" && hit.Type != "SUCCESS" && hit.Type != "NONE"))
+                                    {
+                                        <span class="job-viewer-hit" style="color: @GetHitColor(hit); background-color: @(selectedHits.Contains(hit) ? "var(--bg-secondary)" : "invisible")"
+                                              @onclick="e => HitClicked(hit, e)">
+                                            [@hit.Date] [@hit.Type] @hit.Data.Data |
+                                            @(hit.Proxy != null ? $"{hit.Proxy.Host}:{hit.Proxy.Port}" : "-") |
+                                            @hit.CapturedDataString
+                                        </span>
+                                        <br />
+                                    }
                                 </Virtualize>
                             </div>
                         </div>
