@@ -172,7 +172,7 @@ namespace RuriLib.Parallelization
                     }
                 }
 
-                // Wait for every task to finish unless aborted
+                // Wait for every remaining task from the last batch to finish unless aborted
                 while (Progress < 1 && !hardCTS.IsCancellationRequested)
                 {
                     await Task.Delay(100);
@@ -180,8 +180,8 @@ namespace RuriLib.Parallelization
             }
             catch (OperationCanceledException)
             {
-                // Wait for every task to finish unless aborted
-                while (Progress < 1 && !hardCTS.IsCancellationRequested)
+                // Wait for current tasks to finish unless aborted
+                while (semaphore.CurrentCount < degreeOfParallelism && !hardCTS.IsCancellationRequested)
                 {
                     await Task.Delay(100);
                 }

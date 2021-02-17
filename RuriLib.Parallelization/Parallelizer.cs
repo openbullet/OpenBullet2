@@ -199,7 +199,6 @@ namespace RuriLib.Parallelization
         /// <summary>
         /// Stops the execution (waits for the current items to finish).
         /// </summary>
-        /// <returns></returns>
         public virtual Task Stop()
         {
             if (Status != ParallelizerStatus.Running && Status != ParallelizerStatus.Paused)

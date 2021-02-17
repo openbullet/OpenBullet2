@@ -60,6 +60,35 @@ namespace RuriLib.Parallelization.Tests
         }
 
         [Fact]
+        public async Task Run_LongTasks_StopBeforeCompletion()
+        {
+            // In theory this should take 1000 * 100 / 10 = 10.000 ms = 10 seconds
+            var parallelizer = ParallelizerFactory<int, bool>.Create(
+                type: type,
+                workItems: Enumerable.Range(1, 1000),
+                workFunction: longTask,
+                degreeOfParallelism: 10,
+                totalAmount: 1000,
+                skip: 0);
+
+            progressCount = 0;
+            completedFlag = false;
+            lastException = null;
+            parallelizer.ProgressChanged += OnProgress;
+            parallelizer.Completed += OnCompleted;
+            parallelizer.Error += OnException;
+
+            await parallelizer.Start();
+            await Task.Delay(250);
+
+            await parallelizer.Stop();
+
+            Assert.InRange(progressCount, 10, 50);
+            Assert.True(completedFlag);
+            Assert.Null(lastException);
+        }
+
+        [Fact]
         public async Task Run_LongTasks_AbortBeforeCompletion()
         {
             // In theory this should take 1000 * 100 / 10 = 10.000 ms = 10 seconds
