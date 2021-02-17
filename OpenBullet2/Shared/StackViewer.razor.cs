@@ -66,17 +66,15 @@ namespace OpenBullet2.Shared
             // Otherwise if we simply clicked on a block
             else
             {
+                selectedBlocks.Clear();
+
                 // If we called this from code passing null, simply clear the list
-                if (item == null)
+                if (item != null)
                 {
-                    selectedBlocks.Clear();
-                }
-                else
-                {
-                    selectedBlocks.Clear();
                     selectedBlocks.Add(item);
-                    await SelectedBlock.InvokeAsync(item);
                 }
+                
+                await SelectedBlock.InvokeAsync(item);
             }
         }
 
