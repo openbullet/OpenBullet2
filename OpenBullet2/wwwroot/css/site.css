@@ -215,7 +215,7 @@ app {
     }
 
     .sidebar {
-        height: calc(100vh - 50px);
+        height: calc(100vh - 62px);
         position: sticky;
         top: 0;
     }
