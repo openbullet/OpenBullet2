@@ -138,4 +138,10 @@
   <data name="Read" xml:space="preserve">
     <value>Lire</value>
   </data>
+  <data name="AlphaTesters" xml:space="preserve">
+    <value>Alpha-testeurs</value>
+  </data>
+  <data name="BetaTesters" xml:space="preserve">
+    <value>Bêta-testeurs</value>
+  </data>
 </root>

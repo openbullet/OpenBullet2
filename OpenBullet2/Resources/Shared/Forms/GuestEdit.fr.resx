@@ -117,79 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AllDone" xml:space="preserve">
-    <value>Terminé !</value>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Expiration de l'accès</value>
   </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
-  </data>
-  <data name="Author" xml:space="preserve">
-    <value>Auteur</value>
-  </data>
-  <data name="by" xml:space="preserve">
-    <value>par</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="Category" xml:space="preserve">
-    <value>Catégorie</value>
-  </data>
-  <data name="ConfigReloadWarning" xml:space="preserve">
-    <value>Cela rechargera toutes les configs à partir du disque, donc toutes les modifications non enregistrées seront perdues. Voulez-vous poursuivre ?</value>
-  </data>
-  <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
-    <value>Configs téléchargées avec succès</value>
-  </data>
-  <data name="CreationDate" xml:space="preserve">
-    <value>Date de création</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="Download" xml:space="preserve">
-    <value>Télécharger</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Éditer</value>
-  </data>
-  <data name="LastModified" xml:space="preserve">
-    <value>Dernière mise à jour</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Nom</value>
-  </data>
-  <data name="New" xml:space="preserve">
-    <value>Nouveau</value>
-  </data>
-  <data name="NoConfigSelectedWarning" xml:space="preserve">
-    <value>On dirait que vous n'avez sélectionné aucune config!</value>
-  </data>
-  <data name="Proxies" xml:space="preserve">
-    <value>Procurations</value>
-  </data>
-  <data name="ReallyDelete" xml:space="preserve">
-    <value>Voulez-vous vraiment supprimer</value>
-  </data>
-  <data name="Reload" xml:space="preserve">
-    <value>Recharger</value>
-  </data>
-  <data name="ToggleView" xml:space="preserve">
-    <value>Basculer la vue</value>
-  </data>
-  <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
-  </data>
-  <data name="Upload" xml:space="preserve">
-    <value>Télécharger</value>
-  </data>
-  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
-    <value>Impossible de télécharger la config distante</value>
-  </data>
-  <data name="CannotEditRemoteConfig" xml:space="preserve">
-    <value>Impossible de modifier la config distance</value>
-  </data>
-  <data name="ConfigWarningMessage" xml:space="preserve">
-    <value>ATTENTION ! Les configs contiennent du code C# qui est exécuté sans aucune vérification automatique de comportements malveillants. Si vous utilisez des configs créées par des tiers, il est de VOTRE responsabilité de vous assurer que les configs font exactement ce qu'elles sont censées faire et que rien de louche ne se passe. Vérifiez toujours vous-même le code LoliCode / C# avant de les exécuter si vous ne faites pas entièrement confiance à l'origine.</value>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Adresses autorisées</value>
   </data>
 </root>
