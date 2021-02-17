@@ -176,6 +176,7 @@ namespace OpenBullet2.Pages
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedConfig.Metadata.Name}?", Loc["Cancel"]))
             {
                 ConfigRepo.Delete(selectedConfig);
+                ConfigService.Configs.Remove(selectedConfig);
                 configs.Remove(selectedConfig);
 
                 if (ConfigService.SelectedConfig == selectedConfig)
