@@ -206,6 +206,12 @@ namespace RuriLib.Models.Jobs
                     botData.STATUS = "ERROR";
                 }
 
+                // Update captcha credit
+                if (botData.CaptchaCredit > 0)
+                {
+                    input.Job.CaptchaCredit = botData.CaptchaCredit;
+                }
+
                 if (botData.Proxy != null)
                 {
                     // If a ban status occurred, ban the proxy
