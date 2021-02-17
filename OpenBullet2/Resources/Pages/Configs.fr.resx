@@ -154,7 +154,7 @@
     <value>Éditer</value>
   </data>
   <data name="LastModified" xml:space="preserve">
-    <value>Dernière mise à jour</value>
+    <value>Dernière modification</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Nom</value>
@@ -163,7 +163,7 @@
     <value>Nouveau</value>
   </data>
   <data name="NoConfigSelectedWarning" xml:space="preserve">
-    <value>On dirait que vous n'avez sélectionné aucune config!</value>
+    <value>On dirait que vous n'avez sélectionné aucune config !</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Procurations</value>
@@ -178,7 +178,7 @@
     <value>Basculer la vue</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value>Oula</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Télécharger</value>
@@ -191,5 +191,38 @@
   </data>
   <data name="ConfigWarningMessage" xml:space="preserve">
     <value>ATTENTION ! Les configs contiennent du code C# qui est exécuté sans aucune vérification automatique de comportements malveillants. Si vous utilisez des configs créées par des tiers, il est de VOTRE responsabilité de vous assurer que les configs font exactement ce qu'elles sont censées faire et que rien de louche ne se passe. Vérifiez toujours vous-même le code LoliCode / C# avant de les exécuter si vous ne faites pas entièrement confiance à l'origine.</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement</value>
+  </data>
+  <data name="LocalConfigs" xml:space="preserve">
+    <value>Configs locales</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Plugin manquant</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>Cette config a été créée avec ce plugin, mais il est manquant</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Distant</value>
+  </data>
+  <data name="RemoteConfigs" xml:space="preserve">
+    <value>Configs distantes</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Config distante</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Modifications non enregistrées</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>La config actuelle a des modifications non enregistrées ! Continuer quand même ?</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>ATTENTION</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlists</value>
   </data>
 </root>

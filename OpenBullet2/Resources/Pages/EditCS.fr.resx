@@ -130,9 +130,12 @@
     <value>Éditeur C#</value>
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile de blocs</value>
+    <value>Transpiler depuis les blocs</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVERTISSEMENT! LISEZ S'IL VOUS PLAÎT!</value>
+    <value>AVERTISSEMENT ! LISEZ S'IL VOUS PLAÎT !</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>À quoi sert cette section ?</value>
   </data>
 </root>

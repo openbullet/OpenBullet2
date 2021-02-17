@@ -123,4 +123,10 @@
   <data name="Category" xml:space="preserve">
     <value>Catégorie</value>
   </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
 </root>

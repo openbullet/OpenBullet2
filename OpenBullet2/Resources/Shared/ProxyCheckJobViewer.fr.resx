@@ -136,7 +136,7 @@
     <value>Vérifier seulement les non testés</value>
   </data>
   <data name="CompletedMessage" xml:space="preserve">
-    <value>Le gestionnaire de tâches a terminé tous ses travaux</value>
+    <value>Le gestionnaire de jobs a terminé tous ses jobs</value>
   </data>
   <data name="Controls" xml:space="preserve">
     <value>Contrôles</value>

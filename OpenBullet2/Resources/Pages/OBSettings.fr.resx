@@ -121,7 +121,7 @@
     <value>Ajouter</value>
   </data>
   <data name="AdminSessionLifetimeHours" xml:space="preserve">
-    <value>Durée de vie de la session admin (heures)</value>
+    <value>Durée de vie d'une session admin (heures)</value>
   </data>
   <data name="AdminUsername" xml:space="preserve">
     <value>Nom d'utilisateur admin</value>
@@ -149,5 +149,98 @@
   </data>
   <data name="Customization" xml:space="preserve">
     <value>Customisation</value>
+  </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>L'auteur par défaut sur les nouvelles configs créées</value>
+  </data>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Mode d'affichage par défaut des job</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Durée de vie d'une session invité (heures)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Ignorer le nom de la wordlist lors de la suppression de hits dupliqués</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Interval de mise à jour du gestionnaire de jobs</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Interval de mise à jour des job</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Nombre d'entrées maximum dans les logs</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Log dans un fichier également</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Lors de la modification d'une config, naviguez vers</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nouveau mot de passe admin</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>Les nouveaux mots de passe ont été définis !</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Jouer un son lors d'un hit</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Distant</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Exiger connexion admin</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Réinitialiser les valeurs par défaut</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Voulez-vous restaurer les paramètres par défaut ?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sécurité</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Les paramètres ont été sauvegardés avec succès.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Clé de succès</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Thème uploadé avec succès</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Format du fichier thème non supporté. Formats supportés: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Uploader un thème</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Affiche un avertisemment quand la config actuellement chargée n'a pas été sauvegardée et qu'une autre est chargée</value>
   </data>
 </root>

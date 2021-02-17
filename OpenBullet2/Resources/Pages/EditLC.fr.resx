@@ -117,25 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add" xml:space="preserve">
-    <value>Ajouter</value>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Qu'est-ce que le LoliCode ?</value>
   </data>
-  <data name="Added" xml:space="preserve">
-    <value>Ajouté</value>
+  <data name="LoliCodeEditor" xml:space="preserve">
+    <value>Éditeur LoliCode</value>
   </data>
-  <data name="AddedWordlist" xml:space="preserve">
-    <value>Wordlist ajoutée avec succès !</value>
+  <data name="SaveScript" xml:space="preserve">
+    <value>Sauvegarder le script</value>
   </data>
-  <data name="AddWordlist" xml:space="preserve">
-    <value>Ajouter une wordlist</value>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Basculer les usings</value>
   </data>
-  <data name="AlsoDeleteFile" xml:space="preserve">
-    <value>Effacer le fichier aussi ?</value>
-  </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Vous pouvez entrer les namespace que vous souhaitez importer dans le script C# généré, un par ligne</value>
   </data>
 </root>

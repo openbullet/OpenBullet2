@@ -139,7 +139,7 @@
     <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vous embêter plus longtemps, je suppose que vous viendriez là. Byee!</value>
+    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
   </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Heure locale</value>
@@ -158,5 +158,14 @@
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Bienvenue dans OpenBullet 2</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="NetworkUsage" xml:space="preserve">
+    <value>Utilisation du réseau</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Où sont sauvegardés tous mes paramètres ?</value>
   </data>
 </root>

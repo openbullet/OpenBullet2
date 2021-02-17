@@ -117,25 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add" xml:space="preserve">
-    <value>Ajouter</value>
-  </data>
-  <data name="Added" xml:space="preserve">
-    <value>Ajouté</value>
-  </data>
-  <data name="AddedWordlist" xml:space="preserve">
-    <value>Wordlist ajoutée avec succès !</value>
-  </data>
-  <data name="AddWordlist" xml:space="preserve">
-    <value>Ajouter une wordlist</value>
-  </data>
-  <data name="AlsoDeleteFile" xml:space="preserve">
-    <value>Effacer le fichier aussi ?</value>
-  </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
+  <data name="Readme" xml:space="preserve">
+    <value>Lisez-moi</value>
   </data>
 </root>

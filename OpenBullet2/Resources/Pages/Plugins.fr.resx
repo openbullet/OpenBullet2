@@ -120,4 +120,7 @@
   <data name="Add" xml:space="preserve">
     <value>Ajouter</value>
   </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Terminé</value>
+  </data>
 </root>

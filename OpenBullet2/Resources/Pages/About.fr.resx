@@ -133,7 +133,7 @@
     <value>Forum officiel</value>
   </data>
   <data name="OfficialRepository" xml:space="preserve">
-    <value>Repository officiel</value>
+    <value>Repo officiel</value>
   </data>
   <data name="Read" xml:space="preserve">
     <value>Lire</value>
@@ -143,5 +143,11 @@
   </data>
   <data name="BetaTesters" xml:space="preserve">
     <value>Bêta-testeurs</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Effectuer des attaques sur des sites que vous ne possédez pas (ou que vous n'avez pas l'autorisation de tester) est illégal ! Le développeur ne sera pas tenu responsable d'une mauvaise utilisation de ce logiciel.</value>
   </data>
 </root>

@@ -135,4 +135,58 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Copier données + capture</value>
+  </data>
+  <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
+    <value>Hits de différentes configs sélectionnés, veuillez sélectionner des hits provenant de la même config</value>
+  </data>
+  <data name="NoHitSelectedWarning" xml:space="preserve">
+    <value>Vous devez d'abord sélectionner un hit</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Pas d'enregistrements à afficher</value>
+  </data>
+  <data name="Proxy" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purger</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer</value>
+  </data>
+  <data name="ReallyDeleteAllHits" xml:space="preserve">
+    <value>Voulez-vous vraiment SUPPRIMER TOUS vos hits?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>résultats</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Résultats par page</value>
+  </data>
+  <data name="SendToRecheck" xml:space="preserve">
+    <value>Envoyer recheck</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="CopyData" xml:space="preserve">
+    <value>Copier données</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Supprimer filtré</value>
+  </data>
 </root>

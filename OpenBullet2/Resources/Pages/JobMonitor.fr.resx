@@ -120,9 +120,6 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
-  <data name="ActionsDescription" xml:space="preserve">
-    <value>Exécuté séquentiellement</value>
-  </data>
   <data name="Active" xml:space="preserve">
     <value>Actif</value>
   </data>
@@ -146,5 +143,119 @@
   </data>
   <data name="days" xml:space="preserve">
     <value>jours</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Executé séquentiellement</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Modifier l'action</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Modifier le déclencheur</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Erreurs</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>S'exécute</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Executions</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Fails</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Comment ça marche ?</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>heures</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>Job</value>
+  </data>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Job terminé</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Statut du job</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>sur webhook</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progrès</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Recharger les proxies</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Supprimer tous</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Répétable</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Re-essais</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>secondes</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Sélectionner le type d'action</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Sélectionner le type de déclencheur</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Définir les bots à</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Définir le temps relatif à</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Démarrer le job</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Arrêter le job</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Testés</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Temps écoulé</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Temps restant</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>À checker</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Déclencheurs</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>Doivent tous être vérifiés au même moment</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Attendre</value>
   </data>
 </root>
