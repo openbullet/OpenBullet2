@@ -41,11 +41,12 @@ namespace RuriLib.Parallelization
         public int CPM { get; protected set; } = 0;
 
         public DateTime StartTime { get; private set; }
+        public DateTime? EndTime { get; private set; }
         public DateTime ETA => CPM > 0 
             ? StartTime + TimeSpan.FromMinutes((totalAmount * (1 - Progress)) / CPM)
             : DateTime.MaxValue;
-        public TimeSpan Elapsed => DateTime.Now - StartTime;
-        public TimeSpan Remaining => ETA - DateTime.Now;
+        public TimeSpan Elapsed => (EndTime ?? DateTime.Now) - StartTime;
+        public TimeSpan Remaining => EndTime.HasValue ? TimeSpan.Zero : ETA - DateTime.Now;
         #endregion
 
         #region Protected Fields
@@ -204,6 +205,8 @@ namespace RuriLib.Parallelization
             if (Status != ParallelizerStatus.Running && Status != ParallelizerStatus.Paused)
                 throw new RequiredStatusException(new ParallelizerStatus[] { ParallelizerStatus.Running, ParallelizerStatus.Paused }, Status);
 
+            EndTime = DateTime.Now;
+
             return Task.CompletedTask;
         }
 
@@ -215,6 +218,8 @@ namespace RuriLib.Parallelization
             if (Status != ParallelizerStatus.Running && Status != ParallelizerStatus.Paused && Status != ParallelizerStatus.Stopping)
                 throw new RequiredStatusException(new ParallelizerStatus[]
                 { ParallelizerStatus.Running, ParallelizerStatus.Paused, ParallelizerStatus.Stopping}, Status);
+
+            EndTime = DateTime.Now;
 
             return Task.CompletedTask;
         }
