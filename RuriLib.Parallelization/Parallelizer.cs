@@ -171,6 +171,7 @@ namespace RuriLib.Parallelization
                 throw new RequiredStatusException(ParallelizerStatus.Idle, Status);
 
             StartTime = DateTime.Now;
+            EndTime = null;
             checkedTimestamps.Clear();
 
             softCTS = new CancellationTokenSource();
