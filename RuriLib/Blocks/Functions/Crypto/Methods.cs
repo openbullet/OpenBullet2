@@ -1,9 +1,12 @@
-﻿using RuriLib.Attributes;
+﻿using JWT.Algorithms;
+using Newtonsoft.Json;
+using RuriLib.Attributes;
 using RuriLib.Functions.Crypto;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using Scrypt;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -166,6 +169,20 @@ namespace RuriLib.Blocks.Functions.Crypto
             data.Logger.LogHeader();
             data.Logger.Log($"Decrypted: {RuriLib.Functions.Conversion.HexConverter.ToHexString(plainText)}", LogColors.YellowGreen);
             return plainText;
+        }
+
+        [Block("Generates a JSON Web Token using a secret key, payload, optional extra headers and specified algorithm type", name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default")]
+        public static string JwtEncode(BotData data, JwtAlgorithmName algorithm, string secret, string extraHeaders = "{}", string payload = "{}")
+        {
+            var extraHeadersDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(extraHeaders);
+            var payloadDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(payload);
+
+            string encoded = RuriLib.Functions.Crypto.Crypto.JwtEncode(algorithm, secret, extraHeadersDictionary, payloadDictionary);
+
+            data.Logger.LogHeader();
+            data.Logger.Log($"Encoded: {encoded}", LogColors.YellowGreen);
+
+            return encoded;
         }
     }
 }
