@@ -89,13 +89,12 @@ namespace RuriLib.Blocks.Conditions
 
         public static bool CheckGlobalBanKeys(BotData data)
         {
-            var result = data.Providers.ProxySettings.ContainsBanKey(data.SOURCE);
+            var result = data.Providers.ProxySettings.ContainsBanKey(data.SOURCE, out var matchedKey);
             
             if (result)
             {
                 data.Logger.LogHeader();
-                data.Logger.Log("Found global ban key");
-                data.STATUS = "BAN";
+                data.Logger.Log($"Found global ban key: {matchedKey}");
             }
 
             return result;
@@ -103,13 +102,12 @@ namespace RuriLib.Blocks.Conditions
 
         public static bool CheckGlobalRetryKeys(BotData data)
         {
-            var result = data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE);
+            var result = data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE, out var matchedKey);
 
             if (result)
             {
                 data.Logger.LogHeader();
-                data.Logger.Log("Found global retry key");
-                data.STATUS = "RETRY";
+                data.Logger.Log($"Found global retry key: {matchedKey}");
             }
 
             return result;

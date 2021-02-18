@@ -162,13 +162,24 @@ namespace RuriLib.Models.Blocks.Custom
                 writer.WriteLine($"if ({CSharpWriter.FromSetting(banIfNoMatch)})");
 
                 if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
+                {
                     writer.WriteLine(" { data.STATUS = \"BAN\"; }");
-
+                    writer.WriteLine("if (CheckGlobalBanKeys(data)) { data.STATUS = \"BAN\"; }");
+                }
                 else
+                {
                     writer.WriteLine("  { data.STATUS = \"BAN\"; return; }");
+                    writer.WriteLine("if (CheckGlobalBanKeys(data)) { data.STATUS = \"BAN\"; return; }");
+                }
 
-                writer.WriteLine("CheckGlobalRetryKeys(data);");
-                writer.WriteLine("CheckGlobalBanKeys(data);");
+                if (settings.GeneralSettings.ContinueStatuses.Contains("RETRY"))
+                {
+                    writer.WriteLine("if (CheckGlobalRetryKeys(data)) { data.STATUS = \"RETRY\"; }");
+                }
+                else
+                {
+                    writer.WriteLine("if (CheckGlobalRetryKeys(data)) { data.STATUS = \"RETRY\"; return; }");
+                }
 
                 return writer.ToString();
             }
@@ -179,9 +190,13 @@ namespace RuriLib.Models.Blocks.Custom
                 var keychain = nonEmpty[i];
 
                 if (i == 0)
+                {
                     writer.Write("if (");
+                }
                 else
+                {
                     writer.Write("else if (");
+                }
 
                 var conditions = keychain.Keys.Select(k => CSharpWriter.ConvertKey(k));
 
@@ -197,11 +212,15 @@ namespace RuriLib.Models.Blocks.Custom
 
                 // Continue on this status
                 if (settings.GeneralSettings.ContinueStatuses.Contains(keychain.ResultStatus))
+                {
                     writer.WriteLine($" {{ data.STATUS = \"{keychain.ResultStatus}\"; }}");
-               
+                }
+
                 // Do not continue on this status (return)
                 else
+                {
                     writer.WriteLine($"  {{ data.STATUS = \"{keychain.ResultStatus}\"; return; }}");
+                }
             }
 
             // The whole purpose of this is to make the code a bit prettier
@@ -239,9 +258,25 @@ namespace RuriLib.Models.Blocks.Custom
                 }
             }
 
-            writer.WriteLine("CheckGlobalRetryKeys(data);");
-            writer.WriteLine("CheckGlobalBanKeys(data);");
-            
+            // Check global ban keys
+            if (settings.GeneralSettings.ContinueStatuses.Contains("BAN"))
+            {
+                writer.WriteLine("if (CheckGlobalBanKeys(data)) { data.STATUS = \"BAN\"; }");
+            }
+            else
+            {
+                writer.WriteLine("if (CheckGlobalBanKeys(data)) { data.STATUS = \"BAN\"; return; }");
+            }
+
+            if (settings.GeneralSettings.ContinueStatuses.Contains("RETRY"))
+            {
+                writer.WriteLine("if (CheckGlobalRetryKeys(data)) { data.STATUS = \"RETRY\"; }");
+            }
+            else
+            {
+                writer.WriteLine("if (CheckGlobalRetryKeys(data)) { data.STATUS = \"RETRY\"; return; }");
+            }
+
             return writer.ToString();
         }
     }
