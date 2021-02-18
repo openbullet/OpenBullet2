@@ -1,4 +1,7 @@
-﻿using System;
+﻿using JWT;
+using JWT.Algorithms;
+using JWT.Serializers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -251,7 +254,7 @@ namespace RuriLib.Functions.Crypto
         public static byte[] RSAEncrypt(byte[] data, byte[] n, byte[] e, bool oaep)
         {
             using RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-            RSA.ImportParameters(new RSAParameters 
+            RSA.ImportParameters(new RSAParameters
             {
                 Modulus = n,
                 Exponent = e
@@ -464,6 +467,25 @@ namespace RuriLib.Functions.Crypto
             while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
                 ms.Write(buffer, 0, bytesRead);
             return ms.ToArray();
+        }
+        #endregion
+
+        #region JWT
+        public static string JwtEncode(JwtAlgorithmName algorithmName, string secret, IDictionary<string, object> extraHeaders, IDictionary<string, object> payload)
+        {
+            IJwtAlgorithm algorithm = algorithmName switch
+            {
+                JwtAlgorithmName.HS256 => new HMACSHA256Algorithm(),
+                JwtAlgorithmName.HS384 => new HMACSHA384Algorithm(),
+                JwtAlgorithmName.HS512 => new HMACSHA512Algorithm(),
+                _ => throw new NotSupportedException("This algorith is not supported at the moment")
+            };
+
+            var jsonSerializer = new JsonNetSerializer();
+            var urlEncoder = new JwtBase64UrlEncoder();
+            var jwtEncoder = new JwtEncoder(algorithm, jsonSerializer, urlEncoder);
+
+            return jwtEncoder.Encode(extraHeaders, payload, secret);
         }
         #endregion
     }
