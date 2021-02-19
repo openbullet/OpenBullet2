@@ -150,4 +150,7 @@
   <data name="Read" xml:space="preserve">
     <value>Leggi</value>
   </data>
+  <data name="Translators" xml:space="preserve">
+    <value>Traduttori</value>
+  </data>
 </root>
