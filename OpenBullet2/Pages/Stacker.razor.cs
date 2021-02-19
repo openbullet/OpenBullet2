@@ -45,16 +45,22 @@ namespace OpenBullet2.Pages
             base.OnInitialized();
         }
 
-        private void SelectedBlock(BlockInstance block)
+        private async Task SelectedBlock(BlockInstance block)
         {
-            selectedBlock = block;
-        }
-
-        private async Task AddBlock(BlockDescriptor descriptor)
-        {
-            selectedBlock = BlockFactory.GetBlock<BlockInstance>(descriptor.Id);
-            config.Stack.Add(selectedBlock);
-            await OBLogger.LogInfo($"Added block {descriptor.Id}");
+            // If we're switching between 2 lolicode blocks, do this to force a refresh
+            // of the component, otherwise the text in the editor does not update
+            if (selectedBlock != null && selectedBlock is LoliCodeBlockInstance &&
+                block != null && block is LoliCodeBlockInstance)
+            {
+                selectedBlock = null;
+                StateHasChanged();
+                await Task.Delay(1);
+                selectedBlock = block;
+            }
+            else
+            {
+                selectedBlock = block;
+            }
         }
     }
 }
