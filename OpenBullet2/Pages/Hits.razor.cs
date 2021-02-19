@@ -15,6 +15,7 @@ using OpenBullet2.Auth;
 using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Models.Data;
+using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
@@ -246,6 +247,7 @@ namespace OpenBullet2.Pages
                 WordlistType = wordlistType
             };
             jobOptions.DataPool = dataPoolOptions;
+            jobOptions.HitOutputs.Add(new DatabaseHitOutputOptions());
 
             // Create the job entity and add it to the database
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
