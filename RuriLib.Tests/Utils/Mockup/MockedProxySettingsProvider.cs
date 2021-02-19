@@ -9,7 +9,16 @@ namespace RuriLib.Tests.Utils.Mockup
 
         public TimeSpan ReadWriteTimeout => TimeSpan.FromSeconds(10);
 
-        public bool ContainsBanKey(string text, bool caseSensitive = false) => false;
-        public bool ContainsRetryKey(string text, bool caseSensitive = false) => false;
+        public bool ContainsBanKey(string text, out string matchedKey, bool caseSensitive = false)
+        {
+            matchedKey = null;
+            return false;
+        }
+
+        public bool ContainsRetryKey(string text, out string matchedKey, bool caseSensitive = false)
+        {
+            matchedKey = null;
+            return false;
+        }
     }
 }
