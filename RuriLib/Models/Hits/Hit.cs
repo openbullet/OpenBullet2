@@ -29,14 +29,23 @@ namespace RuriLib.Models.Hits
 
         private string ConvertCapturedData()
         {
-            List<Variable> variables = new List<Variable>();
-            VariableFactory factory = new VariableFactory();
+            var variables = new List<Variable>();
+            var factory = new VariableFactory();
 
             foreach (var data in CapturedData)
             {
-                var variable = factory.FromObject(data.Value);
-                variable.Name = data.Key;
-                variables.Add(variable);
+                try
+                {
+                    var variable = factory.FromObject(data.Value);
+                    variable.Name = data.Key;
+                    variables.Add(variable);
+                }
+                catch
+                {
+                    // If the variable is null, the snippet above will throw an exception, so just
+                    // add a dummy string variable with the literal value "null".
+                    variables.Add(new StringVariable("null") { Name = data.Key });
+                }
             }
 
             return string.Join(" | ", variables.Select(v => $"{v.Name} = {v.AsString()}"));
