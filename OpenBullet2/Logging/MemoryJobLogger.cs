@@ -2,6 +2,7 @@
 using RuriLib.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenBullet2.Logging
 {
@@ -24,7 +25,8 @@ namespace OpenBullet2.Logging
     public class MemoryJobLogger
     {
         private readonly PersistentSettingsService settings;
-        private Dictionary<int, List<JobLogEntry>> logs = new Dictionary<int, List<JobLogEntry>>();
+        private readonly Dictionary<int, List<JobLogEntry>> logs = new Dictionary<int, List<JobLogEntry>>();
+        private readonly object locker = new();
         public event EventHandler<int> NewLog; // The integer is the id of the job for which a new log came
 
         public MemoryJobLogger(PersistentSettingsService settings)
@@ -33,7 +35,13 @@ namespace OpenBullet2.Logging
         }
 
         public IEnumerable<JobLogEntry> GetLog(int jobId)
-            => logs.ContainsKey(jobId) ? logs[jobId] : new List<JobLogEntry>();
+        {
+            lock (locker)
+            {
+                // Return a copy so we can keep modifying the original one without worrying about thread safety
+                return logs.ContainsKey(jobId) ? logs[jobId].ToArray() : new List<JobLogEntry>();
+            }
+        }
 
         public void Log(int jobId, string message, LogKind kind = LogKind.Custom, string color = "white")
         {
@@ -43,18 +51,21 @@ namespace OpenBullet2.Logging
             var entry = new JobLogEntry(kind, message, color);
             var maxBufferSize = settings.OpenBulletSettings.GeneralSettings.LogBufferSize;
 
-            if (!logs.ContainsKey(jobId))
+            lock (locker)
             {
-                logs[jobId] = new List<JobLogEntry> { entry };
-            }
-            else
-            {
-                lock (logs[jobId])
+                if (!logs.ContainsKey(jobId))
                 {
-                    logs[jobId].Add(entry);
+                    logs[jobId] = new List<JobLogEntry> { entry };
+                }
+                else
+                {
+                    lock (logs[jobId])
+                    {
+                        logs[jobId].Add(entry);
 
-                    if (logs[jobId].Count > maxBufferSize && maxBufferSize > 0)
-                        logs[jobId].RemoveRange(0, logs[jobId].Count - maxBufferSize);
+                        if (logs[jobId].Count > maxBufferSize && maxBufferSize > 0)
+                            logs[jobId].RemoveRange(0, logs[jobId].Count - maxBufferSize);
+                    }
                 }
             }
 
