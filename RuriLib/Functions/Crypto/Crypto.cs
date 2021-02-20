@@ -372,10 +372,11 @@ namespace RuriLib.Functions.Crypto
         /// <param name="iv">The initial value</param>
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
-        public static byte[] AESEncrypt(byte[] data, byte[] key, byte[] iv, CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
+        public static byte[] AESEncrypt(byte[] data, byte[] key, byte[] iv,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int blockSize = 128)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return EncryptStringToBytes_Aes(data, keys[0], keys[1], mode, padding);
+            return EncryptStringToBytes_Aes(data, keys[0], keys[1], mode, padding, blockSize);
         }
 
         /// <summary>
@@ -386,10 +387,11 @@ namespace RuriLib.Functions.Crypto
         /// <param name="iv">The initial value</param>
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
-        public static byte[] AESDecrypt(byte[] data, byte[] key, byte[] iv = null, CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
+        public static byte[] AESDecrypt(byte[] data, byte[] key, byte[] iv = null,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int blockSize = 128)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return DecryptStringFromBytes_Aes(data, keys[0], keys[1], mode, padding);
+            return DecryptStringFromBytes_Aes(data, keys[0], keys[1], mode, padding, blockSize);
         }
 
         private static byte[][] ConvertKeys(byte[] key, byte[] iv)
@@ -412,56 +414,62 @@ namespace RuriLib.Functions.Crypto
             return result;
         }
 
-        private static byte[] EncryptStringToBytes_Aes(byte[] plainText, byte[] Key, byte[] IV, CipherMode mode, PaddingMode padding)
+        private static byte[] EncryptStringToBytes_Aes(byte[] plainText, byte[] key, byte[] iv, CipherMode mode,
+            PaddingMode padding, int blockSize)
         {
             if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(plainText));
 
-            using AesManaged aesAlg = new AesManaged();
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException(nameof(key));
+
+            if (iv == null || iv.Length <= 0)
+                throw new ArgumentNullException(nameof(iv));
+
+            using var aesAlg = new AesManaged();
             aesAlg.KeySize = 256;
-            aesAlg.BlockSize = 128;
-            aesAlg.Key = Key;
-            aesAlg.IV = IV;
+            aesAlg.BlockSize = blockSize;
+            aesAlg.Key = key;
+            aesAlg.IV = iv;
             aesAlg.Mode = mode;
             aesAlg.Padding = padding;
 
-            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+            var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-            using MemoryStream msEncrypt = new MemoryStream();
-            using CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
-            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+            using var msEncrypt = new MemoryStream();
+            using var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+            using (var swEncrypt = new StreamWriter(csEncrypt))
             {
                 swEncrypt.Write(plainText);
             }
             return msEncrypt.ToArray();
         }
 
-        private static byte[] DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV, CipherMode mode, PaddingMode padding)
+        private static byte[] DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] iv, CipherMode mode,
+            PaddingMode padding, int blockSize)
         {
             if (cipherText == null || cipherText.Length <= 0)
-                throw new ArgumentNullException("cipherText");
-            if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
-            if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(cipherText));
 
-            using Aes aesAlg = Aes.Create();
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException(nameof(key));
+
+            if (iv == null || iv.Length <= 0)
+                throw new ArgumentNullException(nameof(iv));
+
+            using var aesAlg = Aes.Create();
             aesAlg.KeySize = 256;
-            aesAlg.BlockSize = 128;
-            aesAlg.Key = Key;
-            aesAlg.IV = IV;
+            aesAlg.BlockSize = blockSize;
+            aesAlg.Key = key;
+            aesAlg.IV = iv;
             aesAlg.Mode = mode;
             aesAlg.Padding = padding;
 
-            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-            using MemoryStream msDecrypt = new MemoryStream(cipherText);
-            using CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-            using MemoryStream ms = new MemoryStream();
+            using var msDecrypt = new MemoryStream(cipherText);
+            using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+            using var ms = new MemoryStream();
             var buffer = new byte[512];
             var bytesRead = 0;
             while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
