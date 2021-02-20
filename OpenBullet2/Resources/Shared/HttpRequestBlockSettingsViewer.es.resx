@@ -117,31 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
+  <data name="AdvancedSettings" xml:space="preserve">
+    <value>Ajustes avanzados</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+    <value>¿Cómo funciona este bloque?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+    <value>El bloque %HTTP Request% le permite realizar una solicitud HTTP hacia un punto final. Si desea enviar datos junto con sus encabezados y cookies, puede hacerlo seleccionando una de las formas de enviar contenido. El modo %Standard% simplemente tomará un texto, lo codificará como UTF-8 y lo enviará dentro de los datos en la solicitud. El campo %Content Type% se convertirá automáticamente en un encabezado %Content-Type% y se agregará a la solicitud.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+    <value>El modo %Raw% básicamente hace lo mismo que el modo Estándar si su contenido es una matriz de bytes y no un texto. El %Basic Auth% se usa para autenticarse con la Autenticación de acceso básico (la ventana emergente típica de nombre de usuario / contraseña que se ve dentro de su navegador pidiendo credenciales). Finalmente, el modo %Multipart% enviará un contenido que puede estar compuesto por múltiples partes, como texto, bytes sin formato y archivos. Esto es útil, por ejemplo, para cargar un archivo en un sitio web.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>The response will be parsed and divided into chunks which will be assigned to different default variables. The response %Address% (after the last redirect if you have %Auto Redirect% enabled) will be saved into the String variable `data.ADDRESS`. The response %body% (a.k.a source) will be inside the String variable `data.SOURCE` (as a UTF-8 string), and inside the Byte Array variable `data.RAWSOURCE` (after decompression of e.g. gzip).</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>El %código de respuesta% (por ejemplo, 200) se insertará en una variable de tipo integro `data.RESPONSECODE`. Los encabezados se analizarán y se insertarán en la variable de tipo Diccionario (par) de Texto `data.HEADERS`, y también para las cookies en la variable` data.COOKIES`. Recuerde que puede recuperar fácilmente valores de diccionarios por clave con la sintaxis `data.HEADERS [" header-name "]`. Si la solicitud falla, la variable `data.STATUS` se establecerá en` ERROR`.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>Una última cosa para recordar es que las cookies dentro de la variable `data.COOKIES` solo se agregan ó sobrescriben, nunca se eliminan. Esto significa que las cookies recibidas anteriormente (que están dentro de la variable `data.COOKIES`) serán enviadas nuevamente dentro de las siguientes solicitudes, además del %Custom Cookies% que puedes definir para cada nueva solicitud. Esto sucederá a menos que se borre o reinicialice `data.COOKIES`.</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Mostrar</value>
   </data>
 </root>

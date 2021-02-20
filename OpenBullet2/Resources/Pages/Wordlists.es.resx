@@ -117,31 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="Added" xml:space="preserve">
+    <value>Agregado</value>
+  </data>
+  <data name="AddedWordlist" xml:space="preserve">
+    <value>¡El Diccionario se agregó correctamente!</value>
+  </data>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Agregar diccionario</value>
+  </data>
+  <data name="AlsoDeleteFile" xml:space="preserve">
+    <value>¿Eliminar el archivo también?</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>¿Estás seguro?</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>¿Quieres eliminar?</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>¿del disco también?</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>Editar diccionario</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Nombre de Archivo</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+    <value>¿Cómo funciona esto?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+    <value>Aquí puede importar diccionarios. En primer lugar, haga clic en el botón %Agregar% de arriba. Podrá especificar un %Tipo de diccionario% (más información sobre esto más adelante), un %Nombre% y un %Propósito%. Tiene dos opciones para cargar su archivo. La primera opción es %cargarlo% en el servidor que está ejecutando la instancia de OpenBullet2. Este es el método preferido %si el diccionario está en el cliente% desde donde está accediendo a OB2 a través del navegador, pero OB2 está alojado en una máquina diferente. Este método de agregar un diccionario agregara una carga adicional, ya que el diccionario debe cargarse a través del navegador.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+    <value>%Si el diccionario está en el servidor%, lo que significa que está intentando recuperar un archivo de la misma máquina en la que se está ejecutando OB2, puede usar la opción %File System%, que le permitirá navegar visualmente a través de carpetas en busca del archivo que desea. Tenga en cuenta que para acceder a ubicaciones en la unidad que están fuera del directorio de trabajo actual de OB2, deberá ir a las opciones de seguridad de OpenBullet y permitir el acceso a archivos en todo el sistema.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Con respecto al %Tipo de diccionario%, encontrará los Tipos de diccionarios especificados actualmente en el archivo % Settings / Environment.ini% en su directorio OB2. Los tipos de diccionarios se cargan cuando se inicia OB2. Puede cambiar este archivo y agregar / eliminar / cambiar los tipos de diccionarios para que coincidan con el formato de sus diccionarios. Puede leer más sobre los tipos de diccionarios en la sección de guías del foro oficial.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="KeepFile" xml:space="preserve">
+    <value>No, mantener el archivo</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Lineas</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Cargando</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No hay registros para mostrar</value>
+  </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>Primero debes seleccionar un diccionario</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>Propósito</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>¿De verdad quieres eliminar?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>resultados</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Resultados por pagina</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>

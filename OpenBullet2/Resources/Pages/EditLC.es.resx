@@ -117,31 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+    <value>¿Qué es LoliCode?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+    <value>%LoliCode% es un lenguaje de scripting personalizado que actúa como %lenguaje intermedio% entre los bloques y el código C # que se genera a partir de bloques. LoliCode se puede convertir en bloques simplemente haciendo clic en la sección Apilador (lo que no sea un bloque adecuado se mueve a un Bloque LoliCode especial), los bloques se pueden convertir en LoliCode simplemente haciendo clic en la sección LoliCode. Cada bloque se traduce automáticamente en un fragmento que se puede identificar a través de su ID.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+    <value>Una gran característica de LoliCode es que se puede usar para integrar código %C #% sin procesar con bloques. Puede incluir bloques en declaraciones `if / Si`, declarar variables y aprovechar las características de C # usando su sintaxis original. Al final, los bloques también se traducen al código C #, por lo que terminará con un código 100% en C # cuando decida ejecutar su configuración.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Si necesita usar clases, etc. de un %namespace% que OB2 no importa automáticamente al compilar el script, puede agregarlo en la parte superior haciendo clic en el botón% Alternar Dependencias% y escribiéndolos en el cuadro de texto. Por ejemplo, para agregar el `namespace` para la clase `Regex`, puede escribir` System.Text.RegularExpressions` en una línea del cuadro de texto.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="LoliCodeEditor" xml:space="preserve">
+    <value>Editor LoliCode</value>
+  </data>
+  <data name="SaveScript" xml:space="preserve">
+    <value>Guardar Script</value>
+  </data>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Alternar Dependencias</value>
+  </data>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Puede escribir los `namespace` que le gustaría importar en al script C #, uno por línea.</value>
   </data>
 </root>

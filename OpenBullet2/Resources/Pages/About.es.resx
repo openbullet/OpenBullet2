@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlphaTesters" xml:space="preserve">
+    <value>Probadores versión Alpha</value>
+  </data>
+  <data name="BetaTesters" xml:space="preserve">
+    <value>Probadores versión Beta</value>
+  </data>
   <data name="Collaborators" xml:space="preserve">
     <value>Colaboradores</value>
   </data>
   <data name="Developer" xml:space="preserve">
     <value>Desarrollador</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Descargo de responsabilidad</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>¡Realizar ataques en sitios que no son de su propiedad (ó que no tiene permiso para realizar pruebas) es ilegal! El desarrollador no se hace responsable del uso inadecuado de este programa.</value>
   </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
     <value>Donantes y Colaboradores</value>

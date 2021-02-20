@@ -117,31 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+    <value>¿Cómo funciona este bloque?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+    <value>El bloque %Parse% le permite analizar datos de un texto con muchos métodos de análisis diferentes y almacenarlos en una variable de Texto o Lista de texto. Los modos de análisis admitidos son LR, CSS, JSON y REGEX. El modo %LR% (izquierda derecha) permite analizar texto entre dos textos dados. El modo %CSS% (Selector de CSS) permite obtener el atributo de un elemento de una página HTML.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+    <value>El modo %JSON% (notación de objetos JavaScript) permite obtener el valor de un objeto ó matriz serializado JSON mediante el uso de %JToken%. JToken le permite especificar una ruta para alcanzar el valor deseado dentro de la estructura JSON. Un ejemplo de esto podría ser `field1.array [0]` para direccionar el primer elemento del arreglo `array` dentro del objeto` field1`. Si escribe `field1.array [*]` en su lugar, obtendrá todos los elementos de la matriz.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>El modo %REGEX% (expresión regular) es un método de análisis avanzado. Deberá crear una expresión regular y utilizar %capturas por grupos% para especificar cuál desea que sea la salida. Tomemos, por ejemplo, el caso en el que estamos analizando la oración `hola amigo 123` y queremos obtener la palabra` amigo`, en el caso en el que `123` es un valor cambiante y no podemos usar el modo LR. Podrías construir una expresión regular como `hola ([a-z] +) [d] {3}`. Observe cómo hay un grupo de captura, indicado por paréntesis. Luego, en el campo %Formato de salida, podrá escribir `[0]` para generar la coincidencia completa, `[1]` para generar el primer grupo capturado y así sucesivamente ... Tenga en cuenta que puede usar más de 1 grupo en el formato de salida.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Si marca la casilla de verificación %Recursivo%, todas las secuencias de caracteres que cumplan con los criterios de análisis se colocarán dentro de una variable de Lista de texto; de lo contrario, solo se tomará la primera coincidencia y se colocará en una variable de texto.</value>
+  </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Es captura</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Etiqueta</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Variable de salida</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ajustes</value>
   </data>
 </root>

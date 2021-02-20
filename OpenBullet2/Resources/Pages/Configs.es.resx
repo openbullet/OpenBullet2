@@ -136,10 +136,10 @@
     <value>Categoría</value>
   </data>
   <data name="ConfigReloadWarning" xml:space="preserve">
-    <value>Esto volverá a cargar todas las configuraciones del disco, por lo que se perderán todos los cambios no guardados. Quieres proceder?</value>
+    <value>Esto volverá a cargar todas las configuraciones del disco, por lo que se perderán todos los cambios no guardados. ¿Quieres proceder?</value>
   </data>
   <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
-    <value>Configuraciones subido correctamente</value>
+    <value>Configuraciones subidas correctamente</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Fecha de creación</value>
@@ -153,8 +153,41 @@
   <data name="Edit" xml:space="preserve">
     <value>Editar</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>¿Qué es una configuración?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Una %Config% es un archivo que contiene instrucciones para automatizar ciertas acciones, generalmente hacia recursos web. Las configuraciones contienen algunos %metadatos% (como un nombre, un autor y un icono), un %léeme% con instrucciones sobre cómo usarlo o para qué sirve, algunos ajustes y luego instrucciones que pueden estar en %LoliCode% lenguaje personalizado de secuencias de comandos ó en %C #% puro. En el disco, las configuraciones se guardan como archivos con la extensión %.opk% en la subcarpeta %Configs%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Las configuraciones se pueden utilizar en trabajos como %MultiRun Job% para ejecutar algunas instrucciones en un conjunto de datos determinado (por ejemplo, un diccionario) en paralelo. Por ejemplo, se pueden usar para verificar si ciertas sub-rutas de un sitio web determinado devuelven una respuesta válida, ó se pueden usar para extraer enlaces de varias páginas de una tienda en línea.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>¿Cómo funciona el Administrador de configuración?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>%Administrador de Config% realiza un seguimiento de todas sus configuraciones. Las configuraciones se cargan desde la subcarpeta Configs cuando se inicia OB2, y si se agregan algunas configuraciones nuevas a esa carpeta, simplemente puede presionar %Recargar% para comenzar el proceso de carga nuevamente. Si no tiene acceso fácil a la carpeta Configuraciones (por ejemplo, si OB2 se está ejecutando en un vps), puede %Cargar% una configuración con el botón relacionado. También puede %Descargar% configuraciones existentes de la misma manera.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>En la parte superior puede encontrar el botón %Nuevo% que creará una nueva configuración. Para %editar% una configuración, puede hacer clic en el botón Editar o hacer doble clic sobre la config en la lista de configuraciones. También hay un botón para %cambiar la vista% a una vista de cuadrícula más detallada.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>¿Qué es un archivo .opk?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Un archivo %.opk% es un archivo %zip% que contiene algunos archivos en su interior. El primer archivo es %metadata.json%, que contiene el nombre, el autor y el icono de la configuración. El icono es una imagen codificada en base64 que también puede ser un GIF. El archivo %readme.md% contendrá una descripción de la configuración, que se le mostrará al usuario cuando abra el menú de selección de configuración durante el proceso de configuración de la tarea. Es compatible con el lenguaje de marcado. El archivo %settings.json% contendrá la configuración específica.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Finalmente, si su configuración usa un apilador/staker, las instrucciones se guardarán como un script LoliCode dentro del archivo %script.loli%. Si, en cambio, decidió convertir su configuración a C # únicamente, se creará un archivo llamado %script.cs% con el código C # a ejecutar.</value>
+  </data>
   <data name="LastModified" xml:space="preserve">
     <value>Última modificación</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Cargando</value>
+  </data>
+  <data name="LocalConfigs" xml:space="preserve">
+    <value>Config local</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Nombre</value>
@@ -166,13 +199,22 @@
     <value>Parece que no ha seleccionado ninguna configuración!</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
+    <value>Proxis</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>¿De verdad quiere eliminar</value>
+    <value>¿De verdad quiere eliminar?</value>
   </data>
   <data name="Reload" xml:space="preserve">
     <value>Recargar</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remota</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Config Remota</value>
+  </data>
+  <data name="RemoteConfigs" xml:space="preserve">
+    <value>Configs Remotas</value>
   </data>
   <data name="ToggleView" xml:space="preserve">
     <value>Cambiar vista</value>
@@ -180,7 +222,19 @@
   <data name="Uh-Oh" xml:space="preserve">
     <value>UH oh</value>
   </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Cambios no guardados</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>¡La configuración actual tiene cambios sin guardar! ¿Desea continuar de todos modos?</value>
+  </data>
   <data name="Upload" xml:space="preserve">
     <value>Subir</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>ADVERTENCIA</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Diccionarios</value>
   </data>
 </root>

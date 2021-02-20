@@ -117,31 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Duración de la sesión de administrador (horas)</value>
+  </data>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Usuario del administrador</value>
+  </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Todo listo</value>
+  </data>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Permitir el acceso a archivos en todo el sistema</value>
+  </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Clave API</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>¿Estás seguro?</value>
+  </data>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Establecer automáticamente los bots recomendados cuando se selecciona una configuración en la página de creación de tareas.</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Cambiar contraseña</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Limpiar</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
+  <data name="Customization" xml:space="preserve">
+    <value>Personalización</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>Autor predeterminado al crear configuraciones nuevas</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Modo de visualización de tareas predeterminado</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+  <data name="Done" xml:space="preserve">
+    <value>Hecho</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="EnableJobLogging" xml:space="preserve">
+    <value>Habilite el registro en la página del visor de tareas</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Capturas de grupo en depurador</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Duración de la sesión de invitado (horas)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Ignore el nombre del Diccionario al eliminar duplicados de los resultados</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Intervalo de actualización de Administrador de Tareas</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Intervalo de actualización de Tareas</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Número máximo de entradas en el registro</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Guardar registros en un archivo también</value>
+  </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Editor de Tema Monaco</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Al editar una configuración, navegue hasta</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nueva contraseña de administrador</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>¡Se estableció la nueva contraseña!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Reproducir sonido en hit</value>
+  </data>
+  <data name="ProxyCheckTargets" xml:space="preserve">
+    <value>Objetivos de verificación de proxy</value>
+  </data>
+  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
+    <value>Estos son los destinos de proxy disponibles en una tarea de verificación de proxy. Los proxis se compararán con la URL de destino, y si se encuentra la clave buscada en la fuente descargada, el proxy se marcará como funcional.</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remoto</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Puntos de Destinos Config Remota</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>Estos son los puntos de destino remotos que se consultarán al volver a cargar el repositorio de configuración para obtener las configuraciones alojadas en otra máquina.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Requerir inicio de administrador</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restaurar predeterminados</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>¿Quieres restaurar los ajustes predeterminados?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Guardado</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Los ajustes se guardaron con éxito.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Clave valida</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Tema subido correctamente</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Formato de archivo de tema no admitido. Formatos admitidos: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Cargar tema</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Mostrar una advertencia cuando la configuración cargada actualmente no se guardó y se carga otra</value>
   </data>
 </root>

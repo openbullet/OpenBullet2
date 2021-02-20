@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
+  </data>
+  <data name="by" xml:space="preserve">
+    <value>por</value>
+  </data>
+  <data name="ConcurrentProxyMode" xml:space="preserve">
+    <value>Modo proxy actual</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Grupo de datos</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Predeterminado</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>¿Que son estas opciones?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Cuando crea una tarea de ejecución múltiple, debe proporcionar una %config%. En la sección %Configs% puede crear uno propio o importar uno existente. Una vez que haya probado una configuración en el depurador de la sección Configuraciones, puede seleccionarla aquí para ejecutarla con varios bots ejecutándose en paralelo. Simplemente haga clic en el botón %Seleccionar config% y podrá seleccionar su configuración de una lista. También se le mostrará una vista previa del archivo %readme% de la configuración.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>El %modo Proxy% decide si se utilizarán proxis al ejecutar la configuración seleccionada. Si lo deja en %por defecto%, usará lo que se especifique en la configuración de la config (sección Proxis, opción %Usar proxis%). Si elige %Sí% ó %No%, anulará la configuración predeterminada.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Bots% es el número de ejecuciones en paralelos que ejecutarán su configuración, cada uno con su propia línea de datos del grupo de datos que especificó (por ejemplo, un diccionario). Cuantos más bots pongas, más solicitudes se realizarán al mismo tiempo, pero ten en cuenta que hay un %limite% que depende del hardware de tu máquina, y que al sobrepasar este límite de bots degrada el rendimiento.</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>El %Omitir% define cuántas líneas se omitirán desde el inicio del grupo de datos. Este valor se establece automáticamente tan pronto como selecciona un par de configuración y diccionarios que ya ha ejecutado antes, ya que los puntos de control de su progreso se guardan periódicamente en la base de datos.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>¿Qué es un grupo de datos?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Un %Grupo de Datos% es la fuente de todas las líneas de datos que se asignarán a los bots. El grupo de datos se leerá línea por línea y siempre que haya un bot disponible, se le asignará una línea para procesar. Hay diferentes formas de inicializar un grupo de datos. La forma más común es a través de %diccionario%. Para utilizar un diccionario, primero debes importar uno en la sección %Diccionario%. Una vez que haya importado un diccionario, simplemente haga clic en el botón %Seleccionar diccionario% y seleccione el diccionario que desea usar. También podrá ver una vista previa de las primeras líneas de su diccionario.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Si elige la opción %Archivo%, puede omitir la fase de importación de diccionario, pero tenga en cuenta que esto deshabilitará algunas funciones, como guardar el progreso de su par Diccionario-config en la base de datos y la relación entre los resultados y los diccionarios que se utilizó para conseguirlos. Los diccionarios son la forma preferida de utilizar los datos de un archivo, por lo que le sugiero que consulte la sección Diccionario. También debe especificar el %tipo de diccionario%, consulte la sección Diccionario habitual para obtener más ayuda sobre lo que significa esta opción.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>La opción %Rango% solo generará un rango de números, comenzando desde un valor inicial. Por ejemplo, si configura %Empezar% = 0, %Cantidad% = 5 y %Incremento% = 2, generará 5 líneas de datos con los valores 0, 2, 4, 6 y 8. Si marca la casilla %Pad%, el número se rellenará con ceros a la izquierda de acuerdo con el número de dígitos del número más grande que se generará, por ejemplo, si el número más grande es 100, verá valores como 001, 042, etc. en su grupo de datos generado.</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>La opción %Combinaciones% le permitirá generar todas las combinaciones posibles de un %Conjunto de caracteres% determinado para una %Longitud% determinada. Por ejemplo, si usa ABCD como un conjunto de caracteres y Longitud = 4, obtendrá combinaciones como AAAA, AAAB, ... ACCB ... DDDC, DDDD.</value>
+  </data>
+  <data name="Help2x05" xml:space="preserve">
+    <value>La opción %Infinito% solo generará una cantidad infinita de líneas de datos vacías, por lo que el trabajo continuará hasta que decida detenerlo.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>¿Qué es una fuente de proxy?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>%Las fuentes de proxy% se utilizan para definir de dónde se tomarán los proxis cuando se agreguen al grupo de proxis que se asignan a los bots. Las fuentes de proxy se consultarán al comienzo de un trabajo, y también siempre que todos los proxis estén prohibidos o una condición obligue a recargarlos. Una fuente de proxy de tipo %Grupo% tomará proxis de un grupo definido en la sección %Proxis%. Para utilizar esta opción, debe tener un grupo con algunos proxis, consulte la sección Proxis para obtener instrucciones sobre cómo hacerlo.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Una fuente de proxy del tipo %Archivo% cargará los proxis de un archivo determinado en el disco. Puede escribir la ruta completa al archivo que desea y también el % tipo% de Proxy que se usará por defecto si no se especificó ninguno a través de la sintaxis avanzada. Puede editar el contenido del archivo en cualquier momento y la próxima vez que se realice una recarga de proxy, se analizarán los nuevos proxis del archivo.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>Una fuente de proxy del tipo %Remoto% implicará consultar un recurso remoto, por ejemplo, el servicio API de un proveedor de proxy, para recargar proxis. Nuevamente, deberá especificar un %tipo% de proxy para usar como opción predeterminada. Esta opción se puede utilizar para recargar proxis de trabajos nuevos que ya fueron verificados por un servicio externo.</value>
+  </data>
+  <data name="Help4x00" xml:space="preserve">
+    <value>¿Qué es una salida de hits?</value>
+  </data>
+  <data name="Help4x01" xml:space="preserve">
+    <value>%Una salida de hits% es un lugar donde se enviarán los aciertos una vez que se encuentren. La opción %Base de datos% (solo puede haber una) escribirá los hits en la base de datos predeterminada de OpenBullet 2. Podrá explorar los hits en la base de datos a través de la sección %Hits%. La opción %Archivo de Sistema% (solo puede haber una) guardará las visitas en una estructura de carpetas organizada en el disco. Simplemente escriba la ruta al directorio base donde desea que se cree la estructura de carpetas.</value>
+  </data>
+  <data name="Help4x02" xml:space="preserve">
+    <value>Finalmente, la opción %Discord webhook% le permitirá enviar los hits a un webhook de discord usando un nombre de usuario y avatar personalizados (especificados a través de la URL de una imagen alojada en un repositorio público). Para utilizar esta opción, deberá crear un webhook de discord para un canal en su servidor y pegar la URL en el campo correspondiente.</value>
+  </data>
+  <data name="HitOutputs" xml:space="preserve">
+    <value>Salidas de hits</value>
+  </data>
+  <data name="MarkAsToCheckOnAbort" xml:space="preserve">
+    <value>Marcar como A verificar en abortar</value>
+  </data>
+  <data name="NeverBanProxies" xml:space="preserve">
+    <value>Nunca deshabilitar los proxis</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Ninguna config seleccionada</value>
+  </data>
+  <data name="NoValidProxyBehaviour" xml:space="preserve">
+    <value>No proxy válido</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Apagado</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Encendido</value>
+  </data>
+  <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
+    <value>Intervalo de recarga periódica (segundos, 0 para deshabilitar)</value>
+  </data>
+  <data name="ProxyBanTimeSeconds" xml:space="preserve">
+    <value>Tiempo par deshabilitar proxy (segundos)</value>
+  </data>
+  <data name="ProxyMode" xml:space="preserve">
+    <value>Modo proxy</value>
+  </data>
+  <data name="ProxySources" xml:space="preserve">
+    <value>Fuentes de proxy</value>
+  </data>
+  <data name="ReloadProxiesWhenAllBanned" xml:space="preserve">
+    <value>Recargar proxis cuando todos estén deshabilitados</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Seleccionar config</value>
+  </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Proxis aleatorios</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Omitir</value>
+  </data>
+  <data name="StartCondition" xml:space="preserve">
+    <value>Condición inicial</value>
+  </data>
+</root>

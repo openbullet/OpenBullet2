@@ -117,58 +117,56 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Autenticado como</value>
+  <data name="AvailableBlocks" xml:space="preserve">
+    <value>Bloques disponibles</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Número de compilación</value>
+  <data name="BlockInformation" xml:space="preserve">
+    <value>Información de bloque</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Dirección IP del cliente</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Uso de CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Directorio de trabajo actual</value>
+  <data name="CurrentStack" xml:space="preserve">
+    <value>Pila actual</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Una cordial bienvenida de Bulletta</value>
+    <value>¿Qué es Pila ó Stacker?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hola y bienvenido a OpenBullet %2%, soy %Bulletta% y seré su guía por aquí. Busque botones con mi cara y voy a saltar sobre la pantalla para explicar lo que sea necesario!</value>
+    <value>%Pila ó Stacker% es una herramienta que puede ayudarte a construir tus configuraciones de una manera muy fácil de usar, gracias al concepto de %bloques%. Los bloques son una representación visual de algunas directivas de LoliCode, y básicamente son funciones que se pueden llamar en cualquier momento dado, opcionalmente tomando algunos parámetros de entrada y, opcionalmente, produciendo algunos resultados de salida. La %Pila ó Stack% es básicamente una lista de bloques que un bot ejecutará, uno tras otro, de arriba a abajo.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>No voy a molestar más, supongo que nos vemos a continuación. Adios!</value>
+    <value>Puede modificar la pila %agregando% ó %eliminando% bloques, %moviéndolos hacia arriba y hacia abajo% y %clonándolos%. Los bloques también se pueden %deshabilitar% si desea omitir la ejecución de un bloque sin tener que eliminarlo y, por lo tanto, perder todo su contenido.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Los bloques se caracterizan principalmente por una %etiqueta% (que puede personalizar a su gusto) y por algunos ajustes que son los parámetros de entrada y los resultados de salida. Si desea agregar código C # a su configuración, verá que se crearán algunos %bloques de LoliCode% cuando regrese a la vista Pila / Stacker. Estos bloques contienen código que el analizador LoliCode no pudo identificar como bloques adecuados, por ejemplo, bucles, condicionales u otras expresiones de C #.</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
-    <value>¿Dónde se guardan todas mis ajustes?</value>
+    <value>Nuevo sistema de variables</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>Hay muchos ajustes en OpenBullet 2 y se guardan dentro de la carpeta %UserData%. El %database% (por defecto SQLite) es el archivo que contiene sus proxis, tareas, hits, invitados y también contiene registros de la ubicación de sus diccionarios en el disco. Por defecto se llama %OpenBullet.db%. Las %Configs% están dentro de la subcarpeta Configs, mientras que los %Diccionarios% que importó a través de la función de carga del navegador están dentro de la subcarpeta Wordlists. Consulte sus secciones específicas para obtener más información.</value>
+    <value>%Variables% en OB2 funcionan de una manera muy diferente que en OB1. Para comprender la razón detrás de este cambio, debe saber que las config se transpilan a C # y luego se compilan para mayor velocidad antes de ejecutarse. El sistema OB1 se interpreta desde LoliScript en tiempo de ejecución, por lo que era mucho más lento. C # es un lenguaje fuertemente tipado y, por lo tanto, las variables están asociadas con un tipo, por ejemplo, `int` para enteros y` string` para textos. En OB1 todo era un texto (o lista de textos, o diccionarios de textos) pero en OB2 hay tipos adicionales.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
-    <value>Los ajustes de OpenBullet y RuriLib se guarda en dos archivos: %OpenBulletSettings.json% y %RuriLibSettings.json%. Estos archivos solo se crean si se realizaron algunos cambios en los ajustes predeterminados. El archivo %Environment.ini% especifica %tipos de diccionarios%, %estados personalizados% y %formatos de exportación% de su entorno OB2. Este es un archivo muy importante; puede encontrar más información sobre los tipos de diccionarios en una guía separada</value>
+    <value>El %tipo% de una variable en OB2 puede ser: Verdadero ó falso (Bool), arreglo de bites (ByteArray), Diccionario de texto (strings), Float, integro (Int), Lista de textos (strings), Texto y Enum. Las variables se crean principalmente a través del campo en bloques %Salida de Variable%, que está presente en una gran cantidad de bloques. Este campo le permitirá conocer el tipo de variable que se creará. Este campo generalmente viene con una opción adicional llamada %es captura%, que le permite al bot saber que una variable específica debe guardarse y escribirse en %Captura de Datos% si obtiene un resultado.</value>
   </data>
   <data name="Help2x03" xml:space="preserve">
-    <value>El archivo %sharingEndpoints.json% contiene la información de sus puntos de destino para compartir configuraciones. Y finalmente, el archivo %triggeredActions.json% contiene todas las %acciones a ejecutar% de su monitor de tarea. Las acciones a ejecutar se guardan automáticamente en este archivo cada 10 segundos.</value>
+    <value>%Parámetros de entrada% de bloques también tienen un tipo específico, como en OB1. Puede elegir entre hasta 3 modos diferentes para ingresar datos en esos parámetros, dependiendo de su tipo. El modo %fijo% le permite especificar un valor fijo que es siempre el mismo para cada ejecución, por ejemplo, `42` ó` hola`. El modo %variable% le permite utilizar una variable creada previamente como valor de entrada para ese parámetro. Si el valor original es de un tipo diferente con respecto al tipo de parámetro, se convertirá automáticamente para usted (por ejemplo, si tiene un número entero e intenta pasarlo a un parámetro de texto, se leerá automáticamente como un texto).</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Hora local</value>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Finalmente, el modo %interpolado% que es muy parecido a cómo funcionó en OB1, donde puede usar la sintaxis `aquí está mi &lt;variable&gt;`, donde `variable` es el nombre de la variable que desea insertar dentro del texto. Este modo solo está disponible para los parámetros de Texto, Lista de textos y Diccionario de texto.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Cerrar sesión</value>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Variables predeterminadas</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Uso de memoria</value>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Algunas variables ya están declaradas para usted y pueden usarse para acceder a datos de entrada y propiedades reservadas. La variable `input` es un objeto dinámico que contiene los datos individuales de su grupo de datos (por ejemplo, si está utilizando el tipo de diccionario predeterminado, podrá acceder a` input.DATA` para recuperar su línea de datos) y las respuestas de las entradas personalizadas que se preguntan en tiempo de ejecución.</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Sistema operativo</value>
+  <data name="Help3x02" xml:space="preserve">
+    <value>El objeto `data` es una clase con múltiples propiedades que se llenan automáticamente con bloques pero que también puedes usar como variables de salida para otros bloques. Los más útiles son STATUS, SOURCE, RAWSOURCE, ADDRESS, RESPONSECODE, COOKIES y HEADERS. Por ejemplo, para utilizar el origen de una respuesta HTTP como parámetro de entrada de un bloque de análisis, deberá seleccionar el modo variable y escribir "data.SOURCE" en el cuadro.</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Tiempo Activo del servidor</value>
+  <data name="Help3x03" xml:space="preserve">
+    <value>El objeto `data` contiene muchas más variables útiles (como el Proxy) que se pueden manipular a través del código C # para realizar algún comportamiento avanzado. Esto se cubrirán en una guía separada.
+Finalmente, el objeto `globals` contiene variables globales y se comparten entre los bots. Puede establecer variables globales usando algo como `globals.Test` como variable de salida, y lo mismo para recuperar su valor. Si planeas realizar operaciones largas en él, por ejemplo, trabajando con listas globales de elementos, debes %bloquear% en el objeto `globals` con` lock (globals) {Tu bloque y código aquí} `para que sea seguro para los subprocesos.</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenido a OpenBullet 2</value>
+  <data name="NoBlockSelectedInfo" xml:space="preserve">
+    <value>Seleccione un bloque para mostrar sus ajustes</value>
   </data>
 </root>

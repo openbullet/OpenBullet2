@@ -117,31 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Agregar</value>
+  </data>
+  <data name="AddBlank" xml:space="preserve">
+    <value>Agregar en blanco</value>
+  </data>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>Tipos de proxy permitidos</value>
+  </data>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>Tipos de Diccionarios permitidos</value>
+  </data>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>Abrir siempre el navegador al inicio</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>¿Estás seguro?</value>
+  </data>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>Evasión de bucle de prohibición, también conocida como, después de cuántos estados BAN, los datos debe marcarse como TOCHECK y el proxy debe prohibirse (0 para deshabilitar)</value>
+  </data>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>Deshabilitar el proxy cuando el bot termina con uno de estos estados</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Una vez que convierta la configuración a C #, usted no será capaz de editarla mediante blockes nuca mas! ¿Está realmente, realmente seguro de que sabes lo que estás haciendo?</value>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Distinguir mayúsculas y minúsculas</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir config a C #</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Limpiar</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C #</value>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>Estados para los que el bot continuará o se detendrá</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>¿Para que es esta sección?</value>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>CPM Limite (0 para no limite)</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Esta sección tiene dos propósitos. Si piensas usar %Stacker/LoliCode% para crear tu config, puedes usar el editor en modo solo-lectura para ver como luce el código final después que los bloques han sido traducidos a instrucciones de C#. Esto ayudara a resolver la mayoría de los problemas, especialmente cuando el %depurador% muestra %excepciones%</value>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>Entradas Personalizadas</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Si, en cambio, decidió codificar su configuración usando %solo C #%, puede hacer clic en el botón %Convertir config a C # % y podrá editar el código C # directamente. Podrá usar la misma API que se usa para los bloques, por lo que sugiero que la estudie un poco verificando el código base o cómo los bloques se traducen automáticamente. Tenga en cuenta que las configuraciones en C # están destinadas a usuarios %muy avanzados%, y todo lo que puede hacer aquí también se puede hacer en LoliCode integrando bloques y código C #, lo que puede resultar en un script mucho más legible para las personas que no están muy familiarizadas con lenguajes de programación.</value>
+  <data name="Data" xml:space="preserve">
+    <value>Datos</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile a partir de bloques</value>
+  <data name="DataRules" xml:space="preserve">
+    <value>Reglas para Datos</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>¡ADVERTENCIA! ¡POR FAVOR LEER!</value>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Respuesta Predeterminada</value>
+  </data>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>Deshabilitar notificaciones de páginas web</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Oculto</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Ignorar errores HTTPS</value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>Ignorar errores de respuesta</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>Descripción (pregunta para el usuario)</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>Las entradas personalizadas son una forma de definir algunos valores directamente en tiempo de ejecución. Los usuarios de la configuración recibirán algunas ventanas emergentes cuando inicien un trabajo y su respuesta se insertará como una variable de tipo texto que puede usar como desee.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Invertir</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>Usos máximos por proxy (0 es infinito)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxis</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Argumentos de la línea de comando (por ejemplo, --disable-Notifications --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (por defecto si esta en blanco)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>Salir del navegador cuando el bot termine con uno de estos estados</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>User Agent Aleatorio</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Regla para Regex</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Regex a coincidir</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Solicitud</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restaurar por defecto</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>¿Quieres restaurar los ajustes predeterminados?</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Guarda también capturas vacías</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Regla simple</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>Nombre separado</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>Cantidad de bots sugerida</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Vista para ayuda Regex</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>Codificar la URL después de separada</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>Usar proxis</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Nombre de Variable</value>
   </data>
 </root>
