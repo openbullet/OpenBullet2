@@ -160,7 +160,7 @@ namespace OpenBullet2.Shared
             catch (Exception ex)
             {
                 data.STATUS = "ERROR";
-                logger.Log($"{ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
+                logger.Log($"[{ex.TargetSite.Name}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
                 await js.AlertException(ex);
             }
             finally
