@@ -66,12 +66,6 @@ namespace OpenBullet2.Services
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
         {
-            if (string.IsNullOrEmpty(options.ConfigId))
-                throw new ArgumentException("No config specified");
-
-            if (options.DataPool is WordlistDataPoolOptions dataPool && dataPool.WordlistId == -1)
-                throw new ArgumentException("No wordlist specified");
-
             var hitOutputsFactory = new HitOutputFactory(hitRepo);
 
             var job = new MultiRunJob(settingsService, pluginRepo, logger)

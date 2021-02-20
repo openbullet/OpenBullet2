@@ -246,6 +246,9 @@
   <data name="Loading" xml:space="preserve">
     <value>Loading</value>
   </data>
+  <data name="NoConfig" xml:space="preserve">
+    <value>No config</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>You must select a hit first</value>
   </data>
