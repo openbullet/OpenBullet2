@@ -140,8 +140,9 @@ namespace RuriLib.Parallelization
                     if (softCTS.IsCancellationRequested)
                         break;
 
-                    if (dopDecreaseRequested)
+                    if (dopDecreaseRequested || IsCPMLimited())
                     {
+                        UpdateCPM();
                         semaphore.Release();
                         goto WAIT;
                     }

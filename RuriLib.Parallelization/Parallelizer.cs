@@ -40,6 +40,11 @@ namespace RuriLib.Parallelization
         /// </summary>
         public int CPM { get; protected set; } = 0;
 
+        /// <summary>
+        /// Sets a maximum threshold for CPM. 0 to disable.
+        /// </summary>
+        public int CPMLimit { get; set; } = 0;
+
         public DateTime StartTime { get; private set; }
         public DateTime? EndTime { get; private set; }
         public DateTime ETA => CPM > 0 
@@ -141,21 +146,7 @@ namespace RuriLib.Parallelization
                     OnProgressChanged(Progress);
 
                     checkedTimestamps.Add(DateTime.Now);
-
-                    // Update CPM (only 1 task can enter)
-                    if (Monitor.TryEnter(cpmLock))
-                    {
-                        try
-                        {
-                            var now = DateTime.Now;
-                            checkedTimestamps = checkedTimestamps.Where(t => (now - t).TotalSeconds < 60).ToList();
-                            CPM = checkedTimestamps.Count;
-                        }
-                        finally
-                        {
-                            Monitor.Exit(cpmLock);
-                        }
-                    }
+                    UpdateCPM();
                 }
             });
         }
@@ -246,6 +237,28 @@ namespace RuriLib.Parallelization
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 await Task.Delay(100, cancellationToken);
+            }
+        }
+        #endregion
+
+        #region Protected Methods
+        protected bool IsCPMLimited() => CPMLimit > 0 && CPM > CPMLimit;
+
+        protected void UpdateCPM()
+        {
+            // Update CPM (only 1 task can enter)
+            if (Monitor.TryEnter(cpmLock))
+            {
+                try
+                {
+                    var now = DateTime.Now;
+                    checkedTimestamps = checkedTimestamps.Where(t => (now - t).TotalSeconds < 60).ToList();
+                    CPM = checkedTimestamps.Count;
+                }
+                finally
+                {
+                    Monitor.Exit(cpmLock);
+                }
             }
         }
         #endregion

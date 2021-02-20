@@ -114,6 +114,14 @@ namespace RuriLib.Parallelization
                 // Otherwise if we already filled the thread pool
                 else
                 {
+                    // If we exceeded the CPM threshold, update CPM and go back to waiting
+                    if (IsCPMLimited())
+                    {
+                        UpdateCPM();
+                        await Task.Delay(100);
+                        goto WAIT;
+                    }
+
                     // Search for the first idle thread
                     var firstFree = threadPool.FirstOrDefault(t => !t.IsAlive);
 

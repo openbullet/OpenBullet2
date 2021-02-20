@@ -393,6 +393,7 @@ namespace RuriLib.Models.Jobs
 
             parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                 .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, DataPool.Size, Skip);
+            parallelizer.CPMLimit = Config.Settings.GeneralSettings.MaximumCPM;
             parallelizer.NewResult += DataProcessed;
             parallelizer.StatusChanged += StatusChanged;
             parallelizer.TaskError += PropagateTaskError;
