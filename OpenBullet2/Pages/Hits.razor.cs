@@ -73,7 +73,7 @@ namespace OpenBullet2.Pages
             };
 
             var query = new QueryDictionary<StringValues>();
-            query.Add("grid-page", "2");
+            query.Add("grid-page", "1");
 
             var client = new GridClient<HitEntity>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()

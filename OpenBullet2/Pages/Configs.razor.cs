@@ -65,7 +65,7 @@ namespace OpenBullet2.Pages
             };
 
             var query = new QueryDictionary<StringValues>();
-            query.Add("grid-page", "2");
+            query.Add("grid-page", "1");
 
             var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
