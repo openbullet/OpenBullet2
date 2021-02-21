@@ -162,6 +162,9 @@
   <data name="MemoryUsage" xml:space="preserve">
     <value>Uso de memoria</value>
   </data>
+  <data name="NetworkUsage" xml:space="preserve">
+    <value>Uso de Red</value>
+  </data>
   <data name="OperatingSystem" xml:space="preserve">
     <value>Sistema operativo</value>
   </data>
