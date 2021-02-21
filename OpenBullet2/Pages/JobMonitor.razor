@@ -23,9 +23,11 @@
                     <span>@Loc["Repeatable"]:</span>
                     <input type="checkbox" @bind="ta.IsRepeatable" /><br />
                     <span>@Loc["Executing"]: @ta.IsExecuting</span><br />
-                    <span>@Loc["Executions"]: @ta.Executions</span>
+                    <span>@Loc["Executions"]: @ta.Executions</span><br />
+                    <button class="btn btn-outline-primary mt-2" @onclick="(() => ta.Reset())">@Loc["Reset"]</button><br />
+                    <button class="btn btn-outline-danger mt-2" @onclick="(() => Remove(ta))">@Loc["Remove"]</button>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-12">
+                <div class="col-xl-5 col-lg-6 col-12">
                     <h5>@Loc["Triggers"]:</h5>
                     <p>@Loc["TriggersDescription"].</p>
                     <div class="row pl-2 mb-2">
@@ -122,7 +124,7 @@
                         </div>
                     }
                 </div>
-                <div class="col-xl-4 col-lg-6 col-12 mt-lg-0 mt-3">
+                <div class="col-xl-5 col-lg-6 col-12 mt-lg-0 mt-3">
                     <h5>@Loc["Actions"]:</h5>
                     <p>@Loc["ActionsDescription"].</p>
                     <div class="row pl-2 mb-2">
@@ -178,18 +180,6 @@
                             </div>
                         </div>
                     }
-                </div>
-                <div class="col-xl-2 col-12 mt-xl-0 mt-3">
-                    <div class="row">
-                        <button class="btn btn-outline-danger" style="height: 100%; width: 100%;" @onclick="(() => Remove(ta))">
-                            @Loc["Remove"]
-                        </button>
-                    </div>
-                    <div class="row mt-1">
-                        <button class="btn btn-outline-primary" style="height: 100%; width: 100%;" @onclick="(() => ta.Reset())">
-                            @Loc["Reset"]
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
