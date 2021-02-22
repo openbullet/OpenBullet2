@@ -626,6 +626,10 @@ a:hover {
 .job-overview > span:not(:first-child) {
     margin-left: 0.5rem;
 }
+
+.multirun-options-overview > span {
+    word-wrap: break-word;
+}
 /* -- JOB OVERVIEW */
 
 /* JOB VIEWER -- */
