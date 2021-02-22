@@ -279,7 +279,7 @@
   <data name="ProxyStats" xml:space="preserve">
     <value>Proxy Estad.</value>
   </data>
-  <data name="RageText" xml:space="preserve">
+  <data name="RangeText" xml:space="preserve">
     <value>Rango de {0} cantidad {1} incremento de {2} (relleno {3})</value>
   </data>
   <data name="RefreshList" xml:space="preserve">

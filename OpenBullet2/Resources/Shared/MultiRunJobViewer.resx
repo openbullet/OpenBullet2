@@ -282,7 +282,7 @@
   <data name="ProxyStats" xml:space="preserve">
     <value>Proxy stats</value>
   </data>
-  <data name="RageText" xml:space="preserve">
+  <data name="RangeText" xml:space="preserve">
     <value>Range from {0} with amount {1} and step {2} (padding {3})</value>
   </data>
   <data name="RefreshList" xml:space="preserve">

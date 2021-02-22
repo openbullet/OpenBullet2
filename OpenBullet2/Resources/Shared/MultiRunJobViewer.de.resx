@@ -246,7 +246,7 @@
   <data name="ProxyStats" xml:space="preserve">
     <value>Proxy-Statistiken</value>
   </data>
-  <data name="RageText" xml:space="preserve">
+  <data name="RangeText" xml:space="preserve">
     <value>Bereich von {0} mit der Anzahl {1} und Schrittweite {2} (Padding {3})</value>
   </data>
   <data name="Remaining" xml:space="preserve">
