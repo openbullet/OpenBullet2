@@ -650,14 +650,15 @@ a:hover {
 
 @media (min-width: 800px) {
     .job-viewer-hits-container {
-        max-width: 50vw;
+        max-width: 100vw;
     }
 }
 
 .job-viewer-hits {
     font-family: var(--consolas);
-    width: 2000px;
+    width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .job-viewer-hit {
