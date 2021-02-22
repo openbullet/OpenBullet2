@@ -13,6 +13,7 @@
 
                 @if (index != Messages.Count() - 1)
                 {
+                    <button class="btn btn-sm btn-outline-danger" @onclick="Dismiss"><span class="oi oi-x"></span> <i>@Loc["Close"]</i></button>
                     <button class="btn btn-sm btn-outline-primary" @onclick="Next"><span class="oi oi-arrow-right"></span> <i>@Loc["Next"]...</i></button>
                 }
                 else
