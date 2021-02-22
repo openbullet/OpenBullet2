@@ -662,7 +662,7 @@ a:hover {
 }
 
 .job-viewer-hit {
-    padding: 5px;
+    padding: 5px 0px;
     cursor: pointer;
     -webkit-user-select: none;
     -khtml-user-select: none;
