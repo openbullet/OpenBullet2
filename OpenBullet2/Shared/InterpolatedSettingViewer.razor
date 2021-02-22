@@ -8,9 +8,12 @@
         {
             case InterpolatedStringSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <input class="bg-interpolated" type="text" @bind="x.Value" />
                     </div>
@@ -22,9 +25,12 @@
 
             case InterpolatedListOfStringsSetting x:
                 <div class="row">
-                    <div class="col-12">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-12">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputListOfStrings CssClass="bg-interpolated" @bind-List="x.Value" />
                     </div>
@@ -36,9 +42,12 @@
 
             case InterpolatedDictionaryOfStringsSetting x:
                 <div class="row">
-                    <div class="col-12">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-12">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputDictionaryOfStrings CssClass="bg-interpolated" @bind-Dictionary="x.Value" />
                     </div>
@@ -54,6 +63,7 @@
 
 @code {
     [Parameter] public BlockSetting BlockSetting { get; set; }
+    [Parameter] public bool DisplayName { get; set; }
     [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
     public string Name => BlockSetting.Name.ToReadableName();
 }

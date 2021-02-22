@@ -7,9 +7,12 @@
         {
             case StringSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputText @bind-Value="@x.Value" />
                     </div>
@@ -21,9 +24,12 @@
 
             case BoolSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch mt-1">
                         <InputCheckbox @bind-Value="@x.Value" />
                     </div>
@@ -35,9 +41,12 @@
 
             case IntSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
@@ -49,9 +58,12 @@
 
             case EnumSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputSelect @bind-Value="@x.Value">
                             @foreach (var name in Enum.GetNames(x.EnumType))
@@ -65,9 +77,12 @@
 
             case FloatSetting x:
                 <div class="row">
-                    <div class="col-auto mr-0 pr-0">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-auto mr-0 pr-0">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputNumber @bind-Value="@x.Value" />
                     </div>
@@ -79,9 +94,12 @@
 
             case ListOfStringsSetting x:
                 <div class="row">
-                    <div class="col-12">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-12">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputListOfStrings @bind-List="x.Value" />
                     </div>
@@ -93,9 +111,12 @@
 
             case DictionaryOfStringsSetting x:
                 <div class="row">
-                    <div class="col-12">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-12">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                     <div class="col align-self-stretch">
                         <InputDictionaryOfStrings @bind-Dictionary="x.Value" />
                     </div>
@@ -107,9 +128,12 @@
 
             case ByteArraySetting x:
                  <div class="row">
-                    <div class="col-12">
-                        <label style="line-height: 30px;">@Name</label>
-                    </div>
+                    @if (DisplayName)
+                    {
+                        <div class="col-12">
+                            <label style="line-height: 30px;">@Name</label>
+                        </div>
+                    }
                      <div class="col-12">
                         <InputByteArray @bind-Bytes="x.Value" />
                     </div>
@@ -125,6 +149,7 @@
 
 @code {
     [Parameter] public BlockSetting BlockSetting { get; set; }
+    [Parameter] public bool DisplayName { get; set; } = true;
     [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
     public string Name => BlockSetting.Name.ToReadableName();
 }

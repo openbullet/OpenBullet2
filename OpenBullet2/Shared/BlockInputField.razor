@@ -7,9 +7,12 @@
     {
         case SettingInputMode.Variable:
             <div class="row">
-                <div class="col-auto mr-0 pr-0">
-                    <label style="line-height: 30px;">@Name</label>
-                </div>
+                @if (DisplayName)
+                {
+                    <div class="col-auto mr-0 pr-0">
+                        <label style="line-height: 30px;">@Name</label>
+                    </div>
+                }
                 <div class="col align-self-stretch">
                     <input class="bg-variable" type="text" @bind="@BlockSetting.InputVariableName" />
                 </div>
@@ -20,18 +23,18 @@
             break;
 
         case SettingInputMode.Fixed:
-            <FixedSettingViewer BlockSetting="BlockSetting" SwitchedMode="@((args) => StateHasChanged())" />
+            <FixedSettingViewer BlockSetting="BlockSetting" DisplayName="DisplayName" SwitchedMode="@((args) => StateHasChanged())" />
             break;
 
         case SettingInputMode.Interpolated:
-            <InterpolatedSettingViewer BlockSetting="BlockSetting" SwitchedMode="@((args) => StateHasChanged())" />
+            <InterpolatedSettingViewer BlockSetting="BlockSetting" DisplayName="DisplayName" SwitchedMode="@((args) => StateHasChanged())" />
             break;
     }
 }
 
 @code {
     [Parameter] public BlockSetting BlockSetting { get; set; }
-    [Parameter] public bool DisplayLabel { get; set; } = true;
+    [Parameter] public bool DisplayName { get; set; } = true;
     public string Name => BlockSetting.Name.ToReadableName();
 
 }
