@@ -58,7 +58,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -100,7 +100,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -143,7 +143,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
@@ -215,7 +215,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request);
             }
