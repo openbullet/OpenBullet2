@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-6">
             <p>Generic</p>
-            <div class="vertical-buttons-list">
+            <div class="vertical-buttons-list" style="max-height: 500px; overflow-y: auto;">
                 <ul>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new StartJobAction())))">Start Job</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new StopJobAction())))">Stop Job</button></li>
@@ -17,7 +17,7 @@
         </div>
         <div class="col-sm-6">
             <p>MultiRunJob</p>
-            <div class="vertical-buttons-list">
+            <div class="vertical-buttons-list" style="max-height: 500px; overflow-y: auto;">
                 <ul>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new SetBotsAction())))">Set Bots</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new ReloadProxiesAction())))">Reload Proxies</button></li>
