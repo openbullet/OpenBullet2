@@ -8,7 +8,7 @@ using System;
 
 namespace RuriLib.Http
 {
-    static internal class RequestBuilder
+    static internal class HttpRequestMessageBuilder
     {
         private static readonly string newLine = "\r\n";
         private static readonly string[] commaHeaders = new[] { "Accept", "Accept-Encoding" };

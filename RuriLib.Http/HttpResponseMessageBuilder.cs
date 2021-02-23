@@ -13,7 +13,7 @@ using RuriLib.Http;
 
 namespace RuriLib.Http
 {
-    internal class ResponseBuilder
+    internal class HttpResponseMessageBuilder
     {
         private sealed class BytesWrapper
         {
@@ -43,7 +43,7 @@ namespace RuriLib.Http
 
         public TimeSpan ReceiveTimeout { get; set; } = TimeSpan.FromSeconds(10);
 
-        public ResponseBuilder(int bufferSize, CookieContainer cookies = null, Uri uri = null)
+        public HttpResponseMessageBuilder(int bufferSize, CookieContainer cookies = null, Uri uri = null)
         {
             this.bufferSize = bufferSize;
             this.cookies = cookies;
@@ -154,36 +154,6 @@ namespace RuriLib.Http
             }
         }
 
-        // TODO: Make this async (need to refactor the mess below)
-        private Task ReceiveContentAsync(CancellationToken cancellationToken = default)
-        {
-            // If there are content headers
-            if (contentHeaders.Count != 0)
-            {
-                contentLength = GetContentLength();
-
-                var memoryStream = new MemoryStream(contentLength == -1 ? 0 : contentLength);
-
-                // Try to get the body and write it to a MemoryStream
-                var source = GetMessageBodySource();
-                foreach (var bytes in source)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    memoryStream.Write(bytes.Value, 0, bytes.Length);
-                }
-
-                // Rewind the stream and set the content of the response and its headers
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                response.Content = new StreamContent(memoryStream);
-                foreach (var pair in contentHeaders)
-                {
-                    response.Content.Headers.TryAddWithoutValidation(pair.Key, pair.Value);
-                }
-            }
-
-            return Task.CompletedTask;
-        }
-
         // Sets the value of a cookie
         private void SetCookie(string value)
         {
@@ -254,6 +224,36 @@ namespace RuriLib.Http
             {
                 cookies.Add(new Cookie(cookieName, cookieValue, "/", uri.Host));
             }
+        }
+
+        // TODO: Make this async (need to refactor the mess below)
+        private Task ReceiveContentAsync(CancellationToken cancellationToken = default)
+        {
+            // If there are content headers
+            if (contentHeaders.Count != 0)
+            {
+                contentLength = GetContentLength();
+
+                var memoryStream = new MemoryStream(contentLength == -1 ? 0 : contentLength);
+
+                // Try to get the body and write it to a MemoryStream
+                var source = GetMessageBodySource();
+                foreach (var bytes in source)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    memoryStream.Write(bytes.Value, 0, bytes.Length);
+                }
+
+                // Rewind the stream and set the content of the response and its headers
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                response.Content = new StreamContent(memoryStream);
+                foreach (var pair in contentHeaders)
+                {
+                    response.Content.Headers.TryAddWithoutValidation(pair.Key, pair.Value);
+                }
+            }
+
+            return Task.CompletedTask;
         }
 
         private IEnumerable<BytesWrapper> GetMessageBodySource()

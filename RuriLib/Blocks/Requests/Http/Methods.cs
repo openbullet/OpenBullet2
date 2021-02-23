@@ -36,12 +36,16 @@ namespace RuriLib.Blocks.Requests.Http
             var clientOptions = GetClientOptions(data, options);
             using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
+            foreach (var cookie in options.CustomCookies)
+                data.COOKIES[cookie.Key] = cookie.Value;
+
             using var request = new HttpRequest
             {
                 Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                Cookies = data.COOKIES,
                 AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine
             };
 
@@ -81,12 +85,16 @@ namespace RuriLib.Blocks.Requests.Http
             var clientOptions = GetClientOptions(data, options);
             using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
+            foreach (var cookie in options.CustomCookies)
+                data.COOKIES[cookie.Key] = cookie.Value;
+
             using var request = new HttpRequest
             {
                 Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                Cookies = data.COOKIES,
                 AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine,
                 Content = new ByteArrayContent(options.Content)
             };
@@ -123,12 +131,16 @@ namespace RuriLib.Blocks.Requests.Http
             var clientOptions = GetClientOptions(data, options);
             using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
 
+            foreach (var cookie in options.CustomCookies)
+                data.COOKIES[cookie.Key] = cookie.Value;
+
             using var request = new HttpRequest
             {
                 Method = System.Net.Http.HttpMethod.Get,
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                Cookies = data.COOKIES,
                 AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine
             };
 
@@ -165,6 +177,9 @@ namespace RuriLib.Blocks.Requests.Http
         {
             var clientOptions = GetClientOptions(data, options);
             using var client = HttpFactory.GetRLHttpClient(data.UseProxy ? data.Proxy : null, clientOptions);
+
+            foreach (var cookie in options.CustomCookies)
+                data.COOKIES[cookie.Key] = cookie.Value;
 
             if (string.IsNullOrWhiteSpace(options.Boundary))
                 options.Boundary = GenerateMultipartBoundary();
@@ -204,6 +219,7 @@ namespace RuriLib.Blocks.Requests.Http
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
+                Cookies = data.COOKIES,
                 AbsoluteUriInFirstLine = options.AbsoluteUriInFirstLine,
                 Content = multipartContent
             };
@@ -253,8 +269,7 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             // Log the cookie header
-            var cookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"])
-                .Select(c => $"{c.Name}={c.Value}");
+            var cookies = data.COOKIES.Select(c => $"{c.Key}={c.Value}");
             
             if (cookies.Any())
                 writer.WriteLine($"Cookie: {string.Join("; ", cookies)}");
@@ -341,16 +356,16 @@ namespace RuriLib.Blocks.Requests.Http
             return writer.ToString();
         }
 
-        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response, HttpRequest request)
+        private static async Task LogHttpResponseData(BotData data, HttpResponse response, HttpRequest request)
         {
             // Read the raw source for Content-Length calculation
             data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
 
             // Address
-            var uri = response.RequestMessage.RequestUri;
+            var uri = response.Request.Uri;
             if (!uri.IsAbsoluteUri)
                 uri = new Uri(request.Uri, uri);
-            data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
+            data.ADDRESS = response.Request.Uri.AbsoluteUri;
             data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
 
             // Response code
@@ -358,17 +373,13 @@ namespace RuriLib.Blocks.Requests.Http
             data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
 
             // Headers
-            data.HEADERS = response.Headers.ToDictionary(h => h.Key, h => h.Value.First());
+            data.HEADERS = response.Headers;
             if (!data.HEADERS.ContainsKey("Content-Length"))
                 data.HEADERS["Content-Length"] = data.RAWSOURCE.Length.ToString();
             data.Logger.Log("Received Headers:", LogColors.MediumPurple);
             data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
 
             // Cookies
-            var allCookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"]);
-            data.COOKIES.Clear();
-            foreach (Cookie cookie in allCookies)
-                data.COOKIES[cookie.Name] = cookie.Value;
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
@@ -447,20 +458,8 @@ namespace RuriLib.Blocks.Requests.Http
         }
 
         private static HttpOptions GetClientOptions(BotData data,
-            RuriLib.Functions.Http.Options.HttpRequestOptions options)
-        {
-            var cookies = new CookieContainer();
-            data.Objects["cookieContainer"] = cookies;
-
-            foreach (var cookie in data.COOKIES)
-                cookies.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
-
-            foreach (var cookie in options.CustomCookies)
-                cookies.Add(new Uri(options.Url), new Cookie(cookie.Key, cookie.Value));
-
-            return new()
+            RuriLib.Functions.Http.Options.HttpRequestOptions options) => new()
             {
-                Cookies = cookies,
                 ConnectTimeout = data.Providers.ProxySettings.ConnectTimeout,
                 ReadWriteTimeout = data.Providers.ProxySettings.ReadWriteTimeout,
                 AutoRedirect = options.AutoRedirect,
@@ -470,6 +469,5 @@ namespace RuriLib.Blocks.Requests.Http
                 CustomCipherSuites = ParseCipherSuites(options.CustomCipherSuites),
                 CertRevocationMode = data.Providers.Security.X509RevocationMode,
             };
-        }
     }
 }

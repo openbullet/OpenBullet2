@@ -10,15 +10,15 @@ namespace RuriLib.Functions.Http
 {
     public class HttpFactory
     {
-        public static ProxyClientHandler GetProxiedHandler(Proxy proxy, HttpOptions options)
+        public static ProxyClientHandler GetProxiedHandler(Proxy proxy, HttpOptions options, CookieContainer cookies)
         {
             var client = GetProxyClient(proxy, options);
 
             return new ProxyClientHandler(client)
             {
                 AllowAutoRedirect = options.AutoRedirect,
-                CookieContainer = options.Cookies,
-                UseCookies = options.Cookies != null,
+                CookieContainer = cookies,
+                UseCookies = cookies != null,
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),
                 UseCustomCipherSuites = options.UseCustomCipherSuites,
                 AllowedCipherSuites = options.CustomCipherSuites,
@@ -34,8 +34,6 @@ namespace RuriLib.Functions.Http
             {
                 AllowAutoRedirect = options.AutoRedirect,
                 MaxNumberOfRedirects = options.MaxNumberOfRedirects,
-                CookieContainer = options.Cookies,
-                UseCookies = options.Cookies != null,
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),
                 UseCustomCipherSuites = options.UseCustomCipherSuites,
                 AllowedCipherSuites = options.CustomCipherSuites,

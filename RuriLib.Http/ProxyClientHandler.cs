@@ -188,12 +188,12 @@ namespace RuriLib.Http
             using var ms = new MemoryStream();
 
             // Send the first line
-            buffer = Encoding.ASCII.GetBytes(RequestBuilder.BuildFirstLine(request));
+            buffer = Encoding.ASCII.GetBytes(HttpRequestMessageBuilder.BuildFirstLine(request));
             ms.Write(buffer);
             await connectionCommonStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
 
             // Send the headers
-            buffer = Encoding.ASCII.GetBytes(RequestBuilder.BuildHeaders(request, CookieContainer));
+            buffer = Encoding.ASCII.GetBytes(HttpRequestMessageBuilder.BuildHeaders(request, CookieContainer));
             ms.Write(buffer);
             await connectionCommonStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
 
@@ -212,7 +212,7 @@ namespace RuriLib.Http
         private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var responseBuilder = new ResponseBuilder(1024, CookieContainer, request.RequestUri);
+            var responseBuilder = new HttpResponseMessageBuilder(1024, CookieContainer, request.RequestUri);
             return await responseBuilder.GetResponseAsync(request, connectionCommonStream, cancellationToken);
         }
 

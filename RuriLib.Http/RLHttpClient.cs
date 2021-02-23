@@ -13,6 +13,7 @@ using System.Text;
 using RuriLib.Proxies.Exceptions;
 using System.Collections.Generic;
 using RuriLib.Http.Models;
+using System.Linq;
 
 namespace RuriLib.Http
 {
@@ -33,7 +34,7 @@ namespace RuriLib.Http
         public ProxyClient ProxyClient => proxyClient;
 
         /// <summary>
-        /// Gets the raw bytes of the last request that was sent.
+        /// Gets the raw bytes of all the requests that were sent.
         /// </summary>
         public List<byte[]> RawRequests { get; } = new();
 
@@ -93,17 +94,6 @@ namespace RuriLib.Http
         public DecompressionMethods AutomaticDecompression => DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the handler uses the CookieContainer
-        /// property to store server cookies and uses these cookies when sending requests.
-        /// </summary>
-        public bool UseCookies { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets the cookie container used to store server cookies by the handler.
-        /// </summary>
-        public CookieContainer CookieContainer { get; set; }
-
-        /// <summary>
         /// Gets or sets delegate to verifies the remote Secure Sockets Layer (SSL) 
         /// certificate used for authentication.
         /// </summary>
@@ -127,7 +117,7 @@ namespace RuriLib.Http
         /// Asynchronously sends a <paramref name="request"/> and returns an <see cref="HttpResponseMessage"/>.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token to cancel the operation</param>
-        public async Task<HttpResponseMessage> SendAsync(HttpRequest request,
+        public async Task<HttpResponse> SendAsync(HttpRequest request,
             CancellationToken cancellationToken = default, int redirects = 0)
         {
             if (redirects > MaxNumberOfRedirects)
@@ -140,11 +130,6 @@ namespace RuriLib.Http
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (UseCookies && CookieContainer == null)
-            {
-                throw new ArgumentNullException(nameof(CookieContainer));
-            }
-
             await CreateConnection(request, cancellationToken).ConfigureAwait(false);
             await SendDataAsync(request, cancellationToken).ConfigureAwait(false);
             var responseMessage = await ReceiveDataAsync(request, cancellationToken).ConfigureAwait(false);
@@ -153,9 +138,14 @@ namespace RuriLib.Http
             if (((int)responseMessage.StatusCode) / 100 == 3 && AllowAutoRedirect)
             {
                 // Compute the redirection URI
-                var redirectUri = responseMessage.Headers.Location.IsAbsoluteUri
-                    ? responseMessage.Headers.Location
-                    : new Uri(request.Uri, responseMessage.Headers.Location);
+                var locationHeaderName = responseMessage.Headers.Keys
+                    .First(k => k.Equals("Location", StringComparison.OrdinalIgnoreCase));
+
+                Uri.TryCreate(responseMessage.Headers[locationHeaderName], UriKind.RelativeOrAbsolute, out var newLocation);
+
+                var redirectUri = newLocation.IsAbsoluteUri
+                    ? newLocation
+                    : new Uri(request.Uri, newLocation);
 
                 // If not 307, change the method to GET
                 if (responseMessage.StatusCode != HttpStatusCode.RedirectKeepVerb)
@@ -164,15 +154,9 @@ namespace RuriLib.Http
                     request.Content = null;
                 }
 
-                // Port over the cookies if the domains are different
+                // Adjust the request if the host is different
                 if (request.Uri.Host != redirectUri.Host)
                 {
-                    var cookies = CookieContainer.GetCookies(request.Uri);
-                    foreach (Cookie cookie in cookies)
-                    {
-                        CookieContainer.Add(redirectUri, new Cookie(cookie.Name, cookie.Value));
-                    }
-
                     // This is needed otherwise if the Host header was set manually
                     // it will keep the previous one after a domain switch
                     if (request.HeaderExists("Host", out var hostHeaderName))
@@ -196,19 +180,15 @@ namespace RuriLib.Http
 
         private async Task SendDataAsync(HttpRequest request, CancellationToken cancellationToken = default)
         {
-            var buffer = await request.GetBytesAsync(CookieContainer, cancellationToken);
+            var buffer = await request.GetBytesAsync(cancellationToken);
             await connectionCommonStream.WriteAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
 
             RawRequests.Add(buffer);
         }
 
-        private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequest request,
-            CancellationToken cancellationToken)
-        {
-            var responseBuilder = new ResponseBuilder(1024, CookieContainer, request.Uri);
-            var dummyRequest = new HttpRequestMessage() { RequestUri = request.Uri };
-            return await responseBuilder.GetResponseAsync(dummyRequest, connectionCommonStream, cancellationToken);
-        }
+        private Task<HttpResponse> ReceiveDataAsync(HttpRequest request,
+            CancellationToken cancellationToken) =>
+            new HttpResponseBuilder().GetResponseAsync(request, connectionCommonStream, cancellationToken);
 
         private async Task CreateConnection(HttpRequest request, CancellationToken cancellationToken)
         {

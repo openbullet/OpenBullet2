@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -17,15 +16,15 @@ namespace RuriLib.Http.Models
         public Version Version { get; set; } = new(1, 1);
         public HttpMethod Method { get; set; } = HttpMethod.Get;
         public Uri Uri { get; set; }
+        public Dictionary<string, string> Cookies { get; set; } = new();
         public Dictionary<string, string> Headers { get; set; } = new();
         public HttpContent Content { get; set; }
 
-        public async Task<byte[]> GetBytesAsync(CookieContainer cookieContainer,
-            CancellationToken cancellationToken = default)
+        public async Task<byte[]> GetBytesAsync(CancellationToken cancellationToken = default)
         {
             using var ms = new MemoryStream();
             ms.Write(Encoding.ASCII.GetBytes(BuildFirstLine()));
-            ms.Write(Encoding.ASCII.GetBytes(BuildHeaders(cookieContainer)));
+            ms.Write(Encoding.ASCII.GetBytes(BuildHeaders()));
 
             if (Content != null)
             {
@@ -61,7 +60,7 @@ namespace RuriLib.Http.Models
         // Builds the headers, for example
         // Host: example.com
         // Connection: Close
-        private string BuildHeaders(CookieContainer cookieContainer)
+        private string BuildHeaders()
         {
             // NOTE: Do not use AppendLine because it appends \n instead of \r\n
             // on Unix-like systems.
@@ -74,8 +73,18 @@ namespace RuriLib.Http.Models
                 finalHeaders.Add("Host", Uri.Host);
             }
 
-            // Add the Connection: Close header if none is present
-            if (!HeaderExists("Connection", out _))
+            // TODO: Implement support for Keep-Alive connections!
+            // If there is already a Connection header
+            if (HeaderExists("Connection", out var connectionHeaderName))
+            {
+                // If its value is not Close, change it to Close
+                if (!Headers[connectionHeaderName].Equals("Close", StringComparison.OrdinalIgnoreCase))
+                {
+                    Headers[connectionHeaderName] = "Close";
+                }
+            }
+            // Otherwise, add it
+            else
             {
                 finalHeaders.Add("Connection", "Close");
             }
@@ -87,22 +96,17 @@ namespace RuriLib.Http.Models
             }
 
             // Add the Cookie header if not set manually and container not null
-            if (!HeaderExists("Cookie", out _) && cookieContainer != null)
+            if (!HeaderExists("Cookie", out _) && Cookies.Any())
             {
-                var cookiesCollection = cookieContainer.GetCookies(Uri);
-                if (cookiesCollection.Count > 0)
+                var cookieBuilder = new StringBuilder();
+
+                foreach (var cookie in Cookies)
                 {
-                    var cookieBuilder = new StringBuilder();
-
-                    foreach (var cookie in cookiesCollection)
-                    {
-                        cookieBuilder
-                            .Append(cookie)
-                            .Append("; ");
-                    }
-
-                    finalHeaders.Add("Cookie", cookieBuilder);
+                    cookieBuilder
+                        .Append($"{cookie.Key}={cookie.Value}; ");
                 }
+
+                finalHeaders.Add("Cookie", cookieBuilder);
             }
 
             // Add the content headers

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
@@ -7,7 +6,6 @@ namespace RuriLib.Functions.Http
 {
     public class HttpOptions
     {
-        public CookieContainer Cookies { get; set; }
         public TimeSpan ConnectTimeout { get; set; } = TimeSpan.FromSeconds(5);
         public TimeSpan ReadWriteTimeout { get; set; } = TimeSpan.FromSeconds(10);
         public bool AutoRedirect { get; set; } = true;
