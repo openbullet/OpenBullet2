@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
     <div class="row py-1">
-        @if (!currentNode.IsRoot)
+        @if (ShowFiltered || !currentNode.IsRoot)
         {
             <div class="col-auto pl-0">
                 <button type="button" class="btn btn-sm btn-outline-success" @onclick="GoBack">@Loc["Back"]</button>
@@ -19,7 +19,7 @@
     </div>
 </div>
 
-@if (filter != string.Empty)
+@if (ShowFiltered)
 {
     <RadzenDataList WrapItems="true" AllowPaging="false" Data="@filteredDescriptors" TItem="BlockDescriptor" PageSize="100" Style="margin-left: -5px;">
         <Template Context="descriptor">
@@ -75,6 +75,7 @@ else
     private List<BlockDescriptor> recentDescriptors;
     private List<BlockDescriptor> filteredDescriptors = new();
     private string filter = string.Empty;
+    private bool ShowFiltered => !string.IsNullOrWhiteSpace(filter);
 
     protected override void OnInitialized()
     {
@@ -93,8 +94,19 @@ else
 
     private void GoBack()
     {
+        // If we have a filter, clear it
+        if (ShowFiltered)
+        {
+            filter = string.Empty;
+            StateHasChanged();
+            return;
+        }
+
+        // Otherwise go back to the parent (if any)
         if (!currentNode.IsRoot)
+        {
             currentNode = currentNode.Parent;
+        }
     }
 
     private BlockCategory GetCategory(CategoryTreeNode node)
