@@ -152,6 +152,9 @@ namespace RuriLib.Models.Blocks
             return writer.ToString();
         }
 
+        // This is needed otherwise when we have blocks made in other plugins they might reference
+        // types from different runtimes and our castings like .AsBool() or .AsInt() will throw a
+        // RuntimeBinderException, so we cannot just write 'var' but we need to explicitly write the type.
         private string GetRuntimeReturnType() => Descriptor.ReturnType switch
         {
             VariableType.Bool => "bool",
