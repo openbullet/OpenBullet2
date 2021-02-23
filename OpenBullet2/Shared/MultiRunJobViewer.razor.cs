@@ -304,12 +304,13 @@ namespace OpenBullet2.Shared
                 else
                 {
                     selectedHits.Clear();
-                    var lastIndex = Job.Hits.IndexOf(lastSelectedHit);
-                    var currentIndex = Job.Hits.IndexOf(hit);
+                    var filteredHits = GetFilteredHits();
+                    var lastIndex = filteredHits.IndexOf(lastSelectedHit);
+                    var currentIndex = filteredHits.IndexOf(hit);
                     var rangeStartIndex = Math.Min(lastIndex, currentIndex);
                     var rangeEndIndex = Math.Max(lastIndex, currentIndex);
 
-                    selectedHits.AddRange(Job.Hits.Skip(rangeStartIndex).Take(rangeEndIndex - rangeStartIndex + 1));
+                    selectedHits.AddRange(filteredHits.Skip(rangeStartIndex).Take(rangeEndIndex - rangeStartIndex + 1));
                     lastSelectedHit = hit;
                 }
             }
@@ -393,6 +394,14 @@ namespace OpenBullet2.Shared
             hitsFilter = value;
             StateHasChanged();
         }
+
+        private List<Hit> GetFilteredHits() => hitsFilter switch
+        {
+            "SUCCESS" => Job.Hits.Where(h => h.Type == "SUCCESS").ToList(),
+            "NONE" => Job.Hits.Where(h => h.Type == "NONE").ToList(),
+            "CUSTOM" => Job.Hits.Where(h => h.Type != "SUCCESS" && h.Type != "NONE").ToList(),
+            _ => throw new NotImplementedException()
+        };
 
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
