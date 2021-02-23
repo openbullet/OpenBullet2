@@ -4,6 +4,7 @@ using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -122,7 +123,7 @@ namespace RuriLib.Models.Blocks
                     if (!Disabled)
                         declaredVariables.Add(OutputVariable);
 
-                    writer.Write($"var {OutputVariable} = ");
+                    writer.Write($"{GetRuntimeReturnType()} {OutputVariable} = ");
                 }
             }
 
@@ -150,5 +151,17 @@ namespace RuriLib.Models.Blocks
 
             return writer.ToString();
         }
+
+        private string GetRuntimeReturnType() => Descriptor.ReturnType switch
+        {
+            VariableType.Bool => "bool",
+            VariableType.ByteArray => "byte[]",
+            VariableType.DictionaryOfStrings => "Dictionary<string, string>",
+            VariableType.Float => "float",
+            VariableType.Int => "int",
+            VariableType.ListOfStrings => "List<string>",
+            VariableType.String => "string",
+            _ => throw new NotSupportedException()
+        };
     }
 }
