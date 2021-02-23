@@ -175,9 +175,21 @@ namespace OpenBullet2.Shared
                     ? currentBrowser
                     : null;
 
-                // Dispose the default HttpClient if any
-                if (data.Objects["httpClient"] is HttpClient client)
-                    client.Dispose();
+                // Dispose all disposable objects
+                foreach (var obj in data.Objects.Where(o => o.Value is IDisposable))
+                {
+                    if (obj.Key == "puppeteer")
+                        continue;
+
+                    try
+                    {
+                        (obj.Value as IDisposable).Dispose();
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
 
             await loggerViewer?.Refresh();

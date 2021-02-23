@@ -205,6 +205,25 @@ namespace RuriLib.Models.Jobs
                 {
                     botData.STATUS = "ERROR";
                 }
+                finally
+                {
+                    // Dispose all disposable objects
+                    foreach (var obj in botData.Objects.Where(o => o.Value is IDisposable))
+                    {
+                        // Do not dispose objects that are given to every bot
+                        if (obj.Key == "httpClient" || obj.Key == "ironPyEngine")
+                            continue;
+
+                        try
+                        {
+                            (obj.Value as IDisposable).Dispose();
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
 
                 // Update captcha credit
                 if (botData.CaptchaCredit > 0)
