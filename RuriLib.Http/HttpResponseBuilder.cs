@@ -30,6 +30,7 @@ namespace RuriLib.Http
         private readonly string newLine = "\r\n";
 
         private readonly ReceiveHelper receiveHelper;
+        private HttpResponse response;
         private NetworkStream networkStream;
         private Stream commonStream;
         private Dictionary<string, List<string>> contentHeaders;
@@ -53,23 +54,23 @@ namespace RuriLib.Http
 
             receiveHelper.Init(stream);
 
-            var response = new HttpResponse
+            response = new HttpResponse
             {
                 Request = request
             };
 
             contentHeaders = new Dictionary<string, List<string>>();
 
-            await ReceiveFirstLineAsync(response, cancellationToken).ConfigureAwait(false);
-            await ReceiveHeadersAsync(response, cancellationToken).ConfigureAwait(false);
-            await ReceiveContentAsync(response, cancellationToken).ConfigureAwait(false);
+            await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
+            await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
+            await ReceiveContentAsync(cancellationToken).ConfigureAwait(false);
 
             return response;
         }
 
         // Parses the first line, for example
         // HTTP/1.1 200 OK
-        private async Task ReceiveFirstLineAsync(HttpResponse response, CancellationToken cancellationToken = default)
+        private async Task ReceiveFirstLineAsync(CancellationToken cancellationToken = default)
         {
             var startingLine = string.Empty;
 
@@ -94,7 +95,7 @@ namespace RuriLib.Http
         }
 
         // Parses the headers
-        private async Task ReceiveHeadersAsync(HttpResponse response, CancellationToken cancellationToken = default)
+        private async Task ReceiveHeadersAsync(CancellationToken cancellationToken = default)
         {
             while (true)
             {
@@ -181,7 +182,7 @@ namespace RuriLib.Http
         }
 
         // TODO: Make this async (need to refactor the mess below)
-        private Task ReceiveContentAsync(HttpResponse response, CancellationToken cancellationToken = default)
+        private Task ReceiveContentAsync(CancellationToken cancellationToken = default)
         {
             // If there are content headers
             if (contentHeaders.Count != 0)
@@ -212,7 +213,7 @@ namespace RuriLib.Http
 
         private IEnumerable<BytesWrapper> GetMessageBodySource()
         {
-            if (!string.IsNullOrWhiteSpace(GetContentEncoding()))
+            if (contentHeaders.ContainsKey("Content-Encoding"))
             {
                 return GetMessageBodySourceZip();
             }
@@ -222,7 +223,7 @@ namespace RuriLib.Http
 
         private IEnumerable<BytesWrapper> GetMessageBodySourceZip()
         {
-            if (!string.IsNullOrWhiteSpace(GetTransferEncoding()))
+            if (response.Headers.ContainsKey("Transfer-Encoding"))
             {
                 return ReceiveMessageBodyChunkedZip();
             }
@@ -239,7 +240,7 @@ namespace RuriLib.Http
 
         private IEnumerable<BytesWrapper> GetMessageBodySourceStd()
         {
-            if (!string.IsNullOrWhiteSpace(GetTransferEncoding()))
+            if (response.Headers.ContainsKey("Transfer-Encoding"))
             {
                 return ReceiveMessageBodyChunked();
             }
@@ -249,6 +250,31 @@ namespace RuriLib.Http
             }
 
             return ReceiveMessageBody(commonStream);
+        }
+
+        private int GetContentLength()
+        {
+            if (contentHeaders.TryGetValue("Content-Length", out var values))
+            {
+                if (int.TryParse(values[0], out var length))
+                {
+                    return length;
+                }
+            }
+
+            return -1;
+        }
+
+        private string GetContentEncoding()
+        {
+            var encoding = "";
+
+            if (contentHeaders.TryGetValue("Content-Encoding", out var values))
+            {
+                encoding = values[0];
+            }
+
+            return encoding;
         }
 
         // TODO: Refactor the mess below
@@ -591,41 +617,6 @@ namespace RuriLib.Http
                 sleepTime += 10;
                 Thread.Sleep(10);
             }
-        }
-
-        private Stream GetDecodedStream(Stream stream)
-        {
-            var contentEncoding = GetContentEncoding().ToLower();
-
-            return contentEncoding switch
-            {
-                "gzip" => new GZipStream(stream, CompressionMode.Decompress, true),
-                "deflate" => new DeflateStream(stream, CompressionMode.Decompress, true),
-                _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
-            };
-        }
-
-        private int GetContentLength()
-        {
-            if (ContentHeaderExists("Content-Length", out var name))
-            {
-                if (int.TryParse(contentHeaders[name][0], out var length))
-                {
-                    return length;
-                }
-            }
-
-            return -1;
-        }
-
-        private string GetContentEncoding()
-        {
-            if (ContentHeaderExists("Content-Encoding", out var name))
-            {
-                return contentHeaders[name][0];
-            }
-
-            return string.Empty;
         }
 
         private string GetTransferEncoding()
