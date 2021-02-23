@@ -132,6 +132,9 @@
   <data name="CurrentWorkingDirectory" xml:space="preserve">
     <value>Directorio de trabajo actual</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Ayuda</value>
+  </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Una cordial bienvenida de Bulletta</value>
   </data>
@@ -142,7 +145,7 @@
     <value>No voy a molestar más, supongo que nos vemos a continuación. Adios!</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
-    <value>¿Dónde se guardan todas mis ajustes?</value>
+    <value>¿Dónde se guardan todos mis ajustes?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
     <value>Hay muchos ajustes en OpenBullet 2 y se guardan dentro de la carpeta %UserData%. El %database% (por defecto SQLite) es el archivo que contiene sus proxis, tareas, hits, invitados y también contiene registros de la ubicación de sus diccionarios en el disco. Por defecto se llama %OpenBullet.db%. Las %Configs% están dentro de la subcarpeta Configs, mientras que los %Diccionarios% que importó a través de la función de carga del navegador están dentro de la subcarpeta Wordlists. Consulte sus secciones específicas para obtener más información.</value>

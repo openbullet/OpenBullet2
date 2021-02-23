@@ -136,7 +136,7 @@
     <value>¿Estás seguro?</value>
   </data>
   <data name="BanLoopEvasion" xml:space="preserve">
-    <value>Evasión de bucle de prohibición, también conocida como, después de cuántos estados BAN, los datos debe marcarse como TOCHECK y el proxy debe prohibirse (0 para deshabilitar)</value>
+    <value>Evasión de bucle de prohibición, también conocida como, después de cuántos estados desabilitados/BAN, los datos debe marcarse como A Verificar y el proxy debe desabilitarse (0 para deshabilitar)</value>
   </data>
   <data name="BanStatuses" xml:space="preserve">
     <value>Deshabilitar el proxy cuando el bot termina con uno de estos estados</value>
@@ -235,7 +235,7 @@
     <value>¿Quieres restaurar los ajustes predeterminados?</value>
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
-    <value>Guarda también capturas vacías</value>
+    <value>Guardar también capturas vacías</value>
   </data>
   <data name="SimpleRule" xml:space="preserve">
     <value>Regla simple</value>

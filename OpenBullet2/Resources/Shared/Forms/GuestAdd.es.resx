@@ -121,7 +121,7 @@
     <value>Vencimiento del acceso</value>
   </data>
   <data name="allIfEmpty" xml:space="preserve">
-    <value>todo si esta vacio</value>
+    <value>todas si se deja vacío</value>
   </data>
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Direcciones permitidas</value>

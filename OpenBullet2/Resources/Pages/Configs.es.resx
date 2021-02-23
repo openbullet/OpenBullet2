@@ -132,6 +132,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
+    <value>No se puede descargar la configuración remota</value>
+  </data>
+  <data name="CannotEditRemoteConfig" xml:space="preserve">
+    <value>No puede editar configuraciones remota</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Categoría</value>
   </data>
@@ -140,6 +146,9 @@
   </data>
   <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
     <value>Configuraciones subidas correctamente</value>
+  </data>
+  <data name="ConfigWarningMessage" xml:space="preserve">
+    <value>¡ADVERTENCIA! Las configuraciones que contienen código C # que se ejecuta sin comprobaciones automáticas de comportamientos maliciosos. Si usa configuraciones hechas por terceros, es SU responsabilidad asegurarse de que las configuraciones hagan exactamente lo que se supone que deben hacer y que no suceda nada sospechoso. Siempre verifique el código LoliCode / C # usted mismo antes de ejecutarlos si no confía completamente en el origen.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Fecha de creación</value>
@@ -189,6 +198,12 @@
   <data name="LocalConfigs" xml:space="preserve">
     <value>Config local</value>
   </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Falta complemento</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>La configuración se creó con este complemento, pero falta</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Nombre</value>
   </data>
@@ -202,7 +217,7 @@
     <value>Proxis</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>¿De verdad quiere eliminar?</value>
+    <value>¿De verdad quieres eliminar?</value>
   </data>
   <data name="Reload" xml:space="preserve">
     <value>Recargar</value>

@@ -163,7 +163,7 @@
     <value>Ejecuciones</value>
   </data>
   <data name="Fails" xml:space="preserve">
-    <value>Malos</value>
+    <value>Fallidos</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
     <value>¿Cómo funciona esto?</value>
@@ -175,7 +175,7 @@
     <value>Luego, debe agregar algunos %activadores% y %acciones%. Una vez que se cumplan todas las condiciones de activación, el Monitor de tareas ejecutará todas las %acciones% que especificó en un orden secuencial hasta que se agoten. Después de ejecutar las acciones, el contador de %ejecuciones% aumentará. Si la acción activada está marcada como %repetible%, los activadores coincidirán varias veces; de lo contrario, la acción activada se establecerá como inactiva y no se activará nunca más.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>El botón % Reiniciar% restablecerá el número de ejecuciones a 0. Las acciones activadas se guardan en el archivo %triggeredActions.json%, por lo que si desea realizar una copia de seguridad de ellas o transferirlas a otra instancia de OB, debe copiar este archivo.</value>
+    <value>El botón % Restablecer% restablecerá el número de ejecuciones a 0. Las acciones activadas se guardan en el archivo %triggeredActions.json%, por lo que si desea realizar una copia de seguridad de ellas o transferirlas a otra instancia de OB, debe copiar este archivo.</value>
   </data>
   <data name="Hits" xml:space="preserve">
     <value>Hits</value>
