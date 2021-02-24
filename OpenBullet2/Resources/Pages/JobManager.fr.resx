@@ -123,9 +123,6 @@
   <data name="by" xml:space="preserve">
     <value>par</value>
   </data>
-  <data name="By" xml:space="preserve">
-    <value>Par</value>
-  </data>
   <data name="Clone" xml:space="preserve">
     <value>Cloner</value>
   </data>
