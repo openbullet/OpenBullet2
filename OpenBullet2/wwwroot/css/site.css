@@ -442,7 +442,6 @@ a:hover {
         max-width: 50vw;
         overflow-wrap: break-word;
         margin-bottom: 2px;
-        background-color: black;
     }
 
     .debugger-log button {
