@@ -198,4 +198,7 @@
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
   </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
 </root>

@@ -117,55 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="Add" xml:space="preserve">
+    <value>Ajouter</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="AddBlank" xml:space="preserve">
+    <value>Ajouter vide</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>Types de proxy autorisés</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>Types de wordlist autorisés</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>Toujours ouvrir le navigateur au démarrage</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Êtes-vous sûr ?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>Évasion de la boucle de ban, en gros après combien de statuts BAN la ligne de data devrait être marquée comme TOCHECK et le proxy devrait être banni (0 pour désactiver)</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>Bannir le proxy quand le bot se termine avec un de ces statuts</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Sensible à la CaSsE</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Vider</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>Statuts pour lesquels le bot continuera / s'arrêtera</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>Limite CPM (0 pour pas de limite)</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>Entrées custom</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Réponse par défaut</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
+  <data name="Data" xml:space="preserve">
+    <value>Données</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="DataRules" xml:space="preserve">
+    <value>Règles de données</value>
+  </data>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>Désactiver les notifications des pages web</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Ignorer les erreurs HTTPS</value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>Ignorer les erreurs de réponse</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>Description (question pour l'utilisateur)</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Entrées</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>Les entrées custom permettent de définir certaines valeurs directement au moment de l'exécution. Les utilisateurs de la config recevront des popups lorsqu'ils démarreront un job et leur réponse sera insérée comme une variable de type string que vous pourrez utiliser à votre guise.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Inverser</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>Utilisations maximum par proxy (0 pour infini)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Arguments de lignes de commande (ex. : --disable-notifications --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (défaut si vide)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>Quitte le navigateur quand le bot se termine avec un de ces statuts</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>User Agent aléatoire</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Règle regex</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Regex à match</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Requêtes</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Réinitialiser les valeurs par défaut</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Voulez-vous restaurer les paramètres par défaut ?</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Sauvegarder les captures vides également</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Règle simple</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>Nom de la part</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>Montant suggéré de bots</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Basculer l'aide regex</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>URL Encoder la donnée après le découpage</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>Utiliser des proxies</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Nom de la variable</value>
   </data>
 </root>

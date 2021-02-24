@@ -121,18 +121,21 @@
     <value>Annuler</value>
   </data>
   <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Une fois que vous convertissez la config à C # seulement, vous ne serez pas en mesure de le modifier avec empileur plus! Êtes-vous vraiment, vraiment sûr que vous savez ce que vous faites?</value>
+    <value>Une fois que vous aurez converti la config en C#, vous ne serez plus en mesure de la modifier avec l'empileur ! Êtes-vous vraiment, vraiment sûr que vous savez ce que vous faites ?</value>
   </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Convertir en C # config</value>
+    <value>Convertir en config C#</value>
   </data>
   <data name="CSharpEditor" xml:space="preserve">
-    <value>C # Editor</value>
+    <value>Éditeur C#</value>
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile de blocs</value>
+    <value>Transpiler depuis les blocs</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVERTISSEMENT! LISEZ S'IL VOUS PLAÎT!</value>
+    <value>AVERTISSEMENT ! LISEZ S'IL VOUS PLAÎT !</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>À quoi sert cette section ?</value>
   </data>
 </root>

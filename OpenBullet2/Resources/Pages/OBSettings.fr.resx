@@ -117,55 +117,130 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="Add" xml:space="preserve">
+    <value>Ajouter</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Durée de vie d'une session admin (heures)</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Nom d'utilisateur admin</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Autoriser l'accès fichier dans tout le système</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Clé d'API</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Êtes-vous sûr ?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Automatiquement définir les bots recommandés lorsqu'une config est sélectionnée dans la page de création de tâches</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Changer le mot de passe</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Vider</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="Customization" xml:space="preserve">
+    <value>Customisation</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="AllDone" xml:space="preserve">
+    <value>Terminé</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>L'auteur par défaut sur les nouvelles configs créées</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Mode d'affichage par défaut des job</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
+  <data name="Done" xml:space="preserve">
+    <value>Terminé</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Durée de vie d'une session invité (heures)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Ignorer le nom de la wordlist lors de la suppression de hits dupliqués</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Interval de mise à jour du gestionnaire de jobs</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Interval de mise à jour des job</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Nombre d'entrées maximum dans les logs</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Log dans un fichier également</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Lors de la modification d'une config, naviguez vers</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nouveau mot de passe admin</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>Les nouveaux mots de passe ont été définis !</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Jouer un son lors d'un hit</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Distant</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Exiger connexion admin</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Réinitialiser les valeurs par défaut</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Voulez-vous restaurer les paramètres par défaut ?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sécurité</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Les paramètres ont été sauvegardés avec succès.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Clé de succès</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Thème uploadé avec succès</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Format du fichier thème non supporté. Formats supportés: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Uploader un thème</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Affiche un avertisemment quand la config actuellement chargée n'a pas été sauvegardée et qu'une autre est chargée</value>
   </data>
 </root>

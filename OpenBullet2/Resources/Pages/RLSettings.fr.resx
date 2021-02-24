@@ -117,55 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="2CaptchaApiKey" xml:space="preserve">
+    <value>Clé d'API 2Captcha</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="AntiCaptchaApiKey" xml:space="preserve">
+    <value>Clé d'API Anti-Captcha</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Êtes-vous sûr ?</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="AZCaptchaApiKey" xml:space="preserve">
+    <value>Clé d'API AZ Captcha</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="CapMonsterHost" xml:space="preserve">
+    <value>Hôte CapMonster</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="CapMonsterPort" xml:space="preserve">
+    <value>Port CapMonster</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="Captchas" xml:space="preserve">
+    <value>Captchas</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="CaptchasDotIoApiKey" xml:space="preserve">
+    <value>Clé d'API Captchas.IO</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Vérifier le solde</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="CheckBalanceBeforeSolving" xml:space="preserve">
+    <value>Vérifier le solde avant de résoudre le captcha</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="ChromeBinaryLocation" xml:space="preserve">
+    <value>Emplacement binaire de Chrome</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Timeout de connexion (millisecondes)</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
+  <data name="CurrentService" xml:space="preserve">
+    <value>Service actuel</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
+  <data name="Custom2CaptchaApiKey" xml:space="preserve">
+    <value>Clé d'API 2Captcha custom</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="Custom2CaptchaHost" xml:space="preserve">
+    <value>Hôte 2Captcha custom</value>
+  </data>
+  <data name="Custom2CaptchaPort" xml:space="preserve">
+    <value>Port 2Captcha custom</value>
   </data>
 </root>

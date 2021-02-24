@@ -117,55 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="by" xml:space="preserve">
+    <value>par</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="By" xml:space="preserve">
+    <value>Par</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="Clone" xml:space="preserve">
+    <value>Cloner</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="Combinations" xml:space="preserve">
+    <value>Combinaisons</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Pool de données</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fichier</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+    <value>Comment ça marche ?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infini</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="JobNotIdle" xml:space="preserve">
+    <value>Job non inactif</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="JobNotIdleWarning" xml:space="preserve">
+    <value>Veuillez arrêter ou abandonner le job avant de le supprimer</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="New" xml:space="preserve">
+    <value>Nouveau</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Pas de config sélectionnée</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Inactif</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="Progress" xml:space="preserve">
+    <value>Progrès</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Supprimer tous</value>
+  </data>
+  <data name="SelectJobType" xml:space="preserve">
+    <value>Sélectionner le type de job</value>
+  </data>
+  <data name="ToCheck" xml:space="preserve">
+    <value>À checker</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Actif</value>
   </data>
 </root>

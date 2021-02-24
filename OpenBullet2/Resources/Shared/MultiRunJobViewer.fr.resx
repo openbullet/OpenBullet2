@@ -117,55 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="Abort" xml:space="preserve">
+    <value>Interrompre</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="Alive" xml:space="preserve">
+    <value>Actif</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="Banned" xml:space="preserve">
+    <value>Banni</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="BotLog" xml:space="preserve">
+    <value>Log de bot</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="BotLogDisabledError" xml:space="preserve">
+    <value>Les logs de bot ont été désactivées dans les paramètres, veuillez l'activer pour pouvoir voir les les de bot pour les futurs hits</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="by" xml:space="preserve">
+    <value>par</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Crédit captcha</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="CapturedData" xml:space="preserve">
+    <value>Captures</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="Change" xml:space="preserve">
+    <value>Catégorie</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="ChangingPleaseWait" xml:space="preserve">
+    <value>Changement en cours... merci de patienter</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="CombinationsText" xml:space="preserve">
+    <value>Combinaisons de {0} avec longueur {1}</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="Controls" xml:space="preserve">
+    <value>Contrôles</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
+  <data name="Custom" xml:space="preserve">
+    <value>Custom</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="CustomInput" xml:space="preserve">
+    <value>Entrée custom</value>
+  </data>
+  <data name="Database" xml:space="preserve">
+    <value>Base de données</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>jour(s)</value>
   </data>
 </root>

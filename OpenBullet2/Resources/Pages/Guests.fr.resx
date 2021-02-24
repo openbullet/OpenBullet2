@@ -117,55 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Authentifié en tant que</value>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Expiration de l'accès</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Numéro de build</value>
+  <data name="Add" xml:space="preserve">
+    <value>Ajouter</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Adresse IP du client</value>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Ajouter un invité</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Utilisation du CPU</value>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Adresses autorisées</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Répertoire de travail actuel</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Êtes-vous sûr ?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Modifier l'invité</value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Modifier les info</value>
+  </data>
+  <data name="EditPassword" xml:space="preserve">
+    <value>Modifier le mot de passe</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Un accueil chaleureux de Bulletta</value>
+    <value>Comment ça marche ?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Bonjour et bienvenue à% OpenBullet 2%, je suis% Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>Nouveau mot de passe pour l'invité</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Heure locale</value>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>Vous devez d'abord sélectionner un inviter</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Aucun enregistrement à afficher</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Utilisation de la mémoire</value>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+  <data name="results" xml:space="preserve">
+    <value>résultats</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Résultats par page</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bienvenue dans OpenBullet 2</value>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Aide</value>
-  </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Utilisation du réseau</value>
-  </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Où sont sauvegardés tous mes paramètres ?</value>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
   </data>
 </root>
