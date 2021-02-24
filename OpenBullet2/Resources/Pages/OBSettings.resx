@@ -199,7 +199,7 @@
     <value>New admin password</value>
   </data>
   <data name="NewPasswordSet" xml:space="preserve">
-    <value>The new passwords was set!</value>
+    <value>The new password was set!</value>
   </data>
   <data name="PlaySoundOnHit" xml:space="preserve">
     <value>Play sound on hit</value>
