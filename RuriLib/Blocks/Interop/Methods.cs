@@ -17,7 +17,7 @@ namespace RuriLib.Blocks.Interop
         public static string ShellCommand(BotData data, string executable, string arguments)
         {
             // For example executable is C:\Python27\python.exe and arguments is C:\sample_script.py
-            ProcessStartInfo start = new ProcessStartInfo(executable, arguments)
+            var start = new ProcessStartInfo(executable, arguments)
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -26,8 +26,8 @@ namespace RuriLib.Blocks.Interop
 
             data.Logger.LogHeader();
 
-            using Process process = Process.Start(start);
-            using StreamReader reader = process.StandardOutput;
+            using var process = Process.Start(start);
+            using var reader = process.StandardOutput;
 
             var result = reader.ReadToEnd();
             data.Logger.Log($"Standard Output:", LogColors.PaleChestnut);
@@ -38,7 +38,7 @@ namespace RuriLib.Blocks.Interop
         public static async Task<T> InvokeNode<T>(BotData data, string scriptFile, object[] parameters)
         {
             data.Logger.LogHeader();
-            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, args: parameters);
+            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, null, parameters, data.CancellationToken);
             data.Logger.Log($"Executed NodeJS script with result: {result}", LogColors.PaleChestnut);
             return result;
         }
@@ -56,13 +56,13 @@ namespace RuriLib.Blocks.Interop
         {
             data.Logger.LogHeader();
             data.Logger.Log($"Getting a new IronPython scope.", LogColors.PaleChestnut);
-            ScriptEngine engine = (ScriptEngine)data.Objects["ironPyEngine"];
+            var engine = (ScriptEngine)data.Objects["ironPyEngine"];
             return engine.CreateScope();
         }
 
         public static void ExecuteIronPyScript(BotData data, ScriptScope scope, string scriptFile)
         {
-            ScriptEngine engine = (ScriptEngine)data.Objects["ironPyEngine"];
+            var engine = (ScriptEngine)data.Objects["ironPyEngine"];
             var code = engine.CreateScriptSourceFromFile(scriptFile);
             var result = code.Execute(scope);
             data.Logger.Log($"Executed IronPython script with result {result}", LogColors.PaleChestnut);
