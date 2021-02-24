@@ -47,6 +47,12 @@ namespace OpenBullet2.Services
 
         private async Task FetchRemoteVersion()
         {
+#if DEBUG
+            Console.WriteLine("Skipped updates check in debug mode");
+            await Task.Delay(1);
+            return;
+#else
+
             try
             {
                 // Query the github api to get a list of the latest releases
@@ -67,6 +73,7 @@ namespace OpenBullet2.Services
             {
                 Console.WriteLine("Failed to check for updates. I will retry in 1 day.");
             }
+#endif
         }
 
         public void Dispose() => timer?.Dispose();
