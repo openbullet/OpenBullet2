@@ -275,6 +275,7 @@ namespace OpenBullet2.Pages
                     using var reader = new StreamReader(stream);
                     using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
 
                     // Upload it to the repo
                     await ConfigRepo.Upload(ms);
