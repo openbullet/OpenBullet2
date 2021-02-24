@@ -215,9 +215,13 @@ app {
     }
 
     .sidebar {
-        height: calc(100vh - 62px);
+        height: 100vh;
         position: sticky;
         top: 0;
+    }
+
+    .nav {
+        margin-bottom: 62px !important;
     }
 
     .main .top-row {
@@ -362,7 +366,7 @@ a:hover {
     position: fixed;
     bottom: 0px;
     height: 62px;
-    width: 230px;
+    width: 229px;
     z-index: 1;
     background: var(--bg-secondary);
 }
