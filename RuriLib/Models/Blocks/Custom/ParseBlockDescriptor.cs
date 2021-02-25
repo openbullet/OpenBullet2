@@ -24,6 +24,8 @@ namespace RuriLib.Models.Blocks.Custom
             Parameters = new Dictionary<string, BlockParameter>
             {
                 { "input", new StringParameter("input", "data.SOURCE", SettingInputMode.Variable) },
+                { "prefix", new StringParameter("prefix") },
+                { "suffix", new StringParameter("suffix") },
 
                 // LR
                 { "leftDelim", new StringParameter("leftDelim") },

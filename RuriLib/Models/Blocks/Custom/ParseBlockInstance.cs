@@ -172,24 +172,27 @@ namespace RuriLib.Models.Blocks.Custom
                 case ParseMode.LR:
                     writer.Write(CSharpWriter.FromSetting(Settings["leftDelim"]) + ", ");
                     writer.Write(CSharpWriter.FromSetting(Settings["rightDelim"]) + ", ");
-                    writer.Write(CSharpWriter.FromSetting(Settings["caseSensitive"]));
+                    writer.Write(CSharpWriter.FromSetting(Settings["caseSensitive"]) + ", ");
+                    
                     break;
 
                 case ParseMode.CSS:
                     writer.Write(CSharpWriter.FromSetting(Settings["cssSelector"]) + ", ");
-                    writer.Write(CSharpWriter.FromSetting(Settings["attributeName"]));
+                    writer.Write(CSharpWriter.FromSetting(Settings["attributeName"]) + ", ");
                     break;
 
                 case ParseMode.Json:
-                    writer.Write(CSharpWriter.FromSetting(Settings["jToken"]));
+                    writer.Write(CSharpWriter.FromSetting(Settings["jToken"]) + ", ");
                     break;
 
                 case ParseMode.Regex:
                     writer.Write(CSharpWriter.FromSetting(Settings["pattern"]) + ", ");
-                    writer.Write(CSharpWriter.FromSetting(Settings["outputFormat"]));
+                    writer.Write(CSharpWriter.FromSetting(Settings["outputFormat"]) + ", ");
                     break;
             }
 
+            writer.Write(CSharpWriter.FromSetting(Settings["prefix"]) + ", ");
+            writer.Write(CSharpWriter.FromSetting(Settings["suffix"]));
             writer.WriteLine(");");
 
             if (IsCapture)

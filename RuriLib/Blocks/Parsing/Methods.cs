@@ -12,9 +12,11 @@ namespace RuriLib.Blocks.Parsing
     {
         #region LR
         public static List<string> ParseBetweenStringsRecursive(BotData data, string input, 
-            string leftDelim, string rightDelim, bool caseSensitive = true)
+            string leftDelim, string rightDelim, bool caseSensitive = true, string prefix = "", string suffix = "")
         {
-            var parsed = LRParser.ParseBetween(input, leftDelim, rightDelim, caseSensitive).ToList();
+            var parsed = LRParser.ParseBetween(input, leftDelim, rightDelim, caseSensitive)
+                .Select(p => prefix + p + suffix).ToList();
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed {parsed.Count} values:", LogColors.Yellow);
             data.Logger.Log(parsed, LogColors.Yellow);
@@ -22,9 +24,11 @@ namespace RuriLib.Blocks.Parsing
         }
 
         public static string ParseBetweenStrings(BotData data, string input, 
-            string leftDelim, string rightDelim, bool caseSensitive = true)
+            string leftDelim, string rightDelim, bool caseSensitive = true, string prefix = "", string suffix = "")
         {
             var parsed = LRParser.ParseBetween(input, leftDelim, rightDelim, caseSensitive).FirstOrDefault() ?? string.Empty;
+            parsed = prefix + parsed + suffix;
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
@@ -33,37 +37,47 @@ namespace RuriLib.Blocks.Parsing
 
         #region HTML
         public static List<string> QueryCssSelectorRecursive(BotData data, string htmlPage,
-            string cssSelector, string attributeName)
+            string cssSelector, string attributeName, string prefix = "", string suffix = "")
         {
-            var parsed = HtmlParser.QueryAttributeAll(htmlPage, cssSelector, attributeName).ToList();
+            var parsed = HtmlParser.QueryAttributeAll(htmlPage, cssSelector, attributeName)
+                .Select(p => prefix + p + suffix).ToList();
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed {parsed.Count} values:", LogColors.Yellow);
             data.Logger.Log(parsed, LogColors.Yellow);
             return parsed;
         }
 
-        public static string QueryCssSelector(BotData data, string htmlPage, string cssSelector, string attributeName)
+        public static string QueryCssSelector(BotData data, string htmlPage, string cssSelector, string attributeName,
+            string prefix = "", string suffix = "")
         {
             var parsed = HtmlParser.QueryAttributeAll(htmlPage, cssSelector, attributeName).FirstOrDefault() ?? string.Empty;
+            parsed = prefix + parsed + suffix;
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
+
             return parsed;
         }
         #endregion
 
         #region JSON
-        public static List<string> QueryJsonTokenRecursive(BotData data, string json, string jToken)
+        public static List<string> QueryJsonTokenRecursive(BotData data, string json, string jToken, string prefix = "", string suffix = "")
         {
-            var parsed = JsonParser.GetValuesByKey(json, jToken).ToList();
+            var parsed = JsonParser.GetValuesByKey(json, jToken)
+                .Select(p => prefix + p + suffix).ToList();
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed {parsed.Count} values:", LogColors.Yellow);
             data.Logger.Log(parsed, LogColors.Yellow);
             return parsed;
         }
 
-        public static string QueryJsonToken(BotData data, string json, string jToken)
+        public static string QueryJsonToken(BotData data, string json, string jToken, string prefix = "", string suffix = "")
         {
             var parsed = JsonParser.GetValuesByKey(json, jToken).FirstOrDefault() ?? string.Empty;
+            parsed = prefix + parsed + suffix;
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
@@ -72,18 +86,23 @@ namespace RuriLib.Blocks.Parsing
 
         #region REGEX
         public static List<string> MatchRegexGroupsRecursive(BotData data, string input,
-            string pattern, string outputFormat)
+            string pattern, string outputFormat, string prefix = "", string suffix = "")
         {
-            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat).ToList();
+            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat)
+                .Select(p => prefix + p + suffix).ToList();
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed {parsed.Count} values:", LogColors.Yellow);
             data.Logger.Log(parsed, LogColors.Yellow);
             return parsed;
         }
 
-        public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat)
+        public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat,
+            string prefix = "", string suffix = "")
         {
             var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat).FirstOrDefault() ?? string.Empty;
+            parsed = prefix + parsed + suffix;
+
             data.Logger.LogHeader();
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;

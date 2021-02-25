@@ -20,6 +20,11 @@
 
 <h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["Settings"]:</h6>
 
+<BlockInputField BlockSetting="@Block.Settings["input"]" />
+<BlockInputField BlockSetting="@Block.Settings["prefix"]" />
+<BlockInputField BlockSetting="@Block.Settings["suffix"]" />
+<hr />
+
 <RadzenRadioButtonList @bind-Value="Block.Mode" TValue="ParseMode">
     <Items>
         <RadzenRadioButtonListItem Text="LR" Value="ParseMode.LR" />
@@ -31,7 +36,6 @@
 <br />
 
 <EditForm Model="Block">
-    <BlockInputField BlockSetting="@Block.Settings["input"]" />
     @switch (Block.Mode)
     {
         case ParseMode.LR:
