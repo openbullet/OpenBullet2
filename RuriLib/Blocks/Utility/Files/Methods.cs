@@ -38,7 +38,7 @@ namespace RuriLib.Blocks.Utility.Files
             });
 
             data.Logger.LogHeader();
-            data.Logger.Log($"Read {path}: {text}", LogColors.Flavescent);
+            data.Logger.Log($"Read {path}: {text.TruncatePretty(200)}", LogColors.Flavescent);
             return text;
         }
 
