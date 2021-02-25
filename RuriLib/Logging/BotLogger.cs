@@ -9,6 +9,7 @@ namespace RuriLib.Logging
 {
     public class BotLogger : IBotLogger
     {
+        public bool Enabled { get; set; } = true;
         public string ExecutingBlock { get; set; } = "Unknown";
         private readonly List<BotLoggerEntry> entries = new();
         public event EventHandler<BotLoggerEntry> NewEntry;
@@ -16,6 +17,9 @@ namespace RuriLib.Logging
 
         public void Log(string message, string color = "#fff", bool canViewAsHtml = false)
         {
+            if (!Enabled)
+                return;
+
             var entry = new BotLoggerEntry
             {
                 Message = message,
@@ -29,6 +33,9 @@ namespace RuriLib.Logging
 
         public void Log(IEnumerable<string> enumerable, string color = "#fff", bool canViewAsHtml = false)
         {
+            if (!Enabled)
+                return;
+
             var entry = new BotLoggerEntry
             {
                 Message = string.Join(Environment.NewLine, enumerable),
@@ -43,7 +50,7 @@ namespace RuriLib.Logging
         public void LogHeader([CallerMemberName] string caller = null)
         {
             // Do not log if called by lolicode
-            if (ExecutingBlock == "LoliCode")
+            if (!Enabled || ExecutingBlock == "LoliCode")
                 return;
 
             var callingMethod = new StackFrame(1).GetMethod();
@@ -63,9 +70,6 @@ namespace RuriLib.Logging
             NewEntry?.Invoke(this, entry);
         }
 
-        public void Clear()
-        {
-            entries.Clear();
-        }
+        public void Clear() => entries.Clear();
     }
 }

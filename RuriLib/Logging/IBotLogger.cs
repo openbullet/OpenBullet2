@@ -6,6 +6,7 @@ namespace RuriLib.Logging
 {
     public interface IBotLogger
     {
+        bool Enabled { get; set; }
         IEnumerable<BotLoggerEntry> Entries { get; }
         string ExecutingBlock { get; set; }
         event EventHandler<BotLoggerEntry> NewEntry;

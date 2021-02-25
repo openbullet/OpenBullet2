@@ -23,6 +23,9 @@ Note: `data.Proxy` is null if proxies are off, so always make a null check first
 - `data.Proxy.Username` (`string`)
 - `data.Proxy.Password` (`string`)
 - `data.Proxy.Type` (`ProxyType`) can be `Http`/`Socks4`/`Socks5`/`Socks4a`
+
+###### Logger
+- `data.Logger.Enabled` (`bool`) enables or disables the logger (e.g. when there is too much data to print)
 ---
 ##### Useful methods
 - `data.MarkForCapture(string varName)` adds the variable name to the `data.MarkedForCapture` list
