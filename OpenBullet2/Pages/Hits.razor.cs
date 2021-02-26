@@ -41,6 +41,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobFactoryService JobFactory { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
@@ -183,6 +184,26 @@ namespace OpenBullet2.Pages
 
                 // Delete the hit from the local list
                 selected.ForEach(h => hits.Remove(h));
+            }
+
+            await RefreshList();
+        }
+
+        private async Task DeleteDuplicates()
+        {
+            var duplicates = hits
+                .GroupBy(h => h.GetHashCode(PersistentSettings.OpenBulletSettings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
+                .Where(g => g.Count() > 1)
+                .SelectMany(g => g.OrderBy(h => h.Date)
+                .Reverse().Skip(1)).ToList();
+
+            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {duplicates.Count} {Loc["hits"]}?", Loc["Cancel"]))
+            {
+                // Delete the hit from the db
+                await HitRepo.Delete(duplicates);
+
+                // Delete the hit from the local list
+                duplicates.ForEach(h => hits.Remove(h));
             }
 
             await RefreshList();

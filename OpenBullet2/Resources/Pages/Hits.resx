@@ -201,4 +201,7 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
   </data>
+  <data name="DeleteDuplicates" xml:space="preserve">
+    <value>Delete duplicates</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@
             <button class="btn btn-sm btn-outline-primary" @onclick="SendToRecheck"><span class="oi oi-action-redo"></span> @Loc["SendToRecheck"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteHit"><span class="oi oi-x"></span> @Loc["Delete"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteFiltered"><span class="oi oi-x"></span> @Loc["DeleteFiltered"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteDuplicates"><span class="oi oi-x"></span> @Loc["DeleteDuplicates"]</button>
             @if (uid == -0)
             {
                 // Only the admin can purge all hits from the DB

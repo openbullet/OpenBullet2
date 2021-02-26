@@ -20,5 +20,18 @@ namespace OpenBullet2.Entities
         // Wordlist-related fields
         public int WordlistId { get; set; }
         public string WordlistName { get; set; } // Needed to still identify the wordlist name even if the wordlist was deleted
+
+        /// <summary>
+        /// Gets a unique hash of the hit.
+        /// </summary>
+        /// <param name="ignoreWordlistName">Whether the wordlist name should affect the generated hash</param>
+        public int GetHashCode(bool ignoreWordlistName = true)
+        {
+            var id = ignoreWordlistName
+                ? Data + ConfigName
+                : Data + ConfigName + WordlistName;
+            
+            return id.GetHashCode();
+        }
     }
 }
