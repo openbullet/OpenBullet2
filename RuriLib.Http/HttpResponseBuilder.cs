@@ -567,6 +567,8 @@ namespace RuriLib.Http
                     return new GZipStream(stream, CompressionMode.Decompress, true);
                 case "deflate":
                     return new DeflateStream(stream, CompressionMode.Decompress, true);
+                case "br":
+                    return new BrotliStream(stream, CompressionMode.Decompress, true);
                 default:
                     throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format");
             }
