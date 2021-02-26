@@ -166,7 +166,7 @@
     <value>%Kelime listesi bir sunucuda ise%, bu OB2'nin çalıştığı makineden bir dosya almaya çalıştığınız anlamına gelir, klasörler arasında görsel olarak göz atmanıza izin veren %Dosya Sistemi% seçeneğini kullanabilirsiniz, Sürücüde OB2'nin mevcut çalışma dizininin dışındaki konumlara erişmek için OpenBullet'in güvenlik seçeneklerine gitmeniz ve sistem genelinde dosya erişimine izin vermeniz gerektiğini unutmayın.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>%Kelime listesi/Wordlist Türü% ile ilgili olarak, OB2 dizininizdeki %Settings/Environment.ini% dosyasında güncel olarak belirtilmiş olan Kelime Listesi/Wordlist Türlerini bulacaksınız. Kelime Listesi/Wordlist Türleri OB2 başladığında yüklenir. Bu dosyayı değiştirebilir ve kelime listelerinizin formatına uyması için Kelime Listesi Türleri ekleyebilir/kaldırabilir/değiştirebilirsiniz. Resmi forumun kılavuzlar bölümünde Kelime Listesi Türleri hakkında daha fazla bilgi edinebilirsiniz.</value>
+    <value>%Kelime listesi/Wordlist Türü% ile ilgili olarak, OB2 dizininizdeki %UserData/Environment.ini% dosyasında güncel olarak belirtilmiş olan Kelime Listesi/Wordlist Türlerini bulacaksınız. Kelime Listesi/Wordlist Türleri OB2 başladığında yüklenir. Bu dosyayı değiştirebilir ve kelime listelerinizin formatına uyması için Kelime Listesi Türleri ekleyebilir/kaldırabilir/değiştirebilirsiniz. Resmi forumun kılavuzlar bölümünde Kelime Listesi Türleri hakkında daha fazla bilgi edinebilirsiniz.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
     <value>Hayır, dosyayı sakla</value>

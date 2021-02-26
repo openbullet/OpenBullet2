@@ -166,7 +166,7 @@
     <value>%Si el diccionario está en el servidor%, lo que significa que está intentando recuperar un archivo de la misma máquina en la que se está ejecutando OB2, puede usar la opción %Archivo de sistema%, que le permitirá navegar visualmente a través de carpetas en busca del archivo que desea. Tenga en cuenta que para acceder a ubicaciones en la unidad que están fuera del directorio de trabajo actual de OB2, deberá ir a las opciones de seguridad de OpenBullet y permitir el acceso a archivos en todo el sistema.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Con respecto al %Tipo de diccionario%, encontrará los Tipos de diccionarios especificados actualmente en el archivo % Settings / Environment.ini% en su directorio OB2. Los tipos de diccionarios se cargan cuando se inicia OB2. Puede cambiar este archivo y agregar / eliminar / cambiar los tipos de diccionarios para que coincidan con el formato de sus diccionarios. Puede leer más sobre los tipos de diccionarios en la sección de guías del foro oficial.</value>
+    <value>Con respecto al %Tipo de diccionario%, encontrará los Tipos de diccionarios especificados actualmente en el archivo % UserData / Environment.ini% en su directorio OB2. Los tipos de diccionarios se cargan cuando se inicia OB2. Puede cambiar este archivo y agregar / eliminar / cambiar los tipos de diccionarios para que coincidan con el formato de sus diccionarios. Puede leer más sobre los tipos de diccionarios en la sección de guías del foro oficial.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
     <value>No, mantener el archivo</value>

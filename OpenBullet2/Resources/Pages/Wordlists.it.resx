@@ -166,7 +166,7 @@
     <value>%Se la wordlist è sul server%, cioè se stai cercando di reperire un file nella stessa macchina che sta eseguendo OB2, puoi usare l'opzione %File System%, che ti permetterà di esplorare le cartelle in cerca del file desiderato. Nota che per accedere a posizioni sul disco che sono fuori dalla cartella di lavoro corrente, dovrai abilitare l'accesso ai file in tutto il sistema nelle opzioni di sicurezza di OB2.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>In quanto ai %Tipi di wordlist% (o Wordlist Types), troverai i Wordlist Types specificati al momento nel file %Settings/Environment.ini% nella cartella di OB2. I Wordlist Types sono caricati quando OB2 viene eseguito. Puoi cambiare questo file e aggiungere/rimuovere/modificare i Wordlist Types a seconda del formato delle tue wordlist. Puoi trovare più informazioni riguardo ai Wordlist Types nella sezione guide del forum ufficiale.</value>
+    <value>In quanto ai %Tipi di wordlist% (o Wordlist Types), troverai i Wordlist Types specificati al momento nel file %UserData/Environment.ini% nella cartella di OB2. I Wordlist Types sono caricati quando OB2 viene eseguito. Puoi cambiare questo file e aggiungere/rimuovere/modificare i Wordlist Types a seconda del formato delle tue wordlist. Puoi trovare più informazioni riguardo ai Wordlist Types nella sezione guide del forum ufficiale.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
     <value>No, mantieni il file</value>
