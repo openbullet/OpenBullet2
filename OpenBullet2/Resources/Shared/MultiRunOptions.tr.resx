@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bots" xml:space="preserve">
+    <value>Botlar</value>
+  </data>
+  <data name="by" xml:space="preserve">
+    <value>tarafından</value>
+  </data>
+  <data name="ConcurrentProxyMode" xml:space="preserve">
+    <value>Eşzamanlı proksi modu</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Yapılandırma</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Veri havuzu</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Bu ayarlar da neyin nesi?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Bir MultiRun/Çoklu çalıştırma işi oluşturduğunuzda bir %config/yapılandırma% sağlamanız gerekir. %Configs/Yapılandırmalar% bölümünde kendinizinkini oluşturabilir veya var olanı içe aktarabilirsiniz. Yapılandırmalar bölümünün hata ayıklayıcısında bir yapılandırmayı test ettikten sonra, onu paralel çalışan birden çok botla yürütmek için buradan seçebilirsiniz. %Yapılandırma Seç% butonuna tıklayın sadece, böylece bir listeden yapılandırma seçebileceksiniz. Ayrıca yapılandırmanın %readme/benioku% dosyasının bir önizlemesi de gösterilecektir.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>%Proksi modu% seçilen yapılandırmayı çalıştırırken proksilerin kullanılıp kullanılmayacağına karar verir. %Varsayılan% olarak bırakırsanız, yapılandırmanın ayarlarında belirtilenleri kullanacaktır (Proksiler bölümü, %Proksiler kullan% seçeneği).%Evet% veya %Hayır%'ı seçerseniz, varsayılan ayarı geçersiz kılar.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Botlar% yapılandırmanızı yürütecek paralel çalışanların sayısıdır, her biri belirttiğiniz veri havuzundan kendi veri satırına sahiptir (örneğin bir kelime listesi gibi). Ne kadar çok bot koyarsanız, aynı anda daha fazla istek yapılacaktır, ancak makinenizin donanımına bağlı olan bir %limit% olduğunu ve botların miktarını artırmanın aslında performansları düşürdüğünü unutmayın!</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>%Skip/Atla% veri havuzunun başlangıcından itibaren kaç satırın atlanacağını tanımlar. This value is set automatically as soon as you select a pair of config and wordlist that you have already run before, since checkpoints of your progress are periodically saved to the database.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Veri havuzu nedir?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Bir %Veri havuzu% botlara atanacak tüm veri hatlarının kaynağıdır. Veri havuzu satır satır okunacak ve kullanılabilir bir bot olduğunda, işlenmesi için bir satır atanacaktır. Bir veri havuzunu başlatmanın farklı yolları vardır. En yaygın yol %wordlist/kelime listesi% yöntemidir. Bir kelime listesi kullanmak için, önce %Kelime Listesi% bölümünden içeri aktarım yapmanız gerekir. Bir kelime listesini içe aktardıktan sonra, %Kelime Listesi Seç% butonuna tıklayın ve kullanmak istediğiniz kelime listesini seçin. Ayrıca, kelime listesinin ilk birkaç satırının önizlemesini de görebileceksiniz.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>%Dosya% seçeneğini seçerseniz, kelime listesinin içe aktarma aşamasını atlayabilirsiniz, ancak bunun wordlist/kelime listesi-config/yapılandırma çiftinizin ilerlemesini veritabanına kaydetme ve hitler/bulunan kayıtlar ile bunları elde etmek için kullanılan wordlist/kelime listesi arasındaki ilişki gibi bazı özellikleri devre dışı bırakacağını unutmayın. Kelime listeleri, bir dosyadaki verileri kullanmanın tercih edilen yoludur, bu yüzden Kelime Listeleri bölümüne göz atmanızı öneririm! Ayrıca %Kelime Listesi Türünü%, belirtmeniz gerekir, bu seçeneğin ne anlama geldiğiyle ilgili daha fazla yardım için Kelime Listeleri bölümüne bakınız.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>%Aralık% seçeneği, bir başlangıç değerinden başlayarak yalnızca bir sayı aralığı oluşturacaktır. Örneğin, %Başla% = 0, %Miktar% = 5 ve %Aşama% = 2 olarak ayarlarsanız, 0, 2, 4, 6 ve 8 değerleriyle 5 veri satırı oluşturacaktır. %Ped% kutusunu işaretlerseniz, sayı, oluşturulacak en büyük sayının basamak sayısına göre sola sıfır olarak doldurulacaktır, örneğin en büyük sayı 100 ise, oluşturulan veri havuzunuzda 001, 042 vb. değerleri göreceksiniz.</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>%Kombinasyonlar% seçeneği, belirli bir %Uzunluk% için belirli bir %Karakter kümesinin% tüm olası kombinasyonlarını oluşturmanıza olanak sağlar. Örneğin, Karakter seti olarak ABCD'yi kullanırsanız ve Uzunluk = 4'ü kullanırsanız, AAAA, AAAB, ... ACCB ... DDDC, DDDD gibi kombinasyonlar elde edersiniz.</value>
+  </data>
+  <data name="Help2x05" xml:space="preserve">
+    <value>%Sınırsız% seçeneği, sonsuz miktarda boş veri satırı oluşturacaktır, böylece siz onu durdurmaya karar verene kadar iş devam edecektir.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Proksi kaynağı nedir?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>%Proksi kaynakları% botlara atanan proksi sunucu havuzuna eklendiğinde, proksilerin nereden alınacağını belirlemek için kullanılır. Proksi kaynakları, bir işin başlangıcında ve ayrıca tüm proksiler yasaklandığında veya bir koşul, proksileri yeniden yüklenmeye zorladığında sorgulanacaktır. %Grup% türündeki bir proxy kaynağı, %Proksiler% bölümünde tanımlanan bir gruptan proksiler alacaktır. Bu seçeneği kullanmak için, içinde bazı proksiler bulunan bir grubunuz olması gerekir, bunun nasıl yapılacağına ilişkin talimatlar için Proksiler bölümüne bakınız.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>%Dosya% türündeki bir proksi kaynağı, diskteki belirli bir dosyadan proksiler yükleyecektir. İstediğiniz dosyanın tam yolunu ve gelişmiş sözdizimi ile hiçbiri belirtilmemişse varsayılan olarak kullanılacak proksi %türünü% yazabilirsiniz. Dosyanın içeriğini istediğiniz zaman düzenleyebilirsiniz ve bir sonraki proksi yeniden yükleme işlemi gerçekleştiğinde, yepyeni proksileriniz dosyadan ayrıştırılır.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>%Uzak bağlantı% türündeki bir proksi kaynağı, proksileri almak için uzak bir kaynağı, örneğin bir proxy sağlayıcısının API hizmetini sorgulamayı içerecektir. Yine, varsayılan seçenek olarak kullanmak için bir proksi %türü% belirtmeniz gerekecektir. Bu seçenek, harici bir hizmet tarafından halihazırda kontrol edilmiş olan yeni çalışan proksileri almak için kullanılabilir.</value>
+  </data>
+  <data name="Help4x00" xml:space="preserve">
+    <value>Hit/Bulunan kayıtlar çıktısı nedir?</value>
+  </data>
+  <data name="Help4x01" xml:space="preserve">
+    <value>%Hit/Bulunan kayıtlar çıktısı%, hitlerin bulunduktan sonra gönderileceği yerdir. %Veritabanı% seçeneği (yalnızca bir tane olabilir) hitleri/bulunan kayıtları OpenBullet 2'nin varsayılan veritabanına yazacaktır. Veritabanındaki hitleri %Bulunan kayıtlar% bölümü aracılığı ile keşfedebilirsiniz. %Dosya sistemi% seçeneği (yalnızca bir tane olabilir) hitleri/bulunan kayıtları diskte organize bir klasör yapısına kaydedecektir. Klasör yapısının oluşturulmasını istediğiniz temel dizinin yolunu yazmanız yeterlidir.</value>
+  </data>
+  <data name="Help4x02" xml:space="preserve">
+    <value>Son olarak, %Discord webhook% seçeneği, bulunan kayıtları özel bir kullanıcı adı ve avatar (genel bir depoda barındırılan bir görüntünün URL'si aracılığıyla belirtilir) kullanarak discord webhook'a göndermenize olanak tanır. Bu seçeneği kullanmak için sunucunuzdaki bir kanal için discord webhook oluşturmanız ve URL'yi uygun alana yapıştırmanız gerekir.</value>
+  </data>
+  <data name="HitOutputs" xml:space="preserve">
+    <value>Hit/Bulunan kayıt çıktıları</value>
+  </data>
+  <data name="MarkAsToCheckOnAbort" xml:space="preserve">
+    <value>İptal edince kontrol et olarak işaretle</value>
+  </data>
+  <data name="NeverBanProxies" xml:space="preserve">
+    <value>Proksileri asla yasaklama</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Yapılandırma seçilmedi</value>
+  </data>
+  <data name="NoValidProxyBehaviour" xml:space="preserve">
+    <value>Geçerli bir proxy hareketi yok</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
+    <value>Periyodik yeniden yükleme aralığı (sn.,devre dışı bırakmak için 0)</value>
+  </data>
+  <data name="ProxyBanTimeSeconds" xml:space="preserve">
+    <value>Proksi yasaklama süresi (saniye)</value>
+  </data>
+  <data name="ProxyMode" xml:space="preserve">
+    <value>Proksi modu</value>
+  </data>
+  <data name="ProxySources" xml:space="preserve">
+    <value>Proksi kaynakları</value>
+  </data>
+  <data name="ReloadProxiesWhenAllBanned" xml:space="preserve">
+    <value>Tümü yasaklandığında proksileri yeniden yükle</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Yapılandırma Seç</value>
+  </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Proksileri karıştır</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Atla</value>
+  </data>
+  <data name="StartCondition" xml:space="preserve">
+    <value>Başlama koşulu</value>
+  </data>
+</root>

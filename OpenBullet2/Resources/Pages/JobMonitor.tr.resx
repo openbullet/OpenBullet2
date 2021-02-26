@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Actions" xml:space="preserve">
+    <value>Hareketler</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Sırayla yürütülür</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktif</value>
+  </data>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Sağlam Proksiler</value>
+  </data>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Yasaklı Proksiler</value>
+  </data>
+  <data name="Bans" xml:space="preserve">
+    <value>Yasaklar</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Captcha kredisi</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Özel</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>gün</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Eylemi Düzenle</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Trigger/tetikleyici Düzenle</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Hatalar</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>Yürütme</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Çalışmalar</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Başarısızlar</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Bu nasıl çalışıyor?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Burası %İş İzleyicisi%, %triggered/tetiklenen eylemlerin% bir listesini içerir. Tetiklenen Eylemler, bir işi izlemekten, tetikleyicileri kontrol etmekten ve eylemleri yürütmekten sorumludur. Öncelikle, sayısal metin kutusunda izlenecek işin %id%'sini tanımlamalısınız. Henüz bitirmediğinizde yanlışlıkla çalıştırılmalarını önlemek için tetikleyicileri ve eylemleri ayarlarken %aktif% onay kutusunun işaretini kaldırmayı unutmayın.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Daha sonra bazı %trigger/tetikleyici% ve %eylemler% eklemelisiniz. Tüm tetikleme koşulları doğru olduğunda, İş Monitörü, belirttiğiniz tüm %eylemleri% tükenene kadar sıralı bir sırada yürütür. Eylemleri gerçekleştirdikten sonra %yürütme% sayacı artacaktır. Tetiklenen Eylem %tekrarlanabilir% olarak işaretlenirse, tetikleyiciler birden çok kez eşleşir, aksi takdirde Tetiklenen Eylem kendisini devre dışı olarak ayarlar ve bir daha asla tetiklenmez.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Sıfırla% butonu yürütme sayısını 0'a sıfırlayacaktır. Tetiklenen Eylemler %triggeredActions.json% dosyasına kaydedilir, bu nedenle onları yedeklemek veya başka bir OB örneğine aktarmak isterseniz bu dosyayı kopyalamanız gerekir.</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Bulunan kayıtlar</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>saat</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>çalışıyor</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>İş</value>
+  </data>
+  <data name="JobFinished" xml:space="preserve">
+    <value>İş bitti</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>İş durumu</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>dakika</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>web kancasında</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>İlerleme</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Proksileri yeniden yükle</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Hepsini Sil</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Tekrarlanabilir</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Sıfırla</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Yeniden denemeler</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>saniye</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Eylem türünü seçin</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Tetikleyici türünü seçin</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Botları şuraya gönder</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Göreceli zamanı ayarlayın</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>İş Başlat</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>İşi Durdur</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Test edildi</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Geçen süre</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Kalan süre</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>Kontrol Et Listesi</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Trigger/Tetikleyiciler</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>Hepsi aynı anda doğrulanmalıdır</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Bekle</value>
+  </data>
+</root>
