@@ -559,19 +559,15 @@ namespace RuriLib.Http
 
         private Stream GetZipStream(Stream stream)
         {
-            string contentEncoding = GetContentEncoding().ToLower();
+            var contentEncoding = GetContentEncoding().ToLower();
 
-            switch (contentEncoding)
+            return contentEncoding switch
             {
-                case "gzip":
-                    return new GZipStream(stream, CompressionMode.Decompress, true);
-                case "deflate":
-                    return new DeflateStream(stream, CompressionMode.Decompress, true);
-                case "br":
-                    return new BrotliStream(stream, CompressionMode.Decompress, true);
-                default:
-                    throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format");
-            }
+                "gzip" => new GZipStream(stream, CompressionMode.Decompress, true),
+                "deflate" => new DeflateStream(stream, CompressionMode.Decompress, true),
+                "br" => new BrotliStream(stream, CompressionMode.Decompress, true),
+                _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
+            };
         }
 
         private bool FindSignature(byte[] source, int sourceLength, byte[] signature)
