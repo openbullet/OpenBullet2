@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Adauga</value>
+  </data>
+  <data name="AddBlank" xml:space="preserve">
+    <value>Adauga gol</value>
+  </data>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>Tipuri de proxiuri permise</value>
+  </data>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>Tipuri de Wordlist permise</value>
+  </data>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>Mereu porneste browserul la inceput</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Esti sigur?</value>
+  </data>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>Baneaza evaziunea in bucla a.k.a. dupa cate statusuri BAN datele vor fi marcate ca TOCHECK si proxiul va fi banat (0 to disable)</value>
+  </data>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>Baneaza proxiul can botul va avea unul dintre statusuri</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuleaza</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case sensitive</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Sterge</value>
+  </data>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>Statusuri pentru care botul va continua / se va opri</value>
+  </data>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>Limita CPM (0 pentru nicio limita)</value>
+  </data>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>Inputuri speciale</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="DataRules" xml:space="preserve">
+    <value>Reguli Data</value>
+  </data>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Raspuns implicit</value>
+  </data>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>Dezactiveaza notificarile din pagini</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Ignora erorile HTTPS</value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>Ignora erorile primite</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>Descriere (intrebare pentru utilizator)</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Inputs</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>Inputurile speciale sunt o cale de definire a unor valori direct in timpul de rulare. Utilizatorii unui config voi primi popups cand acestia pornesc o actiune si raspunsul lor va fi introdus ca variabile de tip string pe care le vei putea folosi cum vrei.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Inverseaza</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>Numarul maxim de utilizator per proxi (0 e infinit)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Erori in linia de comanda (ex. --dezactiveaza-notificarile --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (implicit e gol)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>Inchide browserul cand botii termina cu unul din statusuri</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>User Agent aleatoriu</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Regula Regex</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Potrivire Regex</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Sterge</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Cerere</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restabilire la setarile implicite</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Vrei sa restabilesti la setarile implicite?</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Salveaza si capturile goale</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Regula simpla</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>Imparte numele</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>Numarul sfatuit de boti</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Afiseaza Regex Helper</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>URL Encode datele dupa impartire</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>Foloseste proxiuri</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Numele variabilei</value>
+  </data>
+</root>

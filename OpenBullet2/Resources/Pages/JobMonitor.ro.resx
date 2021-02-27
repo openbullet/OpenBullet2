@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Actions" xml:space="preserve">
+    <value>Actiuni</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Executat secvential</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Activ</value>
+  </data>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Proxiuri in viata</value>
+  </data>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Proxiuri banate</value>
+  </data>
+  <data name="Bans" xml:space="preserve">
+    <value>Banuri</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Captcha credit</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Customs</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>zile</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Editeaza actiune</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Editeaza declansator</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Erori</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>Executa</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Executari</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Esuari</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Cum functioneaza?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Acesta este %Job Monitor%, care contine o lista de %triggered actions%. Actiunile declansatoare sunt insarcinate cu monitorizarea unui job, verificarea declansatorilor si executarea actiunilor. In primul rand, trebuie sa definiti %id% din lucrarea de monitorizat in caseta text numerica. Nu uitati sa debifati caseta de selectare %active% cand configurati declansatoarele si actiunile pentru a evita executarea lor accidentala atunci cand nu ati terminat inca cu ele.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Apoi ar trebui sa adaugati cateva %triggers% si %actions%. Odata ce toate conditiile de declansare sunt adevarate, Job Monitor va executa toate %actions% pe care le-ati specificat intr-o ordine secventiala pana cand acestea sunt epuizate. Dupa executarea actiunilor, contorul% executii% va creste. Daca actiunea declansata este marcata ca %repeatable%, declansatoarele vor fi potrivite de mai multe ori, altfel actiunea declansata se va seta ca inactiva si nu se va mai declansa niciodata.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Butonul %Reset% va reseta numarul de executii la 0. Actiunile declansate sunt salvate in fisierul %triggeredActions.json%, deci daca doriti sa le faceti backup sau sa le transferati intr-o alta instanta OB, ar trebui sa copiati acest fisier.</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>ore</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>in job</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>Job</value>
+  </data>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Job terminat</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Statusul Jobului</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minute</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nou</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>pe webhook</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progras</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Reincarca proxiurile</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Sterge</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Sterge tot</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Repeta</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reseteaza</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Reincercari</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>secunde</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Selecteaza tipul actiunii</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Secelteaza tipul declansarii</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Trimite</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Seteaza botii la</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Seteaza timpul relativ la</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Porneste Job</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Opreste Job</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Testat</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Timp trecut</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Timp ramas</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>Catre verificare</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Declansari</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>Toate trebuie verificate in acelasi timp</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Asteapta</value>
+  </data>
+</root>

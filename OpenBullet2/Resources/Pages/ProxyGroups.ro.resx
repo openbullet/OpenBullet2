@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Adauga Grup</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Toate</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Esti sigur?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuleaza</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Tara</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Creat</value>
+  </data>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Creaza grup de proxy</value>
+  </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Sterge toate proxiurile</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Sterse</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Sterge grup</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>Sterge pe cele nefunctionabile</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Sterge pe cele incete</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Sterge pe cele netestate</value>
+  </data>
+  <data name="EditGroup" xml:space="preserve">
+    <value>Editeaza grup</value>
+  </data>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Editeaza grupul de proxiuri</value>
+  </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>Pentru acest grup</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Grup in folosire</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>In prezent, un job foloseste acest grup proxy. Va rugam sa opriti si sa eliminati lucrarea de la manager si sa incercati din nou.</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Cum functioneaza asta?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Aici va puteti importa proxy-urile in mai multe %groups%. Grupurile ajuta la mentinerea proxy-urilor organizate si va ofera posibilitatea de a utiliza proxy diferite pentru diferite joburi. In primul rand ar trebui sa creati un grup facand clic pe butonul %Add Group% de mai sus. Doar da-i un nume. Asigurati-va ca noul grup este selectat, apoi faceti clic pe %Import Proxies%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Meniul %Import Proxies% va va oferi 3 moduri de a va importa proxy-urile. Puteti fie %paste%,%upload a file%, %type the URL% a unei resurse la distanta care furnizeaza proxy intr-un format text (de obicei unul pe linie). De asemenea, puteti specifica valorile implicite %type%,%username% si %password% pentru proxy-uri. Alternativ, puteti utiliza %advanced syntax% descrisa in formular pentru a specifica tipul, numele de utilizator si parola pe baza de proxy.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Acum sunteti gata si veti putea selecta grupul proxy atunci cand creati sau editati o lucrare. Puteti crea o lucrare de tip %Proxy Check% pentru a testa daca proxy-urile dvs. functioneaza inainte de a le utiliza. Lucrarea de verificare proxy va actualiza campurile %country%, %status%, %ping% si %last check date% din proxy-urile dvs. in tabelul de date de pe aceasta pagina, astfel incat sa puteti apoi %remove% proxy care nu functioneaza sau aveti un ping prea mare pentru nevoile dvs. Puteti chiar decide sa pastrati proxy dintr-o anumita tara!</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Incarcate</value>
+  </data>
+  <data name="ImportProxies" xml:space="preserve">
+    <value>Proxiuri incarcate</value>
+  </data>
+  <data name="LastChecked" xml:space="preserve">
+    <value>Ultima verificare</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Va rugam sa selectati mai intai un grup real</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Nu exista inregistrari de afisat</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Parola</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>ping over</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Proxiurile au fost sterse cu succes</value>
+  </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Proxiurile au for importate cu succes</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Proxy Group</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>Grupul de proxiuri a fost creat cu succes</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Chiar vrei sa stergi</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>rezultate</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Rezultate pe pagina</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Incet</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oh-Uh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nume</value>
+  </data>
+</root>
