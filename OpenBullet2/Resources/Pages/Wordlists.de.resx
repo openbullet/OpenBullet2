@@ -156,11 +156,27 @@
   <data name="FileName" xml:space="preserve">
     <value>Dateiname</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert das?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Hier kannst du Wortlisten importieren. Klicke zuerst auf den %Hinzufügen% Button oben. Es kann nun eine %Wordlist Art% (mehr Informationen dazu später), ein %Name% und ein %Zweck% angegeben werden. Du hast zwei Optionen, um deine Datei hochzuladen. Die erste Option ist, sie auf den Server %hochzuladen%, auf dem die Instanz von OpenBullet2 läuft. Dies ist die bevorzugte Methode, %falls sich die Wordlist auf dem Client% befindet, von dem aus du über den Browser auf OB2 zugreifst, aber OB2 auf einer anderen Maschine gehostet wird. Diese Methode fügt einen gewissen Overhead hinzu, da die Wordlist über den Browser hochgeladen werden muss.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>%Wenn sich die Wortliste auf dem Server% befindet, was bedeutet, dass du versuchst, eine Datei von demselben Rechner abzurufen, auf dem OB2 läuft, kannst du die Option %Dateisystem% verwenden, mit der du visuell durch Ordner auf der Suche nach der gewünschten Datei stöbern kannst. Beachte, dass du, um auf Orte auf dem Laufwerk zuzugreifen, die außerhalb des aktuellen Arbeitsverzeichnisses von OB2 liegen, in die Sicherheitsoptionen von OpenBullet gehen und den systemweiten Dateizugriff erlauben musst.
+%Wenn sich die Wortliste auf dem Server% befindet, was bedeutet, dass du versuchst, eine Datei von demselben Rechner abzurufen, auf dem OB2 läuft, kannst du die Option %Dateisystem% verwenden, mit der du visuell durch Ordner auf der Suche nach der gewünschten Datei blättern kannst. Beachte, dass du, um auf Orte auf dem Laufwerk zuzugreifen, die außerhalb des aktuellen Arbeitsverzeichnisses von OB2 liegen, in die Sicherheitsoptionen von OpenBullet gehen und den systemweiten Dateizugriff erlauben musst.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Was den %Wordlist Art% betrifft, so findest du die aktuell eingestellten Wordlist Arten in der %UserData/Environment.ini% Datei in deinem OB2 Verzeichnis. Die Wortlisten-Arten werden geladen, wenn der OB2 startet. Du kannst diese Datei ändern und Wordlist Types hinzufügen/entfernen/ändern, um sie an das Format deiner Wordlists anzupassen. Du kannst mehr über Wordlist Arten im offiziellen Forum in der Guides Sektion lesen.</value>
+  </data>
   <data name="KeepFile" xml:space="preserve">
     <value>Nein, die Datei behalten</value>
   </data>
   <data name="Lines" xml:space="preserve">
     <value>Zeilen</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>

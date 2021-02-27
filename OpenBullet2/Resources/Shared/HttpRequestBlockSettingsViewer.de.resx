@@ -120,10 +120,34 @@
   <data name="AdvancedSettings" xml:space="preserve">
     <value>Erweiterte Einstellungen</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert dieser Block?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Der %HTTP Request% Block erlaubt es dir, eine HTTP-Anfrage an einen Endpunkt zu stellen. Wenn du neben deinen Headern und Cookies auch einen Body senden möchtest, kannst du dies tun, indem du eine der Möglichkeiten zum Senden von Inhalten auswählst. Der %Standard% Modus nimmt einfach einen String, kodiert ihn als UTF-8 und sendet ihn innerhalb des Request Bodys. Das %Content Type% Feld wird automatisch in einen %Content-Type% Header umgewandelt und der Anfrage hinzugefügt.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Der %Raw% Modus macht im Grunde das Gleiche wie der Standard Modus, wenn dein Inhalt ein Byte Array und kein String ist. Der %Basic Auth% Modus wird für die Authentifizierung mit Basic Access Authentication verwendet (das typische Benutzername/Passwort-Popup, das du in deinem Browser siehst und das nach deinen Zugangsdaten fragt). Schließlich sendet der %Multipart% Modus einen Inhalt, der aus mehreren Teilen bestehen kann, wie Strings, Rohbytes und Dateien. Dies ist zum Beispiel nützlich, um eine Datei auf eine Webseite hochzuladen.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Die Antwort wird geparst und in Stücke aufgeteilt, die verschiedenen Standardvariablen zugewiesen werden. Die Antwort %Address% (nach dem letzten Redirect, wenn du %Auto Redirect% aktiviert hast) wird in der String Variable `data.ADDRESS` gespeichert. Die Antwort %body% (auch bekannt als Quelle) wird in der String-Variable `data.SOURCE` (als UTF-8 String) und in der Byte-Array-Variable `data.RAWSOURCE` (nach der Dekomprimierung von z.B. gzip) gespeichert.</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Der %Response Code% (z.B. 200) wird in die Integer Variable `data.RESPONSECODE` eingefügt. Die Kopfzeilen werden in ein Wörterbuch geparst und in die Dictionary of Strings Variable `data.HEADERS` eingefügt, und ebenso für Cookies in die `data.COOKIES` Variable. Denke daran, dass du Werte aus Wörterbüchern einfach nach Schlüssel mit der Syntax `data.HEADERS["header-name"]` abrufen kannst. Wenn die Anfrage fehlschlägt, wird die Variable `data.STATUS` auf `ERROR` gesetzt.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>Eine letzte Sache, die du dir merken solltest, ist, dass Cookies in der Variable `data.COOKIES` nur hinzugefügt oder überschrieben werden, niemals gelöscht. Das bedeutet, dass zuvor empfangene Cookies (die sich in der Variable `data.COOKIES` befinden) bei den nächsten Anfragen erneut gesendet werden, zusätzlich zu den %Custom Cookies%, die du für jede neue Anfrage definieren kannst. Dies geschieht, solange `data.COOKIES` nicht gelöscht oder neu initialisiert wird.</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Verstecken</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Bezeichnung</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Zeigen</value>
   </data>
 </root>

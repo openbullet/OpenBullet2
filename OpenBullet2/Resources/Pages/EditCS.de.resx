@@ -129,8 +129,17 @@
   <data name="CSharpEditor" xml:space="preserve">
     <value>C# Editor</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wofür ist dieser Abschnitt gedacht?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Dieser Abschnitt dient zwei Zwecken. Wenn du vorhast %Stacker/LoliCode% für die Erstellung deiner Konfiguration zu verwenden, kannst du diesen schreibgeschützten Editor verwenden, um zu sehen, wie der endgültige Code aussieht, nachdem die Blöcke in C# Anweisungen für die Ausführung übersetzt wurden. Das hilft, die meisten Probleme zu lösen, die du bekommst, besonders wenn der %Debugger% dir %Exceptions% gibt.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Wenn du dich stattdessen entschieden hast, deine Config mit %only C#% zu programmieren, kannst du auf den %Convert to C# config% Button klicken und du wirst in der Lage sein, den C# Code direkt zu bearbeiten. Du wirst in der Lage sein, die gleiche API zu nutzen, die auch für Blöcke verwendet wird. Ich schlage vor, dass du dich ein wenig damit beschäftigst, indem du dir entweder die Codebasis ansiehst oder wie die Blöcke automatisch übersetzt werden. Beachte, dass C#-Konfigurationen nur für %sehr fortgeschrittene% Benutzer gedacht sind. Alles, was du hier machen kannst, kann auch in LoliCode gemacht werden, indem du Blöcke und C#-Code integrierst, was zu einem viel besser lesbaren Skript für Leute führen kann, die sich nicht so gut mit Code auskennen.</value>
+  </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Blöcke transpilieren</value>
+    <value>Blöcke übersetzen</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
     <value>WARNUNG! BITTE LESEN!</value>

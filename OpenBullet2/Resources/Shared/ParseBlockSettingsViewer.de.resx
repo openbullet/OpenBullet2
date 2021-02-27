@@ -117,40 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlphaTesters" xml:space="preserve">
-    <value>Alpha Tester</value>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert dieser Block?</value>
   </data>
-  <data name="BetaTesters" xml:space="preserve">
-    <value>Beta Tester</value>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Der %Parse% Block ermöglicht es dir, Daten aus einem String mit vielen verschiedenen Parsing-Methoden zu parsen und in einer String oder List of Strings Variable zu speichern. Die unterstützten Parsing Modi sind LR, CSS, JSON und REGEX. Der %LR% (Left Right) Modus erlaubt es, Text zwischen zwei gegebenen Strings zu parsen. Der %CSS% (CSS Selector) Modus erlaubt es, die Attribute eines Elements aus einer HTML Seite zu erhalten.</value>
   </data>
-  <data name="Collaborators" xml:space="preserve">
-    <value>Mitwirkende</value>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Der %JSON% (JavaScript Object Notation) Modus erlaubt es, den Wert eines JSON-serialisierten Objekts oder Arrays mit Hilfe eines %JToken% zu erhalten. Der JToken erlaubt es dir, einen Pfad anzugeben, um den gewünschten Wert innerhalb der JSON-Struktur zu erreichen. Ein Beispiel hierfür könnte `field1.array[0]` sein, um das erste Element des Arrays `array` innerhalb des Objekts `field1` anzusprechen. Wenn du stattdessen `field1.array[*]` schreibst, wirst du alle Elemente des Arrays erhalten.
+Wie funktioniert dieser Block?</value>
   </data>
-  <data name="Developer" xml:space="preserve">
-    <value>Entwickler</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Der %REGEX% (REGular EXpression) Modus ist eine erweiterte Parsing Methode. Du musst einen regulären Ausdruck erstellen und %capturing groups% verwenden, um festzulegen, was die Ausgabe sein soll. Nimm zum Beispiel den Fall, in dem wir den Satz `Hallo Freund 123` parsen und wir das Wort `Freund` erhalten wollen, in dem Fall, in dem `123` ein sich ändernder Wert ist und wir den LR Modus nicht verwenden können. Du könntest eine Regex wie `hello ([a-z]+) [d]{3}` erstellen. Beachte, dass es eine erfassende Gruppe gibt, die durch die runden Klammern gekennzeichnet ist. Dann kannst du in das %Output format% Feld `[0]` schreiben, um die komplette Übereinstimmung auszugeben, `[1]` um die erste erfasste Gruppe auszugeben und so weiter... Beachte, dass du mehr als eine Gruppe im Ausgabeformat verwenden kannst.</value>
   </data>
-  <data name="Disclaimer" xml:space="preserve">
-    <value>Haftungsausschluss</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Wenn du die %Recursive% Checkbox anklickst, werden alle Zeichensequenzen, die die Parsing-Kriterien erfüllen, in eine List of Strings-Variable geschrieben; andernfalls wird nur die erste Übereinstimmung genommen und in eine String-Variable geschrieben.</value>
   </data>
-  <data name="DisclaimerText" xml:space="preserve">
-    <value>Die Durchführung von Angriffen auf Websites, die dir nicht gehören (oder für die du keine Erlaubnis zum Testen hast), ist illegal! Der Entwickler übernimmt keine Verantwortung für den unsachgemäßen Gebrauch dieser Software.</value>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Ist Capture</value>
   </data>
-  <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Spender und Unterstützer</value>
+  <data name="Label" xml:space="preserve">
+    <value>Bezeichnung</value>
   </data>
-  <data name="License" xml:space="preserve">
-    <value>Lizenz</value>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Ausgabevariable</value>
   </data>
-  <data name="OfficialForum" xml:space="preserve">
-    <value>Offizielles Forum</value>
-  </data>
-  <data name="OfficialRepository" xml:space="preserve">
-    <value>Offizielles Repository</value>
-  </data>
-  <data name="Read" xml:space="preserve">
-    <value>Lesen</value>
-  </data>
-  <data name="Translators" xml:space="preserve">
-    <value>Übersetzer</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
   </data>
 </root>

@@ -124,13 +124,13 @@
     <value>Alles erledigt</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Help1x00</value>
+    <value>Wie man Plugins hinzufügt und benutzt</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Help1x01</value>
+    <value>%Plugins% kommen als %.zip Archive%, die eine oder mehrere Bibliotheken und deren Abhängigkeiten enthalten. Sie ermöglichen es dir, die Funktionalitäten von OpenBullet durch %Hinzufügen neuer Blöcke% zu erweitern. Du kannst Plugins hochladen, indem du oben auf den %Hinzufügen% Button klickst. Sobald sie hinzugefügt wurden, befinden sich die Plugins im Ordner %UserData/Plugins% innerhalb des Basisordners von OpenBullet. Du kannst Blöcke aus Plugins zu deinen Configs hinzufügen, indem du zur obersten Kategorie (drücke auf Zurück) in den %Verfügbaren Blöcken% navigierst und den Namen des Plugins auswählst, das du verwenden möchtest.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Help1x02</value>
+    <value>Plugins können gelöscht werden, indem du auf den %Entfernen% Button neben ihnen klickst. Die Dateien werden aus dem Ordner %Plugins% gelöscht, also stelle sicher, dass du eine Sicherungskopie hast! Es wird empfohlen, dass du alle Jobs stoppst, bevor du Plugins entfernst. Beachte, dass wenn du ein Plugin entfernst, Configs, die Blöcke von diesem Plugin haben, wahrscheinlich nicht mehr funktionieren werden.</value>
   </data>
   <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
     <value>Plugin erfolgreich raufgeladen</value>

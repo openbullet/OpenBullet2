@@ -123,6 +123,9 @@
   <data name="AwwYeah" xml:space="preserve">
     <value>Aww yeah!</value>
   </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
     <value>Sprache wählen</value>
   </data>
@@ -180,11 +183,20 @@
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Sharing</value>
+  </data>
   <data name="Stacker" xml:space="preserve">
     <value>Stacker</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
+  </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Update verfügbar</value>
+  </data>
+  <data name="UpdateInstructions" xml:space="preserve">
+    <value>Update Anweisungen</value>
   </data>
   <data name="wasSavedSuccessfully" xml:space="preserve">
     <value>wurde erfolgreich gespeichert!</value>

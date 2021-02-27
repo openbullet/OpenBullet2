@@ -129,6 +129,15 @@
   <data name="Config" xml:space="preserve">
     <value>Config</value>
   </data>
+  <data name="ConfigMissing" xml:space="preserve">
+    <value>Kann die Konfiguration mit der id nicht finden</value>
+  </data>
+  <data name="CopyData" xml:space="preserve">
+    <value>Daten kopieren</value>
+  </data>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Daten + Capture kopieren</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Daten</value>
   </data>
@@ -145,13 +154,19 @@
     <value>Bearbeiten</value>
   </data>
   <data name="EditHit" xml:space="preserve">
-    <value>Treffer Bearbeiten</value>
+    <value>Treffer bearbeiten</value>
+  </data>
+  <data name="hits" xml:space="preserve">
+    <value>Treffer</value>
+  </data>
+  <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
+    <value>Treffer aus verschiedenen Configs ausgewählt, bitte wähle Treffer aus, die mit der gleichen Config erzielt wurden</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Laden</value>
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Erst muss ein Treffer ausgewählt werden</value>
-  </data>
-  <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>Keine anzuzeigenden Datensätze</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>
@@ -171,6 +186,9 @@
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Ergebnisse pro Seite</value>
   </data>
+  <data name="SendToRecheck" xml:space="preserve">
+    <value>Zum Recheck senden</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Art</value>
   </data>
@@ -179,5 +197,11 @@
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Keine anzuzeigenden Datensätze</value>
+  </data>
+  <data name="DeleteDuplicates" xml:space="preserve">
+    <value>Lösche Duplikate</value>
   </data>
 </root>

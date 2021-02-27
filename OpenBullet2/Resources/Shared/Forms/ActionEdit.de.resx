@@ -117,40 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlphaTesters" xml:space="preserve">
-    <value>Alpha Tester</value>
+  <data name="days" xml:space="preserve">
+    <value>Tage</value>
   </data>
-  <data name="BetaTesters" xml:space="preserve">
-    <value>Beta Tester</value>
+  <data name="hours" xml:space="preserve">
+    <value>Stunden</value>
   </data>
-  <data name="Collaborators" xml:space="preserve">
-    <value>Mitwirkende</value>
+  <data name="inJob" xml:space="preserve">
+    <value>im Job</value>
   </data>
-  <data name="Developer" xml:space="preserve">
-    <value>Entwickler</value>
+  <data name="minutes" xml:space="preserve">
+    <value>Minuten</value>
   </data>
-  <data name="Disclaimer" xml:space="preserve">
-    <value>Haftungsausschluss</value>
+  <data name="onWebhook" xml:space="preserve">
+    <value>an Webhook</value>
   </data>
-  <data name="DisclaimerText" xml:space="preserve">
-    <value>Die Durchführung von Angriffen auf Websites, die dir nicht gehören (oder für die du keine Erlaubnis zum Testen hast), ist illegal! Der Entwickler übernimmt keine Verantwortung für den unsachgemäßen Gebrauch dieser Software.</value>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Proxies neu laden</value>
   </data>
-  <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Spender und Unterstützer</value>
+  <data name="seconds" xml:space="preserve">
+    <value>Sekunden</value>
   </data>
-  <data name="License" xml:space="preserve">
-    <value>Lizenz</value>
+  <data name="Send" xml:space="preserve">
+    <value>Senden</value>
   </data>
-  <data name="OfficialForum" xml:space="preserve">
-    <value>Offizielles Forum</value>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Setze Bots auf</value>
   </data>
-  <data name="OfficialRepository" xml:space="preserve">
-    <value>Offizielles Repository</value>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Setze relative Zeit auf</value>
   </data>
-  <data name="Read" xml:space="preserve">
-    <value>Lesen</value>
+  <data name="StartJob" xml:space="preserve">
+    <value>Job starten</value>
   </data>
-  <data name="Translators" xml:space="preserve">
-    <value>Übersetzer</value>
+  <data name="StopJob" xml:space="preserve">
+    <value>Job anhalten</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Warten</value>
   </data>
 </root>

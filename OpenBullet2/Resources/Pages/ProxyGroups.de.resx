@@ -138,8 +138,23 @@
   <data name="CreateProxyGroup" xml:space="preserve">
     <value>Proxy Gruppe erstellen</value>
   </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Alle Proxies löschen</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>gelöscht</value>
+  </data>
   <data name="DeleteGroup" xml:space="preserve">
     <value>Gruppe löschen</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>Nichtfunktionierende löschen</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Langsame löschen</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Ungetestete löschen</value>
   </data>
   <data name="EditGroup" xml:space="preserve">
     <value>Gruppe bearbeiten</value>
@@ -147,11 +162,27 @@
   <data name="EditProxyGroup" xml:space="preserve">
     <value>Proxy Gruppe bearbeiten</value>
   </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>Für diese Gruppe</value>
+  </data>
   <data name="GroupInUse" xml:space="preserve">
     <value>Gruppe wird verwendet</value>
   </data>
   <data name="GroupInUseWarning" xml:space="preserve">
-    <value>Ein Job verwendet derzeit diese Proxy-Gruppe. Den Job im Manager stoppen und entfernen und es anschließend erneut versuchen</value>
+    <value>Ein Job verwendet derzeit diese Proxy-Gruppe. Bitte stoppe und entferne den Job aus dem Manager und versuche es erneut.
+Verbindungs-Timeout (Millisekunden)</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert das?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Hier kannst du deine Proxys in verschiedene %Gruppen% importieren. Gruppen helfen dabei, die Proxys zu organisieren und geben dir die Möglichkeit, verschiedene Proxys für verschiedene Aufgaben zu verwenden. Als erstes solltest du eine Gruppe erstellen, indem du oben auf den %Gruppe hinzufügen% Button klickst. Gib ihr einfach einen Namen. Stelle sicher, dass deine neue Gruppe ausgewählt ist und klicke dann auf %Proxies importieren%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Das %Proxies importieren% Menü gibt dir 3 Möglichkeiten, deine Proxies zu importieren. Du kannst sie entweder %einfügen%, %eine Datei hochladen% oder %die URL% einer entfernten Ressource eingeben, die Proxies in einem Textformat bereitstellt (normalerweise einen pro Zeile). Du kannst auch die Standard %Art%, %Benutzername% und %Passwort% für die Proxies angeben. Alternativ kannst du die %erweiterte Syntax% verwenden, die im Formular beschrieben ist, um den Typ, den Benutzernamen und das Passwort auf einer per Proxy Basis festzulegen.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Jetzt bist du bereit und kannst deine Proxy-Gruppe auswählen, wenn du einen Job erstellst oder bearbeitest. Du kannst einen Job vom Typ %Proxy Check% erstellen, um zu testen, ob deine Proxys funktionieren, bevor du sie benutzt. Der Job %Proxy Check% wird die Felder %Land%, %Status%, %Ping% und %zuletzt geprüft% deiner Proxys in der Datentabelle dieser Seite aktualisieren, so dass du dann %Proxys löschen% kannst, die nicht funktionieren oder einen Ping haben, der für deine Bedürfnisse zu hoch ist. Du kannst sogar entscheiden, dass du nur Proxys aus einem bestimmten Land behalten willst!</value>
   </data>
   <data name="Host" xml:space="preserve">
     <value>Host</value>
@@ -160,10 +191,13 @@
     <value>Importiert</value>
   </data>
   <data name="ImportProxies" xml:space="preserve">
-    <value>Proxies imporieren</value>
+    <value>Proxies importieren</value>
   </data>
   <data name="LastChecked" xml:space="preserve">
     <value>zuletzt geprüft</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Lade</value>
   </data>
   <data name="NoGroupSelected" xml:space="preserve">
     <value>Bitte wähle zunächst eine Gruppe aus</value>
@@ -177,8 +211,14 @@
   <data name="Ping" xml:space="preserve">
     <value>Ping</value>
   </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>Ping über</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Proxies erfolgreich gelöscht</value>
   </data>
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
     <value>Proxies erfolgreich importiert</value>
@@ -197,6 +237,9 @@
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Ergebnisse pro Seite</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Langsam</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>

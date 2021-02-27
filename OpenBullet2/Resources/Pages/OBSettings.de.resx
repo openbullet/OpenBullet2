@@ -126,11 +126,14 @@
   <data name="AdminUsername" xml:space="preserve">
     <value>Admin Benutzername</value>
   </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Alles erledigt</value>
+  </data>
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
     <value>Systemweiten Dateizugriff erlauben</value>
   </data>
   <data name="ApiKey" xml:space="preserve">
-    <value>Chiave Api</value>
+    <value>Api Key</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Wirklich sicher?</value>
@@ -147,6 +150,9 @@
   <data name="Clear" xml:space="preserve">
     <value>Löschen</value>
   </data>
+  <data name="Customization" xml:space="preserve">
+    <value>Personalisierung</value>
+  </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>Standardautor bei neu erstellten Configs</value>
   </data>
@@ -161,6 +167,9 @@
   </data>
   <data name="General" xml:space="preserve">
     <value>Allgemein</value>
+  </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Captures im Debugger gruppieren</value>
   </data>
   <data name="GuestSessionLifetimeHours" xml:space="preserve">
     <value>Gültigkeitsdauer der Gast-Sitzung (Stunden)</value>
@@ -180,6 +189,9 @@
   <data name="LogToFile" xml:space="preserve">
     <value>Auch in eine Datei protokollieren</value>
   </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Monaco Editor Theme</value>
+  </data>
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>Wenn eine Konfiguration bearbeitet wird, zu ... wechseln</value>
   </data>
@@ -188,6 +200,9 @@
   </data>
   <data name="NewPasswordSet" xml:space="preserve">
     <value>Das neue Passwort wurde gesetzt!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Sound bei Treffer abspielen</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
     <value>Proxy-Check-Ziele</value>
@@ -230,6 +245,18 @@
   </data>
   <data name="SuccessKey" xml:space="preserve">
     <value>Success Key</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Theme erfolgreich hochgeladen</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Nicht unterstütztes Theme Dateiformat. Unterstützte Formate: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Theme hochladen</value>
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>

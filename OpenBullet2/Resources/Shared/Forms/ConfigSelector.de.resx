@@ -123,25 +123,52 @@
   <data name="by" xml:space="preserve">
     <value>von</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Kategorie</value>
   </data>
+  <data name="Danger" xml:space="preserve">
+    <value>Achtung</value>
+  </data>
+  <data name="DangerousConfig" xml:space="preserve">
+    <value>Die von dir gewählte Konfiguration kann C# Code enthalten. Obwohl C# für Config-Macher hilfreich sein kann, wenn sie Funktionalitäten nutzen wollen, die nicht durch Blöcke implementiert sind, kann es auch genutzt werden, um deinem Computer zu schaden oder Informationen zu stehlen. Es wird DRINGEND empfohlen, dass du den Code der Config überprüfst und sicherstellst, dass nichts Verdächtiges vor sich geht. Hast du die Config überprüft und sichergestellt, dass es absolut sicher ist, sie auszuführen?</value>
+  </data>
   <data name="LastModified" xml:space="preserve">
     <value>Letzte Änderung</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Missing Plugin</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>Die Config wurde mit diesem Plugin gebaut, jedoch fehlt dieses</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
-    <value>Es muss erst eine Config gewählt werden</value>
+    <value>Du musst zuerst eine Config auswählen</value>
+  </data>
+  <data name="NoGoBack" xml:space="preserve">
+    <value>Nein, geh zurück</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
   </data>
   <data name="Select" xml:space="preserve">
     <value>Auswählen</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlists</value>
   </data>
 </root>

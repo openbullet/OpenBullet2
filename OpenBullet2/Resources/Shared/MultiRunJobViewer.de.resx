@@ -129,6 +129,9 @@
   <data name="BotLog" xml:space="preserve">
     <value>Bot Protokoll</value>
   </data>
+  <data name="BotLogDisabledError" xml:space="preserve">
+    <value>Das Bot-Protokoll wurde in den Einstellungen deaktiviert, bitte aktiviere es, um das Bot-Protokoll für zukünftige Treffer sehen zu können</value>
+  </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="CaptchaCredit" xml:space="preserve">
     <value>Captcha Kontostand</value>
+  </data>
+  <data name="CapturedData" xml:space="preserve">
+    <value>Captured data</value>
   </data>
   <data name="Change" xml:space="preserve">
     <value>Ändern</value>
@@ -153,6 +159,12 @@
   <data name="Controls" xml:space="preserve">
     <value>Steuerung</value>
   </data>
+  <data name="CopyData" xml:space="preserve">
+    <value>Daten kopieren</value>
+  </data>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Daten + Capture kopieren</value>
+  </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
@@ -161,6 +173,9 @@
   </data>
   <data name="CustomInput" xml:space="preserve">
     <value>Benutzerdefinierte Eingabe</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Daten</value>
   </data>
   <data name="Database" xml:space="preserve">
     <value>Datenbank</value>
@@ -171,8 +186,14 @@
   <data name="DataStats" xml:space="preserve">
     <value>Statistik</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
   <data name="days" xml:space="preserve">
     <value>Tag(e)</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Deaktiviert</value>
   </data>
   <data name="DiscordWebhook" xml:space="preserve">
     <value>Discord webhook</value>
@@ -186,11 +207,14 @@
   <data name="Errors" xml:space="preserve">
     <value>Fehler</value>
   </data>
-  <data name="Fail" xml:space="preserve">
+  <data name="ExecutionInfo" xml:space="preserve">
+    <value>Information zur Ausführung</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
     <value>Falsch</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Datei</value>
   </data>
   <data name="FileSystem" xml:space="preserve">
     <value>Dateisystem</value>
@@ -219,8 +243,17 @@
   <data name="LineCheckedMessage" xml:space="preserve">
     <value>Zeile ({0})({1}) mit dem Status {2} überprüft</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Lade</value>
+  </data>
+  <data name="NoConfig" xml:space="preserve">
+    <value>Keine Config</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Erst muss ein Treffer ausgewählt werden</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Keine Datensätze zum Anzeigen</value>
   </data>
   <data name="OtherStats" xml:space="preserve">
     <value>Andere Statistiken</value>
@@ -229,13 +262,16 @@
     <value>Pause</value>
   </data>
   <data name="PauseMessage" xml:space="preserve">
-    <value>Sende Pause Signal</value>
+    <value>sende Pausensignal</value>
   </data>
   <data name="PausingMessage" xml:space="preserve">
     <value>Pausieren... bitte warten bis die aktuellen Tasks die Verarbeitung beendet wurden</value>
   </data>
   <data name="Progress" xml:space="preserve">
     <value>Fortschritt</value>
+  </data>
+  <data name="Proxy" xml:space="preserve">
+    <value>Proxy</value>
   </data>
   <data name="ProxyMode" xml:space="preserve">
     <value>Proxy-Modus</value>
@@ -248,6 +284,9 @@
   </data>
   <data name="RangeText" xml:space="preserve">
     <value>Bereich von {0} mit der Anzahl {1} und Schrittweite {2} (Padding {3})</value>
+  </data>
+  <data name="RefreshList" xml:space="preserve">
+    <value>Liste aktualisieren</value>
   </data>
   <data name="Remaining" xml:space="preserve">
     <value>Übrig</value>
@@ -264,8 +303,20 @@
   <data name="Retried" xml:space="preserve">
     <value>Wiederholt</value>
   </data>
+  <data name="SendToDebugger" xml:space="preserve">
+    <value>zum Debugger senden</value>
+  </data>
+  <data name="ShowFullLog" xml:space="preserve">
+    <value>Protokoll anzeigen</value>
+  </data>
   <data name="Skip" xml:space="preserve">
     <value>Überspringen</value>
+  </data>
+  <data name="SkippedWait" xml:space="preserve">
+    <value>Warten übersprungen</value>
+  </data>
+  <data name="SkipWait" xml:space="preserve">
+    <value>Warten überspringen</value>
   </data>
   <data name="SoftStopMessage" xml:space="preserve">
     <value>Signal für sanften Abbruch senden</value>
@@ -275,6 +326,9 @@
   </data>
   <data name="StartedChecking" xml:space="preserve">
     <value>Überprüfung gestartet</value>
+  </data>
+  <data name="StartedWaiting" xml:space="preserve">
+    <value>Warten gestartet</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stop</value>
@@ -305,6 +359,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Gesamt</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Art</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>

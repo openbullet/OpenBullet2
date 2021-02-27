@@ -117,14 +117,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
+  </data>
   <data name="by" xml:space="preserve">
     <value>von</value>
   </data>
   <data name="Clone" xml:space="preserve">
     <value>Klonen</value>
   </data>
+  <data name="Combinations" xml:space="preserve">
+    <value>Kombinationen</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Datenpool</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert das?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Dies ist der %Job Manager%, hier kannst du %neue% Jobs erstellen, %vorhandene %Jobs% bearbeiten oder %entfernen% und auf die Schnittstelle eines bestimmten Jobs zugreifen. Um einen neuen Job zu erstellen, klicke auf den %Neu% Button oben. Nachdem du einige Jobs erstellt hast, kannst du auf dieser Seite eine Übersicht über ihren Status sehen. Du kannst auch einen Job erstellen, indem du einen bestehenden klonst, um Zeit bei den Konfigurationsaufgaben zu sparen.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Um auf das Interface eines bestimmten Jobs zuzugreifen, kannst du ihn einfach anklicken! Wenn du möchtest, dass der Manager den Status deiner Jobs weniger häufig aktualisiert, um Bandbreite zu sparen, findest du die Option %Job Manager Aktualisierungsintervall% auf der Seite OB Einstellungen.
+Um auf das Interface eines bestimmten Jobs zuzugreifen, kannst du ihn einfach anklicken! Wenn du möchtest, dass der Manager den Status deiner Jobs weniger häufig aktualisiert, um Bandbreite zu sparen, findest du die Option %Job Manager Aktualisierungsintervall% auf der Seite OB Settings.</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Treffer</value>
+  </data>
+  <data name="Infinite" xml:space="preserve">
+    <value>Unendlich</value>
   </data>
   <data name="JobNotIdle" xml:space="preserve">
     <value>Job nicht untätig</value>
@@ -138,6 +175,18 @@
   <data name="NoConfigSelected" xml:space="preserve">
     <value>Keine Config ausgewählt</value>
   </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Nicht funktionierende</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Fortschritt</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Bereich</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>
   </data>
@@ -146,5 +195,14 @@
   </data>
   <data name="SelectJobType" xml:space="preserve">
     <value>Art des Jobs auswählen</value>
+  </data>
+  <data name="ToCheck" xml:space="preserve">
+    <value>Zur Überprüfung</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Funktionierende</value>
   </data>
 </root>

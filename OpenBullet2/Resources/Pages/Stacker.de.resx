@@ -126,6 +126,48 @@
   <data name="CurrentStack" xml:space="preserve">
     <value>Aktueller Stack</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Was ist der Stacker?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>%Stacker% ist ein Werkzeug, das dir dabei helfen kann, deine Configs auf eine sehr benutzerfreundliche Art und Weise zu erstellen, dank des Konzepts der %Blöcke%. Blöcke sind visuelle Repräsentationen einiger LoliCode-Anweisungen, und sie sind im Grunde Funktionen, die zu jeder Zeit aufgerufen werden können, optional mit einigen Eingabeparametern und optional mit einigen Ausgabeergebnissen. Der %Stack% ist im Grunde nur eine Liste von Blöcken, die von einem Bot ausgeführt werden, einer nach dem anderen, von oben nach unten.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Du kannst den Stack modifizieren, indem du Blöcke %hinzufügst% oder %entfernst%, %nach oben und unten verschiebst% und %klonst%. Blöcke können auch %deaktiviert% werden, wenn du die Ausführung eines Blocks überspringen willst, ohne ihn entfernen zu müssen und somit seinen gesamten Inhalt zu verlieren.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Blöcke werden hauptsächlich durch eine %Bezeichnung% (die du nach Belieben anpassen kannst) und durch einige Einstellungen charakterisiert, die die Eingabeparameter und die Ausgabeergebnisse darstellen. Wenn du C# Code zu deiner Config hinzufügen willst, wirst du sehen, dass einige %LoliCode Blöcke% erstellt werden, wenn du zurück zur Stacker Ansicht gehst. Diese Blöcke enthalten Code, den der LoliCode-Parser nicht als richtige Blöcke identifizieren konnte, zum Beispiel Schleifen und Bedingungen oder andere C#-Ausdrücke.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Das neue Variablen System</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>%Variablen% funktionieren im OB2 auf eine ganz andere Art und Weise als im OB1. Um den Grund für diese Änderung zu verstehen, solltest du wissen, dass Configs nach C# übersetzt und dann für die Geschwindigkeit kompiliert werden, bevor sie ausgeführt werden. Das OB1 System wurde von LoliScript zur Laufzeit interpretiert, daher war es viel langsamer. C# ist eine stark typisierte Sprache und daher sind Variablen mit einem Typ verbunden, zum Beispiel `int` für Integer und `string` für Strings. In OB1 war alles ein String (oder eine Liste von Strings, oder Dictionaries von Strings), aber in OB2 gibt es zusätzliche Typen.
+%Variablen% funktionieren im OB2 auf eine ganz andere Art und Weise als im OB1. Um den Grund für diese Änderung zu verstehen, solltest du wissen, dass Configs nach C# transpiliert und dann für die Geschwindigkeit kompiliert werden, bevor sie ausgeführt werden. Das OB1 System wurde von LoliScript zur Laufzeit interpretiert, daher war es viel langsamer. C# ist eine stark typisierte Sprache und daher sind Variablen mit einem Typ verbunden, zum Beispiel `int` für Integer und `string` für Strings. In OB1 war alles ein String (oder eine Liste von Strings, oder Dictionaries von Strings), aber in OB2 gibt es zusätzliche Typen.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Der %Typ% einer OB2 Variable kann sein: Bool, ByteArray, Dictionary of Strings, Float, Int, List of Strings, String und Enum. Variablen werden hauptsächlich durch das %Ausgabevariable% Feld von Blöcken erstellt, welches in einer Vielzahl von Blöcken vorhanden ist. Dieses Feld lässt dich den Typ der Variable wissen, die erstellt wird. Dieses Feld kommt normalerweise mit einer zusätzlichen Option namens %Ist Capture%, welches den Bot wissen lässt, dass eine bestimmte Variable gespeichert und in die %Captures% geschrieben werden muss, wenn du einen Treffer erhältst.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>Die %Eingabeparameter% der Blöcke haben auch einen bestimmten Typ, wie im OB1. Du kannst aus bis zu 3 verschiedenen Modi für die Eingabe von Daten in diese Parameter wählen, abhängig von ihrem Typ. Der %Fixed% Modus erlaubt es dir, einen festen Wert anzugeben, der bei jeder Ausführung immer gleich ist, zum Beispiel `42` oder `hello`. Der %Variable% Modus erlaubt es dir, eine zuvor erstellte Variable als Eingabewert für diesen Parameter zu verwenden. Wenn der ursprüngliche Wert von einem anderen Typ als der Parameter ist, wird er automatisch für dich umgewandelt (wenn du zum Beispiel eine Ganzzahl hast und versuchst, sie an einen String-Parameter zu übergeben, wird sie automatisch als String gelesen).
+Die %Eingabeparameter% der Blöcke haben auch einen bestimmten Typ, wie im OB1. Du kannst aus bis zu 3 verschiedenen Modi für die Eingabe von Daten in diese Parameter wählen, abhängig von ihrem Typ. Der %Fixed% Modus erlaubt es dir, einen festen Wert anzugeben, der bei jeder Ausführung immer gleich ist, zum Beispiel `42` oder `hello`. Der %Variable% Modus erlaubt es dir, eine zuvor erstellte Variable als Eingabewert für diesen Parameter zu verwenden. Wenn der ursprüngliche Wert von einem anderen Typ als der Parameter ist, wird er automatisch für dich umgewandelt (wenn du zum Beispiel eine Ganzzahl hast und versuchst, sie an einen String-Parameter zu übergeben, wird sie automatisch als String gelesen).</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Schließlich ist der %interpoliert% Modus sehr nahe an der Funktionsweise im OB1, wo du die Syntax `hier ist meine &lt;Variable&gt;` verwenden kannst, wobei `Variable` der Name der Variable ist, die du in den String einfügen möchtest. Dieser Modus ist nur für String, List of String und Dictionary of String Parameter verfügbar.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Standard Variablen</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Einige Variablen sind bereits für dich deklariert und können verwendet werden, um auf Eingabedaten und reservierte Eigenschaften zuzugreifen. Die Variable `input` ist ein dynamisches Objekt, das die aufgeteilten Daten aus deinem Datenpool enthält (wenn du zum Beispiel die Art Default Wordlist verwendest, kannst du auf `input.DATA` zugreifen, um deine Datenzeile abzurufen) und die Antworten der benutzerdefinierten Eingaben, die zur Laufzeit abgefragt werden.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Das `data` Objekt ist eine Klasse mit mehreren Eigenschaften, die automatisch von Blöcken gefüllt werden, die du aber auch als Ausgabevariablen für andere Blöcke verwenden kannst. Die nützlichsten sind STATUS, SOURCE, RAWSOURCE, ADDRESS, RESPONSECODE, COOKIES und HEADERS. Um zum Beispiel die Quelle einer HTTP-Antwort als Eingabeparameter eines Parse-Blocks zu verwenden, müsstest du den Variablenmodus auswählen und `data.SOURCE` in das Feld eingeben.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>Das `data` Objekt enthält viele weitere nützliche Variablen (wie den Proxy), die durch C# Code manipuliert werden können, um ein erweitertes Verhalten auszuführen. Sie werden in einem separaten Guide behandelt.
+Schließlich enthält das `globals` Objekt globale Variablen und wird zwischen den Bots geteilt. Du kannst globale Variablen setzen, indem du etwas wie `globals.Test` als Ausgabevariable verwendest, und das gleiche, um ihren Wert abzurufen. Wenn du vorhast, lange Operationen darauf auszuführen, zum Beispiel mit globalen Listen von Elementen zu arbeiten, solltest du das `globals` Objekt mit `lock(globals) { deine Blöcke und dein Code hier }` %sperren%, um es thread-sicher zu machen.</value>
+  </data>
   <data name="NoBlockSelectedInfo" xml:space="preserve">
     <value>Einen Block auswählen, um seine Einstellungen anzuzeigen</value>
   </data>

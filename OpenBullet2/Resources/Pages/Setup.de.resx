@@ -117,40 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AlphaTesters" xml:space="preserve">
-    <value>Alpha Tester</value>
+  <data name="Accept" xml:space="preserve">
+    <value>Akzeptieren</value>
   </data>
-  <data name="BetaTesters" xml:space="preserve">
-    <value>Beta Tester</value>
+  <data name="AdminAccountInfo" xml:space="preserve">
+    <value>Das Administratorkonto verhindert, dass andere Personen ohne deine Erlaubnis auf deine OpenBullet 2 Instanz zugreifen können.</value>
   </data>
-  <data name="Collaborators" xml:space="preserve">
-    <value>Mitwirkende</value>
+  <data name="AskAccessType" xml:space="preserve">
+    <value>Wie wirst du auf OpenBullet 2 zugreifen?</value>
   </data>
-  <data name="Developer" xml:space="preserve">
-    <value>Entwickler</value>
+  <data name="ChooseYourLanguage" xml:space="preserve">
+    <value>Wähle deine Sprache</value>
   </data>
-  <data name="Disclaimer" xml:space="preserve">
-    <value>Haftungsausschluss</value>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Bestätige das Passwort</value>
   </data>
-  <data name="DisclaimerText" xml:space="preserve">
-    <value>Die Durchführung von Angriffen auf Websites, die dir nicht gehören (oder für die du keine Erlaubnis zum Testen hast), ist illegal! Der Entwickler übernimmt keine Verantwortung für den unsachgemäßen Gebrauch dieser Software.</value>
+  <data name="Continue" xml:space="preserve">
+    <value>Weiter</value>
   </data>
-  <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Spender und Unterstützer</value>
+  <data name="Done" xml:space="preserve">
+    <value>Erledigt</value>
+  </data>
+  <data name="LetsStart" xml:space="preserve">
+    <value>Fangen wir an</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Lizenz</value>
   </data>
-  <data name="OfficialForum" xml:space="preserve">
-    <value>Offizielles Forum</value>
+  <data name="Locally" xml:space="preserve">
+    <value>Lokal</value>
   </data>
-  <data name="OfficialRepository" xml:space="preserve">
-    <value>Offizielles Repository</value>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
   </data>
-  <data name="Read" xml:space="preserve">
-    <value>Lesen</value>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
   </data>
-  <data name="Translators" xml:space="preserve">
-    <value>Übersetzer</value>
+  <data name="Remotely" xml:space="preserve">
+    <value>Aus der Ferne</value>
+  </data>
+  <data name="SetupAdminAccount" xml:space="preserve">
+    <value>Bitte richte einen Administrator-Account ein.</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Einrichtung abgeschlossen!</value>
+  </data>
+  <data name="SetupLanguage" xml:space="preserve">
+    <value>Wähle als erstes deine Sprache.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Hallo und willkommen zu OpenBullet 2. Lass uns ein paar Dinge einrichten, sollen wir?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
   </data>
 </root>

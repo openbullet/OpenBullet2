@@ -120,8 +120,20 @@
   <data name="CompleteLog" xml:space="preserve">
     <value>Vollständiges Protokoll</value>
   </data>
+  <data name="InvalidProxy" xml:space="preserve">
+    <value>Ungültiger Proxy</value>
+  </data>
+  <data name="InvalidProxyMessage" xml:space="preserve">
+    <value>Der von dir angegebene Testproxy ist ungültig und kann nicht geparst werden</value>
+  </data>
   <data name="PersistLog" xml:space="preserve">
     <value>Protokoll behalten</value>
+  </data>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Protokoll zeigen</value>
+  </data>
+  <data name="ShowVariables" xml:space="preserve">
+    <value>Variablen zeigen</value>
   </data>
   <data name="Start" xml:space="preserve">
     <value>Start</value>
@@ -130,10 +142,10 @@
     <value>Stop</value>
   </data>
   <data name="TestData" xml:space="preserve">
-    <value>Test Daten</value>
+    <value>Test data</value>
   </data>
   <data name="TestProxy" xml:space="preserve">
-    <value>Test Proxy</value>
+    <value>Test proxy</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Art</value>

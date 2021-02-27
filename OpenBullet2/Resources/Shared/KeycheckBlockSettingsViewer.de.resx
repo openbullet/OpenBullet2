@@ -117,6 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wie funktioniert dieser Block?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Der %Keycheck% Block erlaubt es dir, den Wert der vordefinierten Variable `data.STATUS` entsprechend dem Ergebnis einiger Bedingungen zu ändern. Du kannst %Keychains% zum Block hinzufügen und du kannst auswählen, wie sich der Status ändern soll, wenn ein bestimmter Keychain übereinstimmt. Der Schlüsselbund hat auch einen %mode%, der %AND% oder %OR% sein kann. Im ersten Fall wird die Bedingung des Schlüsselbundes wahr sein, wenn alle Schlüssel darin wahr sind. Im zweiten Fall reicht es, wenn mindestens ein Schlüssel wahr ist.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Schlüssel können von unterschiedlichem Typ sein, in Bezug auf den Typ der Variable, die du zu vergleichen versuchst.
+Die Schlüsselbunde werden vom ersten bis zum letzten geprüft und sobald die Bedingung eines Schlüsselbundes erfüllt ist, werden die anderen übersprungen. Wenn kein Schlüsselbund übereinstimmt, bleibt der Status unverändert (beachte, dass der anfängliche Status des Bots zu Beginn des Skripts immer `NONE` ist) oder er wird auf `BAN` gesetzt, wenn die Option %Ban if no match% ausgewählt wurde.</value>
+  </data>
   <data name="Label" xml:space="preserve">
     <value>Bezeichnung</value>
   </data>
