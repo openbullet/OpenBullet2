@@ -117,14 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlphaTesters" xml:space="preserve">
+    <value>Alpha-testeurs</value>
+  </data>
+  <data name="BetaTesters" xml:space="preserve">
+    <value>Bêta-testeurs</value>
+  </data>
   <data name="Collaborators" xml:space="preserve">
     <value>Collaborateurs</value>
   </data>
   <data name="Developer" xml:space="preserve">
     <value>Développeur</value>
   </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Effectuer des attaques sur des sites que vous ne possédez pas (ou que vous n'avez pas l'autorisation de tester) est illégal ! Le développeur ne sera pas tenu responsable d'une mauvaise utilisation de ce logiciel.</value>
+  </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Donateurs et partisans</value>
+    <value>Donators and Supporters</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Licence</value>
@@ -138,16 +150,7 @@
   <data name="Read" xml:space="preserve">
     <value>Lire</value>
   </data>
-  <data name="AlphaTesters" xml:space="preserve">
-    <value>Alpha-testeurs</value>
-  </data>
-  <data name="BetaTesters" xml:space="preserve">
-    <value>Bêta-testeurs</value>
-  </data>
-  <data name="Disclaimer" xml:space="preserve">
-    <value>Avertissement</value>
-  </data>
-  <data name="DisclaimerText" xml:space="preserve">
-    <value>Effectuer des attaques sur des sites que vous ne possédez pas (ou que vous n'avez pas l'autorisation de tester) est illégal ! Le développeur ne sera pas tenu responsable d'une mauvaise utilisation de ce logiciel.</value>
+  <data name="Translators" xml:space="preserve">
+    <value>Traducteurs</value>
   </data>
 </root>

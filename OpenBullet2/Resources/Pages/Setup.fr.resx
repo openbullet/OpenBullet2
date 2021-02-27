@@ -124,15 +124,54 @@
     <value>Le compte administrateur empêchera d'autres personnes d'accéder à votre instance OpenBullet 2 sans votre autorisation.</value>
   </data>
   <data name="AskAccessType" xml:space="preserve">
-    <value>Comment allez-vous accéder à OpenBullet 2 ?</value>
+    <value>Comment allez-vous accéder à OpenBullet 2?</value>
   </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
     <value>Choisissez votre langue</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirmer le mot de passe</value>
+    <value>Confirmez le mot de passe</value>
   </data>
   <data name="Continue" xml:space="preserve">
-    <value>Continuer</value>
+    <value>Continuez</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Fait</value>
+  </data>
+  <data name="LetsStart" xml:space="preserve">
+    <value>Commençons</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="Locally" xml:space="preserve">
+    <value>Localement</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Remotely" xml:space="preserve">
+    <value>À distance</value>
+  </data>
+  <data name="SetupAdminAccount" xml:space="preserve">
+    <value>Veuillez créer un compte administrateur.</value>
+  </data>
+  <data name="SetupComplete" xml:space="preserve">
+    <value>Configuration terminée!</value>
+  </data>
+  <data name="SetupLanguage" xml:space="preserve">
+    <value>Tout d'abord, choisissez votre langue.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Bonjour et bienvenue sur OpenBullet 2. Configurons quelques trucs, d'accord?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Oui</value>
   </data>
 </root>

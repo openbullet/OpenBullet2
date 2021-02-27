@@ -124,18 +124,84 @@
     <value>Ajouté</value>
   </data>
   <data name="AddedWordlist" xml:space="preserve">
-    <value>Wordlist ajoutée avec succès !</value>
+    <value>Wordlist a été ajouté avec succès!</value>
   </data>
   <data name="AddWordlist" xml:space="preserve">
-    <value>Ajouter une wordlist</value>
+    <value>Ajouter wordlist</value>
   </data>
   <data name="AlsoDeleteFile" xml:space="preserve">
-    <value>Effacer le fichier aussi ?</value>
+    <value>Supprimer également le fichier?</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Êtes-vous sûr?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>Voulez-vous supprimer?</value>
+  </data>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>du disque aussi?</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>modifier</value>
+  </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>modifier wordlist</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Nom de fichier</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Comment cela marche-t-il?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Ici, vous pouvez importer des wordlists. Tout d'abord, cliquez sur le bouton %Ajouter% ci-dessus. Vous pourrez spécifier un %Type de wordlists% (plus d'informations à ce sujet plus tard), un %Nom% et un %Purpose%. Vous avez deux options pour télécharger votre fichier. La première option est de %upload% it sur le serveur qui exécute l'instance d'OpenBullet2. C'est la méthode préférée %si la wordlists se trouve sur le client% à partir duquel vous accédez à l'OB2 via le navigateur, mais que l'OB2 est hébergé sur une machine différente. Cette méthode d'ajout d'une liste de mots ajoute une surcharge car la liste de mots doit être téléchargée via le navigateur.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>%Si la wordlist se trouve sur le serveur%, ce qui signifie que vous essayez de récupérer un fichier de la même machine sur laquelle est exécuté l'OB2, vous pouvez utiliser l'option %File System%, qui vous permettra de parcourir visuellement les dossiers à la recherche de le fichier souhaité. Notez que pour accéder aux emplacements sur le disque qui sont en dehors du répertoire de travail actuel d'OB2, vous devrez accéder aux options de sécurité d'OpenBullet et autoriser l'accès aux fichiers à l'échelle du système.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Concernant le %Wordlist Type%, vous trouverez les types de liste de mots actuellement spécifiés dans le fichier  UserData/Environment.ini% de votre répertoire OB2. Les types de Wordlist sont chargés au démarrage de l'OB2. Vous pouvez modifier ce fichier et ajouter/supprimer/modifier les types de Wordlists pour qu'ils correspondent au format de vos Wordlists. Vous pouvez en savoir plus sur les types de Wordlists dans la section des guides du forum officiel.</value>
+  </data>
+  <data name="KeepFile" xml:space="preserve">
+    <value>Non, gardez le fichier</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Lignes</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Aucun enregistrement à afficher</value>
+  </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>Vous devez d'abord sélectionner une wordlist</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>Objectif</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>résultats</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>résultats par page</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
   </data>
 </root>

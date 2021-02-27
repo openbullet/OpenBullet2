@@ -121,6 +121,21 @@
     <value>Ajouter</value>
   </data>
   <data name="AllDone" xml:space="preserve">
-    <value>Terminé</value>
+    <value>Tout est fait</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Comment ajouter et utiliser des plugins</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Les %Plugins% se présentent sous la forme d'archives %.zip% qui contiennent une ou plusieurs bibliothèques et leurs dépendances. Ils vous permettent d'étendre les fonctionnalités d'OpenBullet en %ajoutant de nouveaux blocs%. Vous pouvez télécharger des plugins en cliquant sur le bouton %Ajouter% ci-dessus. Une fois ajoutés, les plugins résident dans le dossier %UserData /Plugins% à l'intérieur du dossier de base d'OpenBullet. Vous pouvez ajouter des blocs de plugins à vos configurations en accédant à la catégorie de niveau supérieur (appuyez sur Retour) dans les %Blocs disponibles% et en sélectionnant le nom du plugin que vous avez l'intention d'utiliser.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Les plugins peuvent être supprimés en cliquant sur le bouton %Remove% à côté d'eux. Les fichiers seront supprimés du dossier %Plugins% alors assurez-vous d'avoir une copie de sauvegarde! Il est recommandé d'arrêter toutes les tâches avant de supprimer les plugins. Notez qu'une fois que vous supprimez un plugin, les configurations qui ont des blocs de ce plugin cesseront probablement de fonctionner.</value>
+  </data>
+  <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
+    <value>Plugins téléchargés avec succès</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
   </data>
 </root>

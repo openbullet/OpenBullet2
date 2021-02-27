@@ -121,27 +121,96 @@
     <value>Ajouter une config</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Êtes-vous sûr?</value>
   </data>
   <data name="Author" xml:space="preserve">
     <value>Auteur</value>
   </data>
   <data name="CannotShareRemoteConfig" xml:space="preserve">
-    <value>Impossible de partager la config distante</value>
+    <value>Impossible de partager la configuration à distance</value>
   </data>
   <data name="Category" xml:space="preserve">
     <value>Catégorie</value>
   </data>
   <data name="ConfigRemovedSuccessfully" xml:space="preserve">
-    <value>Config supprimée avec succès</value>
+    <value>La config a bien été supprimée</value>
   </data>
   <data name="ConfigsRemovedSuccessfully" xml:space="preserve">
     <value>Configs supprimées avec succès</value>
   </data>
+  <data name="Created" xml:space="preserve">
+    <value>Créé</value>
+  </data>
   <data name="CreateEndpoint" xml:space="preserve">
-    <value>Créer un endpoint</value>
+    <value>Créer un Endpoint</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Date de création</value>
+  </data>
+  <data name="DeleteEndpoint" xml:space="preserve">
+    <value>Supprimer le Endpoint</value>
+  </data>
+  <data name="EditEndpoint" xml:space="preserve">
+    <value>Modifier le Endpoint</value>
+  </data>
+  <data name="Endpoint" xml:space="preserve">
+    <value>Endpoint</value>
+  </data>
+  <data name="EndpointCreated" xml:space="preserve">
+    <value>Endpoint créé</value>
+  </data>
+  <data name="ForThisEndpoint" xml:space="preserve">
+    <value>Pour ce endpoint</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Qu'est-ce que c'est?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>C'est ici que vous pouvez configurer le partage de %endpoints% pour vos configurations afin que d'autres personnes puissent y accéder. Vous pouvez %créer des endpoints% et leur ajouter %des configs, et également spécifier les %Api Keys% qui sont autorisés à recevoir les configs.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Pour partager des configurations avec un ami, vous devez créer un point de terminaison, y ajouter des configurations, configurer au moins une clé API et l'envoyer à votre ami, avec l'%URL% de votre point de terminaison. Votre ami devra ensuite le configurer dans les %OB Settings &gt; Remote%. Par exemple, si votre instance OpenBullet 2 est accessible sur `1.1.1.1: 5000`, votre ami doit taper` http://1.1.1.1:5000/api/shared/configs/ROUTE` où %ROUTE% est le nom que vous donné au point final.</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>Dernière modification</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Chargement</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Aucune config sélectionnée</value>
+  </data>
+  <data name="NoEndpointSelected" xml:space="preserve">
+    <value>Aucune endpoint sélectionné</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Vraiment supprimer!</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>À distance</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Config à distance</value>
+  </data>
+  <data name="RemoveAllConfigs" xml:space="preserve">
+    <value>Supprimer toutes les configs</value>
+  </data>
+  <data name="RemoveConfig" xml:space="preserve">
+    <value>Supprimer la config</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Supprimé</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Sélectionnez la config</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
   </data>
 </root>

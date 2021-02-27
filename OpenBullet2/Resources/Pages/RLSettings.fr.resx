@@ -118,57 +118,150 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="2CaptchaApiKey" xml:space="preserve">
-    <value>Clé d'API 2Captcha</value>
+    <value>Clé API 2Captcha</value>
   </data>
   <data name="AntiCaptchaApiKey" xml:space="preserve">
-    <value>Clé d'API Anti-Captcha</value>
+    <value>Clé API Anti-Captcha</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Êtes-vous sûr?</value>
   </data>
   <data name="AZCaptchaApiKey" xml:space="preserve">
-    <value>Clé d'API AZ Captcha</value>
+    <value>Clé API AZ Captcha</value>
   </data>
   <data name="Balance" xml:space="preserve">
-    <value>Balance</value>
+    <value>Solde</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
   </data>
   <data name="CapMonsterHost" xml:space="preserve">
-    <value>Hôte CapMonster</value>
+    <value>CapMonster Host</value>
   </data>
   <data name="CapMonsterPort" xml:space="preserve">
-    <value>Port CapMonster</value>
+    <value>CapMonster Port</value>
   </data>
   <data name="Captchas" xml:space="preserve">
     <value>Captchas</value>
   </data>
   <data name="CaptchasDotIoApiKey" xml:space="preserve">
-    <value>Clé d'API Captchas.IO</value>
+    <value>Clé API Captchas.IO</value>
   </data>
   <data name="CheckBalance" xml:space="preserve">
     <value>Vérifier le solde</value>
   </data>
   <data name="CheckBalanceBeforeSolving" xml:space="preserve">
-    <value>Vérifier le solde avant de résoudre le captcha</value>
+    <value>Vérifiez le solde du compte avant de résoudre le captcha</value>
   </data>
   <data name="ChromeBinaryLocation" xml:space="preserve">
-    <value>Emplacement binaire de Chrome</value>
+    <value>Emplacement binaire Chrome</value>
   </data>
   <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
-    <value>Timeout de connexion (millisecondes)</value>
+    <value>Délai de connexion (millisecondes)</value>
   </data>
   <data name="CurrentService" xml:space="preserve">
     <value>Service actuel</value>
   </data>
   <data name="Custom2CaptchaApiKey" xml:space="preserve">
-    <value>Clé d'API 2Captcha custom</value>
+    <value>Clé API 2Captcha personnalisée</value>
   </data>
   <data name="Custom2CaptchaHost" xml:space="preserve">
-    <value>Hôte 2Captcha custom</value>
+    <value>Host 2Captcha personnalisé</value>
   </data>
   <data name="Custom2CaptchaPort" xml:space="preserve">
-    <value>Port 2Captcha custom</value>
+    <value>Port 2Captcha personnalisé</value>
+  </data>
+  <data name="DeathByCaptcha Username" xml:space="preserve">
+    <value>Nom d'utilisateur Death By Captcha</value>
+  </data>
+  <data name="DeathByCaptchaPassword" xml:space="preserve">
+    <value>Mot de passe Death By Captcha</value>
+  </data>
+  <data name="DeCaptcherPassword" xml:space="preserve">
+    <value>Mot de passe DeCaptcher</value>
+  </data>
+  <data name="DeCaptcherUsername" xml:space="preserve">
+    <value>Nom d'utilisateur DeCaptcher</value>
+  </data>
+  <data name="DrawMouseMovement" xml:space="preserve">
+    <value>Draw le mouvement de la souris</value>
+  </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Activer la journalisation des bots</value>
+  </data>
+  <data name="FirefoxBinaryLocation" xml:space="preserve">
+    <value>Emplacement binaire Firefox</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="GlobalBanKeys" xml:space="preserve">
+    <value>Clés de ban globale</value>
+  </data>
+  <data name="GlobalRetryKeys" xml:space="preserve">
+    <value>Clés de réessai globales</value>
+  </data>
+  <data name="ImageTyperzApiKey" xml:space="preserve">
+    <value>Clé API Imagetyperz</value>
+  </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Enregistrer l'activité du travail dans un fichier</value>
+  </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Type de paralléliseur</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Délai de lecture / écriture (millisecondes)</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Voulez-vous restaurer les paramètres par défaut?</value>
+  </data>
+  <data name="RestrictBlocksToCWD" xml:space="preserve">
+    <value>Restreindre les capacités d'I/O des blocs au répertoire de travail actuel uniquement</value>
+  </data>
+  <data name="RuCaptchaApiKey" xml:space="preserve">
+    <value>Clé API RuCaptcha</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Enregistré</value>
+  </data>
+  <data name="SelectedBrowser" xml:space="preserve">
+    <value>Navigateur sélectionné</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Les paramètres ont été enregistrés avec succès.</value>
+  </data>
+  <data name="SolveCaptchaApiKey" xml:space="preserve">
+    <value>Clé API SolveCaptcha</value>
+  </data>
+  <data name="SolveRecaptchaApiKey" xml:space="preserve">
+    <value>Clé API SolveRecaptcha</value>
+  </data>
+  <data name="TimeoutSeconds" xml:space="preserve">
+    <value>Timeout en secondes</value>
+  </data>
+  <data name="TrueCaptchaApiKey" xml:space="preserve">
+    <value>Clé API TrueCaptcha</value>
+  </data>
+  <data name="TrueCaptchaUsername" xml:space="preserve">
+    <value>Nom d'utilisateur TrueCaptcha</value>
+  </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Utiliser la liste personnalisée des User Agents</value>
+  </data>
+  <data name="UserAgents" xml:space="preserve">
+    <value>User Agents</value>
   </data>
 </root>

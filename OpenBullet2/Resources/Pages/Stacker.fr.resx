@@ -120,7 +120,53 @@
   <data name="AvailableBlocks" xml:space="preserve">
     <value>Blocs disponibles</value>
   </data>
+  <data name="BlockInformation" xml:space="preserve">
+    <value>Bloquer les informations</value>
+  </data>
   <data name="CurrentStack" xml:space="preserve">
-    <value>Pile actuelle</value>
+    <value>Stack en cours</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Qu'est-ce que Stacker?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>%Stacker% est un outil qui peut vous aider à construire vos configs de manière très conviviale, grâce au concept de %blocks%. Les blocs sont une représentation visuelle de certaines directives LoliCode, et ce sont essentiellement des fonctions qui peuvent être appelées à tout moment, prenant éventuellement certains paramètres d'entrée et produisant éventuellement des résultats de sortie. Le %Stack% est essentiellement une liste de blocs qui seront exécutés par un bot, les uns après les autres de haut en bas.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Vous pouvez modifier la pile en %ajoutant% ou %supprimant% blocs, %en les déplaçant vers le haut et vers le bas% et %en les clonant%. Les blocs peuvent également être %désactivés% si vous voulez sauter l'exécution d'un bloc sans avoir à le supprimer et donc perdre tout son contenu.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Les blocs sont principalement caractérisés par un %label% (que vous pouvez personnaliser à votre guise) et par certains réglages qui sont les paramètres d'entrée et les résultats de sortie. Si vous souhaitez ajouter du code C# à votre configuration, vous verrez que certains %blocs LoliCode% seront créés lorsque vous reviendrez à la vue Stacker. Ces blocs contiennent du code que l'analyseur LoliCode n'a pas pu identifier comme des blocs appropriés, par exemple des boucles et des conditions ou d'autres expressions C#.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Le nouveau système de variables</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>%Les variables% dans l'OB2 fonctionnent d'une manière très différente de celle de l'OB1. Pour comprendre la raison de ce changement, vous devez savoir que les configurations sont transpilées en C# puis compilées pour la vitesse avant d'être exécutées. Le système OB1 a été interprété à partir de LoliScript au moment de l'exécution, il était donc beaucoup plus lent. C# est un langage fortement typé et donc les variables sont associées à un type, par exemple `int` pour les entiers et` string` pour les chaînes. Dans l'OB1, tout était une chaîne (ou une liste de chaînes, ou des dictionnaires de chaînes) mais dans l'OB2, il existe des types supplémentaires.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Le %type% d'une variable OB2 peut être: Bool, ByteArray, Dictionary of Strings, Float, Int, List of Strings, String et Enum. Les variables sont créées principalement via le champ %Variable de sortie% des blocs, qui est présent dans une bonne quantité de blocs. Ce champ vous indiquera le type de la variable qui sera créée. Ce champ est généralement livré avec une option supplémentaire appelée %Is capture%, qui indique au bot qu'une variable spécifique doit être enregistrée et écrite dans le %Captured Data% si vous obtenez un hit.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>%Paramètres d'entrée% des blocs ont également un type spécifique, comme dans l'OB1. Vous pouvez choisir jusqu'à 3 modes différents pour saisir des données dans ces paramètres, en fonction de leur type. Le mode %fixed% vous permet de spécifier une valeur fixe qui est toujours la même à chaque exécution, par exemple «42» ou «hello». Le mode %variable% vous permet d'utiliser une variable créée précédemment comme valeur d'entrée pour ce paramètre. Si la valeur d'origine est d'un type différent par rapport au type de paramètre, elle sera automatiquement convertie pour vous (par exemple si vous avez un entier et que vous essayez de le passer à un paramètre de chaîne, elle sera automatiquement lue sous forme de chaîne).</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Enfin, le mode %interpolated% est très proche de la façon dont il fonctionnait dans l'OB1, où vous pouvez utiliser la syntaxe `here is my &lt;variable&gt;`, où `variable` est le nom de la variable que vous voulez insérer dans le chaîne de caractères. Ce mode n'est disponible que pour les paramètres String, List of String et Dictionary of String.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Variables par défaut</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Certaines variables sont déjà déclarées pour vous et peuvent être utilisées pour accéder aux données d'entrée et aux propriétés réservées. La variable `input` est un objet dynamique qui contient les données découpées de votre pool de données (par exemple, si vous utilisez le type de liste de mots par défaut, vous pourrez accéder à `input.DATA` afin de récupérer votre ligne de données) et les réponses des entrées personnalisées qui sont demandées lors de l'exécution.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>L'objet `data` est une classe avec plusieurs propriétés qui sont automatiquement remplies par des blocs mais que vous pouvez également utiliser comme variables de sortie pour d'autres blocs. Les plus utiles sont STATUS, SOURCE, RAWSOURCE, ADDRESS, RESPONSECODE, COOKIES et HEADERS. Par exemple, pour utiliser la source d'une réponse HTTP comme paramètre d'entrée d'un bloc d'analyse, vous devez sélectionner le mode variable et taper «data.SOURCE» dans la zone.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>L'objet `data` contient beaucoup plus de variables utiles (comme le Proxy) qui peuvent être manipulées via du code C# afin d'effectuer un comportement avancé. Ils seront traités dans un guide séparé.
+Enfin, l'objet `globals` contient des variables globales et est partagé entre les bots. Vous pouvez définir des variables globales en utilisant quelque chose comme `globals.Test` comme variable de sortie, et la même chose pour récupérer sa valeur. Si vous prévoyez de faire de longues opérations dessus, par exemple travailler avec des listes globales d'éléments, vous devez %verrouiller% sur l'objet `globals` avec` lock (globals) {vos blocs et code ici} `pour le rendre thread-safe.</value>
+  </data>
+  <data name="NoBlockSelectedInfo" xml:space="preserve">
+    <value>Sélectionnez un bloc pour afficher ses paramètres</value>
   </data>
 </root>

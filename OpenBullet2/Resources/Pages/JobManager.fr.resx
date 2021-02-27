@@ -121,7 +121,7 @@
     <value>Bots</value>
   </data>
   <data name="by" xml:space="preserve">
-    <value>par</value>
+    <value>Par</value>
   </data>
   <data name="Clone" xml:space="preserve">
     <value>Cloner</value>
@@ -148,7 +148,13 @@
     <value>Fichier</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Comment ça marche ?</value>
+    <value>Comment ça marche?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Il s'agit du %Job Manager%, ici vous pouvez %créer% de nouveaux emplois, %modifier% ou %supprimer% des %emplois% existants et accéder à l'interface d'un travail spécifique. Pour créer un nouvel emploi, cliquez sur le bouton %Nouveau% ci-dessus. Après avoir créé certains emplois, vous pourrez voir un aperçu de leur statut sur cette page. Vous pouvez également créer un travail en clonant un existant afin de gagner du temps avec toutes les tâches de configuration.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Pour accéder à l'interface d'un travail spécifique, il vous suffit de cliquer dessus! Si vous souhaitez que le gestionnaire mette à jour le statut de vos travaux moins fréquemment afin d'économiser de la bande passante, vous pouvez trouver l'option %Intervalle de mise à jour du gestionnaire de travaux% dans la page Paramètres OB.</value>
   </data>
   <data name="Hits" xml:space="preserve">
     <value>Hits</value>
@@ -176,6 +182,9 @@
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Intervalle</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Supprimer</value>

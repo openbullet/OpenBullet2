@@ -133,7 +133,7 @@
     <value>Toujours ouvrir le navigateur au démarrage</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Êtes-vous sûr?</value>
   </data>
   <data name="BanLoopEvasion" xml:space="preserve">
     <value>Évasion de la boucle de ban, en gros après combien de statuts BAN la ligne de data devrait être marquée comme TOCHECK et le proxy devrait être banni (0 pour désactiver)</value>
@@ -159,14 +159,14 @@
   <data name="CustomInputs" xml:space="preserve">
     <value>Entrées custom</value>
   </data>
-  <data name="DefaultAnswer" xml:space="preserve">
-    <value>Réponse par défaut</value>
-  </data>
   <data name="Data" xml:space="preserve">
     <value>Données</value>
   </data>
   <data name="DataRules" xml:space="preserve">
     <value>Règles de données</value>
+  </data>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Réponse par défaut</value>
   </data>
   <data name="DisableWebpagesNotifications" xml:space="preserve">
     <value>Désactiver les notifications des pages web</value>
@@ -232,7 +232,7 @@
     <value>Réinitialiser les valeurs par défaut</value>
   </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
-    <value>Voulez-vous restaurer les paramètres par défaut ?</value>
+    <value>Voulez-vous restaurer les paramètres par défaut?</value>
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
     <value>Sauvegarder les captures vides également</value>

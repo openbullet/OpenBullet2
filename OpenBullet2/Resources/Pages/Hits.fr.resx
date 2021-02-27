@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Êtes-vous sûr ?</value>
+    <value>Êtes-vous sûr?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
@@ -132,20 +132,41 @@
   <data name="ConfigMissing" xml:space="preserve">
     <value>Impossible de trouver la config avec l'ID</value>
   </data>
-  <data name="Date" xml:space="preserve">
-    <value>Date</value>
+  <data name="CopyData" xml:space="preserve">
+    <value>Copier les données</value>
   </data>
   <data name="CopyDataCapture" xml:space="preserve">
     <value>Copier données + capture</value>
   </data>
+  <data name="Data" xml:space="preserve">
+    <value>Données</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Supprimer filtré</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="EditHit" xml:space="preserve">
+    <value>Modifier hit</value>
+  </data>
+  <data name="hits" xml:space="preserve">
+    <value>hits</value>
+  </data>
   <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
     <value>Hits de différentes configs sélectionnés, veuillez sélectionner des hits provenant de la même config</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>chargement</value>
+  </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Vous devez d'abord sélectionner un hit</value>
-  </data>
-  <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>Pas d'enregistrements à afficher</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>
@@ -154,7 +175,7 @@
     <value>Purger</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Voulez-vous vraiment supprimer</value>
+    <value>Voulez-vous vraiment supprimer?</value>
   </data>
   <data name="ReallyDeleteAllHits" xml:space="preserve">
     <value>Voulez-vous vraiment SUPPRIMER TOUS vos hits?</value>
@@ -177,16 +198,10 @@
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
   </data>
-  <data name="CopyData" xml:space="preserve">
-    <value>Copier données</value>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Pas d'enregistrements à afficher</value>
   </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Modifier</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="DeleteFiltered" xml:space="preserve">
-    <value>Supprimer filtré</value>
+  <data name="DeleteDuplicates" xml:space="preserve">
+    <value>Supprimer les doublons</value>
   </data>
 </root>

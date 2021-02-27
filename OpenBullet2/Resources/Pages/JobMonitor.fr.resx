@@ -120,14 +120,17 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Executed sequentially</value>
+  </data>
   <data name="Active" xml:space="preserve">
-    <value>Actif</value>
+    <value>Active</value>
   </data>
   <data name="AliveProxies" xml:space="preserve">
-    <value>Proxies actifs</value>
+    <value>Proxies Actifs</value>
   </data>
   <data name="BannedProxies" xml:space="preserve">
-    <value>Proxies bannis</value>
+    <value>Proxies Bannis</value>
   </data>
   <data name="Bans" xml:space="preserve">
     <value>Bans</value>
@@ -143,9 +146,6 @@
   </data>
   <data name="days" xml:space="preserve">
     <value>jours</value>
-  </data>
-  <data name="ActionsDescription" xml:space="preserve">
-    <value>Executé séquentiellement</value>
   </data>
   <data name="EditAction" xml:space="preserve">
     <value>Modifier l'action</value>
@@ -166,13 +166,25 @@
     <value>Fails</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Comment ça marche ?</value>
+    <value>Comment ça marche?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Il s'agit du %Job Monitor%, qui contient une liste de %actions déclenchées%. Les actions déclenchées sont chargées de surveiller un travail, de vérifier les déclencheurs et d'exécuter des actions. Tout d'abord, vous devez définir le %id% du travail à surveiller dans la zone de texte numérique. N'oubliez pas de décocher la case %active% lors de la configuration des déclencheurs et des actions pour éviter de les exécuter accidentellement lorsque vous n'en avez pas encore fini avec eux.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Ensuite, vous devez ajouter quelques %triggers% et %actions%. Une fois que toutes les conditions de déclenchement sont remplies, Job Monitor exécutera toutes les %actions% que vous avez spécifiées dans un ordre séquentiel jusqu'à ce qu'elles soient épuisées. Après avoir exécuté les actions, le compteur %exécutions% augmentera. Si l'action déclenchée est marquée comme %répétable%, les déclencheurs seront appariés plusieurs fois, sinon l'action déclenchée se définira comme inactive et ne se déclenchera plus jamais.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Le bouton %Reset% réinitialisera le nombre d'exécutions à 0. Les actions déclenchées sont enregistrées dans le fichier %triggeredActions.json%, donc si vous souhaitez les sauvegarder ou les transférer vers une autre instance d'OB, vous devez copier ce fichier.</value>
   </data>
   <data name="Hits" xml:space="preserve">
     <value>Hits</value>
   </data>
   <data name="hours" xml:space="preserve">
     <value>heures</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>dans le job</value>
   </data>
   <data name="Job" xml:space="preserve">
     <value>Job</value>
@@ -202,7 +214,7 @@
     <value>Supprimer</value>
   </data>
   <data name="RemoveAll" xml:space="preserve">
-    <value>Supprimer tous</value>
+    <value>Supprimer Tous</value>
   </data>
   <data name="Repeatable" xml:space="preserve">
     <value>Répétable</value>
@@ -256,6 +268,6 @@
     <value>Doivent tous être vérifiés au même moment</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Attendre</value>
+    <value>Attend</value>
   </data>
 </root>
