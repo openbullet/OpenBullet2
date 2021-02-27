@@ -38,7 +38,7 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                LogError(ex);
+                ExitWithError(ex);
             }
 
             // Read version.txt to get the current version
@@ -80,7 +80,7 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                LogError(ex);
+                ExitWithError(ex);
             }
 
             // Extract it
@@ -105,7 +105,7 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                LogError(ex);
+                ExitWithError(ex);
             }
 
             // Write the new version
@@ -117,7 +117,7 @@ namespace Updater
             }
             catch (Exception ex)
             {
-                LogError(ex);
+                ExitWithError(ex);
             }
 
             Console.WriteLine("The update was completed successfully. You may now restart your OpenBullet 2 instance!");
@@ -126,7 +126,7 @@ namespace Updater
             Environment.Exit(0);
         }
 
-        private static void LogError(Exception ex)
+        private static void ExitWithError(Exception ex)
         {
             Console.WriteLine($"Failed! {ex.Message}");
             Console.WriteLine("Press any key to exit...");
