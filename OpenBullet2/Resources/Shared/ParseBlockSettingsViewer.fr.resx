@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Comment fonctionne ce bloc?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Le bloc %Parse% vous permet d'analyser les données d'une chaîne avec beaucoup de différentes méthodes d'analyse syntaxique et de le stocker dans une chaîne ou Liste des variables Strings. Les modes d'analyse pris en charge sont LR, CSS, JSON et REGEX. Le mode %LR% (gauche droite) permet d'analyser le texte entre deux chaînes données. Le mode %CSS% (CSS Selector) permet d'obtenir l'attribut d'un élément à partir d'une page HTML.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Le mode %JSON% (JavaScript Object Notation) permet d'obtenir la valeur d'un objet ou d'un tableau sérialisé JSON en utilisant un %JToken%. Le JToken vous permet de spécifier un chemin pour atteindre la valeur souhaitée dans la structure JSON. Un exemple de ceci pourrait être «field1.array [0]» pour adresser le premier élément du tableau «array» à l'intérieur de l'objet «champ1». Si vous écrivez à la place «champ1.array [*]», vous obtiendrez tous les éléments du tableau.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Le mode %REGEX% (REGular EXpression) est une méthode d'analyse avancée. Vous devrez créer une expression régulière et utiliser %groupes de captures% pour spécifier ce que vous voulez que la sortie soit. Prenons par exemple le cas où nous analysons la phrase «bonjour ami 123» et nous voulons obtenir le mot «ami», dans le cas où «123» est une valeur changeante et nous ne pouvons pas utiliser le mode LR. Vous pouvez créer une expression régulière comme `bonjour ([a-z] +) [d] {3}`. Remarquez comment il existe un groupe de capture, indiqué par les accolades rondes. Ensuite, dans le champ %Format de sortie%, vous pourrez écrire `[0]` pour afficher la correspondance complète, `[1]` pour afficher le premier groupe capturé et ainsi de suite ... Notez que vous pouvez utiliser plus de 1 groupe dans le format de sortie.</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Si vous cochez la case %Récursif%, toutes les séquences de caractères qui répondent aux critères d'analyse seront placées dans une variable Liste de chaînes; sinon, seule la première correspondance sera prise et placée dans une variable String.</value>
+  </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Est-capture</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Étiquette</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Variable de sortie</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Réglages</value>
+  </data>
+</root>
