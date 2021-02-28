@@ -24,7 +24,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                 args += $" --proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}";
 
             // Check if there is already an open browser
-            if (!data.Objects.ContainsKey("puppeteer"))
+            if (!data.Objects.ContainsKey("puppeteer") || ((PuppeteerSharp.Browser)data.Objects["puppeteer"]).IsClosed)
             {
                 // Configure the options
                 var launchOptions = new LaunchOptions
