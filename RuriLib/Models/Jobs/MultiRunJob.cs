@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
+using PuppeteerSharp;
 
 namespace RuriLib.Models.Jobs
 {
@@ -207,11 +208,26 @@ namespace RuriLib.Models.Jobs
                 }
                 finally
                 {
+                    // Close the browser if needed
+                    if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS)
+                        && botData.Objects.ContainsKey("puppeteer"))
+                    {
+                        try
+                        {
+                            var browser = (Browser)botData.Objects["puppeteer"];
+                            await browser.CloseAsync();
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+
                     // Dispose all disposable objects
                     foreach (var obj in botData.Objects.Where(o => o.Value is IDisposable))
                     {
-                        // Do not dispose objects that are given to every bot
-                        if (obj.Key == "httpClient" || obj.Key == "ironPyEngine")
+                        // Do not dispose objects that are given to every bot or puppeteer
+                        if (obj.Key == "httpClient" || obj.Key == "ironPyEngine" || obj.Key == "puppeteer")
                             continue;
 
                         try

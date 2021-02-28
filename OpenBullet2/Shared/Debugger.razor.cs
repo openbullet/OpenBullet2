@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Blazored.Modal.Services;
 using IronPython.Compiler;
 using IronPython.Hosting;
 using IronPython.Runtime;

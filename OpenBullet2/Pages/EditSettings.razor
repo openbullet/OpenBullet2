@@ -184,10 +184,6 @@
 
     <h1>@Loc["Puppeteer"]</h1>
     <EditForm Model="settings.PuppeteerSettings">
-        <label>@Loc["AlwaysOpenBrowser"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.AlwaysOpenBrowser" />
-        <br />
-
         <label>@Loc["QuitBrowserStatuses"]</label>
         <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
 
