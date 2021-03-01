@@ -33,8 +33,6 @@ namespace ParallelizationDemo
 
         static async Task MainAsync(string[] args)
         {
-            var count = 100;
-
             // This func takes an input type of 'int', a cancellation token, and an output type of `Task` of `bool`
             Func<int, CancellationToken, Task<bool>> parityCheck = new(async (number, token) => 
             {
@@ -48,7 +46,7 @@ namespace ParallelizationDemo
                 workItems: Enumerable.Range(1, 100), // The work items are all integers from 1 to 100
                 workFunction: parityCheck, // Use the work function we defined above
                 degreeOfParallelism: 5, // Use 5 concurrent tasks at most
-                totalAmount: count, // The total amount of tasks you expect to have, used for calculating progress
+                totalAmount: 100, // The total amount of tasks you expect to have, used for calculating progress
                 skip: 0); // How many items to skip from the start of the provided enumerable
 
             // Hook the events
