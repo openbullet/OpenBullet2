@@ -43,7 +43,7 @@
     <PackageReference Include="HtmlSanitizer" Version="5.0.372" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
-    <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.3" />
+    <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.4" />
     <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="MaxMind.GeoIP2" Version="4.0.1" />
@@ -60,7 +60,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PuppeteerExtraSharp" Version="1.1.0" />
+    <PackageReference Include="PuppeteerExtraSharp" Version="1.2.1" />
     <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
     <PackageReference Include="Radzen.Blazor" Version="2.18.8" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
