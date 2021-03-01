@@ -14,7 +14,7 @@ namespace RuriLib.Http.Models
 
         public Version Version { get; set; } = new(1, 1);
         public HttpStatusCode StatusCode { get; set; }
-        public Dictionary<string, string> Headers { get; set; } = new();
+        public Dictionary<string, string> Headers { get; set; } = new(StringComparer.InvariantCultureIgnoreCase);
         public HttpContent Content { get; set; }
 
         public void Dispose() => Content?.Dispose();
