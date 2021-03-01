@@ -206,6 +206,7 @@ namespace RuriLib.Models.Jobs
                 catch
                 {
                     botData.STATUS = "ERROR";
+                    input.Job.DataErrors++;
                 }
                 finally
                 {
