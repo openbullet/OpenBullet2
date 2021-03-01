@@ -55,7 +55,12 @@ namespace RuriLib.Http.Models
         // Builds the first line, for example
         // GET /resource HTTP/1.1
         private string BuildFirstLine()
-            => $"{Method.Method} {(AbsoluteUriInFirstLine ? Uri.AbsoluteUri : Uri.PathAndQuery)} HTTP/{Version}{newLine}";
+        {
+            if (Version >= new Version(2, 0))
+                throw new Exception($"HTTP/{Version.Major}.{Version.Minor} not supported yet");
+
+            return $"{Method.Method} {(AbsoluteUriInFirstLine ? Uri.AbsoluteUri : Uri.PathAndQuery)} HTTP/{Version}{newLine}";
+        }
 
         // Builds the headers, for example
         // Host: example.com

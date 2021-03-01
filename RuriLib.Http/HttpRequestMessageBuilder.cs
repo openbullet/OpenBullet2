@@ -16,7 +16,12 @@ namespace RuriLib.Http
         // Builds the first line, for example
         // GET /resource HTTP/1.1
         public static string BuildFirstLine(HttpRequestMessage request)
-            => $"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version}{newLine}";
+        {
+            if (request.Version >= new Version(2, 0))
+                throw new Exception($"HTTP/{request.Version.Major}.{request.Version.Minor} not supported yet");
+
+            return $"{request.Method.Method} {request.RequestUri.PathAndQuery} HTTP/{request.Version}{newLine}";
+        }
 
         // Builds the headers, for example
         // Host: example.com
