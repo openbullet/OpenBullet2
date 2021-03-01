@@ -66,15 +66,17 @@ namespace Updater
                 Environment.Exit(0);
             }
 
-            // Download the remote resource
-            var size = release["assets"].First["size"].ToObject<double>();
+            // Download the remote patch (not the entire build)
+            var patch = release["assets"].First(t => t["name"].ToObject<string>().Contains("patch", StringComparison.OrdinalIgnoreCase));
+            var size = patch["size"].ToObject<double>();
             var megaBytes = size / (1 * 1000 * 1000);
             Console.Write($"[4/6] Downloading the updated build ({megaBytes:0.00} MB)... ");
             try
             {
-                var downloadUrl = release["assets"].First["browser_download_url"].ToString();
+                var downloadUrl = patch["browser_download_url"].ToString();
                 var response = client.GetAsync(downloadUrl).Result;
                 stream = response.Content.ReadAsStream();
+                stream.Seek(0, SeekOrigin.Begin);
                 
                 Console.WriteLine("Done!");
             }
