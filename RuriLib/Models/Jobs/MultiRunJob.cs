@@ -143,6 +143,7 @@ namespace RuriLib.Models.Jobs
                 {
                     // This is important! Otherwise we reuse the same proxy
                     botData.Proxy = null;
+                    botData.UseProxy = ShouldUseProxies(input.Job.ProxyMode, botData.ConfigSettings.ProxySettings);
 
                     // Get a hold of a proxy
                     if (botData.UseProxy)
@@ -662,16 +663,13 @@ namespace RuriLib.Models.Jobs
             return newCaptures;
         }
 
-        private bool ShouldUseProxies(JobProxyMode mode, ProxySettings settings)
+        private static bool ShouldUseProxies(JobProxyMode mode, ProxySettings settings) => mode switch
         {
-            return mode switch
-            {
-                JobProxyMode.Default => settings.UseProxies,
-                JobProxyMode.On => true,
-                JobProxyMode.Off => false,
-                _ => throw new NotImplementedException()
-            };
-        }
+            JobProxyMode.Default => settings.UseProxies,
+            JobProxyMode.On => true,
+            JobProxyMode.Off => false,
+            _ => throw new NotImplementedException()
+        };
 
         private bool IsHitStatus(string status) => !badStatuses.Contains(status);
 
