@@ -55,6 +55,7 @@ namespace ParallelizationDemo
             parallelizer.NewResult += OnResult;
             parallelizer.Completed += OnCompleted;
             parallelizer.Error += OnException;
+            parallelizer.TaskError += OnTaskError;
 
             await parallelizer.Start();
 
@@ -68,6 +69,8 @@ namespace ParallelizationDemo
         private static void OnResult(object sender, ResultDetails<int, bool> value)
             => Console.WriteLine($"Got result {value.Result} from the parity check of {value.Item}");
         private static void OnCompleted(object sender, EventArgs e) => Console.WriteLine("All work completed!");
+        private static void OnTaskError(object sender, ErrorDetails<int> details)
+            => Console.WriteLine($"Got error {details.Exception.Message} while processing the item {details.Item}");
         private static void OnException(object sender, Exception ex) => Console.WriteLine($"Exception: {ex.Message}");
     }
 }
