@@ -136,7 +136,7 @@ namespace RuriLib.Blocks.Requests.Http
 
             using var request = new HttpRequest
             {
-                Method = System.Net.Http.HttpMethod.Get,
+                Method = new System.Net.Http.HttpMethod(options.Method.ToString()),
                 Uri = new Uri(options.Url),
                 Version = Version.Parse(options.HttpVersion),
                 Headers = options.CustomHeaders,
