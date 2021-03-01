@@ -184,9 +184,9 @@ namespace RuriLib.Blocks.Requests.Http
             if (string.IsNullOrWhiteSpace(options.Boundary))
                 options.Boundary = GenerateMultipartBoundary();
 
-            // Do not set the boundary directly in the constructor otherwise it will add double quotes around it like
+            // Rewrite the value of the Content-Type header otherwise it will add double quotes around it like
             // Content-Type: multipart/form-data; boundary="------WebKitFormBoundaryewozmkbxwbblilpm"
-            var multipartContent = new MultipartFormDataContent();
+            var multipartContent = new MultipartFormDataContent(options.Boundary);
             multipartContent.Headers.ContentType.Parameters.First(o => o.Name == "boundary").Value = options.Boundary;
 
             FileStream fileStream = null;
