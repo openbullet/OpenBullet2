@@ -60,7 +60,10 @@ namespace RuriLib.Models.Bots
                 throw new ArgumentException("Name cannot be null or empty");
 
             if (!MarkedForCapture.Contains(name))
+            {
                 MarkedForCapture.Add(name);
+                Logger.Log($"Variable {name} marked for capture", LogColors.Tomato);
+            }
         }
 
         public void ExecutingBlock(string label)
