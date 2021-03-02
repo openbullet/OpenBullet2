@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -13,7 +14,17 @@ namespace RuriLib.Logging
         public string ExecutingBlock { get; set; } = "Unknown";
         private readonly List<BotLoggerEntry> entries = new();
         public event EventHandler<BotLoggerEntry> NewEntry;
-        public IEnumerable<BotLoggerEntry> Entries => entries;
+        public IEnumerable<BotLoggerEntry> Entries
+        {
+            get
+            {
+                lock (entries)
+                {
+                    // Make a copy of the list so it's thread safe
+                    return entries.ToList();
+                }
+            }
+        }
 
         public void Log(string message, string color = "#fff", bool canViewAsHtml = false)
         {
@@ -27,7 +38,11 @@ namespace RuriLib.Logging
                 CanViewAsHtml = canViewAsHtml
             };
 
-            entries.Add(entry);
+            lock (entries)
+            {
+                entries.Add(entry);
+            }
+            
             NewEntry?.Invoke(this, entry);
         }
 
@@ -43,7 +58,11 @@ namespace RuriLib.Logging
                 CanViewAsHtml = canViewAsHtml
             };
 
-            entries.Add(entry);
+            lock (entries)
+            {
+                entries.Add(entry);
+            }
+            
             NewEntry?.Invoke(this, entry);
         }
 
@@ -65,11 +84,21 @@ namespace RuriLib.Logging
                 Color = LogColors.ChromeYellow
             };
 
-            entries.Add(new BotLoggerEntry { Message = string.Empty });
-            entries.Add(entry);
+            lock (entries)
+            {
+                entries.Add(new BotLoggerEntry { Message = string.Empty });
+                entries.Add(entry);
+            }
+            
             NewEntry?.Invoke(this, entry);
         }
 
-        public void Clear() => entries.Clear();
+        public void Clear()
+        {
+            lock (entries)
+            {
+                entries.Clear();
+            }
+        }
     }
 }
