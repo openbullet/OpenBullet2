@@ -72,9 +72,8 @@ namespace RuriLib.Models.Configs
                 {
                     ConfigMode.CSharp => true,
                     ConfigMode.DLL => true,
-                    ConfigMode.Stack => Stack.Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
-                    ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript)
-                        .Any(b => (b is LoliCodeBlockInstance || b is ScriptBlockInstance)),
+                    ConfigMode.Stack => Stack.Any(b => IsDangerousBlock(b)),
+                    ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript).Any(b => IsDangerousBlock(b)),
                     _ => throw new NotImplementedException(),
                 };
             }
@@ -84,6 +83,9 @@ namespace RuriLib.Models.Configs
                 return false;
             }
         }
+
+        private static bool IsDangerousBlock(BlockInstance b)
+            => b is LoliCodeBlockInstance || b is ScriptBlockInstance || b.Descriptor.Id == "ShellCommand";
 
         /// <summary>
         /// Update the hashes of the current state of LoliCode and C# scripts

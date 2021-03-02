@@ -133,7 +133,7 @@
     <value>Danger</value>
   </data>
   <data name="DangerousConfig" xml:space="preserve">
-    <value>The Config you selected might have some C# code in it. Although C# can be helpful for config makers who want to use functionalities that are not implemented through blocks, it can also be used to harm your computer or steal information. It's STRONGLY advised that you review the code of the config and make sure nothing fishy is going on. Did you review the config and made sure that it's completely safe to run it?</value>
+    <value>The Config you selected might have some C# code in it (or blocks that call external programs). Although C# can be helpful for config makers who want to use functionalities that are not implemented through blocks, it can also be used to harm your computer or steal information. It's STRONGLY advised that you review the code of the config and make sure nothing fishy is going on. Did you review the config and made sure that it's completely safe to run it?</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Last Modified</value>
