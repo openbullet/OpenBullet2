@@ -1,5 +1,6 @@
 ﻿using IronPython.Runtime;
 using RuriLib.Attributes;
+using RuriLib.Functions.Files;
 using RuriLib.Functions.Puppeteer;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -198,6 +199,9 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             string fileName, bool fullPage = false, bool omitBackground = false)
         {
             data.Logger.LogHeader();
+
+            if (data.Providers.Security.RestrictBlocksToCWD)
+                FileUtils.ThrowIfNotInCWD(fileName);
 
             var frame = GetFrame(data);
             var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];

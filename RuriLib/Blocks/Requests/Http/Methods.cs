@@ -208,6 +208,9 @@ namespace RuriLib.Blocks.Requests.Http
                     case FileHttpContent x:
                         lock (FileLocker.GetHandle(x.FileName))
                         {
+                            if (data.Providers.Security.RestrictBlocksToCWD)
+                                FileUtils.ThrowIfNotInCWD(x.FileName);
+
                             fileStream = new FileStream(x.FileName, FileMode.Open);
                             var fileContent = CreateFileContent(fileStream, x.Name, Path.GetFileName(x.FileName), x.ContentType);
                             multipartContent.Add(fileContent, x.Name);
