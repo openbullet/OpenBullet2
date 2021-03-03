@@ -26,7 +26,7 @@ namespace RuriLib.Helpers.CSharp
                     code: preScript.ToString() + cSharpScript + postScript.ToString(),
                     options: ScriptOptions.Default
                         .WithReferences(new Assembly[] { ruriLib }.Concat(plugins))
-                        .WithImports(settings.CustomUsings == null ? GetUsings() : GetUsings().Concat(settings.CustomUsings)),
+                        .WithImports(GetImports(settings)),
                     globalsType: typeof(ScriptGlobals));
 
             // Add references from RuriLib
@@ -67,5 +67,12 @@ namespace RuriLib.Helpers.CSharp
             usings.AddRange(Globals.DescriptorsRepository.Descriptors.Values.Select(d => d.Category.Namespace).Distinct());
             return usings;
         }
+
+        private static IEnumerable<string> GetImports(ScriptSettings settings) 
+            => settings.CustomUsings == null 
+                ? GetUsings() 
+                : GetUsings().Concat(settings.CustomUsings
+                    .Where(u => !string.IsNullOrWhiteSpace(u))
+                    .Select(u => u.Trim()));
     }
 }
