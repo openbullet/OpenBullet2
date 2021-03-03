@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
+  </data>
+  <data name="by" xml:space="preserve">
+    <value>door</value>
+  </data>
+  <data name="ConcurrentProxyMode" xml:space="preserve">
+    <value>Concurrent proxy-modus</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Gegevens pool</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Welke mogelijkheden zijn er?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Wanneer u een MultiRun Taak aanmaakt, moet u een %config% opgeven. In de %Configs% sectie kunt u uw eigen aanmaken of een bestaande importeren. Nadat je een config hebt getest in de debugger van de sectie Configs, kun je deze hier selecteren om deze uit te voeren met meerdere bots die parallel lopen. Klik gewoon op de knop %Select Config% en u kunt uw config uit een lijst selecteren. U krijgt ook een voorbeeld te zien van het %readme% -bestand van de config.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>De %Proxy-modus% beslist of er proxy's worden gebruikt bij het uitvoeren van de geselecteerde config. Als je het op %Default% laat staan, zal het alles gebruiken wat gespecificeerd is in de instellingen van de config (sectie Proxy's, %Gebruik proxy's% optie). Als u %Ja% of %Nee% kiest, wordt de standaardinstellingen overschreven.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Bots% is het aantal parallelle werkers dat uw config zal uitvoeren, elk met hun eigen datalijn uit de datapool die u heeft gespecificeerd (bijvoorbeeld een wordlist). Hoe meer bots je plaatst, hoe meer verzoeken er tegelijkertijd worden gedaan, maar houd er rekening mee dat er een %Limiet% is dat afhangt van de hardware van je machine, waarna het verhogen van het aantal bots de prestaties daadwerkelijk verslechtert!</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>%Skip% geeft aan hoeveel regels er moeten worden overgeslagen vanaf het begin van de datapool. Deze waarde wordt automatisch ingesteld zodra u een paar configs en wordlists selecteert die u al eerder hebt uitgevoerd, aangezien controlepunten van uw voortgang periodiek in de database worden opgeslagen.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Wat is een datapool?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Een %Data pool% is de bron van alle datalijnen die aan de bots worden toegewezen. De datapool wordt regel voor regel gelezen en wanneer er een beschikbare bot is, krijgt deze een regel toegewezen om te verwerken. Er zijn verschillende manieren om een ​​datapool te initialiseren. De meest gebruikelijke manier is via een %wordlist%. Om een wordlist te gebruiken, moet u er eerst een importeren in de %Wordlists% sectie. Nadat u een wordlist heeft geïmporteerd, klikt u op de %Selecteer wordlist% knop en selecteert u de wordlist die u wilt gebruiken. U kunt ook een voorbeeld van de eerste paar regels van de wordlist zien.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Als u de optie %Bestand% kiest, kunt u de importfase van de wordlist omzeilen, maar denk eraan dat dit sommige functies zal uitschakelen, zoals het opslaan van de voortgang van uw wordlist-config paar in de database en de relatie tussen hits en de wordlists die werd gebruikt om ze te krijgen. Wordlists zijn de beste manier om gegevens uit een bestand te gebruiken, dus ik raad je aan om de sectie Wordlists te bekijken! U moet ook het %Wordlist type% specificeren, raadpleeg de gebruikelijke sectie wordlists voor meer hulp over wat deze optie betekent.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>De optie %Bereik% genereert alleen een reeks getallen, beginnend bij een beginwaarde. Als u bijvoorbeeld %Start% = 0, %Amount% = 5 en %Step% = 2 instelt, worden 5 datalijnen gegenereerd met de waarden 0, 2, 4, 6 en 8. Als u het vakje %Pad% aanvinkt, het nummer wordt links met nul opgevuld op basis van het aantal cijfers van het grootste getal dat wordt gegenereerd, als het grootste getal bijvoorbeeld 100 is, ziet u waarden zoals 001, 042 enz. in uw gegenereerde datapool.</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Met de optie %Combinaties% kunt u alle mogelijke combinaties van een gegeven %Karakter set% voor een gegeven %Lengte% genereren. Als u bijvoorbeeld ABCD als een tekenset en lengte = 4 gebruikt, krijgt u combinaties zoals AAAA, AAAB, ... ACCB ... DDDC, DDDD.</value>
+  </data>
+  <data name="Help2x05" xml:space="preserve">
+    <value>De %Oneindig% -optie genereert gewoon een oneindig aantal lege dataregels, dus de taak gaat door totdat u besluit deze te stoppen.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Wat is een proxy-bron?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>%Proxy bronnen% worden gebruikt om te bepalen waar proxy's vandaan komen wanneer ze worden toegevoegd aan de pool van proxy's die aan bots zijn toegewezen. Proxy-bronnen worden aan het begin van een taak opgevraagd, en ook wanneer alle proxy's worden verbannen of een voorwaarde dwingt proxy's te herladen. Een proxybron van het type %Groep% neemt proxy's over van een groep die is gedefinieerd in de sectie %Proxy's%. Om deze optie te gebruiken, moet u een groep hebben met enkele proxy's erin, raadpleeg het gedeelte Proxy's voor instructies over hoe u dat moet doen.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Een proxy-bron van het type %Bestand% laadt proxy's van een bepaald bestand op de schijf. U kunt het volledige pad naar het gewenste bestand typen en ook de proxy %type% die als standaard zal worden gebruikt als er geen is opgegeven via de geavanceerde syntax. U kunt de inhoud van het bestand op elk moment bewerken en de volgende keer dat een proxy opnieuw wordt geladen, worden uw gloednieuwe proxy's uit het bestand verwerkt.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>Een proxybron van het type %Extern% omvat het opvragen van een externe bron, bijvoorbeeld de API-service van een proxyprovider, om proxy's op te halen. Nogmaals, u moet een proxy %type% specificeren om als de standaardoptie te gebruiken. Deze optie kan worden gebruikt om nieuwe werkende proxy's op te halen die al zijn gecontroleerd door een externe service.</value>
+  </data>
+  <data name="Help4x00" xml:space="preserve">
+    <value>Wat is een hit-uitgang?</value>
+  </data>
+  <data name="Help4x01" xml:space="preserve">
+    <value>Een %Hit uitgang% is een plaats waar hits worden verzonden nadat ze zijn gevonden. De %Database% optie (er kan er maar één zijn) zal de hits naar de standaard database van OpenBullet 2 schrijven. U kunt de hits in de database verkennen via de %Hits% sectie. De %Bestandssysteem% optie (er kan er maar één zijn) zal de hits opslaan in een georganiseerde mapstructuur op de schijf. Schrijf gewoon het pad naar de basismap waar u de mapstructuur wilt maken.</value>
+  </data>
+  <data name="Help4x02" xml:space="preserve">
+    <value>Ten slotte kunt u met de optie %Discord webhook% de hits naar een discord webhook sturen met een aangepaste gebruikersnaam en avatar (gespecificeerd via de URL naar een afbeelding die wordt gehost op een openbare opslagplaats). Om deze optie te gebruiken, moet je een discord-webhook voor een kanaal op je server maken en de URL in het daarvoor bestemde veld plakken.</value>
+  </data>
+  <data name="HitOutputs" xml:space="preserve">
+    <value>hit-uitgangen</value>
+  </data>
+  <data name="MarkAsToCheckOnAbort" xml:space="preserve">
+    <value>Markeer als te controleren bij afbreken</value>
+  </data>
+  <data name="NeverBanProxies" xml:space="preserve">
+    <value>Verbied nooit proxy's</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Geen config geselecteerd</value>
+  </data>
+  <data name="NoValidProxyBehaviour" xml:space="preserve">
+    <value>Geen geldig proxygedrag</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Uit</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Aan</value>
+  </data>
+  <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
+    <value>Periodiek herlaadinterval (seconden, 0 om uit te schakelen)</value>
+  </data>
+  <data name="ProxyBanTimeSeconds" xml:space="preserve">
+    <value>Proxy-blokkeringstijd (seconden)</value>
+  </data>
+  <data name="ProxyMode" xml:space="preserve">
+    <value>Proxy-modus</value>
+  </data>
+  <data name="ProxySources" xml:space="preserve">
+    <value>Proxy-bronnen</value>
+  </data>
+  <data name="ReloadProxiesWhenAllBanned" xml:space="preserve">
+    <value>Herlaad proxy's als ze allemaal zijn verbannen</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Selecteer config</value>
+  </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Hussel proxys</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Overslaan</value>
+  </data>
+  <data name="StartCondition" xml:space="preserve">
+    <value>Startvoorwaarde</value>
+  </data>
+</root>

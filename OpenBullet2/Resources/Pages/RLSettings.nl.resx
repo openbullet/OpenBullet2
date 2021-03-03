@@ -117,64 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="2CaptchaApiKey" xml:space="preserve">
+    <value>2Captcha API Sleutel</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="AntiCaptchaApiKey" xml:space="preserve">
+    <value>Anti-Captcha API Sleutel</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Weet je het zeker?</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="AZCaptchaApiKey" xml:space="preserve">
+    <value>AZ Captcha API Sleutel</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="Balance" xml:space="preserve">
+    <value>Saldo</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>annuleren</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+  <data name="CapMonsterHost" xml:space="preserve">
+    <value>CapMonster Host</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+  <data name="CapMonsterPort" xml:space="preserve">
+    <value>CapMonster Port</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+  <data name="Captchas" xml:space="preserve">
+    <value>Captchas</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="CaptchasDotIoApiKey" xml:space="preserve">
+    <value>Captchas.IO API Sleutel</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Controleer het saldo</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="CheckBalanceBeforeSolving" xml:space="preserve">
+    <value>Controleer het rekeningsaldo voordat u de captcha oplost</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="ChromeBinaryLocation" xml:space="preserve">
+    <value>Chrome binaire locatie</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Time-out voor verbinding (milliseconden)</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="CurrentService" xml:space="preserve">
+    <value>Huidige service</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="Custom2CaptchaApiKey" xml:space="preserve">
+    <value>Custom 2Captcha API Sleutel</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="Custom2CaptchaHost" xml:space="preserve">
+    <value>Custom 2Captcha Host</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="Custom2CaptchaPort" xml:space="preserve">
+    <value>Custom 2Captcha Port</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
+  <data name="DeathByCaptcha Username" xml:space="preserve">
+    <value>Death By Captcha Gebruikersnaam</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="DeathByCaptchaPassword" xml:space="preserve">
+    <value>Death By Captcha Wachtwoord</value>
+  </data>
+  <data name="DeCaptcherPassword" xml:space="preserve">
+    <value>DeCaptcher Wachtwoord</value>
+  </data>
+  <data name="DeCaptcherUsername" xml:space="preserve">
+    <value>DeCaptcher Gebruikersnaam</value>
+  </data>
+  <data name="DrawMouseMovement" xml:space="preserve">
+    <value>Teken muisbewegingen</value>
+  </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Schakel bot-logboekregistratie in</value>
+  </data>
+  <data name="FirefoxBinaryLocation" xml:space="preserve">
+    <value>Firefox binaire locatie</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="GlobalBanKeys" xml:space="preserve">
+    <value>algemene ban sleutels</value>
+  </data>
+  <data name="GlobalRetryKeys" xml:space="preserve">
+    <value>Globale sleutels voor opnieuw proberen</value>
+  </data>
+  <data name="ImageTyperzApiKey" xml:space="preserve">
+    <value>Imagetyperz API Sleutel</value>
+  </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Log taakactiviteit in een bestand</value>
+  </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Parallelizer Type</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy's</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Poppenspeler</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Time-out lezen / schrijven (milliseconden)</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Herstel standaardinstellingen</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Wilt u de standaardinstellingen herstellen?</value>
+  </data>
+  <data name="RestrictBlocksToCWD" xml:space="preserve">
+    <value>Beperk de I/O-mogelijkheden van blokken tot alleen de huidige werkdirectory</value>
+  </data>
+  <data name="RuCaptchaApiKey" xml:space="preserve">
+    <value>RuCaptcha API Sleutel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Opgeslagen</value>
+  </data>
+  <data name="SelectedBrowser" xml:space="preserve">
+    <value>Geselecteerde browser</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>De instellingen zijn succesvol opgeslagen.</value>
+  </data>
+  <data name="SolveCaptchaApiKey" xml:space="preserve">
+    <value>SolveCaptcha API Sleutel</value>
+  </data>
+  <data name="SolveRecaptchaApiKey" xml:space="preserve">
+    <value>SolveRecaptcha API Sleutel</value>
+  </data>
+  <data name="TimeoutSeconds" xml:space="preserve">
+    <value>Timeout in seconds</value>
+  </data>
+  <data name="TrueCaptchaApiKey" xml:space="preserve">
+    <value>TrueCaptcha API Sleutel</value>
+  </data>
+  <data name="TrueCaptchaUsername" xml:space="preserve">
+    <value>TrueCaptcha Gebruikersnaam</value>
+  </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Gebruik een aangepaste lijst met User Agents</value>
+  </data>
+  <data name="UserAgents" xml:space="preserve">
+    <value>UserAgents</value>
   </data>
 </root>

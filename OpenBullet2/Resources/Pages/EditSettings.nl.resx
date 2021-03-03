@@ -117,64 +117,145 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="AddBlank" xml:space="preserve">
+    <value>Lege toevoegen</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>Toegestane proxy typen</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>Toegestane wordlist typen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>Open altijd de browser aan het begin</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Weet je het zeker?</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>Ban loop ontwijking, oftewel na hoeveel BAN statussen de datalijn moet worden gemarkeerd als TOCHECK en de proxy moet worden geblokkeerd (0 om uit te schakelen)</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>Ban de proxy wanneer de bot eindigt met een van deze statussen</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleer</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Hoofdlettergevoelig</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Legen</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>Statussen waarvoor de bot doorgaat / stopt</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>CPM Limiet (0 voor geen limiet)</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>Aangepaste ingangen</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="Data" xml:space="preserve">
+    <value>Gegevens</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="DataRules" xml:space="preserve">
+    <value>Gegevens Regels</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Standaard antwoord</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>Schakel meldingen van webpagina's uit</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Negeer HTTPS fouten</value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>Negeer antwoordfouten</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>Beschrijving (vraag voor de gebruiker)</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Invoer</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>Aangepaste invoer is een manier om sommige waarden direct tijdens runtime te definiëren. De gebruikers van de config zullen een aantal pop-ups krijgen wanneer ze een taak starten en hun antwoord zal worden ingevoegd als een variabele van het type string die je kunt gebruiken zoals je wilt.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Omkeren</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>Maximaal gebruik per proxy (0 is oneindig)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy's</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Poppenspeler</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Command line argumenten (bijv. --disable-notifications --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (standaard indien leeg)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>Sluit de browser wanneer de bot eindigt met een van deze statussen</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>Willekeurige User Agent</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Regex regel</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Regex die overeenkomt</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Verzoeken</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Herstel standaardinstellingen</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Wilt u de standaardinstellingen herstellen?</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Sla ook lege opnames op</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Eenvoudige regel</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>Segment naam</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>Aanbevolen aantal bots</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Schakel Regex Helper in</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>URL Codeer gegevens na het snijden</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>Gebruik proxy's</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Variabele naam</value>
   </data>
 </root>

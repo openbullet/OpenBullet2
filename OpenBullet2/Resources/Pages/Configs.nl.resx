@@ -132,29 +132,77 @@
   <data name="Cancel" xml:space="preserve">
     <value>Annuleer</value>
   </data>
+  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
+    <value>Kan externe config niet downloaden</value>
+  </data>
+  <data name="CannotEditRemoteConfig" xml:space="preserve">
+    <value>Kan externe config niet bewerken</value>
+  </data>
   <data name="Category" xml:space="preserve">
     <value>Categorie</value>
   </data>
   <data name="ConfigReloadWarning" xml:space="preserve">
-    <value>Hiermee worden alle configs herladen van schijf, zodat alle niet-opgeslagen wijzigingen gaan verloren. Wil je doorgaan?</value>
+    <value>Hierdoor worden alle configs opnieuw van de schijf geladen, zodat alle niet-opgeslagen wijzigingen verloren gaan. Wil je doorgaan?</value>
   </data>
   <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
-    <value>Configs geüpload</value>
+    <value>Configs zijn geüpload</value>
+  </data>
+  <data name="ConfigWarningMessage" xml:space="preserve">
+    <value>WAARSCHUWING! Configs bevatten C# -code die wordt uitgevoerd zonder automatische controles op kwaadaardig gedrag. Als u configs gebruikt die door derden zijn gemaakt, is het UW verantwoordelijkheid om ervoor te zorgen dat configs precies doen wat ze moeten doen en dat er niets verdachts aan de hand is. Controleer altijd zelf de LoliCode / C# -code voordat u ze uitvoert als u de oorsprong niet volledig vertrouwt.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Aanmaakdatum</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Verwijder</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Download</value>
+    <value>Downloaden</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Bewerk</value>
   </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Wat is een config?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Een %Config% is een bestand dat instructies bevat voor het automatiseren van bepaalde acties, meestal naar webbronnen. Configs bevatten een aantal %metadata% (zoals een naam, een auteur en een pictogram), een %leesmij% met instructies over hoe het te gebruiken of waar het voor is, enkele instellingen en vervolgens instructies die ofwel in de aangepaste %LoliCode% kunnen staan of in pure %C#%. Op de schijf worden configs opgeslagen als bestanden met de %.opk% extensie in de %Configs% submap.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Configs kunnen worden gebruikt in taken zoals de %MultiRun Taak% om enkele instructies parallel uit te voeren op een gegeven dataset (bijv. Een wordlist). Ze kunnen bijvoorbeeld worden gebruikt om te controleren of bepaalde subpaden van een bepaalde website een geldig antwoord opleveren, of ze kunnen worden gebruikt om links van meerdere pagina's van een online winkel te schrapen.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Hoe werkt de Config Manager?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>De %Config Manager% houdt al uw configs bij. Configs worden geladen vanuit de submap Configs wanneer OB2 opstart, en als er een aantal nieuwe configs aan die map worden toegevoegd, kunt u eenvoudig op %Herlaad% drukken om het laadproces opnieuw te starten. Als u geen gemakkelijke toegang heeft tot de map Configs (bijvoorbeeld als OB2 op een vps draait), kunt u een Config %Uploaden% met de gerelateerde knop. U kunt ook met %Downloaden% bestaande configs op dezelfde manier downloaden.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Bovenaan vind je de %Nieuw% knop die een nieuwe config zal aanmaken. Om %een config% te editen, kunt u op de knop Bewerken klikken of dubbelklikken op de config in de lijst. Er is ook een knop om %de weergave% te wijzigen naar een meer gedetailleerde rasterweergave.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Wat is een .opk-bestand?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Een %.opk% -bestand is een %zip-archief% dat enkele bestanden erin bevat. Het eerste bestand is %metadata.json%, dat is de naam, auteur en het pictogram van de config. Het pictogram is een met base64 gecodeerde afbeelding die ook een GIF kan zijn. Het %readme.md% -bestand zal een beschrijving van de config bevatten, deze zal aan de gebruiker worden getoond wanneer ze het config selectiemenu openen tijdens het instellen van de taak. Het ondersteunt de markdown-taal. Het %settings.json% -bestand bevat de config-specifieke instellingen.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Ten slotte, als u de config stapelaar gebruikt, worden de instructies opgeslagen als een LoliCode-script in het bestand %script.loli%. Als je in plaats daarvan hebt besloten om je config alleen naar C# te converteren, wordt een bestand met de naam %script.cs% gemaakt met de C#-code om uit te voeren.</value>
+  </data>
   <data name="LastModified" xml:space="preserve">
     <value>Laatst gewijzigd</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Bezig met laden</value>
+  </data>
+  <data name="LocalConfigs" xml:space="preserve">
+    <value>Lokale configs</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Ontbrekende plugin</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>De config is gebouwd met deze plugin, maar deze ontbreekt</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Naam</value>
@@ -163,24 +211,45 @@
     <value>Nieuw</value>
   </data>
   <data name="NoConfigSelectedWarning" xml:space="preserve">
-    <value>Het lijkt erop dat u geen config heeft geselecteerd!</value>
+    <value>Het lijkt erop dat je geen config hebt geselecteerd!</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Volmachten</value>
+    <value>Proxy's</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Wil je echt wilt verwijderen</value>
+    <value>Wil je dit echt verwijderen?</value>
   </data>
   <data name="Reload" xml:space="preserve">
-    <value>Reload</value>
+    <value>Herlaad</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Externe</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Externe config</value>
+  </data>
+  <data name="RemoteConfigs" xml:space="preserve">
+    <value>Externe configs</value>
   </data>
   <data name="ToggleView" xml:space="preserve">
-    <value>Toggle View</value>
+    <value>Verander weergave</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oh Oh</value>
+    <value>Uh-Oh</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Niet-opgeslagen wijzigingen</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>De huidige config heeft niet-opgeslagen wijzigingen! Toch doorgaan?</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Uploaden</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>WAARSCHUWING</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlists</value>
   </data>
 </root>

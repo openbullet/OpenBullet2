@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlphaTesters" xml:space="preserve">
+    <value>Alpha testers</value>
+  </data>
+  <data name="BetaTesters" xml:space="preserve">
+    <value>Beta testers</value>
+  </data>
   <data name="Collaborators" xml:space="preserve">
     <value>Medewerkers</value>
   </data>
   <data name="Developer" xml:space="preserve">
     <value>Ontwikkelaar</value>
+  </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Het uitvoeren van aanvallen op sites waarvan u niet de eigenaar bent (of die u niet mag testen) is illegaal! De ontwikkelaar kan niet verantwoordelijk worden gehouden voor oneigenlijk gebruik van deze software.</value>
   </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
     <value>Donateurs en Supporters</value>
@@ -130,12 +142,15 @@
     <value>Licentie</value>
   </data>
   <data name="OfficialForum" xml:space="preserve">
-    <value>Officiële forum</value>
+    <value>Officieel forum</value>
   </data>
   <data name="OfficialRepository" xml:space="preserve">
-    <value>Officiële repository</value>
+    <value>Officieel repository</value>
   </data>
   <data name="Read" xml:space="preserve">
     <value>Lezen</value>
+  </data>
+  <data name="Translators" xml:space="preserve">
+    <value>Vertalers</value>
   </data>
 </root>

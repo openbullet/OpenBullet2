@@ -117,64 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
-  </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
-  </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
-  </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
-  </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
-  </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
-  </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
-  </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
-  </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
-  </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
-  </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
-  </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="Readme" xml:space="preserve">
+    <value>Leesmij</value>
   </data>
 </root>

@@ -117,64 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Acties</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Opeenvolgend uitgevoerd</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="Active" xml:space="preserve">
+    <value>Actief</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Levend proxy's</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Verboden proxy's</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Bans" xml:space="preserve">
+    <value>Verboden</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Captcha tegoed</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Customs</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>dagen</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Actie bewerken</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Bewerk Trigger</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Fouten</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>Uitvoeren</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Uitvoeringen</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Mislukt</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+    <value>Hoe werkt dit?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+    <value>Dit is de %Taak Monitor%, die een lijst met %geactiveerde acties% bevat. Triggered Actions zijn verantwoordelijk voor het bewaken van een taak, het controleren op triggers en het uitvoeren van acties. Allereerst moet u het %id% van de te controleren taak in het numerieke tekstvak definiëren. Vergeet niet om het selectievakje %actief% uit te schakelen bij het instellen van de triggers en acties om te voorkomen dat ze per ongeluk worden uitgevoerd als u er nog niet mee klaar bent.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+    <value>Dan moet u enkele %triggers% en %acties% toevoegen. Zodra alle activeringsvoorwaarden zijn voldaan, voert de Taak Monitor alle %acties% die u hebt opgegeven in een opeenvolgende volgorde uit totdat ze klaar zijn. Na het uitvoeren van de acties zal de %executions% teller toenemen. Als de getriggerde actie is gemarkeerd als %herhaalbaar%, zullen triggers meerdere keren overeenkomen, anders zal de getriggerde actie zichzelf instellen als inactief en nooit meer worden geactiveerd.</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>De %Reset% knop zal het aantal uitvoeringen terugzetten naar 0. Getriggerde acties worden opgeslagen in het %triggeredActions.json% bestand, dus als je er een back-up van wilt maken of ze naar een andere OB-instantie wilt overbrengen, moet je dit bestand kopiëren.</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="hours" xml:space="preserve">
+    <value>uren</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="inJob" xml:space="preserve">
+    <value>in taak</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="Job" xml:space="preserve">
+    <value>Taak</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Taak klaar</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Taak status</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="minutes" xml:space="preserve">
+    <value>minuten</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="New" xml:space="preserve">
+    <value>Nieuw</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
+  <data name="onWebhook" xml:space="preserve">
+    <value>op webhook</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="Progress" xml:space="preserve">
+    <value>Vooruitgang</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Herlaad proxy's</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Verwijder</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Verwijder alles</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Herhaalbaar</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Nieuwe pogingen</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>seconden</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Selecteer actietype</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Selecteer triggertype</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Stuur</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Stel bots in op</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Stel de relatieve tijd in op</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Start Taak</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Stop Taak</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Getest</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tijd verstreken</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Overgebleven tijd</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>Om te controleren</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Triggers</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>Ze moeten allemaal tegelijkertijd worden geverifieerd</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Wacht</value>
   </data>
 </root>

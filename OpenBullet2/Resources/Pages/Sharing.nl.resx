@@ -117,64 +117,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="AddConfig" xml:space="preserve">
+    <value>Config toevoegen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Weet je het zeker?</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="Author" xml:space="preserve">
+    <value>Auteur</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="CannotShareRemoteConfig" xml:space="preserve">
+    <value>Kan externe config niet delen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="Category" xml:space="preserve">
+    <value>Categorie</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="ConfigRemovedSuccessfully" xml:space="preserve">
+    <value>Config succesvol verwijderd</value>
+  </data>
+  <data name="ConfigsRemovedSuccessfully" xml:space="preserve">
+    <value>Configs succesvol verwijderd</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Gemaakt</value>
+  </data>
+  <data name="CreateEndpoint" xml:space="preserve">
+    <value>Maak een eindpunt</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Aanmaakdatum</value>
+  </data>
+  <data name="DeleteEndpoint" xml:space="preserve">
+    <value>Eindpunt verwijderen</value>
+  </data>
+  <data name="EditEndpoint" xml:space="preserve">
+    <value>Bewerk eindpunt</value>
+  </data>
+  <data name="Endpoint" xml:space="preserve">
+    <value>Eindpunt</value>
+  </data>
+  <data name="EndpointCreated" xml:space="preserve">
+    <value>Eindpunt gemaakt</value>
+  </data>
+  <data name="ForThisEndpoint" xml:space="preserve">
+    <value>Voor dit eindpunt</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+    <value>Wat is dit?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+    <value>Dit is waar u het delen van %endpoints% voor uw configs kunt instellen, zodat andere mensen er toegang toe hebben. U kunt %eindpunten% maken en configs eraan toevoegen, en ook de %Api Sleutel% specificeren die geautoriseerd zijn om de configs te ontvangen.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+    <value>Om configs met een vriend te delen, moet je een eindpunt maken, voeg er configs aan toe, stel ten minste één api-sleutel in en stuur deze samen met het %URL% van uw eindpunt. Uw vriend zal het dan moeten instellen in de %OB-instellingen &gt; Remote% sectie. Als uw OpenBullet 2-instantie bijvoorbeeld bereikbaar is op `1.1.1.1:5000` moet je vriend `http://1.1.1.1:5000/api/shared/configs/ROUTE` typen waar %ROUTE% de naam is die u aan het eindpunt heeft gegeven.</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="LastModified" xml:space="preserve">
+    <value>Laatst gewijzigd</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Bezig met laden</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="Name" xml:space="preserve">
+    <value>Naam</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Geen config geselecteerd</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="NoEndpointSelected" xml:space="preserve">
+    <value>Geen eindpunt geselecteerd</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy's</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Echt verwijderen</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="Remote" xml:space="preserve">
+    <value>Extern</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Externe configs</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
+  <data name="RemoveAllConfigs" xml:space="preserve">
+    <value>Verwijder alle configs</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="RemoveConfig" xml:space="preserve">
+    <value>Verwijder config</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Verwijderd</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Selecteer config</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>

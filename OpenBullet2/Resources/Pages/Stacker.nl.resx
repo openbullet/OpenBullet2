@@ -117,64 +117,56 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="AvailableBlocks" xml:space="preserve">
+    <value>Beschikbare blokken</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="BlockInformation" xml:space="preserve">
+    <value>Blok informatie</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
-  </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="CurrentStack" xml:space="preserve">
+    <value>Huidige stapel</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+    <value>Wat is een Stapelaar?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+    <value>%Stapelaar% is een tool die u kan helpen bij het bouwen van uw configs op een zeer gebruiksvriendelijke manier, dankzij het concept van %blokken%. Blokken zijn een visuele weergave van sommige LoliCode-richtlijnen, en het zijn in feite functies die op elk moment kunnen worden aangeroepen, waarbij optioneel enkele invoerparameters kunnen worden gebruikt en optioneel enkele uitvoerresultaten kunnen worden geproduceerd. De %Stapel% is eigenlijk gewoon een lijst met blokken die door een bot worden uitgevoerd, de een na de ander van boven naar beneden.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+    <value>U kunt de stapel wijzigen door %toe te voegen% of %blokken te verwijderen%, %ze op en neer te bewegen% en %te dupliceren% ze. Blokken kunnen ook %uitgeschakeld% worden als u de uitvoering van een blok wilt overslaan zonder het te hoeven verwijderen en daardoor de volledige inhoud verliest.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Blokken worden voornamelijk gekenmerkt door een %label% (die u naar wens kunt aanpassen) en door enkele instellingen die de invoerparameters en de uitvoerresultaten zijn. Als je C #-code aan je config wilt toevoegen, zul je zien dat enkele %LoliCode-blokken% zullen worden aangemaakt als je teruggaat naar de Stapelaar-weergave. Deze blokken bevatten code die de LoliCode-parser niet als juiste blokken kon identificeren, bijvoorbeeld loops en conditionals of andere C#-uitdrukkingen.</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+    <value>Het nieuwe variabelenstelsel</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+    <value>%Variabelen% in OB2 werken op een veel andere manier dan in OB1. Om de reden achter deze wijziging te begrijpen, moet u weten dat configs naar C# worden getransporteerd en vervolgens voor snelheid worden gecompileerd voordat ze worden uitgevoerd. OB1-systeem werd tijdens runtime geïnterpreteerd vanuit LoliScript, dus het was veel langzamer. C# is een sterk getypeerde taal en daarom zijn variabelen geassocieerd met een type, bijvoorbeeld 'int' voor gehele getallen en 'string' voor strings. In OB1 was alles een string (of lijst met strings, of woordenboeken met strings), maar in OB2 zijn er nog meer typen.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+    <value>Het %type% van een OB2-variabele kan zijn: Bool, ByteArray, Dictionary of Strings, Float, Int, List of Strings, String en Enum. Variabelen worden voornamelijk gemaakt via het veld %Uitvoervariabele% met blokken, dat in een groot aantal blokken aanwezig is. Dit veld laat u weten welk type variabele zal worden gemaakt. Dit veld wordt meestal geleverd met een extra optie genaamd %Is capture%, die de bot laat weten dat een specifieke variabele moet worden opgeslagen en naar de %Captured Data% moet worden geschreven als je een hit krijgt.</value>
   </data>
   <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+    <value>%Invoerparameters% van de blokken hebben ook een specifiek type, zoals in OB1. U kunt kiezen uit maximaal 3 verschillende types voor het invoeren van gegevens in die parameters, afhankelijk van hun type. Met de %fixed%-modus kunt u een vaste waarde specificeren die altijd hetzelfde is voor elke uitvoering, bijvoorbeeld '42' of 'hallo'. Met de %variable%-modus kunt u een eerder gemaakte variabele gebruiken als invoerwaarde voor die parameter. Als de oorspronkelijke waarde van een ander type is met betrekking tot het parametertype, wordt deze automatisch voor u geconverteerd (als u bijvoorbeeld een geheel getal heeft en u probeert deze door te geven aan een stringparameter, wordt deze automatisch gelezen als een string).</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Ten slotte komt de %geïnterpoleerde%-modus heel dicht bij hoe deze werkte in OB1, waar u de syntax kunt gebruiken `hier is mijn &lt;variabele&gt;`, waar `variabele` is de naam van de variabele die u in de string wilt invoegen. Deze modus is alleen beschikbaar voor de parameters String, List of String en Dictionary of String.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Standaard variabelen</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Sommige variabelen zijn al voor u gedeclareerd en kunnen worden gebruikt om toegang te krijgen tot invoergegevens en gereserveerde eigenschappen. De `input` variabele is een dynamisch object dat de gesegmenteerde data uit je datapool bevat (als je bijvoorbeeld het Default wordlist type gebruikt, heb je toegang tot` input.DATA` om je datalijn op te halen) en de antwoorden van de aangepaste invoer die tijdens runtime wordt gevraagd.</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Het `data` -object is een klasse met meerdere eigenschappen die automatisch worden gevuld door blokken maar die je ook kunt gebruiken als uitvoervariabelen voor andere blokken. De meest bruikbare zijn STATUS, SOURCE, RAWSOURCE, ADRES, RESPONSECODE, COOKIES en HEADERS. Als u bijvoorbeeld de bron van een HTTP-antwoord als invoerparameter van een ontleedblok wilt gebruiken, moet u de variabele modus selecteren en 'data.SOURCE' typen in het vak.</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="Help3x03" xml:space="preserve">
+    <value>Het `data` -object bevat veel meer bruikbare variabelen (zoals de proxy) die kunnen worden gemanipuleerd via C # -code om wat geavanceerd gedrag uit te voeren. Ze worden behandeld in een aparte gids.
+Ten slotte bevat het `globals` -object globale variabelen en wordt het gedeeld tussen bots. U kunt globale variabelen instellen door zoiets als 'globals.Test' als uitvoervariabele te gebruiken, en hetzelfde om de waarde ervan op te halen. Als u van plan bent er lange bewerkingen op uit te voeren, bijvoorbeeld werken met globale lijsten met items, moet u% lock% op het `globals` object met` lock (globals) {your blocks and code here} `om het thread-safe te maken .</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="NoBlockSelectedInfo" xml:space="preserve">
+    <value>Selecteer een blok om zijn instellingen weer te geven</value>
   </data>
 </root>

@@ -117,64 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Levensduur beheerderssessie (uren)</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Admin gebruikersnaam</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="AllDone" xml:space="preserve">
+    <value>Helemaal klaar</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Sta systeembrede toegang tot bestanden toe</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="ApiKey" xml:space="preserve">
+    <value>API sleutel</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Weet je het zeker?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Stel automatisch de aanbevolen bots in wanneer een config is geselecteerd op de pagina voor het maken van taken</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleren</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Wachtwoord wijzigen</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Legen</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="Customization" xml:space="preserve">
+    <value>Aanpassingen</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>De standaardauteur op nieuw gemaakte config</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Standaard taakweergavemodus</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="Done" xml:space="preserve">
+    <value>Klaar</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="EnableJobLogging" xml:space="preserve">
+    <value>Schakel logboekregistratie in op de taakviewer-pagina</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="General" xml:space="preserve">
+    <value>Algemeen</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Groepsopnames in debugger</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Levensduur gastsessie (uren)</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Negeer de naam van de wordlists bij het verwijderen van duplicaten uit hits</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Update-interval voor Taak Manager</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Taakupdate-interval</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Maximaal aantal vermeldingen in het logboek</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Log ook in op een bestand opslaan</value>
+  </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Monaco Bewerker Thema</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Navigeer bij het bewerken van een config naar</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nieuw beheerderswachtwoord</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>De nieuwe wachtwoorden zijn ingesteld!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Speel geluid af op hit</value>
+  </data>
+  <data name="ProxyCheckTargets" xml:space="preserve">
+    <value>Proxy Check doelen</value>
+  </data>
+  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
+    <value>Dit zijn de proxy-doelen die beschikbaar zijn in een proxycontroletaak. De proxy's worden vergeleken met de doel-URL en als de successleutel wordt gevonden in de gedownloade bron, wordt de proxy gemarkeerd als werkend.</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Extern</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Externe configs eindpunten</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>Dit zijn de externe eindpunten die zullen worden opgevraagd bij het opnieuw laden van de config-repository om configs te krijgen die op een andere machine worden gehost.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Vereist beheerdersaanmelding</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Herstel standaardinstellingen</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Wilt u de standaardinstellingen herstellen?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Opgeslagen</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Beveiliging</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>De instellingen zijn succesvol opgeslagen.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Succes sleutel</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Thema</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Thema succesvol geüpload</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Niet-ondersteunde themabestandsindeling. Ondersteunde formaten: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Thema uploaden</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Laat een waarschuwing zien wanneer de momenteel geladen config niet is opgeslagen en een andere is geladen</value>
   </data>
 </root>

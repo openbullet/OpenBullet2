@@ -117,64 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Geauthenticeerd als</value>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Toegang vervalt</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Bouw Nummer</value>
+  <data name="Add" xml:space="preserve">
+    <value>Toevoegen</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>Client IP-adres</value>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Gast toevoegen</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>CPU Gebruik</value>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Toegestane adressen</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Huidige werkdirectory</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Weet je het zeker?</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuleer</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Gast bewerken</value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Info wijzigen</value>
+  </data>
+  <data name="EditPassword" xml:space="preserve">
+    <value>Wachtwoord wijzigen</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Een warm welkom van Bulletta</value>
+    <value>Hoe werkt dit?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hallo en welkom bij %OpenBullet 2%, ik ben %Bulletta% en ik zal hier uw gids zijn. Zoek naar helplinks en ik kom uitleggen wat je nodig hebt!</value>
+    <value>Met OpenBullet 2 kunt u accounts aanmaken voor %gasten% die toegang hebben tot uw OpenBullet 2-server. Vergeet allereerst niet om de optie %vereist admin login% in te schakelen in OB's %beveiligingsinstellingen%. Dit garandeert dat mensen met de link naar deze server worden verwelkomd met een inlogscherm. Om ervoor te zorgen dat andere mensen deze server kunnen bereiken, moet u %de poorten% op uw router openen en de %firewallregels% op uw computer instellen. Dit is meestal al voor u gedaan op een VPS, wat de voorgestelde manier is om een ​​openbaar blootgestelde OpenBullet 2-installatie te hosten.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Ik zal je niet langer irriteren, ik zie je dan nog wel. Later!</value>
+    <value>In de %beveiligingsinstellingen% kun je ook de %gast sessie levensduur% definiëren, dit is het aantal uren waarna gasten wordt gevraagd om opnieuw in te loggen. Dit is handig omdat u misschien niet wilt dat gasten voor onbepaalde tijd toegang hebben tot de server. Merk op dat zodra de server een geldig %token% voor de gast heeft gegenereerd, deze geldig zal zijn totdat deze is verlopen, dus zelfs als u een gast uit de bovenstaande tabel verwijdert, zal deze uw OpenBullet 2-installatie kunnen gebruiken zolang de token geldig is.</value>
   </data>
-  <data name="Help2x00" xml:space="preserve">
-    <value>Waar worden al mijn instellingen opgeslagen?</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Door op de %Nieuw% knop hierboven te klikken, kunt u %inloggegevens% aanmaken voor de nieuwe gast, de %access expiration% instellen (waarna de server geen geldig token meer naar de gast stuurt) en optioneel  een aantal %IP-adressen% in kan stellen waarmee de gast verbinding mag maken. Dit is handig om te voorkomen dat gasten hun account met andere mensen delen.</value>
   </data>
-  <data name="Help2x01" xml:space="preserve">
-    <value>Er zijn veel instellingen in OpenBullet 2, en ze worden opgeslagen in de map %UserData%. De %database% (standaard SQLite) is het bestand dat uw proxy's, taken, hits, gasten en ook records bevat van de locatie van uw wordlists op schijf. Standaard heet het %OpenBullet.db%. %Configs% bevinden zich in de submap Configs, terwijl %Wordlists% die u via de uploadfunctie van de browser hebt geïmporteerd, zich in de submap Wordlists bevinden. Raadpleeg hun specifieke secties voor meer informatie.</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Bezig met laden</value>
   </data>
-  <data name="Help2x02" xml:space="preserve">
-    <value>De OpenBullet- en RuriLib-instellingen worden opgeslagen in twee bestanden: %OpenBulletSettings.json% en %RuriLibSettings.json%. Deze bestanden worden alleen gemaakt als er enkele wijzigingen zijn aangebracht in de standaardconfig. Het bestand %Environment.ini% specificeert de %Wordlist Types%, %Custom States% en %Export Formats% van uw OB2-omgeving. Dit is een zeer belangrijk bestand, meer informatie over Wordlists Types is te vinden in een aparte gids.</value>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>Nieuw wachtwoord voor gast</value>
   </data>
-  <data name="Help2x03" xml:space="preserve">
-    <value>Het %sharingEndpoints.json% -bestand bevat de informatie van uw eindpunten voor het delen van configs. Ten slotte bevat het %triggeredActions.json% bestand alle %Triggered Actions% van uw Taak Monitor. Getriggerde acties worden automatisch elke 10 seconden in dit bestand opgeslagen.</value>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>U moet eerst een gast selecteren</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Lokale Tijd</value>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Geen records om weer te geven</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Uitloggen</value>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Wil je dit echt verwijderen</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Geheugengebruik</value>
+  <data name="results" xml:space="preserve">
+    <value>Resultaten</value>
   </data>
-  <data name="NetworkUsage" xml:space="preserve">
-    <value>Netwerkgebruik</value>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Resultaten per pagina</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Besturingssysteem</value>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime van webserver</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welkom bij OpenBullet 2</value>
+  <data name="Username" xml:space="preserve">
+    <value>Gebruikersnaam</value>
   </data>
 </root>

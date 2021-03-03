@@ -121,16 +121,25 @@
     <value>Annuleer</value>
   </data>
   <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Zodra u de config converteren naar alleen C #, zul je niet meer in staat zijn om te bewerken het met stacker! Ben je echt, echt dat je weet wat je doet?</value>
+    <value>Zodra je de config alleen naar C# hebt geconverteerd, kun je deze niet meer met stapelaar bewerken! Weet je echt, ECHT zeker dat je weet wat je doet?</value>
   </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Omzetten naar C # config</value>
+    <value>Converteren naar C#-config</value>
   </data>
   <data name="CSharpEditor" xml:space="preserve">
-    <value>C # Editor</value>
+    <value>C# Bewerker</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Waar is deze sectie voor bedoeld?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Deze sectie heeft twee doelen. Als u van plan bent %Stacker / LoliCode% te gebruiken voor het bouwen van uw config, kunt u deze alleen-lezen editor gebruiken om te zien hoe de uiteindelijke code eruitziet nadat de blokken zijn vertaald naar C# voor de uitvoering. Dit helpt bij het oplossen van de meeste problemen die u krijgt, vooral wanneer de %debugger% uitzonderingen geeft.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Als je in plaats daarvan hebt besloten je config te coderen met %alleen C#%, kun je op de knop %Converteren naar C# config% klikken en kun je de C#-code rechtstreeks bewerken. U kunt dezelfde API gebruiken die voor blokken wordt gebruikt, dus ik raad u aan om het een beetje te bestuderen door de codebase te controleren of door te kijken hoe de blokken automatisch worden vertaald. Merk op dat C#-configs bedoeld zijn voor %zeer geavanceerde% gebruikers, en alles wat je hier kunt doen, kan ook worden gedaan in LoliCode door blokken en C#-code te integreren, wat kan resulteren in een veel beter leesbaar script voor mensen die niet goed thuis zijn in programmeren.</value>
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile uit blokken</value>
+    <value>Transpileren van blokken</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
     <value>WAARSCHUWING! GELIEVE TE LEZEN!</value>
