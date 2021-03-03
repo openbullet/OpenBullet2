@@ -81,7 +81,7 @@ namespace RuriLib.Models.Jobs
 
                 var sw = new Stopwatch();
                 sw.Start();
-                var response = await http.GetAsync(input.Url, linkedCts.Token);
+                using var response = await http.GetAsync(input.Url, linkedCts.Token);
                 var content = await response.Content.ReadAsStringAsync();
                 sw.Stop();
 
