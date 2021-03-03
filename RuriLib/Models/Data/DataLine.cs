@@ -44,7 +44,7 @@ namespace RuriLib.Models.Data
             // If there are less than the required slices, set the missing ones to empty strings
             var toAdd = split.Concat(Enumerable.Repeat(string.Empty, Type.Slices.Length - split.Length));
 
-            return split
+            return toAdd
                 .Zip(Type.Slices, (k, v) => new { k, v })
                 .Select(x => new StringVariable(x.k) { Name = x.v })
                 .ToList();
