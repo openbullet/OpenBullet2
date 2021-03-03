@@ -158,7 +158,7 @@
                 <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
                 <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
                 <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span> @(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span>
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span>@(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span><br />
             }
             else
             {
@@ -168,6 +168,10 @@
                 <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>-</span><br />
                 <span class="font-weight-bold">@Loc["Remaining"]: </span><span>-</span><br />
                 <span class="font-weight-bold">@Loc["Progress"]: </span><span>-</span><br />
+            }
+            @foreach (var answer in Job.CustomInputsAnswers)
+            {
+                <span class="font-weight-bold">@answer.Key:</span><span> @answer.Value</span><br />
             }
         </div>
     </div>
