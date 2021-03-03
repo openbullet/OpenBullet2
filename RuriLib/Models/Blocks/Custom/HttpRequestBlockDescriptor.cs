@@ -10,7 +10,7 @@ namespace RuriLib.Models.Blocks.Custom
         public HttpRequestBlockDescriptor()
         {
             Id = "HttpRequest";
-            Name = Id;
+            Name = "Http Request";
             Description = "Performs an Http request and reads the response";
             Category = new BlockCategory
             {
