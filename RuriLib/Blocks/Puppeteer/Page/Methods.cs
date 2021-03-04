@@ -52,7 +52,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             data.Logger.Log($"Typed {text}", LogColors.DarkSalmon);
         }
 
-        [Block("Presses and releases a key in the browser page", name = "Key Press in Page")]
+        [Block("Presses and releases a key in the browser page", name = "Key Press in Page", 
+            extraInfo = "Full list of keys here: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js")]
         public static async Task PuppeteerPageKeyPress(BotData data, string key)
         {
             data.Logger.LogHeader();
@@ -64,7 +65,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             // Full list of keys: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js
         }
 
-        [Block("Presses a key in the browser page without releasing it", name = "Key Down in Page")]
+        [Block("Presses a key in the browser page without releasing it", name = "Key Down in Page",
+            extraInfo = "Full list of keys here: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js")]
         public static async Task PuppeteerPageKeyDown(BotData data, string key)
         {
             data.Logger.LogHeader();
@@ -76,7 +78,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             // Full list of keys: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js
         }
 
-        [Block("Releases a key that was previously pressed in the browser page", name = "Key Up in Page")]
+        [Block("Releases a key that was previously pressed in the browser page", name = "Key Up in Page",
+            extraInfo = "Full list of keys here: https://github.com/puppeteer/puppeteer/blob/v1.14.0/lib/USKeyboardLayout.js")]
         public static async Task PuppeteerKeyUp(BotData data, string key)
         {
             data.Logger.LogHeader();
