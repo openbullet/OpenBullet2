@@ -148,9 +148,12 @@ namespace RuriLib.Models.Blocks.Custom
                     
                     writer.WriteLine($"var {engineName} = new Engine();");
 
-                    foreach (var input in InputVariables.Split(','))
+                    if (!string.IsNullOrWhiteSpace(InputVariables))
                     {
-                        writer.WriteLine($"{engineName}.SetValue(nameof({input}), {input});");
+                        foreach (var input in InputVariables.Split(','))
+                        {
+                            writer.WriteLine($"{engineName}.SetValue(nameof({input}), {input});");
+                        }
                     }
 
                     writer.WriteLine($"{engineName} = InvokeJint(data, {engineName}, \"{scriptPath}\");");
