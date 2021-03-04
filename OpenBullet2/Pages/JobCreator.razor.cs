@@ -78,7 +78,7 @@ namespace OpenBullet2.Pages
                 ProxyCheckJob _ => JobType.ProxyCheck,
                 RipJob _ => JobType.Ripper,
                 SpiderJob _ => JobType.Spider,
-                SeleniumUnitTestJob _ => JobType.SeleniumUnitTest,
+                PuppeteerUnitTestJob _ => JobType.PuppeteerUnitTest,
                 _ => throw new NotImplementedException()
             };
         }

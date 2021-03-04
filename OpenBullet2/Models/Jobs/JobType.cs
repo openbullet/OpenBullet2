@@ -6,6 +6,6 @@
         ProxyCheck,
         Spider,
         Ripper,
-        SeleniumUnitTest
+        PuppeteerUnitTest
     }
 }
