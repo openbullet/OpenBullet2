@@ -163,7 +163,7 @@
     <value>Für diesen Endpunkt</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Was ist das`?</value>
+    <value>Was ist das?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
     <value>Hier kannst du %Endpunkte% für die Freigabe deiner Konfigurationen einrichten, damit andere Personen darauf zugreifen können. Durch %Erstellen% von Endpunkten und %Hinzufügen% von Konfigs zu diesen können Sie auch die %Api-Schlüssel% festlegen, die berechtigt sind, die Konfigs zu empfangen.</value>
