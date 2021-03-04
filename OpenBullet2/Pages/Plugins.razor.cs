@@ -29,6 +29,7 @@ namespace OpenBullet2.Pages
                     using var reader = new StreamReader(stream);
                     using var ms = new MemoryStream();
                     await stream.CopyToAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
 
                     // Add it to the repo
                     PluginRepo.AddPlugin(ms);
