@@ -120,4 +120,7 @@
   <data name="Back" xml:space="preserve">
     <value>Retour</value>
   </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value>Utilisé récemment</value>
+  </data>
 </root>

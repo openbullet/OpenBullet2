@@ -118,6 +118,48 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompleteLog" xml:space="preserve">
-    <value>Log complète</value>
+    <value>Journal complet</value>
+  </data>
+  <data name="InvalidProxy" xml:space="preserve">
+    <value>Proxy invalide</value>
+  </data>
+  <data name="InvalidProxyMessage" xml:space="preserve">
+    <value>Le proxy de test que vous avez fourni n'est pas valide et ne peut pas être analysé</value>
+  </data>
+  <data name="PersistLog" xml:space="preserve">
+    <value>Journal de persistance</value>
+  </data>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Afficher le journal</value>
+  </data>
+  <data name="ShowVariables" xml:space="preserve">
+    <value>Afficher les variables</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="TestData" xml:space="preserve">
+    <value>Data test</value>
+  </data>
+  <data name="TestProxy" xml:space="preserve">
+    <value>Proxy test</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="UseProxy" xml:space="preserve">
+    <value>Utiliser un proxy</value>
+  </data>
+  <data name="Variables" xml:space="preserve">
+    <value>Variables</value>
+  </data>
+  <data name="ViewAsHTML" xml:space="preserve">
+    <value>Afficher au format HTML</value>
+  </data>
+  <data name="WordlistType" xml:space="preserve">
+    <value>Type de Wordlist</value>
   </data>
 </root>

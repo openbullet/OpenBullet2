@@ -120,4 +120,49 @@
   <data name="BaseDirectory" xml:space="preserve">
     <value>Répertoire de base</value>
   </data>
+  <data name="DirectoryNotExistant" xml:space="preserve">
+    <value>Ce répertoire n'existe pas</value>
+  </data>
+  <data name="FileSystem" xml:space="preserve">
+    <value>Système de fichiers</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>Objectif</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Sélectionner</value>
+  </data>
+  <data name="SelectedFile" xml:space="preserve">
+    <value>Fichier sélectionné</value>
+  </data>
+  <data name="SelectFileFirst" xml:space="preserve">
+    <value>Vous devez d'abord sélectionner un fichier!</value>
+  </data>
+  <data name="SystemWideFileAccessDisabled" xml:space="preserve">
+    <value>L'accès aux fichiers à l'échelle du système a été désactivé dans les paramètres</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Non autorisé</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Uploaded" xml:space="preserve">
+    <value>Uploaded</value>
+  </data>
+  <data name="UploadFileFirst" xml:space="preserve">
+    <value>Vous devez d'abord upload un fichier! </value>
+  </data>
+  <data name="WordlistType" xml:space="preserve">
+    <value>Type de Wordlist</value>
+  </data>
 </root>

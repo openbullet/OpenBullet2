@@ -118,6 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AdvancedSettings" xml:space="preserve">
-    <value>Paramètres avancés</value>
+    <value>Réglages avancés</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Comment fonctionne ce bloc?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Le bloc %HTTP Request% vous permet d'effectuer une requête HTTP vers un point de terminaison. Si vous souhaitez envoyer un corps à côté de vos en-têtes et cookies, vous pouvez le faire en sélectionnant l'un des moyens d'envoyer du contenu. Le mode %Standard% prendra simplement une chaîne, l'encodera en UTF-8 et l'enverra dans le corps de la requête. Le champ %Content Type% sera automatiquement converti en un en-tête %Content-Type% et ajouté à la demande.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Le mode %Raw% fait essentiellement la même chose que le mode Standard si votre contenu est un tableau d'octets et non une chaîne. Le %Auth de base% est utilisé pour l'authentification avec l'authentification d'accès de base (la fenêtre contextuelle typique de nom d'utilisateur / mot de passe que vous voyez dans votre navigateur demandant des informations d'identification). Enfin, le mode %Multipart% enverra un contenu qui peut être composé de plusieurs parties, comme des chaînes, des octets bruts et des fichiers. Ceci est utile par exemple pour télécharger un fichier sur un site Web.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>La réponse sera analysée et divisée en morceaux qui seront affectés à différentes variables par défaut. La réponse %Address% (après la dernière redirection si vous avez activé %Auto Redirect%) sera enregistrée dans la variable String `data.ADDRESS`. La réponse %body% (a.k.a source) sera à l'intérieur de la variable String `data.SOURCE` (sous forme de chaîne UTF-8), et à l'intérieur de la variable Byte Array `data.RAWSOURCE` (après décompression de par exemple gzip).</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Le %Code de réponse% (par exemple 200) sera inséré dans la variable Entier `data.RESPONSECODE`. Les en-têtes seront analysés dans un dictionnaire et insérés dans la variable Dictionary of Strings `data.HEADERS`, et de même pour les cookies dans la variable `data.COOKIES`. N'oubliez pas que vous pouvez facilement récupérer les valeurs des dictionnaires par clé avec la syntaxe `data.HEADERS [" header-name "]`. Si la requête échoue, la variable `data.STATUS` sera définie sur` ERROR`.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>Une dernière chose à retenir est que les cookies à l'intérieur de la variable `data.COOKIES` sont uniquement ajoutés ou écrasés, jamais supprimés. Cela signifie que les cookies précédemment reçus (qui sont à l'intérieur de la variable `data.COOKIES`) seront à nouveau envoyés dans les requêtes suivantes, en plus des %Cookies personnalisés% que vous pouvez définir pour chaque nouvelle requête. Cela se produit à moins que «data.COOKIES» ne soit effacé ou réinitialisé.</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Cacher</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Réglages</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Afficher</value>
   </data>
 </root>

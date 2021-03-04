@@ -118,6 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompleteLog" xml:space="preserve">
-    <value>Log complète</value>
+    <value>Journal complet</value>
+  </data>
+  <data name="HTMLView" xml:space="preserve">
+    <value>Affichage HTML</value>
+  </data>
+  <data name="ViewAsHTML" xml:space="preserve">
+    <value>Afficher au format HTML</value>
   </data>
 </root>

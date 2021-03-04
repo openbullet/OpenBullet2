@@ -117,13 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="All" xml:space="preserve">
+    <value>Tout</value>
+  </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
   </data>
   <data name="CheckOnlyUntested" xml:space="preserve">
-    <value>Vérifier seulement les non testés</value>
+    <value>Vérifier seulement non testé</value>
   </data>
   <data name="CheckOnWebsite" xml:space="preserve">
-    <value>Vérifier sur le site</value>
+    <value>Vérifiez sur le site Web</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Groupe proxy</value>
+  </data>
+  <data name="StartCondition" xml:space="preserve">
+    <value>Condition de départ</value>
+  </data>
+  <data name="TimeoutMilliseconds" xml:space="preserve">
+    <value>Délai d'expiration (millisecondes)</value>
   </data>
 </root>

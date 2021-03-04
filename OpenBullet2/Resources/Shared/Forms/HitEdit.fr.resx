@@ -118,6 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CapturedData" xml:space="preserve">
-    <value>Captures</value>
+    <value>Données capturées</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Donnés</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="HitType" xml:space="preserve">
+    <value>Type de Hit</value>
   </data>
 </root>

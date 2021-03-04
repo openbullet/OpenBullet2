@@ -130,7 +130,7 @@
     <value>sélectionner</value>
   </data>
   <data name="SelectWordlistFirst" xml:space="preserve">
-    <value>Vous devez d'abord sélectionner une liste de mots</value>
+    <value>Vous devez d'abord sélectionner une Wordlist</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Totale</value>
@@ -139,6 +139,6 @@
     <value>Type</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value>Oula</value>
   </data>
 </root>

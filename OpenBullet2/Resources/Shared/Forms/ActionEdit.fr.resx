@@ -120,4 +120,40 @@
   <data name="days" xml:space="preserve">
     <value>jours</value>
   </data>
+  <data name="hours" xml:space="preserve">
+    <value>heures</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>dans le job</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>sur webhook</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Recharger les proxies</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Définir les bots sur</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Définir le temps relatif sur</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Démarrer le Job</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Stop Job</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Attend</value>
+  </data>
 </root>

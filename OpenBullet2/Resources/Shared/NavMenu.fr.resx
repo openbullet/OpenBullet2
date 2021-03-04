@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>Interrompre</value>
+    <value>À propos</value>
   </data>
   <data name="AwwYeah" xml:space="preserve">
-    <value>C'est tipar !</value>
+    <value>AWW ouais!</value>
   </data>
   <data name="Changelog" xml:space="preserve">
-    <value>Changelog</value>
+    <value>Journal des modifications</value>
   </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
     <value>Choisissez votre langue</value>
@@ -132,10 +132,76 @@
   <data name="Configs" xml:space="preserve">
     <value>Configs</value>
   </data>
-  <data name="Stacker" xml:space="preserve">
-    <value>Empileur</value>
-  </data>
   <data name="CSharpCode" xml:space="preserve">
     <value>Code C#</value>
+  </data>
+  <data name="Guests" xml:space="preserve">
+    <value>Invités</value>
+  </data>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="InvalidLolicode" xml:space="preserve">
+    <value>Impossible d'enregistrer: LoliCode invalide!</value>
+  </data>
+  <data name="Jobs" xml:space="preserve">
+    <value>Jobs</value>
+  </data>
+  <data name="LoliCode" xml:space="preserve">
+    <value>LoliCode</value>
+  </data>
+  <data name="Metadata" xml:space="preserve">
+    <value>Metadata</value>
+  </data>
+  <data name="Monitor" xml:space="preserve">
+    <value>Moniteur</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Aucune config sélectionnée</value>
+  </data>
+  <data name="OBSettings" xml:space="preserve">
+    <value>Paramètres OB</value>
+  </data>
+  <data name="Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Readme" xml:space="preserve">
+    <value>Lisez-moi</value>
+  </data>
+  <data name="RLSettings" xml:space="preserve">
+    <value>Paramètres RL</value>
+  </data>
+  <data name="SaveConfig" xml:space="preserve">
+    <value>Enregistrer la config</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Réglages</value>
+  </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Partage</value>
+  </data>
+  <data name="Stacker" xml:space="preserve">
+    <value>Stacker</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
+  </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Mise à jour disponible</value>
+  </data>
+  <data name="UpdateInstructions" xml:space="preserve">
+    <value>Mettre à jour les instructions</value>
+  </data>
+  <data name="wasSavedSuccessfully" xml:space="preserve">
+    <value>a été enregistré avec succès! </value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Wordlists</value>
   </data>
 </root>

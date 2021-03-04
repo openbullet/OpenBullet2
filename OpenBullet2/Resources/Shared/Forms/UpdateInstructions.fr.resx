@@ -120,4 +120,10 @@
   <data name="CurrentVersion" xml:space="preserve">
     <value>Version actuelle</value>
   </data>
+  <data name="RemoteVersion" xml:space="preserve">
+    <value>Version à distance</value>
+  </data>
+  <data name="UpdateInstructionsMarkdown" xml:space="preserve">
+    <value>Pour mettre à jour OpenBullet 2, quittez l'instance actuelle puis démarrez le programme de mise à jour en tapant «dotnet. / Updater.dll» (ou en cliquant sur le fichier «Updater.exe» sous Windows). Une fois que le programme de mise à jour a terminé son travail, vous pouvez redémarrer OpenBullet 2.</value>
+  </data>
 </root>

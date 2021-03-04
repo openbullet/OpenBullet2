@@ -120,13 +120,55 @@
   <data name="AddWordlist" xml:space="preserve">
     <value>Ajouter une wordlist</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Montant</value>
+  </data>
   <data name="CharacterSet" xml:space="preserve">
-    <value>Jeu de caractères</value>
+    <value>Set de caractères</value>
   </data>
   <data name="Combinations" xml:space="preserve">
     <value>Combinaisons</value>
   </data>
   <data name="combinationsWillBeGenerated" xml:space="preserve">
-    <value>combinaisons vont être générées</value>
+    <value>les combinaisons seront générées</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>Nom de fichier</value>
+  </data>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infini</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Longueur</value>
+  </data>
+  <data name="lines" xml:space="preserve">
+    <value>lignes</value>
+  </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>Aucune Wordlist sélectionnée</value>
+  </data>
+  <data name="Pad" xml:space="preserve">
+    <value>Pad</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Intervalle</value>
+  </data>
+  <data name="SelectWordlist" xml:space="preserve">
+    <value>Sélectionnez une wordlist</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="Step" xml:space="preserve">
+    <value>Étape</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="WordlistType" xml:space="preserve">
+    <value>Type de Wordlist</value>
   </data>
 </root>

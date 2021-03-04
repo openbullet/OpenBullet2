@@ -120,10 +120,31 @@
   <data name="AccessExpiration" xml:space="preserve">
     <value>Expiration de l'accès</value>
   </data>
+  <data name="allIfEmpty" xml:space="preserve">
+    <value>tout si vide</value>
+  </data>
   <data name="AllowedAddresses" xml:space="preserve">
     <value>Adresses autorisées</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirmer le mot de passe</value>
+    <value>Confirmez le mot de passe</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Exemple</value>
+  </data>
+  <data name="GuestAlreadyExists" xml:space="preserve">
+    <value>Un invité avec le même nom existe déjà</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oula</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
   </data>
 </root>

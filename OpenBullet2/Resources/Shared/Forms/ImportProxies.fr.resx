@@ -120,4 +120,28 @@
   <data name="AdvancedSyntax" xml:space="preserve">
     <value>Syntaxe avancée</value>
   </data>
+  <data name="DefaultPassword" xml:space="preserve">
+    <value>Mot de passe par défaut</value>
+  </data>
+  <data name="DefaultType" xml:space="preserve">
+    <value>Type par défaut</value>
+  </data>
+  <data name="DefaultUsername" xml:space="preserve">
+    <value>Nom d'utilisateur par défaut</value>
+  </data>
+  <data name="Example" xml:space="preserve">
+    <value>Exemple</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fichier</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importer</value>
+  </data>
+  <data name="Paste" xml:space="preserve">
+    <value>Coller</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
 </root>

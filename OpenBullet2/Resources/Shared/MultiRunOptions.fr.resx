@@ -129,4 +129,112 @@
   <data name="Config" xml:space="preserve">
     <value>Config</value>
   </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Pool de données</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Par défaut</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Quelles sont ces options?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Lorsque vous créez un Job MultiRun, vous devez fournir un %config%. Dans la section %Configs%, vous pouvez créer le vôtre ou en importer un existant. Une fois que vous avez testé une config dans le débogueur de la section Configs, vous pouvez la sélectionner ici afin de l'exécuter avec plusieurs robots fonctionnant en parallèle. Cliquez simplement sur le bouton %Select Config% et vous pourrez sélectionner votre config dans une liste. Un aperçu du fichier %readme% de la config s'affichera également.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value> Le %mode proxy% décide si les proxies seront utilisés lors de l'exécution de la config sélectionnée. Si vous le laissez sur %Default%, il utilisera tout ce qui est spécifié dans les paramètres de la configuration (section Proxies, option %Use proxies%). Si vous choisissez %Oui% ou %Non%, cela remplacera le paramètre par défaut.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>%Bots% est le nombre de nœuds de calcul parallèles qui exécuteront votre configuration, chacun avec sa propre ligne de données du pool de données que vous avez spécifié (par exemple une Wordlist). Plus vous mettez de bots, plus il y aura de requêtes en même temps, mais sachez qu'il y a un %limite% qui dépend du matériel de votre machine après quoi l'augmentation du nombre de bots dégrade réellement les performances!</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value> Le %Skip% définit le nombre de lignes à ignorer depuis le début du pool de données. Cette valeur est définie automatiquement dès que vous sélectionnez une paire de config et de wordlist que vous avez déjà exécutée auparavant, car les points de contrôle de votre progression sont périodiquement enregistrés dans la base de données.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Qu'est-ce qu'un pool de données?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value> Un %pool de données% est la source de toutes les lignes de données qui seront affectées aux bots. Le pool de données sera lu ligne par ligne et chaque fois qu'il y aura un bot disponible, il se verra attribuer une ligne à traiter. Il existe différentes manières d'initialiser un pool de données. Le moyen le plus courant consiste à utiliser une %wordlist%. Pour utiliser une wordlist, vous devez d'abord en importer une dans la section %Wordlists%. Une fois que vous avez importé une wordlist, cliquez simplement sur le bouton %Select wordlist% et sélectionnez la liste de mots que vous souhaitez utiliser. Vous pourrez également voir un aperçu des premières lignes de la wordlist.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Si vous choisissez l'option %File%, vous pouvez contourner la phase d'importation de la wordlist, mais sachez que cela désactivera certaines fonctionnalités telles que l'enregistrement de la progression de votre paire wordlist-config dans la base de données et la relation entre les hits et la wordlist utilisée pour les obtenir. Les wordlists sont le moyen préféré d'utiliser les données d'un fichier, alors je vous suggère d'aller consulter la section des wordlists! Vous devez également spécifier le %type de wordlists%, reportez-vous à la section habituelle des wordlists pour plus d'aide sur ce que signifie cette option</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>L'option %Range% générera simplement une plage de nombres, à partir d'une valeur initiale. Par exemple, si vous définissez %Start% = 0, %Amount% = 5 et %Step% = 2, il générera 5 lignes de données avec les valeurs 0, 2, 4, 6 et 8. Si vous cochez la case %Pad%, le nombre sera complété par zéro à gauche en fonction du nombre de chiffres du plus grand nombre qui sera généré, par exemple si le plus grand nombre est 100, vous verrez des valeurs telles que 001, 042 etc. dans votre pool de données généré.</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>L'option %Combinations% vous permettra de générer toutes les combinaisons possibles d'un %Character set% donné pour un %Length% donné. Par exemple, si vous utilisez ABCD comme jeu de caractères et Length = 4, vous obtiendrez des combinaisons telles que AAAA, AAAB, ... ACCB ... DDDC, DDDD.</value>
+  </data>
+  <data name="Help2x05" xml:space="preserve">
+    <value>L'option %Infinite% générera simplement une quantité infinie de lignes de données vides, donc le travail continuera jusqu'à ce que vous décidiez de l'arrêter.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Qu'est-ce qu'une source proxy?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>%Les sources proxy% sont utilisées pour définir d'où les proxys seront extraits lorsqu'ils seront ajoutés au pool de proxies affectés aux bots. Les sources de proxy seront interrogées au début d'un travail, et également chaque fois que tous les proxy sont interdits ou qu'une condition oblige les proxy à être rechargés. Une source proxy de type %Group% prendra les proxies d'un groupe défini dans la section %Proxies%. Pour utiliser cette option, vous devez avoir un groupe avec des proxys, reportez-vous à la section Proxies pour obtenir des instructions sur la façon de le faire.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Une source proxy de type %File% chargera les proxies à partir d'un fichier donné sur le disque. Vous pouvez taper le chemin complet du fichier souhaité ainsi que le proxy %type% qui sera utilisé par défaut si aucun n'a été spécifié via la syntaxe avancée. Vous pouvez modifier le contenu du fichier à tout moment et lors du prochain rechargement d'un proxy, vos nouveaux proxy seront analysés à partir du fichier.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>Une source proxy de type %Remote% impliquera d'interroger une ressource distante, par exemple le service API d'un fournisseur de proxy, afin de récupérer des proxies. Encore une fois, vous devrez spécifier un proxy %type% à utiliser comme option par défaut. Cette option peut être utilisée pour récupérer de nouveaux proxys fonctionnels qui ont déjà été vérifiés par un service externe.</value>
+  </data>
+  <data name="Help4x00" xml:space="preserve">
+    <value>Qu'est-ce qu'une sortie de hit?</value>
+  </data>
+  <data name="Help4x01" xml:space="preserve">
+    <value>Une sortie %Hit% est un endroit où les hits seront envoyés après avoir été trouvés. L'option %Database% (il ne peut y en avoir qu'un) écrira les hits dans la base de données par défaut d'OpenBullet 2. Vous pourrez explorer les hits dans la base de données via la section %Hits%. L'option %File system% (il ne peut y en avoir qu'un) enregistrera les hits dans une structure de dossiers organisée sur le disque. Écrivez simplement le chemin vers le répertoire de base où vous voulez que la structure de dossiers soit créée.</value>
+  </data>
+  <data name="Help4x02" xml:space="preserve">
+    <value>Enfin, l'option %Discord webhook% vous permettra d'envoyer les hits à un webhook Discord en utilisant un nom d'utilisateur et un avatar personnalisés (spécifiés via l'URL d'une image hébergée sur un référentiel public). Pour utiliser cette option, vous devrez créer un webhook Discord pour une chaîne de votre serveur et coller l'URL dans le champ approprié.</value>
+  </data>
+  <data name="HitOutputs" xml:space="preserve">
+    <value>Résultats Hit</value>
+  </data>
+  <data name="MarkAsToCheckOnAbort" xml:space="preserve">
+    <value>Marquer comme à vérifier en cas d'abandon</value>
+  </data>
+  <data name="NeverBanProxies" xml:space="preserve">
+    <value>Ne jamais banni les proxies</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Aucune config sélectionnée</value>
+  </data>
+  <data name="NoValidProxyBehaviour" xml:space="preserve">
+    <value>Aucun comportement de proxy valide</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="PeriodicReloadIntervalSeconds" xml:space="preserve">
+    <value>Intervalle de rechargement périodique (secondes, 0 pour désactiver)</value>
+  </data>
+  <data name="ProxyBanTimeSeconds" xml:space="preserve">
+    <value>Temps d'interdiction du proxy (secondes)</value>
+  </data>
+  <data name="ProxyMode" xml:space="preserve">
+    <value>Mode proxy</value>
+  </data>
+  <data name="ProxySources" xml:space="preserve">
+    <value>Sources proxy</value>
+  </data>
+  <data name="ReloadProxiesWhenAllBanned" xml:space="preserve">
+    <value>Recharger les proxys lorsque tous sont bannis</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Sélectionnez une config</value>
+  </data>
+  <data name="ShuffleProxies" xml:space="preserve">
+    <value>Mélanger les proxies</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Sauter</value>
+  </data>
+  <data name="StartCondition" xml:space="preserve">
+    <value>Condition de départ</value>
+  </data>
 </root>

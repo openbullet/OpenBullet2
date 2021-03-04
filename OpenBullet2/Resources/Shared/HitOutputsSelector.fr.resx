@@ -118,12 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AvatarURL" xml:space="preserve">
-    <value>URL Avatar</value>
+    <value>URL de l'avatar</value>
   </data>
   <data name="BaseDirectory" xml:space="preserve">
     <value>Répertoire de base</value>
   </data>
   <data name="Database" xml:space="preserve">
     <value>Base de données</value>
+  </data>
+  <data name="DiscordWebhook" xml:space="preserve">
+    <value>Discord webhook</value>
+  </data>
+  <data name="FileSystem" xml:space="preserve">
+    <value>Système de fichiers</value>
+  </data>
+  <data name="NoSettingsRequired" xml:space="preserve">
+    <value>Aucun paramètre requis</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="WebhookURL" xml:space="preserve">
+    <value>URL de Webhook</value>
   </data>
 </root>
