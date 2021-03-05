@@ -9,7 +9,7 @@ This variable contains all data related to the current bot.
 - `data.RESPONSECODE` (`int`) the status code of the last http response
 - `data.COOKIES` (`Dictionary<string, string>`) the cookies sent or received so far
 - `data.HEADERS` (`Dictionary<string, string>`) the headers of the last http response
-- `data.Objects` (`Dictionary<string, object>`) holds stateful objects for cross-block use
+- `data.Objects` (`Dictionary<string, object>`) holds stateful objects for cross-block use (they will get disposed automatically at the end of the script)
 - `data.MarkedForCapture` (`List<string>`) all the names of variables marked for capture
 
 ###### Line
@@ -29,6 +29,6 @@ Note: `data.Proxy` is null if proxies are off, so always make a null check first
 ---
 ##### Useful methods
 - `data.MarkForCapture(string varName)` adds the variable name to the `data.MarkedForCapture` list
-- `data.Logger.Log(string message, string htmlColor, bool canViewAsHtml)` htmlColor must be e.g. `#fff` or `while`
+- `data.Logger.Log(string message, string htmlColor, bool canViewAsHtml)` htmlColor must be e.g. `#fff` or `white`
 - `data.Logger.Log(IEnumerable<string> enumerable, string htmlColor, bool canViewAsHtml)`
 - `data.Logger.Clear()` clears the log
