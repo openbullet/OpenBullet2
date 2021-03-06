@@ -200,16 +200,17 @@ namespace RuriLib.Models.Jobs
 
                         await task.ConfigureAwait(false);
                     }
-
-                    botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
                 }
-                catch
+                catch (Exception ex)
                 {
                     botData.STATUS = "ERROR";
+                    botData.Logger.Log($"[{botData.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
                     input.Job.DataErrors++;
                 }
                 finally
                 {
+                    botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
+
                     // Close the browser if needed
                     if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS)
                         && botData.Objects.ContainsKey("puppeteer"))
