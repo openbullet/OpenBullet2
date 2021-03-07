@@ -117,31 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>Como funciona esse bloqueio?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>O bloco %Script% permite que você use uma linguagem de script externa (como JavaScript ou Python) para executar algum código. O campo %Input Variables% deve ser uma lista separada por vírgulas dos nomes das variáveis ​​que você deseja enviar para o contexto do script a partir do contexto do bot. Eles serão declarados automaticamente antes de seu código e você poderá usá-los sempre que desejar.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Para extrair dados do script, você deve adicionar itens à lista %Output Variables%, selecionar o tipo de retorno que deseja que eles tenham quando forem inicializados no escopo do bot e seus nomes. Sempre que você quiser executar um script, o texto do script final será impresso em um arquivo gerado dentro da subpasta %Scripts%. Isso é útil para depuração, especialmente no caso do Node JS, pois seus scripts serão envolvidos em uma instrução `module.exports` e as variáveis ​​de saída são definidas como um objeto, para que você possa ver exatamente o que acontece nos bastidores.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Label" xml:space="preserve">
+    <value>Rótulo</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Configurações</value>
   </data>
 </root>

@@ -117,31 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Adicionar</value>
+  </data>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Duração da sessão de administrador (horas)</value>
+  </data>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Nome de usuário do administrador</value>
+  </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Tudo feito</value>
+  </data>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Permitir acesso a arquivos em todo o sistema</value>
+  </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Chave API</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Tem certeza?</value>
+  </data>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Define automaticamente os bots recomendados quando uma configuração é selecionada na página de criação de trabalhos</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Mudar senha</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Limpar</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="Customization" xml:space="preserve">
+    <value>Costumização</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>O autor padrão em configurações recém-criadas</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Modo de exibição de trabalho padrão</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+  <data name="Done" xml:space="preserve">
+    <value>Feito</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="EnableJobLogging" xml:space="preserve">
+    <value>Habilite o registro na página do visualizador de trabalhos</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="General" xml:space="preserve">
+    <value>Geral</value>
+  </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Capturas de grupo no depurador</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Duração da sessão de visitante (horas)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Ignore o nome da lista de palavras ao remover duplicatas de resultados</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Intervalo de atualização do Job Manager</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Intervalo de atualização de trabalho</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Número máximo de entradas no log</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Log para um arquivo também</value>
+  </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Tema Monaco</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Ao editar uma configuração, navegue até</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Nova senha de administrador</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>As novas senhas foram definidas!</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Tocar som quando der alguma live</value>
+  </data>
+  <data name="ProxyCheckTargets" xml:space="preserve">
+    <value>Alvos de verificação de proxy</value>
+  </data>
+  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
+    <value>Esses são os destinos de proxy disponíveis em um trabalho de verificação de proxy. Os proxies serão verificados em relação ao URL de destino e se a chave de sucesso for encontrada na fonte baixada, o proxy será marcado como funcionando.</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remoto</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Endpoints de configurações remotas</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>Estes são os endpoints remotos que serão consultados na recarga do repositório de configuração para obter configurações hospedadas em outra máquina.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Retirar</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Requer login de administrador</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restaurar padrões</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Você quer restaurar as configurações padrão?</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Salvo</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Segurança</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>As configurações foram salvas com sucesso.</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Chave de sucesso</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Tema carregado com sucesso</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Formato de arquivo de tema não compatível. Formatos suportados: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Carregar tema</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Mostra um aviso quando a configuração atualmente carregada não foi salva e outra é carregada</value>
   </data>
 </root>

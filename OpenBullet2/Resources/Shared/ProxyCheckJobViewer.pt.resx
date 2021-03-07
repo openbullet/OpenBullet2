@@ -117,31 +117,130 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+  <data name="Abort" xml:space="preserve">
+    <value>Abortar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="andCountry" xml:space="preserve">
+    <value>e país</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="asNotWorking" xml:space="preserve">
+    <value>não funcionando</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+  <data name="ChangingPleaseWait" xml:space="preserve">
+    <value>Mudando ... por favor aguarde</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+  <data name="CheckOnlyUntested" xml:space="preserve">
+    <value>Verificar apenas não testado</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+  <data name="CompletedMessage" xml:space="preserve">
+    <value>O Gerenciador de Tarefas concluiu todo o seu trabalho</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Controls" xml:space="preserve">
+    <value>Controles</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>dia(s)</value>
+  </data>
+  <data name="EditBotsAmount" xml:space="preserve">
+    <value>Editar quantidade de bots</value>
+  </data>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Decorrido</value>
+  </data>
+  <data name="HardStopMessage" xml:space="preserve">
+    <value>Enviando sinal de aborto forçado</value>
+  </data>
+  <data name="JobOptions" xml:space="preserve">
+    <value>Opções de trabalho</value>
+  </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Não está funcionando</value>
+  </data>
+  <data name="OtherStats" xml:space="preserve">
+    <value>Outras estatísticas</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="PauseMessage" xml:space="preserve">
+    <value>Enviando sinal de pausa</value>
+  </data>
+  <data name="PausingMessage" xml:space="preserve">
+    <value>Pausando ... aguarde até que as tarefas atuais concluam o processamento</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="ProxyChecked" xml:space="preserve">
+    <value>Proxy verificada</value>
+  </data>
+  <data name="ProxyStats" xml:space="preserve">
+    <value>Estatísticas de proxy</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Remanescente</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Retomar</value>
+  </data>
+  <data name="ResumeMessage" xml:space="preserve">
+    <value>Verificação retomada</value>
+  </data>
+  <data name="SoftStopMessage" xml:space="preserve">
+    <value>Enviando sinal de parada suave</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Começar</value>
+  </data>
+  <data name="StartedChecking" xml:space="preserve">
+    <value>Verificação iniciada</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Pare</value>
+  </data>
+  <data name="StoppingMessage" xml:space="preserve">
+    <value>Parando ... aguarde até que as tarefas atuais concluam o processamento. </value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Chave de sucesso</value>
+  </data>
+  <data name="TaskError" xml:space="preserve">
+    <value>Erro de tarefa!</value>
+  </data>
+  <data name="TaskManagerError" xml:space="preserve">
+    <value>Erro do gerenciador de tarefas!</value>
+  </data>
+  <data name="TaskManagerPaused" xml:space="preserve">
+    <value>O gerenciador de tarefas foi pausado</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Testado</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Tempo restante</value>
+  </data>
+  <data name="TimeoutMilliseconds" xml:space="preserve">
+    <value>Tempo limite (milissegundos)</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>Esperar</value>
+  </data>
+  <data name="withPing" xml:space="preserve">
+    <value>com ping</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Trabalhando</value>
   </data>
 </root>

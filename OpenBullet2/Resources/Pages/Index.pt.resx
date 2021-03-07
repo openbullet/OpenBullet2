@@ -121,7 +121,7 @@
     <value>Autenticado como</value>
   </data>
   <data name="BuildNumber" xml:space="preserve">
-    <value>Número de compilação</value>
+    <value>Número da compilação</value>
   </data>
   <data name="ClientIpAddress" xml:space="preserve">
     <value>Endereço IP do cliente</value>
@@ -130,16 +130,31 @@
     <value>Utilização do CPU</value>
   </data>
   <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Diretório de trabalho atual</value>
+    <value>Diretório de Trabalho Atual</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Ajuda</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>A calorosa recepção de Bulletta</value>
+    <value>Boas-vindas calorosas de Bulletta</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Olá e bem-vindo ao% OpenBullet 2%, estou% Bulletta% e eu serei seu guia por aqui. Procure botões com meu rosto e eu vou pular na tela para explicar o que você precisa!</value>
+    <value>Olá e bem-vindo ao %OpenBullet 2%, sou %Bulletta% e serei seu guia por aqui. Procure os links de ajuda e irei explicar o que você precisar!</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Eu não irá perturbá-lo por mais tempo, acho que vou vê-lo em torno de então. Byee!</value>
+    <value>Não vou mais te incomodar, acho que te vejo por aí então. Tchau!</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Onde todas as minhas configurações são salvas?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>Existem várias configurações no OpenBullet 2 e elas são salvas na pasta %UserData%. O %banco de dados% (por padrão SQLite) é o arquivo que contém seus proxies, jobs, hits, convidados e também mantém registros da localização de suas listas de palavras no disco. Por padrão, é chamado de %OpenBullet.db%. %Configs% está dentro da subpasta Configs, enquanto %Wordlists% que você importou através do recurso de upload do navegador estão dentro da subpasta Wordlists. Consulte suas seções específicas para obter mais informações.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>As configurações OpenBullet e RuriLib são salvas em dois arquivos: %OpenBulletSettings.json% e %RuriLibSettings.json%. Esses arquivos são criados apenas se algumas alterações foram feitas na configuração padrão. O arquivo %Environment.ini% especifica %Tipo da Wordlist%, %Status Customizados% e %Formatos de exportação% de seu ambiente OB2. Este é um arquivo muito importante, mais informações sobre os Tipos de listas de palavras podem ser encontradas em um guia separado.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>O arquivo %sharingEndpoints.json% contém as informações de seus terminais para compartilhamento de configuração. Finalmente, o arquivo %triggeredActions.json% contém todas as %Ações desencadeadas% do seu Monitor de Trabalho. As ações disparadas são salvas automaticamente neste arquivo a cada 10 segundos.</value>
   </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Horário local</value>
@@ -150,11 +165,14 @@
   <data name="MemoryUsage" xml:space="preserve">
     <value>Uso de memória</value>
   </data>
+  <data name="NetworkUsage" xml:space="preserve">
+    <value>Uso de rede</value>
+  </data>
   <data name="OperatingSystem" xml:space="preserve">
     <value>Sistema operacional</value>
   </data>
   <data name="WebserverUptime" xml:space="preserve">
-    <value>Webserver Uptime</value>
+    <value>Tempo de atividade do servidor web</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Bem-vindo ao OpenBullet 2</value>

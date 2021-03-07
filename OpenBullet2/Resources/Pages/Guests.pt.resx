@@ -117,31 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Expiração de acesso</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Adicionar</value>
+  </data>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Adicionar convidado</value>
+  </data>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Endereços permitidos</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Tem certeza?</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Excluir</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Editar convidado</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Editar Informações</value>
+  </data>
+  <data name="EditPassword" xml:space="preserve">
+    <value>Editar Senha</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>Como é que isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>OpenBullet 2 permite que você crie contas para %convidados% que podem acessar seu servidor OpenBullet 2. Em primeiro lugar, lembre-se de ativar a opção %rquisitar login de administrador% nas %configurações de segurança% do OB. Isso garantirá que as pessoas com o link para este servidor serão recebidas com uma tela de login. Para que outras pessoas acessem este servidor, você precisará %abrir as portas% em seu roteador e configurar as %regras de firewall% em sua máquina. Isso geralmente já é feito para você em um VPS, que é a maneira sugerida de hospedar uma instalação do OpenBullet 2 exposta publicamente.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Nas %configurações de segurança% você também será capaz de definir a %duração da sessão de convidado%, que é a quantidade de horas após as quais os hóspedes serão solicitados a fazer o login novamente. Isso é útil porque você pode não querer que os convidados tenham acesso indefinido ao servidor. Observe que uma vez que o servidor gerou um %token% válido para o convidado, ele será válido até que expire, então mesmo se você excluir um convidado da tabela acima, ele poderá usar a instalação do OpenBullet 2 enquanto o token é válido, %Você pode fazer o bloqueio por ip nas configurações%.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Ao clicar no botão %Adicionar% acima, você será capaz de criar %credenciais de login% para o novo convidado, definir a %expiração de acesso% (após o qual o servidor não enviará mais um token válido para o convidado) opcionalmente configure um número de %endereços IP% dos quais o convidado pode se conectar. Isso é útil para evitar que convidados compartilhem suas contas com outras pessoas.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Carregando</value>
+  </data>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>Nova senha para convidado</value>
+  </data>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>Você deve selecionar um convidado primeiro</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Não há registros a serem exibidos</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Você realmente quer deletar?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>Resultados</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Resultados por pagina</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nome de usuário</value>
   </data>
 </root>

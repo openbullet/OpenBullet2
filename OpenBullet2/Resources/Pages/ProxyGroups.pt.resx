@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -117,31 +120,139 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Adicionar grupo</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Tem certeza?</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="Country" xml:space="preserve">
+    <value>País</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="Created" xml:space="preserve">
+    <value>Criado</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Criar grupo proxy</value>
+  </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Apagar todos os proxies</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Excluído</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Excluir Grupo</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>A exclusão não esta funcionando</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Apagar Proxies Lerdas</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Excluir não testadas</value>
+  </data>
+  <data name="EditGroup" xml:space="preserve">
+    <value>Editar Grupo</value>
+  </data>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Editar grupo proxy</value>
+  </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>Para este grupo</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Grupo em uso</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>Um trabalho está usando este grupo proxy. Pare e remova o trabalho do gerenciador e tente novamente.</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>Como isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>Aqui você pode importar suas proxies em vários %grupos%. Grupos ajudam a manter as proxies organizadas e te dão a possibilidade de usar diferentes proxies para diferentes trabalhos. Primeiro de tudo, você deve criar um grupo clicando no botão de %Adicionar Grupo% acima. E depois dar um nome a ele. Tenha certeza que o novo grupo está selecionado e depois clique em %Importar Proxies%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>O menu de %Importar Proxies% te dará tres opções e modos de importar suas proxies. Você pode escolher entre %colar% elas, %enviar um arquivo% ou %digitar o URL% de um recurso remoto que irá fornecer as proxies em formato de texto (geralmente uma por linha). Você também pode especificar o %tipo%, %usuário% e %senha% padrão para as proxies. Alternativamente, você pode usar a %sintax avançada% descrita no campo para especificar o tipo, usuário e senha por proxy.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Agora você está pronto e poderá selecionar o grupo de proxy quando for criar ou editar um trabalho. Você pode criar um trabalho de tipo %Checar Proxies% para testar se suas proxies estão funcionando antes de usá-las. O trabalho de checagem de proxies irá atualizar os campos de %país%, %status%, %ping% e %último teste% da sua proxy na tabela de dados dessa pagina para que você possa então %remover% proxies que não funcionam ou que tem um ping muito alto para suas necessidades. Você pode até decidir manter apenas as proxies de um país específico!</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Importadas</value>
+  </data>
+  <data name="ImportProxies" xml:space="preserve">
+    <value>Importar Proxies</value>
+  </data>
+  <data name="LastChecked" xml:space="preserve">
+    <value>Último teste</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Carregando</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Por favor selecione um grupo primeiro</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Sem registros para exibir</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Senha</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>ping acima de</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Porta</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Proxies deletadas com sucesso</value>
+  </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Proxies importadas com sucesso</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Grupo de proxies</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>O grupo de proxies foi criado com sucesso!</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Você realmente quer deletar</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>resultados</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Resultados por pagina</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Lenta</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Usuário</value>
   </data>
 </root>

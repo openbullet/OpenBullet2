@@ -117,31 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+  <data name="Bots" xml:space="preserve">
+    <value>Bots</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="by" xml:space="preserve">
+    <value>de</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="Clone" xml:space="preserve">
+    <value>Clone</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="Combinations" xml:space="preserve">
+    <value>Combinações</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Personalizado</value>
+  </data>
+  <data name="DataPool" xml:space="preserve">
+    <value>Pool de dados</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Arquivo</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>Como é que isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>Este é o %Gerenciador de Trabalhos%, aqui você pode %criar% novos trabalhos, %editar% ou %remover% %empregos existentes% e acessar a interface de um trabalho específico. Para criar um novo trabalho, clique no botão %Novo% acima. Depois de criar alguns trabalhos, você poderá ter uma visão geral de seu status nesta página. Você também pode criar um trabalho clonando um existente para economizar tempo com todas as tarefas de configuração.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Para acessar a interface de um trabalho específico basta clicar nele! Se desejar que o gerenciador atualize o status de seus trabalhos com menos frequência para economizar largura de banda, você pode encontrar a opção %intervalo de atualização do gerenciador de trabalhos% na página Configurações de OB.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Lives</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infinito</value>
+  </data>
+  <data name="JobNotIdle" xml:space="preserve">
+    <value>Trabalho não inativo</value>
+  </data>
+  <data name="JobNotIdleWarning" xml:space="preserve">
+    <value>Pare ou aborte o trabalho antes de excluí-lo.</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Novo</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Nenhuma configuração selecionada</value>
+  </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Não está funcionando</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Range" xml:space="preserve">
+    <value>Faixa</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Remover Todos</value>
+  </data>
+  <data name="SelectJobType" xml:space="preserve">
+    <value>Selecione o tipo de trabalho</value>
+  </data>
+  <data name="ToCheck" xml:space="preserve">
+    <value>Checar</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Rodando</value>
   </data>
 </root>

@@ -117,31 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>How does this block work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>O bloco %Parse% permite analisar dados de uma string com muitos métodos de análise diferentes e armazená-los em uma variável String ou Lista de Strings. Os modos de análise suportados são LR, CSS, JSON e REGEX. O modo %LR% (esquerda direita) permite analisar o texto entre duas strings fornecidas. O modo %CSS% (Seletor CSS) permite obter o atributo de um elemento de uma página HTML.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>O modo %JSON% (JavaScript Object Notation) permite obter o valor de um objeto serializado JSON ou matriz usando um %JToken%. O JToken permite que você especifique um caminho para alcançar o valor desejado dentro da estrutura JSON. Um exemplo disso poderia ser `field1.array [0]` para endereçar o primeiro elemento do array `array` dentro do objeto` field1`. Se você escrever `field1.array [*]` ao invés, você obterá todos os elementos do array.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>O modo% REGEX% (Expressão Regular) é um método de análise avançado. Você precisará construir uma expressão regular e usar %capturing groups% para especificar o que deseja que a saída seja. Tome por exemplo o caso em que estamos analisando a frase `hello friend 123` e queremos a palavra` friend`, no caso em que `123` é um valor mutável e não podemos usar o modo LR. Você poderia construir um regex como `hello ([a-z] +) [d] {3}`. Observe como há um grupo de captura, denotado pelas chaves redondas. Então, no campo %Output format% você será capaz de escrever `[0]` para gerar a correspondência completa, `[1]` para gerar o primeiro grupo capturado e assim por diante ... Observe que você pode usar mais de 1 grupo no formato de saída.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>Se você marcar a caixa de seleção %Recursive%, todas as sequências de caracteres que atendem aos critérios de análise serão colocadas dentro de uma variável de Lista de Strings; caso contrário, apenas a primeira correspondência será obtida e colocada em uma variável String.</value>
+  </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>É captura</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>Rótulo</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Variável de saída</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Configurações</value>
   </data>
 </root>

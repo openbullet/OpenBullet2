@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AvailableBlocks" xml:space="preserve">
+    <value>Blocos disponíveis</value>
+  </data>
+  <data name="BlockInformation" xml:space="preserve">
+    <value>Informação do bloco</value>
+  </data>
+  <data name="CurrentStack" xml:space="preserve">
+    <value>Stack at ual</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>O que é o Stacker?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>O %Stacker% é uma ferramenta que pode ajudar você a construir suas configs de uma forma bem amigável, graças ao conceito dos %blocos%. Blocos são as representações visuais das diretivas do LoliCode, e eles são basicamente funções que podem ser chamadas a qualquer momento especificado, opcionalmente recebendo parâmetros de entrada, e opcionalmente produzindo resultados de saída. A %Stack% é basicamente uma lista de blocos que irão ser executadas por um bot, um atrás do outro, de cima para baixo.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Você pode modificar a stack %adicionando% ou %removendo% blocos, %movendo eles para cima ou par abaixo% e %clonando% eles. Blocos também podem ser %desativados% se você quiser pular a execução de um bloco sem ter que removê-lo e acabar perdendo todo seu conteúdo.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Blocos são caracterizados principalmente por um %rótulo% (que é completamente customizável) e por algumas configurações que são os parâmetros de entradas e de saída. Se você deseja escrever código em C# em sua config, você verá que alguns %Blocos LoliCode% serão criados quando você voltar pra visão do Stacker. Esses blocos contém código que o analisador do LoliCode não conseguiu identificar como um bloco padrão, por exemplo, loops e condições if ou qualquer outra expressão em C#.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>O novo sistema de variáveis</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>%Variáveis% no OB2 funcionam de uma forma bem diferente do que no OB1. Para entender o motivo por trás dessas mudanças, você deve entender que configs são traduzidas para C# e depois compiladas para melhor performance antes de serem executadas. O sistema do OB1 era interpretava o LoliScript em tempo de execução, o que fazia ele ser muito mais lerdo. C# é uma linguagem fortemente tipada e, portanto, as variáveis estão vinculadas à um tipo, como exemplo, `int` para inteiros e `string` para strings(textos). No OB1, tudo era uma string (ou uma lista de strings, ou um dicionário de strings) mas no OB2 temos novos tipos.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>O %tipo% de uma variávei no OB2 pode ser: Booleano, Array de Bytes, Dicionário de Strings, Float, Int, Lista de Strings, String e Enum. Variáveis são criadas principalmente pelo campo %Variável de Saída% dentro dos blocos, que está presente em boa parte dos blocos. Esse campo vai deixar você decidir o tipo de variável que será criado. Esse campo costuma vir com uma opção adicional, chamada %É Captura%, na qual deixa o bot saber que uma variável em específico deve ser salva e escrita nos dados de captura se você receber um hit.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>Os %Parâmetros de Entrada% dos blocos também tem tipos específicos, como no OB1. Você pode escolher até 3 modos diferentes para os parâmetros de entradas, dpendendo do seu tipo. O modo %fixo% permite você especificar um valor fixo que será sempre o mesmo para qualquer execução do código, por exemplo `42` ou `hello`. O modo %variável% permite você a usar uma variável anteriormente criada como valor para o parâmetro. Se o valor original for de um tipo diferente do tipo específicado para entrada, o tipo será convertido automaticamente (por exemplo, se vocÊ tem um inteiro e você tenta passar como um parâmetro string, vai ser automaticamente lido como string).</value>
+  </data>
+  <data name="Help2x04" xml:space="preserve">
+    <value>Finalmente, o modo %interpolado% é bem próximo da maneira na qual o OB1 funcionava, onde você pode usar a sintaxe `aqui está minha &lt;variável&gt;`, onde `variável` é o nome da variável que você deseja inserir dentro de uma string. Esse modo só é permitido para parâmetros de tipo: String, Lista de String e Dicionário de String.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Variáveis Padrão</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Algumas variáveis já estão declaradas pra você e podem ser usadas para acessar os dados de input e propriedades reservadas pelo sistema. A variável %input% é um objeto dinâmico que contém os dados fatiados do tipo das suas wordlists (por exemplo, se você está usando o tipo Default para as wordlists, você conseguirá acessar `input.DATA` para conseguir utilizar os dados de uma linha da wordlist) e as respostas de inputs costmizados que são perguntadas na hora de executar a config.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>O objeto `data` é uma classe com múltiplas propriedades que são automaticamente preenchidas pelos blocos, mas você também pode usar como variáveis de saída para outros blocos. As propriedades mais usadas são as de: STATUS, SOURCE, RAWSOURCE, ADDRESS, RESPONSECODE, COOKIES e HEADERS. Por exemplo, para conseguir usar a source de uma resposta HTTP como um parâmetro de entrada em um bloco parse, você precisaria selecionar o modo variável e digitar `data.SOURCE` no campo de entrada.</value>
+  </data>
+  <data name="Help3x03" xml:space="preserve">
+    <value>O objeto `data` contém além dessas citadas anteriormente, muitas propriedades e variáveis úteis a mais (como o Proxy) que podem ser manipuladas através de código C# para conseguir performar um comportamento mais avançado, que serão cobertos em um tutorial separado.
+    Finalmente, o objeto `globals` contém variáveis globais que podem ser compartilhadas entre bots. Você pode definir variáveis globais utilizando algo como `globals.Teste` em um campo de variável de saída, e pode fazer a mesma coisa para recuperar seu valor. Se você planeja fazer operações de longo prazos com essas variáveis, por exemplo, trabalhando com uma lista global de itensm você deveria %lock%(bloquear) o objeto `globals` utilizando `lock(globals) { seus blocos e código aqui }` para uma segurança de threads.</value>
+  </data>
+  <data name="NoBlockSelectedInfo" xml:space="preserve">
+    <value>Selecione um bloco para exibir suas configurações</value>
+  </data>
+</root>

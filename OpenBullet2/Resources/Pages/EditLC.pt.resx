@@ -117,31 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
-  </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
-  </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>O que é LoliCode?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>%LoliCode% é uma linguagem de script personalizada que atua como uma %linguagem intermediária% entre os blocos e o código C# gerado a partir dos blocos. LoliCode pode ser convertido em blocos simplesmente clicando na seção Stacker (o que não for um bloco apropriado é movido para um Bloco LoliCode especial), e os blocos podem ser convertidos em LoliCode simplesmente clicando na seção LoliCode. Cada bloco é traduzido automaticamente em um snippet que pode ser identificado por meio de seu id.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Um grande recurso do LoliCode é que ele pode ser usado para integrar código %C#% bruto com blocos. Você pode envolver blocos em instruções `if`, declarar variáveis ​​e aproveitar as vantagens dos recursos do C# usando sua sintaxe original. No final do dia, os blocos também são traduzidos em código C#, então você acabará com código 100% C# quando decidir executar sua configuração!</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Se você precisar usar classes etc. de um %namespace% que não é importado automaticamente pelo OB2 ao compilar o script, você pode adicioná-lo no topo clicando no botão %Alternar usos% e escrevendo-os na caixa de texto. Por exemplo, para adicionar o namespace para a classe `Regex`, você pode digitar `System.Text.RegularExpressions` em uma linha da caixa de texto.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="LoliCodeEditor" xml:space="preserve">
+    <value>Editor LoliCode</value>
+  </data>
+  <data name="SaveScript" xml:space="preserve">
+    <value>Salvar script</value>
+  </data>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Alternar usos</value>
+  </data>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Você pode digitar namespaces que gostaria de importar no script C# gerado, um por linha.</value>
   </data>
 </root>

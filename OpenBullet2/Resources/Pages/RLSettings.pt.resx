@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -117,31 +120,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="2CaptchaApiKey" xml:space="preserve">
+    <value>API Key 2Captcha</value>
+  </data>
+  <data name="AntiCaptchaApiKey" xml:space="preserve">
+    <value>API Key Anti-Captcha</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Tem certeza?</value>
+  </data>
+  <data name="AZCaptchaApiKey" xml:space="preserve">
+    <value>API Key AZ Captcha</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Saldo</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="CapMonsterHost" xml:space="preserve">
+    <value>Host CapMonster</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="CapMonsterPort" xml:space="preserve">
+    <value>Porta CapMonster</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="Captchas" xml:space="preserve">
+    <value>Captchas</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+  <data name="CaptchasDotIoApiKey" xml:space="preserve">
+    <value>API Key Captchas.IO</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Verificar Saldo</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+  <data name="CheckBalanceBeforeSolving" xml:space="preserve">
+    <value>Verificar saldo da conta antes de resolver captcha</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="ChromeBinaryLocation" xml:space="preserve">
+    <value>Caminho do binário(.exe) do Chrome</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Tempo limite de conexão (milissegundos)</value>
+  </data>
+  <data name="CurrentService" xml:space="preserve">
+    <value>Serviço atual</value>
+  </data>
+  <data name="Custom2CaptchaApiKey" xml:space="preserve">
+    <value>API Key 2Captcha Customizado</value>
+  </data>
+  <data name="Custom2CaptchaHost" xml:space="preserve">
+    <value>Host 2Captcha Customizado</value>
+  </data>
+  <data name="Custom2CaptchaPort" xml:space="preserve">
+    <value>Porta 2Captcha Customizado</value>
+  </data>
+  <data name="DeathByCaptcha Username" xml:space="preserve">
+    <value>Usuário Death By Captcha</value>
+  </data>
+  <data name="DeathByCaptchaPassword" xml:space="preserve">
+    <value>Senha Death By Captcha</value>
+  </data>
+  <data name="DeCaptcherPassword" xml:space="preserve">
+    <value>Senha DeCaptcher</value>
+  </data>
+  <data name="DeCaptcherUsername" xml:space="preserve">
+    <value>Usuário DeCaptcher</value>
+  </data>
+  <data name="DrawMouseMovement" xml:space="preserve">
+    <value>Desenhar movimento do mouse</value>
+  </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Ativar logs do bot</value>
+  </data>
+  <data name="FirefoxBinaryLocation" xml:space="preserve">
+    <value>Caminho do binário(.exe) do Firefox</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Geral</value>
+  </data>
+  <data name="GlobalBanKeys" xml:space="preserve">
+    <value>Keys globais de banimento</value>
+  </data>
+  <data name="GlobalRetryKeys" xml:space="preserve">
+    <value>Keys globais de retry</value>
+  </data>
+  <data name="ImageTyperzApiKey" xml:space="preserve">
+    <value>API Key Imagetyperz</value>
+  </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Salvar logs dos trabalhos para um arquivo</value>
+  </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Tipo do Paralelizador</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Tempo limite de escritura/leitura (milissegundos)</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restaurar configurações padrão</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Você deseja restaurar as configurações padrão?</value>
+  </data>
+  <data name="RestrictBlocksToCWD" xml:space="preserve">
+    <value>Restringir as capacidades de I/O dos blocos apenas para o diretório de trabalho atual</value>
+  </data>
+  <data name="RuCaptchaApiKey" xml:space="preserve">
+    <value>API Key RuCaptcha</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Salvo</value>
+  </data>
+  <data name="SelectedBrowser" xml:space="preserve">
+    <value>Selecionar Navegador</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>As configurações foram salvas com sucesso.</value>
+  </data>
+  <data name="SolveCaptchaApiKey" xml:space="preserve">
+    <value>API Key SolveCaptcha</value>
+  </data>
+  <data name="SolveRecaptchaApiKey" xml:space="preserve">
+    <value>API Key SolveRecaptcha</value>
+  </data>
+  <data name="TimeoutSeconds" xml:space="preserve">
+    <value>Tempo limite em segundos</value>
+  </data>
+  <data name="TrueCaptchaApiKey" xml:space="preserve">
+    <value>API Key TrueCaptcha</value>
+  </data>
+  <data name="TrueCaptchaUsername" xml:space="preserve">
+    <value>Usuário TrueCaptcha</value>
+  </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Usar lista customizada de User Agents</value>
+  </data>
+  <data name="UserAgents" xml:space="preserve">
+    <value>User Agents</value>
   </data>
 </root>

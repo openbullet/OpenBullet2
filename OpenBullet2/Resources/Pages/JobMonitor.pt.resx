@@ -117,31 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancelar</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Ações</value>
   </data>
-  <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Executado sequencialmente</value>
   </data>
-  <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Converter para config C#</value>
+  <data name="Active" xml:space="preserve">
+    <value>Ativo</value>
   </data>
-  <data name="CSharpEditor" xml:space="preserve">
-    <value>Editor C#</value>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Proxies Ativas</value>
+  </data>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Proxies Banidas</value>
+  </data>
+  <data name="Bans" xml:space="preserve">
+    <value>Banimentos</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Créditos captcha</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Personalizados</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>dias</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Editar ação</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Editar gatilho</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Erros</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>Executando</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Execuções</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Falhas</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Para que serve esta seção?</value>
+    <value>Como é que isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>Este é o %Monitorador de Trabalhos%, que contém uma lista de %ações disparadas%. Ações acionadas são responsáveis ​​por monitorar um trabalho, verificar se há acionadores e executar ações. Em primeiro lugar, você deve definir o %id% do trabalho a ser monitorado na caixa de texto numérica. Lembre-se de desmarcar a caixa de seleção %ativo% ao configurar os gatilhos e ações para evitar que sejam executados acidentalmente quando você ainda não terminou de usá-los.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Então você deve adicionar alguns %gatilhos% e %ações%. Assim que todas as condições de acionamento forem verdadeiras, o Monitorador de Trabalho executará todas as %ações% que você especificou em uma ordem sequencial até que sejam esgotadas. Depois de executar as ações, o contador de %Execuções% aumentará. Se a ação acionada for marcada como %repetível%, os acionadores serão correspondidos várias vezes, caso contrário, a ação acionada será definida como inativa e não acionará nunca mais.</value>
   </data>
-  <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transcrever de blocos</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>O botão %Reset% redefinirá o número de execuções para 0. Ações acionadas são salvas no arquivo %triggeredActions.json%, então se você quiser fazer backup ou transferi-las para outra instância de OB, você deve copiar este arquivo.</value>
   </data>
-  <data name="WarningPleaseRead" xml:space="preserve">
-    <value>AVISO! POR FAVOR LEIA!</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Lives</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>horas</value>
+  </data>
+  <data name="inJob" xml:space="preserve">
+    <value>em trabalho</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>Trabalho</value>
+  </data>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Trabalho finalizado</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Status de Trabalho</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minutos</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Novo</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>em webhook</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progresso</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Recarregar proxies</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remover</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Remover Todos</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Repetível</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reiniciar</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Tentativas</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>segundos</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Selecione o tipo de ação</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Selecione o tipo de gatilho</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Enviar</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Definir bots para</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Defina o tempo relativo para</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Iniciar Trabalho</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Parar Trabalho</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Testado</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tempo decorrido</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tempo restante</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>Checar</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Gatilhos</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>Todos devem ser verificados ao mesmo tempo</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Espere</value>
   </data>
 </root>
