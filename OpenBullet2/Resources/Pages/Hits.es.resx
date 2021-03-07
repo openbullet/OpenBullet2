@@ -147,6 +147,9 @@
   <data name="Delete" xml:space="preserve">
     <value>Eliminar</value>
   </data>
+  <data name="DeleteDuplicates" xml:space="preserve">
+    <value>Eliminar duplicados</value>
+  </data>
   <data name="DeleteFiltered" xml:space="preserve">
     <value>Eliminar filtrados</value>
   </data>
@@ -167,6 +170,9 @@
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
     <value>Primero debes seleccionar un hit</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No hay registros para mostrar</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>

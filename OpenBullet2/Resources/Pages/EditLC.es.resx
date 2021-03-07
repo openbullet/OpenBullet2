@@ -136,7 +136,7 @@
     <value>Guardar Script</value>
   </data>
   <data name="ToggleUsings" xml:space="preserve">
-    <value>Alternar Dependencias</value>
+    <value>Visualizar Dependencias</value>
   </data>
   <data name="UsingsInfo" xml:space="preserve">
     <value>Puede escribir los `namespace` que le gustaría importar en al script C #, uno por línea.</value>
