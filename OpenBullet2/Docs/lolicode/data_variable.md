@@ -7,8 +7,8 @@ This variable contains all data related to the current bot.
 - `data.SOURCE` (`string`) same as above but as a string
 - `data.ADDRESS` (`string`) the absolute uri of the last http response (after redirection)
 - `data.RESPONSECODE` (`int`) the status code of the last http response
-- `data.COOKIES` (`Dictionary<string, string>`) the cookies sent or received so far
-- `data.HEADERS` (`Dictionary<string, string>`) the headers of the last http response
+- `data.COOKIES` (`Dictionary<string, string>`) the cookies sent or received so far (e.g. `data.COOKIES["PHPSESSID"]`)
+- `data.HEADERS` (`Dictionary<string, string>`) the headers of the last http response (e.g. `data.HEADERS["Location"]`)
 - `data.Objects` (`Dictionary<string, object>`) holds stateful objects for cross-block use (they will get disposed automatically at the end of the script)
 - `data.MarkedForCapture` (`List<string>`) all the names of variables marked for capture
 
