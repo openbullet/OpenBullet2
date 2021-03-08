@@ -3,10 +3,12 @@
 @using System.Globalization
 @using OpenBullet2.Repositories
 @using OpenBullet2.Shared.Forms 
+@using OpenBullet2.Auth
 @inject IConfigRepository ConfigRepo
 @inject UpdateService UpdateService
 @inject NavigationManager NavigationManager 
-@inject OpenBullet2.Services.ConfigService ConfigService
+@inject ConfigService ConfigService
+@inject AuthenticationStateProvider Auth 
 @inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
 
@@ -59,7 +61,7 @@
                 <span class="oi oi-cog" aria-hidden="true"></span> @Loc["Configs"]
             </NavLink>
         </li>
-        @if (displayConfigSubmenu)
+        @if (displayConfigSubmenu && isAdmin)
         {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="config/edit/metadata">
@@ -172,11 +174,15 @@
     private bool displayStackerSubmenu = true;
     private bool displayCSharpSubmenu = true;
     private bool sidebarExpanded = true;
+    private bool isAdmin = false;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     protected override async Task OnInitializedAsync()
     {
+        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        isAdmin = uid == 0;
+
         try { ConfigService.OnConfigSelected -= OnConfigSelected; } catch { }
 
         ConfigService.OnConfigSelected += OnConfigSelected;
