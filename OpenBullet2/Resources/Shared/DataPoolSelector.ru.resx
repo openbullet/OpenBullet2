@@ -117,46 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Add wordlist</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="CharacterSet" xml:space="preserve">
+    <value>Character set</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="Combinations" xml:space="preserve">
+    <value>Combinations</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="combinationsWillBeGenerated" xml:space="preserve">
+    <value>combinations will be generated</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="FileName" xml:space="preserve">
+    <value>File name</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Infinite" xml:space="preserve">
+    <value>Infinite</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="lines" xml:space="preserve">
+    <value>lines</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>No wordlist selected</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Pad" xml:space="preserve">
+    <value>Pad</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Range" xml:space="preserve">
+    <value>Range</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="SelectWordlist" xml:space="preserve">
+    <value>Select wordlist</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Step" xml:space="preserve">
+    <value>Step</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="WordlistType" xml:space="preserve">
+    <value>Wordlist type</value>
   </data>
 </root>

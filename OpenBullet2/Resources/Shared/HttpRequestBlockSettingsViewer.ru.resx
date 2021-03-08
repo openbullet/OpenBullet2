@@ -117,46 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="AdvancedSettings" xml:space="preserve">
+    <value>Advanced settings</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this block work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>The %HTTP Request% block allows you to perform an HTTP request towards an endpoint. If you want to send a body alongside your headers and cookies you can do so by selecting one of the ways to send content. The %Standard% mode will simply take a String, encode it as UTF-8 and send it inside the request body. The %Content Type% field will be automatically converted into a %Content-Type% header and added to the request.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>The %Raw% mode basically does the same as the Standard mode if your content is a Byte Array and not a String. The %Basic Auth% is used for authenticating with Basic Access Authentication (the typical username/password popup you see inside your browser asking for credentials). Finally, the %Multipart% mode will send a content that can be made of multiple parts, like strings, raw bytes and files. This is useful for example in order to upload a file to a website.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>The response will be parsed and divided into chunks which will be assigned to different default variables. The response %Address% (after the last redirect if you have %Auto Redirect% enabled) will be saved into the String variable `data.ADDRESS`. The response %body% (a.k.a source) will be inside the String variable `data.SOURCE` (as a UTF-8 string), and inside the Byte Array variable `data.RAWSOURCE` (after decompression of e.g. gzip).</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>The %Response Code% (e.g. 200) will be inserted in the Integer variable `data.RESPONSECODE`. The headers will be parsed to a dictionary and inserted in the Dictionary of Strings variable `data.HEADERS`, and likewise for cookies in the `data.COOKIES` variable. Remember that you can easily retrieve values from dictionaries by key with the syntax `data.HEADERS["header-name"]`. If the request fails, the `data.STATUS` variable will be set to `ERROR`.</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Help1x05" xml:space="preserve">
+    <value>One last thing to remember is that cookies inside the `data.COOKIES` variable are only added or overwritten, never deleted. This means that previously received cookies (which are inside the `data.COOKIES` variable) will be sent again inside the next requests, in addition to the %Custom Cookies% you can define for each new request. This happens unless `data.COOKIES` is cleared or reinitialized.</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
   </data>
 </root>

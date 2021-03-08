@@ -117,46 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="AllDone" xml:space="preserve">
+    <value>All done</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How to add and use plugins</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>%Plugins% come as %.zip archives% that contain one or more libraries and their dependencies. They allow you to expand the functionalities of OpenBullet by %adding new blocks%. You can upload plugins by clicking on the %Add% button above. Once they are added, plugins reside in the %UserData/Plugins% folder inside the base folder of OpenBullet. You can add blocks from plugins to your configs by navigating to the top level category (press Back) in the %Available Blocks% and selecting the name of the plugin you intend to use.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>Plugins can be deleted by clicking on the %Remove% button next to them. The files will be deleted from the %Plugins% folder so make sure you have a backup copy! It is recommended that you stop all jobs before removing plugins. Mind that once you remove a plugin, configs that have blocks from that plugin will probably stop working.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
+    <value>Plugins successfully uploaded</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
   </data>
 </root>

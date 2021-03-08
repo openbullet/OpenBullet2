@@ -117,46 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="Author" xml:space="preserve">
+    <value>Автор</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="by" xml:space="preserve">
+    <value>от</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отменить</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="Category" xml:space="preserve">
+    <value>Категория</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="Danger" xml:space="preserve">
+    <value>Опасность</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="DangerousConfig" xml:space="preserve">
+    <value>Выбранная конфигурация может содержать код C#. Несмотря на то, что C# может быть полезен разработчикам конфигураций, использующих функциональные возможности, которые не реализованные посредством блоков. C# также может быть использован для нанесения вреда компьютеру или кражи информации. НАСТОЯТЕЛЬНО рекомендуется проверить код конфигурации и убедиться, что он не содержит ничего поддельного. Вы проверили код и убедились, что он полностью безопасен?</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="LastModified" xml:space="preserve">
+    <value>Последнее изменение</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Отсутствует подключаемый модуль</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>Конфигурация была создана с помощью этого плагина, но он отсутствует</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Сначала необходимо выбрать Конфигурацию</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="NoGoBack" xml:space="preserve">
+    <value>Нет, возвращайся</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Proxies" xml:space="preserve">
+    <value>Прокси</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Удалённый</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Ой-Ой</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Списки слов</value>
   </data>
 </root>

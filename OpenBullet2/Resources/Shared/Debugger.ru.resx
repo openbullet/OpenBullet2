@@ -117,46 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="CompleteLog" xml:space="preserve">
+    <value>Complete log</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="InvalidProxy" xml:space="preserve">
+    <value>Invalid proxy</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="InvalidProxyMessage" xml:space="preserve">
+    <value>The test proxy you provided is invalid and cannot be parsed</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="PersistLog" xml:space="preserve">
+    <value>Persist log</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Show log</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="ShowVariables" xml:space="preserve">
+    <value>Show variables</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="TestData" xml:space="preserve">
+    <value>Test data</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="TestProxy" xml:space="preserve">
+    <value>Test proxy</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="UseProxy" xml:space="preserve">
+    <value>Use proxy</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Variables" xml:space="preserve">
+    <value>Variables</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="ViewAsHTML" xml:space="preserve">
+    <value>View as HTML</value>
+  </data>
+  <data name="WordlistType" xml:space="preserve">
+    <value>Wordlist type</value>
   </data>
 </root>

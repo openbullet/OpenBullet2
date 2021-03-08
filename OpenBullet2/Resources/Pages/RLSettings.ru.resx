@@ -117,46 +117,151 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="2CaptchaApiKey" xml:space="preserve">
+    <value>2Captcha API Key</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="AntiCaptchaApiKey" xml:space="preserve">
+    <value>Anti-Captcha API Key</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="AZCaptchaApiKey" xml:space="preserve">
+    <value>AZ Captcha API Key</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="CapMonsterHost" xml:space="preserve">
+    <value>CapMonster Host</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="CapMonsterPort" xml:space="preserve">
+    <value>CapMonster Port</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Captchas" xml:space="preserve">
+    <value>Captchas</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="CaptchasDotIoApiKey" xml:space="preserve">
+    <value>Captchas.IO API Key</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Check balance</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="CheckBalanceBeforeSolving" xml:space="preserve">
+    <value>Check the account balance before solving the captcha</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="ChromeBinaryLocation" xml:space="preserve">
+    <value>Chrome binary location</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Connect timeout (milliseconds)</value>
+  </data>
+  <data name="CurrentService" xml:space="preserve">
+    <value>Current service</value>
+  </data>
+  <data name="Custom2CaptchaApiKey" xml:space="preserve">
+    <value>Custom 2Captcha API Key</value>
+  </data>
+  <data name="Custom2CaptchaHost" xml:space="preserve">
+    <value>Custom 2Captcha Host</value>
+  </data>
+  <data name="Custom2CaptchaPort" xml:space="preserve">
+    <value>Custom 2Captcha Port</value>
+  </data>
+  <data name="DeathByCaptcha Username" xml:space="preserve">
+    <value>Death By Captcha Username</value>
+  </data>
+  <data name="DeathByCaptchaPassword" xml:space="preserve">
+    <value>Death By Captcha Password</value>
+  </data>
+  <data name="DeCaptcherPassword" xml:space="preserve">
+    <value>DeCaptcher Password</value>
+  </data>
+  <data name="DeCaptcherUsername" xml:space="preserve">
+    <value>DeCaptcher Username</value>
+  </data>
+  <data name="DrawMouseMovement" xml:space="preserve">
+    <value>Draw mouse movement</value>
+  </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Enable bot logging</value>
+  </data>
+  <data name="FirefoxBinaryLocation" xml:space="preserve">
+    <value>Firefox binary location</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="GlobalBanKeys" xml:space="preserve">
+    <value>Global ban keys</value>
+  </data>
+  <data name="GlobalRetryKeys" xml:space="preserve">
+    <value>Global retry keys</value>
+  </data>
+  <data name="ImageTyperzApiKey" xml:space="preserve">
+    <value>Imagetyperz API Key</value>
+  </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Log job activity to file</value>
+  </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Parallelizer Type</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Read/Write timeout (milliseconds)</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restore Defaults</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Do you want to restore the default settings?</value>
+  </data>
+  <data name="RestrictBlocksToCWD" xml:space="preserve">
+    <value>Restrict blocks I/O capabilities to the Current Working Directory only</value>
+  </data>
+  <data name="RuCaptchaApiKey" xml:space="preserve">
+    <value>RuCaptcha API Key</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Saved</value>
+  </data>
+  <data name="SelectedBrowser" xml:space="preserve">
+    <value>Selected browser</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>The settings were successfully saved.</value>
+  </data>
+  <data name="SolveCaptchaApiKey" xml:space="preserve">
+    <value>SolveCaptcha API Key</value>
+  </data>
+  <data name="SolveRecaptchaApiKey" xml:space="preserve">
+    <value>SolveRecaptcha API Key</value>
+  </data>
+  <data name="TimeoutSeconds" xml:space="preserve">
+    <value>Timeout in seconds</value>
+  </data>
+  <data name="TrueCaptchaApiKey" xml:space="preserve">
+    <value>TrueCaptcha API Key</value>
+  </data>
+  <data name="TrueCaptchaUsername" xml:space="preserve">
+    <value>TrueCaptcha Username</value>
+  </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Use custom User Agents list</value>
+  </data>
+  <data name="UserAgents" xml:space="preserve">
+    <value>User Agents</value>
   </data>
 </root>

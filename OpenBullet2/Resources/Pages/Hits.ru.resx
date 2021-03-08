@@ -117,46 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="CapturedData" xml:space="preserve">
+    <value>Captured Data</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="Config" xml:space="preserve">
+    <value>Config</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="ConfigMissing" xml:space="preserve">
+    <value>Cannot find config with id</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="CopyData" xml:space="preserve">
+    <value>Copy data</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="CopyDataCapture" xml:space="preserve">
+    <value>Copy data + capture</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Delete filtered</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="EditHit" xml:space="preserve">
+    <value>Edit hit</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="hits" xml:space="preserve">
+    <value>hits</value>
+  </data>
+  <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
+    <value>Hits from different configs selected, please select hits obtained with the same config</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="NoHitSelectedWarning" xml:space="preserve">
+    <value>You must select a hit first</value>
+  </data>
+  <data name="Proxy" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
+  </data>
+  <data name="ReallyDeleteAllHits" xml:space="preserve">
+    <value>Do you really want to DELETE ALL of your hits?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>results</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Results per page</value>
+  </data>
+  <data name="SendToRecheck" xml:space="preserve">
+    <value>Send to recheck</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Wordlist" xml:space="preserve">
+    <value>Wordlist</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
+  <data name="DeleteDuplicates" xml:space="preserve">
+    <value>Delete duplicates</value>
   </data>
 </root>

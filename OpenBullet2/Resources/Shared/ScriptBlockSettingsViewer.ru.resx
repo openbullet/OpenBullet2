@@ -117,46 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>Как работает этот блок?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>Блок %Сценарии% позволяет использовать внешний язык сценариев для выполнения некоторого кода (например, JavaScript или Python). В поле %Ввод Переменных% через запятую, указывается список всех переменных, которые вы хотите отправить в контекст скрипта из контекста бота. Все переменные автоматически будут вставлены перед вашим кодом, и вы сможете использовать их, когда захотите.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>Чтобы извлечь данные из сценария, вы должны добавить элементы в список %Output Variables%, выбрать тип возвращаемого значения, которым они должны быть после инициализации в области действия бота, и их имя. Всякий раз, когда вы хотите выполнить сценарий, текст окончательного сценария будет распечатан в файл, созданный внутри подпапки %Сценарии%. Это полезно для отладки, особенно в случае NodeJS, поскольку ваши скрипты будут заключены в оператор module.exports, а выходные переменные определены как объект, так что вы можете точно видеть, что происходит за кулисами.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Label" xml:space="preserve">
+    <value>Лейбл</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
   </data>
 </root>

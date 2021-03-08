@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -121,25 +121,34 @@
     <value>Все сделано!</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Ты уверен?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="Author" xml:space="preserve">
     <value>Автор</value>
   </data>
   <data name="by" xml:space="preserve">
-    <value>по</value>
+    <value>от</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
+  </data>
+  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
+    <value>Не удается скачать Конфигурацию для удалённого доступа</value>
+  </data>
+  <data name="CannotEditRemoteConfig" xml:space="preserve">
+    <value>Невозможно отредактировать Конфигурацию для удалённого доступа </value>
   </data>
   <data name="Category" xml:space="preserve">
     <value>Категория</value>
   </data>
   <data name="ConfigReloadWarning" xml:space="preserve">
-    <value>Это перезагрузит все конфигурации с диска, поэтому все несохраненные изменения будут потеряны. Вы хотите продолжить?</value>
+    <value>Это перезагрузит все Конфигурации заново, поэтому все несохраненные изменения будут утеряны. Вы хотите продолжить?</value>
   </data>
   <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
     <value>Конфигурации успешно загружены</value>
+  </data>
+  <data name="ConfigWarningMessage" xml:space="preserve">
+    <value>ПРЕДУПРЕЖДЕНИЕ! Конфигурации содержат код C#, который выполняется без каких-либо автоматических проверок на вредоносное поведение. Вся ответственность за использование Конфигураций, созданных третьими лицами, лежит полностью на Вас. Если Вы не доверяете источнику, всегда проверяйте код LoliCode / C# перед запуском.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Дата создания</value>
@@ -148,22 +157,64 @@
     <value>Удалить</value>
   </data>
   <data name="Download" xml:space="preserve">
-    <value>Скачать</value>
+    <value>Загрузить</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>редактировать</value>
+    <value>Редактировать</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Что такое Конфигурация?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value> %Конфигурация% - это файл, содержащий инструкции для автоматизации определённых действий, как правило направленных в отношении веб-ресурсов. Конфигурации обычно содержат %метаданные% (такие как, название, имя автора и иконку), а также файлы %ReadMe%, инструкциями как использовать Конфигурацию или как работают определёные функции, а также функции которые могут находиться либо в кастомном %LoliCode% или в чистом %C#% коде. На диске Конфиги сохраняются в виде файлов с расширением %*.opk% в подпапке %Configs%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Конфигурации используются в таких заданиях, как %Задания Мульти Запуска%, для параллельного выполнения некоторых действий для определённого набора данных (к примеру, списка слов). Например, используются для проверки того, возвращают ли определенные поддирректории исследуемого веб-сайта допустимый ответ. Или их можно использовать для парсинга ссылок с нескольких страниц интернет-магазина..</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Как работает диспетчер Конфигураций?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>%Диспетчер Конфигураций% отслеживает все ваши конфигурации. Конфигурации загружаются из подпапки Configs при запуске программы OB2. При добавлении новых конфигураций, для их загрузки в программу, вы можете просто нажать %Перезагрузить%. Если у вас нет быстрого доступа к папке Configs (например, если OB2 работает на VPS), вы можете %Загрузить% необходимую конфигурацию в программу с помощью соответствующей кнопки. Таким же образом вы можете %Скачать% любой из уже загруженных конфигураций.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>Чтобы создать новую конфигурацию нажмите на кнопку %Новый%, которая расположена на верхней панели. Чтобы %отредактировать% Конфигурацию, достаточно нажать кнопку Правка, или с помощью двойного клика по файлу нужной Конфигурации в списке. Ещё есть кнопка %Вид% для изменения на более подробный вид сетки.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>Что такое файл *.opk?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>Файл %*.opk% представляет собой %ZIP-архив%, в котором содержатся следующие файлы:
+    1. %Metadata.json% - файл содержит Название, Имя Автора и Иконку конфигурации. Иконка представляет собой изображение в кодировке base64, но также возможно ипользовать Иконки в формате GIF.
+    2. %ReadMe.md% - файл, содержащий описание конфигурации, которое можно просмотреть при открытии меню выбора конфигураций во время настройки задания.
+    3. %Settings.json% - содержит все настройки для конкретной Конфигурации.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Ну и наконец, если в вашей Конфигурации используется Stacker, все инструкции будут сохранены в файле %script.loli%, как скрипт LoliCode. Но если хотите, чтобы ваша Конфигурация была только на чистом C#, будет создан содержащий исходный код C# файл с названием %script.cs%, который готов для копмиляции </value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Последнее изменение</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка</value>
+  </data>
+  <data name="LocalConfigs" xml:space="preserve">
+    <value>Локальные Конфигурации</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Отсутствует подключаемый модуль</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>Конфигурация была создана с помощью этого плагина, но он отсутствует</value>
+  </data>
   <data name="Name" xml:space="preserve">
-    <value>название</value>
+    <value>Имя</value>
   </data>
   <data name="New" xml:space="preserve">
     <value>Новый</value>
   </data>
   <data name="NoConfigSelectedWarning" xml:space="preserve">
-    <value>Похоже, вы не выбрали ни одной конфигурации!</value>
+    <value>Похоже, вы не выбрали ни одной Конфигурации!</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Прокси</value>
@@ -174,13 +225,34 @@
   <data name="Reload" xml:space="preserve">
     <value>Перезагрузить</value>
   </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Удалённый</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Удалённая Конфигурация</value>
+  </data>
+  <data name="RemoteConfigs" xml:space="preserve">
+    <value>Удалённые Конфигурации</value>
+  </data>
   <data name="ToggleView" xml:space="preserve">
-    <value>Переключить вид</value>
+    <value>Переключить Вид</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Ой-ой</value>
+    <value>Ой-Ой</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Несохраненные Изменения</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>В текущей конфигурации есть несохраненные изменения! Все равно продолжить?</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>Загрузить</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>ПРЕДУПРЕЖДЕНИЕ</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Списки слов</value>
   </data>
 </root>

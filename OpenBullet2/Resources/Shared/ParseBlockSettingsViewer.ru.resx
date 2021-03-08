@@ -117,46 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this block work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>The %Parse% block allows you to parse data from a string with many different parsing methods and store it into a String or List of Strings variable. The supported parsing modes are LR, CSS, JSON and REGEX. The %LR% (Left Right) mode allows to parse text between two given strings. The %CSS% (CSS Selector) mode allows to get an element's attribute from an HTML page.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>The %JSON% (JavaScript Object Notation) mode allows to get the value of a JSON-serialized object or array by using a %JToken%. The JToken allows you to specify a path to reach the desired value inside the JSON structure. An example of this could be `field1.array[0]` to address the first element of the array `array` inside the object `field1`. If you write `field1.array[*]` instead, you will get all the elements of the array.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>The %REGEX% (REGular EXpression) mode is an advanced parsing method. You will need to build a regular expression and use %capturing groups% to specify what you want the output to be. Take for example the case in which we are parsing the sentence `hello friend 123` and we want to get the word `friend`, in the case where `123` is a changing value and we cannot use the LR mode. You could build a regex like `hello ([a-z]+) [d]{3}`. Notice how there is a capturing group, denoted by the round braces. Then in the %Output format% field you will be able to write `[0]` to output the full match, `[1]` to output the first captured group and so on... Note that you can use more than 1 group in the output format.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Help1x04" xml:space="preserve">
+    <value>If you tick the %Recursive% checkbox, all the sequences of characters that meet the parsing criteria will be put inside a List of Strings variable; otherwise only the first match will be taken and put into a String variable.</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="IsCapture" xml:space="preserve">
+    <value>Is capture</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>Output variable</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
 </root>

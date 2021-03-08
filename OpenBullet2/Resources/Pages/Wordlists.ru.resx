@@ -117,46 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="Added" xml:space="preserve">
+    <value>Added</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="AddedWordlist" xml:space="preserve">
+    <value>The wordlist was added successfully!</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="AddWordlist" xml:space="preserve">
+    <value>Add wordlist</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="AlsoDeleteFile" xml:space="preserve">
+    <value>Delete the file too?</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeleteFileText1" xml:space="preserve">
+    <value>Do you want to delete</value>
+  </data>
+  <data name="DeleteFileText2" xml:space="preserve">
+    <value>from the disk as well?</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditWordlist" xml:space="preserve">
+    <value>Edit wordlist</value>
+  </data>
+  <data name="FileName" xml:space="preserve">
+    <value>File Name</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>Here you can import wordlists. First of all click on the %Add% button above. You will be able to specify a %Wordlist Type% (more information on this later), a %Name% and a %Purpose%. You have two options to upload your file. The first option is to %upload% it to the server that is running the instance of OpenBullet2. This is the preferred method %if the wordlist is on the client% from which you are accessing OB2 through the browser, but OB2 is being hosted on a different machine. This method of adding a wordlist adds some overhead as the wordlist needs to be uploaded through the browser.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>%If the wordlist is on the server%, which means you are trying to retrieve a file from the same machine in which OB2 is running, you can use the %File System% option, which will let you visually browse through folders in search of the file you want. Note that in order to access locations on the drive that are outside of the current working directory of OB2 you will need to go to OpenBullet's security options and allow system-wide file access.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Regarding the %Wordlist Type%, you will find the currently specified Wordlist Types in the %UserData/Environment.ini% file in your OB2 directory. Wordlist Types are loaded when OB2 starts up. You can change this file and add/remove/change Wordlist Types to match the format of your wordlists. You can read more about Wordlist Types on the official forum's guides section.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="KeepFile" xml:space="preserve">
+    <value>No, keep the file</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Lines" xml:space="preserve">
+    <value>Lines</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
+  <data name="NoWordlistSelected" xml:space="preserve">
+    <value>You must select a wordlist first</value>
+  </data>
+  <data name="Purpose" xml:space="preserve">
+    <value>Purpose</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>results</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Results per page</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>

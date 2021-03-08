@@ -116,26 +116,41 @@
   </resheader>
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
+ </resheader>
+  <data name="AlphaTesters" xml:space="preserve">
+    <value>Alpha-тестеры</value>
+  </data>
+  <data name="BetaTesters" xml:space="preserve">
+    <value>Beta-тестеры</value>
+  </data>
   <data name="Collaborators" xml:space="preserve">
-    <value>Соавторы</value>
+    <value>Со-Авторы</value>
   </data>
   <data name="Developer" xml:space="preserve">
     <value>Разработчик</value>
   </data>
+  <data name="Disclaimer" xml:space="preserve">
+    <value>Отказ от ответственности</value>
+  </data>
+  <data name="DisclaimerText" xml:space="preserve">
+    <value>Выполнение атак на сайты и ресурсы, которые не принадлежат Вам (и/или у вас нет официального разрешения на пободные действия), является НЕЗАКОННЫМ! Разработчик не несет ответственности за ненадлежащее и противоправное использование этого программного обеспечения.</value>
+  </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Жертвователи и сторонники</value>
+    <value>Сторонники и те кто пожертвовал на развитие проекта</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Лицензия</value>
   </data>
   <data name="OfficialForum" xml:space="preserve">
-    <value>Официальный форум</value>
+    <value>Официальный Форум</value>
   </data>
   <data name="OfficialRepository" xml:space="preserve">
-    <value>Официальный репозиторий</value>
+    <value>Официальный Репозиторий</value>
   </data>
   <data name="Read" xml:space="preserve">
-    <value>Читать</value>
+    <value>Прочитать</value>
+  </data>
+  <data name="Translators" xml:space="preserve">
+    <value>Переводчики</value>
   </data>
 </root>

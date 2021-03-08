@@ -117,46 +117,91 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="About" xml:space="preserve">
+    <value>О</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="AwwYeah" xml:space="preserve">
+    <value>Ооо Да!</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="Changelog" xml:space="preserve">
+    <value>Журнал изменений</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="ChooseYourLanguage" xml:space="preserve">
+    <value>Выбери свой язык</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="Configs" xml:space="preserve">
+    <value>Конфигурации</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="CSharpCode" xml:space="preserve">
+    <value>Код C#</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="Guests" xml:space="preserve">
+    <value>Гости</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Хиты</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Home" xml:space="preserve">
+    <value>Домой</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="InvalidLolicode" xml:space="preserve">
+    <value>Невозможно сохранить: неправильный LoliCode!</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Jobs" xml:space="preserve">
+    <value>Задания</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="LoliCode" xml:space="preserve">
+    <value>LoliCode</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Metadata" xml:space="preserve">
+    <value>Метаданные</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Monitor" xml:space="preserve">
+    <value>Контроль</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Конфигурация не выбрана</value>
+  </data>
+  <data name="OBSettings" xml:space="preserve">
+    <value>Настройки OB2</value>
+  </data>
+  <data name="Plugins" xml:space="preserve">
+    <value>Плагины</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Прокси</value>
+  </data>
+  <data name="Readme" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="RLSettings" xml:space="preserve">
+    <value>Настройки RL</value>
+  </data>
+  <data name="SaveConfig" xml:space="preserve">
+    <value>Сохранить Конфигурацию</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Раздача</value>
+  </data>
+  <data name="Stacker" xml:space="preserve">
+    <value>Stacker</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Ой-Ой</value>
+  </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>Обновления Доступны</value>
+  </data>
+  <data name="UpdateInstructions" xml:space="preserve">
+    <value>Инструкции по обновлению</value>
+  </data>
+  <data name="wasSavedSuccessfully" xml:space="preserve">
+    <value>успешно сохранено!</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Списки слов</value>
   </data>
 </root>

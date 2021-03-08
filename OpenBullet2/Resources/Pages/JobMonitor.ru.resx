@@ -117,46 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>Executed sequentially</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="AliveProxies" xml:space="preserve">
+    <value>Alive Proxies</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="BannedProxies" xml:space="preserve">
+    <value>Banned Proxies</value>
+  </data>
+  <data name="Bans" xml:space="preserve">
+    <value>Bans</value>
+  </data>
+  <data name="CaptchaCredit" xml:space="preserve">
+    <value>Captcha credit</value>
+  </data>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
+  </data>
+  <data name="Customs" xml:space="preserve">
+    <value>Customs</value>
+  </data>
+  <data name="days" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="EditAction" xml:space="preserve">
+    <value>Edit Action</value>
+  </data>
+  <data name="EditTrigger" xml:space="preserve">
+    <value>Edit Trigger</value>
+  </data>
+  <data name="Errors" xml:space="preserve">
+    <value>Errors</value>
+  </data>
+  <data name="Executing" xml:space="preserve">
+    <value>Executing</value>
+  </data>
+  <data name="Executions" xml:space="preserve">
+    <value>Executions</value>
+  </data>
+  <data name="Fails" xml:space="preserve">
+    <value>Fails</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>This is the %Job Monitor%, which contains a list of %triggered actions%. Triggered Actions are in charge of monitoring a job, checking for triggers and executing actions. First of all you should define the %id% of the job to monitor in the numeric textbox. Remember to uncheck the %active% checkbox when setting up the triggers and actions to avoid having them execute accidentally when you're not yet finished with them.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>Then you should add some %triggers% and %actions%. Once all of the triggering conditions are true, the Job Monitor will execute all the %actions% you specified in a sequential order until they are exhausted. After executing the actions, the %executions% counter will increase. If the Triggered Action is marked as %repeatable%, triggers will be matches multiple times, otherwise the Triggered Action will set itself as inactive and not trigger ever again.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>The %Reset% button will reset the number of executions to 0. Triggered Actions are saved in the %triggeredActions.json% file, so if you want to back them up or transfer them to another OB instance you should copy this file.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Hits" xml:space="preserve">
+    <value>Hits</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="hours" xml:space="preserve">
+    <value>hours</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="inJob" xml:space="preserve">
+    <value>in job</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="Job" xml:space="preserve">
+    <value>Job</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="JobFinished" xml:space="preserve">
+    <value>Job finished</value>
+  </data>
+  <data name="JobStatus" xml:space="preserve">
+    <value>Job status</value>
+  </data>
+  <data name="minutes" xml:space="preserve">
+    <value>minutes</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="onWebhook" xml:space="preserve">
+    <value>on webhook</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="ReloadProxies" xml:space="preserve">
+    <value>Reload proxies</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="RemoveAll" xml:space="preserve">
+    <value>Remove All</value>
+  </data>
+  <data name="Repeatable" xml:space="preserve">
+    <value>Repeatable</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Retries" xml:space="preserve">
+    <value>Retries</value>
+  </data>
+  <data name="seconds" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="SelectActionType" xml:space="preserve">
+    <value>Select action type</value>
+  </data>
+  <data name="SelectTriggerType" xml:space="preserve">
+    <value>Select trigger type</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="SetBotsTo" xml:space="preserve">
+    <value>Set bots to</value>
+  </data>
+  <data name="SetRelativeTimeTo" xml:space="preserve">
+    <value>Set relative time to</value>
+  </data>
+  <data name="StartJob" xml:space="preserve">
+    <value>Start Job</value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Stop Job</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Tested</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="ToChecks" xml:space="preserve">
+    <value>To Checks</value>
+  </data>
+  <data name="Triggers" xml:space="preserve">
+    <value>Triggers</value>
+  </data>
+  <data name="TriggersDescription" xml:space="preserve">
+    <value>All must be verified at the same time</value>
+  </data>
+  <data name="Wait" xml:space="preserve">
+    <value>Wait</value>
   </data>
 </root>

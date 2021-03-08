@@ -117,46 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="AccessExpiration" xml:space="preserve">
+    <value>Access expiration</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="AddGuest" xml:space="preserve">
+    <value>Add guest</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="AllowedAddresses" xml:space="preserve">
+    <value>Allowed addresses</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="EditGuest" xml:space="preserve">
+    <value>Edit guest</value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>Edit Info</value>
+  </data>
+  <data name="EditPassword" xml:space="preserve">
+    <value>Edit Password</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>OpenBullet 2 allows you to create accounts for %guests% that can access your OpenBullet 2 server. First of all, remember to turn on the %require admin login% option in OB's %security settings%. This will guarantee that people with the link to this server will be welcomed with a login screen. In order for other people to reach this server, you will need to %open the ports% on your router and setup the %firewall rules% on your machine. This is usually already done for you on a VPS, which is the suggested way to host a publicly exposed OpenBullet 2 installation.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>In the %security settings% you will also be able to define the %guest session lifetime%, which is the amount of hours after which guests will be prompted to login once more. This is useful as you might not want guests to have indefinite access to the server. Note that once the server generated a valid %token% for the guest, it will be valid until it expired, so even if you delete a guest from the table above, it will be able to use your OpenBullet 2 installation for as long as the token is valid.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>By clicking on the %Add% button above, you will be able to create %login credentials% for the new guest, set the %access expiration% (after which the server won't send a valid token to the guest anymore) and optionally set up a number of %IP addresses% which the guest is allowed to connect from. This is useful to prevent guests from sharing their account with other people.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="NewPasswordForGuest" xml:space="preserve">
+    <value>New password for guest</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="NoGuestSelectedWarning" xml:space="preserve">
+    <value>You must select a guest first</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>results</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Results per page</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

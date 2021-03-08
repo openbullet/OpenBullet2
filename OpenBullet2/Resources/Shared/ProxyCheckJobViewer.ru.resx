@@ -117,46 +117,130 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="Abort" xml:space="preserve">
+    <value>Экстренная остановка</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="andCountry" xml:space="preserve">
+    <value>и Страна</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="asNotWorking" xml:space="preserve">
+    <value>как неработающий</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="Bots" xml:space="preserve">
+    <value>Боты</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="ChangingPleaseWait" xml:space="preserve">
+    <value>Изменение...подождите, пожалуйста</value>
   </data>
-  <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+  <data name="CheckOnlyUntested" xml:space="preserve">
+    <value>Чекать только непроверенные</value>
   </data>
-  <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+  <data name="CompletedMessage" xml:space="preserve">
+    <value>Диспетчер задач завершил всю свою работу</value>
   </data>
-  <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+  <data name="Controls" xml:space="preserve">
+    <value>Контроллеры</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="CPM" xml:space="preserve">
+    <value>CPM</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="days" xml:space="preserve">
+    <value>дней</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="EditBotsAmount" xml:space="preserve">
+    <value>Изменить кол-во Ботов</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="Elapsed" xml:space="preserve">
+    <value>Протечка</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="HardStopMessage" xml:space="preserve">
+    <value>Отправка сигнала жесткой остановки</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="JobOptions" xml:space="preserve">
+    <value>Параметры задания</value>
+  </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Не работает</value>
+  </data>
+  <data name="OtherStats" xml:space="preserve">
+    <value>Остальные данные статистики</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Пауза</value>
+  </data>
+  <data name="PauseMessage" xml:space="preserve">
+    <value>Передача сигнала паузы</value>
+  </data>
+  <data name="PausingMessage" xml:space="preserve">
+    <value>Приостановка... дождитесь завершения обработки текущих задач</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Прогресс</value>
+  </data>
+  <data name="ProxyChecked" xml:space="preserve">
+    <value>Проверенные Прокси</value>
+  </data>
+  <data name="ProxyStats" xml:space="preserve">
+    <value>Статистика Прокси</value>
+  </data>
+  <data name="Remaining" xml:space="preserve">
+    <value>Сохранение</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Возобновить</value>
+  </data>
+  <data name="ResumeMessage" xml:space="preserve">
+    <value>Возобновленная проверка</value>
+  </data>
+  <data name="SoftStopMessage" xml:space="preserve">
+    <value>Передача сигнала деликатной остановки</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+  <data name="StartedChecking" xml:space="preserve">
+    <value>Начата проверка</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Остановить</value>
+  </data>
+  <data name="StoppingMessage" xml:space="preserve">
+    <value>Остановка... Дождитесь завершения обработки текущих задач. Или, вы знаете, вы всегда можете</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Верный ключ</value>
+  </data>
+  <data name="TaskError" xml:space="preserve">
+    <value>Ошибка задачи!</value>
+  </data>
+  <data name="TaskManagerError" xml:space="preserve">
+    <value>Ошибка диспетчера задач!</value>
+  </data>
+  <data name="TaskManagerPaused" xml:space="preserve">
+    <value>Диспетчер задач приостановлен</value>
+  </data>
+  <data name="Tested" xml:space="preserve">
+    <value>Протестировано</value>
+  </data>
+  <data name="TimeLeft" xml:space="preserve">
+    <value>Времени прошло</value>
+  </data>
+  <data name="TimeoutMilliseconds" xml:space="preserve">
+    <value>Тайм-Айт (миллисекунды)</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Итого</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="withPing" xml:space="preserve">
+    <value>с Пингом</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>В процессе</value>
   </data>
 </root>

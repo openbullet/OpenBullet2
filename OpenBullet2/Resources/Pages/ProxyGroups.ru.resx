@@ -117,46 +117,139 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Add Group</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Create proxy group</value>
+  </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Delete all proxies</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Delete Group</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>Delete not working</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Delete slow</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Delete untested</value>
+  </data>
+  <data name="EditGroup" xml:space="preserve">
+    <value>Edit Group</value>
+  </data>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Edit proxy group</value>
+  </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>For this group</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Group in use</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>A job is currently using this proxy group. Please stop and remove the job from the manager and try again.</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>Here you can import your proxies into several %groups%. Groups help keep proxies organized and give you the ability to use different proxies for different jobs. First of all you should create a group by clicking on the %Add Group% button above. Just give it a name. Make sure your new group is selected and then click on %Import Proxies%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>The %Import Proxies% menu will give you 3 ways to import your proxies. You can either %paste% them, %upload a file% or %type the URL% of a remote resource that provides proxies in a text format (usually one per line). You are also able to specify the default %type%, %username% and %password% for the proxies. Alternatively, you can use the %advanced syntax% described in the form in order to specify the type, username and password on a per-proxy basis.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Now you're all set and you will be able to select your proxy group when you create or edit a job. You can create a job of type %Proxy Check% in order to test if your proxies work before using them. The Proxy Check job will update the %country%, %status%, %ping% and %last check date% fields of your proxies in the data table of this page, so you can then %remove% proxies that don't work or have a ping that is too high for your needs. You can even decide to only keep proxies from a specific country!</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Imported" xml:space="preserve">
+    <value>Imported</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="ImportProxies" xml:space="preserve">
+    <value>Import Proxies</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="LastChecked" xml:space="preserve">
+    <value>Last Checked</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Please select an actual group first</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>No records to display</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>ping over</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Proxies deleted successfully</value>
+  </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Proxies imported successfully</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Proxy Group</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>The proxy group was created successfully!</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Do you really want to delete</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>results</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Results per page</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Slow</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

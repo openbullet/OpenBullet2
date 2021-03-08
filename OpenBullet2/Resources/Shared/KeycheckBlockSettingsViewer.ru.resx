@@ -117,46 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>How does this block work?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>The %Keycheck% block allows you to change the value of the `data.STATUS` predefined variable according to the result of some conditions. You can add %Keychains% to the block, and you can select how the status will change if a specific keychain is matched. The keychain also has a %mode% that can be %AND% or %OR%. In the first case, the condition of the keychain will be true if all the keys inside it are true. In the second case, it's enough that at least one key is true.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>Keys can be of various type, with respect to the type of the variable you're trying to compare.
+Keychains are checked from the first to the last, and as soon as the condition of one keychain is true the others will be skipped. If no keychain is matched, the status will be unchanged (note that the initial status of the bot at the start of the script is always `NONE`) or it will be set to `BAN` if the %Ban if no match% option was selected.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Label" xml:space="preserve">
+    <value>Label</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
-  </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
-  </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
 </root>

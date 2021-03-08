@@ -117,46 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
-  </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
-  </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
-  </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
-  </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
-  </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>Что такое LoliCode?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>%LoliCode% - это пользовательский язык сценариев, который действует как %intermediate language% между блоками и кодом C#, создаваемым из блоков. LoliCode может быть преобразован в блоки, просто нажав на раздел Stacker (независимо от того, что не надлежащий блок, перемещен в специальный Блок LoliCode), и блоки могут быть преобразованы в LoliCode, просто нажав на раздел LoliCode. Каждый блок автоматически преобразуется в фрагмент, который может быть идентифицирован через его ID.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>Отличительной особенностью кода LoliCode является то, что он может использоваться для интеграции исходного кода %C#% с блоками. Можно переносить блоки в операторы 'if', объявлять переменные и использовать возможности C#, используя его исходный синтаксис. В конце дня блоки также переводятся в код C#, так что вы получите 100% код C#, когда решите запустить файл конфигурации!</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Если при компиляции скрипта необходимо использовать классы из %namespace%, которые автоматически OB2 не импортируются, можно добавить их вверху, нажав кнопку %Переключить Использование% и прописать их в текстовое поле. Например, чтобы добавить пространство имен для класса 'Regex', можно ввести 'System.Text.RegularExpressions' в строке текстового поля.</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="LoliCodeEditor" xml:space="preserve">
+    <value>Редактор LoliCode</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="SaveScript" xml:space="preserve">
+    <value>Сохранить Скрипт</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Переключить Использование</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
-  </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Имена файлов, которые необходимо импортировать в созданный скрипт C#, Вы можетеуказать по одному на строку.</value>
   </data>
 </root>

@@ -117,46 +117,100 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuthenticatedAs" xml:space="preserve">
-    <value>Вы авторизованы как</value>
+  <data name="AddConfig" xml:space="preserve">
+    <value>Add config</value>
   </data>
-  <data name="BuildNumber" xml:space="preserve">
-    <value>Номер сборки</value>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
   </data>
-  <data name="ClientIpAddress" xml:space="preserve">
-    <value>IP-адрес клиента</value>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
   </data>
-  <data name="CPUUsage" xml:space="preserve">
-    <value>Использование CPU</value>
+  <data name="CannotShareRemoteConfig" xml:space="preserve">
+    <value>Cannot share remote config</value>
   </data>
-  <data name="CurrentWorkingDirectory" xml:space="preserve">
-    <value>Текущий рабочий каталог</value>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ConfigRemovedSuccessfully" xml:space="preserve">
+    <value>Config removed successfully</value>
+  </data>
+  <data name="ConfigsRemovedSuccessfully" xml:space="preserve">
+    <value>Configs removed successfully</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="CreateEndpoint" xml:space="preserve">
+    <value>Create endpoint</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="DeleteEndpoint" xml:space="preserve">
+    <value>Delete endpoint</value>
+  </data>
+  <data name="EditEndpoint" xml:space="preserve">
+    <value>Edit endpoint</value>
+  </data>
+  <data name="Endpoint" xml:space="preserve">
+    <value>Endpoint</value>
+  </data>
+  <data name="EndpointCreated" xml:space="preserve">
+    <value>Endpoint created</value>
+  </data>
+  <data name="ForThisEndpoint" xml:space="preserve">
+    <value>For this endpoint</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Теплый приём от Bulletta</value>
+    <value>What is this?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Здравствуйте и Добро пожаловать в %OpenBullet2%, меня зовут %Bulletta%, и я буду вашим проводником здесь. Ищите кнопки с моим лицом, и я выйду на экран, чтобы объяснить всё, что вам нужно!</value>
+    <value>This is where you can set up sharing %endpoints% for your configs so that other people can access them. You can %create% endpoints and %add% configs to them, and also specify the %Api Keys% that are authorized to receive the configs.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Я больше не буду тебя раздражать, думаю, увидимся тогда. Пока!</value>
+    <value>In order to share configs with a friend, you have to create an endpoint, add configs to it, set up at least one api key and send it to your friend, along with the %URL% of your endpoint. Your friend will then have to set it up in the %OB Settings &gt; Remote% section. For example, if your OpenBullet 2 instance is reachable on `1.1.1.1:5000` your friend needs to type `http://1.1.1.1:5000/api/shared/configs/ROUTE` where %ROUTE% is the name you gave to the endpoint.</value>
   </data>
-  <data name="LocalTime" xml:space="preserve">
-    <value>Местное время</value>
+  <data name="LastModified" xml:space="preserve">
+    <value>Last modified</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading</value>
   </data>
-  <data name="MemoryUsage" xml:space="preserve">
-    <value>Использование памяти</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="OperatingSystem" xml:space="preserve">
-    <value>Операционная система</value>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>No config selected</value>
   </data>
-  <data name="WebserverUptime" xml:space="preserve">
-    <value>Время работы Web-сервера</value>
+  <data name="NoEndpointSelected" xml:space="preserve">
+    <value>No endpoint selected</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Добро пожаловать в OpenBullet2</value>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Really delete</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Remote config</value>
+  </data>
+  <data name="RemoveAllConfigs" xml:space="preserve">
+    <value>Remove all configs</value>
+  </data>
+  <data name="RemoveConfig" xml:space="preserve">
+    <value>Remove config</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Removed</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Select config</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Uh-Oh</value>
   </data>
 </root>
