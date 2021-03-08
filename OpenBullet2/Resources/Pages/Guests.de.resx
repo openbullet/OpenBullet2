@@ -175,10 +175,10 @@
     <value>Wirklich löschen?</value>
   </data>
     <data name="DeleteEverything" xml:space="preserve">
-    <value>Do you really want to delete</value>
+    <value>Wirklich löschen?</value>
   </data>
   <data name="DeleteEverythingMessage" xml:space="preserve">
-    <value>Do you really want to delete everything</value>
+    <value>Wollen Sie wirklich alles löschen?</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>Ergebnisse</value>
