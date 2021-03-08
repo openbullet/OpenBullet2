@@ -40,22 +40,20 @@ namespace RuriLib.Services
                 : new GlobalSettings();
         }
 
+        /// <summary>
+        /// Saves the settings to the designated file.
+        /// </summary>
         public async Task Save()
-        {
-            await File.WriteAllTextAsync(RlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
-        }
+            => await File.WriteAllTextAsync(RlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
 
+        /// <summary>
+        /// Gets the currently supported statuses (including the custom ones defined in the Environment settings).
+        /// </summary>
         public string[] GetStatuses()
-        {
-            return (new string[]
-            {
-            "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR"
-                }).Concat(Environment.CustomStatuses.Select(s => s.Name)).ToArray();
-        }
+            => (new string[] { "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR" })
+            .Concat(Environment.CustomStatuses.Select(s => s.Name)).ToArray();
 
-        private string GetDefaultEnvironment()
-        {
-            return
+        private string GetDefaultEnvironment() => 
 @"[WORDLIST TYPE]
 Name=Default
 Regex=^.*$
@@ -104,6 +102,5 @@ Format=<DATA>:<PROXY>:<CAPTURE>
 [EXPORT FORMAT]
 Format=<DATA>\t<PROXY>\t<CAPTURE>\t
 ";
-        }
     }
 }

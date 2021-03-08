@@ -11,7 +11,7 @@ namespace RuriLib.Helpers
             if (name.Contains("."))
                 return name.Split('.').All(n => IsValid(n));
 
-            CodeDomProvider provider = CodeDomProvider.CreateProvider("C#");
+            var provider = CodeDomProvider.CreateProvider("C#");
             return provider.IsValidIdentifier(name);
         }
 
@@ -36,7 +36,7 @@ namespace RuriLib.Helpers
 
         public static string RandomName(int length = 4)
         {
-            Random rand = new Random();
+            var rand = new Random();
             const string chars = "abcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[rand.Next(s.Length)]).ToArray());

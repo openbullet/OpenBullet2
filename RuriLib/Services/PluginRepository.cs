@@ -65,20 +65,10 @@ namespace RuriLib.Services
                 .Select(p => Path.GetFileNameWithoutExtension(p));
 
         /// <summary>
-        /// Retrieves the path of folders that contain the dependencies of existing plugins.
-        /// </summary>
-        private IEnumerable<string> GetDependencyFolders()
-            => GetPluginNames().Select(p => Path.Combine(BaseFolder, p));
-
-        /// <summary>
         /// Retrieves the assemblies of all plugins and their references.
         /// </summary>
         public IEnumerable<Assembly> GetPluginsAndReferences()
             => GetReferences(GetPlugins());
-
-        // Builds a list of assemblies and their references recursively
-        private IEnumerable<Assembly> GetReferences(IEnumerable<Assembly> assemblies)
-            => assemblies.Concat(GetReferences(assemblies.SelectMany(a => a.GetReferencedAssemblies()).Select(n => Assembly.Load(n))));
 
         /// <summary>
         /// Adds a plugin from a .zip file.
@@ -120,9 +110,17 @@ namespace RuriLib.Services
             ReloadBlockDescriptors();
         }
 
+        // Retrieves the path of folders that contain the dependencies of existing plugins.
+        private IEnumerable<string> GetDependencyFolders()
+            => GetPluginNames().Select(p => Path.Combine(BaseFolder, p));
+
+        // Builds a list of assemblies and their references recursively
+        private IEnumerable<Assembly> GetReferences(IEnumerable<Assembly> assemblies)
+            => assemblies.Concat(GetReferences(assemblies.SelectMany(a => a.GetReferencedAssemblies()).Select(n => Assembly.Load(n))));
+
+        // Recreates the descriptors repository and loads the plugins
         private void ReloadBlockDescriptors()
         {
-            // Recreate the descriptors repository and load the plugins
             Globals.DescriptorsRepository.Recreate();
             GetPlugins().ToList().ForEach(p => Globals.DescriptorsRepository.AddFromExposedMethods(p));
         }

@@ -17,10 +17,10 @@ namespace RuriLib.Helpers.Transpilers
                 return new List<BlockInstance>();
 
             var lines = script.Split(new string[] { "\n", "\r\n" }, System.StringSplitOptions.None);
-            List<BlockInstance> stack = new List<BlockInstance>();
+            var stack = new List<BlockInstance>();
 
-            int localLineNumber = 0;
-            int lineNumber = 0;
+            var localLineNumber = 0;
+            var lineNumber = 0;
             string line, trimmedLine;
 
             while (localLineNumber < lines.Length)
@@ -44,12 +44,12 @@ namespace RuriLib.Helpers.Transpilers
                     if (!match.Success)
                         throw new LoliCodeParsingException(lineNumber, "Could not parse the block id");
 
-                    string blockId = match.Groups[1].Value;
+                    var blockId = match.Groups[1].Value;
 
                     // Create the block
                     var block = BlockFactory.GetBlock<BlockInstance>(blockId);
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
 
                     // As long as we don't find the ENDBLOCK token, add lines to the StringBuilder
                     while (localLineNumber < lines.Length)
@@ -64,7 +64,7 @@ namespace RuriLib.Helpers.Transpilers
                         sb.AppendLine(trimmedLine);
                     }
 
-                    string blockOptions = sb.ToString();
+                    var blockOptions = sb.ToString();
                     block.FromLC(ref blockOptions, ref lineNumber); // This can throw a LoliCodeParsingException
                     lineNumber++; // Add one line for the ENDBLOCK statement
                     
@@ -77,7 +77,7 @@ namespace RuriLib.Helpers.Transpilers
                     var descriptor = new LoliCodeBlockDescriptor();
                     var block = new LoliCodeBlockInstance(descriptor);
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
 
                     sb.Append(line);
 
