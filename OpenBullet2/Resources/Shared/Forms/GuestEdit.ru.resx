@@ -133,7 +133,7 @@
     <value>Гость с таким именем уже существует</value>
   </data>
   <data name="InvalidUsername" xml:space="preserve">
-    Имя пользователя должно содержать от 3 до 32 символов</value>
+    <value>Имя пользователя должно содержать от 3 до 32 символов</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Ок</value>
