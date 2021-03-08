@@ -9,8 +9,8 @@ namespace Updater
 {
     internal class Program
     {
-        private static Version remoteVersion = new(0, 0, 1);
-        private static Version currentVersion = new(0, 0, 1);
+        private static Version remoteVersion = new(0, 1, 0);
+        private static Version currentVersion = new(0, 1, 0);
         private static JToken release = null;
         private static Stream stream;
 
