@@ -174,6 +174,12 @@
   <data name="ReallyDelete" xml:space="preserve">
     <value>Voulez-vous vraiment supprimer?</value>
   </data>
+  <data name="DeleteEverything" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer?</value>
+  </data>
+  <data name="DeleteEverythingMessage" xml:space="preserve">
+    <value>Voulez-vous vraiment tout supprimer</value>
+  </data>
   <data name="results" xml:space="preserve">
     <value>résultats</value>
   </data>
