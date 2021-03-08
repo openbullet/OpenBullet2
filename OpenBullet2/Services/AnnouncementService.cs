@@ -26,6 +26,7 @@ namespace OpenBullet2.Services
                 {
                     var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/{culture}.md";
                     using HttpClient client = new();
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
                     var response = await client.GetAsync(url);
 
                     if (!response.IsSuccessStatusCode)

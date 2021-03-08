@@ -12,6 +12,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var client = new HttpClient();
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
 
         try
         {
