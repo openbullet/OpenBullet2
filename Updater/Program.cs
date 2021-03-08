@@ -29,7 +29,7 @@ namespace Updater
 
                 // Take the first and get its name
                 var json = response.Content.ReadAsStringAsync().Result;
-                release = JToken.Parse(json);
+                release = JToken.Parse(json)[0];
                 var releaseName = release["name"].ToString();
 
                 // Try to parse that name to a Version object
