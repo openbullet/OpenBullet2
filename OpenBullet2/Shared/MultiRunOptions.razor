@@ -129,7 +129,7 @@
         {
             selectedConfig = result.Data as Config;
             Options.ConfigId = selectedConfig.Id;
-            Options.Bots = Math.Clamp(selectedConfig.Settings.GeneralSettings.SuggestedBots, 1, 100);
+            Options.Bots = Math.Clamp(selectedConfig.Settings.GeneralSettings.SuggestedBots, 1, 200);
             await TryApplyRecord();
         }
     }
