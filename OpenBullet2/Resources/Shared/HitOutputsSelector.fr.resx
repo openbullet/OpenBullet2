@@ -129,6 +129,15 @@
   <data name="DiscordWebhook" xml:space="preserve">
     <value>Discord webhook</value>
   </data>
+  <data name="TelegramBot" xml:space="preserve">
+    <value>Bot Telegram</value>
+  </data>
+  <data name="Token" xml:space="preserve">
+    <value>Bot token</value>
+  </data>
+  <data name="ChatId" xml:space="preserve">
+    <value>Chat ID</value>
+  </data>
   <data name="FileSystem" xml:space="preserve">
     <value>Système de fichiers</value>
   </data>
@@ -143,5 +152,8 @@
   </data>
   <data name="WebhookURL" xml:space="preserve">
     <value>URL de Webhook</value>
+  </data>
+  <data name="ApiServer" xml:space="preserve">
+    <value>Serveur API</value>
   </data>
 </root>

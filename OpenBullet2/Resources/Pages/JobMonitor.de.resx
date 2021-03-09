@@ -208,7 +208,7 @@
     <value>Fortschritt</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Proxies neu laden</value>
+    <value>Proxies neu laden</value>               
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>

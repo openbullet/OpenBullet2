@@ -270,4 +270,7 @@
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
   </data>
+  <data name="inChat" xml:space="preserve">
+    <value>in chat</value>
+  </data>
 </root>

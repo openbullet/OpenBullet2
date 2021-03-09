@@ -162,6 +162,10 @@
                                     case DiscordWebhookAction a:
                                         <span>@Loc["Send"] @a.Message @Loc["onWebhook"] @a.Webhook</span>
                                         break;
+                                        
+                                    case TelegramBotAction a:
+                                        <span>@Loc["Send"] @a.Message @Loc["inChat"] @a.ChatId</span>
+                                        break;
 
                                     case ReloadProxiesAction a:
                                         <span>@Loc["ReloadProxies"]</span>
