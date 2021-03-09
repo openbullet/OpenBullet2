@@ -129,11 +129,8 @@
   <data name="minutes" xml:space="preserve">
     <value>Minuten</value>
   </data>
- <data name="onWebhook" xml:space="preserve">
+  <data name="onWebhook" xml:space="preserve">
     <value>an Webhook</value>
-  </data>
-  <data name="inChat" xml:space="preserve">
-    <value>chat</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
     <value>Proxies neu laden</value>

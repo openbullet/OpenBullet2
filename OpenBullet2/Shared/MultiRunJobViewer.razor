@@ -106,7 +106,7 @@
                             break;
                             
                         case TelegramBotHitOutput x:
-                            <span class="fg-retry ml-1">@Loc["TelegramBot"] (@x.Token)</span>
+                            <span class="fg-retry ml-1">@Loc["TelegramBot"] (ID: @x.Token.Split(':')[0])</span>
                             break;
                     }
                 }

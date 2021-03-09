@@ -70,10 +70,16 @@
                             <InputText @bind-Value="x.AvatarUrl" />
                         </div>
                         break;
-                        
+
                     case TelegramBotHitOutputOptions x:
                         <div class="col-auto">
                             <span class="fg-retry">@Loc["TelegramBot"]</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["ApiServer"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.ApiServer" />
                         </div>
                         <div class="col-auto px-1">
                             <span>@Loc["Token"]:</span>
@@ -85,13 +91,14 @@
                             <span>@Loc["ChatId"]:</span>
                         </div>
                         <div class="col align-self-stretch px-1">
-                            <InputText @bind-Value="x.ChatId" />
+                            <InputNumber @bind-Value="x.ChatId" />
                         </div>
                         break;
                 }
                 <div class="col-auto">
                     <button class="btn btn-sm btn-outline-danger" @onclick="(() => HitOutputs.Remove(output))">
-                        <span class="oi oi-x"></span></button>
+                        <span class="oi oi-x"></span>
+                    </button>
                 </div>
             </div>
         </EditForm>

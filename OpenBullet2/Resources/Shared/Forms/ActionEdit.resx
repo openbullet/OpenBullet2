@@ -156,4 +156,10 @@
   <data name="Wait" xml:space="preserve">
     <value>Wait</value>
   </data>
+  <data name="inChat" xml:space="preserve">
+    <value>in chat</value>
+  </data>
+  <data name="onApiServer" xml:space="preserve">
+    <value>on API server</value>
+  </data>
 </root>

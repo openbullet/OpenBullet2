@@ -153,4 +153,7 @@
   <data name="WebhookURL" xml:space="preserve">
     <value>Webhook URL</value>
   </data>
+  <data name="ApiServer" xml:space="preserve">
+    <value>API server</value>
+  </data>
 </root>

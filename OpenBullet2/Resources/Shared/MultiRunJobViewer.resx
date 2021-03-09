@@ -202,7 +202,7 @@
     <value>Telegram bot</value>
   </data>
   <data name="Token" xml:space="preserve">
-    <value>Bot token</value>
+    <value>Token</value>
   </data>
   <data name="ChatId" xml:space="preserve">
     <value>Chat ID</value>

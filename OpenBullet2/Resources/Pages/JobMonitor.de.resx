@@ -201,14 +201,8 @@
   <data name="New" xml:space="preserve">
     <value>Neu</value>
   </data>
- <data name="onWebhook" xml:space="preserve">
+  <data name="onWebhook" xml:space="preserve">
     <value>an Webhook</value>
-  </data>
-  <data name="inChat" xml:space="preserve">
-    <value>chat</value>
-  </data>
-  <data name="inChat" xml:space="preserve">
-    <value>chat</value>
   </data>
   <data name="Progress" xml:space="preserve">
     <value>Fortschritt</value>

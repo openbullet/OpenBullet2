@@ -199,13 +199,13 @@
     <value>Discord webhook</value>
   </data>
   <data name="TelegramBot" xml:space="preserve">
-    <value>Telegram bot</value>
+    <value>Bot Telegram</value>
   </data>
   <data name="Token" xml:space="preserve">
-    <value>Bot token</value>
+    <value>Token</value>
   </data>
   <data name="ChatId" xml:space="preserve">
-    <value>Chat ID</value>
+    <value>ID du chat</value>
   </data>
   <data name="EditBotsAmount" xml:space="preserve">
     <value>Modifier le montant des bots</value>
