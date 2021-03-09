@@ -215,6 +215,8 @@
 
         case JobStatus.Paused:
             <button class="btn btn-sm btn-outline-success" @onclick="Resume"><span class="oi oi-media-play"></span> @Loc["Resume"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
         case JobStatus.Running:
