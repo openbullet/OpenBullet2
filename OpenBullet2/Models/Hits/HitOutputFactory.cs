@@ -21,7 +21,7 @@ namespace OpenBullet2.Models.Hits
                 DatabaseHitOutputOptions _ => new DatabaseHitOutput(hitRepo),
                 FileSystemHitOutputOptions x => new FileSystemHitOutput(x.BaseDir),
                 DiscordWebhookHitOutputOptions x => new DiscordWebhookHitOutput(x.Webhook, x.Username, x.AvatarUrl),
-                TelegramBotHitOutputOptions x => new TelegramBotHitOutput(x.Token, x.ChatId),
+                TelegramBotHitOutputOptions x => new TelegramBotHitOutput(x.ApiServer, x.Token, x.ChatId),
                 _ => throw new NotImplementedException()
             };
 

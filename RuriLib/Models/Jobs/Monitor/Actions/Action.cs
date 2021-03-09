@@ -90,18 +90,21 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
     // Sends a message through a telegram bot
     public class TelegramBotAction : Action
     {
+        public string ApiServer { get; set; } = "https://api.telegram.org/";
         public string Token { get; set; } = string.Empty;
-        public string ChatId { get; set; } = string.Empty;
+        public long ChatId { get; set; } = 0;
         public string Message { get; set; } = string.Empty;
 
         public async override Task Execute(int currentJob, IEnumerable<Job> jobs)
         {
             using var client = new HttpClient();
-            var webhook = $"https://api.telegram.org/bot{Token}/sendMessage";
-            var obj = new JObject
+
+            var webhook = $"{new Uri(ApiServer)}bot{Token}/sendMessage";
+
+            var obj = new Dictionary<string, object>()
             {
-                { "chat_id", JToken.FromObject(ChatId) },
-                { "text", JToken.FromObject(Message) }
+                { "chat_id", ChatId },
+                { "text", Message }
             };
 
             await client.PostAsync(webhook, 

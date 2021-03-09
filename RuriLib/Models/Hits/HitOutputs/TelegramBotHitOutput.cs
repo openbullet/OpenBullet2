@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,11 +9,13 @@ namespace RuriLib.Models.Hits.HitOutputs
 {
     public class TelegramBotHitOutput : IHitOutput
     {
+        public string ApiServer { get; set; }
         public string Token { get; set; }
-        public string ChatId { get; set; }
+        public long ChatId { get; set; }
 
-        public TelegramBotHitOutput(string token = "", string chatId = "")
+        public TelegramBotHitOutput(string apiServer, string token, long chatId)
         {
+            ApiServer = apiServer;
             Token = token;
             ChatId = chatId;
         }
@@ -20,14 +23,16 @@ namespace RuriLib.Models.Hits.HitOutputs
         public async Task Store(Hit hit)
         {
             using var client = new HttpClient();
-            var webhook = $"https://api.telegram.org/bot{Token}/sendMessage";
-            var obj = new JObject
+
+            var webhook = $"{new Uri(ApiServer)}bot{Token}/sendMessage";
+
+            var obj = new Dictionary<string, object>()
             {
-                { "chat_id", JToken.FromObject(ChatId) },
-                { "text", JToken.FromObject(hit.ToString()) }
+                { "chat_id", ChatId },
+                { "text", hit.ToString() }
             };
 
-            await client.PostAsync(webhook, 
+            await client.PostAsync(webhook,
                 new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
         }
     }
