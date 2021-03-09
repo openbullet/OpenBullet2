@@ -86,7 +86,7 @@ namespace RuriLib.Parallelization
         private async void Run()
         {
             // Skip the items
-            var items = workItems.Skip(skip).GetEnumerator();
+            using var items = workItems.Skip(skip).GetEnumerator();
 
             while (items.MoveNext())
             {

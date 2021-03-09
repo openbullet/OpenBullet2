@@ -115,7 +115,7 @@ namespace RuriLib.Parallelization
             dopDecreaseRequested = false;
 
             // Skip the items
-            var items = workItems.Skip(skip).GetEnumerator();
+            using var items = workItems.Skip(skip).GetEnumerator();
 
             // Create the queue
             queue = new ConcurrentQueue<TInput>();
