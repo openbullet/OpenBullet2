@@ -96,14 +96,13 @@ namespace Updater
                     // it's currently being executed, so it's better to just ignore them
                     try
                     {
-                        entry.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), entry.FullName));
+                        entry.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), entry.FullName), true);
                     }
                     catch
                     {
 
                     }
                 }
-                archive.ExtractToDirectory(Directory.GetCurrentDirectory());
             }
             catch (Exception ex)
             {

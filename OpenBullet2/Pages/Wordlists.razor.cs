@@ -22,6 +22,8 @@ using System.Globalization;
 using GridMvc.Server;
 using Microsoft.AspNetCore.Http;
 using OpenBullet2.Services;
+using RuriLib.Models.Data.DataPools;
+using RuriLib.Models.Jobs;
 
 namespace OpenBullet2.Pages
 {
@@ -30,6 +32,7 @@ namespace OpenBullet2.Pages
         [Inject] private IModalService Modal { get; set; }
         [Inject] private IWordlistRepository WordlistRepo { get; set; }
         [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private JobManagerService Manager { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
 
@@ -153,6 +156,19 @@ namespace OpenBullet2.Pages
             {
                 await ShowNoWordlistSelectedWarning();
                 return;
+            }
+
+            var jobsUsingSelectedWordlist = Manager.Jobs.OfType<MultiRunJob>().Where(j => j.DataPool is WordlistDataPool wl && wl.Wordlist.Id == selectedWordlist.Id);
+
+            if (jobsUsingSelectedWordlist.Any(j => j.Status != JobStatus.Idle))
+            {
+                await js.AlertError(Loc["Uh-Oh"], Loc["WordlistInUse"]);
+                return;
+            }
+
+            foreach (var job in jobsUsingSelectedWordlist.Where(j => j.Status == JobStatus.Idle))
+            {
+                job.DataPool = new InfiniteDataPool();
             }
 
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selectedWordlist.Name}?", Loc["Cancel"]))

@@ -204,4 +204,7 @@
   <data name="Uh-Oh" xml:space="preserve">
     <value>Uh-Oh</value>
   </data>
+  <data name="WordlistInUse" xml:space="preserve">
+    <value>This wordlist is in use by a running job, please abort or delete it before</value>
+  </data>
 </root>
