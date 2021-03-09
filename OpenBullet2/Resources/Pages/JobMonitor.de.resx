@@ -201,14 +201,20 @@
   <data name="New" xml:space="preserve">
     <value>Neu</value>
   </data>
-  <data name="onWebhook" xml:space="preserve">
+ <data name="onWebhook" xml:space="preserve">
     <value>an Webhook</value>
+  </data>
+  <data name="inChat" xml:space="preserve">
+    <value>chat</value>
+  </data>
+  <data name="inChat" xml:space="preserve">
+    <value>chat</value>
   </data>
   <data name="Progress" xml:space="preserve">
     <value>Fortschritt</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Proxies neu laden</value>
+    <value>Proxies neu laden</value>               
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>

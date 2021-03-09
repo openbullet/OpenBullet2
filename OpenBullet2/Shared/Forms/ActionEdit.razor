@@ -46,6 +46,15 @@
             <span>@Loc["onWebhook"]</span>
             <InputText @bind-Value="a.Webhook" />
             break;
+            
+        case TelegramBotAction a:
+            <span>@Loc["Send"]</span>
+            <InputText @bind-Value="a.Message" />
+            <span>@Loc["inChat"]</span>
+            <InputText @bind-Value="a.ChatId" />
+            <span>@Loc["withBot"]</span>
+            <InputText @bind-Value="a.Token" />
+            break;
 
         case ReloadProxiesAction a:
             <span>@Loc["ReloadProxies"]</span>

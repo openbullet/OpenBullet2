@@ -86,4 +86,26 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
                 new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
         }
     }
+    
+    // Sends a message through a telegram bot
+    public class TelegramBotAction : Action
+    {
+        public string Token { get; set; } = string.Empty;
+        public string ChatId { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+
+        public async override Task Execute(int currentJob, IEnumerable<Job> jobs)
+        {
+            using var client = new HttpClient();
+            var webhook = $"https://api.telegram.org/bot{Token}/sendMessage";
+            var obj = new JObject
+            {
+                { "chat_id", JToken.FromObject(ChatId) },
+                { "text", JToken.FromObject(Message) }
+            };
+
+            await client.PostAsync(webhook, 
+                new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
+        }
+    }
 }
