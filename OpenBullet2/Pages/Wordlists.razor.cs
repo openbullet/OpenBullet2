@@ -123,10 +123,15 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                var entity = result.Data as WordlistEntity;
-                entity.Owner = await GuestRepo.Get(uid);
-                await WordlistRepo.Add(entity);
-                wordlists.Add(entity);
+                var entities = result.Data as List<WordlistEntity>;
+
+                foreach (var entity in entities)
+                {
+                    entity.Owner = await GuestRepo.Get(uid);
+                    await WordlistRepo.Add(entity);
+                    wordlists.Add(entity);
+                }
+
                 await js.AlertSuccess(Loc["Added"], Loc["AddedWordlist"]);
             }
 

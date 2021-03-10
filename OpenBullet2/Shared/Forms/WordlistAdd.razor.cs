@@ -26,8 +26,8 @@ namespace OpenBullet2.Shared.Forms
 
         private ElementReference inputTypeFileElement;
         private List<string> wordlistTypes;
-        private WordlistEntity wordlist;
-        private MemoryStream memoryStream;
+        private string selectedWordlistType;
+        private Dictionary<WordlistEntity, MemoryStream> wordlists;
         private long max;
         private long value;
         private decimal progress;
@@ -40,12 +40,7 @@ namespace OpenBullet2.Shared.Forms
         protected override async Task OnInitializedAsync()
         {
             wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
-
-            wordlist = new WordlistEntity
-            {
-                Name = "My Wordlist",
-                Type = wordlistTypes.First()
-            };
+            selectedWordlistType = wordlistTypes.First();
 
             baseDirectory = Directory.Exists("UserData") ? "UserData" : Directory.GetCurrentDirectory();
             await LoadTree(baseDirectory);
@@ -55,33 +50,49 @@ namespace OpenBullet2.Shared.Forms
         {
             max = 0;
             value = 0;
+            progress = 0;
             StateHasChanged();
-            var files = (await FileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync()).ToList();
-            var file = files.FirstOrDefault();
 
-            if (file == null)
+            var files = (await FileReaderService.CreateReference(inputTypeFileElement).EnumerateFilesAsync()).ToList();
+
+            if (files.Count == 0)
                 return;
 
-            var fileInfo = await file.ReadFileInfoAsync();
-            wordlist.Name = Path.GetFileNameWithoutExtension(fileInfo.Name);
-            max = fileInfo.Size;
-            StateHasChanged();
+            max = files.Count;
+            wordlists = new();
 
-            using (var fs = await file.OpenReadAsync())
+            foreach (var file in files)
             {
+                var fileInfo = await file.ReadFileInfoAsync();
+
+                var wordlist = new WordlistEntity()
+                {
+                    Name = Path.GetFileNameWithoutExtension(fileInfo.Name),
+                    Type = selectedWordlistType
+                };
+
+                var memoryStream = new MemoryStream();
+
+                wordlists.Add(wordlist, memoryStream);
+
+                StateHasChanged();
+
+                await using var fs = await file.OpenReadAsync();
                 var buffer = new byte[20480];
-                memoryStream = new MemoryStream();
                 int count;
+
                 while ((count = await fs.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    value += count;
-                    progress = ((decimal)fs.Position * 100) / fs.Length;
-                    await InvokeAsync(StateHasChanged);
                     await Task.Delay(1);
                     await memoryStream.WriteAsync(buffer, 0, count);
                 }
+
+                value++;
+                progress = (decimal)value / max * 100;
+
+                StateHasChanged();
             }
-            StateHasChanged();
+
             validUpload = true;
         }
 
@@ -121,15 +132,18 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            var fileName = Path.Combine("UserData", "Wordlists", Guid.NewGuid().ToString() + ".txt").Replace('\\', '/');
-            FileStream fs = new(fileName, FileMode.Create);
-            memoryStream.CopyTo(fs);
-            fs.Close();
-            wordlist.FileName = fileName;
-            wordlist.Total = File.ReadLines(fileName).Count();
+            foreach (var wordlist in wordlists)
+            {
+                wordlist.Value.Seek(0, SeekOrigin.Begin);
+                var fileName = Path.Combine("UserData", "Wordlists", Guid.NewGuid().ToString() + ".txt").Replace('\\', '/');
+                FileStream fs = new(fileName, FileMode.Create);
+                wordlist.Value.CopyTo(fs);
+                fs.Close();
+                wordlist.Key.FileName = fileName;
+                wordlist.Key.Total = File.ReadLines(fileName).Count();
+            }
 
-            BlazoredModal.Close(ModalResult.Ok(wordlist));
+            BlazoredModal.Close(ModalResult.Ok(wordlists.Select(wl => wl.Key).ToList()));
         }
 
         private async Task SelectFile()
@@ -140,13 +154,24 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            wordlist.FileName = selectedNode.Path;
-            wordlist.Total = File.ReadLines(selectedNode.Path).Count();
-            BlazoredModal.Close(ModalResult.Ok(wordlist));
+            BlazoredModal.Close(ModalResult.Ok(new List<WordlistEntity>() {
+                new() {
+                    FileName = selectedNode.Path,
+                    Total = File.ReadLines(selectedNode.Path).Count()
+                }
+            }));
         }
 
         public void Dispose()
-            => memoryStream?.Close();
+        {
+            if (wordlists != null)
+            {
+                foreach (var memoryStream in wordlists.Select(wl => wl.Value))
+                {
+                    memoryStream.Close();
+                }
+            }
+        }
 
         ~WordlistAdd()
             => Dispose();
