@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using RuriLib.Proxies;
-using System.Text;
 using RuriLib.Proxies.Exceptions;
 using System.Collections.Generic;
 using RuriLib.Http.Models;
@@ -114,7 +113,7 @@ namespace RuriLib.Http
         }
 
         /// <summary>
-        /// Asynchronously sends a <paramref name="request"/> and returns an <see cref="HttpResponseMessage"/>.
+        /// Asynchronously sends a <paramref name="request"/> and returns an <see cref="HttpResponse"/>.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token to cancel the operation</param>
         public async Task<HttpResponse> SendAsync(HttpRequest request,
