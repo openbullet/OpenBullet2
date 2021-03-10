@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AllDone" xml:space="preserve">
-    <value>All done!</value>
+    <value>Tudo feito!</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Tem certeza?</value>
@@ -187,7 +187,7 @@
     <value>Um %.opk% arquivo é um %Arquivo .zip% que contém alguns arquivos dentro dele. O primeiro arquivo é %metadata.json%, que contém o nome, autor e ícone da configuração. O ícone é uma imagem codificada em base64 que também pode ser um GIF. O arquivo %readme.md% conterá uma descrição da configuração, que será mostrada ao usuário quando ele abrir o menu de seleção de configuração durante o processo de configuração do trabalho. Suporta a linguagem markdown. O arquivo %settings.json% conterá as configuração da Config.</value>
   </data>
   <data name="Help3x02" xml:space="preserve">
-    <value>Finalmente, se sua configuração usa stacker, as instruções serão salvas como um script LoliCode dentro do arquivo %script.loli%. Se, em vez disso, você decidir converter sua configuração para apenas C#, um arquivo chamado %script.cs% será criado com o código C# para ser executado.</value>
+    <value>Finalmente, se sua configuração usa o stacker, as instruções serão salvas como um script LoliCode dentro do arquivo %script.loli%. Se, em vez disso, você decidir converter sua configuração para apenas C#, um arquivo chamado %script.cs% será criado com o código C# para ser executado.</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Ultima Modificação</value>
@@ -199,7 +199,7 @@
     <value>Configurações Locais</value>
   </data>
   <data name="MissingPlugin" xml:space="preserve">
-    <value>Faltando plug-in</value>
+    <value>Plug-in não foi encontrado</value>
   </data>
   <data name="MissingPluginText" xml:space="preserve">
     <value>A configuração foi construída com este plugin, mas está faltando.</value>

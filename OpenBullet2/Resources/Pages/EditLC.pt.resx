@@ -121,13 +121,13 @@
     <value>O que é LoliCode?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%LoliCode% é uma linguagem de script personalizada que atua como uma %linguagem intermediária% entre os blocos e o código C# gerado a partir dos blocos. LoliCode pode ser convertido em blocos simplesmente clicando na seção Stacker (o que não for um bloco apropriado é movido para um Bloco LoliCode especial), e os blocos podem ser convertidos em LoliCode simplesmente clicando na seção LoliCode. Cada bloco é traduzido automaticamente em um snippet que pode ser identificado por meio de seu id.</value>
+    <value>%LoliCode% é uma linguagem de script personalizada que atua como uma %linguagem intermediária% entre os blocos e o código C# gerado a partir dos blocos. LoliCode pode ser convertido em blocos simplesmente clicando na seção Stacker (o que não for um bloco apropriado é movido para um Bloco LoliCode especial), e os blocos podem ser convertidos em LoliCode simplesmente clicando na seção %LoliCode%. Cada bloco é traduzido automaticamente em um snippet que pode ser identificado por meio de seu id.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Um grande recurso do LoliCode é que ele pode ser usado para integrar código %C#% bruto com blocos. Você pode envolver blocos em instruções `if`, declarar variáveis ​​e aproveitar as vantagens dos recursos do C# usando sua sintaxe original. No final do dia, os blocos também são traduzidos em código C#, então você acabará com código 100% C# quando decidir executar sua configuração!</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Se você precisar usar classes etc. de um %namespace% que não é importado automaticamente pelo OB2 ao compilar o script, você pode adicioná-lo no topo clicando no botão %Alternar usos% e escrevendo-os na caixa de texto. Por exemplo, para adicionar o namespace para a classe `Regex`, você pode digitar `System.Text.RegularExpressions` em uma linha da caixa de texto.</value>
+    <value>Se você precisar usar classes e outras propriedades de um %namespace% que não é importado automaticamente pelo OB2 ao compilar o script, você pode adicioná-lo no topo clicando no botão %Importar Namespaces% e escrevendo-os na caixa de texto. Por exemplo, para adicionar o namespace para a classe `Regex`, você pode digitar `System.Text.RegularExpressions` em uma linha da caixa de texto.</value>
   </data>
   <data name="LoliCodeEditor" xml:space="preserve">
     <value>Editor LoliCode</value>
@@ -136,7 +136,7 @@
     <value>Salvar script</value>
   </data>
   <data name="ToggleUsings" xml:space="preserve">
-    <value>Alternar usos</value>
+    <value>Importar Namespaces</value>
   </data>
   <data name="UsingsInfo" xml:space="preserve">
     <value>Você pode digitar namespaces que gostaria de importar no script C# gerado, um por linha.</value>

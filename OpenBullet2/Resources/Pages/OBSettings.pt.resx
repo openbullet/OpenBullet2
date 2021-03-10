@@ -124,7 +124,7 @@
     <value>Duração da sessão de administrador (horas)</value>
   </data>
   <data name="AdminUsername" xml:space="preserve">
-    <value>Nome de usuário do administrador</value>
+    <value>Nome de usuário administrador</value>
   </data>
   <data name="AllDone" xml:space="preserve">
     <value>Tudo feito</value>
@@ -163,7 +163,7 @@
     <value>Feito</value>
   </data>
   <data name="EnableJobLogging" xml:space="preserve">
-    <value>Habilite o registro na página do visualizador de trabalhos</value>
+    <value>Habilite o log na página do visualizador de trabalhos</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>Geral</value>
@@ -187,7 +187,7 @@
     <value>Número máximo de entradas no log</value>
   </data>
   <data name="LogToFile" xml:space="preserve">
-    <value>Log para um arquivo também</value>
+    <value>Salvar log em um arquivo</value>
   </data>
   <data name="MonacoTheme" xml:space="preserve">
     <value>Tema Monaco</value>
@@ -205,7 +205,7 @@
     <value>Tocar som quando der alguma live</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
-    <value>Alvos de verificação de proxy</value>
+    <value>Alvos para verificação de proxy</value>
   </data>
   <data name="ProxyCheckTargetsDescription" xml:space="preserve">
     <value>Esses são os destinos de proxy disponíveis em um trabalho de verificação de proxy. Os proxies serão verificados em relação ao URL de destino e se a chave de sucesso for encontrada na fonte baixada, o proxy será marcado como funcionando.</value>
@@ -220,7 +220,7 @@
     <value>Estes são os endpoints remotos que serão consultados na recarga do repositório de configuração para obter configurações hospedadas em outra máquina.</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Retirar</value>
+    <value>Remover</value>
   </data>
   <data name="RequireAdminLogin" xml:space="preserve">
     <value>Requer login de administrador</value>
