@@ -21,7 +21,10 @@ namespace RuriLib.Models.Proxies.ProxySources
             var response = await client.GetAsync(Url);
             var content = await response.Content.ReadAsStringAsync();
             var lines = content.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            return lines.Select(l => Proxy.Parse(l, DefaultType, DefaultUsername, DefaultPassword));
+
+            return lines
+                .Select(l => Proxy.TryParse(l, out var proxy, DefaultType, DefaultUsername, DefaultPassword) ? proxy : null)
+                .Where(p => p != null);
         }
     }
 }

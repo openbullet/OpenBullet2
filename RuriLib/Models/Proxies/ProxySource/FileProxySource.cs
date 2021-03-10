@@ -17,7 +17,10 @@ namespace RuriLib.Models.Proxies.ProxySources
         public override async Task<IEnumerable<Proxy>> GetAll()
         {
             var lines = await File.ReadAllLinesAsync(FileName);
-            return lines.Select(l => Proxy.Parse(l, DefaultType, DefaultUsername, DefaultPassword));
+
+            return lines
+                .Select(l => Proxy.TryParse(l, out var proxy, DefaultType, DefaultUsername, DefaultPassword) ? proxy : null)
+                .Where(p => p != null);
         }
     }
 }
