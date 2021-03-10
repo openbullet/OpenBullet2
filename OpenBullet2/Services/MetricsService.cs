@@ -81,10 +81,28 @@ namespace OpenBullet2.Services
             netDownload = GetCurrentNetDownload(interfaces) - startDownload;
         }
 
-        private long GetCurrentNetUpload(NetworkInterface[] interfaces)
-            => interfaces.Select(i => i.GetIPv4Statistics().BytesSent).Sum();
+        private static long GetCurrentNetUpload(NetworkInterface[] interfaces)
+        {
+            try
+            {
+                return interfaces.Select(i => i.GetIPv4Statistics().BytesSent).Sum();
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
-        private long GetCurrentNetDownload(NetworkInterface[] interfaces)
-            => interfaces.Select(i => i.GetIPv4Statistics().BytesReceived).Sum();
+        private static long GetCurrentNetDownload(NetworkInterface[] interfaces)
+        {
+            try
+            {
+                return interfaces.Select(i => i.GetIPv4Statistics().BytesReceived).Sum();
+            }
+            catch
+            {
+                return 0;
+            }
+        }
     }
 }
