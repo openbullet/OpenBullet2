@@ -138,6 +138,12 @@
   <data name="CopyDataCapture" xml:space="preserve">
     <value>Copia dati + cattura</value>
   </data>
+  <data name="CopyToClipboardFailed" xml:space="preserve">
+    <value>Copia negli appunti fallita</value>
+  </data>
+  <data name="CopyToClipboardFailedMessage" xml:space="preserve">
+    <value>La copia negli appunti è fallita. Nota: Se accedi a OB2 da remoto via HTTP (e non HTTPS) il browser bloccherà la copia per proteggerti da potenziali rischi.</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Dati</value>
   </data>

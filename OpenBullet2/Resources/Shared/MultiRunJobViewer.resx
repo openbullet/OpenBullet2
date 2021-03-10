@@ -384,4 +384,10 @@
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>
   </data>
+  <data name="CopyToClipboardFailed" xml:space="preserve">
+    <value>Copy to clipboard failed</value>
+  </data>
+  <data name="CopyToClipboardFailedMessage" xml:space="preserve">
+    <value>The copy to clipboard failed. Note: If you're accessing OB2 remotely through HTTP (and not HTTPS) the browser will block the copy to protect you from potential risks.</value>
+  </data>
 </root>

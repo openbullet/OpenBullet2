@@ -333,7 +333,14 @@ namespace OpenBullet2.Shared
             var sb = new StringBuilder();
             selectedHits.ForEach(i => sb.AppendLine($"{i.Data.Data} | {i.CapturedDataString}"));
 
-            await js.CopyToClipboard(sb.ToString());
+            try
+            {
+                await js.CopyToClipboard(sb.ToString());
+            }
+            catch
+            {
+                await js.AlertError(Loc["CopyToClipboardFailed"], Loc["CopyToClipboardFailedMessage"]);
+            }
         }
 
         private async Task CopyHitData()
@@ -347,7 +354,14 @@ namespace OpenBullet2.Shared
             var sb = new StringBuilder();
             selectedHits.ForEach(i => sb.AppendLine(i.Data.Data));
 
-            await js.CopyToClipboard(sb.ToString());
+            try
+            {
+                await js.CopyToClipboard(sb.ToString());
+            }
+            catch
+            {
+                await js.AlertError(Loc["CopyToClipboardFailed"], Loc["CopyToClipboardFailedMessage"]);
+            }
         }
 
         private async Task SendToDebugger()
