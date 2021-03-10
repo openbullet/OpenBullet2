@@ -139,16 +139,16 @@
     <value>Realizar ataques em sites que você não possui(ou não tem permissão para testar) é ilegal! O desenvolvedor não será responsabilizado pelo uso indevido deste software.</value>
   </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Doatores e Suportes</value>
+    <value>Doadores e Apoiadores</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Licença</value>
   </data>
   <data name="OfficialForum" xml:space="preserve">
-    <value>Forum oficial</value>
+    <value>Forum Oficial</value>
   </data>
   <data name="OfficialRepository" xml:space="preserve">
-    <value>Repositório oficial</value>
+    <value>Repositório Oficial</value>
   </data>
   <data name="Read" xml:space="preserve">
     <value>Ler</value>

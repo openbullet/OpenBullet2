@@ -142,31 +142,31 @@
     <value>Dados</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Date</value>
+    <value>Data</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Excluir</value>
   </data>
   <data name="DeleteFiltered" xml:space="preserve">
-    <value>Excluir filtrados</value>
+    <value>Excluir dados filtrados</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Editar</value>
   </data>
   <data name="EditHit" xml:space="preserve">
-    <value>Editar sucessos</value>
+    <value>Editar hits</value>
   </data>
   <data name="hits" xml:space="preserve">
-    <value>Lives</value>
+    <value>Hits</value>
   </data>
   <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
-    <value>Lives de diferentes configs selecionadas, selecione hits obtidos com a mesma config.</value>
+    <value>Hits de diferentes configs selecionadas, selecione hits obtidos com a mesma config.</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Carregando</value>
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
-    <value>Você deve selecionar uma live primeiro</value>
+    <value>Você deve selecionar um hit primeiro</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy</value>

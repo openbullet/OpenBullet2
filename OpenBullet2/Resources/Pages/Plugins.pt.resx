@@ -127,7 +127,7 @@
     <value>Como adicionar e usar plug-ins</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%Plugins% vêm como arquivos %.zip% que contêm uma ou mais bibliotecas e suas dependências. Eles permitem que você expanda as funcionalidades do OpenBullet por %adicionando novos blocos%. Você pode fazer upload de plug-ins clicando no botão %Adicionar% acima. Depois de adicionados, os plug-ins residem na pasta %UserData/Plugins% dentro da pasta base do OpenBullet. Você pode adicionar blocos de plug-ins às suas configurações navegando até a categoria de nível superior (pressione Voltar) em %Blocos Disponíveis% e selecionando o nome do plug-in que pretende usar.</value>
+    <value>%Plugins% vêm como arquivos %.zip% que contêm uma ou mais bibliotecas e suas dependências. Eles permitem que você expanda as funcionalidades do OpenBullet %adicionando novos blocos%. Você pode fazer upload de plug-ins clicando no botão %Adicionar% acima. Depois de adicionados, os plug-ins residem na pasta %UserData/Plugins% dentro da pasta base do OpenBullet. Você pode adicionar blocos de plug-ins às suas configurações navegando até a categoria de nível superior (pressione Voltar) em %Blocos Disponíveis% e selecionando o nome do plug-in que pretende usar.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Os plug-ins podem ser excluídos clicando no botão %Remover% próximo a eles. Os arquivos serão excluídos da pasta %Plugins%, portanto, certifique-se de ter uma cópia de backup! É recomendável interromper todos os trabalhos antes de remover os plug-ins. Lembre-se de que, depois de remover um plug-in, as configurações que contêm blocos desse plug-in provavelmente deixarão de funcionar.</value>

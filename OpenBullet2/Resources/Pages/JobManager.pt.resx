@@ -124,7 +124,7 @@
     <value>de</value>
   </data>
   <data name="Clone" xml:space="preserve">
-    <value>Clone</value>
+    <value>Clonar</value>
   </data>
   <data name="Combinations" xml:space="preserve">
     <value>Combinações</value>
@@ -148,22 +148,22 @@
     <value>Arquivo</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Como é que isso funciona?</value>
+    <value>Como isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Este é o %Gerenciador de Trabalhos%, aqui você pode %criar% novos trabalhos, %editar% ou %remover% %empregos existentes% e acessar a interface de um trabalho específico. Para criar um novo trabalho, clique no botão %Novo% acima. Depois de criar alguns trabalhos, você poderá ter uma visão geral de seu status nesta página. Você também pode criar um trabalho clonando um existente para economizar tempo com todas as tarefas de configuração.</value>
+    <value>Este é o %Gerenciador de Trabalhos%, aqui você pode %criar% novos trabalhos, %editar% ou %remover% %trabalhos existentes% e acessar a interface de um trabalho específico. Para criar um novo trabalho, clique no botão %Novo% acima. Depois de criar alguns trabalhos, você poderá ter uma visão geral de seu status nesta página. Você também pode criar um trabalho clonando um existente para economizar tempo com todas as tarefas de configuração.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Para acessar a interface de um trabalho específico basta clicar nele! Se desejar que o gerenciador atualize o status de seus trabalhos com menos frequência para economizar largura de banda, você pode encontrar a opção %intervalo de atualização do gerenciador de trabalhos% na página Configurações de OB.</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Lives</value>
+    <value>Hits</value>
   </data>
   <data name="Infinite" xml:space="preserve">
     <value>Infinito</value>
   </data>
   <data name="JobNotIdle" xml:space="preserve">
-    <value>Trabalho não inativo</value>
+    <value>O trabalho ainda está rodando</value>
   </data>
   <data name="JobNotIdleWarning" xml:space="preserve">
     <value>Pare ou aborte o trabalho antes de excluí-lo.</value>

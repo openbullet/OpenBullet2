@@ -121,7 +121,7 @@
     <value>Cancelar</value>
   </data>
   <data name="ConfirmConfigConversion" xml:space="preserve">
-    <value>Depois de converter a configuração para codigo C#, você não poderá mais editá-la com o stacker! Você tem realmente, MUITA certeza de que sabe o que está fazendo?</value>
+    <value>Depois de converter a configuração para código C#, você não poderá mais editá-la com o stacker! Você tem CERTEZA ABSOLUTA de que sabe o que está fazendo?</value>
   </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
     <value>Converter para config C#</value>
@@ -133,10 +133,10 @@
     <value>Para que serve esta seção?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
+    <value>Esta seção tem dois propósitos. Se você planeja usar %Stacker/LoliCode% para construir sua configuração, pode usar este editor de somente leitura para ver como fica o código final depois que os blocos são traduzidos para instruções C# para a execução. Isso ajuda a resolver a maioria dos problemas que você obtém, especialmente quando o %debugger% acusa alguma %exceção%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %Mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
+    <value>Se, em vez disso, você decidiu codificar sua configuração usando %Apenas C#%, pode clicar no botão %Converter para config C#% e poderá editar o código C# diretamente. Você poderá usar a mesma API que é usada para blocos, então sugiro estudá-la um pouco, verificando a base de código ou como os blocos são traduzidos automaticamente. Observe que as configurações somente C# são destinadas a usuários %mais avançados%, e tudo que você pode fazer aqui também pode ser feito em LoliCode integrando blocos e código C# que pode resultar em um script muito mais legível para pessoas que não estão familiarizadas com código.</value>
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
     <value>Transcrever de blocos</value>

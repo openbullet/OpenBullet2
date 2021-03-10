@@ -121,7 +121,7 @@
     <value>Autenticado como</value>
   </data>
   <data name="BuildNumber" xml:space="preserve">
-    <value>Número da compilação</value>
+    <value>Número de compilação</value>
   </data>
   <data name="ClientIpAddress" xml:space="preserve">
     <value>Endereço IP do cliente</value>
@@ -136,7 +136,7 @@
     <value>Ajuda</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Boas-vindas calorosas de Bulletta</value>
+    <value>Calorosas boas-vindas de Bulletta</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
     <value>Olá e bem-vindo ao %OpenBullet 2%, sou %Bulletta% e serei seu guia por aqui. Procure os links de ajuda e irei explicar o que você precisar!</value>
@@ -148,13 +148,13 @@
     <value>Onde todas as minhas configurações são salvas?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>Existem várias configurações no OpenBullet 2 e elas são salvas na pasta %UserData%. O %banco de dados% (por padrão SQLite) é o arquivo que contém seus proxies, jobs, hits, convidados e também mantém registros da localização de suas listas de palavras no disco. Por padrão, é chamado de %OpenBullet.db%. %Configs% está dentro da subpasta Configs, enquanto %Wordlists% que você importou através do recurso de upload do navegador estão dentro da subpasta Wordlists. Consulte suas seções específicas para obter mais informações.</value>
+    <value>Existem várias configurações no OpenBullet 2 e elas são salvas na pasta %UserData%. O %banco de dados% (por padrão SQLite) é o arquivo que contém seus proxies, jobs, hits, convidados e também mantém registros da localização de wordlists no disco. Por padrão chamado de %OpenBullet.db%. Suas %Configurações% ficam dentro da subpasta Configs, enquanto %Wordlists% que você importou através do recurso de upload do navegador ficam dentro da subpasta Wordlists. Consulte suas seções específicas para obter mais informações.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
-    <value>As configurações OpenBullet e RuriLib são salvas em dois arquivos: %OpenBulletSettings.json% e %RuriLibSettings.json%. Esses arquivos são criados apenas se algumas alterações foram feitas na configuração padrão. O arquivo %Environment.ini% especifica %Tipo da Wordlist%, %Status Customizados% e %Formatos de exportação% de seu ambiente OB2. Este é um arquivo muito importante, mais informações sobre os Tipos de listas de palavras podem ser encontradas em um guia separado.</value>
+    <value>As configurações OpenBullet e RuriLib são salvas em dois arquivos: %OpenBulletSettings.json% e %RuriLibSettings.json%. Esses arquivos são criados apenas se algumas alterações foram feitas na configuração padrão. O arquivo %Environment.ini% especifica o %Tipo da Wordlist%, %Status Customizados% e %Formatos de exportação% de seu ambiente OB2. Este é um arquivo muito importante, mais informações sobre os Tipos de listas de palavras podem ser encontradas em um guia separado.</value>
   </data>
   <data name="Help2x03" xml:space="preserve">
-    <value>O arquivo %sharingEndpoints.json% contém as informações de seus terminais para compartilhamento de configuração. Finalmente, o arquivo %triggeredActions.json% contém todas as %Ações desencadeadas% do seu Monitor de Trabalho. As ações disparadas são salvas automaticamente neste arquivo a cada 10 segundos.</value>
+    <value>O arquivo %sharingEndpoints.json% contém as informações de seus endpoints para compartilhamento de configuração. Finalmente, o arquivo %triggeredActions.json% contém todas as %Ações disparadas% do seu Monitor de Trabalho. As ações disparadas são salvas automaticamente neste arquivo a cada 10 segundos.</value>
   </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Horário local</value>

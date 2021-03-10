@@ -166,7 +166,7 @@
     <value>Falhas</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Como é que isso funciona?</value>
+    <value>Como isso funciona?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
     <value>Este é o %Monitorador de Trabalhos%, que contém uma lista de %ações disparadas%. Ações acionadas são responsáveis ​​por monitorar um trabalho, verificar se há acionadores e executar ações. Em primeiro lugar, você deve definir o %id% do trabalho a ser monitorado na caixa de texto numérica. Lembre-se de desmarcar a caixa de seleção %ativo% ao configurar os gatilhos e ações para evitar que sejam executados acidentalmente quando você ainda não terminou de usá-los.</value>
@@ -178,7 +178,7 @@
     <value>O botão %Reset% redefinirá o número de execuções para 0. Ações acionadas são salvas no arquivo %triggeredActions.json%, então se você quiser fazer backup ou transferi-las para outra instância de OB, você deve copiar este arquivo.</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Lives</value>
+    <value>Hits</value>
   </data>
   <data name="hours" xml:space="preserve">
     <value>horas</value>
