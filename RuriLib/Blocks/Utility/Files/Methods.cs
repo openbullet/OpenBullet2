@@ -230,12 +230,16 @@ namespace RuriLib.Blocks.Utility.Files
         }
         #endregion
 
-        private static async Task<TOut> ExecuteFileOperation<TIn, TOut>(BotData data, string path, TIn parameter, Func<string, TIn, Task<TOut>> func)
+        private static Task<TOut> ExecuteFileOperation<TIn, TOut>(BotData data, string path, TIn parameter, Func<string, TIn, Task<TOut>> func)
         {
             if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             FileUtils.CreatePath(path);
+
+            // TODO: Implement an asynchronous lock, otherwise it will throw a
+            // SynchronizationLockException since we cannot call Monitor.Exit() in an async context
+            // https://stackoverflow.com/questions/21404144/synchronizationlockexception-on-monitor-exit-when-using-await
 
             TOut result;
             var fileLock = FileLocker.GetHandle(path);
@@ -243,14 +247,15 @@ namespace RuriLib.Blocks.Utility.Files
 
             try
             {
-                result = await func.Invoke(path, parameter);
+                // HACK: Execute synchronously as a temporary fix
+                result = func.Invoke(path, parameter).Result;
             }
             finally
             {
                 Monitor.Exit(fileLock);
             }
 
-            return result;
+            return Task.FromResult(result);
         }
     }
 }
