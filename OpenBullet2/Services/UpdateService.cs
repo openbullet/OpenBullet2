@@ -26,7 +26,7 @@ namespace OpenBullet2.Services
             try
             {
                 var content = File.ReadLines(versionFile).First();
-                var version = Version.Parse(versionFile);
+                var version = Version.Parse(content);
 
                 // If higher than the minimum expected current version, set it
                 if (version > CurrentVersion)
