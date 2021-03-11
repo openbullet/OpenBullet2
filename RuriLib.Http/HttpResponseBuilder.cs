@@ -122,7 +122,8 @@ namespace RuriLib.Http
                 var headerValue = header[(separatorPos + 1)..].Trim(' ', '\t', '\r', '\n');
 
                 // If the header is Set-Cookie, add the cookie
-                if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
+                if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
+                    headerName.Equals("Set-Cookie2", StringComparison.OrdinalIgnoreCase))
                 {
                     SetCookie(response, headerValue);
                 }
