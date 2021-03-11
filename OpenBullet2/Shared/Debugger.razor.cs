@@ -177,7 +177,7 @@ namespace OpenBullet2.Shared
                 // Dispose all disposable objects
                 foreach (var obj in data.Objects.Where(o => o.Value is IDisposable))
                 {
-                    if (obj.Key == "puppeteer")
+                    if (obj.Key.Contains("puppeteer"))
                         continue;
 
                     try
