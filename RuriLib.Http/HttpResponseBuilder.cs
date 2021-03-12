@@ -20,7 +20,7 @@ namespace RuriLib.Http
     internal class HttpResponseBuilder
     {
 
-        
+
         private PipeReader reader;
         private const string newLine = "\r\n";
         private readonly byte[] CRLF = Encoding.UTF8.GetBytes(newLine);
@@ -42,7 +42,7 @@ namespace RuriLib.Http
         /// <summary>
         /// Builds an HttpResponse by reading a network stream.
         /// </summary>
-        [MethodImpl(methodImplOptions:MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(methodImplOptions: MethodImplOptions.AggressiveOptimization)]
         async internal Task<HttpResponse> GetResponseAsync(HttpRequest request, Stream stream,
             CancellationToken cancellationToken = default)
         {
@@ -75,7 +75,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-               
+
                 var buff = res.Buffer;
                 int crlfIndex = buff.FirstSpan.IndexOf(CRLF);
                 if (crlfIndex > -1)
@@ -118,7 +118,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-                
+
                 var buff = res.Buffer;
                 if (buff.IsSingleSegment)
                 {
@@ -288,44 +288,53 @@ namespace RuriLib.Http
             }
         }
 
-        private async Task<Stream> GetMessageBodySource(CancellationToken cancellationToken)
+        private Task<Stream> GetMessageBodySource(CancellationToken cancellationToken)
         {
             if (response.Headers.ContainsKey("Transfer-Encoding"))
             {
                 if (contentHeaders.ContainsKey("Content-Encoding"))
                 {
-                    using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
-                    {
-                        var decompressedStream = new MemoryStream();
-                        await compressedStream.CopyToAsync(decompressedStream);
-                        return decompressedStream;
-                    }
+                    return GetChunkedDecompressedStream(cancellationToken);
                 }
                 else
                 {
-                    return await ReceiveMessageBodyChunked(cancellationToken);
+                    return ReceiveMessageBodyChunked(cancellationToken);
                 }
             }
             else //if (contentLength > -1)
             {
                 if (contentHeaders.ContainsKey("Content-Encoding"))
                 {
-                    using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
-                    {
-                        var decompressedStream = new MemoryStream();
-                        await compressedStream.CopyToAsync(decompressedStream);
-                        return decompressedStream;
-                    }
+                    return GetContentLengthDecompressedStream(cancellationToken);
                 }
                 else
                 {
-                    return await ReciveContentLength(cancellationToken);
+                    return ReciveContentLength(cancellationToken);
 
                 }
             }
 
         }
 
+        private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
+        {
+            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
+            {
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream,cancellationToken);
+                return decompressedStream;
+            }
+        }
+
+        private async Task<Stream> GetChunkedDecompressedStream(CancellationToken cancellationToken)
+        {
+            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
+            {
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream,cancellationToken);
+                return decompressedStream;
+            }
+        }
 
         private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
         {
@@ -334,7 +343,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-              
+
                 var buff = res.Buffer;
                 if (buff.IsSingleSegment)
                 {
@@ -397,7 +406,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-               
+
                 var buff = res.Buffer;
                 chunkedDecoder.Decode(ref buff);
                 reader.AdvanceTo(buff.Start, buff.End);
