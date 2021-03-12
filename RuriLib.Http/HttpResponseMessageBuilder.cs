@@ -325,44 +325,52 @@ namespace RuriLib.Http
             }
         }
 
-        private async Task<Stream> GetMessageBodySource(CancellationToken cancellationToken)
+        private Task<Stream> GetMessageBodySource(CancellationToken cancellationToken)
         {
             if (response.Headers.Contains("Transfer-Encoding"))
             {
                 if (contentHeaders.ContainsKey("Content-Encoding"))
                 {
-                    using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
-                    {
-                        var decompressedStream = new MemoryStream();
-                        compressedStream.CopyTo(decompressedStream);
-                        return decompressedStream;
-                    }
+                    return GetChunkedDecompressedStream(cancellationToken);
                 }
                 else
                 {
-                    return await ReceiveMessageBodyChunked(cancellationToken);
+                    return ReceiveMessageBodyChunked(cancellationToken);
                 }
             }
             else //if (contentLength > -1)
             {
                 if (contentHeaders.ContainsKey("Content-Encoding"))
                 {
-                    using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
-                    {
-                        var decompressedStream = new MemoryStream();
-                        compressedStream.CopyTo(decompressedStream);
-                        return decompressedStream;
-                    }
+                    return GetContentLengthDecompressedStream(cancellationToken);
                 }
                 else
                 {
-                    return await ReciveContentLength(cancellationToken);
+                    return ReciveContentLength(cancellationToken);
 
                 }
             }
 
         }
+        private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
+        {
+            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
+            {
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream, cancellationToken);
+                return decompressedStream;
+            }
+        }
 
+        private async Task<Stream> GetChunkedDecompressedStream(CancellationToken cancellationToken)
+        {
+            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
+            {
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream, cancellationToken);
+                return decompressedStream;
+            }
+        }
 
         private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
         {
