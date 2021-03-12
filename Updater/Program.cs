@@ -63,6 +63,7 @@ namespace Updater
             else
             {
                 Console.WriteLine("Already up to date!");
+                Console.ReadKey();
                 Environment.Exit(0);
             }
 

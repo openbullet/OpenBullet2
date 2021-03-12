@@ -13,7 +13,7 @@
         }
         <div class="col align-self-stretch pl-0">
             <EditForm Model="filter">
-                <InputText Value="@filter" ValueExpression="() => filter" ValueChanged="value => FilterChanged(value)" />
+                <InputText id="filter-textbox" Value="@filter" ValueExpression="() => filter" ValueChanged="value => FilterChanged(value)" />
             </EditForm>
         </div>
     </div>
@@ -71,6 +71,7 @@ else
 @code
 {
     [Parameter] public EventCallback<BlockDescriptor> SelectedDescriptor { get; set; }
+    [Parameter] public bool FocusFilterTexbox { get; set; } = false;
     private CategoryTreeNode currentNode;
     private List<BlockDescriptor> recentDescriptors;
     private List<BlockDescriptor> filteredDescriptors = new();
@@ -85,6 +86,15 @@ else
             .SubCategories.First(s => s.Name == "Blocks");
 
         recentDescriptors = VolatileSettings.RecentDescriptors.Take(6).ToList();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && FocusFilterTexbox)
+        {
+            // ElementReference.FocusAsync() doesn't seem to work for <InputText>, only <input>
+            _ = js.InvokeVoidAsync("focusElement", "filter-textbox");
+        }
     }
 
     private void SelectSubCategory(CategoryTreeNode subCategory)
