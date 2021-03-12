@@ -54,3 +54,8 @@ function startRandomSetupEffect() {
 function playHitSound() {
     document.getElementById('hit-sound').play();
 }
+
+function focusElement (id) {
+    const element = document.getElementById(id);
+    element.focus();
+}

@@ -13,8 +13,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
     public static class Methods
     {
         [Block("Navigates to a given URL in the current page", name = "Navigate To")]
-        public static async Task PuppeteerNavigateTo(BotData data, string url, WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load,
-            string referer = "", int timeout = 30000)
+        public static async Task PuppeteerNavigateTo(BotData data, string url = "https://example.com",
+            WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load, string referer = "", int timeout = 30000)
         {
             data.Logger.LogHeader();
 
@@ -184,6 +184,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
             var dom = await page.EvaluateExpressionAsync<string>("document.body.innerHTML");
 
             data.Logger.Log($"Got the full page DOM", LogColors.DarkSalmon);
+            data.Logger.Log(dom, LogColors.DarkSalmon, true);
             return dom;
         }
 
@@ -228,6 +229,20 @@ namespace RuriLib.Blocks.Puppeteer.Page
 
             SwitchToMainFramePrivate(data);
             data.Logger.Log($"Switched to main frame", LogColors.DarkSalmon);
+        }
+
+        [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
+        public static async Task<string> PuppeteerExecuteJs(BotData data, string expression)
+        {
+            data.Logger.LogHeader();
+
+            var page = GetPage(data);
+            var response = await page.EvaluateExpressionAsync(expression);
+            var json = response != null ? response.ToString() : "undefined";
+            data.Logger.Log($"Evaluated {expression}", LogColors.DarkSalmon);
+            data.Logger.Log($"Got result: {json}", LogColors.DarkSalmon);
+
+            return json;
         }
 
         private static PuppeteerSharp.Page GetPage(BotData data)

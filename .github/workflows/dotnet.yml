@@ -55,4 +55,5 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: '.publish/Patch.zip'
         tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
+        release_name: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         overwrite: true
