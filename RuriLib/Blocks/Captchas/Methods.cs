@@ -222,8 +222,8 @@ namespace RuriLib.Blocks.Captchas
 
         private static void AddCaptchaId(BotData data, long id, CaptchaType type)
         {
-            data.Objects.Add("lastCaptchaId", id);
-            data.Objects.Add("lastCaptchaType", type);
+            data.Objects["lastCaptchaId"] = id;
+            data.Objects["lastCaptchaType"] = type;
         }
 
         private static Proxy SetupProxy(BotData data, bool useProxy, string userAgent)
