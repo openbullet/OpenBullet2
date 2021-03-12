@@ -184,6 +184,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
             var dom = await page.EvaluateExpressionAsync<string>("document.body.innerHTML");
 
             data.Logger.Log($"Got the full page DOM", LogColors.DarkSalmon);
+            data.Logger.Log(dom, LogColors.DarkSalmon, true);
             return dom;
         }
 
