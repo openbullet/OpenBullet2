@@ -231,6 +231,20 @@ namespace RuriLib.Blocks.Puppeteer.Page
             data.Logger.Log($"Switched to main frame", LogColors.DarkSalmon);
         }
 
+        [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
+        public static async Task<string> PuppeteerExecuteJs(BotData data, string expression)
+        {
+            data.Logger.LogHeader();
+
+            var page = GetPage(data);
+            var response = await page.EvaluateExpressionAsync(expression);
+            var json = response != null ? response.ToString() : "undefined";
+            data.Logger.Log($"Evaluated {expression}", LogColors.DarkSalmon);
+            data.Logger.Log($"Got result: {json}", LogColors.DarkSalmon);
+
+            return json;
+        }
+
         private static PuppeteerSharp.Page GetPage(BotData data)
             => (PuppeteerSharp.Page)data.Objects["puppeteerPage"] ?? throw new Exception("No pages open!");
 
