@@ -1,12 +1,16 @@
-﻿using PuppeteerExtraSharp;
+﻿using Yove.Proxy;
+using PuppeteerExtraSharp;
 using PuppeteerExtraSharp.Plugins.ExtraStealth;
 using PuppeteerSharp;
 using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using ProxyType = RuriLib.Models.Proxies.ProxyType;
 
 namespace RuriLib.Blocks.Puppeteer.Browser
 {
@@ -17,47 +21,60 @@ namespace RuriLib.Blocks.Puppeteer.Browser
         public static async Task PuppeteerOpenBrowser(BotData data)
         {
             data.Logger.LogHeader();
-            PuppeteerSharp.Browser browser;
+         
+            // Check if there is already an open browser
+            if (data.Objects.ContainsKey("puppeteer") && !((PuppeteerSharp.Browser)data.Objects["puppeteer"]).IsClosed)
+            {
+                data.Logger.Log("The browser is already open, close it if you want to open a new browser", LogColors.DarkSalmon);
+                return;
+            }
 
             var args = data.ConfigSettings.PuppeteerSettings.CommandLineArgs;
             if (data.Proxy != null && data.UseProxy)
-                args += $" --proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}";
-
-            // Check if there is already an open browser
-            if (!data.Objects.ContainsKey("puppeteer") || ((PuppeteerSharp.Browser)data.Objects["puppeteer"]).IsClosed)
             {
-                // Configure the options
-                var launchOptions = new LaunchOptions
+                if (data.Proxy.Type == ProxyType.Http || !data.Proxy.NeedsAuthentication)
                 {
-                    Args = new string[] { args },
-                    ExecutablePath = data.Providers.PuppeteerBrowser.ChromeBinaryLocation,
-                    Headless = data.ConfigSettings.PuppeteerSettings.Headless,
-                    DefaultViewport = null // This is important
-                };
-
-                // Add the plugins
-                var extra = new PuppeteerExtra();
-                extra.Use(new StealthPlugin());
-
-                // Launch the browser
-                browser = await extra.LaunchAsync(launchOptions);
-                browser.IgnoreHTTPSErrors = data.ConfigSettings.PuppeteerSettings.IgnoreHttpsErrors;
-
-                // Save the browser for further use
-                data.Objects["puppeteer"] = browser;
-                var page = (await browser.PagesAsync()).First();
-                SetPageAndFrame(data, page);
-
-                // Authenticate if the proxy requires auth
-                if (data.UseProxy && data.Proxy != null && data.Proxy.NeedsAuthentication)
-                    await page.AuthenticateAsync(new Credentials { Username = data.Proxy.Username, Password = data.Proxy.Password });
-
-                data.Logger.Log($"{(launchOptions.Headless ? "Headless " : "")}Browser opened successfully!", LogColors.DarkSalmon);
+                    args += $" --proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}";
+                }
+                else
+                {
+                    var proxyType = data.Proxy.Type == ProxyType.Socks5 ? Yove.Proxy.ProxyType.Socks5 : Yove.Proxy.ProxyType.Socks4;
+                    var proxyClient = new ProxyClient(
+                        data.Proxy.Host, data.Proxy.Port,
+                        data.Proxy.Username, data.Proxy.Password, 
+                        proxyType);
+                    data.Objects["puppeteer.yoveproxy"] = proxyClient;
+                    args += $" --proxy-server={proxyClient.GetProxy(null).Authority}";
+                }
             }
-            else
+
+            // Configure the options
+            var launchOptions = new LaunchOptions
             {
-                data.Logger.Log("The browser is already open, close it if you want to open a new browser", LogColors.DarkSalmon);
-            }
+                Args = new string[] { args },
+                ExecutablePath = data.Providers.PuppeteerBrowser.ChromeBinaryLocation,
+                Headless = data.ConfigSettings.PuppeteerSettings.Headless,
+                DefaultViewport = null // This is important
+            };
+
+            // Add the plugins
+            var extra = new PuppeteerExtra();
+            extra.Use(new StealthPlugin());
+
+            // Launch the browser
+            var browser = await extra.LaunchAsync(launchOptions);
+            browser.IgnoreHTTPSErrors = data.ConfigSettings.PuppeteerSettings.IgnoreHttpsErrors;
+
+            // Save the browser for further use
+            data.Objects["puppeteer"] = browser;
+            var page = (await browser.PagesAsync()).First();
+            SetPageAndFrame(data, page);
+
+            // Authenticate if the proxy requires auth
+            if(data.UseProxy && data.Proxy is { NeedsAuthentication: true, Type: ProxyType.Http } proxy)
+                await page.AuthenticateAsync(new Credentials { Username = proxy.Username, Password = proxy.Password });
+
+            data.Logger.Log($"{(launchOptions.Headless ? "Headless " : "")}Browser opened successfully!", LogColors.DarkSalmon);
         }
 
         [Block("Closes an open puppeteer browser", name = "Close Browser")]
@@ -67,6 +84,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
             var browser = GetBrowser(data);
             await browser.CloseAsync();
+            StopYoveProxyInternalServer(data);
             data.Logger.Log("Browser closed successfully!", LogColors.DarkSalmon);
         }
 
@@ -164,6 +182,14 @@ namespace RuriLib.Blocks.Puppeteer.Browser
         {
             data.Objects["puppeteerPage"] = page;
             SwitchToMainFramePrivate(data);
+        }
+
+        private static void StopYoveProxyInternalServer(BotData data)
+        {
+            if (data.Objects.GetValueOrDefault("puppeteer.yoveproxy") is ProxyClient proxyClient)
+            {
+                proxyClient.Dispose();
+            }
         }
     }
 }
