@@ -13,8 +13,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
     public static class Methods
     {
         [Block("Navigates to a given URL in the current page", name = "Navigate To")]
-        public static async Task PuppeteerNavigateTo(BotData data, string url, WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load,
-            string referer = "", int timeout = 30000)
+        public static async Task PuppeteerNavigateTo(BotData data, string url = "https://example.com",
+            WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load, string referer = "", int timeout = 30000)
         {
             data.Logger.LogHeader();
 
