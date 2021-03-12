@@ -314,7 +314,7 @@ namespace RuriLib.Http
                 contentLength = GetContentLength();
 
                 // Try to get the body and write it to a MemoryStream
-                var finaleResponceStream = await GetMessageBodySource(cancellationToken);
+                var finaleResponceStream = await GetMessageBodySource(cancellationToken).ConfigureAwait(false);
                 // Rewind the stream and set the content of the response and its headers
                 finaleResponceStream.Seek(0, SeekOrigin.Begin);
                 response.Content = new StreamContent(finaleResponceStream);
@@ -354,7 +354,7 @@ namespace RuriLib.Http
         }
         private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
         {
-            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
+            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken).ConfigureAwait(false)))
             {
                 var decompressedStream = new MemoryStream();
                 await compressedStream.CopyToAsync(decompressedStream, cancellationToken);
@@ -364,10 +364,10 @@ namespace RuriLib.Http
 
         private async Task<Stream> GetChunkedDecompressedStream(CancellationToken cancellationToken)
         {
-            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
+            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken).ConfigureAwait(false)))
             {
                 var decompressedStream = new MemoryStream();
-                await compressedStream.CopyToAsync(decompressedStream, cancellationToken);
+                await compressedStream.CopyToAsync(decompressedStream, cancellationToken).ConfigureAwait(false);
                 return decompressedStream;
             }
         }
