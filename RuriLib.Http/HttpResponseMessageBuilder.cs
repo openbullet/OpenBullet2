@@ -136,6 +136,7 @@ namespace RuriLib.Http
                         break;
                     }
                 }
+                reader.AdvanceTo(buff.Start, buff.End);// not adding ghis linw might result in infinit loop
                 if (res.IsCanceled || res.IsCompleted)
                 {
                     reader.Complete();
@@ -431,7 +432,7 @@ namespace RuriLib.Http
 
 
 
-        // Загрузка тела сообщения частями.
+      
         private async Task<Stream> ReceiveMessageBodyChunked(CancellationToken cancellationToken)
         {
             var chunkedDecoder = new ChunkedDecoderOptimized();
