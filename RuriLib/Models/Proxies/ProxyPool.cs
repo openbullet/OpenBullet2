@@ -3,6 +3,7 @@ using RuriLib.Models.Proxies.ProxySources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies
@@ -54,6 +55,7 @@ namespace RuriLib.Models.Proxies
         /// Use this together with a lock if possible. Returns null if no proxy
         /// matching the required parameters was found.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)] //hot path
         public Proxy GetProxy(bool evenBusy = false, int maxUses = 0)
         {
             IEnumerable<Proxy> possibleProxies = proxies;

@@ -51,9 +51,9 @@ namespace RuriLib.Http
         {
             networkStream = stream as NetworkStream;
             commonStream = stream;
-
+           
             reader = PipeReader.Create(stream);
-
+            
             response = new HttpResponseMessage();
             contentHeaders = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
@@ -83,7 +83,7 @@ namespace RuriLib.Http
                 {
                     try
                     {
-                        startingLine = Encoding.UTF8.GetString(res.Buffer.FirstSpan.Slice(0, crlfIndex));
+                        startingLine = Encoding.UTF8.GetString(buff.FirstSpan.Slice(0, crlfIndex));
                         var fields = startingLine.Split(' ');
                         response.Version = Version.Parse(fields[0].Trim()[5..]);
                         response.StatusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), fields[1]);
@@ -176,22 +176,15 @@ namespace RuriLib.Http
 
             while (reader.TryReadTo(out ReadOnlySpan<byte> Line, CRLF, true))
             {
-                if (Line.Length == 0)
+                if (Line.Length == 0)// reached last crlf (empty line)
                 {
-                    break;
+                    buff = buff.Slice(reader.Position);
+                    return true;// all headers received
                 }
                 ProcessHeaderLine(Encoding.UTF8.GetString(Line));
             }
-            if (!reader.Position.Equals(buff.Start)) // means we have read the headeers
-            {
-                buff = buff.Slice(reader.Position); // so we can advance the pipe.
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
+            buff = buff.Slice(reader.Position);
+            return false;// empty line not found need more data
         }
 
         private void ProcessHeaderLine(string header)

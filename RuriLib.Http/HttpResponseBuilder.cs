@@ -179,22 +179,15 @@ namespace RuriLib.Http
 
             while (reader.TryReadTo(out ReadOnlySpan<byte> Line, CRLF, true))
             {
-                if (Line.Length == 0)
+                if (Line.Length == 0)// reached last crlf (empty line)
                 {
-                    break;
+                    buff = buff.Slice(reader.Position);
+                    return true;// all headers received
                 }
                 ProcessHeaderLine(Encoding.UTF8.GetString(Line));
             }
-            if (!reader.Position.Equals(buff.Start)) // means we have read the headeers
-            {
-                buff = buff.Slice(reader.Position); // so we can advance the pipe.
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
+            buff = buff.Slice(reader.Position);
+            return false;// empty line not found need more data
         }
 
         private void ProcessHeaderLine(string header)
