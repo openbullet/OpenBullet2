@@ -137,6 +137,7 @@ namespace RuriLib.Http
                         break;
                     }
                 }
+                reader.AdvanceTo(buff.Start, buff.End); // not adding this line might result in infinit loop.
                 if (res.IsCanceled || res.IsCompleted)
                 {
                     reader.Complete();
