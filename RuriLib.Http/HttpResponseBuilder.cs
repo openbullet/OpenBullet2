@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO.Pipelines;
 using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace RuriLib.Http
 {
@@ -41,6 +42,7 @@ namespace RuriLib.Http
         /// <summary>
         /// Builds an HttpResponse by reading a network stream.
         /// </summary>
+        [MethodImpl(methodImplOptions:MethodImplOptions.AggressiveOptimization)]
         async internal Task<HttpResponse> GetResponseAsync(HttpRequest request, Stream stream,
             CancellationToken cancellationToken = default)
         {
@@ -73,6 +75,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+               
                 var buff = res.Buffer;
                 int crlfIndex = buff.FirstSpan.IndexOf(CRLF);
                 if (crlfIndex > -1)
@@ -97,6 +100,11 @@ namespace RuriLib.Http
                     // the responce is incomplete ex. (HTTP/1.1 200 O)
                     reader.AdvanceTo(buff.Start, buff.End); // nothing consumed but all the buffer examined loop and read more.
                 }
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
             }
 
 
@@ -110,6 +118,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+                
                 var buff = res.Buffer;
                 if (buff.IsSingleSegment)
                 {
@@ -127,6 +136,11 @@ namespace RuriLib.Http
                         reader.AdvanceTo(buff.Start, buff.End);
                         break;
                     }
+                }
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
 
@@ -283,7 +297,7 @@ namespace RuriLib.Http
                     using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken)))
                     {
                         var decompressedStream = new MemoryStream();
-                        compressedStream.CopyTo(decompressedStream);
+                        await compressedStream.CopyToAsync(decompressedStream);
                         return decompressedStream;
                     }
                 }
@@ -299,7 +313,7 @@ namespace RuriLib.Http
                     using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken)))
                     {
                         var decompressedStream = new MemoryStream();
-                        compressedStream.CopyTo(decompressedStream);
+                        await compressedStream.CopyToAsync(decompressedStream);
                         return decompressedStream;
                     }
                 }
@@ -320,6 +334,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+              
                 var buff = res.Buffer;
                 if (buff.IsSingleSegment)
                 {
@@ -336,6 +351,11 @@ namespace RuriLib.Http
                 if (contentlenghtStream.Length >= contentLength)
                 {
                     return contentlenghtStream;
+                }
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
         }
@@ -369,7 +389,7 @@ namespace RuriLib.Http
         }
 
 
-
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         // Загрузка тела сообщения частями.
         private async Task<Stream> ReceiveMessageBodyChunked(CancellationToken cancellationToken)
         {
@@ -377,6 +397,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+               
                 var buff = res.Buffer;
                 chunkedDecoder.Decode(ref buff);
                 reader.AdvanceTo(buff.Start, buff.End);
@@ -384,7 +405,11 @@ namespace RuriLib.Http
                 {
                     return chunkedDecoder.DecodedStream;
                 }
-
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
             }
         }
 

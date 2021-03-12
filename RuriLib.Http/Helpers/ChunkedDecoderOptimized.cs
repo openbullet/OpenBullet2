@@ -22,6 +22,7 @@ namespace RuriLib.Http.Helpers
 
         public ChunkedDecoderOptimized()
         {
+            DecodedStream = new MemoryStream(1024);
         }
 
         internal void Decode(ref ReadOnlySequence<byte> buff)
@@ -48,8 +49,7 @@ namespace RuriLib.Http.Helpers
                 return;
             }
             if (buff.Length > templength + 2)
-            {
-                DecodedStream ??= new MemoryStream();
+            {              
                 var chunk = buff.Slice(buff.Start, templength);
                 WritetoStream(chunk);
                 Isnewchunk = true;
@@ -105,26 +105,7 @@ namespace RuriLib.Http.Helpers
             }
         }
 
-        private int GetChunkLengthV2(ref ReadOnlySequence<byte> buff)
-        {
-            SequencePosition? pos = buff.PositionOf((byte)'\n');
-            if (pos != null)
-            {
-                var line = buff.Slice(0, pos.Value.GetInteger()); //store the line
-                buff = buff.Slice(pos.Value.GetInteger() + 1); // skip the line
-                pos = line.PositionOf((byte)';');
-                if (pos != null)
-                {
-                    line = line.Slice(0, pos.Value);
-                }
-                return Convert.ToInt32(Encoding.ASCII.GetString(line), 16);
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
+       
         private void WritetoStream(ReadOnlySequence<byte> buff)
         {
             if (buff.IsSingleSegment)
