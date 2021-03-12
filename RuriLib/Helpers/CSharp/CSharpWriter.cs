@@ -77,7 +77,7 @@ namespace RuriLib.Helpers.CSharp
                 .Replace("{", "{{")
                 .Replace("}", "}}");
 
-            foreach (Match match in Regex.Matches(value, @"\w*(?<!<)<([^<][^>]+)>"))
+            foreach (Match match in Regex.Matches(value, @"\w*(?<!<)<([^<][^>]*)>"))
                 sb.Replace(match.Groups[0].Value.Replace("\\", "\\\\").Replace("\"", "\\\""), '{' + match.Groups[1].Value + '}');
 
             return '$' + sb.Replace("<<", "<").Replace(">>", ">").ToString();
