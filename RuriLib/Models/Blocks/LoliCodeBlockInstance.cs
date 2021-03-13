@@ -86,7 +86,7 @@ namespace RuriLib.Models.Blocks
 
             // REPEAT
             // REPEAT 10 => for (int xyz = 0; xyz < 10; xyz++) {
-            if ((match = Regex.Match(input, $"^REPEAT ([0-9]+)$")).Success)
+            if ((match = Regex.Match(input, $"^REPEAT (.+)$")).Success)
             {
                 var i = VariableNames.RandomName();
                 return $"for (var {i} = 0; {i} < {match.Groups[1].Value}; {i}++){System.Environment.NewLine}{{";
