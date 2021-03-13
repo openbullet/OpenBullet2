@@ -197,7 +197,7 @@ namespace RuriLib.Http
 
             var headerName = Encoding.UTF8.GetString(header.Slice(0, separatorPos));
             var headerValuespan = header.Slice(separatorPos + 1); // skip ':'
-            var headerValue = headerValuespan[0] == (byte)' ' ? Encoding.UTF8.GetString(headerValuespan.Slice(1)) : Encoding.UTF8.GetString(headerValuespan); // trim the wight space
+            var headerValue = headerValuespan[0] == (byte)' ' ? Encoding.UTF8.GetString(headerValuespan.Slice(1)) : Encoding.UTF8.GetString(headerValuespan); // trim the white space
 
             // If the header is Set-Cookie, add the cookie
             if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
