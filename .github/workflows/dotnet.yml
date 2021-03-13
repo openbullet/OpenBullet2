@@ -55,5 +55,12 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: '.publish/Patch.zip'
         tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
-        release_name: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         overwrite: true
+    - name: update release
+      uses: tubone24/update_release@v1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+      with:
+        release_name: ${{ steps.tag_name.outputs.SOURCE_TAG }}
+        body: Please refer to [this post](https://discourse.openbullet.dev/t/wip-how-to-download-and-start-openbullet-2/29) on the official forum to learn how to launch OpenBullet 2.
+        
