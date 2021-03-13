@@ -11,25 +11,20 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO.Pipelines;
+using System.Buffers;
+using System.Runtime.CompilerServices;
 
 namespace RuriLib.Http
 {
     internal class HttpResponseBuilder
     {
-        private sealed class BytesWrapper
-        {
-            public int Length { get; set; }
 
-            public byte[] Value { get; set; }
-        }
 
-        private static readonly byte[] openHtmlSignature = Encoding.ASCII.GetBytes("<html");
-        private static readonly byte[] closeHtmlSignature = Encoding.ASCII.GetBytes("</html>");
-
-        private readonly int bufferSize = 1024;
-        private readonly string newLine = "\r\n";
-
-        private readonly ReceiveHelper receiveHelper;
+        private PipeReader reader;
+        private const string newLine = "\r\n";
+        private readonly byte[] CRLF = Encoding.UTF8.GetBytes(newLine);
+        private static byte[] CRLFCRLF_Bytes = { 13, 10, 13, 10 };
         private HttpResponse response;
         private NetworkStream networkStream;
         private Stream commonStream;
@@ -40,26 +35,28 @@ namespace RuriLib.Http
 
         internal HttpResponseBuilder()
         {
-            receiveHelper = new ReceiveHelper(bufferSize);
+            //  pipe = new Pipe();
+
         }
 
         /// <summary>
         /// Builds an HttpResponse by reading a network stream.
         /// </summary>
+        [MethodImpl(methodImplOptions: MethodImplOptions.AggressiveOptimization)]
         async internal Task<HttpResponse> GetResponseAsync(HttpRequest request, Stream stream,
             CancellationToken cancellationToken = default)
         {
             networkStream = stream as NetworkStream;
             commonStream = stream;
+            reader = PipeReader.Create(stream);
 
-            receiveHelper.Init(stream);
 
             response = new HttpResponse
             {
                 Request = request
             };
 
-            contentHeaders = new Dictionary<string, List<string>>();
+            contentHeaders = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
             await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
             await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
@@ -74,79 +71,163 @@ namespace RuriLib.Http
         {
             var startingLine = string.Empty;
 
-            while (string.IsNullOrEmpty(startingLine))
+            // Read the first line from the Network Stream
+            while (true)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
 
-                // Read the first line from the Network Stream
-                startingLine = await receiveHelper.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+                var buff = res.Buffer;
+                int crlfIndex = buff.FirstSpan.IndexOf(CRLF);
+                if (crlfIndex > -1)
+                {
+                    try
+                    {
+                        startingLine = Encoding.UTF8.GetString(res.Buffer.FirstSpan.Slice(0, crlfIndex));
+                        var fields = startingLine.Split(' ');
+                        response.Version = Version.Parse(fields[0].Trim()[5..]);
+                        response.StatusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), fields[1]);
+                        buff = buff.Slice(0, crlfIndex + 2); // add 2 bytes for the CRLF
+                        reader.AdvanceTo(buff.End); // advance to the consumed position
+                        break;
+                    }
+                    catch
+                    {
+                        throw new FormatException($"Invalid first line of the HTTP response: {startingLine}");
+                    }
+                }
+                else
+                {
+                    // the responce is incomplete ex. (HTTP/1.1 200 O)
+                    reader.AdvanceTo(buff.Start, buff.End); // nothing consumed but all the buffer examined loop and read more.
+                }
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
             }
 
-            try
-            {
-                var fields = startingLine.Split(' ');
-                response.Version = Version.Parse(fields[0].Trim()[5..]);
-                response.StatusCode = (HttpStatusCode)Enum.Parse(typeof(HttpStatusCode), fields[1]);
-            }
-            catch
-            {
-                throw new FormatException($"Invalid first line of the HTTP response: {startingLine}");
-            }
+
+
         }
 
         // Parses the headers
         private async Task ReceiveHeadersAsync(CancellationToken cancellationToken = default)
         {
+
             while (true)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
 
-                var header = await receiveHelper.ReadLineAsync(cancellationToken).ConfigureAwait(false);
-
-                // If we ran out of headers (there is always a blank line after the headers)
-                // we're done so we can exit.
-                if (header == newLine)
+                var buff = res.Buffer;
+                if (buff.IsSingleSegment)
                 {
-                    break;
-                }
-
-                var separatorPos = header.IndexOf(':');
-
-                // If we cannot find the ':' character in a header, skip to the next one
-                if (separatorPos == -1)
-                {
-                    continue;
-                }
-
-                var headerName = header.Substring(0, separatorPos);
-                var headerValue = header[(separatorPos + 1)..].Trim(' ', '\t', '\r', '\n');
-
-                // If the header is Set-Cookie, add the cookie
-                if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase))
-                {
-                    SetCookie(response, headerValue);
-                }
-                // If it's a content header
-                else if (ContentHelper.IsContentHeader(headerName))
-                {
-                    if (contentHeaders.TryGetValue(headerName, out var values))
+                    if (ReadHeadersFastPath(ref buff))
                     {
-                        values.Add(headerValue);
+                        reader.AdvanceTo(buff.Start, buff.End);
+                        break;
                     }
-                    else
+
+                }
+                else
+                {
+                    if (ReadHeadersSlowerPath(ref buff))
                     {
-                        values = new List<string>
+                        reader.AdvanceTo(buff.Start, buff.End);
+                        break;
+                    }
+                }
+                reader.AdvanceTo(buff.Start, buff.End); // not adding this line might result in infinit loop.
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Reads all Header Lines using Span<T> For High Perfromace Parsing.
+        /// </summary>
+        /// <param name="buff">Buffered Data From Pipe</param>
+        private bool ReadHeadersFastPath(ref ReadOnlySequence<byte> buff)
+        {
+            int endofheadersindex;
+            if ((endofheadersindex = buff.FirstSpan.IndexOf(CRLFCRLF_Bytes)) > -1)
+            {
+                var spanLines = buff.FirstSpan.Slice(0, endofheadersindex + 4);
+                var Lines = spanLines.SplitLines();// we use spanHelper class here to make a for each loop.
+                foreach (var Line in Lines)
+                {
+                    string HeaderLine = Encoding.UTF8.GetString(Line);
+                    ProcessHeaderLine(HeaderLine);
+                }
+
+                buff = buff.Slice(endofheadersindex + 4); // add 4 bytes for \r\n\r\n and to advance the pipe back in the calling method
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Reads all Header Lines using SequenceReader.
+        /// </summary>
+        /// <param name="buff">Buffered Data From Pipe</param>
+        private bool ReadHeadersSlowerPath(ref ReadOnlySequence<byte> buff)
+        {
+            var reader = new SequenceReader<byte>(buff);
+
+            while (reader.TryReadTo(out ReadOnlySpan<byte> Line, CRLF, true))
+            {
+                if (Line.Length == 0)// reached last crlf (empty line)
+                {
+                    buff = buff.Slice(reader.Position);
+                    return true;// all headers received
+                }
+                ProcessHeaderLine(Encoding.UTF8.GetString(Line));
+            }
+            buff = buff.Slice(reader.Position);
+            return false;// empty line not found need more data
+        }
+
+        private void ProcessHeaderLine(string header)
+        {
+            if (String.IsNullOrEmpty(header))
+            {
+                return;
+            }
+            var separatorPos = header.IndexOf(':');
+
+            var headerName = header.Substring(0, separatorPos);
+            var headerValue = header[(separatorPos + 1)..].Trim(' ', '\t', '\r', '\n');
+
+            // If the header is Set-Cookie, add the cookie
+            if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
+                headerName.Equals("Set-Cookie2", StringComparison.OrdinalIgnoreCase))
+            {
+                SetCookie(response, headerValue);
+            }
+            // If it's a content header
+            else if (ContentHelper.IsContentHeader(headerName))
+            {
+                if (contentHeaders.TryGetValue(headerName, out var values))
+                {
+                    values.Add(headerValue);
+                }
+                else
+                {
+                    values = new List<string>
                         {
                             headerValue
                         };
 
-                        contentHeaders.Add(headerName, values);
-                    }
+                    contentHeaders.Add(headerName, values);
                 }
-                else
-                {
-                    response.Headers[headerName] = headerValue;
-                }
+            }
+            else
+            {
+                response.Headers[headerName] = headerValue;
             }
         }
 
@@ -182,75 +263,108 @@ namespace RuriLib.Http
         }
 
         // TODO: Make this async (need to refactor the mess below)
-        private Task ReceiveContentAsync(CancellationToken cancellationToken = default)
+        private async Task ReceiveContentAsync(CancellationToken cancellationToken = default)
         {
             // If there are content headers
             if (contentHeaders.Count != 0)
             {
                 contentLength = GetContentLength();
 
-                var memoryStream = new MemoryStream(contentLength == -1 ? 0 : contentLength);
-
                 // Try to get the body and write it to a MemoryStream
-                var source = GetMessageBodySource();
-                foreach (var bytes in source)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    memoryStream.Write(bytes.Value, 0, bytes.Length);
-                }
-
+                var finaleResponceStream = await GetMessageBodySource(cancellationToken).ConfigureAwait(false);
                 // Rewind the stream and set the content of the response and its headers
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                response.Content = new StreamContent(memoryStream);
+                finaleResponceStream.Seek(0, SeekOrigin.Begin);
+                response.Content = new StreamContent(finaleResponceStream);
                 foreach (var pair in contentHeaders)
                 {
                     response.Content.Headers.TryAddWithoutValidation(pair.Key, pair.Value);
                 }
             }
-
-            return Task.CompletedTask;
         }
 
-        private IEnumerable<BytesWrapper> GetMessageBodySource()
-        {
-            if (contentHeaders.ContainsKey("Content-Encoding"))
-            {
-                return GetMessageBodySourceZip();
-            }
-
-            return GetMessageBodySourceStd();
-        }
-
-        private IEnumerable<BytesWrapper> GetMessageBodySourceZip()
+        private Task<Stream> GetMessageBodySource(CancellationToken cancellationToken)
         {
             if (response.Headers.ContainsKey("Transfer-Encoding"))
             {
-                return ReceiveMessageBodyChunkedZip();
+                if (contentHeaders.ContainsKey("Content-Encoding"))
+                {
+                    return GetChunkedDecompressedStream(cancellationToken);
+                }
+                else
+                {
+                    return ReceiveMessageBodyChunked(cancellationToken);
+                }
             }
-
-            if (contentLength != -1)
+            else //if (contentLength > -1)
             {
-                return ReceiveMessageBodyZip(contentLength);
+                if (contentHeaders.ContainsKey("Content-Encoding"))
+                {
+                    return GetContentLengthDecompressedStream(cancellationToken);
+                }
+                else
+                {
+                    return ReciveContentLength(cancellationToken);
+
+                }
             }
 
-            var streamWrapper = new ZipWrapperStream(commonStream, receiveHelper);
-
-            return ReceiveMessageBody(GetZipStream(streamWrapper));
         }
 
-        private IEnumerable<BytesWrapper> GetMessageBodySourceStd()
+        private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
         {
-            if (response.Headers.ContainsKey("Transfer-Encoding"))
+            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken).ConfigureAwait(false)))
             {
-                return ReceiveMessageBodyChunked();
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream,cancellationToken).ConfigureAwait(false);
+                return decompressedStream;
             }
-            if (contentLength != -1)
-            {
-                return ReceiveMessageBody(contentLength);
-            }
-
-            return ReceiveMessageBody(commonStream);
         }
+
+        private async Task<Stream> GetChunkedDecompressedStream(CancellationToken cancellationToken)
+        {
+            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken).ConfigureAwait(false)))
+            {
+                var decompressedStream = new MemoryStream();
+                await compressedStream.CopyToAsync(decompressedStream,cancellationToken).ConfigureAwait(false);
+                return decompressedStream;
+            }
+        }
+
+        private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
+        {
+            MemoryStream contentlenghtStream = new MemoryStream(contentLength);
+
+            while (true)
+            {
+                var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+
+                var buff = res.Buffer;
+                if (buff.IsSingleSegment)
+                {
+                    contentlenghtStream.Write(buff.FirstSpan);
+                }
+                else
+                {
+                    foreach (var seg in buff)
+                    {
+                        contentlenghtStream.Write(seg.Span);
+                    }
+                }
+                reader.AdvanceTo(buff.End);
+                if (contentlenghtStream.Length >= contentLength)
+                {
+                    return contentlenghtStream;
+                }
+                if (res.IsCanceled || res.IsCompleted)
+                {
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+            }
+        }
+
+
+
 
         private int GetContentLength()
         {
@@ -277,362 +391,50 @@ namespace RuriLib.Http
             return encoding;
         }
 
-        // TODO: Refactor the mess below
 
-        #region Receive Content (F*cking trash, but works (not sure (really)))
-        // Загрузка тела сообщения неизвестной длины.
-        private IEnumerable<BytesWrapper> ReceiveMessageBody(Stream stream)
-        {
-            var bytesWraper = new BytesWrapper();
-            var buffer = new byte[bufferSize];
-            bytesWraper.Value = buffer;
-            var begBytesRead = 0;
-
-            // Считываем начальные данные из тела сообщения.
-            if (stream is GZipStream || stream is DeflateStream)
-            {
-                begBytesRead = stream.Read(buffer, 0, bufferSize);
-            }
-            else
-            {
-                if (receiveHelper.HasData)
-                {
-                    begBytesRead = receiveHelper.Read(buffer, 0, bufferSize);
-                }
-                if (begBytesRead < bufferSize)
-                {
-                    begBytesRead += stream.Read(buffer, begBytesRead, bufferSize - begBytesRead);
-                }
-            }
-            // Возвращаем начальные данные.
-            bytesWraper.Length = begBytesRead;
-            yield return bytesWraper;
-            // Проверяем, есть ли открывающий тег '<html'.
-            // Если есть, то считываем данные то тех пор, пока не встретим закрывающий тек '</html>'.
-            bool isHtml = FindSignature(buffer, begBytesRead, openHtmlSignature);
-            if (isHtml)
-            {
-                bool found = FindSignature(buffer, begBytesRead, closeHtmlSignature);
-                // Проверяем, есть ли в начальных данных закрывающий тег.
-                if (found)
-                {
-                    yield break;
-                }
-            }
-            while (true)
-            {
-                int bytesRead = stream.Read(buffer, 0, bufferSize);
-                // Если тело сообщения представляет HTML.
-                if (isHtml)
-                {
-                    if (bytesRead == 0)
-                    {
-                        WaitData();
-                        continue;
-                    }
-                    bool found = FindSignature(buffer, bytesRead, closeHtmlSignature);
-                    if (found)
-                    {
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
-                        yield break;
-                    }
-                }
-                else if (bytesRead == 0)
-                {
-                    yield break;
-                }
-                bytesWraper.Length = bytesRead;
-                yield return bytesWraper;
-            }
-        }
-
-        // Загрузка тела сообщения известной длины.
-        private IEnumerable<BytesWrapper> ReceiveMessageBody(int contentLength)
-        {
-            //Stream stream = _request.ClientStream;
-            var bytesWraper = new BytesWrapper();
-            byte[] buffer = new byte[bufferSize];
-            bytesWraper.Value = buffer;
-
-            int totalBytesRead = 0;
-            while (totalBytesRead != contentLength)
-            {
-                int bytesRead;
-                if (receiveHelper.HasData)
-                {
-                    bytesRead = receiveHelper.Read(buffer, 0, bufferSize);
-                }
-                else
-                {
-                    bytesRead = commonStream.Read(buffer, 0, bufferSize);
-                }
-                if (bytesRead == 0)
-                {
-                    WaitData();
-                }
-                else
-                {
-                    totalBytesRead += bytesRead;
-                    bytesWraper.Length = bytesRead;
-                    yield return bytesWraper;
-                }
-            }
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         // Загрузка тела сообщения частями.
-        private IEnumerable<BytesWrapper> ReceiveMessageBodyChunked()
+        private async Task<Stream> ReceiveMessageBodyChunked(CancellationToken cancellationToken)
         {
-            //Stream stream = _request.ClientStream;
-            var bytesWraper = new BytesWrapper();
-            byte[] buffer = new byte[this.bufferSize];
-            bytesWraper.Value = buffer;
+            var chunkedDecoder = new ChunkedDecoderOptimized();
             while (true)
             {
-                string line = receiveHelper.ReadLineAsync().Result;
-                // Если достигнут конец блока.
-                if (line == newLine)
-                {
-                    continue;
-                }
+                var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
 
-                line = line.Trim(' ', '\r', '\n');
-                // Если достигнут конец тела сообщения.
-                if (line == string.Empty)
+                var buff = res.Buffer;
+                chunkedDecoder.Decode(ref buff);
+                reader.AdvanceTo(buff.Start, buff.End);
+                if (chunkedDecoder.Finished)
                 {
-                    yield break;
+                    return chunkedDecoder.DecodedStream;
                 }
-
-                int blockLength;
-                int totalBytesRead = 0;
-                #region Задаём длину блока
-                try
+                if (res.IsCanceled || res.IsCompleted)
                 {
-                    blockLength = Convert.ToInt32(line, 16);
-                }
-                catch (Exception ex)
-                {
-                    if (ex is FormatException || ex is OverflowException)
-                    {
-                        //throw NewHttpException(string.Format(
-                        //Resources.HttpException_WrongChunkedBlockLength, line), ex);
-                    }
-                    throw;
-                }
-                #endregion
-                // Если достигнут конец тела сообщения.
-                if (blockLength == 0)
-                {
-                    yield break;
-                }
-
-                while (totalBytesRead != blockLength)
-                {
-                    int length = blockLength - totalBytesRead;
-                    if (length > bufferSize)
-                    {
-                        length = bufferSize;
-                    }
-                    int bytesRead;
-                    if (receiveHelper.HasData)
-                    {
-                        bytesRead = receiveHelper.Read(buffer, 0, length);
-                    }
-                    else
-                    {
-                        bytesRead = commonStream.Read(buffer, 0, length);
-                    }
-                    if (bytesRead == 0)
-                    {
-                        WaitData();
-                    }
-                    else
-                    {
-                        totalBytesRead += bytesRead;
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
-                    }
+                    reader.Complete();
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
         }
 
-        private IEnumerable<BytesWrapper> ReceiveMessageBodyZip(int contentLength)
-        {
-            var bytesWraper = new BytesWrapper();
-            var streamWrapper = new ZipWrapperStream(commonStream, receiveHelper);
-            using (Stream stream = GetZipStream(streamWrapper))
-            {
-                byte[] buffer = new byte[bufferSize];
-                bytesWraper.Value = buffer;
 
-                while (true)
-                {
-                    int bytesRead = stream.Read(buffer, 0, bufferSize);
-                    if (bytesRead == 0)
-                    {
-                        if (streamWrapper.TotalBytesRead == contentLength)
-                        {
-                            yield break;
-                        }
-                        else
-                        {
-                            WaitData();
-                            continue;
-                        }
-                    }
-                    bytesWraper.Length = bytesRead;
-                    yield return bytesWraper;
-                }
-            }
-        }
 
-        private IEnumerable<BytesWrapper> ReceiveMessageBodyChunkedZip()
-        {
-            var bytesWraper = new BytesWrapper();
-            var streamWrapper = new ZipWrapperStream(commonStream, receiveHelper);
 
-            using (Stream stream = GetZipStream(streamWrapper))
-            {
-                byte[] buffer = new byte[bufferSize];
-                bytesWraper.Value = buffer;
-                while (true)
-                {
-                    string line = receiveHelper.ReadLineAsync().Result;
-                    // Если достигнут конец блока.
-                    if (line == newLine)
-                    {
-                        continue;
-                    }
-
-                    line = line.Trim(' ', '\r', '\n');
-                    // Если достигнут конец тела сообщения.
-                    if (line == string.Empty)
-                    {
-                        yield break;
-                    }
-
-                    int blockLength;
-                    #region Задаём длину блока
-                    try
-                    {
-                        blockLength = Convert.ToInt32(line, 16);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is FormatException || ex is OverflowException)
-                        {
-                            //throw NewHttpException(string.Format(
-                            //Resources.HttpException_WrongChunkedBlockLength, line), ex);
-                        }
-                        throw;
-                    }
-                    #endregion
-                    // Если достигнут конец тела сообщения.
-                    if (blockLength == 0)
-                    {
-                        yield break;
-                    }
-
-                    streamWrapper.TotalBytesRead = 0;
-                    streamWrapper.LimitBytesRead = blockLength;
-                    while (true)
-                    {
-                        int bytesRead = stream.Read(buffer, 0, bufferSize);
-                        if (bytesRead == 0)
-                        {
-                            if (streamWrapper.TotalBytesRead == blockLength)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                WaitData();
-                                continue;
-                            }
-                        }
-                        bytesWraper.Length = bytesRead;
-                        yield return bytesWraper;
-                    }
-                }
-            }
-        }
 
         private Stream GetZipStream(Stream stream)
         {
             var contentEncoding = GetContentEncoding().ToLower();
-
+            stream.Seek(0, SeekOrigin.Begin);
             return contentEncoding switch
             {
-                "gzip" => new GZipStream(stream, CompressionMode.Decompress, true),
-                "deflate" => new DeflateStream(stream, CompressionMode.Decompress, true),
-                "br" => new BrotliStream(stream, CompressionMode.Decompress, true),
+                "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
+                "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
+                "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
                 _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
             };
         }
 
-        private bool FindSignature(byte[] source, int sourceLength, byte[] signature)
-        {
-            int length = (sourceLength - signature.Length) + 1;
-            for (int sourceIndex = 0; sourceIndex < length; ++sourceIndex)
-            {
-                for (int signatureIndex = 0; signatureIndex < signature.Length; ++signatureIndex)
-                {
-                    byte sourceByte = source[signatureIndex + sourceIndex];
-                    char sourceChar = (char)sourceByte;
-                    if (char.IsLetter(sourceChar))
-                    {
-                        sourceChar = char.ToLower(sourceChar);
-                    }
-                    sourceByte = (byte)sourceChar;
-                    if (sourceByte != signature[signatureIndex])
-                    {
-                        break;
-                    }
-                    else if (signatureIndex == (signature.Length - 1))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        #endregion
 
-        #region Help Methods
-        private void WaitData()
-        {
-            var sleepTime = 0;
-            var delay = Math.Max(10, (int)ReceiveTimeout.TotalMilliseconds);
 
-            var dataAvailable = networkStream?.DataAvailable;
-            while (dataAvailable != null && !dataAvailable.Value)
-            {
-                if (sleepTime >= delay)
-                {
-                    throw new TimeoutException("Timed out while waiting for the data");
-                }
 
-                sleepTime += 10;
-                Thread.Sleep(10);
-            }
-        }
-
-        private string GetTransferEncoding()
-        {
-            if (ContentHeaderExists("Transfer-Encoding", out var name))
-            {
-                return contentHeaders[name][0];
-            }
-
-            return string.Empty;
-        }
-
-        private bool ContentHeaderExists(string name, out string actualName)
-        {
-            var key = contentHeaders.Keys.FirstOrDefault(k => k.Equals(name, StringComparison.OrdinalIgnoreCase));
-            actualName = key;
-            return key != null;
-        }
-        #endregion
     }
 }
