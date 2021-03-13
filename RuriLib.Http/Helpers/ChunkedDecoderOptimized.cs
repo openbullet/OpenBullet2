@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RuriLib.Http.Helpers
 {
@@ -15,7 +12,7 @@ namespace RuriLib.Http.Helpers
         // private long remaningchunklength;
         private bool Isnewchunk = true;
 
-        /// private AutoResetEvent manualResetEvent = new AutoResetEvent(true);
+        // private AutoResetEvent manualResetEvent = new AutoResetEvent(true);
         public Stream DecodedStream { get; private set; }
 
         public bool Finished { get; private set; }
@@ -25,10 +22,7 @@ namespace RuriLib.Http.Helpers
             DecodedStream = new MemoryStream(1024);
         }
 
-        internal void Decode(ref ReadOnlySequence<byte> buff)
-        {
-            ParseNewChunk(ref buff);
-        }
+        internal void Decode(ref ReadOnlySequence<byte> buff) => ParseNewChunk(ref buff);
 
         private void ParseNewChunk(ref ReadOnlySequence<byte> buff)
         {
@@ -105,7 +99,6 @@ namespace RuriLib.Http.Helpers
             }
         }
 
-       
         private void WritetoStream(ReadOnlySequence<byte> buff)
         {
             if (buff.IsSingleSegment)
@@ -121,9 +114,6 @@ namespace RuriLib.Http.Helpers
             }
         }
 
-        public void Dispose()
-        {
-            DecodedStream?.Dispose();
-        }
+        public void Dispose() => DecodedStream?.Dispose();
     }
 }

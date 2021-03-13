@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -19,8 +18,6 @@ namespace RuriLib.Http
 {
     internal class HttpResponseBuilder
     {
-
-
         private PipeReader reader;
         private const string newLine = "\r\n";
         private readonly byte[] CRLF = Encoding.UTF8.GetBytes(newLine);
@@ -36,7 +33,6 @@ namespace RuriLib.Http
         internal HttpResponseBuilder()
         {
             //  pipe = new Pipe();
-
         }
 
         /// <summary>
@@ -106,9 +102,6 @@ namespace RuriLib.Http
                     cancellationToken.ThrowIfCancellationRequested();
                 }
             }
-
-
-
         }
 
         // Parses the headers
@@ -144,7 +137,6 @@ namespace RuriLib.Http
                     cancellationToken.ThrowIfCancellationRequested();
                 }
             }
-
         }
 
 
@@ -155,19 +147,22 @@ namespace RuriLib.Http
         private bool ReadHeadersFastPath(ref ReadOnlySequence<byte> buff)
         {
             int endofheadersindex;
+
             if ((endofheadersindex = buff.FirstSpan.IndexOf(CRLFCRLF_Bytes)) > -1)
             {
                 var spanLines = buff.FirstSpan.Slice(0, endofheadersindex + 4);
                 var Lines = spanLines.SplitLines();// we use spanHelper class here to make a for each loop.
+                
                 foreach (var Line in Lines)
                 {
-                    string HeaderLine = Encoding.UTF8.GetString(Line);
+                    var HeaderLine = Encoding.UTF8.GetString(Line);
                     ProcessHeaderLine(HeaderLine);
                 }
 
                 buff = buff.Slice(endofheadersindex + 4); // add 4 bytes for \r\n\r\n and to advance the pipe back in the calling method
                 return true;
             }
+
             return false;
         }
         /// <summary>
@@ -187,16 +182,18 @@ namespace RuriLib.Http
                 }
                 ProcessHeaderLine(Encoding.UTF8.GetString(Line));
             }
+            
             buff = buff.Slice(reader.Position);
             return false;// empty line not found need more data
         }
 
         private void ProcessHeaderLine(string header)
         {
-            if (String.IsNullOrEmpty(header))
+            if (string.IsNullOrEmpty(header))
             {
                 return;
             }
+
             var separatorPos = header.IndexOf(':');
 
             var headerName = header.Substring(0, separatorPos);
@@ -218,9 +215,9 @@ namespace RuriLib.Http
                 else
                 {
                     values = new List<string>
-                        {
-                            headerValue
-                        };
+                    {
+                        headerValue
+                    };
 
                     contentHeaders.Add(headerName, values);
                 }
@@ -307,32 +304,27 @@ namespace RuriLib.Http
 
                 }
             }
-
         }
 
         private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
         {
-            using (var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken).ConfigureAwait(false)))
-            {
-                var decompressedStream = new MemoryStream();
-                await compressedStream.CopyToAsync(decompressedStream,cancellationToken).ConfigureAwait(false);
-                return decompressedStream;
-            }
+            using var compressedStream = GetZipStream(await ReciveContentLength(cancellationToken).ConfigureAwait(false));
+            var decompressedStream = new MemoryStream();
+            await compressedStream.CopyToAsync(decompressedStream, cancellationToken).ConfigureAwait(false);
+            return decompressedStream;
         }
 
         private async Task<Stream> GetChunkedDecompressedStream(CancellationToken cancellationToken)
         {
-            using (var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken).ConfigureAwait(false)))
-            {
-                var decompressedStream = new MemoryStream();
-                await compressedStream.CopyToAsync(decompressedStream,cancellationToken).ConfigureAwait(false);
-                return decompressedStream;
-            }
+            using var compressedStream = GetZipStream(await ReceiveMessageBodyChunked(cancellationToken).ConfigureAwait(false));
+            var decompressedStream = new MemoryStream();
+            await compressedStream.CopyToAsync(decompressedStream, cancellationToken).ConfigureAwait(false);
+            return decompressedStream;
         }
 
         private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
         {
-            MemoryStream contentlenghtStream = new MemoryStream(contentLength);
+            var contentlenghtStream = new MemoryStream(contentLength);
 
             while (true)
             {
@@ -363,9 +355,6 @@ namespace RuriLib.Http
             }
         }
 
-
-
-
         private int GetContentLength()
         {
             if (contentHeaders.TryGetValue("Content-Length", out var values))
@@ -391,9 +380,7 @@ namespace RuriLib.Http
             return encoding;
         }
 
-
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        // Загрузка тела сообщения частями.
         private async Task<Stream> ReceiveMessageBodyChunked(CancellationToken cancellationToken)
         {
             var chunkedDecoder = new ChunkedDecoderOptimized();
@@ -416,10 +403,6 @@ namespace RuriLib.Http
             }
         }
 
-
-
-
-
         private Stream GetZipStream(Stream stream)
         {
             var contentEncoding = GetContentEncoding().ToLower();
@@ -432,9 +415,5 @@ namespace RuriLib.Http
                 _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
             };
         }
-
-
-
-
     }
 }

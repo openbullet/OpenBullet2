@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RuriLib.Http.Helpers
 {
     public static class SpanHelpers
     {
-        private static byte[] CRLF_Bytes = { 13, 10 };
+        private static readonly byte[] CRLF_Bytes = { 13, 10 };
        
         public static LineSplitEnumerator SplitLines(this Span<byte> span)
         {
@@ -40,9 +36,12 @@ namespace RuriLib.Http.Helpers
             public bool MoveNext()
             {
                 var span = _span;
+                
                 if (span.Length == 0) // Reach the end of the string
                     return false;
+                
                 var index = span.IndexOf(CRLF_Bytes);
+                
                 if (index == -1) // The string is composed of only one line
                 {
                     _span = ReadOnlySpan<byte>.Empty; // The remaining string is an empty string
