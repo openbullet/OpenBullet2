@@ -37,7 +37,7 @@ namespace RuriLib.Models.Proxies
         {
             var now = DateTime.Now;
             proxies.Where(p => now > p.LastBanned + minimumBanTime).ToList().ForEach(p =>
-            { 
+            {
                 if (p.ProxyStatus == ProxyStatus.Banned || p.ProxyStatus == ProxyStatus.Bad)
                 {
                     p.ProxyStatus = ProxyStatus.Available;
@@ -58,24 +58,55 @@ namespace RuriLib.Models.Proxies
         [MethodImpl(MethodImplOptions.AggressiveOptimization)] //hot path
         public Proxy GetProxy(bool evenBusy = false, int maxUses = 0)
         {
-            IEnumerable<Proxy> possibleProxies = proxies;
 
-            possibleProxies = evenBusy
-                ? possibleProxies.Where(p => p.ProxyStatus == ProxyStatus.Available || p.ProxyStatus == ProxyStatus.Busy)
-                : possibleProxies.Where(p => p.ProxyStatus == ProxyStatus.Available);
-
-            if (maxUses > 0)
-                possibleProxies = possibleProxies.Where(p => p.TotalUses < maxUses);
-
-            Proxy proxy = possibleProxies.FirstOrDefault();
-
-            if (proxy != null)
+            for (int i = 0; i < proxies.Count; i++)
             {
-                proxy.BeingUsedBy++;
-                proxy.ProxyStatus = ProxyStatus.Busy;
+                Proxy px = proxies[i];
+                if (evenBusy)
+                {
+                    if (px.ProxyStatus == ProxyStatus.Available || px.ProxyStatus == ProxyStatus.Busy)
+                    {
+                        if (maxUses > 0)
+                        {
+                            if (px.TotalUses < maxUses)
+                            {
+                                px.BeingUsedBy++;
+                                px.ProxyStatus = ProxyStatus.Busy;
+                                return px;
+                            }
+                        }
+                        else
+                        {
+                            px.BeingUsedBy++;
+                            px.ProxyStatus = ProxyStatus.Busy;
+                            return px;
+                        }
+                    }
+                }
+                else
+                {
+                    if (px.ProxyStatus == ProxyStatus.Available)
+                    {
+                        if (maxUses > 0)
+                        {
+                            if (px.TotalUses < maxUses)
+                            {
+                                px.BeingUsedBy++;
+                                px.ProxyStatus = ProxyStatus.Busy;
+                                return px;
+                            }
+                        }
+                        else
+                        {
+                            px.BeingUsedBy++;
+                            px.ProxyStatus = ProxyStatus.Busy;
+                            return px;
+                        }
+                    }
+                }
+
             }
-            
-            return proxy;
+            return default;
         }
 
         /// <summary>
@@ -121,7 +152,7 @@ namespace RuriLib.Models.Proxies
 
             isReloadingProxies = true;
 
-            var tasks = sources.Select(async source => 
+            var tasks = sources.Select(async source =>
             {
                 try
                 {
@@ -143,7 +174,7 @@ namespace RuriLib.Models.Proxies
                             Console.WriteLine("Could not reload proxies from unknown source");
                             break;
                     }
-                    
+
                     return new List<Proxy>();
                 }
             });
