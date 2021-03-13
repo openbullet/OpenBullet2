@@ -188,7 +188,7 @@
     {
         var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
         isAdmin = uid == 0;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
 
         try { ConfigService.OnConfigSelected -= OnConfigSelected; } catch { }
 
