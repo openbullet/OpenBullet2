@@ -367,31 +367,31 @@ namespace RuriLib.Functions.Crypto
         /// <summary>
         /// Encrypts data with AES.
         /// </summary>
-        /// <param name="data">The AES-encrypted data</param>
+        /// <param name="plainText">The AES-encrypted data</param>
         /// <param name="key">The encryption key</param>
         /// <param name="iv">The initial value</param>
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
-        public static byte[] AESEncrypt(byte[] data, byte[] key, byte[] iv,
+        public static byte[] AESEncrypt(string plainText, byte[] key, byte[] iv = null,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return EncryptStringToBytes_Aes(data, keys[0], keys[1], mode, padding);
+            return EncryptStringToBytes_Aes(plainText, keys[0], keys[1], mode, padding);
         }
 
         /// <summary>
         /// Decrypts AES-encrypted data.
         /// </summary>
-        /// <param name="data">The AES-encrypted data</param>
+        /// <param name="cipherText">The AES-encrypted data</param>
         /// <param name="key">The decryption key</param>
         /// <param name="iv">The initial value</param>
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
-        public static byte[] AESDecrypt(byte[] data, byte[] key, byte[] iv = null,
+        public static string AESDecrypt(byte[] cipherText, byte[] key, byte[] iv = null,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return DecryptStringFromBytes_Aes(data, keys[0], keys[1], mode, padding);
+            return DecryptStringFromBytes_Aes(cipherText, keys[0], keys[1], mode, padding);
         }
 
         private static byte[][] ConvertKeys(byte[] key, byte[] iv)
@@ -414,7 +414,7 @@ namespace RuriLib.Functions.Crypto
             return result;
         }
 
-        private static byte[] EncryptStringToBytes_Aes(byte[] plainText, byte[] key, byte[] iv, CipherMode mode,
+        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] iv, CipherMode mode,
             PaddingMode padding)
         {
             if (plainText == null || plainText.Length <= 0)
@@ -445,7 +445,7 @@ namespace RuriLib.Functions.Crypto
             return msEncrypt.ToArray();
         }
 
-        private static byte[] DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] iv, CipherMode mode,
+        private static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] iv, CipherMode mode,
             PaddingMode padding)
         {
             if (cipherText == null || cipherText.Length <= 0)
@@ -469,12 +469,8 @@ namespace RuriLib.Functions.Crypto
 
             using var msDecrypt = new MemoryStream(cipherText);
             using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-            using var ms = new MemoryStream();
-            var buffer = new byte[512];
-            var bytesRead = 0;
-            while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
-                ms.Write(buffer, 0, bytesRead);
-            return ms.ToArray();
+            using var srDecrypt = new StreamReader(csDecrypt);
+            return srDecrypt.ReadToEnd();
         }
         #endregion
 
