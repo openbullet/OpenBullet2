@@ -115,14 +115,17 @@ namespace RuriLib.Blocks.Functions.String
         public static string Translate(BotData data, [Variable] string input, Dictionary<string, string> translations,
             bool replaceOne = false)
         {
-            StringBuilder sb = new StringBuilder(input);
-            int replacements = 0;
+            var sb = new StringBuilder(input);
+            var replacements = 0;
             
             foreach (var entry in translations.OrderBy(e => e.Key.Length).Reverse())
             {
-                replacements += input.CountOccurrences(entry.Key);
-                sb.Replace(entry.Key, entry.Value);
-                if (replaceOne) break;
+                if (input.Contains(entry.Key))
+                {
+                    replacements += input.CountOccurrences(entry.Key);
+                    sb.Replace(entry.Key, entry.Value);
+                    if (replaceOne) break;
+                }
             }
 
             var translated = sb.ToString();
