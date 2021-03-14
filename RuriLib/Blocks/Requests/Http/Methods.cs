@@ -55,13 +55,9 @@ namespace RuriLib.Blocks.Requests.Http
 
                 if (options.UrlEncodeContent)
                 {
-                    // HACK: Very dirty but it works
-                    // This splits the query in chunks basing on & and =
-                    var nonce = data.Random.Next(1000000, 9999999);
-                    content = content.Replace("&", $"{nonce}&{nonce}").Replace("=", $"{nonce}={nonce}");
                     content = string.Join("", content.SplitInChunks(2080)
                         .Select(s => Uri.EscapeDataString(s)))
-                        .Replace($"{nonce}%26{nonce}", "&").Replace($"{nonce}%3D{nonce}", "=");
+                        .Replace($"%26", "&").Replace($"%3D", "=");
                 }
 
                 request.Content = new StringContent(content.Unescape());
