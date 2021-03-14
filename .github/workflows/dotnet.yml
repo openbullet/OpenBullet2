@@ -77,4 +77,4 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: openbullet/openbullet2
-          tag_with_ref: true  
+          tags: latest 
