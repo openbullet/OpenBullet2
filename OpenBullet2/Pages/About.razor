@@ -1,4 +1,4 @@
-﻿@page "/about"
+@page "/about"
 @using OpenBullet2.Shared.Forms
 @inject Microsoft.Extensions.Localization.IStringLocalizer<About> Loc
 @inject IModalService Modal
@@ -15,6 +15,10 @@
         <tr>
             <th scope="row">@Loc["Collaborators"]</th>
             <td>demiurgo, meinname</td>
+        </tr>
+        <tr>
+            <th scope="row">@Loc["Contributors"]</th>
+            <td>RydjGit, tracsgh, tcortega, ExaltedInc, matsver</td>
         </tr>
         <tr>
             <th scope="row">@Loc["AlphaTesters"]</th>
