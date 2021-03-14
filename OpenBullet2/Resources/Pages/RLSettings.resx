@@ -264,4 +264,7 @@
   <data name="UserAgents" xml:space="preserve">
     <value>User Agents</value>
   </data>
+  <data name="VerboseMode" xml:space="preserve">
+    <value>Verbose mode</value>
+  </data>
 </root>

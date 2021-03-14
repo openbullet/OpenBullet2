@@ -50,7 +50,6 @@ namespace RuriLib.Models.Jobs
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
         public BotData[] CurrentBotDatas { get; set; } = new BotData[200];
-        public bool DebuggingMode { get; set; } = true;
 
         // Getters
         public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
@@ -677,7 +676,7 @@ namespace RuriLib.Models.Jobs
 
         private void DebugLog(string message)
         {
-            if (DebuggingMode)
+            if (Providers.GeneralSettings.VerboseMode)
             {
                 Console.WriteLine($"[{DateTime.Now}] {message}");
             }

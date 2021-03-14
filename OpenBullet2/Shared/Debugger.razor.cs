@@ -159,7 +159,12 @@ namespace OpenBullet2.Shared
             catch (Exception ex)
             {
                 data.STATUS = "ERROR";
-                logger.Log($"[{data.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
+                
+                var logErrorMessage = RuriLibSettings.RuriLibSettings.GeneralSettings.VerboseMode
+                    ? ex.ToString()
+                    : ex.Message;
+
+                logger.Log($"[{data.ExecutionInfo}] {ex.GetType().Name}: {logErrorMessage}", LogColors.Tomato);
                 await js.AlertError(ex.GetType().Name, $"[{data.ExecutionInfo}] {ex.Message}");
             }
             finally
