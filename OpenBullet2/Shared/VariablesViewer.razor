@@ -10,13 +10,13 @@
         @foreach (var variable in variables.Where(v => !v.MarkedForCapture))
         {
             <p style="color: yellow">
-                @variable.Name (@variable.Type) = @variable.AsString();
+                @variable.Name (@variable.Type) = @variable.AsString()
             </p>
         }
         @foreach (var variable in variables.Where(v => v.MarkedForCapture))
         {
             <p style="color: tomato">
-                @variable.Name (@variable.Type) = @variable.AsString();
+                @variable.Name (@variable.Type) = @variable.AsString()
             </p>
         }
     }
@@ -25,7 +25,7 @@
         @foreach (var variable in variables)
         {
             <p style="color: @(variable.MarkedForCapture ? "tomato" : "yellow");">
-                @variable.Name (@variable.Type) = @variable.AsString();
+                @variable.Name (@variable.Type) = @variable.AsString()
             </p>
         }
     }
