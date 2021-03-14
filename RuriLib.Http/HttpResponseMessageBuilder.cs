@@ -158,8 +158,8 @@ namespace RuriLib.Http
                 var Lines = spanLines.SplitLines();// we use spanHelper class here to make a for each loop.
                 foreach (var Line in Lines)
                 {
-                    string HeaderLine = Encoding.UTF8.GetString(Line);
-                    ProcessHeaderLine(HeaderLine);
+                   
+                    ProcessHeaderLine(Line);
                 }
 
                 buff = buff.Slice(endofheadersindex + 4); // add 4 bytes for \r\n\r\n and to advance the pipe back in the calling method
@@ -182,22 +182,24 @@ namespace RuriLib.Http
                     buff = buff.Slice(reader.Position);
                     return true;// all headers received
                 }
-                ProcessHeaderLine(Encoding.UTF8.GetString(Line));
+                ProcessHeaderLine(Line);
             }
             buff = buff.Slice(reader.Position);
             return false;// empty line not found need more data
         }
 
-        private void ProcessHeaderLine(string header)
+        private void ProcessHeaderLine(ReadOnlySpan<Byte> header)
         {
-            if (String.IsNullOrEmpty(header))
+            if (header.Length == 0)
             {
                 return;
             }
-            var separatorPos = header.IndexOf(':');
+            // changed to use span directly to decrease the number of strings allocated (less GC activity)
+            var separatorPos = header.IndexOf((byte)':');
 
-            var headerName = header.Substring(0, separatorPos);
-            var headerValue = header[(separatorPos + 1)..].Trim(' ', '\t', '\r', '\n');
+            var headerName = Encoding.UTF8.GetString(header.Slice(0, separatorPos));
+            var headerValuespan = header.Slice(separatorPos + 1); // skip ':'
+            var headerValue = headerValuespan[0] == (byte)' ' ? Encoding.UTF8.GetString(headerValuespan.Slice(1)) : Encoding.UTF8.GetString(headerValuespan); // trim the wight space
 
             // If the header is Set-Cookie, add the cookie
             if (headerName.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
@@ -215,9 +217,9 @@ namespace RuriLib.Http
                 else
                 {
                     values = new List<string>
-                        {
-                            headerValue
-                        };
+                    {
+                        headerValue
+                    };
 
                     contentHeaders.Add(headerName, values);
                 }
