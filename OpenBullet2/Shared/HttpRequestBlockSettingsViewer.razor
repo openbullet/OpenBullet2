@@ -46,6 +46,7 @@
         case StandardRequestParams x:
             <BlockInputField BlockSetting="x.Content" />
             <BlockInputField BlockSetting="x.ContentType" />
+            <BlockInputField BlockSetting="@Block.Settings["urlEncodeContent"]" />
             break;
 
         case RawRequestParams x:

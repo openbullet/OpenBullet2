@@ -51,7 +51,20 @@ namespace RuriLib.Blocks.Requests.Http
 
             if (!string.IsNullOrEmpty(options.Content) || options.AlwaysSendContent)
             {
-                request.Content = new StringContent(options.Content.Unescape());
+                var content = options.Content;
+
+                if (options.UrlEncodeContent)
+                {
+                    // HACK: Very dirty but it works
+                    // This splits the query in chunks basing on & and =
+                    var nonce = data.Random.Next(1000000, 9999999);
+                    content = content.Replace("&", $"{nonce}&{nonce}").Replace("=", $"{nonce}={nonce}");
+                    content = string.Join("", content.SplitInChunks(2080)
+                        .Select(s => Uri.EscapeDataString(s)))
+                        .Replace($"{nonce}%26{nonce}", "&").Replace($"{nonce}%3D{nonce}", "=");
+                }
+
+                request.Content = new StringContent(content.Unescape());
                 request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(options.ContentType);
             }
 
