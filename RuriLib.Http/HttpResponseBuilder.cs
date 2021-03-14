@@ -100,6 +100,7 @@ namespace RuriLib.Http
                 {
                     reader.Complete();
                     cancellationToken.ThrowIfCancellationRequested();
+                    break;
                 }
             }
         }
@@ -135,6 +136,7 @@ namespace RuriLib.Http
                 {
                     reader.Complete();
                     cancellationToken.ThrowIfCancellationRequested();
+                    break;
                 }
             }
         }
@@ -292,7 +294,7 @@ namespace RuriLib.Http
                     return ReceiveMessageBodyChunked(cancellationToken);
                 }
             }
-            else //if (contentLength > -1)
+            else if (contentLength > -1)
             {
                 if (contentHeaders.ContainsKey("Content-Encoding"))
                 {
@@ -304,6 +306,49 @@ namespace RuriLib.Http
 
                 }
             }
+            else // handle the case where sever never sent chunked encoding nor content-length headrs (that is not allowed by rfc but whatever)
+            {
+                if (contentHeaders.ContainsKey("Content-Encoding"))
+                {
+                    return GetResponcestreamUntilCloseDecompressed(cancellationToken);
+                }
+                else
+                {
+                    return GetResponcestreamUntilClose(cancellationToken);
+                }
+            }
+        }
+
+    
+        private async Task<Stream> GetResponcestreamUntilClose(CancellationToken cancellationToken)
+        {
+            var responcestream = new MemoryStream();
+            while (true)
+            {
+                var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
+                if (res.IsCompleted || res.Buffer.Length == 0)// here the pipe will be complete if the server closes the connection or sends 0 length byte array
+                {
+                    break;
+                }
+                if (res.IsCanceled)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                }
+                var buff = res.Buffer;
+
+                if (buff.IsSingleSegment)
+                {
+                    responcestream.Write(buff.FirstSpan);
+                }
+                else
+                {
+                    foreach (var seg in buff)
+                    {
+                        responcestream.Write(seg.Span);
+                    }
+                }
+            }
+            return responcestream;
         }
 
         private async Task<Stream> GetContentLengthDecompressedStream(CancellationToken cancellationToken)
@@ -321,10 +366,21 @@ namespace RuriLib.Http
             await compressedStream.CopyToAsync(decompressedStream, cancellationToken).ConfigureAwait(false);
             return decompressedStream;
         }
+        private async Task<Stream> GetResponcestreamUntilCloseDecompressed(CancellationToken cancellationToken)
+        {
+            using var compressedStream = GetZipStream(await GetResponcestreamUntilClose(cancellationToken).ConfigureAwait(false));
+            var decompressedStream = new MemoryStream();
+            await compressedStream.CopyToAsync(decompressedStream, cancellationToken).ConfigureAwait(false);
+            return decompressedStream;
+        }
 
         private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
         {
             var contentlenghtStream = new MemoryStream(contentLength == -1 ? 0 : contentLength);
+            if (contentLength == 0)
+            {
+                return contentlenghtStream;
+            }
 
             while (true)
             {
@@ -351,8 +407,10 @@ namespace RuriLib.Http
                 {
                     reader.Complete();
                     cancellationToken.ThrowIfCancellationRequested();
+                    break;
                 }
             }
+            return contentlenghtStream;
         }
 
         private int GetContentLength()
@@ -399,8 +457,10 @@ namespace RuriLib.Http
                 {
                     reader.Complete();
                     cancellationToken.ThrowIfCancellationRequested();
+                    break;
                 }
             }
+            return chunkedDecoder.DecodedStream;
         }
 
         private Stream GetZipStream(Stream stream)
