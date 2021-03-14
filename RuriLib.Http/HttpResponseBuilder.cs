@@ -324,7 +324,7 @@ namespace RuriLib.Http
 
         private async Task<Stream> ReciveContentLength(CancellationToken cancellationToken)
         {
-            var contentlenghtStream = new MemoryStream(contentLength);
+            var contentlenghtStream = new MemoryStream(contentLength == -1 ? 0 : contentLength);
 
             while (true)
             {
