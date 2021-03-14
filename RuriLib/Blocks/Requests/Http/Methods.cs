@@ -364,8 +364,16 @@ namespace RuriLib.Blocks.Requests.Http
 
         private static async Task LogHttpResponseData(BotData data, HttpResponse response, HttpRequest request)
         {
-            // Read the raw source for Content-Length calculation
-            data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
+            // Try to read the raw source for Content-Length calculation
+            try
+            {
+                data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
+            }
+            catch (NullReferenceException)
+            {
+                // Thrown when there is no content (204)
+                data.RAWSOURCE = Array.Empty<byte>();
+            }
 
             // Address
             var uri = response.Request.Uri;
