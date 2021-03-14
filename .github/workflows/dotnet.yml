@@ -63,4 +63,18 @@ jobs:
       with:
         release_name: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         body: Please refer to [this post](https://discourse.openbullet.dev/t/wip-how-to-download-and-start-openbullet-2/29) on the official forum to learn how to launch OpenBullet 2.
-        
+      
+  push_to_docker:
+    name: Push Docker image to Docker Hub
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: openbullet/openbullet2
+          tag_with_ref: true  
