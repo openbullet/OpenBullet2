@@ -91,11 +91,11 @@
                         {
                     <option value="@comp">@comp</option>
                         }
-            </InputSelect>
-            <InputNumber @bind-Value="t.Days" /> @Loc["days"]
-            <InputNumber @bind-Value="t.Hours" /> @Loc["hours"]
-            <InputNumber @bind-Value="t.Minutes" /> @Loc["minutes"]
-            <InputNumber @bind-Value="t.Seconds" /> @Loc["seconds"]
+            </InputSelect><br />
+            <span>@Loc["days"]</span><InputNumber @bind-Value="t.Days" />
+            <span>@Loc["hours"]</span><InputNumber @bind-Value="t.Hours" />
+            <span>@Loc["minutes"]</span><InputNumber @bind-Value="t.Minutes" />
+            <span>@Loc["seconds"]</span><InputNumber @bind-Value="t.Seconds" />
             break;
 
         case TimeRemainingTrigger t:
@@ -105,11 +105,11 @@
                         {
                     <option value="@comp">@comp</option>
                         }
-            </InputSelect>
-            <InputNumber @bind-Value="t.Days" /> @Loc["days"]
-            <InputNumber @bind-Value="t.Hours" /> @Loc["hours"]
-            <InputNumber @bind-Value="t.Minutes" /> @Loc["minutes"]
-            <InputNumber @bind-Value="t.Seconds" /> @Loc["seconds"]
+            </InputSelect><br />
+            <span>@Loc["days"]</span><InputNumber @bind-Value="t.Days" />
+            <span>@Loc["hours"]</span><InputNumber @bind-Value="t.Hours" />
+            <span>@Loc["minutes"]</span><InputNumber @bind-Value="t.Minutes" />
+            <span>@Loc["seconds"]</span><InputNumber @bind-Value="t.Seconds" />
             break;
     }
 </EditForm>

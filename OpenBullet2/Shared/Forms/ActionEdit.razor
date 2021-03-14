@@ -13,19 +13,19 @@
             break;
 
         case WaitAction a:
-            <span>@Loc["Wait"]</span>
-            <InputNumber @bind-Value="a.Days" /> @Loc["days"]
-            <InputNumber @bind-Value="a.Hours" /> @Loc["hours"]
-            <InputNumber @bind-Value="a.Minutes" /> @Loc["minutes"]
-            <InputNumber @bind-Value="a.Seconds" /> @Loc["seconds"]
+            <span>@Loc["Wait"]</span><br />
+            <span>@Loc["days"]</span><InputNumber @bind-Value="a.Days" />
+            <span>@Loc["hours"]</span><InputNumber @bind-Value="a.Hours" />
+            <span>@Loc["minutes"]</span><InputNumber @bind-Value="a.Minutes" />
+            <span>@Loc["seconds"]</span><InputNumber @bind-Value="a.Seconds" />
             break;
 
         case SetRelativeStartConditionAction a:
-            <span>@Loc["SetRelativeStartTo"]</span>
-            <InputNumber @bind-Value="a.Days" /> @Loc["days"]
-            <InputNumber @bind-Value="a.Hours" /> @Loc["hours"]
-            <InputNumber @bind-Value="a.Minutes" /> @Loc["minutes"]
-            <InputNumber @bind-Value="a.Seconds" /> @Loc["seconds"]
+            <span>@Loc["SetRelativeStartTo"]</span><br />
+            <span>@Loc["days"]</span><InputNumber @bind-Value="a.Days" />
+            <span>@Loc["hours"]</span><InputNumber @bind-Value="a.Hours" />
+            <span>@Loc["minutes"]</span><InputNumber @bind-Value="a.Minutes" />
+            <span>@Loc["seconds"]</span><InputNumber @bind-Value="a.Seconds" />
             <span>@Loc["inJob"]</span>
             <InputNumber @bind-Value="a.JobId" />
             break;
