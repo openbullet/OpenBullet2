@@ -45,7 +45,8 @@ The developer will not be held responsible for improper use of this software.
                 {
                     config
 #if RELEASE
-                        .AddJsonFile("appsettings.Release.json");
+                        .AddJsonFile("appsettings.Release.json")
+                        .AddCommandLine(args);
 #else
                         .AddJsonFile("appsettings.Development.json");
 #endif
