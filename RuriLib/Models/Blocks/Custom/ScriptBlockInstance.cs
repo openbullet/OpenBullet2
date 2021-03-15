@@ -169,12 +169,12 @@ namespace RuriLib.Models.Blocks.Custom
                     break;
 
                 case Interpreter.NodeJS:
-                    var nodeScript = @$"module.exports = (callback, {MakeInputs()}) => {{
+                    var nodeScript = @$"module.exports = async ({MakeInputs()}) => {{
 {Script}
 var noderesult = {{
 {MakeNodeObject()}
 }};
-callback(null, noderesult);
+return noderesult;
 }}";
 
                     scriptHash = HexConverter.ToHexString(Crypto.MD5(Encoding.UTF8.GetBytes(nodeScript)));
