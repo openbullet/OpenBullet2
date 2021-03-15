@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Help1x00" xml:space="preserve">
+    <value>این بلوک چگونه کار می کند؟</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>بلوک٪ Parse٪ به شما امکان می دهد داده ها را از یک رشته با روشهای مختلف تجزیه تجزیه کرده و در یک متغیر رشته یا لیست رشته ها ذخیره کنید. حالت های تجزیه پشتیبانی شده LR ، CSS ، JSON و REGEX هستند. حالت٪ LR٪ (چپ راست) امکان تجزیه متن بین دو رشته داده شده را فراهم می کند. حالت٪ CSS٪ (CSS Selector) امکان دریافت ویژگی عنصر را از یک صفحه HTML فراهم می کند.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>حالت٪ JSON٪ (JavaScript Object Notation) با استفاده از٪ JToken٪ امکان بدست آوردن مقدار یک شی یا آرایه سریال سازی شده JSON را می دهد. JToken به شما امکان می دهد مسیری را تعیین کنید که به مقدار دلخواه درون ساختار JSON برسد. مثالی از این می تواند `field1.array [0]` برای آدرس دهی به اولین عنصر از آرایه `array` درون شی`` field1` باشد. اگر درعوض «field1.array [*]» را بنویسید ، تمام عناصر آرایه را بدست خواهید آورد.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>حالت٪ REGEX٪ (تنظیم منظم) یک روش تجزیه پیشرفته است. شما باید یک عبارت منظم بسازید و از٪ capturing group٪ برای تعیین میزان خروجی استفاده کنید. به عنوان مثال موردی را که در آن ما در حال تجزیه جمله "سلام دوست 123" هستیم و می خواهیم کلمه "دوست" را بدست آوریم ، در موردی که "123" یک مقدار تغییر است و نمی توانیم از حالت LR استفاده کنیم. شما می توانید regex مانند «سلام ([a-z] +] [\ d] {3}» بسازید. توجه کنید که چگونه یک گروه گیرنده وجود دارد ، که با مهاربندهای گرد مشخص می شود. سپس در قسمت٪ Output format٪ شما می توانید "[0]" را برای خروجی مطابقت کامل ، "[1]" برای خروجی اولین گروه گرفته شده و غیره بنویسید ... توجه داشته باشید که می توانید بیش از 1 استفاده کنید گروه در قالب خروجی.</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>اگر کادر٪ Recursive٪ را علامت بزنید ، تمام توالی کاراکترهایی که از معیارهای تجزیه برخوردار هستند ، در داخل یک متغیر List of Strings قرار می گیرند. در غیر این صورت فقط اولین مسابقه گرفته می شود و در یک متغیر String قرار می گیرد.</value>
+  </data>
+  <data name="IsCapture" xml:space="preserve">
+    <value>کپترو</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="OutputVariable" xml:space="preserve">
+    <value>متغیر خروجی</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+</root>

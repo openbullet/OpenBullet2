@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>اضافه کردن</value>
+  </data>
+  <data name="AddBlank" xml:space="preserve">
+    <value>اضافه خالی</value>
+  </data>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>انواع پروکسی مجاز است</value>
+  </data>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>انواع لیست کلمات مجاز</value>
+  </data>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>همیشه در ابتدا مرورگر را باز کنید</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>مطمئنی؟</value>
+  </data>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>ممنوعیت فرار از حلقه a.k.a پس از چند وضعیت بن ، خط داده باید به عنوان تو چک علامت گذاری شود و پروکسی ممنوع شود (0 برای غیرفعال کردن)</value>
+  </data>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>وقتی ربات با یکی از این وضعیت ها پایان یافت ، پروکسی را ممنوع کنید</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>حساس به حروف بزرگ</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>پاک کردن</value>
+  </data>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>وضعیت هایی که ربات برای آنها ادامه / متوقف می شود</value>
+  </data>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>محدودیت سی پی ام (0 بدون محدودیت)</value>
+  </data>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>ورودی های سفارشی</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>دیتا</value>
+  </data>
+  <data name="DataRules" xml:space="preserve">
+    <value>قوانین داده</value>
+  </data>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>پاسخ پیش فرض</value>
+  </data>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>اعلان ها را از صفحات وب غیرفعال کنید</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>عمومی</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>بی سر</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>خطاهای HTTPS را نادیده بگیرید </value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>خطاهای پاسخ را نادیده بگیرید</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>توضیحات (سوال برای کاربر)</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>ورودی ها</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>ورودی های سفارشی راهی برای تعریف برخی مقادیر به طور مستقیم در زمان اجرا است. کاربران کانفیگ هنگام شروع کار برخی از پنجره های بازشو را دریافت می کنند و پاسخ آنها به عنوان متغیر رشته ای درج می شود که می توانید به دلخواه خود استفاده کنید.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>معکوس کردن</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>حداکثر استفاده در هر پروکسی (0 بی نهایت است)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>پروکسی ها</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>کنترل(مثل بازی دادن عروسک :) )</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>آرگومان های خط فرمان (به عنوان مثال - اعلان های غیرفعال - ناشناس)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>نماینده کاربر (در صورت خالی بودن به طور پیش فرض)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>وقتی ربات با یکی از این وضعیت ها پایان یافت ، از مرورگر خارج شوید</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>نماینده کاربر تصادفی</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>قانون Regex</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Regex برای مطابقت</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>ریکوئست</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>بازیابی پیش فرض ها</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>آیا می خواهید تنظیمات پیش فرض را بازیابی کنید؟</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Captures های خالی را نیز ذخیره کنید</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>قانون ساده</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>نام برش</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>مقدار پیشنهادی رباتها</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Regex Helper را تغییر دهید</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>داده ها را پس از برش گذاری رمزگذاری کنید</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>استفاده از پروکسی</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>نام متغیر</value>
+  </data>
+</root>

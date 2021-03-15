@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdvancedSettings" xml:space="preserve">
+    <value>تنظیمات پیشرفته</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>این بلوک چگونه کار می کند؟</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>بلوک٪اچ تی تی پی رکوئست٪ به شما امکان می دهد درخواست HTTP را نسبت به یک نقطه انتهایی انجام دهید. اگر می خواهید یک بدنه را در کنار سرصفحه ها و کوکی های خود ارسال کنید ، می توانید با انتخاب یکی از روش های ارسال محتوا ، این کار را انجام دهید. حالت٪ استاندارد٪ به سادگی یک رشته را می گیرد ، آن را به صورت UTF-8 رمزگذاری کرده و به داخل قسمت درخواست می فرستد. قسمت٪٪ نوع محتوا٪ به طور خودکار به عنوان٪٪ نوع محتوا٪ تبدیل می شود و به درخواست اضافه می شود.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>حالت٪ خام٪ در صورتی که محتوای شما یک آرایه بایت باشد و یک رشته نباشد ، اساساً همان حالت استاندارد را انجام می دهد. ٪ تأیید پایه٪ برای احراز هویت با تأیید اعتبار دسترسی اصلی (پنجره نام کاربری / گذرواژه معمولی که در مرورگر خود مشاهده می کنید و درخواست اعتبار می کند) استفاده می شود. سرانجام ، حالت٪ مولتی پارت٪ محتوایی را ارسال می کند که می تواند از چند قسمت ساخته شود ، مانند رشته ها ، بایت های خام و پرونده ها. این به عنوان مثال برای بارگذاری پرونده در وب سایت مفید است.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>پاسخ تجزیه خواهد شد و به چند بخش تقسیم می شود که به متغیرهای پیش فرض مختلف اختصاص می یابد. پاسخ٪ آدرس٪ (پس از آخرین تغییر مسیر در صورت فعال بودن٪ Redirect٪) در متغیر رشته "data.ADDRESS" ذخیره می شود. پاسخ٪ body٪ (منبع a.k.) در داخل متغیر String `data.SOURCE` (به عنوان رشته UTF-8) و در داخل متغیر Byte Array` data.RAWSOURCE` (پس از فشرده سازی به عنوان مثال gzip) خواهد بود.</value>
+  </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>٪ پاسخ کد٪ (به عنوان مثال 200) در متغیر Integer `data.RESPONSECODE` درج خواهد شد. سرصفحه ها به یک فرهنگ لغت تجزیه می شوند و در متغیر Dictionary of Strings `data.HEADERS` درج می شوند ، و به همین ترتیب برای کوکی ها در متغیر` data.COOKIES`. به یاد داشته باشید که می توانید مقادیر را با استفاده از نحو `data.HEADERS [به راحتی از طریق دیکشنری بازیابی کنید. در صورت عدم موفقیت درخواست ، متغیر `data.STATUS` بر روی` ERROR` تنظیم می شود.</value>
+  </data>
+  <data name="Help1x05" xml:space="preserve">
+    <value>آخرین نکته ای که باید بخاطر بسپارید این است که کوکی های داخل متغیر «data.COOKIES» فقط اضافه یا رونویسی می شوند ، هرگز حذف نمی شوند. این بدان معناست که کوکی های قبلاً دریافت شده (که در داخل متغیر «data.COOKIES» هستند) علاوه بر٪ سفارشی کوکی هایی که می توانید برای هر درخواست جدید تعریف کنید ، دوباره در داخل درخواست های بعدی ارسال می شوند. این اتفاق می افتد مگر اینکه "data.COOKIES" پاک یا مجدداً تنظیم شود.</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>مخفی</value>
+  </data>
+  <data name="Label" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>نمایش</value>
+  </data>
+</root>
