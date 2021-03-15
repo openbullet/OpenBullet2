@@ -53,7 +53,7 @@
     [Parameter] public ProxyCheckJobOptions Options { get; set; }
     private List<ProxyGroupEntity> groups = new();
     private int uid = -1;
-    private List<ProxyCheckTarget> targets;
+    private List<ProxyCheckTarget> targets = new();
     private int selectedTarget = 0;
 
     protected override async Task OnInitializedAsync()
@@ -64,7 +64,7 @@
             ? await ProxyGroupRepo.GetAll().ToListAsync()
             : await ProxyGroupRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
 
-        targets = PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets;
+        targets = PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets ?? new();
 
         if (targets.Count == 0)
         {
