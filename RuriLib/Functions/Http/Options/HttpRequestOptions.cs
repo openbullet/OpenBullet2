@@ -16,6 +16,7 @@ namespace RuriLib.Functions.Http.Options
         public string HttpVersion { get; set; } = "1.1";
         public bool UseCustomCipherSuites { get; set; } = false;
         public List<string> CustomCipherSuites { get; set; } = new();
+        public string CodePagesEncoding { get; set; } = string.Empty;
         public bool AlwaysSendContent { get; set; } = false;
     }
 }

@@ -73,7 +73,7 @@ namespace RuriLib.Blocks.Requests.Http
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request);
+                await LogHttpResponseData(data, response, request, options);
             }
             catch
             {
@@ -119,7 +119,7 @@ namespace RuriLib.Blocks.Requests.Http
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request);
+                await LogHttpResponseData(data, response, request, options);
             }
             catch
             {
@@ -166,7 +166,7 @@ namespace RuriLib.Blocks.Requests.Http
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request);
+                await LogHttpResponseData(data, response, request, options);
             }
             catch
             {
@@ -248,7 +248,7 @@ namespace RuriLib.Blocks.Requests.Http
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request);
+                await LogHttpResponseData(data, response, request, options);
             }
             catch
             {
@@ -371,7 +371,8 @@ namespace RuriLib.Blocks.Requests.Http
             return writer.ToString();
         }
 
-        private static async Task LogHttpResponseData(BotData data, HttpResponse response, HttpRequest request)
+        private static async Task LogHttpResponseData(BotData data, HttpResponse response, HttpRequest request,
+            RuriLib.Functions.Http.Options.HttpRequestOptions requestOptions)
         {
             // Try to read the raw source for Content-Length calculation
             try
@@ -420,7 +421,16 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             // Source
-            data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
+            if (!string.IsNullOrWhiteSpace(requestOptions.CodePagesEncoding))
+            {
+                data.SOURCE = CodePagesEncodingProvider.Instance
+                    .GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE);
+            }
+            else
+            {
+                data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
+            }
+            
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);
             data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }

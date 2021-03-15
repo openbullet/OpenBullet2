@@ -22,6 +22,7 @@
     <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
     <PackageReference Include="Scrypt.NET" Version="1.3.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
     <PackageReference Include="Yove.Proxy" Version="1.1.1" />
   </ItemGroup>

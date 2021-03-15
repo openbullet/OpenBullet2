@@ -339,6 +339,8 @@ namespace RuriLib.Models.Blocks.Custom
             writer.Write("CustomHeaders = " + GetSettingValue("customHeaders") + ", ");
             writer.Write("TimeoutMilliseconds = " + GetSettingValue("timeoutMilliseconds") + ", ");
             writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
+            writer.Write("CodePagesEncoding = " + GetSettingValue("codePagesEncoding") + ", ");
+            writer.Write("AlwaysSendContent = " + GetSettingValue("alwaysSendContent") + ", ");
             writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
             writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
 

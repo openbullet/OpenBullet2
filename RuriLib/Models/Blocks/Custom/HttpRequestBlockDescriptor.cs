@@ -32,6 +32,7 @@ namespace RuriLib.Models.Blocks.Custom
                 { "securityProtocol", new EnumParameter("securityProtocol", typeof(SecurityProtocol), SecurityProtocol.SystemDefault.ToString()) },
                 { "useCustomCipherSuites", new BoolParameter("useCustomCipherSuites", false) },
                 { "alwaysSendContent", new BoolParameter("alwaysSendContent", false) },
+                { "codePagesEncoding", new StringParameter("codePagesEncoding", string.Empty) },
                 { "customCipherSuites", new ListOfStringsParameter("customCipherSuites",
                     new List<string>
                     {
