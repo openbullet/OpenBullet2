@@ -9,6 +9,7 @@
         <div class="list-group list-group-horizontal">
             <button class="btn btn-sm btn-outline-success" @onclick="CreateConfig"><span class="oi oi-plus"></span> @Loc["New"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="EditConfig"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="CloneConfig"><span class="oi oi-layers"></span> @Loc["Clone"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteConfig"><span class="oi oi-x"></span> @Loc["Delete"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="@(() => uploadDisplay = !uploadDisplay)">
                 <span class="oi oi-data-transfer-upload"></span> @Loc["Upload"]

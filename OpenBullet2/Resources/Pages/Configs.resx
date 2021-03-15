@@ -141,6 +141,9 @@
   <data name="Category" xml:space="preserve">
     <value>Category</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Clone</value>
+  </data>
   <data name="ConfigReloadWarning" xml:space="preserve">
     <value>This will reload all configs from disk, so all unsaved changes will be lost. Do you want to proceed?</value>
   </data>

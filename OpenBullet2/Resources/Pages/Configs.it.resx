@@ -141,6 +141,9 @@
   <data name="Category" xml:space="preserve">
     <value>Categoria</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Clona</value>
+  </data>
   <data name="ConfigReloadWarning" xml:space="preserve">
     <value>Verranno ricaricate le config dal disco, tutte le modifiche non salvate saranno perse. Procedere?</value>
   </data>

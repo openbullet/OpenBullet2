@@ -165,6 +165,33 @@ namespace OpenBullet2.Pages
             Nav.NavigateTo("config/edit/metadata");
         }
 
+        private async Task CloneConfig()
+        {
+            if (selectedConfig == null)
+            {
+                await ShowNoConfigSelectedMessage();
+                return;
+            }
+
+            // Pack and unpack to clone
+            var packed = await ConfigPacker.Pack(selectedConfig);
+            using var ms = new MemoryStream(packed);
+            var newConfig = await ConfigPacker.Unpack(ms);
+            
+            // Change the id and save it again
+            newConfig.Id = Guid.NewGuid().ToString();
+            await ConfigRepo.Save(newConfig);
+
+            // Set it as currently selected config
+            configs.Insert(0, newConfig);
+            selectedConfig = newConfig;
+            ConfigService.Configs.Add(selectedConfig);
+            ConfigService.SelectedConfig = selectedConfig;
+
+            VolatileSettings.DebuggerLog = new();
+            Nav.NavigateTo("config/edit/metadata");
+        }
+
         private async Task DeleteConfig()
         {
             if (selectedConfig == null)
