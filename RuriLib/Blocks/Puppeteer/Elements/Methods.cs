@@ -142,16 +142,16 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             return displayed;
         }
 
-        [Block("Uploads a file to the selected element", name = "Upload File")]
-        public static async Task PuppeteerUploadFile(BotData data, FindElementBy findBy, string identifier, int index, string filePath)
+        [Block("Uploads one or more files to the selected element", name = "Upload Files")]
+        public static async Task PuppeteerUploadFiles(BotData data, FindElementBy findBy, string identifier, int index, List<string> filePaths)
         {
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
             var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
-            await elem.UploadFileAsync(filePath);
+            await elem.UploadFileAsync(filePaths.ToArray());
 
-            data.Logger.Log($"Uploaded {filePath} to the element", LogColors.DarkSalmon);
+            data.Logger.Log($"Uploaded {filePaths.Count} files to the element", LogColors.DarkSalmon);
         }
 
         [Block("Gets the X coordinate of the element in pixels", name = "Get Position X")]
