@@ -47,9 +47,16 @@ namespace RuriLib.Parallelization
 
         public DateTime StartTime { get; private set; }
         public DateTime? EndTime { get; private set; }
-        public DateTime ETA => CPM > 0 
-            ? StartTime + TimeSpan.FromMinutes((totalAmount * (1 - Progress)) / CPM)
-            : DateTime.MaxValue;
+        public DateTime ETA
+        {
+            get
+            {
+                var minutes = (totalAmount * (1 - Progress)) / CPM;
+                return CPM > 0 && minutes < TimeSpan.MaxValue.TotalMinutes
+                    ? StartTime + TimeSpan.FromMinutes(minutes)
+                    : DateTime.MaxValue;
+            }
+        }
         public TimeSpan Elapsed => (EndTime ?? DateTime.Now) - StartTime;
         public TimeSpan Remaining => EndTime.HasValue ? TimeSpan.Zero : ETA - DateTime.Now;
         #endregion
@@ -60,7 +67,7 @@ namespace RuriLib.Parallelization
         protected readonly IEnumerable<TInput> workItems;
         protected readonly Func<TInput, CancellationToken, Task<TOutput>> workFunction;
         protected readonly Func<TInput, Task> taskFunction;
-        protected readonly int totalAmount;
+        protected readonly long totalAmount;
         protected readonly int skip;
         protected int current;
         protected List<DateTime> checkedTimestamps = new();
@@ -106,7 +113,7 @@ namespace RuriLib.Parallelization
         /// <param name="totalAmount">The total amount of data that is expected from <paramref name="workItems"/></param>
         /// <param name="skip">The amount of <paramref name="workItems"/> to skip at the beginning</param>
         public Parallelizer(IEnumerable<TInput> workItems, Func<TInput, CancellationToken, Task<TOutput>> workFunction,
-            int degreeOfParallelism, int totalAmount, int skip = 0)
+            int degreeOfParallelism, long totalAmount, int skip = 0)
         {
             if (degreeOfParallelism < 1)
                 throw new ArgumentException("The degree of parallelism must be greater than 1");

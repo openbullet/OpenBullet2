@@ -19,9 +19,11 @@ namespace RuriLib.Models.Data.DataPools
             Length = length;
 
             DataList = charSet.Select(x => x.ToString());
-            for (int i = 0; i < length - 1; i++)
+            for (var i = 0; i < length - 1; i++)
                 DataList = DataList.SelectMany(x => charSet, (x, y) => x + y);
-            Size = (int)Math.Pow(charSet.Length, length);
+
+            var sizeDouble = Math.Pow(charSet.Length, length);
+            Size = sizeDouble < long.MaxValue ? (long)sizeDouble : long.MaxValue;
             WordlistType = wordlistType;
         }
     }
