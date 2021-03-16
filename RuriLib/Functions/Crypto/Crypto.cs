@@ -373,10 +373,10 @@ namespace RuriLib.Functions.Crypto
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
         public static byte[] AESEncrypt(string plainText, byte[] key, byte[] iv = null,
-            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return EncryptStringToBytes_Aes(plainText, keys[0], keys[1], mode, padding);
+            return EncryptStringToBytes_Aes(plainText, keys[0], keys[1], mode, padding, keySize);
         }
 
         /// <summary>
@@ -388,10 +388,10 @@ namespace RuriLib.Functions.Crypto
         /// <param name="mode">The cipher mode</param>
         /// <param name="padding">The padding mode</param>
         public static string AESDecrypt(byte[] cipherText, byte[] key, byte[] iv = null,
-            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None)
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             byte[][] keys = ConvertKeys(key, iv);
-            return DecryptStringFromBytes_Aes(cipherText, keys[0], keys[1], mode, padding);
+            return DecryptStringFromBytes_Aes(cipherText, keys[0], keys[1], mode, padding, keySize);
         }
 
         private static byte[][] ConvertKeys(byte[] key, byte[] iv)
@@ -415,7 +415,7 @@ namespace RuriLib.Functions.Crypto
         }
 
         private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] key, byte[] iv, CipherMode mode,
-            PaddingMode padding)
+            PaddingMode padding, int keySize = 256)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException(nameof(plainText));
@@ -427,7 +427,7 @@ namespace RuriLib.Functions.Crypto
                 throw new ArgumentNullException(nameof(iv));
 
             using var aesAlg = new AesManaged();
-            aesAlg.KeySize = 256;
+            aesAlg.KeySize = keySize;
             aesAlg.BlockSize = 128;
             aesAlg.Key = key;
             aesAlg.IV = iv;
@@ -446,7 +446,7 @@ namespace RuriLib.Functions.Crypto
         }
 
         private static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] key, byte[] iv, CipherMode mode,
-            PaddingMode padding)
+            PaddingMode padding, int keySize = 256)
         {
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException(nameof(cipherText));
@@ -458,7 +458,7 @@ namespace RuriLib.Functions.Crypto
                 throw new ArgumentNullException(nameof(iv));
 
             using var aesAlg = Aes.Create();
-            aesAlg.KeySize = 256;
+            aesAlg.KeySize = keySize;
             aesAlg.BlockSize = 128;
             aesAlg.Key = key;
             aesAlg.IV = iv;
