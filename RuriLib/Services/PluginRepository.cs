@@ -86,7 +86,19 @@ namespace RuriLib.Services
             if (dlls.Any(e => toDelete.Contains(Path.GetFileNameWithoutExtension(e.Name))))
                 throw new Exception("Please restart the application and try again");
 
-            archive.ExtractToDirectory(BaseFolder);
+            foreach (var entry in archive.Entries)
+            {
+                try
+                {
+                    var folder = Path.Combine(BaseFolder, Path.GetDirectoryName(entry.FullName));
+                    Directory.CreateDirectory(folder);
+                    entry.ExtractToFile(Path.Combine(BaseFolder, entry.FullName), true);
+                }
+                catch
+                {
+
+                }
+            }
 
             // Load new assemblies into the domain (the ones that are already loaded will be skipped)
             LoadAssemblies(GetPlugins());
