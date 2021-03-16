@@ -5,6 +5,7 @@ using OpenBullet2.Services;
 using OpenBullet2.Shared;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Configs;
 using System;
 using System.Threading.Tasks;
@@ -47,10 +48,10 @@ namespace OpenBullet2.Pages
 
         private async Task SelectedBlock(BlockInstance block)
         {
-            // If we're switching between 2 lolicode blocks, do this to force a refresh
+            // If we're switching between 2 blocks that have a Monaco Editor, do this to force a refresh
             // of the component, otherwise the text in the editor does not update
-            if (selectedBlock != null && selectedBlock is LoliCodeBlockInstance &&
-                block != null && block is LoliCodeBlockInstance)
+            if (selectedBlock != null && HasMonacoEditor(selectedBlock) &&
+                block != null && HasMonacoEditor(block))
             {
                 selectedBlock = null;
                 StateHasChanged();
@@ -62,5 +63,8 @@ namespace OpenBullet2.Pages
                 selectedBlock = block;
             }
         }
+
+        private bool HasMonacoEditor(BlockInstance block)
+            => block is LoliCodeBlockInstance or ScriptBlockInstance;
     }
 }
