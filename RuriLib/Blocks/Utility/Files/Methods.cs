@@ -218,6 +218,18 @@ namespace RuriLib.Blocks.Utility.Files
             data.Logger.Log($"The path {path} was created", LogColors.Flavescent);
         }
 
+        [Block("Gets the paths to all files in a specific folder")]
+        public static List<string> GetFilesInFolder(BotData data, string path)
+        {
+            if (data.Providers.Security.RestrictBlocksToCWD)
+                FileUtils.ThrowIfNotInCWD(path);
+
+            data.Logger.LogHeader();
+            var files = Directory.GetFiles(path).ToList();
+            data.Logger.Log($"Found {files.Count} files in {path}", LogColors.Flavescent);
+            return files;
+        }
+
         public static void FolderDelete(BotData data, string path)
         {
             if (data.Providers.Security.RestrictBlocksToCWD)
