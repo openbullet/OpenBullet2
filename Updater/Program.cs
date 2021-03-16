@@ -97,6 +97,8 @@ namespace Updater
                     // it's currently being executed, so it's better to just ignore them
                     try
                     {
+                        var folder = Path.Combine(Directory.GetCurrentDirectory(), Path.GetDirectoryName(entry.FullName));
+                        Directory.CreateDirectory(folder);
                         entry.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), entry.FullName), true);
                     }
                     catch
