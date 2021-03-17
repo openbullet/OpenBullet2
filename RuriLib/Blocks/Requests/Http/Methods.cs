@@ -65,13 +65,14 @@ namespace RuriLib.Blocks.Requests.Http
             }
 
             data.Logger.LogHeader();
-            
+
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
+
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request, options);
             }
@@ -115,9 +116,10 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
+
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request, options);
             }
@@ -158,13 +160,14 @@ namespace RuriLib.Blocks.Requests.Http
                 Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}")));
 
             data.Logger.LogHeader();
-            
+
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
+               
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request, options);
             }
@@ -244,9 +247,10 @@ namespace RuriLib.Blocks.Requests.Http
             try
             {
                 Activity.Current = null;
-                var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
+                using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token);
+              
                 LogHttpRequestData(data, client);
                 await LogHttpResponseData(data, response, request, options);
             }
@@ -285,7 +289,7 @@ namespace RuriLib.Blocks.Requests.Http
 
             // Log the cookie header
             var cookies = data.COOKIES.Select(c => $"{c.Key}={c.Value}");
-            
+
             if (cookies.Any())
                 writer.WriteLine($"Cookie: {string.Join("; ", cookies)}");
 
@@ -365,7 +369,7 @@ namespace RuriLib.Blocks.Requests.Http
                         break;
                 }
             }
-            
+
             writer.WriteLine(boundary);
 
             return writer.ToString();
@@ -430,7 +434,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
             }
-            
+
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);
             data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }
@@ -456,7 +460,7 @@ namespace RuriLib.Blocks.Requests.Http
             var fileContent = new StreamContent(stream);
             fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
             {
-                Name = $"\"{fieldName}\"",  
+                Name = $"\"{fieldName}\"",
                 FileName = $"\"{fileName}\""
             }; // the extra quotes are key here
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);

@@ -52,9 +52,10 @@ namespace RuriLib.Proxies
             // Try to connect to the proxy (or directly to the server in the NoProxy case)
             try
             {
-                var timeoutCts = new CancellationTokenSource(Settings.ConnectTimeout);
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
+                using var timeoutCts = new CancellationTokenSource(Settings.ConnectTimeout);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
                 await client.ConnectAsync(host, port, linkedCts.Token).ConfigureAwait(false);
+              
             }
             catch (Exception ex)
             {

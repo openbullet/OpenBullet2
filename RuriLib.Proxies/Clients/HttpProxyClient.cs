@@ -91,7 +91,7 @@ namespace RuriLib.Proxies.Clients
             {
                 return string.Empty;
             }
-                
+
             var data = Convert.ToBase64String(Encoding.UTF8.GetBytes(
                 $"{Settings.Credentials.UserName}:{Settings.Credentials.Password}"));
 
@@ -103,7 +103,7 @@ namespace RuriLib.Proxies.Clients
             var buffer = new byte[50];
             var responseBuilder = new StringBuilder();
 
-            var waitCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(nStream.ReadTimeout));
+            using var waitCts = new CancellationTokenSource(TimeSpan.FromMilliseconds(nStream.ReadTimeout));
 
             while (!nStream.DataAvailable)
             {
@@ -116,7 +116,6 @@ namespace RuriLib.Proxies.Clients
 
                 await Task.Delay(100, cancellationToken).ConfigureAwait(false);
             }
-
             do
             {
                 var bytesRead = await nStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);

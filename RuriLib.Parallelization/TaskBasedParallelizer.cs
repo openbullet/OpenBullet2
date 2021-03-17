@@ -78,6 +78,10 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             hardCTS.Cancel();
             softCTS.Cancel();
+
+            hardCTS.Dispose();
+            softCTS.Dispose();
+            semaphore.Dispose();
         }
 
         /// <inheritdoc/>
