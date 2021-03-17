@@ -10,7 +10,8 @@ namespace RuriLib.Blocks.Requests.WebSocket
     [BlockCategory("Web Sockets", "Blocks to send and receive messages through websockets", "#addfad")]
     public static class Methods
     {
-        [Block("Connects to a Web Socket", name = "WebSocket Connect (Proxiless)")]
+        [Block("Connects to a Web Socket", name = "WebSocket Connect",
+            extraInfo = "Only works with HTTP proxies or without any proxy")]
         public static void WsConnect(BotData data, string url)
         {
             data.Logger.LogHeader();
