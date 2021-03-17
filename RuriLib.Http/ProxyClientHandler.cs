@@ -23,7 +23,7 @@ namespace RuriLib.Http
     public class ProxyClientHandler : HttpMessageHandler, IDisposable
     {
         private readonly ProxyClient proxyClient;
-        
+
         private Stream connectionCommonStream;
         private NetworkStream connectionNetworkStream;
 
@@ -235,7 +235,9 @@ namespace RuriLib.Http
                     {
                         TargetHost = uri.Host,
                         EnabledSslProtocols = SslProtocols,
-                        CertificateRevocationCheckMode = CertRevocationMode
+                        CertificateRevocationCheckMode = CertRevocationMode,
+                        RemoteCertificateValidationCallback = new RemoteCertificateValidationCallback((s, c, ch, e) => { return true; })
+
                     };
 
                     if (UseCustomCipherSuites)
