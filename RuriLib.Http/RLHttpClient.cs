@@ -208,7 +208,8 @@ namespace RuriLib.Http
                     {
                         TargetHost = uri.Host,
                         EnabledSslProtocols = SslProtocols,
-                        CertificateRevocationCheckMode = CertRevocationMode
+                        CertificateRevocationCheckMode = CertRevocationMode,
+                        RemoteCertificateValidationCallback = new RemoteCertificateValidationCallback((s, c, ch, e) => { return true; })
                     };
 
                     if (UseCustomCipherSuites)
