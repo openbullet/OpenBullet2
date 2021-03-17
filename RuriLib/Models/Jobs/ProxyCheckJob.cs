@@ -74,10 +74,10 @@ namespace RuriLib.Models.Jobs
             try
             {
                 // Use 2 cancellation tokens since we need to control the proxy connect timeout as well
-                var cts = new CancellationTokenSource();
+                using var cts = new CancellationTokenSource();
                 cts.CancelAfter(input.Timeout);
 
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, token);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, token);
 
                 var sw = new Stopwatch();
                 sw.Start();

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,7 +71,7 @@ namespace RuriLib.Parallelization
         protected readonly long totalAmount;
         protected readonly int skip;
         protected int current;
-        protected List<DateTime> checkedTimestamps = new();
+        protected List<int> checkedTimestamps = new();
         protected readonly object cpmLock = new();
 
         protected CancellationTokenSource softCTS; // Cancel this for soft AND hard abort
@@ -152,7 +153,7 @@ namespace RuriLib.Parallelization
                     Progress = (float)(++current + skip) / totalAmount;
                     OnProgressChanged(Progress);
 
-                    checkedTimestamps.Add(DateTime.Now);
+                    checkedTimestamps.Add(Environment.TickCount);
                     UpdateCPM();
                 }
             });
@@ -251,6 +252,7 @@ namespace RuriLib.Parallelization
         #region Protected Methods
         protected bool IsCPMLimited() => CPMLimit > 0 && CPM > CPMLimit;
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected void UpdateCPM()
         {
             // Update CPM (only 1 task can enter)
@@ -259,8 +261,8 @@ namespace RuriLib.Parallelization
                 try
                 {
                     var now = DateTime.Now;
-                    checkedTimestamps = checkedTimestamps.Where(t => (now - t).TotalSeconds < 60).ToList();
-                    CPM = checkedTimestamps.Count;
+                    checkedTimestamps = checkedTimestamps.Where(t => Environment.TickCount - t < 60000).ToList();
+                    CPM = checkedTimestamps.Count;                                
                 }
                 finally
                 {
