@@ -19,6 +19,12 @@
             </div>
             <div class="col-sm align-self-stretch pl-0 job-overview-mid-col d-flex align-items-center">
                 <div class="job-overview px-2" @onclick="@(() => SelectJob(job))">
+                    @if (job.OwnerId != 0 && guests.ContainsKey(job.OwnerId))
+                    {
+                        <span>
+                            <b>@Loc["Owner"]: </b> @guests[job.OwnerId]
+                        </span>
+                    }
                     @switch (job)
                     {
                         case MultiRunJob x:

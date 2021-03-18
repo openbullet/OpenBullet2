@@ -10,6 +10,7 @@ using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,13 +25,28 @@ namespace OpenBullet2.Pages
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private PersistentSettingsService PersistentSettings { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private IGuestRepository GuestRepo { get; set; }
 
         private readonly object removeLock = new object();
         private int uid = -1;
         private Timer uiRefreshTimer;
+        private Dictionary<int, string> guests = new();
 
         protected async override Task OnInitializedAsync()
-            => uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        {
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
+            // If admin, also show the owner of each job
+            if (uid == 0)
+            {
+                var entities = await GuestRepo.GetAll().ToListAsync();
+                
+                foreach (var entity in entities)
+                {
+                    guests[entity.Id] = entity.Username;
+                }
+            }
+        }
 
         protected override void OnAfterRender(bool firstRender)
         {

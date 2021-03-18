@@ -177,6 +177,9 @@
   <data name="NotWorking" xml:space="preserve">
     <value>Non funzionanti</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Proprietario</value>
+  </data>
   <data name="Progress" xml:space="preserve">
     <value>Progresso</value>
   </data>
