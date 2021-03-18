@@ -142,6 +142,28 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             return displayed;
         }
 
+        [Block("Checks if an element exists on the page", name = "Exists")]
+        public static async Task<bool> PuppeteerExists(BotData data, FindElementBy findBy, string identifier, int index)
+        {
+            data.Logger.LogHeader();
+
+            var elemScript = GetElementScript(findBy, identifier, index);
+            var frame = GetFrame(data);
+            var script = $"window.getComputedStyle({elemScript}).display !== 'none';";
+
+            try
+            {
+                var displayed = await frame.EvaluateExpressionAsync<bool>(script);
+                data.Logger.Log("The element exists", LogColors.DarkSalmon);
+                return true;
+            }
+            catch
+            {
+                data.Logger.Log("The element does not exist", LogColors.DarkSalmon);
+                return false;
+            }
+        }
+
         [Block("Uploads one or more files to the selected element", name = "Upload Files")]
         public static async Task PuppeteerUploadFiles(BotData data, FindElementBy findBy, string identifier, int index, List<string> filePaths)
         {
