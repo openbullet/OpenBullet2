@@ -462,8 +462,15 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
+                // Avoid increasing the skip twice if the user first stops and then aborts
+                var increaseSkip = Status != JobStatus.Stopping;
+
                 await parallelizer?.Abort();
-                Skip += DataTested;
+
+                if (increaseSkip)
+                {
+                    Skip += DataTested;
+                }
             }
             finally
             {
