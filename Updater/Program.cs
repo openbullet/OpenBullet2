@@ -106,6 +106,7 @@ namespace Updater
 
                     }
                 }
+                Console.WriteLine("Done!");
             }
             catch (Exception ex)
             {
