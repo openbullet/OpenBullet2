@@ -40,20 +40,22 @@ namespace OpenBullet2.Services
                 var record = recordRepo.GetAll()
                     .FirstOrDefault(r => r.ConfigId == job.Config.Id && r.WordlistId == pool.Wordlist.Id);
 
+                var checkpoint = job.Status == JobStatus.Idle
+                    ? job.Skip
+                    : job.Skip + job.DataTested;
+
                 if (record == null)
                 {
                     await recordRepo.Add(new RecordEntity
                     {
                         ConfigId = job.Config.Id,
                         WordlistId = pool.Wordlist.Id,
-                        Checkpoint = job.Status == JobStatus.Idle
-                            ? job.Skip
-                            : job.Skip + job.DataTested
+                        Checkpoint = checkpoint
                     });
                 }
                 else
                 {
-                    record.Checkpoint = job.Skip + job.DataTested;
+                    record.Checkpoint = checkpoint;
                     await recordRepo.Update(record);
                 }
             }
