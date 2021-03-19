@@ -154,6 +154,8 @@ namespace RuriLib.Parallelization
 
             OnCompleted();
             Status = ParallelizerStatus.Idle;
+            hardCTS.Dispose();
+            softCTS.Dispose();
         }
 
         // Creates and starts a thread, given a work item

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,10 +78,6 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             hardCTS.Cancel();
             softCTS.Cancel();
-
-            hardCTS.Dispose();
-            softCTS.Dispose();
-            semaphore.Dispose();
         }
 
         /// <inheritdoc/>
@@ -205,6 +201,9 @@ namespace RuriLib.Parallelization
             {
                 OnCompleted();
                 Status = ParallelizerStatus.Idle;
+                hardCTS.Dispose();
+                softCTS.Dispose();
+                semaphore.Dispose();
             }
         }
         #endregion
