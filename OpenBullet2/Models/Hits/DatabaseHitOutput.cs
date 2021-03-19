@@ -2,18 +2,24 @@
 using OpenBullet2.Repositories;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Hits;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Hits
 {
-    public class DatabaseHitOutput : IHitOutput
+    public class DatabaseHitOutput : IHitOutput, IDisposable
     {
         private readonly IHitRepository hitRepo;
+        private readonly SemaphoreSlim semaphore;
 
         public DatabaseHitOutput(IHitRepository hitRepo)
         {
             this.hitRepo = hitRepo;
+            semaphore = new SemaphoreSlim(1, 1);
         }
+
+        public void Dispose() => semaphore?.Dispose();
 
         public async Task Store(Hit hit)
         {
@@ -36,8 +42,19 @@ namespace OpenBullet2.Models.Hits
                 entity.WordlistId = wordlist.Id;
                 entity.WordlistName = wordlist.Name;
             }
+            
+            // Only allow saving one hit at a time (multiple threads should
+            // not use the same DbContext at the same time).
+            await semaphore.WaitAsync();
 
-            await hitRepo.Add(entity);
+            try
+            {
+                await hitRepo.Add(entity);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
         }
     }
 }
