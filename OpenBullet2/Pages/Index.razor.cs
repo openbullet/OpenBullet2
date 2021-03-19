@@ -41,7 +41,14 @@ namespace OpenBullet2.Pages
         {
             if (firstRender)
             {
-                IP = HttpAccessor.HttpContext.Connection?.RemoteIpAddress;
+                try
+                {
+                    IP = HttpAccessor.HttpContext.Connection?.RemoteIpAddress;
+                }
+                catch
+                {
+                    Console.WriteLine("Could not get the IP from the HttpAccessor. This might happen when OB2 is set up behind a reverse proxy");
+                }
             }
         }
 
