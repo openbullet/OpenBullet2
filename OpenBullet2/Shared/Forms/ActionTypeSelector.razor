@@ -9,6 +9,7 @@
                 <ul>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new StartJobAction())))">Start Job</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new StopJobAction())))">Stop Job</button></li>
+                    <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new AbortJobAction())))">Abort Job</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new WaitAction())))">Wait</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new SetRelativeStartConditionAction())))">Set Relative Start Condition</button></li>
                     <li><button class="btn btn-outline-primary" @onclick="@(() => BlazoredModal.Close(ModalResult.Ok(new DiscordWebhookAction())))">Discord webhook</button></li>

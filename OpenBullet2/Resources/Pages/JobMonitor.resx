@@ -273,4 +273,7 @@
   <data name="inChat" xml:space="preserve">
     <value>in chat</value>
   </data>
+  <data name="AbortJob" xml:space="preserve">
+    <value>Abort Job</value>
+  </data>
 </root>

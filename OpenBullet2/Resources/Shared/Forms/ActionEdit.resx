@@ -162,4 +162,7 @@
   <data name="onApiServer" xml:space="preserve">
     <value>on API server</value>
   </data>
+  <data name="AbortJob" xml:space="preserve">
+    <value>Abort Job</value>
+  </data>
 </root>

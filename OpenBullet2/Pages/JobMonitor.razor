@@ -159,6 +159,10 @@
                                         <span>@Loc["StopJob"] @a.JobId</span>
                                         break;
 
+                                    case AbortJobAction a:
+                                        <span>@Loc["AbortJob"] @a.JobId</span>
+                                        break;
+
                                     case DiscordWebhookAction a:
                                         <span>@Loc["Send"] @a.Message @Loc["onWebhook"] @a.Webhook</span>
                                         break;

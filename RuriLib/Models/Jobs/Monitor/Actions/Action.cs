@@ -58,6 +58,15 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
             => await jobs.First(j => j.Id == JobId).Stop();
     }
 
+    // Aborts the job with the given id
+    public class AbortJobAction : Action
+    {
+        public int JobId { get; set; }
+
+        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
+            => await jobs.First(j => j.Id == JobId).Abort();
+    }
+
     // Starts the job with the given id
     public class StartJobAction : Action
     {

@@ -40,6 +40,11 @@
             <InputNumber @bind-Value="a.JobId" />
             break;
 
+        case AbortJobAction a:
+            <span>@Loc["AbortJob"]</span>
+            <InputNumber @bind-Value="a.JobId" />
+            break;
+
         case DiscordWebhookAction a:
             <span>@Loc["Send"]</span>
             <InputText @bind-Value="a.Message" />
