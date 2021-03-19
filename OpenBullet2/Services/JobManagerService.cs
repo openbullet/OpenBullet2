@@ -46,7 +46,9 @@ namespace OpenBullet2.Services
                     {
                         ConfigId = job.Config.Id,
                         WordlistId = pool.Wordlist.Id,
-                        Checkpoint = job.Skip + job.DataTested
+                        Checkpoint = job.Status == JobStatus.Idle
+                            ? job.Skip
+                            : job.Skip + job.DataTested
                     });
                 }
                 else
