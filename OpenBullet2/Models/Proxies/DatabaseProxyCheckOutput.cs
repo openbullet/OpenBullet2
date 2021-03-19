@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Models.Proxies
 {
-    public class DatabaseProxyCheckOutput : IProxyCheckOutput
+    public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
     {
         private readonly IProxyRepository proxyRepo;
+        private readonly SemaphoreSlim semaphore;
 
         public DatabaseProxyCheckOutput(IProxyRepository proxyRepo)
         {
             this.proxyRepo = proxyRepo;
+            semaphore = new SemaphoreSlim(1, 1);
         }
 
         public async Task Store(Proxy proxy)
@@ -25,7 +27,18 @@ namespace OpenBullet2.Models.Proxies
                 entity.Ping = proxy.Ping;
                 entity.Status = proxy.WorkingStatus;
 
-                await proxyRepo.Update(entity);
+                // Only allow updating one proxy at a time (multiple threads should
+                // not use the same DbContext at the same time).
+                await semaphore.WaitAsync();
+
+                try
+                {
+                    await proxyRepo.Update(entity);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
             }
             catch (ObjectDisposedException)
             {
