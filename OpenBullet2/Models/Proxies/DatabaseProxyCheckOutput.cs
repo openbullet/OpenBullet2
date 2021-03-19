@@ -17,6 +17,8 @@ namespace OpenBullet2.Models.Proxies
             semaphore = new SemaphoreSlim(1, 1);
         }
 
+        public void Dispose() => semaphore?.Dispose();
+
         public async Task Store(Proxy proxy)
         {
             try
