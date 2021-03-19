@@ -70,6 +70,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             hardCTS.Cancel();
             softCTS.Cancel();
+            await WaitCompletion().ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
