@@ -437,6 +437,7 @@ namespace RuriLib.Models.Jobs
             parallelizer.Error += PropagateError;
             parallelizer.NewResult += PropagateResult;
             parallelizer.Completed += PropagateCompleted;
+            parallelizer.Completed += (s, e) => Skip += DataTested;
 
             ResetStats();
             StartTimers();
@@ -449,7 +450,6 @@ namespace RuriLib.Models.Jobs
             try
             {
                 await parallelizer?.Stop();
-                Skip += DataTested;
             }
             finally
             {
@@ -462,15 +462,7 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                // Avoid increasing the skip twice if the user first stops and then aborts
-                var increaseSkip = Status != JobStatus.Stopping;
-
                 await parallelizer?.Abort();
-
-                if (increaseSkip)
-                {
-                    Skip += DataTested;
-                }
             }
             finally
             {
