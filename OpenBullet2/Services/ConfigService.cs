@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using RuriLib.Helpers;
 using System.IO;
+using RuriLib.Functions.Crypto;
+using RuriLib.Functions.Conversion;
 
 namespace OpenBullet2.Services
 {
@@ -81,8 +83,19 @@ namespace OpenBullet2.Services
                         {
                             using var entryStream = entry.Open();
                             var config = await ConfigPacker.Unpack(entryStream);
+
+                            // Calculate the hash of the metadata of the remote config to use as id.
+                            // This is done to have a consistent id through successive pulls of configs
+                            // from remotes, so that jobs can reference the id and retrieve the correct one
+                            config.Id = HexConverter.ToHexString(config.Metadata.GetUniqueHash());
                             config.IsRemote = true;
-                            remoteConfigs.Add(config);
+
+                            // If a config with the same hash is not already present (e.g. same exact config
+                            // from another source) add it to the list
+                            if (!remoteConfigs.Any(c => c.Id == config.Id))
+                            {
+                                remoteConfigs.Add(config);
+                            }
                         }
                         catch
                         {

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RuriLib.Functions.Crypto;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace RuriLib.Models.Configs
 {
@@ -18,5 +20,8 @@ namespace RuriLib.Models.Configs
             CreationDate = DateTime.Now;
             LastModified = CreationDate;
         }
+
+        public byte[] GetUniqueHash()
+            => Crypto.MD5(Encoding.UTF8.GetBytes(Name + Category + Author + Base64Image));
     }
 }
