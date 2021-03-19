@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,6 +88,12 @@ namespace RuriLib.Parallelization
         public async override Task ChangeDegreeOfParallelism(int newValue)
         {
             await base.ChangeDegreeOfParallelism(newValue);
+
+            if (Status == ParallelizerStatus.Paused)
+            {
+                savedDOP = newValue;
+                return;
+            }
 
             if (newValue == degreeOfParallelism)
             {
