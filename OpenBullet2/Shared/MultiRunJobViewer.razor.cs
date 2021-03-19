@@ -157,8 +157,10 @@ namespace OpenBullet2.Shared
                 return;
             }
 
-            // Update the skip
-            options.Skip = Job.Skip + Job.DataTested;
+            // Update the skip (if not idle, also add the currently tested ones)
+            options.Skip = Job.Status == JobStatus.Idle
+                ? Job.Skip
+                : Job.Skip + Job.DataTested;
             
             // Wrap and serialize again
             var newWrapper = new JobOptionsWrapper { Options = options };
