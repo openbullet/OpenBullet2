@@ -9,9 +9,10 @@ namespace RuriLib.Blocks.Functions.Time
     public static class Methods
     {
         [Block("Gets the current unix time in seconds")]
-        public static int CurrentUnixTime(BotData data)
+        public static int CurrentUnixTime(BotData data, bool useUtc = false)
         {
-            var time = (int)DateTime.Now.ToUnixTime();
+            var dateTime = useUtc ? DateTime.UtcNow : DateTime.Now;
+            var time = (int)dateTime.ToUnixTime();
             data.Logger.LogHeader();
             data.Logger.Log($"Current unix time: {time}");
             return time;
