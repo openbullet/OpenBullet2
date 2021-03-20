@@ -86,7 +86,12 @@ namespace RuriLib.Parallelization
         {
             await base.ChangeDegreeOfParallelism(newValue);
 
-            if (Status == ParallelizerStatus.Paused)
+            if (Status == ParallelizerStatus.Idle)
+            {
+                degreeOfParallelism = newValue;
+                return;
+            }
+            else if (Status == ParallelizerStatus.Paused)
             {
                 savedDOP = newValue;
                 return;
