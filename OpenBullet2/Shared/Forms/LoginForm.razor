@@ -1,5 +1,6 @@
 ﻿@using OpenBullet2.Auth
 @using OpenBullet2.Helpers
+@using System.Net 
 @inject AuthenticationStateProvider Auth
 @inject NavigationManager Nav
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor ContextAccessor
@@ -25,9 +26,21 @@
 
     private async Task ValidateUser()
     {
+        IPAddress ip = IPAddress.Parse("127.0.0.1");
+
         try
         {
-            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password, ContextAccessor.HttpContext.Connection?.RemoteIpAddress);
+            // This will throw if OB2 is behind a reverse proxy
+            ip = ContextAccessor.HttpContext.Connection.RemoteIpAddress;
+        }
+        catch
+        {
+
+        }
+
+        try
+        {
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password, ip);
             Nav.NavigateTo("/");
         }
         catch (Exception ex)
