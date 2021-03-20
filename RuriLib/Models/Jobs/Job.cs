@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Models.Jobs
 {
+    // Todo: Implement IDisposable and dispose the following when a job is deleted or edited
+    // - GroupProxySource
+    // - DatabaseHitOutput
+    // - DatabaseProxyCheckOutput
     public abstract class Job
     {
         // Public properties
