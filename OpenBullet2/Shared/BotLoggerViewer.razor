@@ -6,7 +6,7 @@
 <div class="debugger-log">
     @foreach (var entry in BotLogger.Entries)
     {
-        @if (entry.Message.Contains("\n"))
+        @if (entry.Message != null && entry.Message.Contains("\n"))
         {
             <textarea class="border-0" readonly
                 style="color: @entry.Color;">
