@@ -1,16 +1,11 @@
-﻿using OpenBullet2.Models.Data;
-using OpenBullet2.Models.Hits;
+﻿using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
 using RuriLib.Logging;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
-using RuriLib.Providers.Captchas;
-using RuriLib.Providers.Proxies;
-using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
-using RuriLib.Providers.Security;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 using System;

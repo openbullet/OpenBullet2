@@ -93,9 +93,13 @@ namespace OpenBullet2.Shared
 
             var providers = new Providers(RuriLibSettings)
             {
-                RandomUA = RandomUAProvider,
                 RNG = RNGProvider
             };
+
+            if (RuriLibSettings.RuriLibSettings.GeneralSettings.UseCustomUserAgentsList)
+            {
+                providers.RandomUA = RandomUAProvider;
+            }
 
             // Build the BotData
             var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
