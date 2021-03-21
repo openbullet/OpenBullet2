@@ -49,7 +49,7 @@ namespace OpenBullet2.Pages
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
 
             wordlists = uid == 0
-                ? await WordlistRepo.GetAll().ToListAsync()
+                ? await WordlistRepo.GetAll().Include(w => w.Owner).ToListAsync()
                 : await WordlistRepo.GetAll().Include(w => w.Owner).Where(w => w.Owner.Id == uid).ToListAsync();
 
             Action<IGridColumnCollection<WordlistEntity>> columns = c =>
@@ -59,6 +59,9 @@ namespace OpenBullet2.Pages
                 c.Add(w => w.Purpose).Titled(Loc["Purpose"]);
                 c.Add(w => w.Total).Titled(Loc["Lines"]);
                 c.Add(w => w.FileName).Titled(Loc["FileName"]);
+
+                if (uid == 0)
+                    c.Add(w => w.Owner.Username).Titled(Loc["Owner"]);
             };
 
             var query = new QueryDictionary<StringValues>();

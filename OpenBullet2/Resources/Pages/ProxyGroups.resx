@@ -204,6 +204,9 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>

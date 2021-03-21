@@ -186,6 +186,9 @@
   <data name="NoWordlistSelected" xml:space="preserve">
     <value>You must select a wordlist first</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Owner</value>
+  </data>
   <data name="Purpose" xml:space="preserve">
     <value>Purpose</value>
   </data>

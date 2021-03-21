@@ -54,7 +54,7 @@ namespace OpenBullet2.Pages
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
 
             groups = uid == 0
-                ? await ProxyGroupsRepo.GetAll().ToListAsync()
+                ? await ProxyGroupsRepo.GetAll().Include(g => g.Owner).ToListAsync()
                 : await ProxyGroupsRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
 
             proxies = uid == 0

@@ -204,6 +204,9 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Nessun proxy trovato</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Proprietario</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>

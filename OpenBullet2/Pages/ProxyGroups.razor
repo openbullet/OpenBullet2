@@ -23,6 +23,10 @@
                         <option value="@group.Id">@group.Name</option>
                     }
                 </InputSelectNumber>
+                @if (uid == 0 && groups.Any(g => g.Id == currentGroupId) && groups.First(g => g.Id == currentGroupId).Owner != null)
+                {
+                    <span class="ml-3"><b>@Loc["Owner"]: </b>@groups.FirstOrDefault(g => g.Id == currentGroupId).Owner.Username</span>
+                }
             </EditForm>
         </div>
     </div>
