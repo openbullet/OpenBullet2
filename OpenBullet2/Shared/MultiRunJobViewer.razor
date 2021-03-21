@@ -226,7 +226,8 @@
             break;
 
         case JobStatus.Pausing:
-            <span><i>@Loc["PausingMessage"]</i></span>
+            <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["PausingMessage"]</i></span>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
             break;
 
         case JobStatus.Stopping:

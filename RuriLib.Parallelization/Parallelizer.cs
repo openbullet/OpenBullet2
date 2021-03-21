@@ -215,9 +215,11 @@ namespace RuriLib.Parallelization
         /// </summary>
         public virtual Task Abort()
         {
-            if (Status != ParallelizerStatus.Running && Status != ParallelizerStatus.Paused && Status != ParallelizerStatus.Stopping)
+            if (Status != ParallelizerStatus.Running && Status != ParallelizerStatus.Paused && Status != ParallelizerStatus.Stopping
+                && Status != ParallelizerStatus.Pausing)
                 throw new RequiredStatusException(new ParallelizerStatus[]
-                { ParallelizerStatus.Running, ParallelizerStatus.Paused, ParallelizerStatus.Stopping}, Status);
+                { ParallelizerStatus.Running, ParallelizerStatus.Paused, ParallelizerStatus.Stopping, ParallelizerStatus.Pausing},
+                Status);
 
             EndTime = DateTime.Now;
 
