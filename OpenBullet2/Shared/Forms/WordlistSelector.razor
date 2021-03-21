@@ -11,9 +11,9 @@
 @inject VolatileSettingsService VolatileSettings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
-<div class="container-fluid" style="overflow-y: auto;">
+<div class="wordlist-selector container-fluid" style="overflow-y: auto;">
     <div class="row">
-        <div class="col-12 mt-3" style="height: 250px; overflow-y: auto;">
+        <div class="wordlist-selector-grid col-12 mt-3" style="height: 250px; overflow-y: auto;">
             @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
             {
                 <GridComponent @ref="gridComponent" T="WordlistEntity" Grid="@grid" OnRowClicked="@OnWordlistSelected"></GridComponent>
@@ -23,7 +23,7 @@
                 <p><em>@Loc["Loading"]...</em></p>
             }
         </div>
-        <div class="col-12 mt-3" style="height: 250px; overflow-y: auto;">
+        <div class="wordlist-selector-preview col-12 mt-3" style="height: 250px; overflow-y: auto;">
             <textarea class="h-100" readonly>@linesPreview</textarea>
         </div>
         <div class="col-12 mt-3">
