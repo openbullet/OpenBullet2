@@ -191,6 +191,10 @@
         <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
         <br />
 
+        <label>@Loc["LoadOnlyDocumentAndScript"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.LoadOnlyDocumentAndScript" />
+        <br />
+
         <label>@Loc["PuppeteerCommandLineArguments"]</label>
         <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
 

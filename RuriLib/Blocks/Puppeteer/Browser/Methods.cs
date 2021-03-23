@@ -95,6 +95,23 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
             var browser = GetBrowser(data);
             var page = await browser.NewPageAsync();
+
+            if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript)
+            {
+                await page.SetRequestInterceptionAsync(true);
+                page.Request += (sender, e) =>
+                {
+                    if (e.Request.ResourceType == ResourceType.Document || e.Request.ResourceType == ResourceType.Script)
+                    {
+                        e.Request.ContinueAsync();
+                    }
+                    else
+                    {
+                        e.Request.AbortAsync();
+                    }
+                };
+            }
+
             SetPageAndFrame(data, page); // Set the new page as active
             data.Logger.Log($"Opened a new page", LogColors.DarkSalmon);
         }
