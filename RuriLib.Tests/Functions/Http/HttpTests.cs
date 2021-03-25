@@ -165,6 +165,8 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal("fileContent", response.Files["fileName"]);
         }
 
+        /*
+        // Test for future implementation of HTTP/2.0
         [Fact]
         public async Task HttpRequestStandard_Http2_Verify()
         {
@@ -181,5 +183,6 @@ namespace RuriLib.Tests.Functions.Http
 
             Assert.Contains("Protocol: HTTP/2.0", data.SOURCE);
         }
+        */
     }
 }

@@ -25,6 +25,7 @@ namespace RuriLib.Proxies.Tests
             Assert.Contains("Example Domain", response);
         }
 
+        /*
         [Fact]
         public async Task ConnectAsync_HttpProxyClient_Http()
         {
@@ -37,6 +38,7 @@ namespace RuriLib.Proxies.Tests
             var response = await GetResponseAsync(client, BuildSampleGetRequest(), cts.Token);
             Assert.Contains("Example Domain", response);
         }
+        */
 
         [Fact]
         public async Task ConnectAsync_HttpProxyClient_Invalid()
