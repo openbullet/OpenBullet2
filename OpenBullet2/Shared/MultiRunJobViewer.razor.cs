@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
+using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
 using OpenBullet2.Models.Data;
@@ -134,10 +135,22 @@ namespace OpenBullet2.Shared
             JobManager.SaveRecord(Job).ConfigureAwait(false);
         }
 
+        // TODO: Move this to a separate service! It has no point of being here!
         private void SaveJobOptions(object sender, EventArgs e)
         {
+            JobEntity job = null;
+
             // Get the job
-            var job = JobRepo.Get(Job.Id).Result;
+            lock (JobRepo)
+            {
+                job = JobRepo.Get(Job.Id).Result;
+            }
+
+            if (job.JobOptions == null)
+            {
+                Console.WriteLine("Skipped job options save because JobOptions was null");
+                return;
+            }
             
             // Deserialize and unwrap the job options
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -167,7 +180,10 @@ namespace OpenBullet2.Shared
             job.JobOptions = JsonConvert.SerializeObject(newWrapper, settings);
 
             // Update the job
-            JobRepo.Update(job).ConfigureAwait(false);
+            lock (JobRepo)
+            {
+                JobRepo.Update(job).Wait();
+            }
         }
 
         private async Task Start()
