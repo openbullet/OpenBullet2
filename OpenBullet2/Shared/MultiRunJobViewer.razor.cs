@@ -146,9 +146,9 @@ namespace OpenBullet2.Shared
                 job = JobRepo.Get(Job.Id).Result;
             }
 
-            if (job.JobOptions == null)
+            if (job == null || job.JobOptions == null)
             {
-                Console.WriteLine("Skipped job options save because JobOptions was null");
+                Console.WriteLine("Skipped job options save because Job (or JobOptions) was null");
                 return;
             }
             
