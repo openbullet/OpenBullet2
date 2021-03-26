@@ -69,9 +69,10 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             data.Objects["puppeteer"] = browser;
             var page = (await browser.PagesAsync()).First();
             SetPageAndFrame(data, page);
+            await SetPageLoadingOptions(data, page);
 
             // Authenticate if the proxy requires auth
-            if(data.UseProxy && data.Proxy is { NeedsAuthentication: true, Type: ProxyType.Http } proxy)
+            if (data.UseProxy && data.Proxy is { NeedsAuthentication: true, Type: ProxyType.Http } proxy)
                 await page.AuthenticateAsync(new Credentials { Username = proxy.Username, Password = proxy.Password });
 
             data.Logger.Log($"{(launchOptions.Headless ? "Headless " : "")}Browser opened successfully!", LogColors.DarkSalmon);
@@ -95,22 +96,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
             var browser = GetBrowser(data);
             var page = await browser.NewPageAsync();
-
-            if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript)
-            {
-                await page.SetRequestInterceptionAsync(true);
-                page.Request += (sender, e) =>
-                {
-                    if (e.Request.ResourceType == ResourceType.Document || e.Request.ResourceType == ResourceType.Script)
-                    {
-                        e.Request.ContinueAsync();
-                    }
-                    else
-                    {
-                        e.Request.AbortAsync();
-                    }
-                };
-            }
+            await SetPageLoadingOptions(data, page);
 
             SetPageAndFrame(data, page); // Set the new page as active
             data.Logger.Log($"Opened a new page", LogColors.DarkSalmon);
@@ -206,6 +192,25 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             if (data.Objects.GetValueOrDefault("puppeteer.yoveproxy") is ProxyClient proxyClient)
             {
                 proxyClient.Dispose();
+            }
+        }
+
+        private static async Task SetPageLoadingOptions(BotData data, PuppeteerSharp.Page page)
+        {
+            if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript)
+            {
+                await page.SetRequestInterceptionAsync(true);
+                page.Request += (sender, e) =>
+                {
+                    if (e.Request.ResourceType == ResourceType.Document || e.Request.ResourceType == ResourceType.Script)
+                    {
+                        e.Request.ContinueAsync();
+                    }
+                    else
+                    {
+                        e.Request.AbortAsync();
+                    }
+                };
             }
         }
     }

@@ -195,6 +195,9 @@
   <data name="Invert" xml:space="preserve">
     <value>Invert</value>
   </data>
+  <data name="LoadOnlyDocumentAndScript" xml:space="preserve">
+    <value>Load only document and script</value>
+  </data>
   <data name="MaxUsesPerProxy" xml:space="preserve">
     <value>Maximum uses per proxy (0 is infinite)</value>
   </data>
