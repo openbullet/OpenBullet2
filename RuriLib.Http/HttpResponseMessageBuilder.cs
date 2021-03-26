@@ -24,8 +24,8 @@ namespace RuriLib.Http
 
         private int contentLength = -1;
 
-        private NetworkStream networkStream;
-        private Stream commonStream;
+        //private NetworkStream networkStream;
+        //private Stream commonStream;
 
         private HttpResponseMessage response;
         private Dictionary<string, List<string>> contentHeaders;
@@ -47,10 +47,7 @@ namespace RuriLib.Http
         }
 
         public async Task<HttpResponseMessage> GetResponseAsync(HttpRequestMessage request, Stream stream,
-            CancellationToken cancellationToken = default)
-        {
-            networkStream = stream as NetworkStream;
-            commonStream = stream;
+            CancellationToken cancellationToken = default)       {           
            
             reader = PipeReader.Create(stream);
             
@@ -365,10 +362,7 @@ namespace RuriLib.Http
             while (true)
             {
                 var res = await reader.ReadAsync(cancellationToken).ConfigureAwait(false);
-                if (res.IsCompleted || res.Buffer.Length == 0)// here the pipe will be complete if the server closes the connection or sends 0 length byte array
-                {
-                    break;
-                }
+          
                 if (res.IsCanceled)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -385,6 +379,10 @@ namespace RuriLib.Http
                     {
                         responcestream.Write(seg.Span);
                     }
+                }
+                if (res.IsCompleted || res.Buffer.Length == 0)// here the pipe will be complete if the server closes the connection or sends 0 length byte array
+                {
+                    break;
                 }
             }
             return responcestream;
