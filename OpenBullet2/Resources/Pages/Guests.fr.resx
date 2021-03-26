@@ -142,7 +142,7 @@
     <value>Modifier l'invité</value>
   </data>
   <data name="EditInfo" xml:space="preserve">
-    <value>Modifier les info</value>
+    <value>Modifier les informations</value>
   </data>
   <data name="EditPassword" xml:space="preserve">
     <value>Modifier le mot de passe</value>
@@ -151,7 +151,7 @@
     <value>Comment ça marche?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>OpenBullet 2 vous permet de créer des comptes pour %invités% qui peuvent accéder à votre serveur OpenBullet 2. Tout d'abord, n'oubliez pas d'activer l'option %require admin login% dans les %security settings% d'OB. Cela garantira que les personnes ayant le lien vers ce serveur seront accueillies avec un écran de connexion. Pour que d'autres personnes puissent accéder à ce serveur, vous devrez %ouvrir les ports% sur votre routeur et configurer les %règles de pare-feu% sur votre machine. Cela est généralement déjà fait pour vous sur un VPS, ce qui est la manière suggérée d'héberger une installation OpenBullet 2 exposée publiquement.</value>
+    <value>OpenBullet 2 vous permet de créer des comptes pour des %invités% souhaitant accéder à votre serveur OpenBullet 2. Tout d'abord, n'oubliez pas d'activer l'option %Nécessite l'authentification administrateur% dans les %paramètres de sécurité% d'OB. Cela garantira que les personnes ayant le lien vers ce serveur seront accueillies avec un écran de connexion. Pour que d'autres personnes puissent accéder à ce serveur, vous devrez %ouvrir les ports% sur votre routeur et configurer les %règles de pare-feu% sur votre machine. Cela est généralement déjà fait pour vous sur un VPS, ce qui est la manière suggérée d'héberger une installation OpenBullet 2 exposée publiquement.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Dans les %paramètres de sécurité%, vous pourrez également définir le %durée de vie de la session invité%, qui est le nombre d'heures après lequel les invités seront invités à se connecter à nouveau. Ceci est utile car vous ne voudrez peut-être pas que les invités aient un accès indéfini au serveur. Notez qu'une fois que le serveur a généré un %token% valide pour l'invité, il sera valide jusqu'à son expiration, donc même si vous supprimez un invité du tableau ci-dessus, il pourra utiliser votre installation OpenBullet 2 aussi longtemps que le le token est valide.</value>
@@ -175,19 +175,19 @@
     <value>Voulez-vous vraiment supprimer?</value>
   </data>
   <data name="DeleteEverything" xml:space="preserve">
-    <value>Voulez-vous vraiment supprimer?</value>
+    <value>Voulez-vous vraiment tout supprimer?</value>
   </data>
   <data name="DeleteEverythingMessage" xml:space="preserve">
-    <value>Voulez-vous vraiment tout supprimer</value>
+    <value>Voulez-vous vraiment tout supprimer ?</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>résultats</value>
+    <value>Résultats</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Résultats par page</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oula</value>
+    <value>Uh-Oh</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Nom d'utilisateur</value>
