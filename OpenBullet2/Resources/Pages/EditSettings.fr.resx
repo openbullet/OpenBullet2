@@ -250,7 +250,7 @@
     <value>Afficher l'aide regex</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
-    <value>Encoder les données après le découpage</value>
+    <value>Encoder avec URLEncode après le découpage</value>
   </data>
   <data name="UseProxies" xml:space="preserve">
     <value>Utiliser des proxys</value>
