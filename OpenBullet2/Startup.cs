@@ -44,8 +44,23 @@ namespace OpenBullet2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            ServicePointManager.DefaultConnectionLimit = 1000;
-            ThreadPool.SetMinThreads(1000, 1000);
+            var workerThreads = 1000;
+            var ioThreads = 1000;
+            var connectionLimit = 1000;
+            
+            try
+            {
+                workerThreads = Configuration.GetSection("Resources").GetValue<int>("WorkerThreads");
+                ioThreads = Configuration.GetSection("Resources").GetValue<int>("IOThreads");
+                connectionLimit = Configuration.GetSection("Resources").GetValue<int>("ConnectionLimit");
+            }
+            catch
+            {
+                Console.WriteLine("Could not read the Resources section of appsettings.json (using default values)");
+            }
+
+            ThreadPool.SetMinThreads(workerThreads, ioThreads);
+            ServicePointManager.DefaultConnectionLimit = connectionLimit;
 
             services.AddRazorPages();
             services.AddServerSideBlazor()
