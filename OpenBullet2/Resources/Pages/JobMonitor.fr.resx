@@ -121,16 +121,16 @@
     <value>Actions</value>
   </data>
   <data name="ActionsDescription" xml:space="preserve">
-    <value>Executed sequentially</value>
+    <value>Description des actions</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Active</value>
+    <value>Actif</value>
   </data>
   <data name="AliveProxies" xml:space="preserve">
-    <value>Proxies Actifs</value>
+    <value>Proxys Actifs</value>
   </data>
   <data name="BannedProxies" xml:space="preserve">
-    <value>Proxies Bannis</value>
+    <value>Proxyss Bannis</value>
   </data>
   <data name="Bans" xml:space="preserve">
     <value>Bans</value>
@@ -157,13 +157,13 @@
     <value>Erreurs</value>
   </data>
   <data name="Executing" xml:space="preserve">
-    <value>S'exécute</value>
+    <value>Exécution</value>
   </data>
   <data name="Executions" xml:space="preserve">
-    <value>Executions</value>
+    <value>Exécutions</value>
   </data>
   <data name="Fails" xml:space="preserve">
-    <value>Fails</value>
+    <value>Echoués</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Comment ça marche?</value>
@@ -205,16 +205,16 @@
     <value>sur webhook</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progrès</value>
+    <value>Progression</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Recharger les proxies</value>
+    <value>Recharger les proxys</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Supprimer</value>
   </data>
   <data name="RemoveAll" xml:space="preserve">
-    <value>Supprimer Tous</value>
+    <value>Tout supprimer</value>
   </data>
   <data name="Repeatable" xml:space="preserve">
     <value>Répétable</value>
@@ -223,7 +223,7 @@
     <value>Réinitialiser</value>
   </data>
   <data name="Retries" xml:space="preserve">
-    <value>Re-essais</value>
+    <value>Tentatives</value>
   </data>
   <data name="seconds" xml:space="preserve">
     <value>secondes</value>
@@ -259,7 +259,7 @@
     <value>Temps restant</value>
   </data>
   <data name="ToChecks" xml:space="preserve">
-    <value>À checker</value>
+    <value>À revoir</value>
   </data>
   <data name="Triggers" xml:space="preserve">
     <value>Déclencheurs</value>
@@ -268,7 +268,7 @@
     <value>Doivent tous être vérifiés au même moment</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Attend</value>
+    <value>Patientez</value>
   </data>
   <data name="inChat" xml:space="preserve">
     <value>dans le chat</value>

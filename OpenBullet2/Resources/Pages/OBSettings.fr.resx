@@ -172,16 +172,16 @@
     <value>Ignorer le nom de la wordlist lors de la suppression de hits dupliqués</value>
   </data>
   <data name="JobManagerUpdateInterval" xml:space="preserve">
-    <value>Interval de mise à jour du gestionnaire de jobs</value>
+    <value>Intervalle de mise à jour du gestionnaire de jobs</value>
   </data>
   <data name="JobUpdateInterval" xml:space="preserve">
-    <value>Interval de mise à jour des job</value>
+    <value>Intervalle de mise à jour des job</value>
   </data>
   <data name="LogMaxEntries" xml:space="preserve">
     <value>Nombre d'entrées maximum dans les logs</value>
   </data>
   <data name="LogToFile" xml:space="preserve">
-    <value>Log dans un fichier également</value>
+    <value>Logger dans un fichier également</value>
   </data>
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>Lors de la modification d'une config, naviguez vers</value>
@@ -214,7 +214,7 @@
     <value>Sauvegarder</value>
   </data>
   <data name="Saved" xml:space="preserve">
-    <value>Sauvegarder</value>
+    <value>Sauvegardé</value>
   </data>
   <data name="Security" xml:space="preserve">
     <value>Sécurité</value>

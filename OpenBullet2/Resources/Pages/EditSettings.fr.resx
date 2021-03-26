@@ -121,7 +121,7 @@
     <value>Ajouter</value>
   </data>
   <data name="AddBlank" xml:space="preserve">
-    <value>Ajouter vide</value>
+    <value>Ajouter une case vide</value>
   </data>
   <data name="AllowedProxyTypes" xml:space="preserve">
     <value>Types de proxy autorisés</value>
@@ -199,7 +199,7 @@
     <value>Utilisations maximum par proxy (0 pour infini)</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
+    <value>Proxys</value>
   </data>
   <data name="Puppeteer" xml:space="preserve">
     <value>Puppeteer</value>
@@ -220,7 +220,7 @@
     <value>Règle regex</value>
   </data>
   <data name="RegexToMatch" xml:space="preserve">
-    <value>Regex à match</value>
+    <value>Regex à faire correspondre</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Supprimer</value>
@@ -241,19 +241,19 @@
     <value>Règle simple</value>
   </data>
   <data name="SliceName" xml:space="preserve">
-    <value>Nom de la part</value>
+    <value>Nom de la découpe</value>
   </data>
   <data name="SuggestedBots" xml:space="preserve">
-    <value>Montant suggéré de bots</value>
+    <value>Nombre suggéré de bots</value>
   </data>
   <data name="ToggleRegexHelper" xml:space="preserve">
-    <value>Basculer l'aide regex</value>
+    <value>Afficher l'aide regex</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
-    <value>URL Encoder la donnée après le découpage</value>
+    <value>Encoder avec URLEncode après le découpage</value>
   </data>
   <data name="UseProxies" xml:space="preserve">
-    <value>Utiliser des proxies</value>
+    <value>Utiliser des proxys</value>
   </data>
   <data name="VariableName" xml:space="preserve">
     <value>Nom de la variable</value>

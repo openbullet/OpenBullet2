@@ -136,10 +136,10 @@
     <value>Annuler</value>
   </data>
   <data name="CapMonsterHost" xml:space="preserve">
-    <value>CapMonster Host</value>
+    <value>Hôte CapMonster</value>
   </data>
   <data name="CapMonsterPort" xml:space="preserve">
-    <value>CapMonster Port</value>
+    <value>Port CapMonster</value>
   </data>
   <data name="Captchas" xml:space="preserve">
     <value>Captchas</value>
@@ -154,7 +154,7 @@
     <value>Vérifiez le solde du compte avant de résoudre le captcha</value>
   </data>
   <data name="ChromeBinaryLocation" xml:space="preserve">
-    <value>Emplacement binaire Chrome</value>
+    <value>Emplacement exécutable Chrome</value>
   </data>
   <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
     <value>Délai de connexion (millisecondes)</value>
@@ -166,7 +166,7 @@
     <value>Clé API 2Captcha personnalisée</value>
   </data>
   <data name="Custom2CaptchaHost" xml:space="preserve">
-    <value>Host 2Captcha personnalisé</value>
+    <value>Hôte 2Captcha personnalisé</value>
   </data>
   <data name="Custom2CaptchaPort" xml:space="preserve">
     <value>Port 2Captcha personnalisé</value>
@@ -184,22 +184,22 @@
     <value>Nom d'utilisateur DeCaptcher</value>
   </data>
   <data name="DrawMouseMovement" xml:space="preserve">
-    <value>Draw le mouvement de la souris</value>
+    <value>Dessiner le mouvement de la souris</value>
   </data>
   <data name="EnableBotLogging" xml:space="preserve">
     <value>Activer la journalisation des bots</value>
   </data>
   <data name="FirefoxBinaryLocation" xml:space="preserve">
-    <value>Emplacement binaire Firefox</value>
+    <value>Emplacement exécutable Firefox</value>
   </data>
   <data name="General" xml:space="preserve">
     <value>Général</value>
   </data>
   <data name="GlobalBanKeys" xml:space="preserve">
-    <value>Clés de ban globale</value>
+    <value>Clés de bannissement globale</value>
   </data>
   <data name="GlobalRetryKeys" xml:space="preserve">
-    <value>Clés de réessai globales</value>
+    <value>Clés de tentatives globales</value>
   </data>
   <data name="ImageTyperzApiKey" xml:space="preserve">
     <value>Clé API Imagetyperz</value>

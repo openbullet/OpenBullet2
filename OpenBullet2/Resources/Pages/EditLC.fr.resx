@@ -121,7 +121,7 @@
     <value>Qu'est-ce que le LoliCode?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%LoliCode% est un langage de script personnalisé qui agit comme un %langage intermédiaire% entre les blocs et le code C# généré à partir des blocs. LoliCode peut être converti en blocs en cliquant simplement sur la section Stacker (tout ce qui n'est pas un bloc approprié est déplacé vers un bloc LoliCode spécial), et les blocs peuvent être convertis en LoliCode en cliquant simplement sur la section LoliCode. Chaque bloc est automatiquement traduit en un extrait qui peut être identifié grâce à son identifiant.</value>
+    <value>Le %LoliCode% est un langage de script personnalisé qui agit comme un %langage intermédiaire% entre les blocs et le code C# généré à partir des blocs. LoliCode peut être converti en blocs en cliquant simplement sur la section Stacker (tout ce qui n'est pas un bloc approprié est déplacé vers un bloc LoliCode spécial), et les blocs peuvent être convertis en LoliCode en cliquant simplement sur la section LoliCode. Chaque bloc est automatiquement traduit en un extrait qui peut être identifié grâce à son identifiant.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Une grande caractéristique de LoliCode est qu'il peut être utilisé pour intégrer du code %C#% brut avec des blocs. Vous pouvez encapsuler des blocs dans des instructions `if`, déclarer des variables et tirer parti des fonctionnalités de C# en utilisant sa syntaxe d'origine. En fin de compte, les blocs sont également traduits en code C#, vous vous retrouverez donc avec du code 100% C# lorsque vous décidez d'exécuter votre configuration!</value>
@@ -139,6 +139,6 @@
     <value>Basculer les Usings</value>
   </data>
   <data name="UsingsInfo" xml:space="preserve">
-    <value>Vous pouvez entrer les namespace que vous souhaitez importer dans le script C# généré, un par ligne</value>
+    <value>Vous pouvez entrer les namespaces que vous souhaitez importer dans le script C# généré, un par ligne</value>
   </data>
 </root>

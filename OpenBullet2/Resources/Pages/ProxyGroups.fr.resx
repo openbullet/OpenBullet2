@@ -139,7 +139,7 @@
     <value>Créer un groupe proxy</value>
   </data>
   <data name="DeleteAllProxies" xml:space="preserve">
-    <value>Supprimer tous les proxies</value>
+    <value>Supprimer tous les proxys</value>
   </data>
   <data name="Deleted" xml:space="preserve">
     <value>Supprimé</value>
@@ -148,13 +148,13 @@
     <value>Supprimer le groupe</value>
   </data>
   <data name="DeleteNotWorking" xml:space="preserve">
-    <value>Supprimer ce qui ne fonctionne pas</value>
+    <value>Supprimer proxys non fonctionnels</value>
   </data>
   <data name="DeleteSlow" xml:space="preserve">
-    <value>Supprimer ce qui lente</value>
+    <value>Supprimer proxys trop lents</value>
   </data>
   <data name="DeleteUntested" xml:space="preserve">
-    <value>Supprimer non testé</value>
+    <value>Supprimer proxys non testés</value>
   </data>
   <data name="EditGroup" xml:space="preserve">
     <value>Modifier le groupe</value>
@@ -175,16 +175,16 @@
     <value>Comment ça marche?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Ici, vous pouvez importer vos proxies dans plusieurs %groups%. Les groupes aident à organiser les proxys et vous donnent la possibilité d'utiliser différents proxys pour différents Jobs. Tout d'abord, vous devez créer un groupe en cliquant sur le bouton %Ajouter un groupe% ci-dessus. Donnez-lui simplement un nom. Assurez-vous que votre nouveau groupe est sélectionné, puis cliquez sur %Importer les proxies%.</value>
+    <value>Ici, vous pouvez importer vos proxys dans plusieurs %groups%. Les groupes aident à organiser les proxys et vous donnent la possibilité d'utiliser différents proxys pour différents Jobs. Tout d'abord, vous devez créer un groupe en cliquant sur le bouton %Ajouter un groupe% ci-dessus. Donnez-lui simplement un nom. Assurez-vous que votre nouveau groupe est sélectionné, puis cliquez sur %Importer les proxys%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Le menu %Import Proxies% vous donnera 3 façons d'importer vos proxies. Vous pouvez soit %les coller%, %télécharger un fichier% ou %taper l'URL% d'une ressource distante qui fournit des proxies au format texte (généralement un par ligne). Vous pouvez également spécifier les paramètres par défaut %type%, %username% et %password% pour les proxys. Vous pouvez également utiliser la %syntaxe avancée% décrite dans le formulaire afin de spécifier le type, le nom d'utilisateur et le mot de passe pour chaque proxy.</value>
+    <value>Le menu %Importation de proxys% vous donnera 3 façons d'importer vos proxies. Vous pouvez soit %les coller%, %les télécharger% ou %renseigner l'URL% d'une ressource distante qui fournit des proxys au format texte (généralement un par ligne). Vous pouvez également spécifier les paramètres par défaut %type%, %username% et %password% pour les proxys. Vous pouvez également utiliser la %syntaxe avancée% décrite dans le formulaire afin de spécifier le type, le nom d'utilisateur et le mot de passe pour chaque proxy.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Vous êtes maintenant prêt et vous pourrez sélectionner votre groupe proxy lorsque vous créez ou modifiez un travail. Vous pouvez créer un job de type %Proxy Check% afin de tester si vos proxies fonctionnent avant de les utiliser. La tâche Proxy Check mettra à jour les champs %country%, %status%, %ping% et %last check date% de vos proxys dans le tableau de données de cette page, de sorte que vous puissiez alors %supprimer% les proxies qui ne fonctionnent pas ou avoir un ping trop élevé pour vos besoins. Vous pouvez même décider de ne conserver que les mandataires d'un pays spécifique!</value>
+    <value>Vous êtes maintenant prêt et vous pourrez sélectionner votre groupe proxy lorsque vous créez ou modifiez un travail. Vous pouvez créer un job de type %Proxy Check% afin de tester si vos proxys fonctionnent avant de les utiliser. La tâche Proxy Check mettra à jour les champs %pays%, %statut%, %ping% et %dernière vérification% de vos proxys dans le tableau de données de cette page, de sorte que vous puissiez alors %supprimer% les proxys qui ne fonctionnent pas ou avoir un ping trop élevé pour vos besoins. Vous pouvez même décider de ne conserver que les mandataires d'un pays spécifique!</value>
   </data>
   <data name="Host" xml:space="preserve">
-    <value>Host</value>
+    <value>Hôte</value>
   </data>
   <data name="Imported" xml:space="preserve">
     <value>Importé</value>
@@ -211,7 +211,7 @@
     <value>Ping</value>
   </data>
   <data name="pingOver" xml:space="preserve">
-    <value>ping over</value>
+    <value>pinger vers</value>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
@@ -241,7 +241,7 @@
     <value>Lent</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Statut</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>

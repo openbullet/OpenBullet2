@@ -178,10 +178,10 @@
     <value>Inactif</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progrès</value>
+    <value>Progression</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
+    <value>Proxys</value>
   </data>
   <data name="Range" xml:space="preserve">
     <value>Intervalle</value>
@@ -190,13 +190,13 @@
     <value>Supprimer</value>
   </data>
   <data name="RemoveAll" xml:space="preserve">
-    <value>Supprimer tous</value>
+    <value>Tout supprimer</value>
   </data>
   <data name="SelectJobType" xml:space="preserve">
     <value>Sélectionner le type de job</value>
   </data>
   <data name="ToCheck" xml:space="preserve">
-    <value>À checker</value>
+    <value>À revoir</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
     <value>Wordlist</value>

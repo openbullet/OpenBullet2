@@ -142,7 +142,7 @@
     <value>Bonjour et bienvenue à %OpenBullet 2%, je suis %Bulletta% et je serai votre guide ici. Rechercher des boutons avec mon visage et je vais sauter sur l'écran pour expliquer ce que vous avez besoin!</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous verrais dans les alentours. Byee!</value>
+    <value>Je ne vais pas vous embêter plus longtemps, je suppose que vous regarderez les alentours. Byee!</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
     <value>Où sont sauvegardés tous mes paramètres?</value>
@@ -169,10 +169,10 @@
     <value>Utilisation du réseau</value>
   </data>
   <data name="OperatingSystem" xml:space="preserve">
-    <value>Système opérateur</value>
+    <value>Système d'exploitation</value>
   </data>
   <data name="WebserverUptime" xml:space="preserve">
-    <value>Uptime du serveur</value>
+    <value>Disponibilité du serveur</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
     <value>Bienvenue dans OpenBullet 2</value>

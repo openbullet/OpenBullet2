@@ -142,34 +142,34 @@
     <value>Créé</value>
   </data>
   <data name="CreateEndpoint" xml:space="preserve">
-    <value>Créer un Endpoint</value>
+    <value>Créer un point de terminaison</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Date de création</value>
   </data>
   <data name="DeleteEndpoint" xml:space="preserve">
-    <value>Supprimer le Endpoint</value>
+    <value>Supprimer le point de terminaison</value>
   </data>
   <data name="EditEndpoint" xml:space="preserve">
-    <value>Modifier le Endpoint</value>
+    <value>Modifier le point de terminaison/value>
   </data>
   <data name="Endpoint" xml:space="preserve">
-    <value>Endpoint</value>
+    <value>Point de terminaison</value>
   </data>
   <data name="EndpointCreated" xml:space="preserve">
-    <value>Endpoint créé</value>
+    <value>Point de terminaison créé</value>
   </data>
   <data name="ForThisEndpoint" xml:space="preserve">
-    <value>Pour ce endpoint</value>
+    <value>Pour ce point de terminaison</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Qu'est-ce que c'est?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>C'est ici que vous pouvez configurer le partage de %endpoints% pour vos configurations afin que d'autres personnes puissent y accéder. Vous pouvez %créer des endpoints% et leur ajouter %des configs, et également spécifier les %Api Keys% qui sont autorisés à recevoir les configs.</value>
+    <value>C'est ici que vous pouvez configurer le partage de %points de terminaisons% pour vos configs afin que d'autres personnes puissent y accéder. Vous pouvez %créer des endpoints% et leur ajouter des configs, et également spécifier les %clés API% qui sont autorisés à les recevoir.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Pour partager des configurations avec un ami, vous devez créer un point de terminaison, y ajouter des configurations, configurer au moins une clé API et l'envoyer à votre ami, avec l'%URL% de votre point de terminaison. Votre ami devra ensuite le configurer dans les %OB Settings &gt; Remote%. Par exemple, si votre instance OpenBullet 2 est accessible sur `1.1.1.1: 5000`, votre ami doit taper` http://1.1.1.1:5000/api/shared/configs/ROUTE` où %ROUTE% est le nom que vous donné au point final.</value>
+    <value>Pour partager des configs avec un ami, vous devez créer un point de terminaison, y ajouter des configurations, configurer au moins une clé API et l'envoyer à votre ami, avec l'%URL% de votre point de terminaison. Votre ami devra ensuite le configurer dans les %Paramètres OB &gt; Distant%. Par exemple, si votre instance OpenBullet 2 est accessible sur `1.1.1.1: 5000`, votre ami doit taper` http://1.1.1.1:5000/api/shared/configs/ROUTE` où %ROUTE% est le nom que vous donnez au point de terminaison.</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Dernière modification</value>

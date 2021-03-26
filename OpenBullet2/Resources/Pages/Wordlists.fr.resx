@@ -127,7 +127,7 @@
     <value>Wordlist a été ajouté avec succès!</value>
   </data>
   <data name="AddWordlist" xml:space="preserve">
-    <value>Ajouter wordlist</value>
+    <value>Ajouter une wordlist</value>
   </data>
   <data name="AlsoDeleteFile" xml:space="preserve">
     <value>Supprimer également le fichier?</value>
@@ -151,22 +151,22 @@
     <value>modifier</value>
   </data>
   <data name="EditWordlist" xml:space="preserve">
-    <value>modifier wordlist</value>
+    <value>modifier la wordlist</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>Nom de fichier</value>
+    <value>Nom du fichier</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
     <value>Comment cela marche-t-il?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Ici, vous pouvez importer des wordlists. Tout d'abord, cliquez sur le bouton %Ajouter% ci-dessus. Vous pourrez spécifier un %Type de wordlists% (plus d'informations à ce sujet plus tard), un %Nom% et un %Purpose%. Vous avez deux options pour télécharger votre fichier. La première option est de %upload% it sur le serveur qui exécute l'instance d'OpenBullet2. C'est la méthode préférée %si la wordlists se trouve sur le client% à partir duquel vous accédez à l'OB2 via le navigateur, mais que l'OB2 est hébergé sur une machine différente. Cette méthode d'ajout d'une liste de mots ajoute une surcharge car la liste de mots doit être téléchargée via le navigateur.</value>
+    <value>Ici, vous pouvez importer des wordlists. Tout d'abord, cliquez sur le bouton %Ajouter% ci-dessus. Vous pourrez spécifier un %Type de wordlist% (plus d'informations à ce sujet plus tard), un %Nom% et un %Purpose%. Vous avez deux options pour télécharger votre fichier. La première option est d'%uploader% la wordlist sur le serveur qui exécute OpenBullet2. C'est la meilleure méthode %si la wordlist se trouve sur le client% (celle sur lequel vous accédez à OB2), mais qu'OB2 est hébergé sur une machine différente. Cette méthode d'ajout d'une wordlist ajoute une surcharge car la wordlist doit être téléversée via le navigateur.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>%Si la wordlist se trouve sur le serveur%, ce qui signifie que vous essayez de récupérer un fichier de la même machine sur laquelle est exécuté l'OB2, vous pouvez utiliser l'option %File System%, qui vous permettra de parcourir visuellement les dossiers à la recherche de le fichier souhaité. Notez que pour accéder aux emplacements sur le disque qui sont en dehors du répertoire de travail actuel d'OB2, vous devrez accéder aux options de sécurité d'OpenBullet et autoriser l'accès aux fichiers à l'échelle du système.</value>
+    <value>%Si la wordlist se trouve sur le serveur%, ce qui signifie que vous essayez de récupérer un fichier de la même machine sur laquelle est exécuté OB2, vous pouvez utiliser l'option %File System%, qui vous permettra de parcourir visuellement les dossiers à la recherche de le fichier souhaité. Notez que pour accéder aux emplacements sur le disque qui sont en dehors du répertoire de travail actuel d'OB2, vous devrez accéder aux options de sécurité d'OpenBullet et autoriser l'accès aux fichiers à l'échelle du système.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Concernant le %Wordlist Type%, vous trouverez les types de liste de mots actuellement spécifiés dans le fichier  UserData/Environment.ini% de votre répertoire OB2. Les types de Wordlist sont chargés au démarrage de l'OB2. Vous pouvez modifier ce fichier et ajouter/supprimer/modifier les types de Wordlists pour qu'ils correspondent au format de vos Wordlists. Vous pouvez en savoir plus sur les types de Wordlists dans la section des guides du forum officiel.</value>
+    <value>Concernant le %Type de Wordlist%, vous trouverez les types actuellement spécifiés dans le fichier %UserData/Environment.ini% de votre répertoire OB2. Les types de Wordlist sont chargés au démarrage d'OB2. Vous pouvez modifier ce fichier et ajouter/supprimer/modifier les types de Wordlists pour qu'ils correspondent au format de vos Wordlists. Vous pouvez en savoir plus sur les types de Wordlists dans la section "Guides", sur le forum officiel.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
     <value>Non, gardez le fichier</value>
