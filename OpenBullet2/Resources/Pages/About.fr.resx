@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -136,7 +136,7 @@
     <value>Effectuer des attaques sur des sites que vous ne possédez pas (ou que vous n'avez pas l'autorisation de tester) est illégal ! Le développeur ne sera pas tenu responsable d'une mauvaise utilisation de ce logiciel.</value>
   </data>
   <data name="DonatorsAndSupporters" xml:space="preserve">
-    <value>Donators and Supporters</value>
+    <value>Donateurs and Supporters</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Licence</value>
@@ -145,7 +145,7 @@
     <value>Forum officiel</value>
   </data>
   <data name="OfficialRepository" xml:space="preserve">
-    <value>Repo officiel</value>
+    <value>Dépôt officiel</value>
   </data>
   <data name="Read" xml:space="preserve">
     <value>Lire</value>
