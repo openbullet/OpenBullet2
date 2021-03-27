@@ -230,6 +230,7 @@ namespace RuriLib.Blocks.Utility.Files
             return files;
         }
 
+        [Block("Deletes a given directory")]
         public static void FolderDelete(BotData data, string path)
         {
             if (data.Providers.Security.RestrictBlocksToCWD)
