@@ -211,9 +211,12 @@ return noderesult;
 
                     writer.WriteLine($"var {scopeName} = GetIronPyScope(data);");
 
-                    foreach (var input in InputVariables.Split(','))
+                    if (!string.IsNullOrWhiteSpace(InputVariables))
                     {
-                        writer.WriteLine($"{scopeName}.SetVariable(nameof({input}), {input});");
+                        foreach (var input in InputVariables.Split(','))
+                        {
+                            writer.WriteLine($"{scopeName}.SetVariable(nameof({input}), {input});");
+                        }
                     }
 
                     writer.WriteLine($"ExecuteIronPyScript(data, {scopeName}, \"{scriptPath}\");");
