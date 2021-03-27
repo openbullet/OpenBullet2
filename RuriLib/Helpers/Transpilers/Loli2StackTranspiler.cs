@@ -61,7 +61,7 @@ namespace RuriLib.Helpers.Transpilers
                         if (trimmedLine.StartsWith("ENDBLOCK"))
                             break;
 
-                        sb.AppendLine(trimmedLine);
+                        sb.AppendLine(line);
                     }
 
                     var blockOptions = sb.ToString();
