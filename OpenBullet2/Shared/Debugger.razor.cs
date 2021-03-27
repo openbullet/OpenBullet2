@@ -96,7 +96,7 @@ namespace OpenBullet2.Shared
                 RNG = RNGProvider
             };
 
-            if (RuriLibSettings.RuriLibSettings.GeneralSettings.UseCustomUserAgentsList)
+            if (!RuriLibSettings.RuriLibSettings.GeneralSettings.UseCustomUserAgentsList)
             {
                 providers.RandomUA = RandomUAProvider;
             }
