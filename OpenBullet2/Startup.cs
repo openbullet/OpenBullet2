@@ -44,20 +44,9 @@ namespace OpenBullet2
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var workerThreads = 1000;
-            var ioThreads = 1000;
-            var connectionLimit = 1000;
-            
-            try
-            {
-                workerThreads = Configuration.GetSection("Resources").GetValue<int>("WorkerThreads");
-                ioThreads = Configuration.GetSection("Resources").GetValue<int>("IOThreads");
-                connectionLimit = Configuration.GetSection("Resources").GetValue<int>("ConnectionLimit");
-            }
-            catch
-            {
-                Console.WriteLine("Could not read the Resources section of appsettings.json (using default values)");
-            }
+            var workerThreads = Configuration.GetSection("Resources").GetValue<int>("WorkerThreads", 1000);
+            var ioThreads = Configuration.GetSection("Resources").GetValue<int>("IOThreads", 1000);
+            var connectionLimit = Configuration.GetSection("Resources").GetValue<int>("ConnectionLimit", 1000);
 
             ThreadPool.SetMinThreads(workerThreads, ioThreads);
             ServicePointManager.DefaultConnectionLimit = connectionLimit;
@@ -119,14 +108,19 @@ namespace OpenBullet2
                 "UserData"));
 
             // Localization
+            var useCultureCookie = Configuration.GetSection("Culture").GetValue<bool>("UseCookie", false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(context =>
+                if (!useCultureCookie)
                 {
-                    var settingsService = context.RequestServices.GetService<PersistentSettingsService>();
-                    return Task.FromResult(new ProviderCultureResult(settingsService.OpenBulletSettings.GeneralSettings.Culture));
-                }));
+                    options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(context =>
+                    {
+                        var settingsService = context.RequestServices.GetService<PersistentSettingsService>();
+                        settingsService.UseCultureCookie = false;
+                        return Task.FromResult(new ProviderCultureResult(settingsService.OpenBulletSettings.GeneralSettings.Culture));
+                    }));
+                }
 
                 var supportedCultures = new[]
                 {

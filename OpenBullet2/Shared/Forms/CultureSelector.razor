@@ -66,17 +66,27 @@
 
     private async Task ChangeCulture(string culture)
     {
-        PersistentSettings.OpenBulletSettings.GeneralSettings.Culture = culture;
-
-        if (SaveSettings)
-            await PersistentSettings.Save();
-
-        CultureInfo.CurrentCulture = new CultureInfo(culture);
-        CultureInfo.CurrentUICulture = new CultureInfo(culture);
-
         var uri = new Uri(NavigationManager.Uri)
             .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
 
-        NavigationManager.NavigateTo(uri, true);
+        if (PersistentSettings.UseCultureCookie)
+        {
+            var query = $"?culture={Uri.EscapeDataString(culture)}&" +
+                $"redirectUri={Uri.EscapeDataString(uri)}";
+
+            NavigationManager.NavigateTo("/Culture/SetCulture" + query, true);
+        }
+        else
+        {
+            PersistentSettings.OpenBulletSettings.GeneralSettings.Culture = culture;
+
+            if (SaveSettings)
+                await PersistentSettings.Save();
+
+            CultureInfo.CurrentCulture = new CultureInfo(culture);
+            CultureInfo.CurrentUICulture = new CultureInfo(culture);
+
+            NavigationManager.NavigateTo(uri, true);
+        }
     }
 }

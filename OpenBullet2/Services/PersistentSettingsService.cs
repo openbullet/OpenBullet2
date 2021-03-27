@@ -1,6 +1,4 @@
-﻿using OpenBullet2.Models;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OpenBullet2.Models.Settings;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,6 +14,7 @@ namespace OpenBullet2.Services
 
         public OpenBulletSettings OpenBulletSettings { get; set; }
         public bool SetupComplete => File.Exists(ObSettFile);
+        public bool UseCultureCookie { get; set; } = true;
 
         public PersistentSettingsService(string baseFolder)
         {
