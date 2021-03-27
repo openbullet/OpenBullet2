@@ -151,7 +151,7 @@
     <value>Supprimer le point de terminaison</value>
   </data>
   <data name="EditEndpoint" xml:space="preserve">
-    <value>Modifier le point de terminaison/value>
+    <value>Modifier le point de terminaison</value>
   </data>
   <data name="Endpoint" xml:space="preserve">
     <value>Point de terminaison</value>
