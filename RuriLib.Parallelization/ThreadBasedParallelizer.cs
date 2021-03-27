@@ -30,6 +30,7 @@ namespace RuriLib.Parallelization
         {
             await base.Start();
 
+            stopwatch.Restart();
             Status = ParallelizerStatus.Running;
             _ = Task.Run(() => Run()).ConfigureAwait(false);
         }
@@ -42,6 +43,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Pausing;
             await WaitCurrentWorkCompletion();
             Status = ParallelizerStatus.Paused;
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -50,6 +52,7 @@ namespace RuriLib.Parallelization
             await base.Resume();
 
             Status = ParallelizerStatus.Running;
+            stopwatch.Start();
         }
 
         /// <inheritdoc/>
@@ -60,6 +63,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -71,6 +75,7 @@ namespace RuriLib.Parallelization
             hardCTS.Cancel();
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>

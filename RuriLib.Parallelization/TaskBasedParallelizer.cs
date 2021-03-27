@@ -35,6 +35,7 @@ namespace RuriLib.Parallelization
         {
             await base.Start();
 
+            stopwatch.Restart();
             Status = ParallelizerStatus.Running;
             _ = Task.Run(() => Run()).ConfigureAwait(false);
         }
@@ -48,6 +49,7 @@ namespace RuriLib.Parallelization
             savedDOP = degreeOfParallelism;
             await ChangeDegreeOfParallelism(0).ConfigureAwait(false);
             Status = ParallelizerStatus.Paused;
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -58,6 +60,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Resuming;
             await ChangeDegreeOfParallelism(savedDOP).ConfigureAwait(false);
             Status = ParallelizerStatus.Running;
+            stopwatch.Start();
         }
 
         /// <inheritdoc/>
@@ -68,6 +71,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -79,6 +83,7 @@ namespace RuriLib.Parallelization
             hardCTS.Cancel();
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
+            stopwatch.Stop();
         }
 
         /// <inheritdoc/>

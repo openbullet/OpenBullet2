@@ -58,7 +58,7 @@ namespace RuriLib.Parallelization
                     : DateTime.MaxValue;
             }
         }
-        public TimeSpan Elapsed => (EndTime ?? DateTime.Now) - StartTime;
+        public TimeSpan Elapsed => TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds);
         public TimeSpan Remaining => EndTime.HasValue ? TimeSpan.Zero : ETA - DateTime.Now;
         #endregion
 
@@ -73,6 +73,7 @@ namespace RuriLib.Parallelization
         protected int current;
         protected List<int> checkedTimestamps = new();
         protected readonly object cpmLock = new();
+        protected readonly Stopwatch stopwatch = new();
 
         protected CancellationTokenSource softCTS; // Cancel this for soft AND hard abort
         protected CancellationTokenSource hardCTS; // Cancel this for hard abort
