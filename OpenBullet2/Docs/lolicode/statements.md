@@ -83,6 +83,7 @@ END
 ---
 ##### LOCK
 Very useful if you want to execute operations on global variables.
+It makes sure that only 1 bot can enter a given piece of code at a time, so that multiple bots do not edit the same global variable at the same time.
 Often used in conjunction with TRY/CATCH.
 Example:
 ```
