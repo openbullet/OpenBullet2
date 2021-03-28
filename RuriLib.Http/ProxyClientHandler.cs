@@ -236,12 +236,18 @@ namespace RuriLib.Http
                         TargetHost = uri.Host,
                         EnabledSslProtocols = SslProtocols,
                         CertificateRevocationCheckMode = CertRevocationMode,
-                        RemoteCertificateValidationCallback = new RemoteCertificateValidationCallback((s, c, ch, e) => { return true; })
-
                     };
 
+                    if (CertRevocationMode != X509RevocationMode.Online)
+                    {
+                        sslOptions.RemoteCertificateValidationCallback =
+                            new RemoteCertificateValidationCallback((s, c, ch, e) => { return true; });
+                    }
+
                     if (UseCustomCipherSuites)
+                    {
                         sslOptions.CipherSuitesPolicy = new CipherSuitesPolicy(AllowedCipherSuites);
+                    }
 
                     await sslStream.AuthenticateAsClientAsync(sslOptions, cancellationToken);
                     connectionCommonStream = sslStream;
