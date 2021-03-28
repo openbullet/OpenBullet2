@@ -301,6 +301,6 @@ return noderesult;
 
         // Converts input.DATA into DATA
         private string SanitizeInput(string input)
-            => Regex.Match(input, "[A-Za-z0-9]+$").Value;
+            => Regex.Match(input, "[A-Za-z0-9_]+$").Value;
     }
 }
