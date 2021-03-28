@@ -185,6 +185,13 @@ namespace RuriLib.Models.Blocks
                 return $"}}{System.Environment.NewLine}catch{System.Environment.NewLine}{{";
             }
 
+            // LOCK
+            // LOCK globals => lock (globals) {
+            if ((match = Regex.Match(input, $"^LOCK (.+)$")).Success)
+            {
+                return $"lock({match.Groups[1].Value}){System.Environment.NewLine}{{";
+            }
+
             throw new NotSupportedException();
         }
     }

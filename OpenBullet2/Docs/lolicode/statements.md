@@ -80,3 +80,19 @@ CATCH
 // fallback request to a reliable URL
 END
 ```
+---
+##### LOCK
+Very useful if you want to execute operations on global variables.
+Often used in conjunction with TRY/CATCH.
+Example:
+```
+LOCK globals
+TRY
+// Try to increase globals.Count by 1 if it exists
+globals.Count++;
+CATCH
+// Create globals.Count if it doesn't exist
+globals.Count = 1;
+END
+END
+```
