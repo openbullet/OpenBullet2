@@ -6,6 +6,7 @@ namespace RuriLib.Models.Settings
     {
         public CaptchaServiceType CurrentService { get; set; } = CaptchaServiceType.TwoCaptcha;
         public int TimeoutSeconds { get; set; } = 120;
+        public int PollingIntervalMilliseconds { get; set; } = 5000;
         public bool CheckBalanceBeforeSolving { get; set; } = true;
 
         public string AntiCaptchaApiKey { get; set; } = "";

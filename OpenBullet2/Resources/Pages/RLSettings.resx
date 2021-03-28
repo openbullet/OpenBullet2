@@ -210,6 +210,9 @@
   <data name="ParallelizerType" xml:space="preserve">
     <value>Parallelizer Type</value>
   </data>
+  <data name="PollingIntervalMilliseconds" xml:space="preserve">
+    <value>Polling interval in milliseconds</value>
+  </data>
   <data name="Proxies" xml:space="preserve">
     <value>Proxies</value>
   </data>

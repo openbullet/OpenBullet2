@@ -65,6 +65,9 @@
     <label>@Loc["TimeoutSeconds"]</label>
     <InputNumber @bind-Value="settings.CaptchaSettings.TimeoutSeconds" />
 
+    <label>@Loc["PollingIntervalMilliseconds"]</label>
+    <InputNumber @bind-Value="settings.CaptchaSettings.PollingIntervalMilliseconds" />
+
     <label>@Loc["CheckBalanceBeforeSolving"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.CaptchaSettings.CheckBalanceBeforeSolving" />
     <br />

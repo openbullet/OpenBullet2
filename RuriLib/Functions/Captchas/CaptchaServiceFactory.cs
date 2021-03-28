@@ -32,6 +32,7 @@ namespace RuriLib.Functions.Captchas
             };
 
             service.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+            service.PollingInterval = TimeSpan.FromMilliseconds(settings.PollingIntervalMilliseconds);
             return service;
         }
     }
