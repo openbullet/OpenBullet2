@@ -236,7 +236,7 @@ namespace RuriLib.Blocks.Utility.Files
             if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
-            Directory.Delete(path);
+            Directory.Delete(path, true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Deleted {path}", LogColors.Flavescent);
