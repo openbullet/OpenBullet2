@@ -135,6 +135,9 @@
   <data name="NoSettingsRequired" xml:space="preserve">
     <value>Nessuna impostazione necessaria</value>
   </data>
+  <data name="OnlyHits" xml:space="preserve">
+    <value>Solo hit</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
   </data>

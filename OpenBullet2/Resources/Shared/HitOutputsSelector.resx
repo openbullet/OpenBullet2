@@ -156,4 +156,7 @@
   <data name="ApiServer" xml:space="preserve">
     <value>API server</value>
   </data>
+  <data name="OnlyHits" xml:space="preserve">
+    <value>Only hits</value>
+  </data>
 </root>

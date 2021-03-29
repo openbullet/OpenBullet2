@@ -69,6 +69,12 @@
                         <div class="col align-self-stretch px-1">
                             <InputText @bind-Value="x.AvatarUrl" />
                         </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["OnlyHits"]:</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <InputCheckbox @bind-Value="x.OnlyHits" />
+                        </div>
                         break;
 
                     case TelegramBotHitOutputOptions x:
@@ -92,6 +98,12 @@
                         </div>
                         <div class="col align-self-stretch px-1">
                             <InputNumber @bind-Value="x.ChatId" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["OnlyHits"]:</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <InputCheckbox @bind-Value="x.OnlyHits" />
                         </div>
                         break;
                 }

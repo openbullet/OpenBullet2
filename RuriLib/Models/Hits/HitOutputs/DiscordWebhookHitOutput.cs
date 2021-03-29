@@ -11,16 +11,23 @@ namespace RuriLib.Models.Hits.HitOutputs
         public string Webhook { get; set; }
         public string Username { get; set; }
         public string AvatarUrl { get; set; }
+        public bool OnlyHits { get; set; }
 
-        public DiscordWebhookHitOutput(string webhook, string username = "", string avatarUrl = "")
+        public DiscordWebhookHitOutput(string webhook, string username = "", string avatarUrl = "", bool onlyHits = true)
         {
             Webhook = webhook;
             Username = username;
             AvatarUrl = avatarUrl;
+            OnlyHits = onlyHits;
         }
 
         public async Task Store(Hit hit)
         {
+            if (OnlyHits && hit.Type != "SUCCESS")
+            {
+                return;
+            }
+
             using var client = new HttpClient();
 
             var obj = new JObject

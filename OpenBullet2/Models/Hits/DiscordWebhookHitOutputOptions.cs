@@ -5,5 +5,6 @@
         public string Webhook { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string AvatarUrl { get; set; } = string.Empty;
+        public bool OnlyHits { get; set; } = true;
     }
 }
