@@ -162,6 +162,9 @@
   <data name="EditProxyGroup" xml:space="preserve">
     <value>Edit proxy group</value>
   </data>
+  <data name="ExportProxies" xml:space="preserve">
+    <value>Export Proxies</value>
+  </data>
   <data name="ForThisGroup" xml:space="preserve">
     <value>For this group</value>
   </data>
@@ -221,6 +224,9 @@
   </data>
   <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
     <value>Proxies deleted successfully</value>
+  </data>
+  <data name="ProxiesExportedSuccessfully" xml:space="preserve">
+    <value>Proxies exported successfully</value>
   </data>
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
     <value>Proxies imported successfully</value>

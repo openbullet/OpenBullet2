@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Microsoft.JSInterop;
 using OpenBullet2.Auth;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
@@ -24,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -223,7 +225,7 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<ImportProxies>(Loc["ImportProxies"]);
             var result = await modal.Result;
-            
+
             if (!result.Cancelled)
             {
                 var dto = result.Data as ProxiesForImportDto;
@@ -238,6 +240,36 @@ namespace OpenBullet2.Pages
 
                 await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Distinct().Count()}");
             }
+        }
+
+        private async Task ExportProxies()
+        {
+            if (currentGroupId == -1)
+            {
+                proxies = uid == 0
+                    ? await ProxyRepo.GetAll().ToListAsync()
+                    : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
+                        .Where(p => p.Group.Owner.Id == uid).ToListAsync();
+            }
+            else
+            {
+                proxies = await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync();
+            }
+
+            var proxiesList = proxies.Select(x => $"{x.Host}:{x.Port}");
+            var outputProxies = string.Join('\n', proxiesList);
+            byte[] outputBytes = Encoding.UTF8.GetBytes(outputProxies);
+
+            await js.InvokeVoidAsync(
+              "downloadFromByteArray",
+              new
+              {
+                  ByteArray = outputBytes,
+                  FileName = "proxies.txt",
+                  ContentType = "text/plain"
+              });
+
+            await js.AlertSuccess(Loc["Exported"], $"{Loc["ProxiesExportedSuccessfully"]}: {proxiesList.Count()}");
         }
 
         private async Task DeleteAllProxies()
@@ -259,7 +291,7 @@ namespace OpenBullet2.Pages
         private async Task DeleteNotWorking()
         {
             var all = ProxyRepo.GetAll();
-            
+
             if (currentGroupId != -1)
                 all = all.Where(p => p.Group.Id == currentGroupId);
 
