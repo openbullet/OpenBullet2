@@ -26,6 +26,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
                 WaitUntil = new WaitUntilNavigation[] { loadedEvent }
             };
             var response = await page.GoToAsync(url, options);
+            data.ADDRESS = response.Url;
             data.SOURCE = await response.TextAsync();
             data.RAWSOURCE = await response.BufferAsync();
             SwitchToMainFramePrivate(data);
