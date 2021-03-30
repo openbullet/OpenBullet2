@@ -43,9 +43,13 @@ namespace OpenBullet2.Shared.Forms
 
             try
             {
+                // Maximum of 10 files per upload (default)
+                foreach(var file in e.GetMultipleFiles())
+                {
                 // Maximum 10 MB file upload
-                using var reader = new StreamReader(e.File.OpenReadStream(10 * 1000 * 1000));
-                fileContent = await reader.ReadToEndAsync();
+                    using var reader = new StreamReader(file.OpenReadStream(10 * 1000 * 1024));
+                    fileContent += await reader.ReadToEndAsync() + Environment.NewLine;
+                }
             }
             catch (Exception ex)
             {
