@@ -43,6 +43,7 @@ namespace OpenBullet2.Shared.Forms
 
             try
             {
+                fileContent = "";
                 // Maximum of 10 files per upload (default)
                 foreach(var file in e.GetMultipleFiles())
                 {
