@@ -1,4 +1,5 @@
-﻿using Blazored.Modal;
+﻿using BlazorDownloadFile;
+using Blazored.Modal;
 using Blazored.Modal.Services;
 using GridBlazor;
 using GridBlazor.Pages;
@@ -24,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -37,6 +39,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobManagerService JobManagerService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
+        [Inject] private IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
         private InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups = new();
@@ -223,7 +226,7 @@ namespace OpenBullet2.Pages
 
             var modal = Modal.Show<ImportProxies>(Loc["ImportProxies"]);
             var result = await modal.Result;
-            
+
             if (!result.Cancelled)
             {
                 var dto = result.Data as ProxiesForImportDto;
@@ -238,6 +241,15 @@ namespace OpenBullet2.Pages
 
                 await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Distinct().Count()}");
             }
+        }
+
+        private async Task ExportProxies()
+        {
+            var proxiesList = proxies.Select(x => x.ToString());
+            var outputProxies = string.Join(Environment.NewLine, proxiesList);
+            byte[] outputBytes = Encoding.UTF8.GetBytes(outputProxies);
+
+            await BlazorDownloadFileService.DownloadFile("proxies.txt", outputBytes, "text/plain");
         }
 
         private async Task DeleteAllProxies()
@@ -259,7 +271,7 @@ namespace OpenBullet2.Pages
         private async Task DeleteNotWorking()
         {
             var all = ProxyRepo.GetAll();
-            
+
             if (currentGroupId != -1)
                 all = all.Where(p => p.Group.Id == currentGroupId);
 
