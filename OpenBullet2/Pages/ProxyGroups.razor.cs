@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
-using Microsoft.JSInterop;
 using OpenBullet2.Auth;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
