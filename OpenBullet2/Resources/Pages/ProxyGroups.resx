@@ -225,9 +225,6 @@
   <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
     <value>Proxies deleted successfully</value>
   </data>
-  <data name="ProxiesExportedSuccessfully" xml:space="preserve">
-    <value>Proxies exported successfully</value>
-  </data>
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
     <value>Proxies imported successfully</value>
   </data>

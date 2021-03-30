@@ -1,4 +1,5 @@
-﻿using Blazored.Modal;
+﻿using BlazorDownloadFile;
+using Blazored.Modal;
 using Blazored.Modal.Services;
 using GridBlazor;
 using GridBlazor.Pages;
@@ -39,6 +40,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobManagerService JobManagerService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
+        [Inject] private IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
         private InputSelectNumber<int> groupSelectElement;
         private List<ProxyGroupEntity> groups = new();
@@ -244,32 +246,11 @@ namespace OpenBullet2.Pages
 
         private async Task ExportProxies()
         {
-            if (currentGroupId == -1)
-            {
-                proxies = uid == 0
-                    ? await ProxyRepo.GetAll().ToListAsync()
-                    : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
-                        .Where(p => p.Group.Owner.Id == uid).ToListAsync();
-            }
-            else
-            {
-                proxies = await ProxyRepo.GetAll().Where(p => p.Group.Id == currentGroupId).ToListAsync();
-            }
-
-            var proxiesList = proxies.Select(x => $"{x.Host}:{x.Port}");
-            var outputProxies = string.Join('\n', proxiesList);
+            var proxiesList = proxies.Select(x => x.ToString());
+            var outputProxies = string.Join(Environment.NewLine, proxiesList);
             byte[] outputBytes = Encoding.UTF8.GetBytes(outputProxies);
 
-            await js.InvokeVoidAsync(
-              "downloadFromByteArray",
-              new
-              {
-                  ByteArray = outputBytes,
-                  FileName = "proxies.txt",
-                  ContentType = "text/plain"
-              });
-
-            await js.AlertSuccess(Loc["Exported"], $"{Loc["ProxiesExportedSuccessfully"]}: {proxiesList.Count()}");
+            await BlazorDownloadFileService.DownloadFile("proxies.txt", outputBytes, "text/plain");
         }
 
         private async Task DeleteAllProxies()

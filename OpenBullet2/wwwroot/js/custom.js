@@ -59,18 +59,3 @@ function focusElement (id) {
     const element = document.getElementById(id);
     element.focus();
 }
-
-function downloadFromUrl(url, fileName) {
-    const anchorElement = document.createElement('a');
-    anchorElement.href = url;
-    anchorElement.download = fileName ?? '';
-    anchorElement.click();
-    anchorElement.remove();
-}
-
-function downloadFromByteArray(options) {
-    // The byte array in .NET is encoded to base64 string when it passes to JavaScript.
-    // So we can pass that base64 encoded string to the browser as a "data URL" directly.
-    const url = "data:" + options.contentType + ";base64," + options.byteArray;
-    downloadFromUrl(url, options.fileName);
-}
