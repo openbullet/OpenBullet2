@@ -17,8 +17,8 @@
             <div class="col-sm-auto job-overview-left-col d-flex align-items-center">
                 <span>#@job.Id  [@job.Status]</span>
             </div>
-            <div class="col-sm align-self-stretch pl-0 job-overview-mid-col d-flex align-items-center">
-                <div class="job-overview px-2" @onclick="@(() => SelectJob(job))">
+            <div class="col-sm align-self-stretch pl-0 job-overview-mid-col d-flex align-items-center" @onclick="@(() => SelectJob(job))">
+                <div class="job-overview px-2">
                     @if (job.OwnerId != 0 && guests.ContainsKey(job.OwnerId))
                     {
                         <span>
