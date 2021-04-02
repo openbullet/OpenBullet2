@@ -8,6 +8,5 @@ namespace RuriLib.Models.Configs.Settings
         public bool Headless { get; set; } = true;
         public string CommandLineArgs { get; set; } = "--disable-notifications";
         public bool IgnoreHttpsErrors { get; set; } = false;
-        public bool LoadOnlyDocumentAndScript { get; set; } = false;
     }
 }
