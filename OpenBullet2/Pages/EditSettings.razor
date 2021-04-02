@@ -191,12 +191,63 @@
         <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
         <br />
 
+        <label>@Loc["LoadDocument"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadDocument" />
+        <br />
+
+        <label>@Loc["LoadStylesheet"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadStylesheet" />
+        <br />
+
+        <label>@Loc["LoadImage"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadImage" />
+        <br />
+
+        <label>@Loc["LoadMedia"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadMedia" />
+        <br />
+
+        <label>@Loc["LoadFont"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadFont" />
+        <br />
+
+        <label>@Loc["LoadScript"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadScript" />
+        <br />
+
+        <label>@Loc["LoadTexttrack"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadTexttrack" />
+        <br />
+
+        <label>@Loc["LoadXhr"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadXhr" />
+        <br />
+
+        <label>@Loc["LoadFetch"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadFetch" />
+        <br />
+
+        <label>@Loc["LoadEventsource"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadEventsource" />
+        <br />
+
+        <label>@Loc["LoadWebsocket"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadWebsocket" />
+        <br />
+
+        <label>@Loc["LoadManifest"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadManifest" />
+        <br />
+
+        <label>@Loc["LoadOther"]</label>
+        <InputCheckbox @bind-Value="settings.PuppeteerSettings.LoadOther" />
+        <br />
+
         <label>@Loc["PuppeteerCommandLineArguments"]</label>
         <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
 
         <label>@Loc["IgnoreHttpsErrors"]</label>
         <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
-        <br />
     </EditForm>
 
     <button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>
