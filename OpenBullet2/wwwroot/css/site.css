@@ -421,7 +421,7 @@ a:hover {
 
 /* LOGS -- */
 .debugger-log {
-    background-color: black;
+    background-color: #111;
     font-family: var(--consolas);
     padding: 20px;
     height: 600px;
