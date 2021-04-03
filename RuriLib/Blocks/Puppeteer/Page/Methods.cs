@@ -255,11 +255,10 @@ namespace RuriLib.Blocks.Puppeteer.Page
 
             var page = GetPage(data);
             var response = await page.WaitForResponseAsync(url);
-            var headers = response.Headers;
 
             data.ADDRESS = response.Url;
             data.RESPONSECODE = (int)response.Status;
-            data.HEADERS = headers;
+            data.HEADERS = response.Headers;
 
             // else puppetteer return body missing exeption
             if (((int)response.Status) / 100 != 3)
