@@ -402,8 +402,17 @@ namespace RuriLib.Blocks.Requests.Http
 
             // Headers
             data.HEADERS = response.Headers;
+            if (response.Content != null)
+            {
+                foreach (var header in response.Content.Headers)
+                {
+                    data.HEADERS[header.Key] = header.Value.First();
+                }
+            }
+
             if (!data.HEADERS.ContainsKey("Content-Length"))
                 data.HEADERS["Content-Length"] = data.RAWSOURCE.Length.ToString();
+
             data.Logger.Log("Received Headers:", LogColors.MediumPurple);
             data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
 

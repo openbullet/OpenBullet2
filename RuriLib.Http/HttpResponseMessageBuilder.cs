@@ -58,11 +58,7 @@ namespace RuriLib.Http
 
             await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
             await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
-
-            if (readResponseContent)
-            {
-                await ReceiveContentAsync(cancellationToken).ConfigureAwait(false);
-            }
+            await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
 
             return response;
         }
@@ -303,18 +299,27 @@ namespace RuriLib.Http
         }
 
         // TODO: Make this async (need to refactor the mess below)
-        private async Task ReceiveContentAsync(CancellationToken cancellationToken = default)
+        private async Task ReceiveContentAsync(bool readResponseContent = true, CancellationToken cancellationToken = default)
         {
             // If there are content headers
             if (contentHeaders.Count != 0)
             {
                 contentLength = GetContentLength();
 
-                // Try to get the body and write it to a MemoryStream
-                var finaleResponceStream = await GetMessageBodySource(cancellationToken).ConfigureAwait(false);
-                // Rewind the stream and set the content of the response and its headers
-                finaleResponceStream.Seek(0, SeekOrigin.Begin);
-                response.Content = new StreamContent(finaleResponceStream);
+                if (readResponseContent)
+                {
+                    // Try to get the body and write it to a MemoryStream
+                    var finaleResponceStream = await GetMessageBodySource(cancellationToken).ConfigureAwait(false);
+
+                    // Rewind the stream and set the content of the response and its headers
+                    finaleResponceStream.Seek(0, SeekOrigin.Begin);
+                    response.Content = new StreamContent(finaleResponceStream);
+                }
+                else
+                {
+                    response.Content = new ByteArrayContent(Array.Empty<byte>());
+                }
+
                 foreach (var pair in contentHeaders)
                 {
                     response.Content.Headers.TryAddWithoutValidation(pair.Key, pair.Value);
