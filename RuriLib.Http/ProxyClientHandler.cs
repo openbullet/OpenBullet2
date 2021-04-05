@@ -44,6 +44,12 @@ namespace RuriLib.Http
         public bool AllowAutoRedirect { get; set; } = true;
 
         /// <summary>
+        /// Whether to read the content of the response. Set to false if you're only interested
+        /// in headers.
+        /// </summary>
+        public bool ReadResponseContent { get; set; } = true;
+
+        /// <summary>
         /// The allowed SSL or TLS protocols.
         /// </summary>
         public SslProtocols SslProtocols { get; set; } = SslProtocols.None;
@@ -213,7 +219,7 @@ namespace RuriLib.Http
             CancellationToken cancellationToken)
         {
             var responseBuilder = new HttpResponseMessageBuilder(1024, CookieContainer, request.RequestUri);
-            return await responseBuilder.GetResponseAsync(request, connectionCommonStream, cancellationToken);
+            return await responseBuilder.GetResponseAsync(request, connectionCommonStream, ReadResponseContent, cancellationToken);
         }
 
         private async Task CreateConnection(HttpRequestMessage request, CancellationToken cancellationToken)

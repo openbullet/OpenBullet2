@@ -18,5 +18,6 @@ namespace RuriLib.Functions.Http.Options
         public List<string> CustomCipherSuites { get; set; } = new();
         public string CodePagesEncoding { get; set; } = string.Empty;
         public bool AlwaysSendContent { get; set; } = false;
+        public bool ReadResponseContent { get; set; } = true;
     }
 }

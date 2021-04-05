@@ -22,7 +22,8 @@ namespace RuriLib.Functions.Http
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),
                 UseCustomCipherSuites = options.UseCustomCipherSuites,
                 AllowedCipherSuites = options.CustomCipherSuites,
-                CertRevocationMode = options.CertRevocationMode
+                CertRevocationMode = options.CertRevocationMode,
+                ReadResponseContent = options.ReadResponseContent
             };
         }
 
@@ -37,7 +38,8 @@ namespace RuriLib.Functions.Http
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),
                 UseCustomCipherSuites = options.UseCustomCipherSuites,
                 AllowedCipherSuites = options.CustomCipherSuites,
-                CertRevocationMode = options.CertRevocationMode
+                CertRevocationMode = options.CertRevocationMode,
+                ReadResponseContent = options.ReadResponseContent
             };
         }
 

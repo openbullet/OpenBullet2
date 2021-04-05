@@ -39,11 +39,10 @@ namespace RuriLib.Http
         /// </summary>
         [MethodImpl(methodImplOptions: MethodImplOptions.AggressiveOptimization)]
         async internal Task<HttpResponse> GetResponseAsync(HttpRequest request, Stream stream,
-            CancellationToken cancellationToken = default)
+            bool readResponseContent = true, CancellationToken cancellationToken = default)
         {
           
             reader = PipeReader.Create(stream);
-
 
             response = new HttpResponse
             {
@@ -54,7 +53,11 @@ namespace RuriLib.Http
 
             await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
             await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
-            await ReceiveContentAsync(cancellationToken).ConfigureAwait(false);
+
+            if (readResponseContent)
+            {
+                await ReceiveContentAsync(cancellationToken).ConfigureAwait(false);
+            }
 
             return response;
         }

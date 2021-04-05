@@ -333,6 +333,7 @@ namespace RuriLib.Models.Blocks.Custom
             writer.Write("Method = " + GetSettingValue("method") + ", ");
             writer.Write("AutoRedirect = " + GetSettingValue("autoRedirect") + ", ");
             writer.Write("MaxNumberOfRedirects = " + GetSettingValue("maxNumberOfRedirects") + ", ");
+            writer.Write("ReadResponseContent = " + GetSettingValue("readResponseContent") + ", ");
             writer.Write("AbsoluteUriInFirstLine = " + GetSettingValue("absoluteUriInFirstLine") + ", ");
             writer.Write("SecurityProtocol = " + GetSettingValue("securityProtocol") + ", ");
             writer.Write("CustomCookies = " + GetSettingValue("customCookies") + ", ");

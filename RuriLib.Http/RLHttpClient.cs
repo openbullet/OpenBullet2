@@ -48,6 +48,12 @@ namespace RuriLib.Http
         public int MaxNumberOfRedirects { get; set; }
 
         /// <summary>
+        /// Whether to read the content of the response. Set to false if you're only interested
+        /// in headers.
+        /// </summary>
+        public bool ReadResponseContent { get; set; } = true;
+
+        /// <summary>
         /// The allowed SSL or TLS protocols.
         /// </summary>
         public SslProtocols SslProtocols { get; set; } = SslProtocols.None;
@@ -187,7 +193,7 @@ namespace RuriLib.Http
 
         private Task<HttpResponse> ReceiveDataAsync(HttpRequest request,
             CancellationToken cancellationToken) =>
-            new HttpResponseBuilder().GetResponseAsync(request, connectionCommonStream, cancellationToken);
+            new HttpResponseBuilder().GetResponseAsync(request, connectionCommonStream, ReadResponseContent, cancellationToken);
 
         private async Task CreateConnection(HttpRequest request, CancellationToken cancellationToken)
         {
