@@ -249,18 +249,23 @@ namespace RuriLib.Blocks.Puppeteer.Page
         }
 
         [Block("Capture the response from the given URL", name = "Wait For Response")]
-        public static async Task PuppeteerWaitForResponse(BotData data, string url)
+        public static async Task PuppeteerWaitForResponse(BotData data, string url, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
             var page = GetPage(data);
+            var options = new WaitForOptions
+            {
+                Timeout = timeoutMilliseconds
+            };
+
             var response = await page.WaitForResponseAsync(url);
 
             data.ADDRESS = response.Url;
             data.RESPONSECODE = (int)response.Status;
             data.HEADERS = response.Headers;
 
-            // else puppetteer return body missing exeption
+            // On 3xx puppeteer returns a body missing exception
             if (((int)response.Status) / 100 != 3)
             {
                 data.SOURCE = await response.TextAsync();
@@ -272,6 +277,9 @@ namespace RuriLib.Blocks.Puppeteer.Page
 
             data.Logger.Log("Received Headers:", LogColors.MediumPurple);
             data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
+
+            data.Logger.Log("Received Payload:", LogColors.ForestGreen);
+            data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }
 
         private static PuppeteerSharp.Page GetPage(BotData data)
