@@ -248,7 +248,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
             return json;
         }
 
-        [Block("Capture the response from the given URL", name = "Wait For Response")]
+        [Block("Captures the response from the given URL", name = "Wait for Response")]
         public static async Task PuppeteerWaitForResponse(BotData data, string url, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
@@ -259,7 +259,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
                 Timeout = timeoutMilliseconds
             };
 
-            var response = await page.WaitForResponseAsync(url);
+            var response = await page.WaitForResponseAsync(url, options);
 
             data.ADDRESS = response.Url;
             data.RESPONSECODE = (int)response.Status;
