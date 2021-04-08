@@ -69,6 +69,7 @@ namespace OpenBullet2.Pages
 
             var client = new GridClient<Config>(q => GetGridRows(columns, q), query, false, "configsGrid", columns, CultureInfo.CurrentCulture)
                 .Sortable()
+                .ExtSortable()
                 .Filterable()
                 .WithMultipleFilters()
                 .SetKeyboard(true)
