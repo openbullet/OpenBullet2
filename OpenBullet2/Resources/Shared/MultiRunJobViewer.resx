@@ -390,4 +390,7 @@
   <data name="CopyToClipboardFailedMessage" xml:space="preserve">
     <value>The copy to clipboard failed. Note: If you're accessing OB2 remotely through HTTP (and not HTTPS) the browser will block the copy to protect you from potential risks.</value>
   </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Custom webhook</value>
+  </data>
 </root>

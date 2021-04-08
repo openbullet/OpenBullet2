@@ -22,6 +22,7 @@ namespace OpenBullet2.Models.Hits
                 FileSystemHitOutputOptions x => new FileSystemHitOutput(x.BaseDir),
                 DiscordWebhookHitOutputOptions x => new DiscordWebhookHitOutput(x.Webhook, x.Username, x.AvatarUrl),
                 TelegramBotHitOutputOptions x => new TelegramBotHitOutput(x.ApiServer, x.Token, x.ChatId),
+                CustomWebhookHitOutputOptions x => new CustomWebhookHitOutput(x.Url, x.User),
                 _ => throw new NotImplementedException()
             };
 

@@ -159,4 +159,10 @@
   <data name="OnlyHits" xml:space="preserve">
     <value>Only hits</value>
   </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Custom webhook</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
 </root>
