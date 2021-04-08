@@ -36,7 +36,8 @@ namespace RuriLib.Blocks.Functions.List
             {
                 var nums = list.Select(e => double.Parse(e, CultureInfo.InvariantCulture)).ToList();
                 nums.Sort();
-                list = nums.Select(e => e.ToString()).ToList();
+                list.Clear();
+                list.AddRange(nums.Select(e => e.ToString()));
             }
             else
             {
