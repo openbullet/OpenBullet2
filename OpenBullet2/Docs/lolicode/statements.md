@@ -97,3 +97,14 @@ globals.Count = 1;
 END
 END
 ```
+---
+##### SET VAR/CAP
+Sets a string variable, and optionally also marks it for capture. Introduced for consistency with OB1.
+Example:
+```
+SET VAR myString "variable"
+LOG myString
+
+SET CAP myCapture "capture"
+LOG myCapture
+```

@@ -192,6 +192,20 @@ namespace RuriLib.Models.Blocks
                 return $"lock({match.Groups[1].Value}){System.Environment.NewLine}{{";
             }
 
+            // SET VAR
+            // SET VAR myString "hello" => string myString = "hello";
+            if ((match = Regex.Match(input, $"^SET VAR ({validTokenRegex}) (.+)$")).Success)
+            {
+                return $"string {match.Groups[1].Value} = {match.Groups[2].Value};";
+            }
+
+            // SET CAP
+            // SET CAP myCapture "hello" => string myString = "hello"; data.MarkForCapture(nameof(myCapture));
+            if ((match = Regex.Match(input, $"^SET CAP ({validTokenRegex}) (.+)$")).Success)
+            {
+                return $"string {match.Groups[1].Value} = {match.Groups[2].Value};{System.Environment.NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
+            }
+
             throw new NotSupportedException();
         }
     }
