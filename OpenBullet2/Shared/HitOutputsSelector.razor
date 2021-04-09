@@ -14,8 +14,11 @@
             <button class="btn btn-sm btn-outline-primary" @onclick="AddDiscord">
                 <span class="oi oi-plus"></span> @Loc["DiscordWebhook"]
             </button>
-             <button class="btn btn-sm btn-outline-primary" @onclick="AddTelegram">
+            <button class="btn btn-sm btn-outline-primary" @onclick="AddTelegram">
                 <span class="oi oi-plus"></span> @Loc["TelegramBot"]
+            </button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="AddCustomWebhook">
+                <span class="oi oi-plus"></span> @Loc["CustomWebhook"]
             </button>
         </div>
     </div>
@@ -106,6 +109,24 @@
                             <InputCheckbox @bind-Value="x.OnlyHits" />
                         </div>
                         break;
+
+                    case CustomWebhookHitOutputOptions x:
+                        <div class="col-auto">
+                            <span class="fg-retry">@Loc["CustomWebhook"]</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["Url"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.Url" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["Username"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.User" />
+                        </div>
+                        break;
                 }
                 <div class="col-auto">
                     <button class="btn btn-sm btn-outline-danger" @onclick="(() => HitOutputs.Remove(output))">
@@ -140,5 +161,10 @@
     private void AddTelegram()
     {
         HitOutputs.Add(new TelegramBotHitOutputOptions());
+    }
+
+    private void AddCustomWebhook()
+    {
+        HitOutputs.Add(new CustomWebhookHitOutputOptions());
     }
 }

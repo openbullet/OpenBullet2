@@ -180,6 +180,9 @@
   <data name="CustomInput" xml:space="preserve">
     <value>Input personalizzato</value>
   </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Webhook personalizzato</value>
+  </data>
   <data name="Data" xml:space="preserve">
     <value>Dati</value>
   </data>

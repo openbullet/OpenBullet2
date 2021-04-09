@@ -123,6 +123,9 @@
   <data name="BaseDirectory" xml:space="preserve">
     <value>Cartella base</value>
   </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Webhook personalizzato</value>
+  </data>
   <data name="Database" xml:space="preserve">
     <value>Database</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Nome utente</value>

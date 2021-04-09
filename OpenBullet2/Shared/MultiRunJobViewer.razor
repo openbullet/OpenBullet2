@@ -108,6 +108,10 @@
                         case TelegramBotHitOutput x:
                             <span class="fg-retry ml-1">@Loc["TelegramBot"] (ID: @x.Token.Split(':')[0])</span>
                             break;
+
+                        case CustomWebhookHitOutput x:
+                            <span class="fg-retry ml-1">@Loc["CustomWebhook"] (@x.Url.TruncatePretty(70))</span>
+                            break;
                     }
                 }
                 <br />
