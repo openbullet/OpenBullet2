@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: fix nuget problems
+      run: dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org --configfile $env:APPDATA\NuGet\NuGet.Config
     - name: Build OpenBullet2
       run: dotnet publish OpenBullet2/OpenBullet2.csproj -c Release -o .publish/OpenBullet2
     - name: Build Updater
