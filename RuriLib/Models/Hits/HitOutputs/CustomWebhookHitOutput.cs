@@ -8,17 +8,24 @@ namespace RuriLib.Models.Hits.HitOutputs
 {
     public class CustomWebhookHitOutput : IHitOutput
     {
-        public string Url { get; set; } = "http://mycustomwebhook.com";
-        public string User { get; set; } = "Anonymous";
+        public string Url { get; set; }
+        public string User { get; set; }
+        public bool OnlyHits { get; set; }
 
-        public CustomWebhookHitOutput(string url, string user)
+        public CustomWebhookHitOutput(string url, string user, bool onlyHits = true)
         {
             Url = url;
             User = user;
+            OnlyHits = onlyHits;
         }
 
         public async Task Store(Hit hit)
         {
+            if (OnlyHits && hit.Type != "SUCCESS")
+            {
+                return;
+            }
+
             var data = new CustomWebhookData
             {
                 Data = hit.Data.Data,

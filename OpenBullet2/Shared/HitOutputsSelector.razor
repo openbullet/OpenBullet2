@@ -126,6 +126,12 @@
                         <div class="col align-self-stretch px-1">
                             <InputText @bind-Value="x.User" />
                         </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["OnlyHits"]:</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <InputCheckbox @bind-Value="x.OnlyHits" />
+                        </div>
                         break;
                 }
                 <div class="col-auto">
