@@ -4,6 +4,11 @@ using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading.Tasks;
+using Websocket.Client;
 
 namespace RuriLib.Blocks.Requests.WebSocket
 {
@@ -12,13 +17,11 @@ namespace RuriLib.Blocks.Requests.WebSocket
     {
         [Block("Connects to a Web Socket", name = "WebSocket Connect",
             extraInfo = "Only works with HTTP proxies or without any proxy")]
-        public static void WsConnect(BotData data, string url)
+        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000)
         {
             data.Logger.LogHeader();
 
-            var ws = new WebSocketSharp.WebSocket(url);
-
-            // Set the proxy
+            IWebProxy proxy = null;
             if (data.UseProxy)
             {
                 if (data.Proxy.Type != Models.Proxies.ProxyType.Http)
@@ -27,24 +30,50 @@ namespace RuriLib.Blocks.Requests.WebSocket
                 }
                 else
                 {
-                    ws.SetProxy($"http://{data.Proxy.Host}:{data.Proxy.Port}", data.Proxy.Username, data.Proxy.Password);
+                    proxy = new WebProxy(data.Proxy.Host, data.Proxy.Port);
+
+                    if (data.Proxy.NeedsAuthentication)
+                    {
+                        proxy.Credentials = new NetworkCredential(data.Proxy.Username, data.Proxy.Password);
+                    }
                 }
             }
 
-            data.Objects["webSocket"] = ws;
+            var factory = new Func<ClientWebSocket>(() => new ClientWebSocket
+            {
+                Options =
+                {
+                    KeepAliveInterval = TimeSpan.FromMilliseconds(keepAliveMilliseconds),
+                    Proxy = proxy
+                }
+            });
 
             var wsMessages = new List<string>();
             data.Objects["wsMessages"] = wsMessages;
 
-            // Hook the listener
-            ws.OnMessage += (sender, e) =>
+            var ws = new WebsocketClient(new Uri(url), factory)
             {
-                lock (wsMessages)
-                    wsMessages.Add(e.Data);
+                IsReconnectionEnabled = false,
+                ErrorReconnectTimeout = null
             };
 
+            ws.MessageReceived.Subscribe(msg => 
+            {
+                lock (wsMessages)
+                {
+                    wsMessages.Add(msg.Text);
+                }
+            });
+
             // Connect
-            ws.Connect();
+            await ws.Start();
+
+            if (!ws.IsRunning)
+            {
+                throw new Exception("Failed to connect to the websocket");
+            }
+
+            data.Objects["webSocket"] = ws;
 
             data.Logger.Log($"The Web Socket client connected to {url}", LogColors.MossGreen);
         }
@@ -83,17 +112,17 @@ namespace RuriLib.Blocks.Requests.WebSocket
             data.Logger.LogHeader();
 
             var ws = GetSocket(data);
-            ws.Close();
+            ws.Stop(WebSocketCloseStatus.NormalClosure, null);
 
             data.Logger.Log("Closed the WebSocket", LogColors.MossGreen);
         }
 
-        private static WebSocketSharp.WebSocket GetSocket(BotData data)
+        private static WebsocketClient GetSocket(BotData data)
         {
             if (!data.Objects.ContainsKey("webSocket"))
                 throw new NullReferenceException("You must open a websocket connection first");
 
-            return (WebSocketSharp.WebSocket)data.Objects["webSocket"];
+            return (WebsocketClient)data.Objects["webSocket"];
         }
 
         private static List<string> GetMessages(BotData data)
