@@ -83,7 +83,7 @@ namespace RuriLib.Blocks.Functions.List
         public static void AddToList(BotData data, [Variable] List<string> list, string item, int index = -1)
         {
             if (list.Count == 0) index = 0;
-            else if (index < 0) index += list.Count;
+            else if (index < 0) index += list.Count + 1;
             list.Insert(index, item);
 
             data.Logger.LogHeader();
@@ -95,7 +95,7 @@ namespace RuriLib.Blocks.Functions.List
         public static void RemoveFromList(BotData data, [Variable] List<string> list, int index = 0)
         {
             if (list.Count == 0) index = 0;
-            else if (index < 0) index += list.Count;
+            else if (index < 0) index += list.Count +1 ;
             string removedItem = list[index];
             list.RemoveAt(index);
 
