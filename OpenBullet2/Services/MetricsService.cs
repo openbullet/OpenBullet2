@@ -24,8 +24,7 @@ namespace OpenBullet2.Services
             }
         }
 
-        private DateTime startTime = DateTime.Now;
-        public TimeSpan UpTime => DateTime.Now - startTime;
+        public TimeSpan UpTime => TimeSpan.FromMilliseconds(Environment.TickCount64);
 
         public string CWD => System.IO.Directory.GetCurrentDirectory();
         
