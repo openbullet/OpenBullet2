@@ -178,11 +178,9 @@ namespace RuriLib.Parallelization
                     if (queue.TryDequeue(out TInput item))
                     {
                         // The task will release its slot no matter what
-                        _ = Task.Run(async () => 
-                        {
-                            await taskFunction.Invoke(item).ConfigureAwait(false);
-                            semaphore.Release();
-                        });
+                        _ = taskFunction.Invoke(item)
+                            .ContinueWith(_ => semaphore.Release())
+                            .ConfigureAwait(false);
                     }
                     else
                     {
