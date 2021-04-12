@@ -68,7 +68,7 @@ namespace RuriLib.Proxies.Clients
         protected async virtual Task RequestConnectionAsync(NetworkStream nStream, byte command, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {
-            var dstIp = HostHelper.GetIPAddressBytes(destinationHost);
+            var dstIp = await HostHelper.GetIPAddressBytesAsync(destinationHost);
             var dstPort = HostHelper.GetPortBytes(destinationPort);
 
             var userId = Array.Empty<byte>();

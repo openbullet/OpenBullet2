@@ -18,11 +18,11 @@ namespace OpenBullet2.Models.Proxies
 
         public void Dispose() => reader.Dispose();
 
-        public Task<string> Geolocate(string host)
+        public async Task<string> Geolocate(string host)
         {
             if (!IPAddress.TryParse(host, out var _))
             {
-                var addresses = Dns.GetHostAddresses(host);
+                var addresses = await Dns.GetHostAddressesAsync(host);
                 
                 if (addresses.Length > 0)
                 {
@@ -30,7 +30,7 @@ namespace OpenBullet2.Models.Proxies
                 }
             }
 
-            return Task.FromResult(reader.Country(host).Country.Name);
+            return reader.Country(host).Country.Name;
         }
     }
 }

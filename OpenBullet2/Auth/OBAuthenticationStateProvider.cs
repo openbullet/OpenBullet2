@@ -126,7 +126,9 @@ namespace OpenBullet2.Auth
             if (ip.IsIPv4MappedToIPv6)
                 ip = ip.MapToIPv4();
 
-            if (entity.AllowedAddresses.Count() > 0 && !CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries)))
+            var isValid = await CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            if (entity.AllowedAddresses.Count() > 0 && !isValid)
                 throw new UnauthorizedAccessException($"Unauthorized IP address: {ip}");
 
             var claims = new[]
@@ -172,7 +174,7 @@ namespace OpenBullet2.Auth
         }
 
         // Supported: IPv4, IPv6, masked IPv4, dynamic DNS
-        private bool CheckIpValidity(IPAddress ip, IEnumerable<string> allowed)
+        private async Task<bool> CheckIpValidity(IPAddress ip, IEnumerable<string> allowed)
         {
             foreach (var addr in allowed)
             {
@@ -199,7 +201,7 @@ namespace OpenBullet2.Auth
                     }
 
                     // Otherwise it must be a dynamic DNS
-                    var resolved = Dns.GetHostEntry(addr);
+                    var resolved = await Dns.GetHostEntryAsync(addr);
                     if (resolved.AddressList.Any(a => a.Equals(ip)))
                         return true;
                 }

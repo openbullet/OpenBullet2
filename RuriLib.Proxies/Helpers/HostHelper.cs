@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RuriLib.Proxies.Helpers
 {
@@ -18,13 +19,13 @@ namespace RuriLib.Proxies.Helpers
             return array;
         }
 
-        public static byte[] GetIPAddressBytes(string destinationHost, bool preferIpv4 = true)
+        public static async Task<byte[]> GetIPAddressBytesAsync(string destinationHost, bool preferIpv4 = true)
         {
             if (!IPAddress.TryParse(destinationHost, out var ipAddr))
             {
                 try
                 {
-                    var ips = Dns.GetHostAddresses(destinationHost);
+                    var ips = await Dns.GetHostAddressesAsync(destinationHost).ConfigureAwait(false);
 
                     if (ips.Length > 0)
                     {
