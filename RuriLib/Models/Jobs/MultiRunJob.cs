@@ -312,11 +312,6 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
-                if (input.IsDLL)
-                {
-                    botData.Logger.Clear();
-                }
-
                 // RETURN THE RESULT
                 return new CheckResult 
                 {
@@ -422,6 +417,7 @@ namespace RuriLib.Models.Jobs
                     Index = index++
                 };
 
+                input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
                 input.BotData.Objects.Add("httpClient", client); // Add the default HTTP client
                 input.BotData.Objects.Add("ironPyEngine", pyengine); // Add the IronPython engine
 
@@ -619,7 +615,9 @@ namespace RuriLib.Models.Jobs
             var hit = new Hit()
             {
                 Data = botData.Line,
-                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging ? botData.Logger : null,
+                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL 
+                    ? botData.Logger 
+                    : null,
                 Type = botData.STATUS,
                 DataPool = DataPool,
                 Config = Config,
