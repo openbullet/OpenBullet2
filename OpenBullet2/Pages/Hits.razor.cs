@@ -88,9 +88,9 @@ namespace OpenBullet2.Pages
             grid = client.Grid;
 
             // Try to set a previous filter
-            if (VolatileSettings.GridQueries.ContainsKey("hitsGrid"))
+            if (VolatileSettings.GridQueries.ContainsKey((uid, "hitsGrid")))
             {
-                grid.Query = VolatileSettings.GridQueries["hitsGrid"];
+                grid.Query = VolatileSettings.GridQueries[(uid, "hitsGrid")];
             }
 
             // Set new items to grid
@@ -101,7 +101,7 @@ namespace OpenBullet2.Pages
         private ItemsDTO<HitEntity> GetGridRows(Action<IGridColumnCollection<HitEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
-            VolatileSettings.GridQueries["hitsGrid"] = query;
+            VolatileSettings.GridQueries[(uid, "hitsGrid")] = query;
 
             var server = new GridServer<HitEntity>(hits, new QueryCollection(query),
                 true, "hitsGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();

@@ -92,9 +92,9 @@ namespace OpenBullet2.Pages
             grid = client.Grid;
 
             // Try to set a previous filter
-            if (VolatileSettings.GridQueries.ContainsKey("proxiesGrid"))
+            if (VolatileSettings.GridQueries.ContainsKey((uid, "proxiesGrid")))
             {
-                grid.Query = VolatileSettings.GridQueries["proxiesGrid"];
+                grid.Query = VolatileSettings.GridQueries[(uid, "proxiesGrid")];
             }
 
             // Set new items to grid
@@ -105,7 +105,7 @@ namespace OpenBullet2.Pages
         private ItemsDTO<ProxyEntity> GetGridRows(Action<IGridColumnCollection<ProxyEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
-            VolatileSettings.GridQueries["proxiesGrid"] = query;
+            VolatileSettings.GridQueries[(uid, "proxiesGrid")] = query;
 
             var server = new GridServer<ProxyEntity>(proxies, new QueryCollection(query),
                 true, "proxiesGrid", columns, 10).Sortable().Filterable().WithMultipleFilters();

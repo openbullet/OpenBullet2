@@ -79,9 +79,9 @@ namespace OpenBullet2.Pages
             grid = client.Grid;
 
             // Try to set a previous filter
-            if (VolatileSettings.GridQueries.ContainsKey("wordlistsGrid"))
+            if (VolatileSettings.GridQueries.ContainsKey((uid, "wordlistsGrid")))
             {
-                grid.Query = VolatileSettings.GridQueries["wordlistsGrid"];
+                grid.Query = VolatileSettings.GridQueries[(uid, "wordlistsGrid")];
             }
 
             // Set new items to grid
@@ -92,7 +92,7 @@ namespace OpenBullet2.Pages
         private ItemsDTO<WordlistEntity> GetGridRows(Action<IGridColumnCollection<WordlistEntity>> columns,
                 QueryDictionary<StringValues> query)
         {
-            VolatileSettings.GridQueries["wordlistsGrid"] = query;
+            VolatileSettings.GridQueries[(uid, "wordlistsGrid")] = query;
 
             var server = new GridServer<WordlistEntity>(wordlists, new QueryCollection(query),
                 true, "wordlistsGrid", columns, 10).Sortable().Filterable().WithMultipleFilters();

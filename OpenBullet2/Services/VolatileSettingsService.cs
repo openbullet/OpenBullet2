@@ -15,7 +15,7 @@ namespace OpenBullet2.Services
         public BotLogger DebuggerLog { get; set; }
         public List<BlockDescriptor> RecentDescriptors { get; set; }
         public bool ConfigsDetailedView { get; set; } = false;
-        public Dictionary<string, QueryDictionary<StringValues>> GridQueries { get; set; } = new();
+        public Dictionary<(int, string), QueryDictionary<StringValues>> GridQueries { get; set; } = new();
 
         public VolatileSettingsService(RuriLibSettingsService ruriLibSettings)
         {

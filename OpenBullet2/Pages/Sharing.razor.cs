@@ -76,9 +76,9 @@ namespace OpenBullet2.Pages
             grid = client.Grid;
 
             // Try to set a previous filter
-            if (VolatileSettings.GridQueries.ContainsKey("sharingGrid"))
+            if (VolatileSettings.GridQueries.ContainsKey((0, "sharingGrid")))
             {
-                grid.Query = VolatileSettings.GridQueries["sharingGrid"];
+                grid.Query = VolatileSettings.GridQueries[(0, "sharingGrid")];
             }
 
             // Set new items to grid
@@ -89,7 +89,7 @@ namespace OpenBullet2.Pages
         private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
                 QueryDictionary<StringValues> query)
         {
-            VolatileSettings.GridQueries["sharingGrid"] = query;
+            VolatileSettings.GridQueries[(0, "sharingGrid")] = query;
 
             var server = new GridServer<Config>(configs, new Microsoft.AspNetCore.Http.QueryCollection(query),
                 true, "sharingGrid", columns, 15).Sortable().Filterable().WithMultipleFilters();
