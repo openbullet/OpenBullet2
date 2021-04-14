@@ -71,7 +71,6 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Stopping;
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
-            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -83,7 +82,6 @@ namespace RuriLib.Parallelization
             hardCTS.Cancel();
             softCTS.Cancel();
             await WaitCompletion().ConfigureAwait(false);
-            stopwatch.Stop();
         }
 
         /// <inheritdoc/>
@@ -213,6 +211,7 @@ namespace RuriLib.Parallelization
                 hardCTS.Dispose();
                 softCTS.Dispose();
                 semaphore.Dispose();
+                stopwatch.Stop();
             }
         }
         #endregion

@@ -60,6 +60,29 @@ namespace RuriLib.Parallelization.Tests
         }
 
         [Fact]
+        public async Task Run_QuickTasks_StopwatchStops()
+        {
+            var count = 100;
+            var parallelizer = ParallelizerFactory<int, bool>.Create(
+                type: type,
+                workItems: Enumerable.Range(1, count),
+                workFunction: parityCheck,
+                degreeOfParallelism: 1,
+                totalAmount: count,
+                skip: 0);
+
+            await parallelizer.Start();
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(10000);
+            await parallelizer.WaitCompletion(cts.Token);
+
+            var elapsed = parallelizer.Elapsed;
+            await Task.Delay(1000);
+            Assert.Equal(elapsed, parallelizer.Elapsed);
+        }
+
+        [Fact]
         public async Task Run_LongTasks_StopBeforeCompletion()
         {
             // In theory this should take 1000 * 100 / 10 = 10.000 ms = 10 seconds
@@ -225,6 +248,29 @@ namespace RuriLib.Parallelization.Tests
             Assert.Equal(count, progressCount);
             Assert.True(completedFlag);
             Assert.Null(lastException);
+        }
+
+        [Fact]
+        public async Task Run_Pause_StopwatchStops()
+        {
+            var count = 10;
+            var parallelizer = ParallelizerFactory<int, bool>.Create(
+                type: type,
+                workItems: Enumerable.Range(1, count),
+                workFunction: longTask,
+                degreeOfParallelism: 1,
+                totalAmount: count,
+                skip: 0);
+
+            await parallelizer.Start();
+            await Task.Delay(150);
+            await parallelizer.Pause();
+
+            var elapsed = parallelizer.Elapsed;
+            await Task.Delay(1000);
+            Assert.Equal(elapsed, parallelizer.Elapsed);
+
+            await parallelizer.Abort();
         }
     }
 }

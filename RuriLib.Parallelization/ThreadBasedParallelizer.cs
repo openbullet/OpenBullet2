@@ -162,6 +162,7 @@ namespace RuriLib.Parallelization
             Status = ParallelizerStatus.Idle;
             hardCTS.Dispose();
             softCTS.Dispose();
+            stopwatch.Stop();
         }
 
         // Creates and starts a thread, given a work item
