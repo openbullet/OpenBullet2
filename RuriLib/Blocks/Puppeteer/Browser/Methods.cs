@@ -212,6 +212,15 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                     }
                 };
             }
+
+            if (data.ConfigSettings.PuppeteerSettings.DismissDialogs)
+            {
+                page.Dialog += (sender, e) =>
+                {
+                    data.Logger.Log($"Dialog automatically dismissed: {e.Dialog.Message}", LogColors.DarkSalmon);
+                    e.Dialog.Dismiss();
+                };
+            }
         }
     }
 }

@@ -9,5 +9,6 @@ namespace RuriLib.Models.Configs.Settings
         public string CommandLineArgs { get; set; } = "--disable-notifications";
         public bool IgnoreHttpsErrors { get; set; } = false;
         public bool LoadOnlyDocumentAndScript { get; set; } = false;
+        public bool DismissDialogs { get; set; } = false;
     }
 }

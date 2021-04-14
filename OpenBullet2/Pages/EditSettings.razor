@@ -195,6 +195,10 @@
         <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.LoadOnlyDocumentAndScript" />
         <br />
 
+        <label>@Loc["DismissDialogs"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.DismissDialogs" />
+        <br />
+
         <label>@Loc["PuppeteerCommandLineArguments"]</label>
         <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
 

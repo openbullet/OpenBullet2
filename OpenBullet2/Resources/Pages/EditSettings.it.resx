@@ -171,6 +171,9 @@
   <data name="DisableWebpagesNotifications" xml:space="preserve">
     <value>Disabilita le notifiche dalle pagine web</value>
   </data>
+  <data name="DismissDialogs" xml:space="preserve">
+    <value>Chiudi i dialog</value>
+  </data>
   <data name="General" xml:space="preserve">
     <value>Generali</value>
   </data>
