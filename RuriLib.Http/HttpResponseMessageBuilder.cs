@@ -120,7 +120,7 @@ namespace RuriLib.Http
                 {
                     if (ReadHeadersFastPath(ref buff))
                     {
-                        reader.AdvanceTo(buff.Start, buff.End);
+                        reader.AdvanceTo(buff.Start);
                         break;
                     }
 
@@ -129,7 +129,7 @@ namespace RuriLib.Http
                 {
                     if (ReadHeadersSlowerPath(ref buff))
                     {
-                        reader.AdvanceTo(buff.Start, buff.End);
+                        reader.AdvanceTo(buff.Start);
                         break;
                     }
                 }
