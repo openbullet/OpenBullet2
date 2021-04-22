@@ -1,4 +1,5 @@
 ﻿using RuriLib.Attributes;
+using RuriLib.Extensions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
@@ -14,7 +15,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var rounded = Convert.ToInt32(Math.Ceiling(input));
             data.Logger.LogHeader();
-            data.Logger.Log($"Rounded {input} to {rounded}", LogColors.YellowGreen);
+            data.Logger.Log($"Rounded {input.AsString()} to {rounded}", LogColors.YellowGreen);
             return rounded;
         }
 
@@ -23,7 +24,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var rounded = Convert.ToInt32(Math.Floor(input));
             data.Logger.LogHeader();
-            data.Logger.Log($"Rounded {input} to {rounded}", LogColors.YellowGreen);
+            data.Logger.Log($"Rounded {input.AsString()} to {rounded}", LogColors.YellowGreen);
             return rounded;
         }
 
@@ -32,7 +33,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var rounded = Convert.ToInt32(Round(data, input, 0));
             data.Logger.LogHeader();
-            data.Logger.Log($"Rounded {input} to {rounded}", LogColors.YellowGreen);
+            data.Logger.Log($"Rounded {input.AsString()} to {rounded}", LogColors.YellowGreen);
             return rounded;
         }
 
@@ -41,7 +42,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var rounded = Convert.ToSingle(Math.Round(input, decimalPlaces, MidpointRounding.AwayFromZero));
             data.Logger.LogHeader();
-            data.Logger.Log($"Rounded {input} to {rounded}", LogColors.YellowGreen);
+            data.Logger.Log($"Rounded {input.AsString()} to {rounded.AsString()}", LogColors.YellowGreen);
             return rounded;
         }
 
@@ -50,7 +51,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var result = Convert.ToSingle(new DataTable().Compute(input.Replace(',', '.'), null));
             data.Logger.LogHeader();
-            data.Logger.Log($"Computed {input} with result {result}", LogColors.YellowGreen);
+            data.Logger.Log($"Computed {input} with result {result.AsString()}", LogColors.YellowGreen);
             return result;
         }
 
@@ -59,7 +60,7 @@ namespace RuriLib.Blocks.Functions.Float
         {
             var random = Convert.ToSingle(data.Random.NextDouble()) * (maximum - minimum) + minimum;
             data.Logger.LogHeader();
-            data.Logger.Log($"Generated random value {random} in the interval ({minimum},{maximum})", LogColors.YellowGreen);
+            data.Logger.Log($"Generated random value {random.AsString()} in the interval ({minimum.AsString()},{maximum.AsString()})", LogColors.YellowGreen);
             return random;
         }
     }

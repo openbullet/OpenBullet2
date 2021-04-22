@@ -19,7 +19,10 @@ namespace RuriLib.Extensions
             => BitConverter.GetBytes(f);
 
         public static string AsString(this float f)
-            => f.ToString(CultureInfo.InvariantCulture);
+        {
+            var formatted = f.ToString("0.#################################################################################", CultureInfo.InvariantCulture);
+            return formatted.EndsWith('.') ? formatted.Trim('.') : formatted;
+        }
 
         public static List<string> AsList(this float f)
             => new List<string> { f.AsString() };
