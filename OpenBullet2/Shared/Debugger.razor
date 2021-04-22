@@ -74,57 +74,6 @@
             }
         </div>
     </div>
-    <!--
-    <div class="row mt-2">
-        <div id="debugger-options" class="col-auto pl-0 ml-0">
-            @if (variablesCollapsed)
-            {
-            <div>
-                <span class="oi oi-caret-right mr-2" style="cursor: pointer;" @onclick="() => variablesCollapsed = false"></span>
-                <h5 style="display: inline;">@Loc["Variables"] (@options.Variables.Count)</h5>
-            </div>
-            }
-            else
-            {
-                <div>
-                    <span class="oi oi-caret-bottom mr-2" style="cursor: pointer;" @onclick="() => variablesCollapsed = true"></span>
-                    <h5 style="display: inline;">@Loc["Variables"] (@options.Variables.Count)</h5>
-                </div>
-                <RadzenTree Style="width: 100% !important; cursor: default;">
-                    @foreach (var variable in options.Variables)
-                    {
-                        <RadzenTreeItem Text="@($"{variable.Name} ({variable.Type}){(variable.MarkedForCapture ? " [CAPTURED]" : "")}")">
-                            @switch (variable)
-                            {
-                                default:
-                                    <RadzenTreeItem Text="@variable.AsString()" />
-                                    break;
-
-                                case ListOfStringsVariable _:
-                                    @foreach (var element in variable.AsListOfStrings())
-                                    {
-                                        <RadzenTreeItem Text="@element" />
-                                    }
-                                    break;
-
-                                case DictionaryOfStringsVariable _:
-                                    @foreach (var element in variable.AsDictionaryOfStrings())
-                                    {
-                                        <RadzenTreeItem Text="@($"{element.Key}: {element.Value}")" />
-                                    }
-                                    break;
-
-                                case ByteArrayVariable _:
-                                    <RadzenTreeItem Text="@(Convert.ToBase64String(variable.AsByteArray()))" />
-                                    break;
-                            }
-                        </RadzenTreeItem>
-                    }
-                </RadzenTree>
-            }
-        </div>
-    </div>
-    -->
 </div>
 
 @code {
