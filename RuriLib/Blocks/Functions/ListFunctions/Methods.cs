@@ -2,6 +2,7 @@
 using RuriLib.Extensions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -127,6 +128,27 @@ namespace RuriLib.Blocks.Functions.List
             list.Shuffle(data.Random);
             data.Logger.LogHeader();
             data.Logger.Log("Shuffled the list", LogColors.YellowGreen);
+        }
+
+        [Block("Splits the items of a list to create a dictionary", name = "To Dictionary")]
+        public static Dictionary<string, string> ListToDictionary(BotData data, [Variable] List<string> list,
+            string separator = ":", bool autoTrim = true)
+        {
+            Dictionary<string, string> dict = new();
+
+            foreach (var item in list)
+            {
+                var split = item.Split(separator, 2, autoTrim ? StringSplitOptions.TrimEntries : StringSplitOptions.None);
+
+                if (!string.IsNullOrEmpty(split[0]))
+                {
+                    dict[split[0]] = split[1];
+                }
+            }
+
+            data.Logger.LogHeader();
+            data.Logger.Log("Split the list into a dictionary", LogColors.YellowGreen);
+            return dict;
         }
     }
 }
