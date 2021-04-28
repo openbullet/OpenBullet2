@@ -76,17 +76,15 @@
         {
             sb.Append("(?=.*[A-Za-z])");
         }
-        else
-        {
-            if (compulsoryCharacters.Contains("Lowercase"))
-            {
-                sb.Append("(?=.*[a-z])");
-            }
 
-            if (compulsoryCharacters.Contains("Uppercase"))
-            {
-                sb.Append("(?=.*[A-Z])");
-            }
+        if (compulsoryCharacters.Contains("Lowercase"))
+        {
+            sb.Append("(?=.*[a-z])");
+        }
+
+        if (compulsoryCharacters.Contains("Uppercase"))
+        {
+            sb.Append("(?=.*[A-Z])");
         }
 
         if (compulsoryCharacters.Contains("Numbers"))
