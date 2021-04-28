@@ -166,7 +166,7 @@
     <value>O que é uma Config?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Um %Config% é um arquivo que contem instuções para automatizar certas ações, geralmente para recursos da web. As configs contêm alguns %metadata% (como um nome, um autor e um ícone), um %readme% com instruções sobre como usá-lo ou para que serve, algumas configurações e instruções que podem estar no %LoliCode% personalizado ou em %C#% puro. No disco, as configurações são salvas como arquivos com a extensão %.opk% na subpasta %Configs%.</value>
+    <value>Um %Config% é um arquivo que contem instuções para automatizar certas ações, geralmente para recursos da web. As configs contêm alguns %metadata% (como um nome, um autor e um ícone), um %readme% com instruções sobre como usá-lo ou para que serve, algumas configurações e instruções que podem estar no %LoliCode% personalizado ou em %C#% puro. No disco, as configurações são salvas como arquivos com a extensão %.opk% na subpasta %UserData/Configs%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>As configs podem ser usadas em trabalhos com %Multiplas Threads% para executar algumas instruções em um determinado conjunto de dados (por exemplo, uma Wordlist) em paralelo. Por exemplo eles podem ser usados para verificar se certos subcaminhos de um determinado site retornam uma resposta válida ou podem ser usados para raspar links de várias páginas de uma loja online.</value>
@@ -175,7 +175,7 @@
     <value>Como funciona o gerenciador de Configs?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>O %Gerenciador de Configs% mantém o controle de todas as suas configurações. As configs são carregadas da subpasta Configs quando o OB2 é inicializado e se alguma nova config for adicionada a essa pasta, você pode simplesmente clicar em %Recarregar% para iniciar o processo de carregamento novamente. Se você não tiver acesso fácil á pasta Configs(por exemplo se o OB2 estiver sendo executado em uma vps), você pode %Upload% a config com um botão relacionado. Você também pode fazer o %Download% de configurações existentes da mesma maneira.</value>
+    <value>O %Gerenciador de Configs% mantém o controle de todas as suas configurações. As configs são carregadas da subpasta `UserData/Configs` quando o OB2 é inicializado e se alguma nova config for adicionada a essa pasta, você pode simplesmente clicar em %Recarregar% para iniciar o processo de carregamento novamente. Se você não tiver acesso fácil á pasta Configs(por exemplo se o OB2 estiver sendo executado em uma vps), você pode %Upload% a config com um botão relacionado. Você também pode fazer o %Download% de configurações existentes da mesma maneira.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>No topo você pode encontrar o botão %Novo% que irá criar uma nova configuração. A fim de %Editar% uma configuração você pode clicar no botão Editar ou clicar duas vezes na configuração na lista. Há também um botão para %Mudar o tipo de Visualização% para um tipo de grade mais detalhada.</value>

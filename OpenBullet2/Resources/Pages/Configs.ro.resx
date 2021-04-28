@@ -166,7 +166,7 @@
     <value>Ce este un config?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Un %Config% este un fisier care contine instructiuni pentru automatizarea actiunilor, de obicei catre o pagina web. Confuratiile contin %metadata% (precum un nume,un autor sau o iconita), un %readme% cu instructiuni despre cum sa folosesti sau pentru ce este, cateva setari, si instructiuni care pot fie sa fie in codul special creat %LoliCode% sau in codul %C#%. In stocare, configurile  sunt salvate ca fisiere cu extensia %.opk% in sub folderul %Configs%.</value>
+    <value>Un %Config% este un fisier care contine instructiuni pentru automatizarea actiunilor, de obicei catre o pagina web. Confuratiile contin %metadata% (precum un nume,un autor sau o iconita), un %readme% cu instructiuni despre cum sa folosesti sau pentru ce este, cateva setari, si instructiuni care pot fie sa fie in codul special creat %LoliCode% sau in codul %C#%. In stocare, configurile  sunt salvate ca fisiere cu extensia %.opk% in sub folderul %UserData/Configs%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Configurile pot fi folosite in alte feluri precum %MultiRun Job% in ordine sa execute cateva instructiuni sau un set de date (ex. o lista de cuvinte) in paralel. De exemplu, acestea pot fi folosite sa verifici daca specifice adrese pentru un site trimit un raspuns valid sau acestea pot fi folosite pentru a cauta linkuri dintr-un site cu mai multe pagini.</value>
@@ -175,7 +175,7 @@
     <value>Cum functioneaza Config Managerul?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>%Config Manager% este o biblioteca pentru configurile tale. Configurile sunt incarcate din sub folderul Configs si daca un config nou este adaugat in acel folder poti sa apesi pe %Reload% pentru a-l putea incarca in biblioteca. Daca nu ai un acces usor in folderul Configs (de exemplu OB2 functioneaza pe un vps) poti sa %Upload% un config cu acest buton. Poti si sa %Download% un config deja existent prin aceasta metoda.</value>
+    <value>%Config Manager% este o biblioteca pentru configurile tale. Configurile sunt incarcate din sub folderul `UserData/Configs` si daca un config nou este adaugat in acel folder poti sa apesi pe %Reload% pentru a-l putea incarca in biblioteca. Daca nu ai un acces usor in folderul Configs (de exemplu OB2 functioneaza pe un vps) poti sa %Upload% un config cu acest buton. Poti si sa %Download% un config deja existent prin aceasta metoda.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>Sus poti gasi butonul %New% prin care poti crea un config nou. Pentru a %edit% un config poti sa apesi pe butonul Editare sau sa dai dublu click pe config in lista. Mai exista si un buton pentru %change the view% intr-o grila mai detaliata.</value>

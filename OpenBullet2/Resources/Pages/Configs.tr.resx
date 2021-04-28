@@ -166,7 +166,7 @@
     <value>Yapılandırma nedir?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%Yapılandırma% genellikle web kaynaklarına yönelik belirli eylemleri otomatikleştirmek için talimatlar içeren bir dosyadır. Yapılandırmalar bazı %metaveriler% (bir ad, yazar ve simge gibi), nasıl kullanılacağına veya ne için kullanılacağına ilişkin talimatların bulunduğu bir %benioku% dosyası, bazı ayarlar ve ardından özel %LoliCode% komut dosyası dili içinde bulunan ya da tamamen %C#% içinde bulunan talimatlar içerir. Diskte, yapılandırmalar %Configs% alt klasörüne %.opk% uzantılı dosyalar olarak kaydedilir.</value>
+    <value>%Yapılandırma% genellikle web kaynaklarına yönelik belirli eylemleri otomatikleştirmek için talimatlar içeren bir dosyadır. Yapılandırmalar bazı %metaveriler% (bir ad, yazar ve simge gibi), nasıl kullanılacağına veya ne için kullanılacağına ilişkin talimatların bulunduğu bir %benioku% dosyası, bazı ayarlar ve ardından özel %LoliCode% komut dosyası dili içinde bulunan ya da tamamen %C#% içinde bulunan talimatlar içerir. Diskte, yapılandırmalar %UserData/Configs% alt klasörüne %.opk% uzantılı dosyalar olarak kaydedilir.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Yapılandırmalar, belirli bir veri kümesinde (örneğin bir sözcük listesi) paralel olarak bazı talimatları yürütmek için %MultiRun Job% gibi işlerde kullanılabilir. Örneğin, belirli bir web sitesinin belirli alt yollarının geçerli bir yanıta karşılık verip vermediğini kontrol etmek için kullanılabilirler veya bir çevrimiçi mağazanın birden çok sayfasından bağlantı istatistikleri almak için kullanılabilirler.</value>

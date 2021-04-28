@@ -169,7 +169,7 @@
     <value>What is a Config?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>A %Config% is a file that contains instructions for automating certain actions, usually towards web resources. Configs contain some %metadata% (like a name, an author and an icon), a %readme% with instructions on how to use it or what it's for, some settings, and then instructions that can either be in the custom %LoliCode% scripting language or in pure %C#%. On the disk, configs are saved as files with the %.opk% extension in the %Configs% subfolder.</value>
+    <value>A %Config% is a file that contains instructions for automating certain actions, usually towards web resources. Configs contain some %metadata% (like a name, an author and an icon), a %readme% with instructions on how to use it or what it's for, some settings, and then instructions that can either be in the custom %LoliCode% scripting language or in pure %C#%. On the disk, configs are saved as files with the %.opk% extension in the %UserData/Configs% subfolder.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Configs can be used in jobs such as the %MultiRun Job% in order to execute some instructions on a given dataset (e.g. a wordlist) in parallel. For example, they can be used to check if certain subpaths of a given website return a valid response, or they can be used to scrape links from multiple pages of an online shop.</value>
@@ -178,7 +178,7 @@
     <value>How does the Config Manager work?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>The %Config Manager% keeps track of all your configs. Configs are loaded from the Configs subfolder when OB2 starts up, and if some new configs are added to that folder you can simply hit %Reload% in order to start the loading process again. If you don't have easy access to the Configs folder (for example if OB2 is running on a vps) you can %Upload% a config with the related button. You can also %Download% existing configs in the same way.</value>
+    <value>The %Config Manager% keeps track of all your configs. Configs are loaded from the `UserData/Configs` subfolder when OB2 starts up, and if some new configs are added to that folder you can simply hit %Reload% in order to start the loading process again. If you don't have easy access to the Configs folder (for example if OB2 is running on a vps) you can %Upload% a config with the related button. You can also %Download% existing configs in the same way.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>At the top you can find the %New% button that will create a new config. In order to %edit% a config you can click on the Edit button or double click on the config in the list. There is also a button to %change the view% to a more detailed grid view.</value>

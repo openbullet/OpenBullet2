@@ -166,7 +166,7 @@
     <value>Wat is een config?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Een %Config% is een bestand dat instructies bevat voor het automatiseren van bepaalde acties, meestal naar webbronnen. Configs bevatten een aantal %metadata% (zoals een naam, een auteur en een pictogram), een %leesmij% met instructies over hoe het te gebruiken of waar het voor is, enkele instellingen en vervolgens instructies die ofwel in de aangepaste %LoliCode% kunnen staan of in pure %C#%. Op de schijf worden configs opgeslagen als bestanden met de %.opk% extensie in de %Configs% submap.</value>
+    <value>Een %Config% is een bestand dat instructies bevat voor het automatiseren van bepaalde acties, meestal naar webbronnen. Configs bevatten een aantal %metadata% (zoals een naam, een auteur en een pictogram), een %leesmij% met instructies over hoe het te gebruiken of waar het voor is, enkele instellingen en vervolgens instructies die ofwel in de aangepaste %LoliCode% kunnen staan of in pure %C#%. Op de schijf worden configs opgeslagen als bestanden met de %.opk% extensie in de %UserData/Configs% submap.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Configs kunnen worden gebruikt in taken zoals de %MultiRun Taak% om enkele instructies parallel uit te voeren op een gegeven dataset (bijv. Een wordlist). Ze kunnen bijvoorbeeld worden gebruikt om te controleren of bepaalde subpaden van een bepaalde website een geldig antwoord opleveren, of ze kunnen worden gebruikt om links van meerdere pagina's van een online winkel te schrapen.</value>
@@ -175,7 +175,7 @@
     <value>Hoe werkt de Config Manager?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>De %Config Manager% houdt al uw configs bij. Configs worden geladen vanuit de submap Configs wanneer OB2 opstart, en als er een aantal nieuwe configs aan die map worden toegevoegd, kunt u eenvoudig op %Herlaad% drukken om het laadproces opnieuw te starten. Als u geen gemakkelijke toegang heeft tot de map Configs (bijvoorbeeld als OB2 op een vps draait), kunt u een Config %Uploaden% met de gerelateerde knop. U kunt ook met %Downloaden% bestaande configs op dezelfde manier downloaden.</value>
+    <value>De %Config Manager% houdt al uw configs bij. Configs worden geladen vanuit de submap `UserData/Configs` wanneer OB2 opstart, en als er een aantal nieuwe configs aan die map worden toegevoegd, kunt u eenvoudig op %Herlaad% drukken om het laadproces opnieuw te starten. Als u geen gemakkelijke toegang heeft tot de map Configs (bijvoorbeeld als OB2 op een vps draait), kunt u een Config %Uploaden% met de gerelateerde knop. U kunt ook met %Downloaden% bestaande configs op dezelfde manier downloaden.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>Bovenaan vind je de %Nieuw% knop die een nieuwe config zal aanmaken. Om %een config% te editen, kunt u op de knop Bewerken klikken of dubbelklikken op de config in de lijst. Er is ook een knop om %de weergave% te wijzigen naar een meer gedetailleerde rasterweergave.</value>

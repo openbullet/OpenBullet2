@@ -166,7 +166,7 @@
     <value>¿Qué es una configuración?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Una %Config% es un archivo que contiene instrucciones para automatizar ciertas acciones, generalmente hacia recursos web. Las configuraciones contienen algunos %metadatos% (como un nombre, un autor y un icono), un %léeme% con instrucciones sobre cómo usarlo o para qué sirve, algunos ajustes y luego instrucciones que pueden estar en %LoliCode% lenguaje personalizado de secuencias de comandos ó en %C #% puro. En el disco, las configuraciones se guardan como archivos con la extensión %.opk% en la subcarpeta %Configs%.</value>
+    <value>Una %Config% es un archivo que contiene instrucciones para automatizar ciertas acciones, generalmente hacia recursos web. Las configuraciones contienen algunos %metadatos% (como un nombre, un autor y un icono), un %léeme% con instrucciones sobre cómo usarlo o para qué sirve, algunos ajustes y luego instrucciones que pueden estar en %LoliCode% lenguaje personalizado de secuencias de comandos ó en %C #% puro. En el disco, las configuraciones se guardan como archivos con la extensión %.opk% en la subcarpeta %UserData/Configs%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Las configuraciones se pueden utilizar en trabajos como %MultiRun Job% para ejecutar algunas instrucciones en un conjunto de datos determinado (por ejemplo, un diccionario) en paralelo. Por ejemplo, se pueden usar para verificar si ciertas sub-rutas de un sitio web determinado devuelven una respuesta válida, ó se pueden usar para extraer enlaces de varias páginas de una tienda en línea.</value>
@@ -175,7 +175,7 @@
     <value>¿Cómo funciona el Administrador de configuración?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>%Administrador de Config% realiza un seguimiento de todas sus configuraciones. Las configuraciones se cargan desde la subcarpeta Configs cuando se inicia OB2, y si se agregan algunas configuraciones nuevas a esa carpeta, simplemente puede presionar %Recargar% para comenzar el proceso de carga nuevamente. Si no tiene acceso fácil a la carpeta Configuraciones (por ejemplo, si OB2 se está ejecutando en un vps), puede %Cargar% una configuración con el botón relacionado. También puede %Descargar% configuraciones existentes de la misma manera.</value>
+    <value>%Administrador de Config% realiza un seguimiento de todas sus configuraciones. Las configuraciones se cargan desde la subcarpeta `UserData/Configs` cuando se inicia OB2, y si se agregan algunas configuraciones nuevas a esa carpeta, simplemente puede presionar %Recargar% para comenzar el proceso de carga nuevamente. Si no tiene acceso fácil a la carpeta Configuraciones (por ejemplo, si OB2 se está ejecutando en un vps), puede %Cargar% una configuración con el botón relacionado. También puede %Descargar% configuraciones existentes de la misma manera.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>En la parte superior puede encontrar el botón %Nuevo% que creará una nueva configuración. Para %editar% una configuración, puede hacer clic en el botón Editar o hacer doble clic sobre la config en la lista de configuraciones. También hay un botón para %cambiar la vista% a una vista de cuadrícula más detallada.</value>

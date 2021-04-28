@@ -166,7 +166,7 @@
     <value>Was ist eine Config?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Eine %Config% ist eine Datei, die Anweisungen für die Automatisierung bestimmter Aktionen enthält, normalerweise in Verbindung zu Webressourcen. Configs enthalten einige %Metadaten% (wie z.B. einen Namen, einen Autor und ein Icon), eine %LiesMich% mit Anweisungen, wie man sie benutzt oder wofür sie da ist, einige Einstellungen und dann Anweisungen, die entweder in der benutzerdefinierten %LoliCode% Skriptsprache oder in reinem %C#% sein können. Auf der Festplatte werden die Configs als Dateien mit der Erweiterung %.opk% im Unterordner %Configs% gespeichert.</value>
+    <value>Eine %Config% ist eine Datei, die Anweisungen für die Automatisierung bestimmter Aktionen enthält, normalerweise in Verbindung zu Webressourcen. Configs enthalten einige %Metadaten% (wie z.B. einen Namen, einen Autor und ein Icon), eine %LiesMich% mit Anweisungen, wie man sie benutzt oder wofür sie da ist, einige Einstellungen und dann Anweisungen, die entweder in der benutzerdefinierten %LoliCode% Skriptsprache oder in reinem %C#% sein können. Auf der Festplatte werden die Configs als Dateien mit der Erweiterung %.opk% im Unterordner %UserData/Configs% gespeichert.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
     <value>Configs können in Jobs wie dem %MultiRun Job% verwendet werden, um einige Anweisungen auf einem gegebenen Datensatz (z.B. einer Wordlist) parallel auszuführen. Zum Beispiel können sie verwendet werden, um zu prüfen, ob bestimmte Unterpfade einer gegebenen Webseite eine gültige Antwort zurückgeben, oder sie können verwendet werden, um Links von mehreren Seiten eines Onlineshops zu sammeln.</value>
@@ -175,7 +175,7 @@
     <value>Wie funktioniert der Config Manager?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>Der %Config Manager% behält den Überblick über alle deine Configs. Configs werden aus dem Configs-Unterordner geladen, wenn OB2 startet. Wenn neue Configs zu diesem Ordner hinzugefügt werden, kannst du einfach %Neu Laden% drücken, um den Ladeprozess erneut zu starten. Wenn du keinen einfachen Zugriff auf den Configs-Ordner hast (z.B. wenn OB2 auf einem VPS läuft), kannst du eine Config mit dem entsprechenden Button %Hochladen% raufladen Auf die gleiche Art und Weise kannst du auch bestehender Configs %Herunterladen%.</value>
+    <value>Der %Config Manager% behält den Überblick über alle deine Configs. Configs werden aus dem `UserData/Configs`-Unterordner geladen, wenn OB2 startet. Wenn neue Configs zu diesem Ordner hinzugefügt werden, kannst du einfach %Neu Laden% drücken, um den Ladeprozess erneut zu starten. Wenn du keinen einfachen Zugriff auf den Configs-Ordner hast (z.B. wenn OB2 auf einem VPS läuft), kannst du eine Config mit dem entsprechenden Button %Hochladen% raufladen Auf die gleiche Art und Weise kannst du auch bestehender Configs %Herunterladen%.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
     <value>Oben findest du den %Neu% Button, mit dem du eine neue Konfiguration erstellen kannst. Um eine Konfiguration zu %bearbeiten%, kannst du auf den Bearbeiten-Button klicken oder einen Doppelklick auf die Konfiguration in der Liste machen. Es gibt auch einen Button zum %Ansicht umschalten% zu einer detaillierteren Gitteransicht.</value>
