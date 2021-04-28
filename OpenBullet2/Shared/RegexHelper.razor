@@ -73,31 +73,54 @@
 
         // Compulsory
         if (compulsoryCharacters.Contains("Letters"))
+        {
             sb.Append("(?=.*[A-Za-z])");
-        else if (compulsoryCharacters.Contains("Lowercase"))
-            sb.Append("(?=.*[a-z])");
-        else if (compulsoryCharacters.Contains("Uppercase"))
-            sb.Append("(?=.*[A-Z])");
+        }
+        else
+        {
+            if (compulsoryCharacters.Contains("Lowercase"))
+            {
+                sb.Append("(?=.*[a-z])");
+            }
+
+            if (compulsoryCharacters.Contains("Uppercase"))
+            {
+                sb.Append("(?=.*[A-Z])");
+            }
+        }
 
         if (compulsoryCharacters.Contains("Numbers"))
+        {
             sb.Append("(?=.*\\d)");
+        }
 
         if (compulsoryCharacters.Contains("Symbols"))
+        {
             sb.Append($"(?=.*[{Regex.Escape(supportedSymbols)}])");
+        }
 
         // Allowed
         sb.Append("[");
+
         if (allowedCharacters.Contains("Lowercase"))
+        {
             sb.Append("a-z");
+        }
 
         if (allowedCharacters.Contains("Uppercase"))
+        {
             sb.Append("A-Z");
+        }
 
         if (allowedCharacters.Contains("Numbers"))
+        {
             sb.Append("\\d");
+        }
 
         if (allowedCharacters.Contains("Symbols"))
+        {
             sb.Append(Regex.Escape(supportedSymbols));
+        }
 
         sb.Append("]");
 
@@ -107,8 +130,12 @@
             sb.Append("{");
             sb.Append(minLength);
             sb.Append(",");
+
             if (maxLength > 0)
+            {
                 sb.Append(maxLength);
+            }
+
             sb.Append("}");
         }
         else
