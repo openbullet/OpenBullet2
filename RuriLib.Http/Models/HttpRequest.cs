@@ -82,8 +82,8 @@ namespace RuriLib.Http.Models
             // If there is already a Connection header
             if (HeaderExists("Connection", out var connectionHeaderName))
             {
-                // If its value is not Close, change it to Close
-                if (!Headers[connectionHeaderName].Equals("Close", StringComparison.OrdinalIgnoreCase))
+                // If its value is Keep-Alive, change it to Close
+                if (Headers[connectionHeaderName].Equals("Keep-Alive", StringComparison.OrdinalIgnoreCase))
                 {
                     Headers[connectionHeaderName] = "Close";
                 }
