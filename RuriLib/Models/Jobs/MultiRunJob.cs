@@ -341,6 +341,9 @@ namespace RuriLib.Models.Jobs
 
             if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
             {
+                // HACK: This should probably not be here, but it will work for now
+                ProxySources.ForEach(p => p.UserId = OwnerId);
+
                 var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                 proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
                 await proxyPool.ReloadAll(ShuffleProxies);

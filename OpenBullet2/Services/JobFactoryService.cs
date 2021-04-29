@@ -106,7 +106,7 @@ namespace OpenBullet2.Services
             };
 
             job.GeoProvider = new DBIPProxyGeolocationProvider("dbip-country-lite.mmdb");
-            job.Proxies = proxyReloadService.Reload(options.GroupId).Result;
+            job.Proxies = proxyReloadService.Reload(options.GroupId, job.OwnerId).Result;
             
             // Update the stats
             var proxies = options.CheckOnlyUntested

@@ -18,8 +18,8 @@ namespace OpenBullet2.Models.Proxies.Sources
             this.reloadService = reloadService;
         }
 
-        public override async Task<IEnumerable<Proxy>> GetAll()
-            => await reloadService.Reload(GroupId);
+        public async override Task<IEnumerable<Proxy>> GetAll()
+            => await reloadService.Reload(GroupId, UserId);
 
         public void Dispose() => reloadService?.Dispose();
     }

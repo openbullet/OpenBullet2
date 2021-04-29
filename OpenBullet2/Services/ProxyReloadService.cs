@@ -26,7 +26,7 @@ namespace OpenBullet2.Services
 
         public void Dispose() => semaphore?.Dispose();
 
-        public async Task<IEnumerable<Proxy>> Reload(int groupId)
+        public async Task<IEnumerable<Proxy>> Reload(int groupId, int userId)
         {
             List<ProxyEntity> entities;
 
@@ -38,7 +38,10 @@ namespace OpenBullet2.Services
             {
                 if (groupId == -1)
                 {
-                    entities = await proxyRepo.GetAll().ToListAsync();
+                    entities = userId == 0
+                        ? await proxyRepo.GetAll().ToListAsync()
+                        : await proxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
+                            .Where(p => p.Group.Owner.Id == userId).ToListAsync();
                 }
                 else
                 {
