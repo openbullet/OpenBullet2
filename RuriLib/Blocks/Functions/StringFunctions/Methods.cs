@@ -173,7 +173,7 @@ namespace RuriLib.Blocks.Functions.String
         }
 
         [Block("Generates a random string given a mask",
-            extraInfo = "?l = Lowercase, ?u = Uppercase, ?d = Digit, ?f = Uppercase + Lowercase, ?s = Symbol, ?h = Hex (Lowercase), ?m = Upper + Digits,?n = Lower + Digits ?i = Lower + Upper + Digits, ?a = Any, ?c = Custom")]
+            extraInfo = "?l = Lowercase, ?u = Uppercase, ?d = Digit, ?f = Uppercase + Lowercase, ?s = Symbol, ?h = Hex (Lowercase), ?H = Hex (Uppercase), ?m = Upper + Digits,?n = Lower + Digits ?i = Lower + Upper + Digits, ?a = Any, ?c = Custom")]
         public static string RandomString(BotData data, string input, string customCharset = "0123456789")
         {
             input = Regex.Replace(input, @"\?l", m => _lowercase[data.Random.Next(_lowercase.Length)].ToString());
@@ -181,6 +181,7 @@ namespace RuriLib.Blocks.Functions.String
             input = Regex.Replace(input, @"\?d", m => _digits[data.Random.Next(_digits.Length)].ToString());
             input = Regex.Replace(input, @"\?s", m => _symbols[data.Random.Next(_symbols.Length)].ToString());
             input = Regex.Replace(input, @"\?h", m => _hex[data.Random.Next(_hex.Length)].ToString());
+            input = Regex.Replace(input, @"\?H", m => _hex[data.Random.Next(_hex.Length)].ToString().ToUpper());
             input = Regex.Replace(input, @"\?a", m => _allChars[data.Random.Next(_allChars.Length)].ToString());
             input = Regex.Replace(input, @"\?m", m => _udChars[data.Random.Next(_udChars.Length)].ToString());
             input = Regex.Replace(input, @"\?n", m => _ldChars[data.Random.Next(_ldChars.Length)].ToString());
