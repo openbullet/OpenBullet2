@@ -261,7 +261,7 @@ namespace RuriLib.Blocks.Utility.Files
                     // If we need write access, try to acquire a write lock periodically every 5 seconds
                     while (!fileLock.TryEnterWriteLock(5000))
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(10, data.CancellationToken);
                     }
                 }
                 else
@@ -269,7 +269,7 @@ namespace RuriLib.Blocks.Utility.Files
                     // If we need read access, try to acquire a read lock periodically every 5 seconds
                     while (!fileLock.TryEnterReadLock(5000))
                     {
-                        await Task.Delay(10);
+                        await Task.Delay(10, data.CancellationToken);
                     }
                 }
                 
