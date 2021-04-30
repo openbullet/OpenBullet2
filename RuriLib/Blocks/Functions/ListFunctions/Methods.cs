@@ -2,6 +2,7 @@
 using RuriLib.Extensions;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Conditions.Comparisons;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -97,11 +98,20 @@ namespace RuriLib.Blocks.Functions.List
         {
             if (list.Count == 0) index = 0;
             else if (index < 0) index += list.Count +1 ;
-            string removedItem = list[index];
+            var removedItem = list[index];
             list.RemoveAt(index);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Removed item {removedItem} at index {index}", LogColors.YellowGreen);
+        }
+
+        [Block("Removes all items that match a given condition from a list")]
+        public static void RemoveAllFromList(BotData data, [Variable] List<string> list, StrComparison comparison, string term)
+        {
+            var count = list.RemoveAll(i => RuriLib.Functions.Conditions.Conditions.Check(i, comparison, term));
+
+            data.Logger.LogHeader();
+            data.Logger.Log($"Removed {count} items", LogColors.YellowGreen);
         }
 
         [Block("Removes duplicate items from a list")]
