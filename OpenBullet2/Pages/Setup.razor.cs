@@ -18,7 +18,6 @@ namespace OpenBullet2.Pages
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private PersistentSettingsService Settings { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
-        [Inject] private HttpContextAccessor ContextAccessor { get; set; }
         [Inject] private IModalService Modal { get; set; }
         
         private readonly int finalStep = 5;
