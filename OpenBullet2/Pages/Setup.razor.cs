@@ -1,10 +1,14 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
+using OpenBullet2.Auth;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Pages
@@ -13,6 +17,8 @@ namespace OpenBullet2.Pages
     {
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private PersistentSettingsService Settings { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
+        [Inject] private HttpContextAccessor ContextAccessor { get; set; }
         [Inject] private IModalService Modal { get; set; }
         
         private readonly int finalStep = 5;
@@ -49,11 +55,15 @@ namespace OpenBullet2.Pages
             public string ConfirmPassword { get; set; } = string.Empty;
         }
 
-        private void SetupAdminAccount()
+        private async Task SetupAdminAccount()
         {
             Settings.OpenBulletSettings.SecuritySettings.RequireAdminLogin = true;
             Settings.OpenBulletSettings.SecuritySettings.AdminUsername = admin.Username;
             Settings.OpenBulletSettings.SecuritySettings.SetupAdminPassword(admin.Password);
+
+            // Authenticate the admin (we don't care about its IP)
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(admin.Username, admin.Password, IPAddress.Parse("127.0.0.1"));
+
             step++;
         }
 
