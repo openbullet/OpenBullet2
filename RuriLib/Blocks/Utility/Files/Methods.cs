@@ -78,7 +78,7 @@ namespace RuriLib.Blocks.Utility.Files
             { 
                 await File.WriteAllTextAsync(p, c.Unescape(), data.CancellationToken);
                 return true; 
-            });
+            }, isWriteOperation: true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote content to {path}", LogColors.Flavescent);
@@ -92,7 +92,7 @@ namespace RuriLib.Blocks.Utility.Files
             {
                 await File.WriteAllLinesAsync(p, c, data.CancellationToken);
                 return true;
-            });
+            }, isWriteOperation: true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote lines to {path}", LogColors.Flavescent);
@@ -106,7 +106,7 @@ namespace RuriLib.Blocks.Utility.Files
             {
                 await File.WriteAllBytesAsync(p, c, data.CancellationToken);
                 return true;
-            });
+            }, isWriteOperation: true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote bytes to {path}", LogColors.Flavescent);
@@ -121,7 +121,7 @@ namespace RuriLib.Blocks.Utility.Files
             {
                 await File.AppendAllTextAsync(p, c.Unescape(), data.CancellationToken);
                 return true;
-            });
+            }, isWriteOperation: true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Appended content to {path}", LogColors.Flavescent);
@@ -134,7 +134,7 @@ namespace RuriLib.Blocks.Utility.Files
             {
                 await File.AppendAllLinesAsync(p, c, data.CancellationToken);
                 return true;
-            });
+            }, isWriteOperation: true);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Appended lines to {path}", LogColors.Flavescent);
@@ -243,32 +243,51 @@ namespace RuriLib.Blocks.Utility.Files
         }
         #endregion
 
-        private static Task<TOut> ExecuteFileOperation<TIn, TOut>(BotData data, string path, TIn parameter, Func<string, TIn, Task<TOut>> func)
+        private static async Task<TOut> ExecuteFileOperation<TIn, TOut>(BotData data, string path, TIn parameter,
+            Func<string, TIn, Task<TOut>> func, bool isWriteOperation = false)
         {
             if (data.Providers.Security.RestrictBlocksToCWD)
                 FileUtils.ThrowIfNotInCWD(path);
 
             FileUtils.CreatePath(path);
 
-            // TODO: Implement an asynchronous lock, otherwise it will throw a
-            // SynchronizationLockException since we cannot call Monitor.Exit() in an async context
-            // https://stackoverflow.com/questions/21404144/synchronizationlockexception-on-monitor-exit-when-using-await
-
             TOut result;
             var fileLock = FileLocker.GetHandle(path);
-            Monitor.Enter(fileLock);
 
             try
             {
-                // HACK: Execute synchronously as a temporary fix
-                result = func.Invoke(path, parameter).Result;
+                if (isWriteOperation)
+                {
+                    // If we need write access, try to acquire a write lock periodically every 5 seconds
+                    while (!fileLock.TryEnterWriteLock(5000))
+                    {
+                        await Task.Delay(10);
+                    }
+                }
+                else
+                {
+                    // If we need read access, try to acquire a read lock periodically every 5 seconds
+                    while (!fileLock.TryEnterReadLock(5000))
+                    {
+                        await Task.Delay(10);
+                    }
+                }
+                
+                result = await func.Invoke(path, parameter);
             }
             finally
             {
-                Monitor.Exit(fileLock);
+                if (isWriteOperation)
+                {
+                    fileLock.ExitWriteLock();
+                }
+                else
+                {
+                    fileLock.ExitReadLock();
+                }
             }
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

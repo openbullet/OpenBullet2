@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Threading;
 
 namespace RuriLib.Functions.Files
 {
@@ -10,17 +11,17 @@ namespace RuriLib.Functions.Files
         private static readonly Hashtable hashtable = new();
 
         /// <summary>
-        /// Gets a lockable handle associated to a file name or creates one if it doesn't exist.
+        /// Gets a <see cref="ReaderWriterLockSlim"/> associated to a file name or creates one if it doesn't exist.
         /// </summary>
         /// <param name="fileName">The name of the file to access</param>
-        public static object GetHandle(string fileName)
+        public static ReaderWriterLockSlim GetHandle(string fileName)
         {
             if (!hashtable.ContainsKey(fileName))
             {
-                hashtable.Add(fileName, new object());
+                hashtable.Add(fileName, new ReaderWriterLockSlim());
             }
 
-            return hashtable[fileName];
+            return (ReaderWriterLockSlim)hashtable[fileName];
         }
     }
 }
