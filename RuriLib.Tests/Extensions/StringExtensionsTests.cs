@@ -24,18 +24,43 @@ namespace RuriLib.Tests.Extensions
             Assert.Equal("llo", "hello".RightMostCharacters(3));
         }
 
-        [Fact]
-        public void IsSubPathOf_ValidSubPath_True()
+        [Theory]
+        [InlineData("C:/test/dir/file.txt")]
+        [InlineData("C:\\test\\dir\\file.txt")]
+        [InlineData("file.txt")]
+        [InlineData("./file.txt")]
+        [InlineData("Test/file.txt")]
+        public void IsSubPathOf_ValidSubPath_True(string path)
         {
-            Assert.True("C:/test/dir/file.txt".IsSubPathOf("C:/test/"));
+            Assert.True(path.IsSubPathOf("C:/test/"));
+        }
+
+        [Theory]
+        [InlineData("/home/user/file.txt")]
+        [InlineData("file.txt")]
+        [InlineData("./file.txt")]
+        [InlineData("Test/file.txt")]
+        public void IsSubPathOf_ValidSubPathUnix_True(string path)
+        {
+            Assert.True(path.IsSubPathOf("/home/user/"));
         }
 
         [Theory]
         [InlineData("C:/windows/system32/cmd.exe")]
         [InlineData("C:/test/../windows/system32/cmd.exe")]
+        [InlineData("../../windows/system32/cmd.exe")]
         public void IsSubPathOf_IllegalSubPath_False(string path)
         {
             Assert.False(path.IsSubPathOf("C:/test/"));
+        }
+
+        [Theory]
+        [InlineData("/opt/test")]
+        [InlineData("/home/user/../../root")]
+        [InlineData("../../root")]
+        public void IsSubPathOf_IllegalSubPathUnix_False(string path)
+        {
+            Assert.False(path.IsSubPathOf("/home/user/"));
         }
     }
 }
