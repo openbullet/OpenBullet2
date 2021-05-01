@@ -154,7 +154,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         }
 
         [Block("Encrypts data with AES", name = "AES Encrypt")]
-        public static byte[] AESEncrypt(BotData data, string plainText, byte[] key, byte[] iv,
+        public static byte[] AESEncrypt(BotData data, byte[] plainText, byte[] key, byte[] iv,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             var cipherText = RuriLib.Functions.Crypto.Crypto.AESEncrypt(plainText, key, iv, mode, padding, keySize);
@@ -164,7 +164,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         }
 
         [Block("Decrypts data with AES", name = "AES Decrypt")]
-        public static string AESDecrypt(BotData data, byte[] cipherText, byte[] key, byte[] iv,
+        public static byte[] AESDecrypt(BotData data, byte[] cipherText, byte[] key, byte[] iv,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             var plainText = RuriLib.Functions.Crypto.Crypto.AESDecrypt(cipherText, key, iv, mode, padding, keySize);
