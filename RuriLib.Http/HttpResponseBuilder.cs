@@ -349,6 +349,7 @@ namespace RuriLib.Http
                         responcestream.Write(seg.Span);
                     }
                 }
+                reader.AdvanceTo(buff.End);
                 if (res.IsCompleted || res.Buffer.Length == 0)// here the pipe will be complete if the server closes the connection or sends 0 length byte array
                 {
                     break;
