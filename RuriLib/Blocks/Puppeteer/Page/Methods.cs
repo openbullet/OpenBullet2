@@ -5,6 +5,7 @@ using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Puppeteer.Page
@@ -32,6 +33,28 @@ namespace RuriLib.Blocks.Puppeteer.Page
             SwitchToMainFramePrivate(data);
 
             data.Logger.Log($"Navigated to {url}", LogColors.DarkSalmon);
+        }
+
+        [Block("Waits for navigation to complete", name = "Wait for Navigation")]
+        public static async Task PuppeteerWaitForNavigation(BotData data,
+            WaitUntilNavigation loadedEvent = WaitUntilNavigation.Load, int timeout = 30000)
+        {
+            data.Logger.LogHeader();
+
+            var page = GetPage(data);
+            var options = new NavigationOptions
+            {
+                Timeout = timeout,
+                WaitUntil = new WaitUntilNavigation[] { loadedEvent }
+            };
+
+            await page.WaitForNavigationAsync(options);
+            data.ADDRESS = page.Url;
+            data.SOURCE = await page.GetContentAsync();
+            data.RAWSOURCE = Encoding.UTF8.GetBytes(data.SOURCE);
+            SwitchToMainFramePrivate(data);
+
+            data.Logger.Log($"Waited for navigation to complete", LogColors.DarkSalmon);
         }
 
         [Block("Clears cookies in the page stored for a specific website", name = "Clear Cookies")]
