@@ -1,8 +1,8 @@
 ﻿@using RuriLib.Models.Configs
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ConfigSelector> Loc
 
-<div class="config-selector" style="overflow-y: auto; width: 1000px;">
-    <div class="config-selector-grid" style="height: 250px; overflow-y: auto;">
+<div class="config-selector">
+    <div class="config-selector-grid">
         @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
         {
             <GridComponent @ref="gridComponent" T="Config" Grid="@grid" OnRowClicked="@OnConfigSelected"></GridComponent>
@@ -12,7 +12,7 @@
             <p><em>@Loc["Loading"]...</em></p>
         }
     </div>
-    <div class="config-selector-details" style="height: 250px; margin-top: 15px; overflow-y: auto;">
+    <div class="config-selector-details">
         @if (selectedConfig != null)
         {
             <div class="w-100">

@@ -591,6 +591,24 @@ a:hover {
 }
 /* -- CONFIGS */
 
+/* CONFIG SELECTOR -- */
+.config-selector {
+    overflow-y: auto;
+    width: 100%;
+}
+
+.config-selector-grid {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.config-selector-details {
+    height: 250px;
+    margin-top: 15px;
+    overflow-y: auto;
+}
+/* -- CONFIG SELECTOR */
+
 /* PLUGINS -- */
 .plugin-info {
     border-top-right-radius: 5px;

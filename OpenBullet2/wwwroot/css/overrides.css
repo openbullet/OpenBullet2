@@ -192,11 +192,29 @@
 
 /* BLAZORED MODAL */
 .blazored-modal {
+    width: 100%;
     background-color: var(--bg-primary);
+}
+
+.blazored-modal-content {
+    width: 100%;
 }
 
 .blazored-modal-close {
     color: var(--bg-light);
+}
+
+@media (max-width: 1400px) {
+    .blazored-modal-wrapper {
+        width: 95vw;
+    }
+}
+
+@media (min-width: 1400px) {
+    .blazored-modal-wrapper {
+        width: unset;
+        max-width: 1400px;
+    }
 }
 
 /* BOOTSTRAP */
