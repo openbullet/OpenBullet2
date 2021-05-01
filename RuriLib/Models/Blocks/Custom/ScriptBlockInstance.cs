@@ -161,7 +161,7 @@ namespace RuriLib.Models.Blocks.Custom
                     foreach (var output in OutputVariables)
                     {
                         if (!definedVariables.Contains(output.Name))
-                            writer.Write("var ");
+                            writer.Write($"{ToCSharpType(output.Type)} ");
 
                         writer.WriteLine($"{output.Name} = {engineName}.Global.GetProperty(\"{output.Name}\").Value.{GetJintMethod(output.Type)};");
                     }
@@ -191,7 +191,7 @@ return noderesult;
                     foreach (var output in OutputVariables)
                     {
                         if (!definedVariables.Contains(output.Name))
-                            writer.Write("var ");
+                            writer.Write($"{ToCSharpType(output.Type)} ");
 
                         writer.WriteLine($"{output.Name} = {resultName}.GetProperty(\"{output.Name}\").{GetNodeMethod(output.Type)};");
                     }
@@ -224,7 +224,7 @@ return noderesult;
                     foreach (var output in OutputVariables)
                     {
                         if (!definedVariables.Contains(output.Name))
-                            writer.Write("var ");
+                            writer.Write($"{ToCSharpType(output.Type)} ");
 
                         writer.WriteLine($"{output.Name} = {scopeName}" + output.Type switch
                         {
