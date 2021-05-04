@@ -333,7 +333,7 @@ namespace RuriLib.Blocks.Requests.Http
                     data.Logger.Log($"Redirect {i}", LogColors.Beige);
                 }
 
-                data.Logger.Log(Encoding.ASCII.GetString(client.RawRequests[i]), LogColors.NonPhotoBlue);
+                data.Logger.Log(Encoding.UTF8.GetString(client.RawRequests[i]), LogColors.NonPhotoBlue);
             }
         }
 
