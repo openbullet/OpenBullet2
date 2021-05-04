@@ -277,11 +277,11 @@ namespace RuriLib.Blocks.Utility.Files
             }
             finally
             {
-                if (isWriteOperation)
+                if (isWriteOperation && fileLock.IsWriteLockHeld)
                 {
                     fileLock.ExitWriteLock();
                 }
-                else
+                else if (fileLock.IsReadLockHeld)
                 {
                     fileLock.ExitReadLock();
                 }
