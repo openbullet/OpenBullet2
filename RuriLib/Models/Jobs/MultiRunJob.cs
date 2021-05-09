@@ -618,14 +618,14 @@ namespace RuriLib.Models.Jobs
             // Update the stats
             switch (botData.STATUS)
             {
-                case "SUCCESS": dataHits++; break;
-                case "NONE": dataToCheck++; break;
-                case "FAIL": dataFails++; break;
-                case "INVALID": dataInvalid++; break;
-                default: dataCustom++; break;
+                case "SUCCESS": Interlocked.Increment(ref dataHits); break;
+                case "NONE": Interlocked.Increment(ref dataToCheck); break;
+                case "FAIL": Interlocked.Increment(ref dataFails); break;
+                case "INVALID": Interlocked.Increment(ref dataInvalid); break;
+                default: Interlocked.Increment(ref dataCustom); break;
             }
 
-            dataTested++;
+            Interlocked.Increment(ref dataTested);
         }
 
         private async Task RegisterHit(CheckResult result)
