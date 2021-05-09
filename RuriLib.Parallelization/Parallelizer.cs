@@ -34,7 +34,7 @@ namespace RuriLib.Parallelization
         /// Retrieves the current progress in the interval [0, 1].
         /// The progress is -1 if the manager hasn't been started yet.
         /// </summary>
-        public float Progress { get; protected set; } = 0;
+        public float Progress => (float)(current + skip) / totalAmount;
 
         /// <summary>
         /// Retrieves the completed work per minute.
@@ -70,7 +70,7 @@ namespace RuriLib.Parallelization
         protected readonly Func<TInput, Task> taskFunction;
         protected readonly long totalAmount;
         protected readonly int skip;
-        protected int current;
+        protected int current = 0;
         protected List<int> checkedTimestamps = new();
         protected readonly object cpmLock = new();
         protected readonly Stopwatch stopwatch = new();
@@ -151,7 +151,7 @@ namespace RuriLib.Parallelization
                 // Report the progress, update the CPM and release the semaphore slot
                 finally
                 {
-                    Progress = (float)(++current + skip) / totalAmount;
+                    Interlocked.Increment(ref current);
                     OnProgressChanged(Progress);
 
                     checkedTimestamps.Add(Environment.TickCount);

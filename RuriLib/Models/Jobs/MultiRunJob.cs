@@ -80,17 +80,34 @@ namespace RuriLib.Models.Jobs
         /*********
          * STATS *
          *********/
-        
+
         // -- Data
-        public int DataTested { get; private set; } = 0;
-        public int DataHits { get; private set; } = 0;
-        public int DataCustom { get; private set; } = 0;
-        public int DataFails { get; private set; } = 0;
-        public int DataRetried { get; private set; } = 0;
-        public int DataBanned { get; private set; } = 0;
-        public int DataToCheck { get; private set; } = 0;
-        public int DataInvalid { get; private set; } = 0;
-        public int DataErrors { get; private set; } = 0;
+        private int dataTested = 0;
+        public int DataTested => dataTested;
+
+        private int dataHits = 0;
+        public int DataHits => dataHits;
+
+        private int dataCustom = 0;
+        public int DataCustom => dataCustom;
+
+        private int dataFails = 0;
+        public int DataFails => dataFails;
+
+        private int dataRetried = 0;
+        public int DataRetried => dataRetried;
+
+        private int dataBanned = 0;
+        public int DataBanned => dataBanned;
+
+        private int dataToCheck = 0;
+        public int DataToCheck => dataToCheck;
+
+        private int dataInvalid = 0;
+        public int DataInvalid => dataInvalid;
+
+        private int dataErrors = 0;
+        public int DataErrors => dataErrors;
 
         // -- Proxies
         public int ProxiesTotal => proxyPool == null ? 0 : proxyPool.Proxies.Count();
@@ -204,7 +221,7 @@ namespace RuriLib.Models.Jobs
                 {
                     botData.STATUS = "ERROR";
                     botData.Logger.Log($"[{botData.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
-                    input.Job.DataErrors++;
+                    Interlocked.Increment(ref input.Job.dataErrors);
                 }
                 finally
                 {
@@ -279,7 +296,7 @@ namespace RuriLib.Models.Jobs
                 else if (botData.STATUS == "RETRY")
                 {
                     input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
-                    input.Job.DataRetried++;
+                    Interlocked.Increment(ref input.Job.dataRetried);
                     goto START;
                 }
                 else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
@@ -295,7 +312,7 @@ namespace RuriLib.Models.Jobs
                     else
                     {
                         input.Job.DebugLog($"BAN ({botData.Line.Data})({botData.Proxy})");
-                        input.Job.DataBanned++;
+                        Interlocked.Increment(ref input.Job.dataBanned);
                         goto START;
                     }
                 }
@@ -560,14 +577,14 @@ namespace RuriLib.Models.Jobs
 
         private void ResetStats()
         {
-            DataTested = 0;
-            DataHits = 0;
-            DataCustom = 0;
-            DataFails = 0;
-            DataRetried = 0;
-            DataBanned = 0;
-            DataToCheck = 0;
-            DataErrors = 0;
+            dataTested = 0;
+            dataHits = 0;
+            dataCustom = 0;
+            dataFails = 0;
+            dataRetried = 0;
+            dataBanned = 0;
+            dataToCheck = 0;
+            dataErrors = 0;
             Hits = new();
         }
 
@@ -601,14 +618,14 @@ namespace RuriLib.Models.Jobs
             // Update the stats
             switch (botData.STATUS)
             {
-                case "SUCCESS": DataHits++; break;
-                case "NONE": DataToCheck++; break;
-                case "FAIL": DataFails++; break;
-                case "INVALID": DataInvalid++; break;
-                default: DataCustom++; break;
+                case "SUCCESS": Interlocked.Increment(ref dataHits); break;
+                case "NONE": Interlocked.Increment(ref dataToCheck); break;
+                case "FAIL": Interlocked.Increment(ref dataFails); break;
+                case "INVALID": Interlocked.Increment(ref dataInvalid); break;
+                default: Interlocked.Increment(ref dataCustom); break;
             }
 
-            DataTested++;
+            Interlocked.Increment(ref dataTested);
         }
 
         private async Task RegisterHit(CheckResult result)

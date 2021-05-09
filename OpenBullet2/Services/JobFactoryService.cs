@@ -17,7 +17,7 @@ namespace OpenBullet2.Services
     {
         private readonly ConfigService configService;
         private readonly RuriLibSettingsService settingsService;
-        private readonly IHitRepository hitRepo;
+        private readonly HitStorageService hitStorage;
         private readonly ProxySourceFactoryService proxySourceFactory;
         private readonly DataPoolFactoryService dataPoolFactory;
         private readonly ProxyReloadService proxyReloadService;
@@ -28,14 +28,14 @@ namespace OpenBullet2.Services
         private readonly PluginRepository pluginRepo;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
-            IHitRepository hitRepo, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
+            HitStorageService hitStorage, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
             ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger,
             IProxyRepository proxyRepo)
         {
             this.configService = configService;
             this.settingsService = settingsService;
             this.pluginRepo = pluginRepo;
-            this.hitRepo = hitRepo;
+            this.hitStorage = hitStorage;
             this.proxySourceFactory = proxySourceFactory;
             this.dataPoolFactory = dataPoolFactory;
             this.proxyReloadService = proxyReloadService;
@@ -61,7 +61,7 @@ namespace OpenBullet2.Services
 
         private MultiRunJob MakeMultiRunJob(MultiRunJobOptions options)
         {
-            var hitOutputsFactory = new HitOutputFactory(hitRepo);
+            var hitOutputsFactory = new HitOutputFactory(hitStorage);
 
             var job = new MultiRunJob(settingsService, pluginRepo, logger)
             {
