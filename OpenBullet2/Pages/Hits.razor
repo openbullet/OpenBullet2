@@ -26,7 +26,7 @@
 </div>
 
 <EditForm Model="actionTarget">
-    <label>@Loc["ActionTarget"]</label>
+    <label>@Loc["ExecuteOn"]</label>
     <InputSelect @bind-Value="actionTarget">
         @foreach (var t in Enum.GetNames(typeof(HitsActionTarget)))
         {

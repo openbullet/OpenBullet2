@@ -207,8 +207,8 @@
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
-  <data name="ActionTarget" xml:space="preserve">
-    <value>Action target</value>
+  <data name="ExecuteOn" xml:space="preserve">
+    <value>Execute on</value>
   </data>
   <data name="Format" xml:space="preserve">
     <value>Format</value>
