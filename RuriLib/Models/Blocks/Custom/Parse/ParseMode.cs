@@ -4,6 +4,7 @@
     {
         LR,
         CSS,
+        XPath,
         Json,
         Regex
     }

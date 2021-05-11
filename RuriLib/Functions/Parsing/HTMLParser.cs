@@ -1,5 +1,4 @@
-﻿using AngleSharp.Dom;
-using RuriLib.Attributes;
+﻿using Microsoft.Scripting.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +24,8 @@ namespace RuriLib.Functions.Parsing
             if (attributeName == null)
                 throw new ArgumentNullException(nameof(attributeName));
 
-            var elements = QuerySelectorAll(htmlPage, cssSelector);
+            var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(htmlPage);
+            var elements = document.QuerySelectorAll(cssSelector);
 
             return attributeName switch
             {
@@ -37,12 +37,6 @@ namespace RuriLib.Functions.Parsing
                     .Where(a => a != null)
                     .Select(a => a.Value),
             };
-        }
-
-        private static IEnumerable<IElement> QuerySelectorAll(string htmlPage, string cssSelector)
-        {
-            var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(htmlPage);
-            return document.QuerySelectorAll(cssSelector);
         }
     }
 }

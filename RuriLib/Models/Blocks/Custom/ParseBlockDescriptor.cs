@@ -34,7 +34,10 @@ namespace RuriLib.Models.Blocks.Custom
                 
                 // CSS
                 { "cssSelector", new StringParameter("cssSelector") },
-                { "attributeName", new StringParameter("attributeName", "innerHTML") },
+                { "attributeName", new StringParameter("attributeName", "innerText") },
+
+                // XPATH
+                { "xPath", new StringParameter("xPath") },
 
                 // JSON
                 { "jToken", new StringParameter("jToken") },

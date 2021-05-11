@@ -61,6 +61,32 @@ namespace RuriLib.Blocks.Parsing
         }
         #endregion
 
+        #region XML
+        public static List<string> QueryXPathRecursive(BotData data, string xmlPage,
+            string xPath, string attributeName, string prefix = "", string suffix = "")
+        {
+            var parsed = XmlParser.QueryXPathAll(xmlPage, xPath, attributeName)
+                .Select(p => prefix + p + suffix).ToList();
+
+            data.Logger.LogHeader();
+            data.Logger.Log($"Parsed {parsed.Count} values:", LogColors.Yellow);
+            data.Logger.Log(parsed, LogColors.Yellow);
+            return parsed;
+        }
+
+        public static string QueryXPath(BotData data, string xmlPage, string xPath, string attributeName,
+            string prefix = "", string suffix = "")
+        {
+            var parsed = XmlParser.QueryXPathAll(xmlPage, xPath, attributeName).FirstOrDefault() ?? string.Empty;
+            parsed = prefix + parsed + suffix;
+
+            data.Logger.LogHeader();
+            data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
+
+            return parsed;
+        }
+        #endregion
+
         #region JSON
         public static List<string> QueryJsonTokenRecursive(BotData data, string json, string jToken, string prefix = "", string suffix = "")
         {

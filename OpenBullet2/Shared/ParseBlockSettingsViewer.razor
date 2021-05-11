@@ -29,6 +29,7 @@
     <Items>
         <RadzenRadioButtonListItem Text="LR" Value="ParseMode.LR" />
         <RadzenRadioButtonListItem Text="CSS" Value="ParseMode.CSS" />
+        <RadzenRadioButtonListItem Text="XPath" Value="ParseMode.XPath" />
         <RadzenRadioButtonListItem Text="Json" Value="ParseMode.Json" />
         <RadzenRadioButtonListItem Text="Regex" Value="ParseMode.Regex" />
     </Items>
@@ -46,6 +47,11 @@
 
         case ParseMode.CSS:
             <BlockInputField BlockSetting="@Block.Settings["cssSelector"]" />
+            <BlockInputField BlockSetting="@Block.Settings["attributeName"]" />
+            break;
+
+        case ParseMode.XPath:
+            <BlockInputField BlockSetting="@Block.Settings["xPath"]" />
             <BlockInputField BlockSetting="@Block.Settings["attributeName"]" />
             break;
 

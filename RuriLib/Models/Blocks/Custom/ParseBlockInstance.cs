@@ -152,6 +152,10 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write("QueryCssSelector");
                     break;
 
+                case ParseMode.XPath:
+                    writer.Write("QueryXPath");
+                    break;
+
                 case ParseMode.Json:
                     writer.Write("QueryJsonToken");
                     break;
@@ -178,6 +182,11 @@ namespace RuriLib.Models.Blocks.Custom
 
                 case ParseMode.CSS:
                     writer.Write(CSharpWriter.FromSetting(Settings["cssSelector"]) + ", ");
+                    writer.Write(CSharpWriter.FromSetting(Settings["attributeName"]) + ", ");
+                    break;
+
+                case ParseMode.XPath:
+                    writer.Write(CSharpWriter.FromSetting(Settings["xPath"]) + ", ");
                     writer.Write(CSharpWriter.FromSetting(Settings["attributeName"]) + ", ");
                     break;
 
