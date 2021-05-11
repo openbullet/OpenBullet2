@@ -6,12 +6,15 @@
 <div class="container-fluid">
     <div class="row mb-2">
         <div class="list-group list-group-horizontal">
-            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitData"><span class="oi oi-layers"></span> @Loc["CopyData"]</button>
-            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHitDataCapture"><span class="oi oi-layers"></span> @Loc["CopyDataCapture"]</button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="CopyHits"><span class="oi oi-layers"></span> @Loc["Copy"]</button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="DownloadHits"><span class="oi oi-cloud-download"></span> @Loc["Download"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="EditHit"><span class="oi oi-pencil"></span> @Loc["Edit"]</button>
             <button class="btn btn-sm btn-outline-primary" @onclick="SendToRecheck"><span class="oi oi-action-redo"></span> @Loc["SendToRecheck"]</button>
-            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteHit"><span class="oi oi-x"></span> @Loc["Delete"]</button>
-            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteFiltered"><span class="oi oi-x"></span> @Loc["DeleteFiltered"]</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="list-group list-group-horizontal">
+            <button class="btn btn-sm btn-outline-danger" @onclick="DeleteHits"><span class="oi oi-x"></span> @Loc["Delete"]</button>
             <button class="btn btn-sm btn-outline-danger" @onclick="DeleteDuplicates"><span class="oi oi-x"></span> @Loc["DeleteDuplicates"]</button>
             @if (uid == -0)
             {
@@ -21,6 +24,26 @@
         </div>
     </div>
 </div>
+
+<EditForm Model="actionTarget">
+    <label>@Loc["ActionTarget"]</label>
+    <InputSelect @bind-Value="actionTarget">
+        @foreach (var t in Enum.GetNames(typeof(HitsActionTarget)))
+        {
+            <option value="@t">@t</option>
+        }
+    </InputSelect>
+    <br />
+    <label>@Loc["Format"]</label>
+    <InputSelect @bind-Value="hitsFormat">
+        <option value="<DATA>">&lt;DATA&gt;</option>
+        <option value="<DATA> | <CAPTURE>">&lt;DATA&gt; | &lt;CAPTURE&gt;</option>
+        @foreach (var f in RuriLibSettings.Environment.ExportFormats)
+        {
+            <option value="@(f.Format)">@(f.Format)</option>
+        }
+    </InputSelect>
+</EditForm>
 
 @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {

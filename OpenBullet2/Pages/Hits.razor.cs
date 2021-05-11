@@ -1,4 +1,5 @@
-﻿using Blazored.Modal;
+﻿using BlazorDownloadFile;
+using Blazored.Modal;
 using Blazored.Modal.Services;
 using GridBlazor;
 using GridBlazor.Pages;
@@ -20,6 +21,7 @@ using OpenBullet2.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
+using RuriLib.Extensions;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
@@ -45,14 +47,19 @@ namespace OpenBullet2.Pages
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
+        [Inject] private IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
         private List<HitEntity> hits = new();
         private HitEntity selectedHit;
         private int uid = -1;
+        private HitsActionTarget actionTarget = HitsActionTarget.Selected;
+        private string hitsFormat = "<DATA> | <CAPTURE>";
 
         private GridComponent<HitEntity> gridComponent;
         private CGrid<HitEntity> grid;
         private Task gridLoad;
+
+        private Action<IGridColumnCollection<HitEntity>> gridColumns;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -62,7 +69,7 @@ namespace OpenBullet2.Pages
                 ? await HitRepo.GetAll().ToListAsync()
                 : await HitRepo.GetAll().Where(h => h.OwnerId == uid).ToListAsync();
 
-            Action<IGridColumnCollection<HitEntity>> columns = c =>
+            gridColumns = c =>
             {
                 c.Add(h => h.Data).Titled(Loc["Data"]);
                 c.Add(h => h.Type).Titled(Loc["Type"]);
@@ -76,7 +83,7 @@ namespace OpenBullet2.Pages
             var query = new QueryDictionary<StringValues>();
             query.Add("grid-page", "1");
 
-            var client = new GridClient<HitEntity>(q => GetGridRows(columns, q), query, false, "hitsGrid", columns, CultureInfo.CurrentCulture)
+            var client = new GridClient<HitEntity>(q => GetGridRows(gridColumns, q), query, false, "hitsGrid", gridColumns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
                 .WithMultipleFilters()
@@ -145,31 +152,9 @@ namespace OpenBullet2.Pages
             await RefreshList();
         }
 
-        private async Task DeleteHit()
+        private async Task DeleteHits()
         {
-            var selected = grid.SelectedItems.Cast<HitEntity>().ToList();
-
-            if (selected.Count == 0)
-            {
-                await ShowNoHitSelectedWarning();
-                return;
-            }
-
-            if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selected.Count} {Loc["hits"]}?", Loc["Cancel"]))
-            {
-                // Delete the hit from the db
-                await HitRepo.Delete(selected);
-
-                // Delete the hit from the local list
-                selected.ForEach(h => hits.Remove(h));
-            }
-
-            await RefreshList();
-        }
-
-        private async Task DeleteFiltered()
-        {
-            var selected = grid.Items.ToList();
+            var selected = GetTargetHits().ToList();
 
             if (selected.Count == 0)
             {
@@ -228,7 +213,7 @@ namespace OpenBullet2.Pages
 
         private async Task SendToRecheck()
         {
-            var selected = grid.SelectedItems.Cast<HitEntity>().ToList();
+            var selected = GetTargetHits().ToList();
 
             if (selected.Count == 0)
             {
@@ -297,9 +282,9 @@ namespace OpenBullet2.Pages
             }
         }
 
-        private async Task CopyHitDataCapture()
+        private async Task CopyHits()
         {
-            var selectedHits = grid.SelectedItems.Cast<HitEntity>().ToList();
+            var selectedHits = GetTargetHits().ToList();
 
             if (selectedHits.Count == 0)
             {
@@ -308,7 +293,7 @@ namespace OpenBullet2.Pages
             }
 
             var sb = new StringBuilder();
-            selectedHits.ForEach(i => sb.AppendLine($"{i.Data} | {i.CapturedData}"));
+            selectedHits.ForEach(i => sb.AppendLine(FormatHit(i, hitsFormat)));
 
             try
             {
@@ -320,30 +305,63 @@ namespace OpenBullet2.Pages
             }
         }
 
-        private async Task CopyHitData()
+        private async Task DownloadHits()
         {
-            var selectedHits = grid.SelectedItems.Cast<HitEntity>().ToList();
-
-            if (selectedHits.Count == 0)
-            {
-                await ShowNoHitSelectedWarning();
-                return;
-            }
-
-            var sb = new StringBuilder();
-            selectedHits.ForEach(i => sb.AppendLine(i.Data));
-
             try
             {
-                await js.CopyToClipboard(sb.ToString());
+                var selectedHits = GetTargetHits().ToList();
+
+                if (selectedHits.Count == 0)
+                {
+                    await ShowNoHitSelectedWarning();
+                    return;
+                }
+
+                var sb = new StringBuilder();
+                selectedHits.ForEach(i => sb.AppendLine(FormatHit(i, hitsFormat)));
+
+                var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+                using var ms = new MemoryStream();
+                ms.Write(bytes, 0, bytes.Length);
+
+                var fileName = "hits.txt";
+                await BlazorDownloadFileService.DownloadFile(fileName, ms, "application/octet-stream");
             }
-            catch
+            catch (Exception ex)
             {
-                await js.AlertError(Loc["CopyToClipboardFailed"], Loc["CopyToClipboardFailedMessage"]);
+                await js.AlertError(ex.GetType().Name, ex.Message);
+                return;
             }
         }
 
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
+
+        private IEnumerable<HitEntity> GetTargetHits()
+            => actionTarget switch
+            {
+                HitsActionTarget.Selected => grid.SelectedItems.Cast<HitEntity>(),
+                HitsActionTarget.Filtered => new GridServer<HitEntity>(hits, new QueryCollection(grid.Query),
+                    true, "hitsGrid", gridColumns, null).Sortable().Filterable().WithMultipleFilters().ItemsToDisplay.Items,
+                _ => throw new NotImplementedException()
+            };
+
+        private string FormatHit(HitEntity hit, string format = "<DATA> | <CAPTURE>")
+            => new StringBuilder(format.Unescape())
+                .Replace("<DATA>", hit.Data)
+                .Replace("<DATE>", hit.Date.ToString())
+                .Replace("<CATEGORY>", hit.ConfigCategory)
+                .Replace("<CONFIG>", hit.ConfigName)
+                .Replace("<PROXY>", hit.Proxy)
+                .Replace("<TYPE>", hit.Type)
+                .Replace("<WORDLIST>", hit.WordlistName)
+                .Replace("<CAPTURE>", hit.CapturedData)
+                .ToString();
+
+        private enum HitsActionTarget
+        {
+            Selected,
+            Filtered
+        }
     }
 }
