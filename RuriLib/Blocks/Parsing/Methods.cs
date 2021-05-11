@@ -65,7 +65,7 @@ namespace RuriLib.Blocks.Parsing
         public static List<string> QueryXPathRecursive(BotData data, string xmlPage,
             string xPath, string attributeName, string prefix = "", string suffix = "")
         {
-            var parsed = XmlParser.QueryXPathAll(xmlPage, xPath, attributeName)
+            var parsed = HtmlParser.QueryXPathAll(xmlPage, xPath, attributeName)
                 .Select(p => prefix + p + suffix).ToList();
 
             data.Logger.LogHeader();
@@ -77,7 +77,7 @@ namespace RuriLib.Blocks.Parsing
         public static string QueryXPath(BotData data, string xmlPage, string xPath, string attributeName,
             string prefix = "", string suffix = "")
         {
-            var parsed = XmlParser.QueryXPathAll(xmlPage, xPath, attributeName).FirstOrDefault() ?? string.Empty;
+            var parsed = HtmlParser.QueryXPathAll(xmlPage, xPath, attributeName).FirstOrDefault() ?? string.Empty;
             parsed = prefix + parsed + suffix;
 
             data.Logger.LogHeader();

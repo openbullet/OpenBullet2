@@ -10,6 +10,7 @@
     <PackageReference Include="CaptchaSharp" Version="1.0.6" />
     <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.0" />
     <PackageReference Include="DeviceId" Version="5.2.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.33" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.4" />
