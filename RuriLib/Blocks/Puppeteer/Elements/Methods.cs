@@ -1,4 +1,4 @@
-﻿using IronPython.Runtime;
+﻿using PuppeteerSharp;
 using RuriLib.Attributes;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Puppeteer;
@@ -35,7 +35,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             await elem.TypeAsync(text, new PuppeteerSharp.Input.TypeOptions { Delay = timeBetweenKeystrokes });
 
             data.Logger.Log($"Typed {text}", LogColors.DarkSalmon);
@@ -48,7 +48,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
 
             foreach (var c in text)
             {
@@ -67,7 +67,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             await elem.ClickAsync(new PuppeteerSharp.Input.ClickOptions { Button = mouseButton, ClickCount = clickCount, Delay = timeBetweenClicks });
 
             data.Logger.Log($"Clicked {clickCount} time(s) with {mouseButton} button", LogColors.DarkSalmon);
@@ -92,7 +92,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             await elem.SelectAsync(value);
 
             data.Logger.Log($"Selected value {value}", LogColors.DarkSalmon);
@@ -170,7 +170,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             await elem.UploadFileAsync(filePaths.ToArray());
 
             data.Logger.Log($"Uploaded {filePaths.Count} files to the element", LogColors.DarkSalmon);
@@ -182,7 +182,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             var x = (int)(await elem.BoundingBoxAsync()).X;
 
             data.Logger.Log($"The X coordinate of the element is {x}", LogColors.DarkSalmon);
@@ -195,7 +195,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             var y = (int)(await elem.BoundingBoxAsync()).Y;
 
             data.Logger.Log($"The Y coordinate of the element is {y}", LogColors.DarkSalmon);
@@ -208,7 +208,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             var width = (int)(await elem.BoundingBoxAsync()).Width;
 
             data.Logger.Log($"The width of the element is {width}", LogColors.DarkSalmon);
@@ -221,7 +221,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             var height = (int)(await elem.BoundingBoxAsync()).Height;
 
             data.Logger.Log($"The height of the element is {height}", LogColors.DarkSalmon);
@@ -238,7 +238,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
                 FileUtils.ThrowIfNotInCWD(fileName);
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             await elem.ScreenshotAsync(fileName, new PuppeteerSharp.ScreenshotOptions { FullPage = fullPage, OmitBackground = omitBackground });
 
             data.Logger.Log($"Took a screenshot of the element and saved it to {fileName}", LogColors.DarkSalmon);
@@ -251,7 +251,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             var base64 = await elem.ScreenshotBase64Async(new PuppeteerSharp.ScreenshotOptions { FullPage = fullPage, OmitBackground = omitBackground });
 
             data.Logger.Log($"Took a screenshot of the element as base64", LogColors.DarkSalmon);
@@ -264,7 +264,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            var elem = (await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier)))[index];
+            var elem = await GetElement(frame, findBy, identifier, index);
             data.Objects["puppeteerFrame"] = await elem.ContentFrameAsync();
 
             data.Logger.Log($"Switched to iframe", LogColors.DarkSalmon);
@@ -277,17 +277,46 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.LogHeader();
 
             var frame = GetFrame(data);
-            await frame.WaitForSelectorAsync(BuildSelector(findBy, identifier),
-                new PuppeteerSharp.WaitForSelectorOptions { Hidden = hidden, Visible = visible, Timeout = timeout });
+            var options = new WaitForSelectorOptions { Hidden = hidden, Visible = visible, Timeout = timeout };
+
+            if (findBy == FindElementBy.XPath)
+            {
+                await frame.WaitForXPathAsync(identifier, options);
+            }
+            else
+            {
+                await frame.WaitForSelectorAsync(BuildSelector(findBy, identifier), options);
+            }
 
             data.Logger.Log($"Waited for element with {findBy} {identifier}", LogColors.DarkSalmon);
         }
 
+        private static async Task<ElementHandle> GetElement(Frame frame, FindElementBy findBy, string identifier, int index)
+        {
+            var elements = findBy == FindElementBy.XPath
+                ? await frame.XPathAsync(identifier)
+                : await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
+
+            return elements[index];
+        }
+
         private static string GetElementsScript(FindElementBy findBy, string identifier)
-            => $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')";
+        {
+            if (findBy == FindElementBy.XPath)
+            {
+                var script = $"document.evaluate(\"{identifier.Replace("\"", "\\\"")}\", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)";
+                return $"Array.from({{ length: {script}.snapshotLength }}, (_, index) => {script}.snapshotItem(index))";
+            }
+            else
+            {
+                return $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')";
+            }
+        }
 
         private static string GetElementScript(FindElementBy findBy, string identifier, int index)
-            => $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')[{index}]";
+            => findBy == FindElementBy.XPath
+            ? $"document.evaluate(\"{identifier.Replace("\"", "\\\"")}\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"
+            : $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')[{index}]";
 
         private static string BuildSelector(FindElementBy findBy, string identifier)
             => findBy switch
@@ -295,7 +324,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
                 FindElementBy.Id => '#' + identifier,
                 FindElementBy.Class => '.' + string.Join('.', identifier.Split(' ')), // "class1 class2" => ".class1.class2"
                 FindElementBy.Selector => identifier,
-                _ => throw new NotImplementedException()
+                _ => throw new NotSupportedException()
             };
 
         private static PuppeteerSharp.Browser GetBrowser(BotData data)

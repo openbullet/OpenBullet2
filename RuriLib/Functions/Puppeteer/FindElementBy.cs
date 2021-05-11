@@ -4,6 +4,7 @@
     {
         Id,
         Class,
-        Selector
+        Selector,
+        XPath
     }
 }
