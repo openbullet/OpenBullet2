@@ -61,9 +61,11 @@ namespace RuriLib.Helpers.LoliCode
                 IntSetting x => x.Value == (parameter as IntParameter).DefaultValue,
                 FloatSetting x => x.Value == (parameter as FloatParameter).DefaultValue,
                 BoolSetting x => x.Value == (parameter as BoolParameter).DefaultValue,
-                ByteArraySetting x => x.Value == (parameter as ByteArrayParameter).DefaultValue,
-                ListOfStringsSetting x => x.Value == (parameter as ListOfStringsParameter).DefaultValue,
-                DictionaryOfStringsSetting x => x.Value == (parameter as DictionaryOfStringsParameter).DefaultValue,
+                ByteArraySetting x => x.Value.SequenceEqual((parameter as ByteArrayParameter).DefaultValue),
+                ListOfStringsSetting x => x.Value.SequenceEqual((parameter as ListOfStringsParameter).DefaultValue),
+                DictionaryOfStringsSetting x => 
+                    x.Value.Keys.SequenceEqual((parameter as DictionaryOfStringsParameter).DefaultValue.Keys) &&
+                    x.Value.Values.SequenceEqual((parameter as DictionaryOfStringsParameter).DefaultValue.Values),
                 EnumSetting x => x.Value == (parameter as EnumParameter).DefaultValue,
                 _ => throw new NotImplementedException(),
             };
