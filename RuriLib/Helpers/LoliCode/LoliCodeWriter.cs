@@ -61,11 +61,11 @@ namespace RuriLib.Helpers.LoliCode
                 IntSetting x => x.Value == (parameter as IntParameter).DefaultValue,
                 FloatSetting x => x.Value == (parameter as FloatParameter).DefaultValue,
                 BoolSetting x => x.Value == (parameter as BoolParameter).DefaultValue,
-                ByteArraySetting x => x.Value.SequenceEqual((parameter as ByteArrayParameter).DefaultValue),
-                ListOfStringsSetting x => x.Value.SequenceEqual((parameter as ListOfStringsParameter).DefaultValue),
+                ByteArraySetting x => Compare(x.Value, (parameter as ByteArrayParameter).DefaultValue),
+                ListOfStringsSetting x => Compare(x.Value, (parameter as ListOfStringsParameter).DefaultValue),
                 DictionaryOfStringsSetting x => 
-                    x.Value.Keys.SequenceEqual((parameter as DictionaryOfStringsParameter).DefaultValue.Keys) &&
-                    x.Value.Values.SequenceEqual((parameter as DictionaryOfStringsParameter).DefaultValue.Values),
+                    Compare(x.Value.Keys, (parameter as DictionaryOfStringsParameter).DefaultValue.Keys) &&
+                    Compare(x.Value.Values, (parameter as DictionaryOfStringsParameter).DefaultValue.Values),
                 EnumSetting x => x.Value == (parameter as EnumParameter).DefaultValue,
                 _ => throw new NotImplementedException(),
             };
@@ -74,6 +74,16 @@ namespace RuriLib.Helpers.LoliCode
                 AppendLine($"{parameter.Name} = {GetSettingValue(setting)}", spaces);
 
             return this;
+        }
+
+        private static bool Compare<T>(IEnumerable<T> first, IEnumerable<T> second)
+        {
+            if (first is null || second is null)
+            {
+                return first == second;
+            }
+
+            return first.SequenceEqual(second);
         }
 
         public static string GetSettingValue(BlockSetting setting)
