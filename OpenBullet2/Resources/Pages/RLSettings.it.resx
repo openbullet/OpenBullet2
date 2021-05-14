@@ -252,6 +252,9 @@
   <data name="SolveRecaptchaApiKey" xml:space="preserve">
     <value>SolveRecaptcha API Key</value>
   </data>
+  <data name="Success" xml:space="preserve">
+    <value>Successo</value>
+  </data>
   <data name="TimeoutSeconds" xml:space="preserve">
     <value>Timeout in secondi</value>
   </data>

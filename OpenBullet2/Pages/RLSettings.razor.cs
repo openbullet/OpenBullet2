@@ -48,7 +48,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var balance = await service.GetBalanceAsync();
-                await js.AlertSuccess(Loc["Saved"], $"{Loc["Balance"]}: {balance}");
+                await js.AlertSuccess(Loc["Success"], $"{Loc["Balance"]}: {balance}");
             }
             catch (Exception ex)
             {
