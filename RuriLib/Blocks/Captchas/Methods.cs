@@ -237,8 +237,8 @@ namespace RuriLib.Blocks.Captchas
                     Username = data.Proxy.Username,
                     Password = data.Proxy.Password,
                     UserAgent = userAgent,
-                    Cookies = RuriLib.Functions.Http.Http.GetAllCookies((CookieContainer)data.Objects["cookieContainer"])
-                        .Select(c => (c.Name, c.Value)).ToArray()
+                    Cookies = data.COOKIES
+                        .Select(c => (c.Key, c.Value)).ToArray()
                 }
                 : null;
         }
