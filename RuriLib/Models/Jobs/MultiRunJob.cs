@@ -436,8 +436,6 @@ namespace RuriLib.Models.Jobs
             httpClient = new HttpClient();
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
-            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
-            pco.Module &= ~ModuleOptions.Optimized;
 
             long index = 0;
             var workItems = DataPool.DataList.Select(line =>
