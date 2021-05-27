@@ -123,4 +123,13 @@
   <data name="RecentlyUsed" xml:space="preserve">
     <value>Recently used</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchBoxText" xml:space="preserve">
+    <value>Enter part of the name of a block</value>
+  </data>
+  <data name="Up" xml:space="preserve">
+    <value>Up</value>
+  </data>
 </root>

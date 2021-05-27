@@ -1,14 +1,11 @@
-﻿using CaptchaSharp;
-using CaptchaSharp.Enums;
+﻿using CaptchaSharp.Enums;
 using CaptchaSharp.Models;
 using RuriLib.Attributes;
-using RuriLib.Functions.Captchas;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Captchas

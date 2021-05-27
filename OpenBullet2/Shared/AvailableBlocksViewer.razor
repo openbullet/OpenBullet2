@@ -8,13 +8,19 @@
         @if (ShowFiltered || !currentNode.IsRoot)
         {
             <div class="col-auto pl-0">
-                <button type="button" class="btn btn-sm btn-outline-success" @onclick="GoBack">@Loc["Back"]</button>
+                <button type="button" class="btn btn-sm btn-outline-warning" @onclick="GoBack"><span class="oi oi-arrow-top"></span> @Loc["Up"]</button>
             </div>
         }
-        <div class="col align-self-stretch pl-0">
+        <div class="col align-self-stretch px-0">
             <EditForm Model="filter">
-                <InputText id="filter-textbox" Value="@filter" ValueExpression="() => filter" ValueChanged="value => FilterChanged(value)" />
+                <InputText id="filter-textbox" Value="@filter" ValueExpression="() => filter" 
+                           ValueChanged="value => FilterChanged(value)" 
+                           placeholder="@Loc["SearchBoxText"]"
+                           autocomplete="off"/>
             </EditForm>
+        </div>
+        <div class="col-auto pr-0">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="() => FilterChanged(filter)">@Loc["Search"]</button>
         </div>
     </div>
 </div>
