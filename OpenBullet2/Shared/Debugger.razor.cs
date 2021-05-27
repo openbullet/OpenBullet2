@@ -108,6 +108,8 @@ namespace OpenBullet2.Shared
             data.Objects.Add("httpClient", httpClient);
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
+            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
+            pco.Module &= ~ModuleOptions.Optimized;
             data.Objects.Add("ironPyEngine", pyengine);
             data.AsyncLocker = new();
 
