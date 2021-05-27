@@ -64,14 +64,14 @@ namespace RuriLib.Models.Blocks
             // TAKEONE FROM "MyResource" => "myString"
             if ((match = Regex.Match(input, "TAKEONE FROM (\"[^\"]+\") => \"([^\"]+)\"")).Success)
             {
-                return $"string {match.Groups[2].Value} = data.Resources[{match.Groups[1].Value}].TakeOne();";
+                return $"string {match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
             }
 
             // (RESOURCES) TAKE
             // TAKE 5 FROM "MyResource" => "myList"
             if ((match = Regex.Match(input, "TAKE ([0-9]+) FROM (\"[^\"]+\") => \"([^\"]+)\"")).Success)
             {
-                return $"List<string> {match.Groups[3].Value} = data.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
+                return $"List<string> {match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
             }
 
             // CODE LABEL
