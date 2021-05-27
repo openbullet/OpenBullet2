@@ -1,20 +1,28 @@
-﻿using RuriLib.Logging;
+﻿using IronPython.Compiler;
+using IronPython.Hosting;
+using IronPython.Runtime;
+using RuriLib.Logging;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
+using RuriLib.Models.Data.Resources;
+using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading;
 
 namespace RuriLib.Models.Bots
 {
-    public class BotData
+    public class BotData : IDisposable
     {
         public DataLine Line { get; set; }
         public Proxy Proxy { get; set; }
         public bool UseProxy { get; set; }
 
         public ConfigSettings ConfigSettings { get; }
+        public Dictionary<string, ConfigResource> Resources { get; }
         public Providers Providers { get; }
         public IBotLogger Logger { get; set; }
         public Random Random { get; }
@@ -52,6 +60,26 @@ namespace RuriLib.Models.Bots
             Line = line;
             Proxy = proxy;
             UseProxy = useProxy;
+
+            Objects.Add("httpClient", new HttpClient());
+            var runtime = Python.CreateRuntime();
+            var pyengine = runtime.GetEngine("py");
+            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
+            pco.Module &= ~ModuleOptions.Optimized;
+            Objects.Add("ironPyEngine", pyengine);
+
+            Resources = new();
+
+            // Resources will need to be disposed of
+            foreach (var resource in configSettings.DataSettings.Resources)
+            {
+                Resources[resource.Name] = resource switch
+                {
+                    LinesFromFileResourceOptions opt => new LinesFromFileResource(opt),
+                    RandomLinesFromFileResourceOptions opt => new RandomLinesFromFileResource(opt),
+                    _ => throw new NotImplementedException()
+                };
+            }
         }
 
         public void MarkForCapture(string name)
@@ -73,6 +101,38 @@ namespace RuriLib.Models.Bots
             if (Logger != null)
             {
                 Logger.ExecutingBlock = label;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Dispose all disposable objects
+            foreach (var obj in Objects.Where(o => o.Value is IDisposable))
+            {
+                if (obj.Key.Contains("puppeteer"))
+                    continue;
+
+                try
+                {
+                    (obj.Value as IDisposable).Dispose();
+                }
+                catch
+                {
+
+                }
+            }
+
+            // Dispose resources
+            foreach (var resource in Resources.Where(r => r.Value is IDisposable))
+            {
+                try
+                {
+                    (resource.Value as IDisposable).Dispose();
+                }
+                catch
+                {
+
+                }
             }
         }
     }

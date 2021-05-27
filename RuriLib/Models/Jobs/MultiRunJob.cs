@@ -241,23 +241,6 @@ namespace RuriLib.Models.Jobs
 
                         }
                     }
-
-                    // Dispose all disposable objects
-                    foreach (var obj in botData.Objects.Where(o => o.Value is IDisposable))
-                    {
-                        // Do not dispose objects that are given to every bot or puppeteer
-                        if (obj.Key == "httpClient" || obj.Key == "ironPyEngine" || obj.Key == "puppeteer")
-                            continue;
-
-                        try
-                        {
-                            (obj.Value as IDisposable).Dispose();
-                        }
-                        catch
-                        {
-
-                        }
-                    }
                 }
 
                 // Update captcha credit
@@ -328,6 +311,9 @@ namespace RuriLib.Models.Jobs
                         }
                     }
                 }
+
+                // Dispose all disposable objects
+                botData.Dispose();
 
                 // RETURN THE RESULT
                 return new CheckResult 
@@ -413,13 +399,6 @@ namespace RuriLib.Models.Jobs
             if (wordlistType == null)
                 throw new NullReferenceException($"The wordlist type with name {DataPool.WordlistType} was not found in the Environment");
 
-            var client = new HttpClient();
-
-            var runtime = Python.CreateRuntime();
-            var pyengine = runtime.GetEngine("py");
-            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
-            pco.Module &= ~ModuleOptions.Optimized;
-
             long index = 0;
             var workItems = DataPool.DataList.Select(line =>
             {
@@ -438,8 +417,6 @@ namespace RuriLib.Models.Jobs
                 };
 
                 input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
-                input.BotData.Objects.Add("httpClient", client); // Add the default HTTP client
-                input.BotData.Objects.Add("ironPyEngine", pyengine); // Add the IronPython engine
 
                 return input;
             });

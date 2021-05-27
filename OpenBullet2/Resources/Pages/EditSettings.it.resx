@@ -180,6 +180,9 @@
   <data name="Headless" xml:space="preserve">
     <value>Headless</value>
   </data>
+  <data name="IgnoreEmptyLines" xml:space="preserve">
+    <value>Ignora righe vuote</value>
+  </data>
   <data name="IgnoreHttpsErrors" xml:space="preserve">
     <value>Ignora errori HTTPS</value>
   </data>
@@ -198,8 +201,17 @@
   <data name="Invert" xml:space="preserve">
     <value>Inverti</value>
   </data>
+  <data name="LinesFromFile" xml:space="preserve">
+    <value>Righe da file</value>
+  </data>
   <data name="LoadOnlyDocumentAndScript" xml:space="preserve">
     <value>Carica solo documento e script</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Percorso</value>
+  </data>
+  <data name="LoopsAround" xml:space="preserve">
+    <value>Riparti dall'inizio</value>
   </data>
   <data name="MaxUsesPerProxy" xml:space="preserve">
     <value>Massimi utilizzi per singolo proxy (0 è infinito)</value>
@@ -219,6 +231,9 @@
   <data name="QuitBrowserStatuses" xml:space="preserve">
     <value>Esci dal browser quando il bot termina con uno di questi stati</value>
   </data>
+  <data name="RandomLinesFromFile" xml:space="preserve">
+    <value>Righe casuali da file</value>
+  </data>
   <data name="RandomUserAgent" xml:space="preserve">
     <value>User Agent Casuale</value>
   </data>
@@ -233,6 +248,12 @@
   </data>
   <data name="Requests" xml:space="preserve">
     <value>Richieste</value>
+  </data>
+  <data name="ResourceName" xml:space="preserve">
+    <value>Nome risorsa</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Risorse</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Ripristina Predefiniti</value>
@@ -254,6 +275,9 @@
   </data>
   <data name="ToggleRegexHelper" xml:space="preserve">
     <value>Mostra Aiutante Regex</value>
+  </data>
+  <data name="Unique" xml:space="preserve">
+    <value>Solo righe uniche</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
     <value>Codifica dati per URL dopo averli divisi</value>

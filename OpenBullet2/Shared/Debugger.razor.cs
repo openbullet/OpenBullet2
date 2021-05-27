@@ -104,12 +104,6 @@ namespace OpenBullet2.Shared
             // Build the BotData
             var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
             data.CancellationToken = cts.Token;
-            data.Objects.Add("httpClient", new HttpClient());
-            var runtime = Python.CreateRuntime();
-            var pyengine = runtime.GetEngine("py");
-            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
-            pco.Module &= ~ModuleOptions.Optimized;
-            data.Objects.Add("ironPyEngine", pyengine);
 
             var script = new ScriptBuilder()
                 .Build(Config.CSharpScript, Config.Settings.ScriptSettings, PluginRepo);
@@ -184,20 +178,7 @@ namespace OpenBullet2.Shared
                     : null;
 
                 // Dispose all disposable objects
-                foreach (var obj in data.Objects.Where(o => o.Value is IDisposable))
-                {
-                    if (obj.Key.Contains("puppeteer"))
-                        continue;
-
-                    try
-                    {
-                        (obj.Value as IDisposable).Dispose();
-                    }
-                    catch
-                    {
-
-                    }
-                }
+                data.Dispose();
             }
 
             await loggerViewer?.Refresh();
