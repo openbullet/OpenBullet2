@@ -108,3 +108,20 @@ LOG myString
 SET CAP myCapture "capture"
 LOG myCapture
 ```
+---
+##### TAKEONE
+Takes a single item from a resource. You can configure resources in Config Settings > Data > Resources.
+You need to provide the name of the resource and the name of the variable that will be created (of type `string`).
+Example:
+```
+TAKEONE FROM "resourceName" => "myString"
+LOG myString
+```
+---
+##### TAKE
+Takes a multiple items from a resource. You can configure resources in Config Settings > Data > Resources.
+You need to provide the name of the resource and the name of the variable that will be created (of type `List<string>`).
+Example:
+```
+TAKE 5 FROM "resourceName" => "myList"
+```
