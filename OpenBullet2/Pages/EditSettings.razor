@@ -1,5 +1,6 @@
 ﻿@page "/config/edit/settings"
 @using RuriLib.Models.Data.Rules
+@using RuriLib.Models.Data.Resources.Options
 @using RuriLib.Models
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EditSettings> Loc
 @attribute [Authorize(Roles = "Admin")]
@@ -51,16 +52,16 @@
         <InputCheckbox class="mb-3" @bind-Value="settings.DataSettings.UrlEncodeDataAfterSlicing" />
         <br />
 
-        <label>@Loc["DataRules"]</label>
+        <label class="fg-custom">@Loc["DataRules"]</label>
         <br />
         <div class="list-group list-group-horizontal">
             <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new SimpleDataRule()))">
                 <span class="oi oi-plus"></span>
-                @Loc["AddSimpleRule"]
+                @Loc["SimpleRule"]
             </button>
             <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.DataRules.Add(new RegexDataRule()))">
                 <span class="oi oi-plus"></span>
-                @Loc["AddRegexRule"]
+                @Loc["RegexRule"]
             </button>
             <button type="button" class="btn btn-sm btn-outline-primary"
                     @onclick="@(() => showRegexHelper = !showRegexHelper)">
@@ -126,6 +127,77 @@
 
                     <div class="col-auto px-1 px-md-2">
                         <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.DataSettings.DataRules.Remove(rule))">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+        <label class="fg-custom mt-2">@Loc["Resources"]</label>
+        <br />
+        <div class="list-group list-group-horizontal">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.Resources.Add(new LinesFromFileResourceOptions()))">
+                <span class="oi oi-plus"></span>
+                @Loc["LinesFromFile"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.DataSettings.Resources.Add(new RandomLinesFromFileResourceOptions()))">
+                <span class="oi oi-plus"></span>
+                @Loc["RandomLinesFromFile"]
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    @onclick="@(() => settings.DataSettings.Resources.Clear())">
+                <span class="oi oi-x"></span> @Loc["Clear"]
+            </button>
+        </div>
+        <div class="container-fluid" style="margin-top: 15px;">
+            @foreach (var resource in settings.DataSettings.Resources)
+            {
+                <div class="row">
+                    <div class="col-auto px-1 px-md-2">
+                        <label style="line-height: 30px;">@Loc["ResourceName"]</label>
+                    </div>
+                    <div class="col align-self-stretch px-1 px-md-2">
+                        <InputText @bind-Value="resource.Name" />
+                    </div>
+
+                    @switch (resource)
+                    {
+                        case LinesFromFileResourceOptions r:
+                            <div class="col-auto px-1 px-md-2">
+                                <label style="line-height: 30px;">@Loc["Location"]</label>
+                            </div>
+                            <div class="col align-self-stretch px-1 px-md-2">
+                                <InputText @bind-Value="r.Location" />
+                            </div>
+                            <div class="col-auto px-1 px-md-2 mt-1">
+                                <span>@Loc["LoopsAround"]</span>
+                                <InputCheckbox @bind-Value="r.LoopsAround" />
+                            </div>
+                            <div class="col-auto px-1 px-md-2 mt-1">
+                                <span>@Loc["IgnoreEmptyLines"]</span>
+                                <InputCheckbox @bind-Value="r.IgnoreEmptyLines" />
+                            </div>
+                            break;
+
+                        case RandomLinesFromFileResourceOptions r:
+                            <div class="col-auto px-1 px-md-2">
+                                <label style="line-height: 30px;">@Loc["Location"]</label>
+                            </div>
+                            <div class="col align-self-stretch px-1 px-md-2">
+                                <InputText @bind-Value="r.Location" />
+                            </div>
+                            <div class="col-auto px-1 px-md-2 mt-1">
+                                <span>@Loc["Unique"]</span>
+                                <InputCheckbox @bind-Value="r.Unique" />
+                            </div>
+                            <div class="col-auto px-1 px-md-2 mt-1">
+                                <span>@Loc["IgnoreEmptyLines"]</span>
+                                <InputCheckbox @bind-Value="r.IgnoreEmptyLines" />
+                            </div>
+                            break;
+                    }
+                    <div class="col-auto px-1 px-md-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.DataSettings.Resources.Remove(resource))">
                             <span class="oi oi-x"></span>
                         </button>
                     </div>

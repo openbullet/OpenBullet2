@@ -21,6 +21,8 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Data;
+using RuriLib.Models.Data.Resources;
+using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Proxies;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
@@ -104,12 +106,13 @@ namespace OpenBullet2.Shared
             // Build the BotData
             var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
             data.CancellationToken = cts.Token;
-            data.Objects.Add("httpClient", new HttpClient());
+            var httpClient = new HttpClient();
+            data.Objects.Add("httpClient", httpClient);
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
-            var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
-            pco.Module &= ~ModuleOptions.Optimized;
             data.Objects.Add("ironPyEngine", pyengine);
+
+            dynamic globals = new ExpandoObject();
 
             var script = new ScriptBuilder()
                 .Build(Config.CSharpScript, Config.Settings.ScriptSettings, PluginRepo);
@@ -125,13 +128,33 @@ namespace OpenBullet2.Shared
             }
 
             logger.NewEntry += OnNewEntry;
-            
+
+            // Initialize resources
+            Dictionary<string, ConfigResource> resources = new();
+
+            // Resources will need to be disposed of
+            foreach (var opt in Config.Settings.DataSettings.Resources)
+            {
+                resources[opt.Name] = opt switch
+                {
+                    LinesFromFileResourceOptions x => new LinesFromFileResource(x),
+                    RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
+                    _ => throw new NotImplementedException()
+                };
+            }
+
+            // Add resources to global variables
+            globals.Resources = resources;
+            var scriptGlobals = new ScriptGlobals(data, globals);
+
+            // Set custom inputs
+            foreach (var input in Config.Settings.InputSettings.CustomInputs)
+            {
+                (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
+            }
+
             try
             {
-                var scriptGlobals = new ScriptGlobals(data, new ExpandoObject());
-                foreach (var input in Config.Settings.InputSettings.CustomInputs)
-                    (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
-
                 sw.Start();
                 var state = await script.RunAsync(scriptGlobals, null, cts.Token);
 
@@ -181,13 +204,16 @@ namespace OpenBullet2.Shared
                 // Save the browser for later use
                 lastBrowser = data.Objects.ContainsKey("puppeteer") && data.Objects["puppeteer"] is Browser currentBrowser
                     ? currentBrowser
-                    : null;
+                    : null;// Dispose all disposable objects
 
-                // Dispose all disposable objects
+                // Dispose stuff in data.Objects
                 foreach (var obj in data.Objects.Where(o => o.Value is IDisposable))
                 {
-                    if (obj.Key.Contains("puppeteer"))
+                    // Do not dispose objects that are given to every bot or puppeteer
+                    if (obj.Key == "puppeteer")
+                    {
                         continue;
+                    }
 
                     try
                     {
@@ -197,6 +223,29 @@ namespace OpenBullet2.Shared
                     {
 
                     }
+                }
+
+                // Dispose resources
+                foreach (var resource in resources.Where(r => r.Value is IDisposable)
+                    .Select(r => r.Value).Cast<IDisposable>())
+                {
+                    try
+                    {
+                        resource.Dispose();
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                try
+                {
+                    httpClient.Dispose();
+                }
+                catch
+                {
+
                 }
             }
 

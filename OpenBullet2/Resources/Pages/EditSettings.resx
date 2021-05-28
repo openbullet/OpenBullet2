@@ -180,6 +180,9 @@
   <data name="Headless" xml:space="preserve">
     <value>Headless</value>
   </data>
+  <data name="IgnoreEmptyLines" xml:space="preserve">
+    <value>Ignore empty lines</value>
+  </data>
   <data name="IgnoreHttpsErrors" xml:space="preserve">
     <value>Ignore HTTPS errors</value>
   </data>
@@ -198,8 +201,17 @@
   <data name="Invert" xml:space="preserve">
     <value>Invert</value>
   </data>
+  <data name="LinesFromFile" xml:space="preserve">
+    <value>Lines from file</value>
+  </data>
   <data name="LoadOnlyDocumentAndScript" xml:space="preserve">
     <value>Load only document and script</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="LoopsAround" xml:space="preserve">
+    <value>Loops around</value>
   </data>
   <data name="MaxUsesPerProxy" xml:space="preserve">
     <value>Maximum uses per proxy (0 is infinite)</value>
@@ -219,6 +231,9 @@
   <data name="QuitBrowserStatuses" xml:space="preserve">
     <value>Quit the browser when the bot ends with one of these statuses</value>
   </data>
+  <data name="RandomLinesFromFile" xml:space="preserve">
+    <value>Random lines from file</value>
+  </data>
   <data name="RandomUserAgent" xml:space="preserve">
     <value>Random User Agent</value>
   </data>
@@ -233,6 +248,12 @@
   </data>
   <data name="Requests" xml:space="preserve">
     <value>Requests</value>
+  </data>
+  <data name="ResourceName" xml:space="preserve">
+    <value>Resource name</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Resources</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
     <value>Restore Defaults</value>
@@ -254,6 +275,9 @@
   </data>
   <data name="ToggleRegexHelper" xml:space="preserve">
     <value>Toggle Regex Helper</value>
+  </data>
+  <data name="Unique" xml:space="preserve">
+    <value>Only unique lines</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
     <value>URL Encode data after slicing</value>
