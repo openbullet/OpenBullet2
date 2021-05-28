@@ -207,23 +207,7 @@ namespace OpenBullet2.Shared
                     : null;// Dispose all disposable objects
 
                 // Dispose stuff in data.Objects
-                foreach (var obj in data.Objects.Where(o => o.Value is IDisposable))
-                {
-                    // Do not dispose objects that are given to every bot or puppeteer
-                    if (obj.Key == "puppeteer")
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        (obj.Value as IDisposable).Dispose();
-                    }
-                    catch
-                    {
-
-                    }
-                }
+                data.DisposeObjectsExcept(new[] { "puppeteer" });
 
                 // Dispose resources
                 foreach (var resource in resources.Where(r => r.Value is IDisposable)

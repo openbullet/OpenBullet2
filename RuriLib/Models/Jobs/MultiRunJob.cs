@@ -158,6 +158,7 @@ namespace RuriLib.Models.Jobs
 
                 START:
                 token.ThrowIfCancellationRequested();
+                botData.ResetState();
 
                 try
                 {
@@ -247,23 +248,7 @@ namespace RuriLib.Models.Jobs
                     }
 
                     // Dispose all disposable objects
-                    foreach (var obj in botData.Objects.Where(o => o.Value is IDisposable))
-                    {
-                        // Do not dispose objects that are given to every bot or puppeteer
-                        if (obj.Key == "httpClient" || obj.Key == "ironPyEngine" || obj.Key == "puppeteer")
-                        {
-                            continue;
-                        }
-
-                        try
-                        {
-                            (obj.Value as IDisposable).Dispose();
-                        }
-                        catch
-                        {
-
-                        }
-                    }
+                    botData.DisposeObjectsExcept(new[] { "puppeteer", "httpClient", "ironPyEngine" });
                 }
 
                 // Update captcha credit
