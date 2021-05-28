@@ -409,12 +409,19 @@ namespace RuriLib.Models.Jobs
             // Resources will need to be disposed of
             foreach (var opt in Config.Settings.DataSettings.Resources)
             {
-                resources[opt.Name] = opt switch
+                try
                 {
-                    LinesFromFileResourceOptions x => new LinesFromFileResource(x),
-                    RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
-                    _ => throw new NotImplementedException()
-                };
+                    resources[opt.Name] = opt switch
+                    {
+                        LinesFromFileResourceOptions x => new LinesFromFileResource(x),
+                        RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
+                        _ => throw new NotImplementedException()
+                    };
+                }
+                catch
+                {
+                    throw new Exception($"Could not create resource {opt.Name}");
+                }
             }
 
             globalVariables.Resources = resources;

@@ -135,12 +135,19 @@ namespace OpenBullet2.Shared
             // Resources will need to be disposed of
             foreach (var opt in Config.Settings.DataSettings.Resources)
             {
-                resources[opt.Name] = opt switch
+                try
                 {
-                    LinesFromFileResourceOptions x => new LinesFromFileResource(x),
-                    RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
-                    _ => throw new NotImplementedException()
-                };
+                    resources[opt.Name] = opt switch
+                    {
+                        LinesFromFileResourceOptions x => new LinesFromFileResource(x),
+                        RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
+                        _ => throw new NotImplementedException()
+                    };
+                }
+                catch
+                {
+                    logger.Log($"Could not create resource {opt.Name}", LogColors.Tomato);
+                }
             }
 
             // Add resources to global variables
