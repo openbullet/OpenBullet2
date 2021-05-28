@@ -63,9 +63,23 @@ namespace RuriLib.Blocks.Functions.List
         }
 
         [Block("Zips two lists into a single one", extraInfo = "For example [1,2] and [a,b] will be zipped into [1a,2b]")]
-        public static List<string> ZipLists(BotData data, [Variable] List<string> list1, [Variable] List<string> list2)
+        public static List<string> ZipLists(BotData data, [Variable] List<string> list1, [Variable] List<string> list2,
+            bool fill = false, string fillString = "NULL")
         {
-            var zipped = list1.Zip(list2, (a, b) => a + b).ToList();
+            List<string> zipped;
+            Func<string, string, string> zipFunc = (a, b) => a + b;
+
+            if (fill)
+            {
+                zipped = list1.Count < list2.Count
+                    ? list1.Concat(Enumerable.Repeat(fillString, list2.Count - list2.Count)).Zip(list2, zipFunc).ToList()
+                    : list1.Zip(list2.Concat(Enumerable.Repeat(fillString, list1.Count - list2.Count)), zipFunc).ToList();
+            }
+            else
+            {
+                zipped = list1.Zip(list2, zipFunc).ToList();
+            }
+            
             data.Logger.LogHeader();
             data.Logger.Log("Zipped the lists", LogColors.YellowGreen);
             return zipped;
