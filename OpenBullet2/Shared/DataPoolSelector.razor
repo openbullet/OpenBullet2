@@ -117,6 +117,7 @@
     {
         uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(t => t.Name).ToList();
+        await InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnParametersSetAsync()
