@@ -110,7 +110,7 @@
     
     private DataPoolType type = DataPoolType.Wordlist;
     private WordlistEntity selectedWordlist;
-    private List<string> wordlistTypes;
+    private List<string> wordlistTypes = new();
     private int uid = -1;
 
     protected override async Task OnInitializedAsync()
