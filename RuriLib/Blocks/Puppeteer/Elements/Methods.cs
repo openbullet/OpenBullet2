@@ -98,6 +98,35 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             data.Logger.Log($"Selected value {value}", LogColors.DarkSalmon);
         }
 
+        [Block("Selects a value by index in a select element", name = "Select by Index")]
+        public static async Task PuppeteerSelectByIndex(BotData data, FindElementBy findBy, string identifier, int index, int selectionIndex)
+        {
+            data.Logger.LogHeader();
+
+            var frame = GetFrame(data);
+            var elemScript = GetElementScript(findBy, identifier, index);
+            var script = elemScript + $".getElementsByTagName('option')[{selectionIndex}].value;";
+            var value = (await frame.EvaluateExpressionAsync(script)).ToString();
+
+            var elem = await GetElement(frame, findBy, identifier, index);
+            await elem.SelectAsync(value);
+
+            data.Logger.Log($"Selected value {value}", LogColors.DarkSalmon);
+        }
+
+        [Block("Selects a value by text in a select element", name = "Select by Text")]
+        public static async Task PuppeteerSelectByText(BotData data, FindElementBy findBy, string identifier, int index, string text)
+        {
+            data.Logger.LogHeader();
+
+            var frame = GetFrame(data);
+            var elemScript = GetElementScript(findBy, identifier, index);
+            var script = $"let el={elemScript};for(let i=0;i<el.options.length;i++){{if(el.options[i].text=='{text}'){{el.selectedIndex = i;break;}}}}";
+            await frame.EvaluateExpressionAsync(script);
+
+            data.Logger.Log($"Selected text {text}", LogColors.DarkSalmon);
+        }
+
         [Block("Gets the value of an attribute of an element", name = "Get Attribute Value")]
         public static async Task<string> PuppeteerGetAttributeValue(BotData data, FindElementBy findBy, string identifier, int index,
             string attributeName = "innerText")
