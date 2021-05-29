@@ -93,7 +93,7 @@ namespace RuriLib.Models.Bots
 
             // We need to dispose of objects created in each retry, because jobs should
             // only dispose of them after the bot has completed its work
-            DisposeObjectsExcept(new[] { "puppeteer", "httpClient", "ironPyEngine" });
+            DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
         }
 
         public void DisposeObjectsExcept(string[] except = null)

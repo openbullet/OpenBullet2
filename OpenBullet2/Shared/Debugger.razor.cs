@@ -212,7 +212,7 @@ namespace OpenBullet2.Shared
                     : null;// Dispose all disposable objects
 
                 // Dispose stuff in data.Objects
-                data.DisposeObjectsExcept(new[] { "puppeteer" });
+                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame" });
 
                 // Dispose resources
                 foreach (var resource in resources.Where(r => r.Value is IDisposable)

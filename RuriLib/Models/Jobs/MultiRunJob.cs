@@ -246,7 +246,7 @@ namespace RuriLib.Models.Jobs
                     }
 
                     // Dispose all disposable objects
-                    botData.DisposeObjectsExcept(new[] { "puppeteer", "httpClient", "ironPyEngine" });
+                    botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
                 }
 
                 // Update captcha credit
