@@ -12,15 +12,18 @@ using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.CSharp
 {
+    /// <summary>
+    /// In charge of writing C# snippets that can be executed.
+    /// </summary>
     public class CSharpWriter
     {
-        private readonly static CodeGeneratorOptions codeGenOptions = new CodeGeneratorOptions
+        private static readonly CodeGeneratorOptions codeGenOptions = new()
         {
             BlankLinesBetweenMembers = false
         };
 
         /// <summary>
-        /// Converts a <paramref name="setting"/> to a valid C# formulation.
+        /// Converts a <paramref name="setting"/> to a valid C# snippet.
         /// </summary>
         public static string FromSetting(BlockSetting setting)
         {
@@ -71,9 +74,12 @@ namespace RuriLib.Helpers.CSharp
         public static string SerializeString(string value)
             => $"\"{value.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
 
+        /// <summary>
+        /// Serializes an interpolated string where &lt;var&gt; is a variable (and sanitizes the '{' and '}' characters).
+        /// </summary>
         public static string SerializeInterpString(string value)
         {
-            StringBuilder sb = new StringBuilder(SerializeString(value))
+            var sb = new StringBuilder(SerializeString(value))
                 .Replace("{", "{{")
                 .Replace("}", "}}");
 
@@ -83,6 +89,9 @@ namespace RuriLib.Helpers.CSharp
             return '$' + sb.ToString();
         }
 
+        /// <summary>
+        /// Serializes a byte array.
+        /// </summary>
         public static string SerializeByteArray(byte[] bytes)
         {
             if (bytes == null)
@@ -95,6 +104,9 @@ namespace RuriLib.Helpers.CSharp
             return writer.ToString();
         }
 
+        /// <summary>
+        /// Serializes a list of strings, optionally interpolated.
+        /// </summary>
         public static string SerializeList(List<string> list, bool interpolated = false)
         {
             if (list == null)
@@ -112,6 +124,9 @@ namespace RuriLib.Helpers.CSharp
             return writer.ToString();
         }
 
+        /// <summary>
+        /// Serializes a dictionary of strings, optionally interpolated.
+        /// </summary>
         public static string SerializeDictionary(Dictionary<string, string> dict, bool interpolated = false)
         {
             if (dict == null)
@@ -152,6 +167,9 @@ namespace RuriLib.Helpers.CSharp
             };
         }
 
+        /// <summary>
+        /// Converts a <paramref name="key"/> to a valid C# snippet.
+        /// </summary>
         public static string ConvertKey(Key key)
         {
             var comparison = key switch

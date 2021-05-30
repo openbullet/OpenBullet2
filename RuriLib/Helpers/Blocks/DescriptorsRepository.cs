@@ -22,13 +22,16 @@ namespace RuriLib.Helpers.Blocks
     {
         public Dictionary<string, BlockDescriptor> Descriptors { get; set; } = new Dictionary<string, BlockDescriptor>();
 
+        /// <summary>
+        /// Initializes a <see cref="DescriptorsRepository"/> and imports blocks from the executing assembly.
+        /// </summary>
         public DescriptorsRepository()
         {
             Recreate();
         }
 
         /// <summary>
-        /// Recreates the repository with only the built-in descriptors (no plugins).
+        /// Recreates the repository with only the descriptors in the executing assembly (no plugins).
         /// </summary>
         public void Recreate()
         {
@@ -43,6 +46,10 @@ namespace RuriLib.Helpers.Blocks
             AddFromExposedMethods(Assembly.GetExecutingAssembly());
         }
 
+        /// <summary>
+        /// Gets a <see cref="BlockDescriptor"/> by its unique <paramref name="id"/>
+        /// and automatically casts it to the type <typeparamref name="T"/>.
+        /// </summary>
         public T GetAs<T>(string id) where T : BlockDescriptor
         {
             if (!Descriptors.TryGetValue(id, out BlockDescriptor descriptor))
@@ -123,6 +130,10 @@ namespace RuriLib.Helpers.Blocks
             return parameter;
         }
 
+        /// <summary>
+        /// Converts the return <paramref name="type"/> of a method to a <see cref="VariableType"/>.
+        /// Returns null if the method returns <see cref="void"/> or <see cref="Task"/>.
+        /// </summary>
         public static VariableType? ToVariableType(Type type)
         {
             if (type == typeof(void))
@@ -162,6 +173,10 @@ namespace RuriLib.Helpers.Blocks
             throw new InvalidCastException($"The type {type} could not be casted to VariableType");
         }
 
+        /// <summary>
+        /// Casts a C# variable with a given <paramref name="name"/>, <paramref name="type"/>
+        /// and <paramref name="value"/> to a custom <see cref="Variable"/> object.
+        /// </summary>
         public static Variable ToVariable(string name, Type type, dynamic value)
         {
             var t = ToVariableType(type);
@@ -232,10 +247,13 @@ namespace RuriLib.Helpers.Blocks
             throw new ArgumentException($"Parameter {parameter.Name} has an invalid type ({parameter.ParameterType})");
         }
 
+        /// <summary>
+        /// Retrieves the category tree of all categories and block descriptors.
+        /// </summary>
         public CategoryTreeNode AsTree()
         {
             // This is the root node, all assemblies are direct children of this node
-            CategoryTreeNode root = new CategoryTreeNode { Name = "Root" };
+            var root = new CategoryTreeNode { Name = "Root" };
 
             // Add all descriptors as children of the root node (we need the ToList() in order to have
             // a new pointer to list and not operate on the same one Descriptors uses, since we will be removing items)
@@ -250,7 +268,7 @@ namespace RuriLib.Helpers.Blocks
         private void PushLeaves(CategoryTreeNode node, int level)
         {
             // Check all descriptors of the node
-            for (int i = 0; i < node.Descriptors.Count; i++)
+            for (var i = 0; i < node.Descriptors.Count; i++)
             {
                 var d = node.Descriptors[i];
                 var split = d.Category.Path.Split('.'); // Example: RuriLib.Blocks.Http
@@ -281,7 +299,7 @@ namespace RuriLib.Helpers.Blocks
             node.Descriptors = node.Descriptors.OrderBy(d => d.Name).ToList();
 
             // Push leaves of subcategories recursively
-            for (int i = 0; i < node.SubCategories.Count; i++)
+            for (var i = 0; i < node.SubCategories.Count; i++)
             {
                 var s = node.SubCategories[i];
                 PushLeaves(s, level + 1);

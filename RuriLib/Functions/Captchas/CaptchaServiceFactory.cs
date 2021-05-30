@@ -8,7 +8,9 @@ namespace RuriLib.Functions.Captchas
 {
     public class CaptchaServiceFactory
     {
-        /// <summary>Gets a <see cref="CaptchaService"/> to be used for solving captcha challenges.</summary>
+        /// <summary>
+        /// Gets a <see cref="CaptchaService"/> to be used for solving captcha challenges.
+        /// </summary>
         public static CaptchaService GetService(CaptchaSettings settings)
         {
             CaptchaService service = settings.CurrentService switch

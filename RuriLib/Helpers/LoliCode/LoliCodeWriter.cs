@@ -6,19 +6,34 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 
 namespace RuriLib.Helpers.LoliCode
 {
+    /// <summary>
+    /// Has methods to write LoliCode syntax.
+    /// </summary>
     public class LoliCodeWriter : StringWriter
     {
-        public LoliCodeWriter() { }
+        /// <summary>
+        /// Initializes a new <see cref="LoliCodeWriter"/> without any initial value.
+        /// </summary>
+        public LoliCodeWriter() 
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new <see cref="LoliCodeWriter"/> with an <paramref name="initialValue"/>.
+        /// </summary>
         public LoliCodeWriter(string initialValue)
         {
             Write(initialValue);
         }
 
+        /// <summary>
+        /// Appends a generic LoliCode token.
+        /// </summary>
         public LoliCodeWriter AppendToken(string token, int spaces = 0)
         {
             if (token == null)
@@ -31,6 +46,10 @@ namespace RuriLib.Helpers.LoliCode
             return this;
         }
 
+        /// <summary>
+        /// Appends a <paramref name="line"/> prefixed by a given number of <paramref name="spaces"/>
+        /// and a return character.
+        /// </summary>
         public LoliCodeWriter AppendLine(string line = "", int spaces = 0)
         {
             if (line == null)
@@ -86,6 +105,9 @@ namespace RuriLib.Helpers.LoliCode
             return first.SequenceEqual(second);
         }
 
+        /// <summary>
+        /// Gets the snippet of the value of a <paramref name="setting"/> in LoliCode syntax.
+        /// </summary>
         public static string GetSettingValue(BlockSetting setting)
         {
             // TODO: Make a valid variable name if it's invalid
@@ -117,7 +139,7 @@ namespace RuriLib.Helpers.LoliCode
             };
         }
 
-        public static string ToLiteral(string input)
+        private static string ToLiteral(string input)
         {
             if (input == null)
                 input = string.Empty;
@@ -125,10 +147,10 @@ namespace RuriLib.Helpers.LoliCode
             return SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(input)).ToFullString();
         }
 
-        public static string FormatFloat(float input)
+        private static string FormatFloat(float input)
             => input.ToString(CultureInfo.InvariantCulture);
 
-        public static string SerializeList(List<string> input)
+        private static string SerializeList(List<string> input)
         {
             if (input == null)
                 return "[]";
@@ -136,7 +158,7 @@ namespace RuriLib.Helpers.LoliCode
             return "[" + string.Join(", ", input.Select(i => ToLiteral(i))) + "]";
         }
 
-        public static string SerializeDictionary(Dictionary<string, string> input) 
+        private static string SerializeDictionary(Dictionary<string, string> input) 
         {
             if (input == null || input.Keys.Count == 0)
                 return "{}";

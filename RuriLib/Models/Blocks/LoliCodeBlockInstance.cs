@@ -129,7 +129,7 @@ namespace RuriLib.Models.Blocks
             if ((match = Regex.Match(input, $"^WHILE (.+)$")).Success)
             {
                 var line = match.Groups[1].Value.Trim();
-                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t)))
                 {
                     var keyType = LineParser.ParseToken(ref line);
                     var key = LoliCodeParser.ParseKey(ref line, keyType);
@@ -146,7 +146,7 @@ namespace RuriLib.Models.Blocks
             if ((match = Regex.Match(input, $"^IF (.+)$")).Success)
             {
                 var line = match.Groups[1].Value.Trim();
-                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t)))
                 {
                     var keyType = LineParser.ParseToken(ref line);
                     var key = LoliCodeParser.ParseKey(ref line, keyType);
@@ -170,7 +170,7 @@ namespace RuriLib.Models.Blocks
             if ((match = Regex.Match(input, $"ELSE IF (.+)$")).Success)
             {
                 var line = match.Groups[1].Value.Trim();
-                if (LoliCodeParser.KeyTypes.Any(t => line.StartsWith(t)))
+                if (LoliCodeParser.keyIdentifiers.Any(t => line.StartsWith(t)))
                 {
                     var keyType = LineParser.ParseToken(ref line);
                     var key = LoliCodeParser.ParseKey(ref line, keyType);

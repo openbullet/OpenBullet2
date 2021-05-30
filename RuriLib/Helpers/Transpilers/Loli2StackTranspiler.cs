@@ -7,10 +7,16 @@ using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.Transpilers
 {
+    /// <summary>
+    /// Takes care of transpiling LoliCode to a list of blocks.
+    /// </summary>
     public static class Loli2StackTranspiler
     {
         private static readonly string validTokenRegex = "[A-Za-z][A-Za-z0-9_]*";
 
+        /// <summary>
+        /// Creates a list of <see cref="BlockInstance"/> objects from a LoliCode <paramref name="script"/>.
+        /// </summary>
         public static List<BlockInstance> Transpile(string script)
         {
             if (string.IsNullOrWhiteSpace(script))

@@ -11,11 +11,18 @@ using System.Reflection;
 
 namespace RuriLib.Helpers.CSharp
 {
+    /// <summary>
+    /// In charge of building the final executable C# script from a string of C# code.
+    /// </summary>
     public class ScriptBuilder
     {
-        private StringWriter preScript = new StringWriter();
-        private StringWriter postScript = new StringWriter();
+        private readonly StringWriter preScript = new();
+        private readonly StringWriter postScript = new();
 
+        /// <summary>
+        /// Builds an executable C# <see cref="Script"/> from a <paramref name="cSharpScript"/> string,
+        /// some <paramref name="settings"/> and a <paramref name="pluginRepo"/> to reference the correct assemblies.
+        /// </summary>
         public Script Build(string cSharpScript, ScriptSettings settings, PluginRepository pluginRepo)
         {
             var ruriLib = Assembly.GetAssembly(typeof(ScriptBuilder));

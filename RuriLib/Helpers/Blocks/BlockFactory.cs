@@ -1,7 +1,6 @@
 ﻿using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using System;
-using System.Linq;
 
 namespace RuriLib.Helpers.Blocks
 {
@@ -10,7 +9,14 @@ namespace RuriLib.Helpers.Blocks
     /// </summary>
     public class BlockFactory
     {
+        /// <summary>
+        /// The label of the block, useful to specify the purpose of the block.
+        /// </summary>
         public string Label { get; set; } = null;
+
+        /// <summary>
+        /// Whether the block is disabled and will not be executed.
+        /// </summary>
         public bool Disabled { get; set; } = false;
 
         /// <summary>

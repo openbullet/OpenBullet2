@@ -8,12 +8,21 @@ using System.Runtime.CompilerServices;
 
 namespace RuriLib.Logging
 {
+    /// An <see cref="IBotLogger"/> that logs in memory.
     public class BotLogger : IBotLogger
     {
+        /// <inheritdoc/>
         public bool Enabled { get; set; } = true;
+
+        /// <inheritdoc/>
         public string ExecutingBlock { get; set; } = "Unknown";
+
         private readonly List<BotLoggerEntry> entries = new();
+
+        /// <inheritdoc/>
         public event EventHandler<BotLoggerEntry> NewEntry;
+
+        /// <inheritdoc/>
         public IEnumerable<BotLoggerEntry> Entries
         {
             get
@@ -26,6 +35,7 @@ namespace RuriLib.Logging
             }
         }
 
+        /// <inheritdoc/>
         public void Log(string message, string color = "#fff", bool canViewAsHtml = false)
         {
             if (!Enabled)
@@ -46,6 +56,7 @@ namespace RuriLib.Logging
             NewEntry?.Invoke(this, entry);
         }
 
+        /// <inheritdoc/>
         public void Log(IEnumerable<string> enumerable, string color = "#fff", bool canViewAsHtml = false)
         {
             if (!Enabled)
@@ -66,6 +77,7 @@ namespace RuriLib.Logging
             NewEntry?.Invoke(this, entry);
         }
 
+        /// <inheritdoc/>
         public void LogHeader([CallerMemberName] string caller = null)
         {
             // Do not log if called by lolicode
@@ -93,6 +105,7 @@ namespace RuriLib.Logging
             NewEntry?.Invoke(this, entry);
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             lock (entries)

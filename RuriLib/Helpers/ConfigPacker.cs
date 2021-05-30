@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Helpers
 {
+    /// <summary>
+    /// Takes care of packing and unpacking <see cref="Config"/> objects.
+    /// </summary>
     public static class ConfigPacker
     {
         private static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
@@ -167,7 +170,7 @@ namespace RuriLib.Helpers
         {
             var entry = archive.GetEntry(path);
 
-            using Stream stream = entry.Open();
+            using var stream = entry.Open();
             using var ms = new MemoryStream();
 
             stream.CopyTo(ms);

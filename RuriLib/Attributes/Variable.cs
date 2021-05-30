@@ -9,6 +9,9 @@ namespace RuriLib.Attributes
     [AttributeUsage(AttributeTargets.Parameter)]
     public class Variable : Attribute
     {
+        /// <summary>
+        /// The default variable name to assign as input to this parameter, e.g. data.SOURCE
+        /// </summary>
         public string defaultVariableName = null;
 
         public Variable()

@@ -35,6 +35,11 @@ namespace RuriLib.Blocks.Interop
             return result;
         }
 
+        /*
+         * These are not blocks, but they take BotData as an input. The ScriptBlockInstance will take care
+         * of writing C# code that calls these methods where necessary once it's transpiled.
+         */
+
         public static async Task<T> InvokeNode<T>(BotData data, string scriptFile, object[] parameters)
         {
             data.Logger.LogHeader();

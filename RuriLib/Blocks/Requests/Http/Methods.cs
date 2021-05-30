@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -28,6 +27,11 @@ namespace RuriLib.Blocks.Requests.Http
     public static class Methods
     {
         private static readonly string[] commaHeaders = new[] { "Accept", "Accept-Encoding" };
+
+        /*
+         * These are not blocks, but they take BotData as an input. The HttpRequestBlockInstance will take care
+         * of writing C# code that calls these methods where necessary once it's transpiled.
+         */
 
         // STANDARD REQUESTS
         // This method is accessed via a custom descriptor so it must not be an auto block

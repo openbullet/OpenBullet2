@@ -4,8 +4,14 @@ using System.Linq;
 
 namespace RuriLib.Helpers
 {
+    /// <summary>
+    /// Utility class that generates C# variable names.
+    /// </summary>
     public static class VariableNames
     {
+        /// <summary>
+        /// Checks if a <paramref name="name"/> is a valid C# variable name.
+        /// </summary>
         public static bool IsValid(string name)
         {
             if (name.Contains("."))
@@ -15,6 +21,11 @@ namespace RuriLib.Helpers
             return provider.IsValidIdentifier(name);
         }
 
+        /// <summary>
+        /// Turns a possibly invalid <paramref name="name"/> into a valid C# variable name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static string MakeValid(string name)
         {
             if (name == null)
@@ -34,6 +45,9 @@ namespace RuriLib.Helpers
             return replaced;
         }
 
+        /// <summary>
+        /// Gets a random valid C# alphabetic variable name with a given <paramref name="length"/>.
+        /// </summary>
         public static string RandomName(int length = 4)
         {
             var rand = new Random();

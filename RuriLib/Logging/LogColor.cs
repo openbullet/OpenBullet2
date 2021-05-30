@@ -1,6 +1,9 @@
 ﻿namespace RuriLib.Logging
 {
-    // Colors from https://www.colorhexa.com/color-names
+    /// <summary>
+    /// HTML color codes identified by their names.
+    /// The colors can be found at https://www.colorhexa.com/color-names
+    /// </summary>
     public static class LogColors
     {
         public static string AirForceBlue => "#5d8aa8";

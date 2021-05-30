@@ -9,6 +9,11 @@ namespace RuriLib.Blocks.Conditions
     [BlockCategory("Conditions", "Blocks that have to do with checking conditions", "#1e90ff")]
     public static class Methods
     {
+        /*
+         * These are not blocks, but they take BotData as an input. The KeycheckBlockInstance will take care
+         * of writing C# code that calls these methods where necessary once it's transpiled.
+         */
+
         public static bool CheckCondition(BotData data, bool leftTerm, BoolComparison comparison, bool rightTerm)
         {
             var result = RuriLib.Functions.Conditions.Conditions.Check(leftTerm, comparison, rightTerm);

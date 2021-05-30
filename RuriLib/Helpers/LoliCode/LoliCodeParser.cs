@@ -3,18 +3,17 @@ using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using RuriLib.Models.Blocks.Settings;
-using System.Linq;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Variables;
-using RuriLib.Models.Conditions;
 using RuriLib.Models.Blocks.Settings.Interpolated;
-using IronPython.Modules;
-using RuriLib.Exceptions;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Conditions.Comparisons;
 
 namespace RuriLib.Helpers.LoliCode
 {
+    /// <summary>
+    /// Has methods to parse LoliCode snippets.
+    /// </summary>
     public static class LoliCodeParser
     {
         /// <summary>
@@ -47,6 +46,10 @@ namespace RuriLib.Helpers.LoliCode
             ParseSettingValue(ref input, setting, param);
         }
 
+        /// <summary>
+        /// Parses a setting value from a LoliCode string (without the setting name) and 
+        /// assigns it to the given <see cref="BlockSetting"/>.
+        /// </summary>
         public static void ParseSettingValue<T>(ref string input, BlockSetting setting,
             T param) where T : BlockParameter
         {
@@ -85,7 +88,7 @@ namespace RuriLib.Helpers.LoliCode
             }
             else if (input[0] == '$') // INTERPOLATED
             {
-                input = input.Substring(1);
+                input = input[1..];
                 setting.InputMode = SettingInputMode.Interpolated;
                 setting.InterpolatedSetting = param switch
                 {
@@ -120,6 +123,9 @@ namespace RuriLib.Helpers.LoliCode
             }
         }
 
+        /// <summary>
+        /// Checks whether a line is a valid LoliCode block setting.
+        /// </summary>
         public static bool IsSetting(string input)
             => Regex.IsMatch(input, "^( |\t)+([0-9A-Za-z]+) = .+$");
 
@@ -156,23 +162,29 @@ namespace RuriLib.Helpers.LoliCode
             throw new Exception("Could not detect the token type");
         }
 
-        public static string[] KeyTypes => new[] { "BOOLKEY", "STRINGKEY", "INTKEY", "FLOATKEY", "LISTKEY", "DICTKEY" };
+        /// <summary>
+        /// All the supported key identifiers.
+        /// </summary>
+        public static readonly string[] keyIdentifiers = new[] { "BOOLKEY", "STRINGKEY", "INTKEY", "FLOATKEY", "LISTKEY", "DICTKEY" };
 
-        public static Key ParseKey(ref string line, string keyType)
+        /// <summary>
+        /// Parses a <see cref="Key"/> from the input and moves forward.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="keyType"></param>
+        /// <returns></returns>
+        public static Key ParseKey(ref string line, string keyType) => keyType switch
         {
-            return keyType switch
-            {
-                "BOOLKEY" => ParseBoolKey(ref line),
-                "STRINGKEY" => ParseStringKey(ref line),
-                "INTKEY" => ParseIntKey(ref line),
-                "FLOATKEY" => ParseFloatKey(ref line),
-                "LISTKEY" => ParseListKey(ref line),
-                "DICTKEY" => ParseDictKey(ref line),
-                _ => throw new NotSupportedException()
-            };
-        }
+            "BOOLKEY" => ParseBoolKey(ref line),
+            "STRINGKEY" => ParseStringKey(ref line),
+            "INTKEY" => ParseIntKey(ref line),
+            "FLOATKEY" => ParseFloatKey(ref line),
+            "LISTKEY" => ParseListKey(ref line),
+            "DICTKEY" => ParseDictKey(ref line),
+            _ => throw new NotSupportedException()
+        };
 
-        public static BoolKey ParseBoolKey(ref string line)
+        private static BoolKey ParseBoolKey(ref string line)
         {
             var key = new BoolKey();
             ParseSettingValue(ref line, key.Left, new BoolParameter());
@@ -181,7 +193,7 @@ namespace RuriLib.Helpers.LoliCode
             return key;
         }
 
-        public static StringKey ParseStringKey(ref string line)
+        private static StringKey ParseStringKey(ref string line)
         {
             var key = new StringKey();
             ParseSettingValue(ref line, key.Left, new StringParameter());
@@ -190,7 +202,7 @@ namespace RuriLib.Helpers.LoliCode
             return key;
         }
 
-        public static IntKey ParseIntKey(ref string line)
+        private static IntKey ParseIntKey(ref string line)
         {
             var key = new IntKey();
             ParseSettingValue(ref line, key.Left, new IntParameter());
@@ -199,7 +211,7 @@ namespace RuriLib.Helpers.LoliCode
             return key;
         }
 
-        public static FloatKey ParseFloatKey(ref string line)
+        private static FloatKey ParseFloatKey(ref string line)
         {
             var key = new FloatKey();
             ParseSettingValue(ref line, key.Left, new FloatParameter());
@@ -208,7 +220,7 @@ namespace RuriLib.Helpers.LoliCode
             return key;
         }
 
-        public static ListKey ParseListKey(ref string line)
+        private static ListKey ParseListKey(ref string line)
         {
             var key = new ListKey();
             ParseSettingValue(ref line, key.Left, new ListOfStringsParameter());
@@ -217,7 +229,7 @@ namespace RuriLib.Helpers.LoliCode
             return key;
         }
 
-        public static DictionaryKey ParseDictKey(ref string line)
+        private static DictionaryKey ParseDictKey(ref string line)
         {
             var key = new DictionaryKey();
             ParseSettingValue(ref line, key.Left, new DictionaryOfStringsParameter());

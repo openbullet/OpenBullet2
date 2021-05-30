@@ -10,8 +10,14 @@ using System.Linq;
 
 namespace RuriLib.Helpers.Transpilers
 {
+    /// <summary>
+    /// Takes care of transpiling a list of blocks to a C# script.
+    /// </summary>
     public class Stack2CSharpTranspiler
     {
+        /// <summary>
+        /// Transpiles a list of <paramref name="blocks"/> to a C# script.
+        /// </summary>
         public static string Transpile(List<BlockInstance> blocks, ConfigSettings settings)
         {
             var declaredVariables = typeof(BotData).GetProperties()
