@@ -144,6 +144,9 @@
   <data name="Deleted" xml:space="preserve">
     <value>Cancellati</value>
   </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Cancella filtrati</value>
+  </data>
   <data name="DeleteGroup" xml:space="preserve">
     <value>Rimuovi Gruppo</value>
   </data>

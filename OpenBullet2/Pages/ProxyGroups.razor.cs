@@ -52,6 +52,8 @@ namespace OpenBullet2.Pages
         private CGrid<ProxyEntity> grid;
         private Task gridLoad;
 
+        private Action<IGridColumnCollection<ProxyEntity>> gridColumns;
+
         protected override async Task OnParametersSetAsync()
         {
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
@@ -65,7 +67,7 @@ namespace OpenBullet2.Pages
                     : await ProxyRepo.GetAll().Include(p => p.Group).ThenInclude(g => g.Owner)
                         .Where(p => p.Group.Owner.Id == uid).ToListAsync();
 
-            Action<IGridColumnCollection<ProxyEntity>> columns = c =>
+            gridColumns = c =>
             {
                 c.Add(p => p.Type).Titled(Loc["Type"]);
                 c.Add(p => p.Host).Titled(Loc["Host"]);
@@ -81,7 +83,7 @@ namespace OpenBullet2.Pages
             var query = new QueryDictionary<StringValues>();
             query.Add("grid-page", "1");
 
-            var client = new GridClient<ProxyEntity>(q => GetGridRows(columns, q), query, false, "proxiesGrid", columns, CultureInfo.CurrentCulture)
+            var client = new GridClient<ProxyEntity>(q => GetGridRows(gridColumns, q), query, false, "proxiesGrid", gridColumns, CultureInfo.CurrentCulture)
                 .Sortable()
                 .Filterable()
                 .WithMultipleFilters()
@@ -263,9 +265,8 @@ namespace OpenBullet2.Pages
             var toDelete = await ProxyRepo.GetAll()
                 .Where(p => p.Group.Id == currentGroupId)
                 .ToListAsync();
-            await ProxyRepo.Delete(toDelete);
-            await RefreshList();
-            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+
+            await DeleteProxies(toDelete);
         }
 
         private async Task DeleteNotWorking()
@@ -276,9 +277,7 @@ namespace OpenBullet2.Pages
                 all = all.Where(p => p.Group.Id == currentGroupId);
 
             var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.NotWorking).ToListAsync();
-            await ProxyRepo.Delete(toDelete);
-            await RefreshList();
-            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+            await DeleteProxies(toDelete);
         }
 
         private async Task DeleteUntested()
@@ -289,9 +288,7 @@ namespace OpenBullet2.Pages
                 all = all.Where(p => p.Group.Id == currentGroupId);
 
             var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.Untested).ToListAsync();
-            await ProxyRepo.Delete(toDelete);
-            await RefreshList();
-            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+            await DeleteProxies(toDelete);
         }
 
         private async Task DeleteSlow()
@@ -302,9 +299,22 @@ namespace OpenBullet2.Pages
                 all = all.Where(p => p.Group.Id == currentGroupId);
 
             var toDelete = await all.Where(p => p.Status == ProxyWorkingStatus.Working && p.Ping > maxPing).ToListAsync();
+            await DeleteProxies(toDelete);
+        }
+
+        private async Task DeleteFiltered()
+        {
+            var toDelete = new GridServer<ProxyEntity>(proxies, new QueryCollection(grid.Query),
+                    true, "hitsGrid", gridColumns, null).Sortable().Filterable().WithMultipleFilters().ItemsToDisplay.Items;
+
+            await DeleteProxies(toDelete);
+        }
+
+        private async Task DeleteProxies(IEnumerable<ProxyEntity> toDelete)
+        {
             await ProxyRepo.Delete(toDelete);
             await RefreshList();
-            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count}");
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count()}");
         }
 
         private IEnumerable<ProxyEntity> ParseProxies(ProxiesForImportDto dto)
