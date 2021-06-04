@@ -82,7 +82,7 @@ END
 ```
 ---
 ##### LOCK
-Very useful if you want to execute operations on global variables.
+Very useful if you want to execute synchronous operations on global variables.
 It makes sure that only 1 bot can enter a given piece of code at a time, so that multiple bots do not edit the same global variable at the same time.
 Often used in conjunction with TRY/CATCH.
 Example:
@@ -95,6 +95,22 @@ CATCH
 // Create globals.Count if it doesn't exist
 globals.Count = 1;
 END
+END
+```
+---
+##### ACQUIRELOCK / RELEASELOCK
+Very useful if you want to execute asynchronous operations on global variables.
+It makes sure that only 1 bot can enter a given piece of code at a time, so that multiple bots do not edit the same global variable at the same time.
+You MUST use this in conjunction with TRY/CATCH/FINALLY.
+Example:
+```
+ACQUIRELOCK globals
+TRY
+// Do some async operation here
+CATCH
+throw; // Rethrow any exception
+FINALLY
+RELEASELOCK globals
 END
 ```
 ---
