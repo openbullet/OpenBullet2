@@ -109,6 +109,7 @@ namespace OpenBullet2.Shared
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
             data.Objects.Add("ironPyEngine", pyengine);
+            data.AsyncLocker = new();
 
             dynamic globals = new ExpandoObject();
 
@@ -231,6 +232,15 @@ namespace OpenBullet2.Shared
                 try
                 {
                     httpClient.Dispose();
+                }
+                catch
+                {
+
+                }
+
+                try
+                {
+                    data.AsyncLocker.Dispose();
                 }
                 catch
                 {

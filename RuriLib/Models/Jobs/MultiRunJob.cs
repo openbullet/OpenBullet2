@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using PuppeteerSharp;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
+using RuriLib.Helpers;
 
 namespace RuriLib.Models.Jobs
 {
@@ -65,6 +66,7 @@ namespace RuriLib.Models.Jobs
         private dynamic globalVariables;
         private Dictionary<string, ConfigResource> resources;
         private HttpClient httpClient;
+        private AsyncLocker asyncLocker;
         private Timer proxyReloadTimer;
 
         // Instance properties and stats
@@ -423,7 +425,8 @@ namespace RuriLib.Models.Jobs
             }
 
             globalVariables.Resources = resources;
-            httpClient = new HttpClient();
+            httpClient = new();
+            asyncLocker = new();
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
 
@@ -447,6 +450,7 @@ namespace RuriLib.Models.Jobs
                 input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
                 input.BotData.Objects.Add("httpClient", httpClient); // Add the default HTTP client
                 input.BotData.Objects.Add("ironPyEngine", pyengine); // Add the IronPython engine
+                input.BotData.AsyncLocker = asyncLocker;
 
                 return input;
             });
@@ -715,6 +719,18 @@ namespace RuriLib.Models.Jobs
                 try
                 {
                     httpClient.Dispose();
+                }
+                catch
+                {
+
+                }
+            }
+
+            if (asyncLocker is not null)
+            {
+                try
+                {
+                    asyncLocker.Dispose();
                 }
                 catch
                 {

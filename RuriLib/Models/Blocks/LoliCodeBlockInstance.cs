@@ -196,11 +196,32 @@ namespace RuriLib.Models.Blocks
                 return $"}}{System.Environment.NewLine}catch{System.Environment.NewLine}{{";
             }
 
+            // FINALLY
+            // FINALLY => } finally {
+            if (input == "FINALLY")
+            {
+                return $"}}{System.Environment.NewLine}finally{System.Environment.NewLine}{{";
+            }
+
             // LOCK
             // LOCK globals => lock (globals) {
             if ((match = Regex.Match(input, $"^LOCK (.+)$")).Success)
             {
                 return $"lock({match.Groups[1].Value}){System.Environment.NewLine}{{";
+            }
+
+            // ACQUIRELOCK
+            // ACQUIRELOCK globals => await data.AsyncLocker.Acquire(nameof(globals), data.CancellationToken);
+            if ((match = Regex.Match(input, $"^ACQUIRELOCK (.+)$")).Success)
+            {
+                return $"await data.AsyncLocker.Acquire(nameof({match.Groups[1].Value}), data.CancellationToken);";
+            }
+
+            // RELEASELOCK
+            // RELEASELOCK globals => data.AsyncLocker.Release(nameof(globals));
+            if ((match = Regex.Match(input, $"^RELEASELOCK (.+)$")).Success)
+            {
+                return $"data.AsyncLocker.Release(nameof({match.Groups[1].Value}));";
             }
 
             // SET VAR
