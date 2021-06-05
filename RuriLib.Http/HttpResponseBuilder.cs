@@ -240,7 +240,8 @@ namespace RuriLib.Http
 
             if (separatorPos == -1)
             {
-                throw new FormatException($"Invalid cookie format: {value}");
+                // Invalid cookie, simply don't add it
+                return;
             }
 
             string cookieValue;
