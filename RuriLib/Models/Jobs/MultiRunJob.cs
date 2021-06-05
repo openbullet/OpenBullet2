@@ -27,6 +27,8 @@ using PuppeteerSharp;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Helpers;
+using IronPython.Compiler;
+using IronPython.Runtime;
 
 namespace RuriLib.Models.Jobs
 {
