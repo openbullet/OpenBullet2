@@ -83,8 +83,8 @@ namespace RuriLib.Helpers.LoliCode
                 ByteArraySetting x => Compare(x.Value, (parameter as ByteArrayParameter).DefaultValue),
                 ListOfStringsSetting x => Compare(x.Value, (parameter as ListOfStringsParameter).DefaultValue),
                 DictionaryOfStringsSetting x => 
-                    Compare(x.Value.Keys, (parameter as DictionaryOfStringsParameter).DefaultValue.Keys) &&
-                    Compare(x.Value.Values, (parameter as DictionaryOfStringsParameter).DefaultValue.Values),
+                    Compare(x.Value?.Keys, (parameter as DictionaryOfStringsParameter).DefaultValue?.Keys) &&
+                    Compare(x.Value?.Values, (parameter as DictionaryOfStringsParameter).DefaultValue?.Values),
                 EnumSetting x => x.Value == (parameter as EnumParameter).DefaultValue,
                 _ => throw new NotImplementedException(),
             };
