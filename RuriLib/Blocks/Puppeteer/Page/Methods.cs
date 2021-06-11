@@ -127,7 +127,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             {
                 FullPage = fullPage,
                 OmitBackground = omitBackground,
-                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg
+                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg,
+                Quality = omitBackground ? null : 100
             };
             await page.ScreenshotAsync(file, options);
             data.Logger.Log($"Took a screenshot of the {(fullPage ? "full" : "visible")} page and saved it to {file}", LogColors.DarkSalmon);
@@ -143,7 +144,8 @@ namespace RuriLib.Blocks.Puppeteer.Page
             {
                 FullPage = fullPage,
                 OmitBackground = omitBackground,
-                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg
+                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg,
+                Quality = omitBackground ? null : 100
             };
             var base64 = await page.ScreenshotBase64Async(options);
             data.Logger.Log($"Took a screenshot of the {(fullPage ? "full" : "visible")} page as base64", LogColors.DarkSalmon);

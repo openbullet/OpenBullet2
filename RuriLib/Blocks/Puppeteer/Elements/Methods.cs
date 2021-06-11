@@ -268,7 +268,13 @@ namespace RuriLib.Blocks.Puppeteer.Elements
 
             var frame = GetFrame(data);
             var elem = await GetElement(frame, findBy, identifier, index);
-            await elem.ScreenshotAsync(fileName, new PuppeteerSharp.ScreenshotOptions { FullPage = fullPage, OmitBackground = omitBackground });
+            await elem.ScreenshotAsync(fileName, new ScreenshotOptions 
+            {
+                FullPage = fullPage,
+                OmitBackground = omitBackground,
+                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg,
+                Quality = omitBackground ? null : 100
+            });
 
             data.Logger.Log($"Took a screenshot of the element and saved it to {fileName}", LogColors.DarkSalmon);
         }
@@ -281,7 +287,13 @@ namespace RuriLib.Blocks.Puppeteer.Elements
 
             var frame = GetFrame(data);
             var elem = await GetElement(frame, findBy, identifier, index);
-            var base64 = await elem.ScreenshotBase64Async(new PuppeteerSharp.ScreenshotOptions { FullPage = fullPage, OmitBackground = omitBackground });
+            var base64 = await elem.ScreenshotBase64Async(new ScreenshotOptions 
+            { 
+                FullPage = fullPage,
+                OmitBackground = omitBackground,
+                Type = omitBackground ? ScreenshotType.Png : ScreenshotType.Jpeg,
+                Quality = omitBackground ? null : 100
+            });
 
             data.Logger.Log($"Took a screenshot of the element as base64", LogColors.DarkSalmon);
             return base64;
