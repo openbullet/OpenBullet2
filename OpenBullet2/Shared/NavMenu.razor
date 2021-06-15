@@ -11,6 +11,7 @@
 @inject AuthenticationStateProvider Auth 
 @inject IModalService Modal
 @inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> Loc
+@implements IDisposable
 
 <div class="top-row pl-4 navbar navbar-dark" style="padding-left: 0.5rem !important;">
     <div class="container-fluid" style="margin-left: -5px;">
@@ -181,6 +182,7 @@
     private bool displayCSharpSubmenu = true;
     private bool sidebarExpanded = true;
     private bool isAdmin = false;
+    private DotNetObjectReference<NavMenu> reference;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -195,7 +197,8 @@
         ConfigService.OnConfigSelected += OnConfigSelected;
         OnConfigSelected(this, ConfigService.SelectedConfig);
 
-        await js.InvokeVoidAsync("registerNavMenu", DotNetObjectReference.Create(this));
+        reference = DotNetObjectReference.Create(this);
+        await js.InvokeVoidAsync("registerNavMenu", reference);
     }
 
     private async Task ToggleNavMenu()
@@ -274,4 +277,7 @@
     }
 
     private void NavigateToHome() => NavigationManager.NavigateTo("/", true);
+
+    public void Dispose()
+        => reference?.Dispose();
 }
