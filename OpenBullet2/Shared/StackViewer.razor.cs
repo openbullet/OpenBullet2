@@ -138,7 +138,7 @@ namespace OpenBullet2.Shared
 
         private async Task DisableBlocks()
         {
-            foreach (var block in selectedBlocks)
+            foreach (var block in selectedBlocks.Where(b => b is not LoliCodeBlockInstance))
             {
                 block.Disabled = !block.Disabled;
                 await OBLogger.LogInfo($"Toggled disabled for block {block.Id}");
