@@ -277,6 +277,9 @@
         <label>@Loc["IgnoreHttpsErrors"]</label>
         <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
         <br />
+
+        <label>@Loc["BlockedUrls"] (@Loc["BlockedUrlsInfo"])</label>
+        <InputListOfStrings @bind-List="settings.PuppeteerSettings.BlockedUrls" />
     </EditForm>
 
     <button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>

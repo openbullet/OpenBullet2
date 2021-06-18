@@ -141,6 +141,12 @@
   <data name="BanStatuses" xml:space="preserve">
     <value>Banna il proxy quando il bot termina con uno di questi stati</value>
   </data>
+  <data name="BlockedUrls" xml:space="preserve">
+    <value>URL bloccati</value>
+  </data>
+  <data name="BlockedUrlsInfo" xml:space="preserve">
+    <value>Se l'URL della risorsa contiene una delle seguenti stringhe di testo, non verrà caricata. Non sensibile a maiuscole e minuscole.</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annulla</value>
   </data>

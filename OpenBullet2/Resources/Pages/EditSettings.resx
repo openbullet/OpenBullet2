@@ -141,6 +141,12 @@
   <data name="BanStatuses" xml:space="preserve">
     <value>Ban the proxy when the bot ends with one of these statuses</value>
   </data>
+  <data name="BlockedUrls" xml:space="preserve">
+    <value>Blocked URLs</value>
+  </data>
+  <data name="BlockedUrlsInfo" xml:space="preserve">
+    <value>If the URL of the resource contains any of the given texts it will not be loaded. Case insensitive.</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

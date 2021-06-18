@@ -197,21 +197,30 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
         private static async Task SetPageLoadingOptions(BotData data, PuppeteerSharp.Page page)
         {
-            if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript)
+            await page.SetRequestInterceptionAsync(true);
+            page.Request += (sender, e) =>
             {
-                await page.SetRequestInterceptionAsync(true);
-                page.Request += (sender, e) =>
+                // If we only want documents and scripts but the resource is not one of those, block
+                if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript && 
+                    e.Request.ResourceType != ResourceType.Document && e.Request.ResourceType != ResourceType.Script)
                 {
-                    if (e.Request.ResourceType == ResourceType.Document || e.Request.ResourceType == ResourceType.Script)
-                    {
-                        e.Request.ContinueAsync();
-                    }
-                    else
-                    {
-                        e.Request.AbortAsync();
-                    }
-                };
-            }
+                    e.Request.AbortAsync();
+                }
+
+                // If the url contains one of the blocked urls
+                else if (data.ConfigSettings.PuppeteerSettings.BlockedUrls
+                    .Where(u => !string.IsNullOrWhiteSpace(u))
+                    .Any(u => e.Request.Url.Contains(u, StringComparison.OrdinalIgnoreCase)))
+                {
+                    e.Request.AbortAsync();
+                }
+
+                // Otherwise all good, continue
+                else
+                {
+                    e.Request.ContinueAsync();
+                }
+            };
 
             if (data.ConfigSettings.PuppeteerSettings.DismissDialogs)
             {
