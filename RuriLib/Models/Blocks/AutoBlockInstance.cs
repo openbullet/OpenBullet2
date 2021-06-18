@@ -88,9 +88,9 @@ namespace RuriLib.Models.Blocks
                     {
                         LoliCodeParser.ParseSetting(ref line, Settings, Descriptor);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)}");
+                        throw new LoliCodeParsingException(lineNumber, $"Could not parse the setting: {lineCopy.TruncatePretty(50)} ({ex.Message})");
                     }
                 }
             }
