@@ -204,6 +204,15 @@
   <data name="Loading" xml:space="preserve">
     <value>Loading</value>
   </data>
+  <data name="Moved" xml:space="preserve">
+    <value>Moved</value>
+  </data>
+  <data name="MoveFiltered" xml:space="preserve">
+    <value>Move filtered</value>
+  </data>
+  <data name="NeedTwoOrMoreGroups" xml:space="preserve">
+    <value>Need two or more proxy groups</value>
+  </data>
   <data name="NoGroupSelected" xml:space="preserve">
     <value>Please select an actual group first</value>
   </data>
@@ -231,6 +240,9 @@
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
     <value>Proxies imported successfully</value>
   </data>
+  <data name="proxiesMoved" xml:space="preserve">
+    <value>proxies moved</value>
+  </data>
   <data name="ProxyGroup" xml:space="preserve">
     <value>Proxy Group</value>
   </data>
@@ -245,6 +257,9 @@
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
     <value>Results per page</value>
+  </data>
+  <data name="SelectProxyGroup" xml:space="preserve">
+    <value>Select proxy group</value>
   </data>
   <data name="Slow" xml:space="preserve">
     <value>Slow</value>

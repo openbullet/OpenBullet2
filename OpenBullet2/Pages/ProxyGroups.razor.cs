@@ -303,12 +303,41 @@ namespace OpenBullet2.Pages
         }
 
         private async Task DeleteFiltered()
-        {
-            var toDelete = new GridServer<ProxyEntity>(proxies, new QueryCollection(grid.Query),
-                    true, "hitsGrid", gridColumns, null).Sortable().Filterable().WithMultipleFilters().ItemsToDisplay.Items;
+            => await DeleteProxies(GetFiltered());
 
-            await DeleteProxies(toDelete);
+        private async Task MoveFiltered()
+        {
+            if (groups.Count < 2)
+            {
+                await js.AlertError(Loc["Uh-Oh"], Loc["NeedTwoOrMoreGroups"]);
+                return;
+            }
+
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ProxyGroupSelector.Groups), groups.Where(g => g.Id != currentGroupId));
+            var modal = Modal.Show<ProxyGroupSelector>(Loc["SelectProxyGroup"], parameters);
+            var result = await modal.Result;
+
+            if (!result.Cancelled)
+            {
+                var group = result.Data as ProxyGroupEntity;
+                var filtered = GetFiltered();
+
+                foreach (var proxy in filtered)
+                {
+                    proxy.Group = group;
+                }
+
+                await ProxyRepo.Update(filtered);
+
+                await js.AlertSuccess(Loc["Moved"], $"{filtered.Count()} {Loc["proxiesMoved"]}");
+                await RefreshList();
+            }
         }
+
+        private IEnumerable<ProxyEntity> GetFiltered()
+            => new GridServer<ProxyEntity>(proxies, new QueryCollection(grid.Query),
+                    true, "hitsGrid", gridColumns, null).Sortable().Filterable().WithMultipleFilters().ItemsToDisplay.Items;
 
         private async Task DeleteProxies(IEnumerable<ProxyEntity> toDelete)
         {

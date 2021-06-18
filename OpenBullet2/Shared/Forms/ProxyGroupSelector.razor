@@ -1,0 +1,34 @@
+﻿@using OpenBullet2.Entities
+@inject IModalService ModalService
+
+@if (selectedGroup is not null)
+{
+    <EditForm Model="Groups">
+        <InputSelect @bind-Value="selectedGroup">
+            @foreach (var group in Groups)
+            {
+                <option value="@group">@group.Name</option>
+            }
+        </InputSelect>
+    </EditForm>
+}
+
+<button class="btn btn-success mt-2" @onclick="Ok">Ok</button>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+    [Parameter] public IEnumerable<ProxyGroupEntity> Groups { get; set; }
+    private ProxyGroupEntity selectedGroup = null;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        selectedGroup = Groups.First();
+    }
+
+    private void Ok()
+    {
+        BlazoredModal.Close(ModalResult.Ok(selectedGroup));
+    }
+}
