@@ -1,6 +1,7 @@
 ﻿using JWT.Algorithms;
 using Newtonsoft.Json;
 using RuriLib.Attributes;
+using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Crypto;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -15,19 +16,37 @@ namespace RuriLib.Blocks.Functions.Crypto
     [BlockCategory("Crypto", "Blocks for executing cryptographic functions", "#9acd32")]
     public static class Methods
     {
+        [Block("XOR En-/Decryption on byte arrays", name = "XOR")]
+        public static byte[] XOR(BotData data, byte[] bytes, byte[] key)
+        {
+            var xored = RuriLib.Functions.Crypto.Crypto.XOR(bytes, key);
+            data.Logger.LogHeader();
+            data.Logger.Log($"XORed the two byte arrays and got {HexConverter.ToHexString(xored)}", LogColors.YellowGreen);
+            return xored;
+        }
+
+        [Block("Does a simple XOR En-/Decryption on strings", name = "XOR Strings")]
+        public static string XORStrings(BotData data, string text, string key)
+        {
+            var xored = RuriLib.Functions.Crypto.Crypto.XORStrings(text, key);
+            data.Logger.LogHeader();
+            data.Logger.Log($"XORed: {text} with {key} with the outcome {xored}", LogColors.YellowGreen);
+            return xored;
+        }
+
         [Block("Hashes data using the specified hashing function")]
         public static byte[] Hash(BotData data, byte[] input, HashFunction hashFunction = HashFunction.MD5)
         {
             var hashed = Hash(input, hashFunction);
             data.Logger.LogHeader();
-            data.Logger.Log($"Computed hash: {RuriLib.Functions.Conversion.HexConverter.ToHexString(hashed)}", LogColors.YellowGreen);
+            data.Logger.Log($"Computed hash: {HexConverter.ToHexString(hashed)}", LogColors.YellowGreen);
             return hashed;
         }
 
         [Block("Hashes a UTF8 string to a HEX-encoded lowercase string using the specified hashing function")]
         public static string HashString(BotData data, string input, HashFunction hashFunction = HashFunction.MD5)
         {
-            var hashed = RuriLib.Functions.Conversion.HexConverter.ToHexString(Hash(Encoding.UTF8.GetBytes(input), hashFunction));
+            var hashed = HexConverter.ToHexString(Hash(Encoding.UTF8.GetBytes(input), hashFunction));
             data.Logger.LogHeader();
             data.Logger.Log($"Computed hash: {hashed}", LogColors.YellowGreen);
             return hashed;
@@ -38,7 +57,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var hashed = RuriLib.Functions.Crypto.Crypto.NTLM(input);
             data.Logger.LogHeader();
-            data.Logger.Log($"Computed hash: {RuriLib.Functions.Conversion.HexConverter.ToHexString(hashed)}", LogColors.YellowGreen);
+            data.Logger.Log($"Computed hash: {HexConverter.ToHexString(hashed)}", LogColors.YellowGreen);
             return hashed;
         }
 
@@ -47,14 +66,14 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var hmac = Hmac(input, key, hashFunction);
             data.Logger.LogHeader();
-            data.Logger.Log($"Computed HMAC: {RuriLib.Functions.Conversion.HexConverter.ToHexString(hmac)}", LogColors.YellowGreen);
+            data.Logger.Log($"Computed HMAC: {HexConverter.ToHexString(hmac)}", LogColors.YellowGreen);
             return hmac;
         }
 
         [Block("Computes the HMAC signature as a HEX-encoded lowercase string from a given UTF8 string using the specified key and hashing function")]
         public static string HmacString(BotData data, string input, byte[] key, HashFunction hashFunction = HashFunction.MD5)
         {
-            var hmac = RuriLib.Functions.Conversion.HexConverter.ToHexString(Hmac(Encoding.UTF8.GetBytes(input), key, hashFunction));
+            var hmac = HexConverter.ToHexString(Hmac(Encoding.UTF8.GetBytes(input), key, hashFunction));
             data.Logger.LogHeader();
             data.Logger.Log($"Computed HMAC: {hmac}", LogColors.YellowGreen);
             return hmac;
@@ -110,7 +129,7 @@ namespace RuriLib.Blocks.Functions.Crypto
 
             public override void GetBytes(byte[] data)
             {
-                for (int i = 0; i < salt.Length; i++)
+                for (var i = 0; i < salt.Length; i++)
                 {
                     data[i] = salt[i];
                 }
@@ -122,7 +141,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var cipherText = RuriLib.Functions.Crypto.Crypto.RSAEncrypt(plainText, modulus, exponent, useOAEP);
             data.Logger.LogHeader();
-            data.Logger.Log($"Encrypted: {RuriLib.Functions.Conversion.HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
+            data.Logger.Log($"Encrypted: {HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
             return cipherText;
         }
 
@@ -131,7 +150,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var plainText = RuriLib.Functions.Crypto.Crypto.RSADecrypt(cipherText, modulus, d, useOAEP);
             data.Logger.LogHeader();
-            data.Logger.Log($"Decrypted: {RuriLib.Functions.Conversion.HexConverter.ToHexString(plainText)}", LogColors.YellowGreen);
+            data.Logger.Log($"Decrypted: {HexConverter.ToHexString(plainText)}", LogColors.YellowGreen);
             return plainText;
         }
 
@@ -140,16 +159,17 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var encrypted = RuriLib.Functions.Crypto.Crypto.RSAPkcs1Pad2(plainText, modulus, exponent);
             data.Logger.LogHeader();
-            data.Logger.Log($"Encrypted: {RuriLib.Functions.Conversion.HexConverter.ToHexString(encrypted)}", LogColors.YellowGreen);
+            data.Logger.Log($"Encrypted: {HexConverter.ToHexString(encrypted)}", LogColors.YellowGreen);
             return encrypted;
         }
 
         [Block("Generates a PKCS v5 #2.0 key using a Password-Based Key Derivation Function", name = "PBKDF2PKCS5")]
-        public static byte[] PBKDF2PKCS5(BotData data, byte[] password, byte[] salt = null, int saltSize = 8, int iterations = 1, int keyLength = 16, HashFunction type = HashFunction.SHA1)
+        public static byte[] PBKDF2PKCS5(BotData data, byte[] password, byte[] salt = null, int saltSize = 8,
+            int iterations = 1, int keyLength = 16, HashFunction type = HashFunction.SHA1)
         {
             var derived = RuriLib.Functions.Crypto.Crypto.PBKDF2PKCS5(password, salt, saltSize, iterations, keyLength, type);
             data.Logger.LogHeader();
-            data.Logger.Log($"Derived: {RuriLib.Functions.Conversion.HexConverter.ToHexString(derived)}", LogColors.YellowGreen);
+            data.Logger.Log($"Derived: {HexConverter.ToHexString(derived)}", LogColors.YellowGreen);
             return derived;
         }
 
@@ -159,7 +179,7 @@ namespace RuriLib.Blocks.Functions.Crypto
         {
             var cipherText = RuriLib.Functions.Crypto.Crypto.AESEncrypt(plainText, key, iv, mode, padding, keySize);
             data.Logger.LogHeader();
-            data.Logger.Log($"Encrypted: {RuriLib.Functions.Conversion.HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
+            data.Logger.Log($"Encrypted: {HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
             return cipherText;
         }
 
@@ -173,7 +193,8 @@ namespace RuriLib.Blocks.Functions.Crypto
             return plainText;
         }
 
-        [Block("Generates a JSON Web Token using a secret key, payload, optional extra headers and specified algorithm type", name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default")]
+        [Block("Generates a JSON Web Token using a secret key, payload, optional extra headers and specified algorithm type",
+            name = "JWT Encode", extraInfo = "The header already contains the selected algorithm and token type (JWT) by default")]
         public static string JwtEncode(BotData data, JwtAlgorithmName algorithm, string secret, string extraHeaders = "{}", string payload = "{}")
         {
             var extraHeadersDictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(extraHeaders);

@@ -40,6 +40,42 @@ namespace RuriLib.Functions.Crypto
     /// </summary>
     public static class Crypto
     {
+        #region XOR
+        /// <summary>
+        /// XOR operation between byte arrays.
+        /// </summary>
+        public static byte[] XOR(byte[] bytes, byte[] key)
+        {
+            var bytesLen = bytes.Length;
+            var keyLen = key.Length;
+            var result = new byte[key.Length];
+
+            for (var i = 0; i < bytesLen; i++)
+            {
+                result[i] = (byte)(bytes[i] ^ key[i % keyLen]);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// XOR operation between strings (treated as char arrays).
+        /// </summary>
+        public static string XORStrings(string text, string key)
+        {
+            var textLen = text.Length;
+            var keyLen = key.Length;
+            var buffer = new char[textLen];
+
+            for (var i = 0; i < textLen; ++i)
+            {
+                buffer[i] = (char)(text[i] ^ key[i % keyLen]);
+            }
+
+            return new string(buffer);
+        }
+        #endregion
+
         #region Hash and Hmac
         /// <summary>
         /// Hashes a string through NTLM.
