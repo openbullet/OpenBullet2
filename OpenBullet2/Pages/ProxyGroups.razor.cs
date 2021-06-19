@@ -348,11 +348,11 @@ namespace OpenBullet2.Pages
 
         private IEnumerable<ProxyEntity> ParseProxies(ProxiesForImportDto dto)
         {
-            List<Proxy> proxies = new List<Proxy>();
+            var proxies = new List<Proxy>();
 
             foreach (var line in dto.Lines)
             {
-                if (Proxy.TryParse(line, out Proxy proxy, dto.DefaultType, dto.DefaultUsername, dto.DefaultPassword))
+                if (Proxy.TryParse(line, out var proxy, dto.DefaultType, dto.DefaultUsername, dto.DefaultPassword))
                 {
                     proxies.Add(proxy);
                 }

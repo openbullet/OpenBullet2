@@ -6,7 +6,6 @@ using OpenBullet2.Helpers;
 using RuriLib.Models.Proxies;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -26,15 +25,8 @@ namespace OpenBullet2.Shared.Forms
         private string defaultUsername = "";
         private string defaultPassword = "";
 
-        private void ImportFromPaste()
-        {
-            ReturnLines(pasteContent);
-        }
-
-        private void ImportFromFile()
-        {
-            ReturnLines(fileContent);
-        }
+        private void ImportFromPaste() => ReturnLines(pasteContent);
+        private void ImportFromFile() => ReturnLines(fileContent);
 
         private async Task ProcessFile(InputFileChangeEventArgs e)
         {
@@ -64,7 +56,12 @@ namespace OpenBullet2.Shared.Forms
             try
             {
                 using var client = new HttpClient();
-                var response = await client.GetAsync(url);
+                using var request = new HttpRequestMessage();
+
+                request.RequestUri = new Uri(url);
+                request.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36");
+
+                using var response = await client.SendAsync(request);
                 var text = await response.Content.ReadAsStringAsync();
                 ReturnLines(text);
             }
@@ -76,8 +73,8 @@ namespace OpenBullet2.Shared.Forms
 
         private void ReturnLines(string text)
         {
-            string[] lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var dto = new OpenBullet2.DTOs.ProxiesForImportDto
+            var lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var dto = new DTOs.ProxiesForImportDto
             {
                 Lines = lines,
                 DefaultType = defaultType,
