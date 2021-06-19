@@ -62,14 +62,14 @@ namespace RuriLib.Models.Blocks
 
             // (RESOURCES) TAKEONE
             // TAKEONE FROM "MyResource" => "myString"
-            if ((match = Regex.Match(input, "TAKEONE FROM (\"[^\"]+\") => \"([^\"]+)\"")).Success)
+            if ((match = Regex.Match(input, "TAKEONE FROM (\"[^\"]+\") => @?\"?([^\"]+)\"?")).Success)
             {
                 return $"string {match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
             }
 
             // (RESOURCES) TAKE
             // TAKE 5 FROM "MyResource" => "myList"
-            if ((match = Regex.Match(input, "TAKE ([0-9]+) FROM (\"[^\"]+\") => \"([^\"]+)\"")).Success)
+            if ((match = Regex.Match(input, "TAKE ([0-9]+) FROM (\"[^\"]+\") => @?\"?([^\"]+)\"?")).Success)
             {
                 return $"List<string> {match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
             }
@@ -226,7 +226,7 @@ namespace RuriLib.Models.Blocks
 
             // SET VAR
             // SET VAR myString "hello" => string myString = "hello";
-            if ((match = Regex.Match(input, $"^SET VAR ({validTokenRegex}) (.+)$")).Success)
+            if ((match = Regex.Match(input, $"^SET VAR @?\"?({validTokenRegex})\"? (.+)$")).Success)
             {
                 if (definedVariables.Contains(match.Groups[1].Value))
                 {
@@ -241,7 +241,7 @@ namespace RuriLib.Models.Blocks
 
             // SET CAP
             // SET CAP myCapture "hello" => string myString = "hello"; data.MarkForCapture(nameof(myCapture));
-            if ((match = Regex.Match(input, $"^SET CAP ({validTokenRegex}) (.+)$")).Success)
+            if ((match = Regex.Match(input, $"^SET CAP @?\"?({validTokenRegex})\"? (.+)$")).Success)
             {
                 if (definedVariables.Contains(match.Groups[1].Value))
                 {

@@ -118,10 +118,10 @@ END
 Sets a string variable, and optionally also marks it for capture. Introduced for consistency with OB1.
 Example:
 ```
-SET VAR myString "variable"
+SET VAR @myString "variable"
 LOG myString
 
-SET CAP myCapture "capture"
+SET CAP @myCapture "capture"
 LOG myCapture
 ```
 ---
@@ -130,7 +130,7 @@ Takes a single item from a resource. You can configure resources in Config Setti
 You need to provide the name of the resource and the name of the variable that will be created (of type `string`).
 Example:
 ```
-TAKEONE FROM "resourceName" => "myString"
+TAKEONE FROM "resourceName" => @myString
 LOG myString
 ```
 ---
@@ -139,5 +139,5 @@ Takes a multiple items from a resource. You can configure resources in Config Se
 You need to provide the name of the resource and the name of the variable that will be created (of type `List<string>`).
 Example:
 ```
-TAKE 5 FROM "resourceName" => "myList"
+TAKE 5 FROM "resourceName" => @myList
 ```
