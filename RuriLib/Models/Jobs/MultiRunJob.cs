@@ -133,7 +133,7 @@ namespace RuriLib.Models.Jobs
 
         #region Work Function
         private Func<MultiRunInput, CancellationToken, Task<CheckResult>> workFunction =
-            new Func<MultiRunInput, CancellationToken, Task<CheckResult>>(async (input, token) =>
+            new(async (input, token) =>
             {
                 var botData = input.BotData;
                 botData.CancellationToken = token;

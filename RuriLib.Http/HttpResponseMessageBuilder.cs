@@ -56,9 +56,17 @@ namespace RuriLib.Http
 
             response.RequestMessage = request;
 
-            await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
-            await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
-            await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
+                await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
+                await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+            }
+            catch
+            {
+                response.Dispose();
+                throw;
+            }
 
             return response;
         }

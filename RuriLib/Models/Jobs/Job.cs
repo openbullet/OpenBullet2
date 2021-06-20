@@ -43,6 +43,7 @@ namespace RuriLib.Models.Jobs
         public virtual async Task Start()
         {
             waitFinished = false;
+            cts?.Dispose();
             cts = new CancellationTokenSource();
 
             StartTime = DateTime.Now;

@@ -113,9 +113,8 @@ namespace RuriLib.Proxies.Clients
                 // Throw a custom exception if we timed out
                 if (waitCts.Token.IsCancellationRequested)
                     throw new ProxyException("Timed out while waiting for data from proxy");
-
-                await Task.Delay(100, cancellationToken).ConfigureAwait(false);
             }
+
             do
             {
                 var bytesRead = await nStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);

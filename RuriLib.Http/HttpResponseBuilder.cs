@@ -41,7 +41,6 @@ namespace RuriLib.Http
         async internal Task<HttpResponse> GetResponseAsync(HttpRequest request, Stream stream,
             bool readResponseContent = true, CancellationToken cancellationToken = default)
         {
-          
             reader = PipeReader.Create(stream);
 
             response = new HttpResponse
@@ -51,9 +50,17 @@ namespace RuriLib.Http
 
             contentHeaders = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-            await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
-            await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
-            await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
+                await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
+                await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+            }
+            catch
+            {
+                response.Dispose();
+                throw;
+            }
 
             return response;
         }

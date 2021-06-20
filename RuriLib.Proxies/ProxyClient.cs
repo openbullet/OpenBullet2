@@ -55,7 +55,9 @@ namespace RuriLib.Proxies
                 using var timeoutCts = new CancellationTokenSource(Settings.ConnectTimeout);
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeoutCts.Token, cancellationToken);
                 await client.ConnectAsync(host, port, linkedCts.Token).ConfigureAwait(false);
-              
+
+                await CreateConnectionAsync(client, destinationHost, destinationPort, cancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -68,9 +70,6 @@ namespace RuriLib.Proxies
 
                 throw;
             }
-
-            await CreateConnectionAsync(client, destinationHost, destinationPort, cancellationToken)
-                .ConfigureAwait(false);
 
             return client;
         }
