@@ -18,6 +18,7 @@ namespace RuriLib.Functions.Http
             return new ProxyClientHandler(client)
             {
                 AllowAutoRedirect = options.AutoRedirect,
+                MaxNumberOfRedirects = options.MaxNumberOfRedirects,
                 CookieContainer = cookies,
                 UseCookies = cookies != null,
                 SslProtocols = ToSslProtocols(options.SecurityProtocol),

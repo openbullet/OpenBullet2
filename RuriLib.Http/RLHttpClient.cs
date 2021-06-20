@@ -46,7 +46,7 @@ namespace RuriLib.Http
         /// <summary>
         /// The maximum number of times a request will be redirected.
         /// </summary>
-        public int MaxNumberOfRedirects { get; set; }
+        public int MaxNumberOfRedirects { get; set; } = 8;
 
         /// <summary>
         /// Whether to read the content of the response. Set to false if you're only interested
@@ -123,8 +123,11 @@ namespace RuriLib.Http
         /// Asynchronously sends a <paramref name="request"/> and returns an <see cref="HttpResponse"/>.
         /// </summary>
         /// <param name="cancellationToken">A cancellation token to cancel the operation</param>
-        public async Task<HttpResponse> SendAsync(HttpRequest request,
-            CancellationToken cancellationToken = default, int redirects = 0)
+        public Task<HttpResponse> SendAsync(HttpRequest request, CancellationToken cancellationToken = default)
+            => SendAsync(request, 0, cancellationToken);
+
+        private async Task<HttpResponse> SendAsync(HttpRequest request, int redirects,
+            CancellationToken cancellationToken = default)
         {
             if (redirects > MaxNumberOfRedirects)
             {
@@ -184,7 +187,7 @@ namespace RuriLib.Http
                     responseMessage.Dispose();
 
                     // Perform a new request
-                    return await SendAsync(request, cancellationToken, redirects++).ConfigureAwait(false);
+                    return await SendAsync(request, redirects + 1, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch
