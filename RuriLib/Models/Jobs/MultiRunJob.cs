@@ -530,7 +530,7 @@ namespace RuriLib.Models.Jobs
             => await proxyPool.ReloadAll(ShuffleProxies);
         #endregion
 
-        #region Wrappers for TaskManager methods
+        #region Wrappers for Parallelizer methods
         public async Task ChangeBots(int amount)
         {
             if (parallelizer != null)
@@ -541,7 +541,7 @@ namespace RuriLib.Models.Jobs
         }
         #endregion
 
-        #region Propagation of TaskManager events
+        #region Propagation of Parallelizer events
         private void PropagateTaskError(object sender, ErrorDetails<MultiRunInput> details)
         {
             OnTaskError?.Invoke(sender, details);
