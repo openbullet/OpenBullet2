@@ -35,6 +35,7 @@ namespace RuriLib.Models.Bots
         public int RESPONSECODE { get; set; } = 0;
         public Dictionary<string, string> COOKIES { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> HEADERS { get; set; } = new Dictionary<string, string>();
+        public string ERROR { get; set; } = string.Empty;
 
         // This dictionary will hold stateful objects like a captcha provider, a TCP client, a selenium webdriver...
         public Dictionary<string, object> Objects { get; } = new Dictionary<string, object>();

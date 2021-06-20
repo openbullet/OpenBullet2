@@ -126,6 +126,9 @@
   <data name="OutputVariable" xml:space="preserve">
     <value>Output variable</value>
   </data>
+  <data name="SafeMode" xml:space="preserve">
+    <value>Safe mode (catch exceptions to data.ERROR)</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>

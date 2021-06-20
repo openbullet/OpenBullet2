@@ -19,6 +19,7 @@ namespace OpenBullet2.Helpers
 					new TokenThemeRule { Token = "block", Foreground = "5DADE2" },
 					new TokenThemeRule { Token = "block.end", Foreground = "5DADE2" },
 					new TokenThemeRule { Token = "block.disabled", Foreground = "EC7063" },
+					new TokenThemeRule { Token = "block.safe", Foreground = "BCFF70" },
 					new TokenThemeRule { Token = "block.label", Foreground = "58D68D" },
 					new TokenThemeRule { Token = "block.var", Foreground = "F7DC6F" },
 					new TokenThemeRule { Token = "block.cap", Foreground = "F1948A" },

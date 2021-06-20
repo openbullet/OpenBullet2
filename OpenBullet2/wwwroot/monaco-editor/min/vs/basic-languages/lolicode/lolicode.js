@@ -237,6 +237,7 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
 			lolicode: [
 				[/^[ \t]*ENDBLOCK$/, "block.end", "@pop"],
                 [/^[ \t]*DISABLED$/, "block.disabled"],
+                [/^[ \t]*SAFE$/, "block.safe"],
                 [/^[ \t]*LABEL:.*/, "block.label"],
                 [/\bVAR\b/, "block.var"],
                 [/\bCAP\b/, "block.cap"],

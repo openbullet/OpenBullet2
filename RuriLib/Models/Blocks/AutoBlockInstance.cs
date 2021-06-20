@@ -26,6 +26,7 @@ namespace RuriLib.Models.Blocks
         }
 
         public bool IsCapture { get; set; } = false;
+        public bool Safe { get; set; } = false;
 
         public AutoBlockInstance(AutoBlockDescriptor descriptor)
             : base(descriptor)
@@ -42,6 +43,11 @@ namespace RuriLib.Models.Blocks
              */
 
             using var writer = new LoliCodeWriter(base.ToLC());
+
+            if (Safe)
+            {
+                writer.AppendLine("SAFE", 2);
+            }
 
             var outVarKind = IsCapture ? "CAP" : "VAR";
 
@@ -69,7 +75,11 @@ namespace RuriLib.Models.Blocks
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                if (line.StartsWith("=>"))
+                if (line.StartsWith("SAFE"))
+                {
+                    Safe = true;
+                }
+                else if (line.StartsWith("=>"))
                 {
                     try
                     {
@@ -111,22 +121,60 @@ namespace RuriLib.Models.Blocks
 
             using var writer = new StringWriter();
 
-            // If not void, do variable assignment
-            if (Descriptor.ReturnType.HasValue)
+            // Safe mode, wrap method in try/catch but declare variable outside of it
+            if (Safe)
             {
-                if (declaredVariables.Contains(OutputVariable) || OutputVariable.StartsWith("globals."))
-                {
-                    writer.Write($"{OutputVariable} = ");
-                }
-                else
+                // If not void, initialize the variable with default value
+                // Only do this if we haven't declared the variable yet!
+                if (Descriptor.ReturnType.HasValue && !declaredVariables.Contains(OutputVariable)
+                    && !OutputVariable.StartsWith("globals."))
                 {
                     if (!Disabled)
                         declaredVariables.Add(OutputVariable);
 
-                    writer.Write($"{GetRuntimeReturnType()} {OutputVariable} = ");
+                    writer.WriteLine($"{GetRuntimeReturnType()} {OutputVariable} = {GetDefaultReturnValue()};");
                 }
+
+                writer.WriteLine("try {");
+
+                // Here we already know the variable exists so we just do the assignment
+                if (Descriptor.ReturnType.HasValue)
+                {
+                    writer.Write($"{OutputVariable} = ");
+                }
+
+                WriteMethod(writer);
+
+                writer.WriteLine("} catch (Exception safeException) {");
+                writer.WriteLine("data.ERROR = safeException.Message;");
+                writer.WriteLine("data.Logger.Log(\"[SAFE MODE] Exception caught and saved to data.ERROR: \" + safeException.Message, LogColors.Tomato); }");
+            }
+            else
+            {
+                // If not void, do variable assignment
+                if (Descriptor.ReturnType.HasValue)
+                {
+                    if (declaredVariables.Contains(OutputVariable) || OutputVariable.StartsWith("globals."))
+                    {
+                        writer.Write($"{OutputVariable} = ");
+                    }
+                    else
+                    {
+                        if (!Disabled)
+                            declaredVariables.Add(OutputVariable);
+
+                        writer.Write($"{GetRuntimeReturnType()} {OutputVariable} = ");
+                    }
+                }
+
+                WriteMethod(writer);
             }
 
+            return writer.ToString();
+        }
+
+        private void WriteMethod(StringWriter writer)
+        {
             // If async, prepend the await keyword
             if ((Descriptor as AutoBlockDescriptor).Async)
                 writer.Write("await ");
@@ -148,8 +196,6 @@ namespace RuriLib.Models.Blocks
 
             if (IsCapture)
                 writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");
-
-            return writer.ToString();
         }
 
         // This is needed otherwise when we have blocks made in other plugins they might reference
@@ -164,6 +210,18 @@ namespace RuriLib.Models.Blocks
             VariableType.Int => "int",
             VariableType.ListOfStrings => "List<string>",
             VariableType.String => "string",
+            _ => throw new NotSupportedException()
+        };
+
+        private string GetDefaultReturnValue() => Descriptor.ReturnType switch
+        {
+            VariableType.Bool => "false",
+            VariableType.ByteArray => "Array.Empty<byte>()",
+            VariableType.DictionaryOfStrings => "new()",
+            VariableType.Float => "0",
+            VariableType.Int => "0",
+            VariableType.ListOfStrings => "new()",
+            VariableType.String => "string.Empty",
             _ => throw new NotSupportedException()
         };
     }
