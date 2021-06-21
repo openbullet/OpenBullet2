@@ -31,6 +31,8 @@
                                   OnDidInit="@(() => OpenBullet2.Helpers.MonacoThemeSetter.SetLolicodeTheme(Settings))" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
                 </div>
                 <br />
+                <span class="fg-custom font-italic">@Loc["CSharpTip"]</span>
+                <br />
                 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
                 <a href="#" @onclick="@(() => js.InvokeVoidAsync("open", "docs/lolicode/statements", "_blank"))">LoliCode Statements</a>
                 <hr />
