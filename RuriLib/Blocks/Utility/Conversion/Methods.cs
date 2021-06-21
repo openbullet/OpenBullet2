@@ -1,5 +1,6 @@
 ﻿using RuriLib.Attributes;
 using RuriLib.Functions.Conversion;
+using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
 using System.Numerics;
@@ -14,7 +15,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         public static byte[] HexStringToByteArray(BotData data, [Variable] string hexString, bool addPadding = true)
         {
             data.Logger.LogHeader();
-            data.Logger.Log($"Converting {hexString} to a byte array");
+            data.Logger.Log($"Converting {hexString} to a byte array", LogColors.Flavescent);
             return HexConverter.ToByteArray(hexString, addPadding);
         }
 
@@ -23,7 +24,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var hex = HexConverter.ToHexString(bytes);
             data.Logger.LogHeader();
-            data.Logger.Log($"Converted the byte array to {hex}");
+            data.Logger.Log($"Converted the byte array to {hex}", LogColors.Flavescent);
             return hex;
         }
 
@@ -31,7 +32,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         public static byte[] Base64StringToByteArray(BotData data, [Variable] string base64String, bool urlEncoded = false)
         {
             data.Logger.LogHeader();
-            data.Logger.Log($"Converting {base64String} to a byte array");
+            data.Logger.Log($"Converting {base64String} to a byte array", LogColors.Flavescent);
             return Base64Converter.ToByteArray(base64String, urlEncoded);
         }
 
@@ -40,7 +41,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var b64 = Base64Converter.ToBase64String(bytes, urlEncoded);
             data.Logger.LogHeader();
-            data.Logger.Log($"Converted the byte array to {b64}");
+            data.Logger.Log($"Converted the byte array to {b64}", LogColors.Flavescent);
             return b64;
         }
 
@@ -48,7 +49,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         public static byte[] BigIntegerToByteArray(BotData data, [Variable] string bigInteger)
         {
             data.Logger.LogHeader();
-            data.Logger.Log($"Converting {bigInteger} to a byte array");
+            data.Logger.Log($"Converting {bigInteger} to a byte array", LogColors.Flavescent);
             return BigInteger.Parse(bigInteger).ToByteArray();
         }
 
@@ -57,7 +58,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var bi = new BigInteger(bytes);
             data.Logger.LogHeader();
-            data.Logger.Log($"Converted the byte array to {bi}");
+            data.Logger.Log($"Converted the byte array to {bi}", LogColors.Flavescent);
             return bi.ToString();
         }
 
@@ -65,7 +66,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         public static byte[] BinaryStringToByteArray(BotData data, [Variable] string binaryString, bool addPadding = true)
         {
             data.Logger.LogHeader();
-            data.Logger.Log($"Converting {binaryString} to a byte array");
+            data.Logger.Log($"Converting {binaryString} to a byte array", LogColors.Flavescent);
             return BinaryConverter.ToByteArray(binaryString, addPadding);
         }
 
@@ -74,7 +75,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var bin = BinaryConverter.ToBinaryString(bytes);
             data.Logger.LogHeader();
-            data.Logger.Log($"Converted the byte array to {bin}");
+            data.Logger.Log($"Converted the byte array to {bin}", LogColors.Flavescent);
             return bin;
         }
 
@@ -83,7 +84,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
             data.Logger.LogHeader();
-            data.Logger.Log($"Encoded as base64: {base64}");
+            data.Logger.Log($"Encoded as base64: {base64}", LogColors.Flavescent);
             return base64;
         }
 
@@ -100,7 +101,7 @@ namespace RuriLib.Blocks.Utility.Conversion
 
             var utf8 = Encoding.UTF8.GetString(Convert.FromBase64String(toDecode));
             data.Logger.LogHeader();
-            data.Logger.Log($"Encoded as UTF8: {utf8}");
+            data.Logger.Log($"Encoded as UTF8: {utf8}", LogColors.Flavescent);
             return utf8;
         }
 
@@ -110,7 +111,7 @@ namespace RuriLib.Blocks.Utility.Conversion
         {
             var size = SizeConverter.ToReadableSize(long.Parse(input), outputBits, binaryUnit, decimalPlaces);
             data.Logger.LogHeader();
-            data.Logger.Log($"Converted {input} bytes into the string {size}");
+            data.Logger.Log($"Converted {input} bytes into the string {size}", LogColors.Flavescent);
             return size;
         }
     }
