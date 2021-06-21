@@ -5,6 +5,7 @@ This variable contains all data related to the current bot.
 - `data.STATUS` (`string`) the current status of the bot
 - `data.RAWSOURCE` (`byte[]`) the content of the last http response received
 - `data.SOURCE` (`string`) same as above but as a string
+- `data.ERROR` (`string`) contains the message of the last exception caught when using safe mode (in blocks that support it)
 - `data.ADDRESS` (`string`) the absolute uri of the last http response (after redirection)
 - `data.RESPONSECODE` (`int`) the status code of the last http response
 - `data.COOKIES` (`Dictionary<string, string>`) the cookies sent or received so far (e.g. `data.COOKIES["PHPSESSID"]`)

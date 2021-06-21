@@ -146,8 +146,8 @@ namespace RuriLib.Models.Blocks
                 WriteMethod(writer);
 
                 writer.WriteLine("} catch (Exception safeException) {");
-                writer.WriteLine("data.ERROR = safeException.Message;");
-                writer.WriteLine("data.Logger.Log(\"[SAFE MODE] Exception caught and saved to data.ERROR: \" + safeException.Message, LogColors.Tomato); }");
+                writer.WriteLine("data.ERROR = $\"{safeException.GetType().ToString()}: {safeException.Message}\";");
+                writer.WriteLine("data.Logger.Log($\"[SAFE MODE] Exception caught and saved to data.ERROR: {data.ERROR}\", LogColors.Tomato); }");
             }
             else
             {
