@@ -22,17 +22,23 @@ namespace OpenBullet2.Services
 
         public async Task<DataPool> FromOptions(DataPoolOptions options)
         {
-            DataPool pool = options switch
+            try
             {
-                InfiniteDataPoolOptions x => new InfiniteDataPool(x.WordlistType),
-                CombinationsDataPoolOptions x => new CombinationsDataPool(x.CharSet, x.Length, x.WordlistType),
-                RangeDataPoolOptions x => new RangeDataPool(x.Start, x.Amount, x.Step, x.Pad, x.WordlistType),
-                FileDataPoolOptions x => new FileDataPool(x.FileName, x.WordlistType),
-                WordlistDataPoolOptions x => await MakeWordlistDataPool(x),
-                _ => throw new NotImplementedException()
-            };
-
-            return pool;
+                return options switch
+                {
+                    InfiniteDataPoolOptions x => new InfiniteDataPool(x.WordlistType),
+                    CombinationsDataPoolOptions x => new CombinationsDataPool(x.CharSet, x.Length, x.WordlistType),
+                    RangeDataPoolOptions x => new RangeDataPool(x.Start, x.Amount, x.Step, x.Pad, x.WordlistType),
+                    FileDataPoolOptions x => new FileDataPool(x.FileName, x.WordlistType),
+                    WordlistDataPoolOptions x => await MakeWordlistDataPool(x),
+                    _ => throw new NotImplementedException()
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception while loading data pool. {ex.Message}");
+                return new InfiniteDataPool();
+            }
         }
 
         private async Task<DataPool> MakeWordlistDataPool(WordlistDataPoolOptions options)
@@ -42,14 +48,12 @@ namespace OpenBullet2.Services
             // If the entity was deleted
             if (entity == null)
             {
-                Console.WriteLine($"Wordlist entity not found: {options.WordlistId}");
-                return new InfiniteDataPool();
+                throw new Exception($"Wordlist entity not found: {options.WordlistId}");
             }
 
             if (!File.Exists(entity.FileName))
             {
-                Console.WriteLine($"Wordlist file not found: {entity.FileName}");
-                return new InfiniteDataPool();
+                throw new Exception($"Wordlist file not found: {entity.FileName}");
             }
 
             var factory = new WordlistFactory(ruriLibSettings);
