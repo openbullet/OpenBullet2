@@ -1,4 +1,4 @@
-using MailKit;
+﻿using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Proxy;
 using MailKit.Search;
@@ -379,8 +379,8 @@ namespace RuriLib.Blocks.Requests.Imap
             return ids;
         }
 
-        [Block("Gets a text representation of a mail", name = "Read Mail")]
-        public static async Task<string> ImapReadMail(BotData data, string id)
+        [Block("Gets a text (or HTML) representation of a mail", name = "Read Mail")]
+        public static async Task<string> ImapReadMail(BotData data, string id, bool preferHtml = false)
         {
             data.Logger.LogHeader();
 
@@ -389,7 +389,7 @@ namespace RuriLib.Blocks.Requests.Imap
             var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken);
             var body = mail.TextBody;
 
-            if (string.IsNullOrEmpty(body))
+            if (string.IsNullOrEmpty(body) || preferHtml)
             {
                 body = mail.HtmlBody;
             }
