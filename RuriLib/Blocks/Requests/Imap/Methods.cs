@@ -9,6 +9,7 @@ using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace RuriLib.Blocks.Requests.Imap
     public static class Methods
     {
         private static readonly object hostsLocker = new();
-        private static Dictionary<string, List<HostEntry>> hosts;
+        private static ConcurrentDictionary<string, List<HostEntry>> hosts;
         private static bool initialized = false;
         private static readonly List<string> subdomains = new() { "mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m" };
         private static readonly string hosterFile = "UserData/imapdomains.dat";
@@ -48,12 +49,12 @@ namespace RuriLib.Blocks.Requests.Imap
             var domain = email.Split('@')[1];
             List<HostEntry> candidates = new();
 
-            // Load the dictionary if not initialized
+            // Load the dictionary if not initialized (only do this once)
             lock (hostsLocker)
             {
                 if (!initialized)
                 {
-                    hosts = new Dictionary<string, List<HostEntry>>(StringComparer.OrdinalIgnoreCase);
+                    hosts = new ConcurrentDictionary<string, List<HostEntry>>(StringComparer.OrdinalIgnoreCase);
 
                     if (!File.Exists(hosterFile))
                     {
@@ -234,10 +235,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
                 if (!hosts.ContainsKey(domain))
                 {
-                    lock (hostsLocker)
-                    {
-                        hosts[domain] = new List<HostEntry> { entry };
-                    }
+                    hosts[domain] = new List<HostEntry> { entry };
 
                     try
                     {
