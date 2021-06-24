@@ -1,4 +1,4 @@
-﻿using MailKit;
+using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Proxy;
 using MailKit.Search;
@@ -349,7 +349,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             SearchQuery query = new DateSearchQuery(SearchTerm.DeliveredAfter, ((long)deliveredAfter).ToDateTimeUtc());
 
-            if (!string.IsNullOrEmpty(text2))
+            if (!string.IsNullOrEmpty(text1))
             {
                 query = query.And(new TextSearchQuery(MapSearchTerm(field1), text1));
             }
