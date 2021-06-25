@@ -5,6 +5,7 @@ using MailKit.Search;
 using RuriLib.Attributes;
 using RuriLib.Functions.Http;
 using RuriLib.Functions.Imap;
+using RuriLib.Functions.Networking;
 using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -111,8 +112,8 @@ namespace RuriLib.Blocks.Requests.Imap
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
-                var xml = await GetXml(data, thunderbirdUrl);
-                candidates = Autoconfig.Parse(xml);
+                var xml = await GetString(data, thunderbirdUrl);
+                candidates = ImapAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
             }
             catch
@@ -140,14 +141,14 @@ namespace RuriLib.Blocks.Requests.Imap
 
                 try
                 {
-                    xml = await GetXml(data, autoconfigUrl);
+                    xml = await GetString(data, autoconfigUrl);
                 }
                 catch
                 {
-                    xml = await GetXml(data, autoconfigUrlUnsecure);
+                    xml = await GetString(data, autoconfigUrlUnsecure);
                 }
 
-                candidates = Autoconfig.Parse(xml);
+                candidates = ImapAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
             }
             catch
@@ -175,19 +176,47 @@ namespace RuriLib.Blocks.Requests.Imap
 
                 try
                 {
-                    xml = await GetXml(data, wellKnownUrl);
+                    xml = await GetString(data, wellKnownUrl);
                 }
                 catch
                 {
-                    xml = await GetXml(data, wellKnownUrlUnsecure);
+                    xml = await GetString(data, wellKnownUrlUnsecure);
                 }
 
-                candidates = Autoconfig.Parse(xml);
+                candidates = ImapAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
             }
             catch
             {
                 data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.DarkOrchid);
+            }
+
+            foreach (var c in candidates)
+            {
+                var success = await TryConnect(data, client, domain, c);
+
+                if (success)
+                {
+                    return;
+                }
+            }
+
+            // Try MX records
+            candidates.Clear();
+            try
+            {
+                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
+                mxRecords.ForEach(r =>
+                {
+                    candidates.Add(new HostEntry(r, 993));
+                    candidates.Add(new HostEntry(r, 143));
+                });
+
+                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.DarkOrchid);
+            }
+            catch
+            {
+                data.Logger.Log($"Failed to query the MX records", LogColors.DarkOrchid);
             }
 
             foreach (var c in candidates)
@@ -257,18 +286,21 @@ namespace RuriLib.Blocks.Requests.Imap
             return false;
         }
 
-        private static async Task<string> GetXml(BotData data, string url)
+        private static async Task<string> GetString(BotData data, string url)
         {
-            using var cts = new CancellationTokenSource(30000);
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, cts.Token);
-            using var httpClient = HttpFactory.GetRLHttpClient(data.Proxy, new());
+            using var httpClient = HttpFactory.GetRLHttpClient(data.Proxy, new()
+            {
+                ConnectTimeout = TimeSpan.FromMilliseconds(30000),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(30000)
+            });
+
             using var request = new HttpRequest
             {
                 Uri = new Uri(url),
             };
 
-            using var response = await httpClient.SendAsync(request, linkedCts.Token);
-            return await response.Content.ReadAsStringAsync();
+            using var response = await httpClient.SendAsync(request, data.CancellationToken);
+            return await response.Content.ReadAsStringAsync(data.CancellationToken);
         }
 
         [Block("Connects to an IMAP server", name = "Connect")]

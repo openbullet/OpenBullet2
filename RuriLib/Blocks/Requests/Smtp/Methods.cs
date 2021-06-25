@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using MimeKit;
 using System.Linq;
 using RuriLib.Extensions;
+using RuriLib.Functions.Networking;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
@@ -111,8 +112,8 @@ namespace RuriLib.Blocks.Requests.Smtp
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
-                var xml = await GetXml(data, thunderbirdUrl);
-                candidates = Autoconfig.Parse(xml);
+                var xml = await GetString(data, thunderbirdUrl);
+                candidates = SmtpAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
@@ -140,14 +141,14 @@ namespace RuriLib.Blocks.Requests.Smtp
 
                 try
                 {
-                    xml = await GetXml(data, autoconfigUrl);
+                    xml = await GetString(data, autoconfigUrl);
                 }
                 catch
                 {
-                    xml = await GetXml(data, autoconfigUrlUnsecure);
+                    xml = await GetString(data, autoconfigUrlUnsecure);
                 }
 
-                candidates = Autoconfig.Parse(xml);
+                candidates = SmtpAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
@@ -175,14 +176,14 @@ namespace RuriLib.Blocks.Requests.Smtp
 
                 try
                 {
-                    xml = await GetXml(data, wellKnownUrl);
+                    xml = await GetString(data, wellKnownUrl);
                 }
                 catch
                 {
-                    xml = await GetXml(data, wellKnownUrlUnsecure);
+                    xml = await GetString(data, wellKnownUrlUnsecure);
                 }
 
-                candidates = Autoconfig.Parse(xml);
+                candidates = SmtpAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
@@ -200,15 +201,46 @@ namespace RuriLib.Blocks.Requests.Smtp
                 }
             }
 
+            // Try MX records
+            candidates.Clear();
+            try
+            {
+                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
+                mxRecords.ForEach(r =>
+                {
+                    candidates.Add(new HostEntry(r, 465));
+                    candidates.Add(new HostEntry(r, 587));
+                    candidates.Add(new HostEntry(r, 25));
+                });
+
+                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.DarkLava);
+            }
+            catch
+            {
+                data.Logger.Log($"Failed to query the MX records", LogColors.DarkLava);
+            }
+
+            foreach (var c in candidates)
+            {
+                var success = await TryConnect(data, client, domain, c);
+
+                if (success)
+                {
+                    return;
+                }
+            }
+
             // Try the domain itself and possible subdomains
             candidates.Clear();
-            candidates.Add(new HostEntry(domain, 993));
-            candidates.Add(new HostEntry(domain, 143));
+            candidates.Add(new HostEntry(domain, 465));
+            candidates.Add(new HostEntry(domain, 587));
+            candidates.Add(new HostEntry(domain, 25));
 
             foreach (var sub in subdomains)
             {
-                candidates.Add(new HostEntry($"{sub}.{domain}", 993));
-                candidates.Add(new HostEntry($"{sub}.{domain}", 143));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 465));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 587));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 25));
             }
 
             foreach (var c in candidates)
@@ -257,18 +289,21 @@ namespace RuriLib.Blocks.Requests.Smtp
             return false;
         }
 
-        private static async Task<string> GetXml(BotData data, string url)
+        private static async Task<string> GetString(BotData data, string url)
         {
-            using var cts = new CancellationTokenSource(30000);
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, cts.Token);
-            using var httpClient = HttpFactory.GetRLHttpClient(data.Proxy, new());
+            using var httpClient = HttpFactory.GetRLHttpClient(data.Proxy, new()
+            {
+                ConnectTimeout = TimeSpan.FromMilliseconds(30000),
+                ReadWriteTimeout = TimeSpan.FromMilliseconds(30000)
+            });
+
             using var request = new HttpRequest
             {
                 Uri = new Uri(url),
             };
 
-            using var response = await httpClient.SendAsync(request, linkedCts.Token);
-            return await response.Content.ReadAsStringAsync();
+            using var response = await httpClient.SendAsync(request, data.CancellationToken);
+            return await response.Content.ReadAsStringAsync(data.CancellationToken);
         }
 
         [Block("Connects to a SMTP server", name = "Connect")]

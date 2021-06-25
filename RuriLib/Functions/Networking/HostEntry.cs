@@ -1,4 +1,4 @@
-﻿namespace RuriLib.Functions.Smtp
+﻿namespace RuriLib.Functions.Networking
 {
     public class HostEntry
     {

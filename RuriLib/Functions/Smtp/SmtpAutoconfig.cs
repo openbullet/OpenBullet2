@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using RuriLib.Functions.Networking;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace RuriLib.Functions.Smtp
 {
-    public static class Autoconfig
+    public static class SmtpAutoconfig
     {
         public static List<HostEntry> Parse(string xml)
         {
