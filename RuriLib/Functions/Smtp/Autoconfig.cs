@@ -10,7 +10,7 @@ namespace RuriLib.Functions.Smtp
             var doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            var servers = doc.DocumentElement.SelectNodes("/clientConfig/emailProvider/outgoingServer[contains(@type,'imap')]");
+            var servers = doc.DocumentElement.SelectNodes("/clientConfig/emailProvider/outgoingServer[contains(@type,'smtp')]");
 
             var hosts = new List<HostEntry>();
 
