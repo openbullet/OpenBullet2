@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MimeKit;
 using System.Linq;
+using RuriLib.Extensions;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
@@ -335,8 +336,8 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             var bodyBuilder = new BodyBuilder
             {
-                HtmlBody = htmlBody,
-                TextBody = textBody
+                HtmlBody = htmlBody.Unescape(),
+                TextBody = textBody.Unescape()
             };
 
             message.Body = bodyBuilder.ToMessageBody();
@@ -368,8 +369,8 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             var bodyBuilder = new BodyBuilder
             {
-                HtmlBody = htmlBody,
-                TextBody = textBody
+                HtmlBody = htmlBody.Unescape(),
+                TextBody = textBody.Unescape()
             };
 
             foreach (var file in fileAttachments)
