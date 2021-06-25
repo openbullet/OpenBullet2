@@ -316,6 +316,7 @@ namespace RuriLib.Blocks.Requests.Imap
             data.Logger.LogHeader();
 
             var client = GetClient(data);
+            client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(email, password, data.CancellationToken);
             data.Logger.Log("Authenticated successfully", LogColors.DarkOrchid);
 
