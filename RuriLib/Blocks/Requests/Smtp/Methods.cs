@@ -1,11 +1,9 @@
-﻿using MailKit;
-using MailKit.Net.Imap;
+﻿using MailKit.Net.Smtp;
 using MailKit.Net.Proxy;
 using MailKit.Search;
 using RuriLib.Attributes;
 using RuriLib.Functions.Http;
-using RuriLib.Functions.Imap;
-using RuriLib.Functions.Networking;
+using RuriLib.Functions.Smtp;
 using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -13,29 +11,31 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using static RuriLib.Functions.Time.TimeConverter;
+using MimeKit;
+using System.Linq;
+using RuriLib.Extensions;
+using RuriLib.Functions.Networking;
 
-namespace RuriLib.Blocks.Requests.Imap
+namespace RuriLib.Blocks.Requests.Smtp
 {
-    [BlockCategory("IMAP", "Blocks for working with the IMAP protocol", "#93c", "#fff")]
+    [BlockCategory("SMTP", "Blocks for working with the SMTP protocol", "#483c32", "#fff")]
     public static class Methods
     {
         private static readonly object hostsLocker = new();
         private static ConcurrentDictionary<string, List<HostEntry>> hosts;
         private static bool initialized = false;
-        private static readonly List<string> subdomains = new() { "mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m" };
-        private static readonly string hosterFile = "UserData/imapdomains.dat";
+        private static readonly List<string> subdomains = new() { "mail", "smtp-mail", "outbound", "out", "mx", "smtp", "smtps", "m" };
+        private static readonly string hosterFile = "UserData/smtpdomains.dat";
 
-        [Block("Connects to an IMAP server by automatically detecting the host and port", name = "Auto Connect")]
-        public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
+        [Block("Connects to a SMTP server by automatically detecting the host and port", name = "Auto Connect")]
+        public static async Task SmtpAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
-            var client = new ImapClient
+            var client = new SmtpClient
             {
                 Timeout = timeoutMilliseconds
             };
@@ -45,7 +45,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["imapClient"] = client;
+            data.Objects["smtpClient"] = client;
 
             var domain = email.Split('@')[1];
             List<HostEntry> candidates = new();
@@ -91,7 +91,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 }
             }
 
-            // Try the entries from imapdomains.dat
+            // Try the entries from smtpdomains.dat
             if (hosts.ContainsKey(domain))
             {
                 candidates = hosts[domain];
@@ -113,12 +113,12 @@ namespace RuriLib.Blocks.Requests.Imap
             try
             {
                 var xml = await GetString(data, thunderbirdUrl);
-                candidates = ImapAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
+                candidates = SmtpAutoconfig.Parse(xml);
+                data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {thunderbirdUrl}", LogColors.DarkOrchid);
+                data.Logger.Log($"Failed to query {thunderbirdUrl}", LogColors.DarkLava);
             }
 
             foreach (var c in candidates)
@@ -148,12 +148,12 @@ namespace RuriLib.Blocks.Requests.Imap
                     xml = await GetString(data, autoconfigUrlUnsecure);
                 }
 
-                candidates = ImapAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
+                candidates = SmtpAutoconfig.Parse(xml);
+                data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http)", LogColors.DarkOrchid);
+                data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http)", LogColors.DarkLava);
             }
 
             foreach (var c in candidates)
@@ -183,12 +183,12 @@ namespace RuriLib.Blocks.Requests.Imap
                     xml = await GetString(data, wellKnownUrlUnsecure);
                 }
 
-                candidates = ImapAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
+                candidates = SmtpAutoconfig.Parse(xml);
+                data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.DarkOrchid);
+                data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.DarkLava);
             }
 
             foreach (var c in candidates)
@@ -208,15 +208,16 @@ namespace RuriLib.Blocks.Requests.Imap
                 var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
                 mxRecords.ForEach(r =>
                 {
-                    candidates.Add(new HostEntry(r, 993));
-                    candidates.Add(new HostEntry(r, 143));
+                    candidates.Add(new HostEntry(r, 465));
+                    candidates.Add(new HostEntry(r, 587));
+                    candidates.Add(new HostEntry(r, 25));
                 });
 
-                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.DarkOrchid);
+                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.DarkLava);
             }
             catch
             {
-                data.Logger.Log($"Failed to query the MX records", LogColors.DarkOrchid);
+                data.Logger.Log($"Failed to query the MX records", LogColors.DarkLava);
             }
 
             foreach (var c in candidates)
@@ -231,13 +232,15 @@ namespace RuriLib.Blocks.Requests.Imap
 
             // Try the domain itself and possible subdomains
             candidates.Clear();
-            candidates.Add(new HostEntry(domain, 993));
-            candidates.Add(new HostEntry(domain, 143));
+            candidates.Add(new HostEntry(domain, 465));
+            candidates.Add(new HostEntry(domain, 587));
+            candidates.Add(new HostEntry(domain, 25));
 
             foreach (var sub in subdomains)
             {
-                candidates.Add(new HostEntry($"{sub}.{domain}", 993));
-                candidates.Add(new HostEntry($"{sub}.{domain}", 143));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 465));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 587));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 25));
             }
 
             foreach (var c in candidates)
@@ -253,14 +256,14 @@ namespace RuriLib.Blocks.Requests.Imap
             throw new Exception("Exhausted all possibilities, failed to connect!");
         }
 
-        private static async Task<bool> TryConnect(BotData data, ImapClient client, string domain, HostEntry entry)
+        private static async Task<bool> TryConnect(BotData data, SmtpClient client, string domain, HostEntry entry)
         {
-            data.Logger.Log($"Trying {entry.Host} on port {entry.Port}...", LogColors.DarkOrchid);
+            data.Logger.Log($"Trying {entry.Host} on port {entry.Port}...", LogColors.DarkLava);
 
             try
             {
                 await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
-                data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
+                data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.DarkLava);
 
                 if (!hosts.ContainsKey(domain))
                 {
@@ -280,7 +283,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
             catch
             {
-                data.Logger.Log($"Failed!", LogColors.DarkOrchid);
+                data.Logger.Log($"Failed!", LogColors.DarkLava);
             }
 
             return false;
@@ -303,12 +306,12 @@ namespace RuriLib.Blocks.Requests.Imap
             return await response.Content.ReadAsStringAsync(data.CancellationToken);
         }
 
-        [Block("Connects to an IMAP server", name = "Connect")]
-        public static async Task ImapConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
+        [Block("Connects to a SMTP server", name = "Connect")]
+        public static async Task SmtpConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
-            var client = new ImapClient
+            var client = new SmtpClient
             {
                 Timeout = timeoutMilliseconds
             };
@@ -318,14 +321,14 @@ namespace RuriLib.Blocks.Requests.Imap
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["imapClient"] = client;
+            data.Objects["smtpClient"] = client;
 
             await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
-            data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
+            data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkLava);
         }
 
-        [Block("Disconnects from an IMAP server", name = "Disconnect")]
-        public static async Task ImapDisconnect(BotData data)
+        [Block("Disconnects from a SMTP server", name = "Disconnect")]
+        public static async Task SmtpDisconnect(BotData data)
         {
             data.Logger.LogHeader();
 
@@ -334,159 +337,111 @@ namespace RuriLib.Blocks.Requests.Imap
             if (client.IsConnected)
             {
                 await client.DisconnectAsync(true, data.CancellationToken);
-                data.Logger.Log($"Client disconnected", LogColors.DarkOrchid);
+                data.Logger.Log($"Client disconnected", LogColors.DarkLava);
             }
             else
             {
-                data.Logger.Log($"The client was not connected", LogColors.DarkOrchid);
+                data.Logger.Log($"The client was not connected", LogColors.DarkLava);
             }
         }
 
         [Block("Logs into an account", name = "Login")]
-        public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true)
+        public static async Task SmtpLogin(BotData data, string email, string password)
         {
             data.Logger.LogHeader();
 
             var client = GetClient(data);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(email, password, data.CancellationToken);
-            data.Logger.Log("Authenticated successfully", LogColors.DarkOrchid);
-
-            if (openInbox)
-            {
-                await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken);
-                data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
-            }
+            data.Logger.Log("Authenticated successfully", LogColors.DarkLava);
         }
 
-        [Block("Opens the inbox folder", name = "Open Inbox")]
-        public static async Task ImapOpenInbox(BotData data)
+        [Block("Sends a mail to the recipient", name = "Send Mail")]
+        public static async Task SmtpSendMail(BotData data, string senderName, string senderAddress,
+            string recipientName, string recipientAddress, string subject, string textBody, string htmlBody)
         {
             data.Logger.LogHeader();
 
             var client = GetAuthenticatedClient(data);
-            await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken);
 
-            data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(senderName, senderAddress));
+            message.To.Add(new MailboxAddress(recipientName, recipientAddress));
+            message.Subject = subject;
+
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = htmlBody.Unescape(),
+                TextBody = textBody.Unescape()
+            };
+
+            message.Body = bodyBuilder.ToMessageBody();
+
+            await client.SendAsync(message, data.CancellationToken);
+
+            data.Logger.Log($"Email sent to {recipientAddress} ({recipientName})", LogColors.DarkLava);
         }
 
-        [Block("Searches for mails", name = "Search Mails", extraInfo = "The 'delivered after' expects a Unix timestamp (UTC) in seconds.")]
-        public static async Task<List<string>> ImapSearchMails(BotData data, SearchField field1 = SearchField.Subject, string text1 = "",
-            SearchField field2 = SearchField.From, string text2 = "", int deliveredAfter = 1)
+        [Block("Sends a mail in advanced mode", name = "Send Mail (Advanced)", 
+            extraInfo = "Senders/Recipients in the format name: address. For attachments, path to one file per line.")]
+        public static async Task SmtpSendMailAdvanced(BotData data, Dictionary<string, string> senders,
+            Dictionary<string, string> recipients, string subject, string textBody, string htmlBody,
+            Dictionary<string, string> customHeaders, List<string> fileAttachments)
         {
             data.Logger.LogHeader();
 
-            var inbox = GetOpenInbox(data);
+            var client = GetAuthenticatedClient(data);
 
-            SearchQuery query = new DateSearchQuery(SearchTerm.DeliveredAfter, ((long)deliveredAfter).ToDateTimeUtc());
+            var message = new MimeMessage();
+            message.From.AddRange(senders.Select(s => new MailboxAddress(s.Key, s.Value)));
+            message.To.AddRange(recipients.Select(r => new MailboxAddress(r.Key, r.Value)));
+            message.Subject = subject;
 
-            if (!string.IsNullOrEmpty(text1))
+            foreach (var header in customHeaders)
             {
-                query = query.And(new TextSearchQuery(MapSearchTerm(field1), text1));
+                message.Headers.Add(header.Key, header.Value);
             }
 
-            if (!string.IsNullOrEmpty(text2))
+            var bodyBuilder = new BodyBuilder
             {
-                query = query.And(new TextSearchQuery(MapSearchTerm(field2), text2));
+                HtmlBody = htmlBody.Unescape(),
+                TextBody = textBody.Unescape()
+            };
+
+            foreach (var file in fileAttachments)
+            {
+                await bodyBuilder.Attachments.AddAsync(file, data.CancellationToken);
             }
 
-            IList<UniqueId> mails = null;
+            message.Body = bodyBuilder.ToMessageBody();
 
-            try
-            {
-                mails = await inbox.SearchAsync(query, data.CancellationToken);
-            }
-            catch
-            {
-                data.Logger.Log("Search denied by the server", LogColors.DarkOrchid);
-                return new();
-            }
+            await client.SendAsync(message, data.CancellationToken);
 
-            var ids = mails.Select(id => id.Id.ToString()).ToList();
-
-            data.Logger.Log($"{ids.Count} mails matched the search", LogColors.DarkOrchid);
-            data.Logger.Log(ids, LogColors.DarkOrchid);
-
-            return ids;
+            data.Logger.Log($"Email sent to {recipients.Count} recipients", LogColors.DarkLava);
         }
 
-        [Block("Gets a text (or HTML) representation of a mail", name = "Read Mail")]
-        public static async Task<string> ImapReadMail(BotData data, string id, bool preferHtml = false)
-        {
-            data.Logger.LogHeader();
-
-            var inbox = GetOpenInbox(data);
-            var uniqueId = new UniqueId(uint.Parse(id));
-            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken);
-            var body = mail.TextBody;
-
-            if (string.IsNullOrEmpty(body) || preferHtml)
-            {
-                body = mail.HtmlBody;
-            }
-
-            var output =
-$@"From: {mail.From.First()}
-To: {mail.To.First()}
-Subject: {mail.Subject}
-Body:
-{body}";
-
-            data.Logger.Log($"From: {mail.From.First()}", LogColors.DarkOrchid);
-            data.Logger.Log($"To: {mail.To.First()}", LogColors.DarkOrchid);
-            data.Logger.Log($"Subject: {mail.Subject}", LogColors.DarkOrchid);
-            data.Logger.Log("Body:", LogColors.DarkOrchid);
-            data.Logger.Log(body, LogColors.DarkOrchid, true);
-            return output;
-        }
-
-        [Block("Deletes a mail", name = "Delete Mail")]
-        public static async Task ImapDeleteMail(BotData data, string id)
-        {
-            data.Logger.LogHeader();
-
-            var inbox = GetOpenInbox(data);
-            var uniqueId = new UniqueId(uint.Parse(id));
-            await inbox.AddFlagsAsync(uniqueId, MessageFlags.Deleted, true, data.CancellationToken);
-            await inbox.ExpungeAsync(data.CancellationToken);
-
-            data.Logger.Log($"Deleted mail with id {id}", LogColors.DarkOrchid);
-        }
-
-        private static ImapClient GetClient(BotData data)
+        private static SmtpClient GetClient(BotData data)
         {
             try
             {
-                return (ImapClient)data.Objects["imapClient"];
+                return (SmtpClient)data.Objects["smtpClient"];
             }
             catch
             {
-                throw new Exception("Connect the IMAP client first!");
+                throw new Exception("Connect the SMTP client first!");
             }
         }
 
-        private static ImapClient GetAuthenticatedClient(BotData data)
+        private static SmtpClient GetAuthenticatedClient(BotData data)
         {
             var client = GetClient(data);
 
             if (!client.IsAuthenticated)
             {
-                throw new Exception("Authenticate the IMAP client first!");
+                throw new Exception("Authenticate the SMTP client first!");
             }
 
             return client;
-        }
-
-        private static IMailFolder GetOpenInbox(BotData data)
-        {
-            var inbox = GetClient(data).Inbox;
-
-            if (!inbox.IsOpen)
-            {
-                throw new Exception("Open the inbox first!");
-            }
-
-            return inbox;
         }
 
         private static IProxyClient MapProxyClient(BotData data)
@@ -516,14 +471,5 @@ Body:
                 };
             }
         }
-
-        private static SearchTerm MapSearchTerm(SearchField field) => field switch
-        {
-            SearchField.To => SearchTerm.ToContains,
-            SearchField.From => SearchTerm.FromContains,
-            SearchField.Subject => SearchTerm.SubjectContains,
-            SearchField.Body => SearchTerm.BodyContains,
-            _ => throw new NotImplementedException()
-        };
     }
 }

@@ -18,7 +18,7 @@ namespace RuriLib.Functions.Files
         {
             if (!hashtable.ContainsKey(fileName))
             {
-                hashtable.Add(fileName, new ReaderWriterLockSlim());
+                hashtable.Add(fileName, new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion));
             }
 
             return (ReaderWriterLockSlim)hashtable[fileName];

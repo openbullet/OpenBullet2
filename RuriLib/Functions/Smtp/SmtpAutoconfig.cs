@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using RuriLib.Functions.Networking;
+using System.Collections.Generic;
 using System.Xml;
 
-namespace RuriLib.Functions.Imap
+namespace RuriLib.Functions.Smtp
 {
-    public static class Autoconfig
+    public static class SmtpAutoconfig
     {
         public static List<HostEntry> Parse(string xml)
         {
             var doc = new XmlDocument();
             doc.LoadXml(xml);
 
-            var servers = doc.DocumentElement.SelectNodes("/clientConfig/emailProvider/incomingServer[contains(@type,'imap')]");
+            var servers = doc.DocumentElement.SelectNodes("/clientConfig/emailProvider/outgoingServer[contains(@type,'smtp')]");
 
             var hosts = new List<HostEntry>();
 
