@@ -16,6 +16,7 @@ using MimeKit;
 using System.Linq;
 using RuriLib.Extensions;
 using RuriLib.Functions.Networking;
+using MailKit;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
@@ -33,11 +34,16 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var client = new SmtpClient
+            var ms = new MemoryStream();
+            var protocolLogger = new ProtocolLogger(ms, true);
+            data.Objects["smtpLoggerStream"] = ms;
+            data.Objects["smtpLogger"] = protocolLogger;
+
+            var client = new SmtpClient(protocolLogger)
             {
                 Timeout = timeoutMilliseconds,
-                ServerCertificateValidationCallback = (s, c, h, e) => true,
-        };
+                ServerCertificateValidationCallback = (s, c, h, e) => true
+            };
 
             if (data.UseProxy && data.Proxy != null)
             {
@@ -356,9 +362,22 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Logger.LogHeader();
 
             var client = GetClient(data);
+            using var logger = client.ProtocolLogger;
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(email, password, data.CancellationToken);
             data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
+        }
+
+        [Block("Gets the protocol log", name = "Get Protocol Log")]
+        public static string SmtpGetLog(BotData data)
+        {
+            var protocolLogger = (ProtocolLogger)data.Objects["smtpLogger"];
+            var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
+            var log = System.Text.Encoding.UTF8.GetString(bytes);
+
+            data.Logger.Log(log, LogColors.LightBrown);
+
+            return log;
         }
 
         [Block("Sends a mail to the recipient", name = "Send Mail")]
