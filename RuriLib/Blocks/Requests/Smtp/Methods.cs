@@ -17,6 +17,7 @@ using System.Linq;
 using RuriLib.Extensions;
 using RuriLib.Functions.Networking;
 using MailKit;
+using System.Text;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
@@ -371,9 +372,11 @@ namespace RuriLib.Blocks.Requests.Smtp
         [Block("Gets the protocol log", name = "Get Protocol Log")]
         public static string SmtpGetLog(BotData data)
         {
+            data.Logger.LogHeader();
+
             var protocolLogger = (ProtocolLogger)data.Objects["smtpLogger"];
             var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
-            var log = System.Text.Encoding.UTF8.GetString(bytes);
+            var log = Encoding.UTF8.GetString(bytes);
 
             data.Logger.Log(log, LogColors.LightBrown);
 
