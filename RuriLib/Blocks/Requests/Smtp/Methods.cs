@@ -1,6 +1,5 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Net.Proxy;
-using MailKit.Search;
 using RuriLib.Attributes;
 using RuriLib.Functions.Http;
 using RuriLib.Functions.Smtp;
@@ -12,7 +11,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using MimeKit;
 using System.Linq;
@@ -21,7 +19,7 @@ using RuriLib.Functions.Networking;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
-    [BlockCategory("SMTP", "Blocks for working with the SMTP protocol", "#483c32", "#fff")]
+    [BlockCategory("SMTP", "Blocks for working with the SMTP protocol", "#b5651d", "#fff")]
     public static class Methods
     {
         private static readonly object hostsLocker = new();
@@ -114,11 +112,11 @@ namespace RuriLib.Blocks.Requests.Smtp
             {
                 var xml = await GetString(data, thunderbirdUrl);
                 candidates = SmtpAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
+                data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.LightBrown);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {thunderbirdUrl}", LogColors.DarkLava);
+                data.Logger.Log($"Failed to query {thunderbirdUrl}", LogColors.LightBrown);
             }
 
             foreach (var c in candidates)
@@ -149,11 +147,11 @@ namespace RuriLib.Blocks.Requests.Smtp
                 }
 
                 candidates = SmtpAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
+                data.Logger.Log($"Queried {autoconfigUrl} and got {candidates.Count} server(s)", LogColors.LightBrown);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http)", LogColors.DarkLava);
+                data.Logger.Log($"Failed to query {autoconfigUrl} (both https and http)", LogColors.LightBrown);
             }
 
             foreach (var c in candidates)
@@ -184,11 +182,11 @@ namespace RuriLib.Blocks.Requests.Smtp
                 }
 
                 candidates = SmtpAutoconfig.Parse(xml);
-                data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.DarkLava);
+                data.Logger.Log($"Queried {wellKnownUrl} and got {candidates.Count} server(s)", LogColors.LightBrown);
             }
             catch
             {
-                data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.DarkLava);
+                data.Logger.Log($"Failed to query {wellKnownUrl} (both https and http)", LogColors.LightBrown);
             }
 
             foreach (var c in candidates)
@@ -213,11 +211,11 @@ namespace RuriLib.Blocks.Requests.Smtp
                     candidates.Add(new HostEntry(r, 25));
                 });
 
-                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.DarkLava);
+                data.Logger.Log($"Queried the MX records and got {candidates.Count} server(s)", LogColors.LightBrown);
             }
             catch
             {
-                data.Logger.Log($"Failed to query the MX records", LogColors.DarkLava);
+                data.Logger.Log($"Failed to query the MX records", LogColors.LightBrown);
             }
 
             foreach (var c in candidates)
@@ -258,12 +256,18 @@ namespace RuriLib.Blocks.Requests.Smtp
 
         private static async Task<bool> TryConnect(BotData data, SmtpClient client, string domain, HostEntry entry)
         {
-            data.Logger.Log($"Trying {entry.Host} on port {entry.Port}...", LogColors.DarkLava);
+            data.Logger.Log($"Trying {entry.Host} on port {entry.Port}...", LogColors.LightBrown);
 
             try
             {
                 await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
-                data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.DarkLava);
+                data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
+                
+                if (!client.Capabilities.HasFlag(SmtpCapabilities.Authentication))
+                {
+                    data.Logger.Log($"Server doesn't support authentication, trying another one...");
+                    return false;
+                }
 
                 if (!hosts.ContainsKey(domain))
                 {
@@ -283,7 +287,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             }
             catch
             {
-                data.Logger.Log($"Failed!", LogColors.DarkLava);
+                data.Logger.Log($"Failed!", LogColors.LightBrown);
             }
 
             return false;
@@ -324,7 +328,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Objects["smtpClient"] = client;
 
             await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
-            data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkLava);
+            data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
         }
 
         [Block("Disconnects from a SMTP server", name = "Disconnect")]
@@ -337,11 +341,11 @@ namespace RuriLib.Blocks.Requests.Smtp
             if (client.IsConnected)
             {
                 await client.DisconnectAsync(true, data.CancellationToken);
-                data.Logger.Log($"Client disconnected", LogColors.DarkLava);
+                data.Logger.Log($"Client disconnected", LogColors.LightBrown);
             }
             else
             {
-                data.Logger.Log($"The client was not connected", LogColors.DarkLava);
+                data.Logger.Log($"The client was not connected", LogColors.LightBrown);
             }
         }
 
@@ -353,7 +357,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             var client = GetClient(data);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
             await client.AuthenticateAsync(email, password, data.CancellationToken);
-            data.Logger.Log("Authenticated successfully", LogColors.DarkLava);
+            data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
         }
 
         [Block("Sends a mail to the recipient", name = "Send Mail")]
@@ -379,7 +383,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             await client.SendAsync(message, data.CancellationToken);
 
-            data.Logger.Log($"Email sent to {recipientAddress} ({recipientName})", LogColors.DarkLava);
+            data.Logger.Log($"Email sent to {recipientAddress} ({recipientName})", LogColors.LightBrown);
         }
 
         [Block("Sends a mail in advanced mode", name = "Send Mail (Advanced)", 
@@ -417,7 +421,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             await client.SendAsync(message, data.CancellationToken);
 
-            data.Logger.Log($"Email sent to {recipients.Count} recipients", LogColors.DarkLava);
+            data.Logger.Log($"Email sent to {recipients.Count} recipients", LogColors.LightBrown);
         }
 
         private static SmtpClient GetClient(BotData data)
