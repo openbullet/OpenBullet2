@@ -35,8 +35,9 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             var client = new SmtpClient
             {
-                Timeout = timeoutMilliseconds
-            };
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true,
+        };
 
             if (data.UseProxy && data.Proxy != null)
             {
