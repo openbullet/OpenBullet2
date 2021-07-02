@@ -10,7 +10,7 @@ namespace OpenBullet2.Repositories
     public class DbRepository<T> : IRepository<T> where T : Entity
     {
         protected readonly ApplicationDbContext context;
-        private readonly object dbLock = new object();
+        private readonly SemaphoreSlim semaphore = new(1, 1);
 
         public DbRepository(ApplicationDbContext context)
         {
@@ -20,11 +20,10 @@ namespace OpenBullet2.Repositories
         /// <summary>
         /// Adds an entity and saves changes.
         /// </summary>
-        public virtual async Task Add(T entity)
+        public async virtual Task Add(T entity)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
-
+            await semaphore.WaitAsync();
+            
             try
             {
                 context.Add(entity);
@@ -32,17 +31,16 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
         /// <summary>
         /// Adds multiple entities and saves changes.
         /// </summary>
-        public virtual async Task Add(IEnumerable<T> entities)
+        public async virtual Task Add(IEnumerable<T> entities)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -51,17 +49,16 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
         /// <summary>
         /// Deletes an entity and saves changes.
         /// </summary>
-        public virtual async Task Delete(T entity)
+        public async virtual Task Delete(T entity)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -70,17 +67,16 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
         /// <summary>
         /// Deletes multiple entities and saves changes.
         /// </summary>
-        public virtual async Task Delete(IEnumerable<T> entities)
+        public async virtual Task Delete(IEnumerable<T> entities)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -89,17 +85,16 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
         /// <summary>
         /// Gets the entry with the specified id or null if not found.
         /// </summary>
-        public virtual async Task<T> Get(int id)
+        public async virtual Task<T> Get(int id)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -107,7 +102,7 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
@@ -120,10 +115,9 @@ namespace OpenBullet2.Repositories
         /// <summary>
         /// Updates the given entity and saves changes.
         /// </summary>
-        public virtual async Task Update(T entity)
+        public async virtual Task Update(T entity)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -132,17 +126,16 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
 
         /// <summary>
         /// Updates multiple entities and saves changes.
         /// </summary>
-        public virtual async Task Update(IEnumerable<T> entities)
+        public async virtual Task Update(IEnumerable<T> entities)
         {
-            while (!Monitor.TryEnter(dbLock))
-                await Task.Delay(10);
+            await semaphore.WaitAsync();
 
             try
             {
@@ -151,7 +144,7 @@ namespace OpenBullet2.Repositories
             }
             finally
             {
-                Monitor.Exit(dbLock);
+                semaphore.Release();
             }
         }
     }
