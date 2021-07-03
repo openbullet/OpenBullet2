@@ -174,6 +174,12 @@ namespace OpenBullet2.Pages
                 return;
             }
 
+            if (selectedConfig.IsRemote)
+            {
+                await js.AlertError(Loc["RemoteConfig"], Loc["CannotCloneRemoteConfig"]);
+                return;
+            }
+
             // Pack and unpack to clone
             var packed = await ConfigPacker.Pack(selectedConfig);
             using var ms = new MemoryStream(packed);

@@ -132,6 +132,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CannotCloneRemoteConfig" xml:space="preserve">
+    <value>Cannot clone remote config</value>
+  </data>
   <data name="CannotDownloadRemoteConfig" xml:space="preserve">
     <value>Cannot download remote config</value>
   </data>
