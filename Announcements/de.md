@@ -1,3 +1,3 @@
 <p style="font-size: 16px; color: yellowgreen;">INFORMATION</p>
 
-Please remember to keep your OB2 instance updated. Updates usually fix bugs and improve the performance, so they are a very nice thing to have! After updating, you can see the list of changes by clicking on the label that displays the current version of the program in the bottom left corner of the page, so you can know exactly what was fixed or added in this version.
+Bitte denk daran deine OB2 Instanz aktuell zu halten. Updates beheben meistens Fehler und verbessern die Performance, also sind sie eine tolle Sache! Nach einem Update kannst du die Liste aller Neuerungen sehen, indem du auf das Label in der linken unteren ecke, das die aktuelle Version des Programms zeigt, klickst. So weißt du immer was in dieser Version behoben oder hinzugefügt wurde.
