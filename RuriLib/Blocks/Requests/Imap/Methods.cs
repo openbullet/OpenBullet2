@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Requests.Imap
         private static readonly List<string> subdomains = new() { "mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m" };
         private static readonly string hosterFile = "UserData/imapdomains.dat";
 
-        [Block("Connects to an IMAP server by automatically detecting the host and port", name = "Auto Connect")]
+        [Block("Connects to an IMAP server by automatically detecting the host and port")]
         public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
@@ -303,7 +303,7 @@ namespace RuriLib.Blocks.Requests.Imap
             return await response.Content.ReadAsStringAsync(data.CancellationToken);
         }
 
-        [Block("Connects to an IMAP server", name = "Connect")]
+        [Block("Connects to an IMAP server")]
         public static async Task ImapConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
@@ -324,7 +324,7 @@ namespace RuriLib.Blocks.Requests.Imap
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
         }
 
-        [Block("Disconnects from an IMAP server", name = "Disconnect")]
+        [Block("Disconnects from an IMAP server")]
         public static async Task ImapDisconnect(BotData data)
         {
             data.Logger.LogHeader();
@@ -342,7 +342,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
         }
 
-        [Block("Logs into an account", name = "Login")]
+        [Block("Logs into an account")]
         public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true)
         {
             data.Logger.LogHeader();
@@ -359,7 +359,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
         }
 
-        [Block("Opens the inbox folder", name = "Open Inbox")]
+        [Block("Opens the inbox folder")]
         public static async Task ImapOpenInbox(BotData data)
         {
             data.Logger.LogHeader();
@@ -370,7 +370,7 @@ namespace RuriLib.Blocks.Requests.Imap
             data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
         }
 
-        [Block("Searches for mails", name = "Search Mails", extraInfo = "The 'delivered after' expects a Unix timestamp (UTC) in seconds.")]
+        [Block("Searches for mails", extraInfo = "The 'delivered after' expects a Unix timestamp (UTC) in seconds.")]
         public static async Task<List<string>> ImapSearchMails(BotData data, SearchField field1 = SearchField.Subject, string text1 = "",
             SearchField field2 = SearchField.From, string text2 = "", int deliveredAfter = 1)
         {
@@ -410,7 +410,7 @@ namespace RuriLib.Blocks.Requests.Imap
             return ids;
         }
 
-        [Block("Gets a text (or HTML) representation of a mail", name = "Read Mail")]
+        [Block("Gets a text (or HTML) representation of a mail")]
         public static async Task<string> ImapReadMail(BotData data, string id, bool preferHtml = false)
         {
             data.Logger.LogHeader();

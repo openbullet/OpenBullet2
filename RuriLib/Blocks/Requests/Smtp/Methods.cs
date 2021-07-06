@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         private static readonly List<string> subdomains = new() { "mail", "smtp-mail", "outbound", "out", "mx", "smtp", "smtps", "m" };
         private static readonly string hosterFile = "UserData/smtpdomains.dat";
 
-        [Block("Connects to a SMTP server by automatically detecting the host and port", name = "Auto Connect")]
+        [Block("Connects to a SMTP server by automatically detecting the host and port")]
         public static async Task SmtpAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
@@ -318,7 +318,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             return await response.Content.ReadAsStringAsync(data.CancellationToken);
         }
 
-        [Block("Connects to a SMTP server", name = "Connect")]
+        [Block("Connects to a SMTP server")]
         public static async Task SmtpConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
@@ -339,7 +339,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
         }
 
-        [Block("Disconnects from a SMTP server", name = "Disconnect")]
+        [Block("Disconnects from a SMTP server")]
         public static async Task SmtpDisconnect(BotData data)
         {
             data.Logger.LogHeader();
@@ -357,7 +357,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             }
         }
 
-        [Block("Logs into an account", name = "Login")]
+        [Block("Logs into an account")]
         public static async Task SmtpLogin(BotData data, string email, string password)
         {
             data.Logger.LogHeader();
@@ -369,7 +369,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
         }
 
-        [Block("Gets the protocol log", name = "Get Protocol Log")]
+        [Block("Gets the protocol log", name = "Get Smtp Log")]
         public static string SmtpGetLog(BotData data)
         {
             data.Logger.LogHeader();
@@ -383,7 +383,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             return log;
         }
 
-        [Block("Sends a mail to the recipient", name = "Send Mail")]
+        [Block("Sends a mail to the recipient")]
         public static async Task SmtpSendMail(BotData data, string senderName, string senderAddress,
             string recipientName, string recipientAddress, string subject, string textBody, string htmlBody)
         {
@@ -409,7 +409,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Logger.Log($"Email sent to {recipientAddress} ({recipientName})", LogColors.LightBrown);
         }
 
-        [Block("Sends a mail in advanced mode", name = "Send Mail (Advanced)", 
+        [Block("Sends a mail in advanced mode", name = "Smtp Send Mail (Advanced)", 
             extraInfo = "Senders/Recipients in the format name: address. For attachments, path to one file per line.")]
         public static async Task SmtpSendMailAdvanced(BotData data, Dictionary<string, string> senders,
             Dictionary<string, string> recipients, string subject, string textBody, string htmlBody,
