@@ -1,5 +1,4 @@
 ﻿using BlazorMonaco;
-using BlazorMonaco.Bridge;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
@@ -64,7 +63,7 @@ namespace OpenBullet2.Pages
             return new StandaloneEditorConstructionOptions
             {
                 AutomaticLayout = true,
-                Minimap = new MinimapOptions { Enabled = false },
+                Minimap = new EditorMinimapOptions { Enabled = false },
                 Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
                 Language = "lolicode",
                 MatchBrackets = true,

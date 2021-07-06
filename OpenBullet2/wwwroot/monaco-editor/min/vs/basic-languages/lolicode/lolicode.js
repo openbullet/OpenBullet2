@@ -84,9 +84,13 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
         symbols: /[=><!~?:&|+\-*\/\^%]+/,
         escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
         tokenizer: {
+            // includeLF: true (only works with latest monaco, seems to not work in current version). It allows to use \n in the tokenizer.
             root: [
 				// Jump to lolicode section
                 [/^[ \t]*BLOCK:.*/, "block", "@lolicode"],
+
+                // Needed to not mess up syntax highlighting in some cases. There are still cases that are not handled.
+                [/^[ \t]*(LOG|JUMP|FOREACH|ACQUIRELOCK|RELEASELOCK) ?/, "block", "@consumeline"],
 				
                 [/\@?[a-zA-Z_]\w*/, {
                     cases: {
@@ -252,7 +256,10 @@ define("vs/basic-languages/lolicode/lolicode", ["require", "exports"], function(
                 [/0[xX][0-9a-fA-F_]+/, "number.hex"],
                 [/0[bB][01_]+/, "number.hex"],
                 [/[0-9_]+/, "number"]
-			]
+            ],
+            consumeline: [
+                [/.?$/, "none", "@pop"]
+            ]
         }
     }
 });
