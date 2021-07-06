@@ -75,7 +75,7 @@
                 [/^[ \t]*BLOCK:.*/, "block", "@block"],
 
                 // Needed to not mess up syntax highlighting in some cases. There are still cases that are not handled.
-                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE|ELSE IF|TRY|CATCH|LOCK|SET|TAKE(ONE)?|FINALLY|ACQUIRELOCK|RELEASELOCK)/, "block", "@consumeline"],
+                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE IF|ELSE|TRY|CATCH|LOCK|SET|TAKE(ONE)?|FINALLY|ACQUIRELOCK|RELEASELOCK)/, "block", "@consumeline"],
                 [/#/, "jumplabel", "jumplabel"],
 
                 [/\@?[a-zA-Z_]\w*/, {
@@ -234,6 +234,19 @@
                 [/\$/, "block.interp"],
                 [/\@[A-Za-z0-9_\.]+/, "block.variable"],
                 [/\b=\>\b/, "block.arrow"],
+                [/KEYCHAIN SUCCESS (OR|AND)/, "keychain.success"],
+                [/KEYCHAIN FAIL (OR|AND)/, "keychain.fail"],
+                [/KEYCHAIN RETRY (OR|AND)/, "keychain.retry"],
+                [/KEYCHAIN BAN (OR|AND)/, "keychain.ban"],
+                [/KEYCHAIN NONE (OR|AND)/, "keychain.none"],
+                [/KEYCHAIN [A-Z]+ (OR|AND)/, "keychain.default"],
+                [/(INPUT|OUTPUT)/, "script.output"],
+                [/(BEGIN|END) SCRIPT/, "script.delimiter"],
+                [/RECURSIVE/, "block.customparam"],
+                [/(INTERPRETER|MODE|TYPE|CONTENT):[A-Za-z0-9]+/, "block.customparam"],
+                [/False/, "false"],
+                [/True/, "true"],
+                [/(INTKEY|STRINGKEY|BOOLKEY|FLOATKEY|LISTKEY|DICTKEY)/, "key"],
                 [/"/, {
                     token: "string.quote",
                     next: "@string"
@@ -251,11 +264,19 @@
                 [/[0-9_]+/, "number"],
                 [/\$/, "block.interp"],
                 [/\b=\>\b/, "block.arrow"],
+                [/False/, "false"],
+                [/True/, "true"],
+                [/(INTKEY|STRINGKEY|BOOLKEY|FLOATKEY|LISTKEY|DICTKEY)/, "key"],
+                [/IN/, "block"],
                 [/"/, {
                     token: "string.quote",
                     next: "@string"
                 }],
                 [/#/, "jumplabel", "jumplabel"],
+                [/\bVAR\b/, "block.var"],
+                [/\bCAP\b/, "block.cap"],
+                [/\$/, "block.interp"],
+                [/\@[A-Za-z0-9_\.]+/, "block.variable"],
             ],
             jumplabel: [
                 [/[A-Za-z0-9]*\n/, "jumplabel", "@pop"]
