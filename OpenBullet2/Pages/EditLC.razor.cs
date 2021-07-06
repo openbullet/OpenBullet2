@@ -58,6 +58,14 @@ namespace OpenBullet2.Pages
             }
         }
 
+        private async Task OnMonacoInit()
+        {
+            await js.RegisterLoliCode();
+            var model = await _editor.GetModel();
+            await MonacoEditorBase.SetModelLanguage(model, "lolicode");
+            await MonacoThemeSetter.SetLolicodeTheme(Settings);
+        }
+
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
         {
             return new StandaloneEditorConstructionOptions
@@ -65,7 +73,7 @@ namespace OpenBullet2.Pages
                 AutomaticLayout = true,
                 Minimap = new EditorMinimapOptions { Enabled = false },
                 Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
-                Language = "lolicode",
+                Language = "csharp",
                 MatchBrackets = true,
                 Value = config.LoliCodeScript
             };

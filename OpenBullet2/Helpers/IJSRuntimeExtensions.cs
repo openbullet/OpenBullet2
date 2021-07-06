@@ -61,5 +61,8 @@ namespace OpenBullet2.Helpers
 
         public async static Task CopyToClipboard(this IJSRuntime js, string text)
             => await js.InvokeVoidAsync("navigator.clipboard.writeText", text);
+
+        public async static Task RegisterLoliCode(this IJSRuntime js)
+            => await js.InvokeVoidAsync("registerLoliCode");
     }
 }
