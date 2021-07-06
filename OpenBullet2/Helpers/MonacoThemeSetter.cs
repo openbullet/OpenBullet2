@@ -25,7 +25,8 @@ namespace OpenBullet2.Helpers
 					new TokenThemeRule { Token = "block.arrow", Foreground = "BB8FCE" },
 					new TokenThemeRule { Token = "block.interp", Foreground = "BB8FCE" },
 					new TokenThemeRule { Token = "block.variable", Foreground = "FAD7A0" },
-					new TokenThemeRule { Token = "string.variable", Foreground = "FAD7A0" }
+					new TokenThemeRule { Token = "string.variable", Foreground = "FAD7A0" },                    
+					new TokenThemeRule { Token = "jumplabel", Foreground = "F78686" },
 				}
 			});
 

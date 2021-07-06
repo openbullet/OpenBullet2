@@ -2,6 +2,62 @@
 	// Register a new language
 	monaco.languages.register({ id: 'lolicode' });
 
+    monaco.languages.setLanguageConfiguration('lolicode', {
+        wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\#\$\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+        comments: {
+            lineComment: "//",
+            blockComment: ["/*", "*/"]
+        },
+        brackets: [
+            ["{", "}"],
+            ["[", "]"],
+            ["(", ")"]
+        ],
+        autoClosingPairs: [{
+            open: "{",
+            close: "}"
+        }, {
+            open: "[",
+            close: "]"
+        }, {
+            open: "(",
+            close: ")"
+        }, {
+            open: "'",
+            close: "'",
+            notIn: ["string", "comment"]
+        }, {
+            open: '"',
+            close: '"',
+            notIn: ["string", "comment"]
+        }],
+        surroundingPairs: [{
+            open: "{",
+            close: "}"
+        }, {
+            open: "[",
+            close: "]"
+        }, {
+            open: "(",
+            close: ")"
+        }, {
+            open: "<",
+            close: ">"
+        }, {
+            open: "'",
+            close: "'"
+        }, {
+            open: '"',
+            close: '"'
+        }],
+        folding: {
+            markers: {
+                start: new RegExp("^\\s*#region\\b"),
+                end: new RegExp("^\\s*#endregion\\b")
+            }
+        }
+    });
+
 	// Register a tokens provider for the language
 	monaco.languages.setMonarchTokensProvider('lolicode', {
 
@@ -15,11 +71,12 @@
         includeLF: true,
         tokenizer: {
             root: [
-                // Jump to lolicode section
-                [/^[ \t]*BLOCK:.*/, "block", "@lolicode"],
+                // Jump to block section
+                [/^[ \t]*BLOCK:.*/, "block", "@block"],
 
                 // Needed to not mess up syntax highlighting in some cases. There are still cases that are not handled.
-                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE|ELSE IF|TRY|CATCH|LOCK|SET|TAKE|TAKEONE|FINALLY|ACQUIRELOCK|RELEASELOCK) ?/, "block", "@consumeline"],
+                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE|ELSE IF|TRY|CATCH|LOCK|SET|TAKE(ONE)?|FINALLY|ACQUIRELOCK|RELEASELOCK)/, "block", "@consumeline"],
+                [/#/, "jumplabel", "jumplabel"],
 
                 [/\@?[a-zA-Z_]\w*/, {
                     cases: {
@@ -165,9 +222,9 @@
                 [/^[ \t\v\f]*#\w.*$/, "namespace.cpp"],
                 [/[ \t\v\f\r\n]+/, ""],
                 [/\/\*/, "comment", "@comment"],
-                [/\/\/.*$/, "comment"]
+                [/\/\/.*\n$/, "comment"]
             ],
-            lolicode: [
+            block: [
                 [/^[ \t]*ENDBLOCK\n$/, "block.end", "@pop"],
                 [/^[ \t]*DISABLED\n$/, "block.disabled"],
                 [/^[ \t]*SAFE\n$/, "block.safe"],
@@ -187,38 +244,72 @@
                 [/[0-9_]+/, "number"]
             ],
             consumeline: [
-                [/\n/, "none", "@pop"]
+                [/\n/, "none", "@pop"],
+                [/[0-9_]*\.[0-9_]+([eE][\-+]?\d+)?[fFdD]?/, "number.float"],
+                [/0[xX][0-9a-fA-F_]+/, "number.hex"],
+                [/0[bB][01_]+/, "number.hex"],
+                [/[0-9_]+/, "number"],
+                [/\$/, "block.interp"],
+                [/\b=\>\b/, "block.arrow"],
+                [/"/, {
+                    token: "string.quote",
+                    next: "@string"
+                }],
+                [/#/, "jumplabel", "jumplabel"],
+            ],
+            jumplabel: [
+                [/[A-Za-z0-9]*\n/, "jumplabel", "@pop"]
             ]
         }
 	});
 
-    /*
-	monaco.languages.registerCompletionItemProvider('lolicode', {
-		provideCompletionItems: () => {
-			var suggestions = [{
-				label: 'simpleText',
-				kind: monaco.languages.CompletionItemKind.Text,
-				insertText: 'simpleText'
-			}, {
-				label: 'testing',
-				kind: monaco.languages.CompletionItemKind.Keyword,
-				insertText: 'testing(${1:condition})',
-				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-			}, {
-				label: 'ifelse',
-				kind: monaco.languages.CompletionItemKind.Snippet,
-				insertText: [
-					'if (${1:condition}) {',
-					'\t$0',
-					'} else {',
-					'\t',
-					'}'
-				].join('\n'),
-				insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-				documentation: 'If-Else Statement'
-			}];
-			return { suggestions: suggestions };
-		}
-	});
-    */
+    monaco.languages.registerCompletionItemProvider('lolicode', {
+        provideCompletionItems: function (model, position) {
+             // find out if we are completing a property in the 'dependencies' object.
+             //var textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
+             //var match = textUntilPosition.match(/"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/);
+             //if (!match) {
+             //    return { suggestions: [] };
+             //}
+
+            var word = model.getWordUntilPosition(position);
+            var range = {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: word.startColumn,
+                endColumn: word.endColumn
+            };
+
+            return {
+                suggestions: autoCompleteLoliCodeStatement(range)
+            };
+        }
+    });
+}
+
+function autoCompleteLoliCodeStatement(range) {
+    // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
+    // here you could do a server side lookup
+    return [
+        {
+            label: 'IF STATEMENT',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'IF ${1:STRINGKEY} ${2:@data.SOURCE} ${3:Contains} ${4:"hello"}',
+                '',
+                'END'
+                ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: 'IF statement in LoliCode'
+        }
+        /*
+        {
+            label: '"IF"',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            documentation: "An IF statement in LoliCode",
+            insertText: 'IF STRINGKEY @data.SOURCE Contains "hello"',
+            range: range
+        }
+        */
+    ];
 }
