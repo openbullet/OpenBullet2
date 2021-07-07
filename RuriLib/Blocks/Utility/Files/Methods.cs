@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,11 +31,11 @@ namespace RuriLib.Blocks.Utility.Files
 
         #region Read File
         [Block("Reads the entire content of a file to a single string")]
-        public static async Task<string> FileRead(BotData data, string path)
+        public static async Task<string> FileRead(BotData data, string path, FileEncoding encoding = FileEncoding.UTF8)
         {
             var text = await ExecuteFileOperation(data, path, true, async (p, c) =>
             {
-                return await File.ReadAllTextAsync(p, data.CancellationToken);
+                return await File.ReadAllTextAsync(p, MapEncoding(encoding), data.CancellationToken);
             });
 
             data.Logger.LogHeader();
@@ -43,11 +44,11 @@ namespace RuriLib.Blocks.Utility.Files
         }
 
         [Block("Reads all lines of a file")]
-        public static async Task<List<string>> FileReadLines(BotData data, string path)
+        public static async Task<List<string>> FileReadLines(BotData data, string path, FileEncoding encoding = FileEncoding.UTF8)
         {
             var lines = await ExecuteFileOperation(data, path, true, async (p, c) =>
             {
-                return await File.ReadAllLinesAsync(p, data.CancellationToken);
+                return await File.ReadAllLinesAsync(p, MapEncoding(encoding), data.CancellationToken);
             });
 
             data.Logger.LogHeader();
@@ -72,11 +73,12 @@ namespace RuriLib.Blocks.Utility.Files
         #region Write File
         [Block("Writes a string to a file",
             extraInfo = "The file will be created if it doesn't exist and all its previous content will be overwritten")]
-        public static async Task FileWrite(BotData data, string path, [Interpolated] string content)
+        public static async Task FileWrite(BotData data, string path, [Interpolated] string content,
+            FileEncoding encoding = FileEncoding.UTF8)
         {
             await ExecuteFileOperation(data, path, content, async (p, c) => 
             { 
-                await File.WriteAllTextAsync(p, c.Unescape(), data.CancellationToken);
+                await File.WriteAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken);
                 return true; 
             }, isWriteOperation: true);
 
@@ -86,11 +88,12 @@ namespace RuriLib.Blocks.Utility.Files
 
         [Block("Writes lines to a file",
             extraInfo = "The file will be created if it doesn't exist and all its previous content will be overwritten")]
-        public static async Task FileWriteLines(BotData data, string path, [Variable] List<string> lines)
+        public static async Task FileWriteLines(BotData data, string path, [Variable] List<string> lines,
+            FileEncoding encoding = FileEncoding.UTF8)
         {
             await ExecuteFileOperation(data, path, lines, async (p, c) =>
             {
-                await File.WriteAllLinesAsync(p, c, data.CancellationToken);
+                await File.WriteAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken);
                 return true;
             }, isWriteOperation: true);
 
@@ -115,11 +118,12 @@ namespace RuriLib.Blocks.Utility.Files
 
         #region Append File
         [Block("Appends a string at the end of a file")]
-        public static async Task FileAppend(BotData data, string path, [Interpolated] string content)
+        public static async Task FileAppend(BotData data, string path, [Interpolated] string content,
+            FileEncoding encoding = FileEncoding.UTF8)
         {
             await ExecuteFileOperation(data, path, content, async (p, c) =>
             {
-                await File.AppendAllTextAsync(p, c.Unescape(), data.CancellationToken);
+                await File.AppendAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken);
                 return true;
             }, isWriteOperation: true);
 
@@ -128,11 +132,12 @@ namespace RuriLib.Blocks.Utility.Files
         }
 
         [Block("Appends lines at the end of a file")]
-        public static async Task FileAppendLines(BotData data, string path, [Variable] List<string> lines)
+        public static async Task FileAppendLines(BotData data, string path, [Variable] List<string> lines,
+            FileEncoding encoding = FileEncoding.UTF8)
         {
             await ExecuteFileOperation(data, path, lines, async (p, c) =>
             {
-                await File.AppendAllLinesAsync(p, c, data.CancellationToken);
+                await File.AppendAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken);
                 return true;
             }, isWriteOperation: true);
 
@@ -289,5 +294,27 @@ namespace RuriLib.Blocks.Utility.Files
 
             return result;
         }
+
+        private static Encoding MapEncoding(FileEncoding encoding)
+            => encoding switch
+            {
+                FileEncoding.UTF8 => Encoding.UTF8,
+                FileEncoding.ASCII => Encoding.ASCII,
+                FileEncoding.Unicode => Encoding.Unicode,
+                FileEncoding.BigEndianUnicode => Encoding.BigEndianUnicode,
+                FileEncoding.UTF32 => Encoding.UTF32,
+                FileEncoding.Latin1 => Encoding.Latin1,
+                _ => throw new NotImplementedException()
+            };
+    }
+
+    public enum FileEncoding
+    {
+        UTF8,
+        ASCII,
+        Unicode,
+        BigEndianUnicode,
+        UTF32,
+        Latin1
     }
 }
