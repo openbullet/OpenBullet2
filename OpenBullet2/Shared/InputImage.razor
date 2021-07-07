@@ -55,7 +55,7 @@
             {
                 // Support maximum 5 MB for file upload
                 await e.File.OpenReadStream(5 * 1000 * 1000).CopyToAsync(ms);
-                var bytes = ms.ToArray();
+                var bytes = ImageEditor.ToCompatibleFormat(ms.ToArray());
 
                 var resize = false;
 
@@ -86,7 +86,7 @@
         {
             using var client = new HttpClient();
             var response = await client.GetAsync(imageUrl);
-            var bytes = await response.Content.ReadAsByteArrayAsync();
+            var bytes = ImageEditor.ToCompatibleFormat(await response.Content.ReadAsByteArrayAsync());
 
             var resize = false;
 
