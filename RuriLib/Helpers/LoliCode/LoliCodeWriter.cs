@@ -66,7 +66,8 @@ namespace RuriLib.Helpers.LoliCode
         /// </summary>
         /// <param name="setting"></param>
         /// <param name="parameter"></param>
-        public LoliCodeWriter AppendSetting(BlockSetting setting, BlockParameter parameter = null, int spaces = 2)
+        public LoliCodeWriter AppendSetting(BlockSetting setting, BlockParameter parameter = null,
+            int spaces = 2, bool printDefaults = false)
         {
             if (parameter == null)
             {
@@ -89,7 +90,7 @@ namespace RuriLib.Helpers.LoliCode
                 _ => throw new NotImplementedException(),
             };
 
-            if (setting.InputMode != SettingInputMode.Fixed || !isDefaultValue)
+            if (setting.InputMode != SettingInputMode.Fixed || !isDefaultValue || printDefaults)
                 AppendLine($"{parameter.Name} = {GetSettingValue(setting)}", spaces);
 
             return this;
@@ -127,13 +128,13 @@ namespace RuriLib.Helpers.LoliCode
 
             return setting.FixedSetting switch
             {
-                StringSetting x => ToLiteral(x.Value),
+                StringSetting x => x.Value == null ? "\"\"" : ToLiteral(x.Value),
                 IntSetting x => x.Value.ToString(),
                 FloatSetting x => FormatFloat(x.Value),
                 BoolSetting x => x.Value.ToString(),
-                ByteArraySetting x => Convert.ToBase64String(x.Value),
-                ListOfStringsSetting x => SerializeList(x.Value),
-                DictionaryOfStringsSetting x => SerializeDictionary(x.Value),
+                ByteArraySetting x => x.Value == null ? "" : Convert.ToBase64String(x.Value),
+                ListOfStringsSetting x => x.Value == null ? "[]" : SerializeList(x.Value),
+                DictionaryOfStringsSetting x => x.Value == null ? "{}" : SerializeDictionary(x.Value),
                 EnumSetting x => x.Value,
                 _ => throw new NotImplementedException(),
             };

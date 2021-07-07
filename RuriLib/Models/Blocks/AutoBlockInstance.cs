@@ -34,7 +34,7 @@ namespace RuriLib.Models.Blocks
             OutputVariable = descriptor.Id.Substring(0, 1).ToLower() + descriptor.Id[1..] + "Output";
         }
 
-        public override string ToLC()
+        public override string ToLC(bool printDefaultParams = false)
         {
             /*
              *   SettingName = "my value"
@@ -42,7 +42,7 @@ namespace RuriLib.Models.Blocks
              *   SettingName = @myVariable
              */
 
-            using var writer = new LoliCodeWriter(base.ToLC());
+            using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
 
             if (Safe)
             {

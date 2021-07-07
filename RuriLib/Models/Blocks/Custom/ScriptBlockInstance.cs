@@ -39,7 +39,7 @@ namespace RuriLib.Models.Blocks.Custom
             
         }
 
-        public override string ToLC()
+        public override string ToLC(bool printDefaultParams = false)
         {
             /*
              *   INTERPRETER:Jint
@@ -50,7 +50,7 @@ namespace RuriLib.Models.Blocks.Custom
              *   OUTPUT Int result
              */
 
-            using var writer = new LoliCodeWriter(base.ToLC());
+            using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
             writer.WriteLine($"INTERPRETER:{Interpreter}");
             writer.WriteLine($"INPUT {InputVariables}");
             writer.WriteLine("BEGIN SCRIPT");

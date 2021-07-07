@@ -25,7 +25,7 @@ namespace RuriLib.Models.Blocks.Custom
             
         }
 
-        public override string ToLC()
+        public override string ToLC(bool printDefaultParams = false)
         {
             /*
              *   TYPE:STANDARD
@@ -48,7 +48,7 @@ namespace RuriLib.Models.Blocks.Custom
              *   
              */
 
-            using var writer = new LoliCodeWriter(base.ToLC());
+            using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
 
             switch (RequestParams)
             {

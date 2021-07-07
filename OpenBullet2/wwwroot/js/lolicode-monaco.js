@@ -294,6 +294,7 @@
             });
 
             if (textUntilPosition.trim().startsWith('BLOCK:')) {
+                // console.log(textUntilPosition);
                 return {
                     suggestions: blockAutocompletions
                 };
@@ -321,7 +322,7 @@
                     blockAutocompletions.push({
                         label: 'BLOCK:' + id,
                         kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: 'BLOCK:' + id + '\n' + data[id] + 'ENDBLOCK\n',
+                        insertText: id + '\n' + data[id] + 'ENDBLOCK\n',
                         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
                     });
                 }

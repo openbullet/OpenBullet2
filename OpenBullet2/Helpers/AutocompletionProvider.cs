@@ -2,9 +2,7 @@
 using RuriLib;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenBullet2.Helpers
 {
@@ -18,16 +16,7 @@ namespace OpenBullet2.Helpers
             foreach (var id in Globals.DescriptorsRepository.Descriptors.Keys)
             {
                 var block = BlockFactory.GetBlock<BlockInstance>(id);
-                blockSnippets[id] = block.ToLC();
-            }
-        }
-
-        public static void Refresh()
-        {
-            foreach (var id in Globals.DescriptorsRepository.Descriptors.Keys.Where(id => !blockSnippets.ContainsKey(id)))
-            {
-                var block = BlockFactory.GetBlock<BlockInstance>(id);
-                blockSnippets[id] = block.ToLC();
+                blockSnippets[id] = block.ToLC(true);
             }
         }
 

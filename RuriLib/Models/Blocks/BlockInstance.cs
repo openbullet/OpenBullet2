@@ -29,7 +29,7 @@ namespace RuriLib.Models.Blocks
                 .ToDictionary(p => p.Name, p => p);
         }
 
-        public virtual string ToLC()
+        public virtual string ToLC(bool printDefaultParams = false)
         {
             /*
              * BLOCK:BlockId
@@ -51,7 +51,7 @@ namespace RuriLib.Models.Blocks
                 if (!Descriptor.Parameters.ContainsKey(setting.Name))
                     throw new Exception($"This setting is not a valid input parameter: {setting.Name}");
 
-                writer.AppendSetting(setting, Descriptor.Parameters[setting.Name]);
+                writer.AppendSetting(setting, Descriptor.Parameters[setting.Name], 2, printDefaultParams);
             }
 
             return writer.ToString();

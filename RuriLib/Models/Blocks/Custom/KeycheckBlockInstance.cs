@@ -25,7 +25,7 @@ namespace RuriLib.Models.Blocks.Custom
             
         }
 
-        public override string ToLC()
+        public override string ToLC(bool printDefaultParams = false)
         {
             /*
              *   KEYCHAIN SUCCESS OR
@@ -36,7 +36,7 @@ namespace RuriLib.Models.Blocks.Custom
              *     FLOATKEY 1 GreaterThan 2
              */
 
-            using var writer = new LoliCodeWriter(base.ToLC());
+            using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
 
             // Write all the keychains
             foreach (var keychain in Keychains)

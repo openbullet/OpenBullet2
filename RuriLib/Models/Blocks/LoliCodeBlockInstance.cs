@@ -22,7 +22,7 @@ namespace RuriLib.Models.Blocks
             
         }
 
-        public override string ToLC() => Script;
+        public override string ToLC(bool printDefaultParams = false) => Script;
 
         public override void FromLC(ref string script, ref int lineNumber) 
         {
