@@ -293,10 +293,16 @@
                 endLineNumber: position.lineNumber, endColumn: position.column
             });
 
-            if (textUntilPosition.trim().startsWith('BLOCK:')) {
-                // console.log(textUntilPosition);
+            if ('BLOCK:'.startsWith(textUntilPosition.trim())) {
                 return {
-                    suggestions: blockAutocompletions
+                    suggestions: [
+                        {
+                            label: 'BLOCK:',
+                            kind: monaco.languages.CompletionItemKind.Snippet,
+                            insertText: 'BLOCK:',
+                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                        }
+                    ]
                 };
             }
 
@@ -308,6 +314,12 @@
                 endColumn: word.endColumn
             };
 
+            if (textUntilPosition.trim().startsWith('BLOCK:')) {
+                return {
+                    suggestions: autoCompleteBlock(range)
+                };
+            }
+
             return {
                 suggestions: autoCompleteLoliCodeStatement(range)
             };
@@ -315,22 +327,26 @@
     });
 
     // Get the snippets from C#
-    if (blockAutocompletions.length === 0) {
+    if (blockSnippets.length === 0) {
         DotNet.invokeMethodAsync('OpenBullet2', 'GetBlockSnippets')
-            .then(data => {
-                for (var id in data) {
-                    blockAutocompletions.push({
-                        label: 'BLOCK:' + id,
-                        kind: monaco.languages.CompletionItemKind.Snippet,
-                        insertText: id + '\n' + data[id] + 'ENDBLOCK\n',
-                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                    });
-                }
-            });
+            .then(data => blockSnippets = data);
     }
 }
 
-var blockAutocompletions = [];
+var blockSnippets = [];
+
+function autoCompleteBlock(range) {
+    let blockAutocompletions = [];
+    for (var id in blockSnippets) {
+        blockAutocompletions.push({
+            label: 'BLOCK:' + id,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: id + '\n' + blockSnippets[id] + 'ENDBLOCK\n',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        });
+    }
+    return blockAutocompletions;
+}
 
 function autoCompleteLoliCodeStatement(range) {
     // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
