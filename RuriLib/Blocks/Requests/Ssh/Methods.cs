@@ -42,6 +42,41 @@ namespace RuriLib.Blocks.Requests.Ssh
             data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
         }
 
+        [Block("Logs in via SSH with a private key stored in the given file", name = "Authenticate (Private Key)")]
+        public static void SshAuthenticateWithPK(BotData data, string host, int port = 22, string username = "root",
+            string keyFile = "rsa.key", string keyFilePassword = "", int timeoutMilliseconds = 30000,
+            int channelTimeoutMilliseconds = 1000, int retryAttempts = 10)
+        {
+            data.Logger.LogHeader();
+
+            ConnectionInfo info;
+            var pk = new PrivateKeyFile(keyFile, keyFilePassword);
+            var keyFiles = new[] { pk };
+
+            if (data.UseProxy)
+            {
+                info = new ConnectionInfo(host, port, username, TranslateProxyType(data.Proxy.Type), data.Proxy.Host,
+                    data.Proxy.Port, data.Proxy.Username, data.Proxy.Password,
+                    new PrivateKeyAuthenticationMethod(username, keyFiles));
+            }
+            else
+            {
+                info = new ConnectionInfo(host, port, username,
+                    new PrivateKeyAuthenticationMethod(username, keyFiles));
+            }
+
+            info.Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+            info.ChannelCloseTimeout = TimeSpan.FromMilliseconds(channelTimeoutMilliseconds);
+            info.RetryAttempts = retryAttempts;
+
+            var client = new SshClient(info);
+            client.Connect();
+
+            data.Objects["sshClient"] = client;
+
+            data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
+        }
+
         [Block("Executes a command via SSH", name = "Run Command")]
         public static string SshRunCommand(BotData data, string command)
         {
