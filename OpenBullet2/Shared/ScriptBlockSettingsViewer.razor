@@ -65,7 +65,7 @@
     </div>
 </EditForm>
 
-<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+<MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="SaveScript" />
 
 <br />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />

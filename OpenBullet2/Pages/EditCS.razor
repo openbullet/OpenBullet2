@@ -36,7 +36,7 @@
         <div class="row">
             <div class="col-xl-6 col-lg-12 pl-0">
                 <div class="w-100 mt-3" style="height: 800px;">
-                    <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+                    <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="SaveScript" />
                 </div>
                 <br />
                 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />

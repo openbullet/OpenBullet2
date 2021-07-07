@@ -2,7 +2,7 @@
 @inject PersistentSettingsService Settings 
 
 <div style="height: 700px;">
-    <MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnKeyUp="SaveScript" OnDidPaste="SaveScript" />
+    <MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="SaveScript" />
 </div>
 
 @code {
