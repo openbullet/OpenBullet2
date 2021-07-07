@@ -286,12 +286,18 @@
 
     monaco.languages.registerCompletionItemProvider('lolicode', {
         provideCompletionItems: function (model, position) {
-             // find out if we are completing a property in the 'dependencies' object.
-             //var textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
-             //var match = textUntilPosition.match(/"dependencies"\s*:\s*\{\s*("[^"]*"\s*:\s*"[^"]*"\s*,\s*)*([^"]*)?$/);
-             //if (!match) {
-             //    return { suggestions: [] };
-             //}
+
+             // Check if we are completing BLOCK:
+            var textUntilPosition = model.getValueInRange({
+                startLineNumber: position.lineNumber, startColumn: 1,
+                endLineNumber: position.lineNumber, endColumn: position.column
+            });
+
+            if (textUntilPosition.trim().startsWith('BLOCK:')) {
+                return {
+                    suggestions: blockAutocompletions
+                };
+            }
 
             var word = model.getWordUntilPosition(position);
             var range = {
@@ -306,7 +312,24 @@
             };
         }
     });
+
+    // Get the snippets from C#
+    if (blockAutocompletions.length === 0) {
+        DotNet.invokeMethodAsync('OpenBullet2', 'GetBlockSnippets')
+            .then(data => {
+                for (var id in data) {
+                    blockAutocompletions.push({
+                        label: 'BLOCK:' + id,
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'BLOCK:' + id + '\n' + data[id] + 'ENDBLOCK\n',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                    });
+                }
+            });
+    }
 }
+
+var blockAutocompletions = [];
 
 function autoCompleteLoliCodeStatement(range) {
     // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),

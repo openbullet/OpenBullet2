@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenBullet2.Helpers;
 
 namespace OpenBullet2
 {
@@ -30,6 +31,8 @@ The developer will not be held responsible for improper use of this software.
             Console.ForegroundColor = ConsoleColor.White;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 Console.WriteLine("DO NOT CLOSE THIS WINDOW" + Environment.NewLine);
+
+            AutocompletionProvider.Init();
 
             CreateHostBuilder(args).Build().Run();
         }
