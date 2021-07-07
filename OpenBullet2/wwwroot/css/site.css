@@ -678,8 +678,9 @@ a:hover {
 .job-viewer-hits {
     font-family: var(--consolas);
     width: 100%;
+    height: 420px;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .job-viewer-hit {
