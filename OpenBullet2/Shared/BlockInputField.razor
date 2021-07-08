@@ -14,7 +14,9 @@
                     </div>
                 }
                 <div class="col align-self-stretch">
-                    <input class="bg-variable" type="text" @bind="@BlockSetting.InputVariableName" />
+                    <EditForm Model="BlockSetting.InputVariableName">
+                        <InputComboBox @bind-Value="BlockSetting.InputVariableName" Suggestions="suggestions" />
+                    </EditForm>
                 </div>
                 <div class="col-auto ml-0 pl-0">
                     <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => StateHasChanged())" />
@@ -36,5 +38,8 @@
     [Parameter] public BlockSetting BlockSetting { get; set; }
     [Parameter] public bool DisplayName { get; set; } = true;
     public string Name => BlockSetting.Name.ToReadableName();
-
+    private string[] suggestions = new string[] { 
+        "data.SOURCE", "data.ERROR", "data.ADDRESS", 
+        "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
+        "data.RESPONSECODE", "data.RAWSOURCE" };
 }
