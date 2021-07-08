@@ -1,7 +1,4 @@
 ﻿@using RuriLib.Models.Blocks.Settings
-@using RuriLib.Extensions 
-@inject RuriLib.Services.RuriLibSettingsService RuriLibSettings
-@inject OpenBullet2.Services.VolatileSettingsService VolatileSettings 
 
 @if (BlockSetting != null)
 {
@@ -17,7 +14,7 @@
                 }
                 <div class="col align-self-stretch">
                     <EditForm Model="BlockSetting.InputVariableName">
-                        <InputComboBox @bind-Value="BlockSetting.InputVariableName" Suggestions="suggestions" />
+                        <InputComboBox @bind-Value="BlockSetting.InputVariableName" GetSuggestions="GetSuggestions" InputTextCssClass="bg-variable" />
                     </EditForm>
                 </div>
                 <div class="col-auto ml-0 pl-0">
@@ -33,24 +30,5 @@
         case SettingInputMode.Interpolated:
             <InterpolatedSettingViewer BlockSetting="BlockSetting" DisplayName="DisplayName" SwitchedMode="@((args) => StateHasChanged())" />
             break;
-    }
-}
-
-@code {
-    [Parameter] public BlockSetting BlockSetting { get; set; }
-    [Parameter] public bool DisplayName { get; set; } = true;
-    public string Name => BlockSetting.Name.ToReadableName();
-    private List<string> suggestions = new List<string> {
-        "data.SOURCE", "data.ERROR", "data.ADDRESS",
-        "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
-        "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE" };
-
-    protected override void OnParametersSet()
-    {
-        var wordlistType = VolatileSettings.DebuggerOptions.WordlistType;
-        foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices)
-        {
-            suggestions.Insert(0, $"input.{slice}");
-        }
     }
 }

@@ -1,12 +1,13 @@
-﻿<InputText class="bg-variable"
+﻿<InputText class="@InputTextCssClass"
        @onfocus="ShowSuggestions"
        @onfocusout="HideSuggestions"
+       @oninput="RefreshSuggestions"
        Value="@currentValue"
        ValueExpression="() => currentValue"
        ValueChanged="e => OnValueChanged(e)"/>
 <div class="suggestions-container @(showSuggestions ? "visible" : "invisible")">
     <div class="input-suggestions">
-        @foreach (var option in Suggestions)
+        @foreach (var option in suggestions)
         {
             <div class="suggestion-item" @onclick="() => SetVariable(option)">
                 @option
@@ -16,7 +17,6 @@
 </div>
 
 @code {
-    [Parameter] public IEnumerable<string> Suggestions { get; set; }
     [Parameter] public string Value
     {
         get => currentValue;
@@ -25,14 +25,24 @@
             currentValue = value;
         }
     }
+    [Parameter] public Func<string, Task<IEnumerable<string>>> GetSuggestions { get; set; }
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public string InputTextCssClass { get; set; }
     private string currentValue;
+    private string[] suggestions = new string[] { };
     private bool showSuggestions = false;
 
-    private void ShowSuggestions()
+    private async Task ShowSuggestions()
     {
         showSuggestions = true;
-        StateHasChanged();
+        suggestions = (await GetSuggestions.Invoke(currentValue)).ToArray();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshSuggestions(ChangeEventArgs e)
+    {
+        suggestions = (await GetSuggestions.Invoke(e.Value.ToString())).ToArray();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task HideSuggestions()
@@ -43,16 +53,16 @@
         if (showSuggestions)
         {
             showSuggestions = false;
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
-    private Task SetVariable(string value)
+    private async Task SetVariable(string value)
     {
         currentValue = value;
         showSuggestions = false;
-        StateHasChanged();
-        return ValueChanged.InvokeAsync(value);
+        await InvokeAsync(StateHasChanged);
+        await ValueChanged.InvokeAsync(value);
     }
 
     private Task OnValueChanged(string newValue)
