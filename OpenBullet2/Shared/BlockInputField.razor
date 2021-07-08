@@ -1,5 +1,7 @@
 ﻿@using RuriLib.Models.Blocks.Settings
 @using RuriLib.Extensions 
+@inject RuriLib.Services.RuriLibSettingsService RuriLibSettings
+@inject OpenBullet2.Services.VolatileSettingsService VolatileSettings 
 
 @if (BlockSetting != null)
 {
@@ -38,8 +40,17 @@
     [Parameter] public BlockSetting BlockSetting { get; set; }
     [Parameter] public bool DisplayName { get; set; } = true;
     public string Name => BlockSetting.Name.ToReadableName();
-    private string[] suggestions = new string[] { 
-        "data.SOURCE", "data.ERROR", "data.ADDRESS", 
+    private List<string> suggestions = new List<string> {
+        "data.SOURCE", "data.ERROR", "data.ADDRESS",
         "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
-        "data.RESPONSECODE", "data.RAWSOURCE" };
+        "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE" };
+
+    protected override void OnParametersSet()
+    {
+        var wordlistType = VolatileSettings.DebuggerOptions.WordlistType;
+        foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices)
+        {
+            suggestions.Insert(0, $"input.{slice}");
+        }
+    }
 }

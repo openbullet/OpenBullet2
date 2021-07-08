@@ -16,7 +16,7 @@
 </div>
 
 @code {
-    [Parameter] public string[] Suggestions { get; set; }
+    [Parameter] public IEnumerable<string> Suggestions { get; set; }
     [Parameter] public string Value
     {
         get => currentValue;
