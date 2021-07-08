@@ -115,6 +115,10 @@
 
             <label>@Loc["Custom2CaptchaPort"]</label>
             <InputNumber class="mb-3" @bind-Value="settings.CaptchaSettings.CustomTwoCaptchaPort" />
+
+            <label>@Loc["Custom2CaptchaOverrideHostHeader"]</label>
+            <InputCheckbox class="mb-3" @bind-Value="settings.CaptchaSettings.CustomTwoCaptchaOverrideHostHeader" />
+            <br />
             break;
 
         case CaptchaServiceType.DeathByCaptcha:

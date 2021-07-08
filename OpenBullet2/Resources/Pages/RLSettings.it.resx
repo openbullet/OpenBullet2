@@ -168,6 +168,9 @@
   <data name="Custom2CaptchaHost" xml:space="preserve">
     <value>Custom 2Captcha Host</value>
   </data>
+  <data name="Custom2CaptchaOverrideHostHeader" xml:space="preserve">
+    <value>Usa 2captcha.com nell'header Host</value>
+  </data>
   <data name="Custom2CaptchaPort" xml:space="preserve">
     <value>Custom 2Captcha Porta</value>
   </data>

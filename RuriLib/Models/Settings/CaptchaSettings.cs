@@ -16,6 +16,7 @@ namespace RuriLib.Models.Settings
         public string CaptchasDotIoApiKey { get; set; } = "";
         public string CustomTwoCaptchaApiKey { get; set; } = "";
         public string CustomTwoCaptchaDomain { get; set; } = "";
+        public bool CustomTwoCaptchaOverrideHostHeader { get; set; } = true;
         public int CustomTwoCaptchaPort { get; set; } = 80;
         public string DeathByCaptchaUsername { get; set; } = "";
         public string DeathByCaptchaPassword { get; set; } = "";
