@@ -55,7 +55,7 @@ namespace OpenBullet2.Shared
         private IEnumerable<string> GetOutputVariables(BlockInstance block)
             => block switch
             {
-                AutoBlockInstance x => new string[] { x.OutputVariable },
+                AutoBlockInstance x => x.Descriptor.ReturnType == null ? Array.Empty<string>() : new string[] { x.OutputVariable },
                 ParseBlockInstance x => new string[] { x.OutputVariable },
                 ScriptBlockInstance x => x.OutputVariables.Select(v => v.Name),
                 _ => Array.Empty<string>()
