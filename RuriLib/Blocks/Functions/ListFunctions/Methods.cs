@@ -177,5 +177,29 @@ namespace RuriLib.Blocks.Functions.List
             data.Logger.Log("Split the list into a dictionary", LogColors.YellowGreen);
             return dict;
         }
+
+        [Block("Gets the index of an element of a list", name = "Index Of")]
+        public static int ListIndexOf(BotData data, [Variable] List<string> list, string item, bool exactMatch = false,
+            bool caseSensitive = false)
+        {
+            var comparer = caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+            var elem = list.FirstOrDefault(i => exactMatch
+                ? i.Equals(item, comparer)
+                : i.Contains(item, comparer));
+
+            data.Logger.LogHeader();
+
+            if (elem is null)
+            {
+                data.Logger.Log("Item not found in the list, returning -1", LogColors.YellowGreen);
+                return -1;
+            }
+            else
+            {
+                var index = list.IndexOf(elem);
+                data.Logger.Log($"Item found at index {index}", LogColors.YellowGreen);
+                return index;
+            }
+        }
     }
 }
