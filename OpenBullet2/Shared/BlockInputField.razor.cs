@@ -30,14 +30,14 @@ namespace OpenBullet2.Shared
             "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE" };
 
             var wordlistType = VolatileSettings.DebuggerOptions.WordlistType;
-            foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices)
+            foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices.Reverse())
             {
                 suggestions.Insert(0, $"input.{slice}");
             }
 
             // TODO: Ideally only show variables in blocks above this one
             var stack = ConfigService.SelectedConfig.Stack;
-            foreach (var variable in stack.Select(b => GetOutputVariables(b)).SelectMany(v => v))
+            foreach (var variable in stack.Select(b => GetOutputVariables(b)).SelectMany(v => v).Reverse())
             {
                 if (!string.IsNullOrWhiteSpace(variable) && !suggestions.Contains(variable))
                 {
