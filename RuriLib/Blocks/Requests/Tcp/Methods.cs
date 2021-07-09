@@ -9,6 +9,7 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Requests.Tcp
@@ -44,7 +45,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         [Block("Sends a message (ASCII) on the previously opened socket and read the response (ASCII) right after")]
         public static async Task<string> TcpSendRead(BotData data, string message, bool unescape = true, bool terminateWithCRLF = true,
-            int bytesToRead = 4096)
+            int bytesToRead = 4096, int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
@@ -57,14 +58,17 @@ namespace RuriLib.Blocks.Requests.Tcp
             // Append \r\n at the end if not present
             if (terminateWithCRLF && !message.EndsWith("\r\n"))
                 message += "\r\n";
-            
+
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
+
             // Send the message
             var txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), data.CancellationToken);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token);
 
             // Read the response
             var buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), data.CancellationToken);
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
@@ -94,15 +98,18 @@ namespace RuriLib.Blocks.Requests.Tcp
         }
 
         [Block("Reads a message (ASCII) from the previously opened socket")]
-        public static async Task<string> TcpRead(BotData data, int bytesToRead = 4096)
+        public static async Task<string> TcpRead(BotData data, int bytesToRead = 4096, 
+            int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
             var netStream = GetStream(data);
 
             // Read the response
             var buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), data.CancellationToken);
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"The server says\r\n{response}", LogColors.Mauve);
@@ -112,10 +119,13 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         [Block("Sends an HTTP message on the previously opened socket and reads the response",
             extraInfo = "Use this block instead of SendMessage or it will only read the headers")]
-        public static async Task<string> TcpSendReadHttp(BotData data, string message, bool unescape = true)
+        public static async Task<string> TcpSendReadHttp(BotData data, string message, bool unescape = true,
+            int timeoutMilliseconds = 60000)
         {
             data.Logger.LogHeader();
 
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
             var netStream = GetStream(data);
 
             // Unescape codes like \r\n
@@ -128,12 +138,12 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Send the message
             var txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), data.CancellationToken);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token);
 
             // Receive data
             var payload = string.Empty;
             using var ms = new MemoryStream();
-            await netStream.CopyToAsync(ms, data.CancellationToken); // Read the whole response stream
+            await netStream.CopyToAsync(ms, linkedCts.Token); // Read the whole response stream
             ms.Position = 0;
             var rxBytes = ms.ToArray();
 
