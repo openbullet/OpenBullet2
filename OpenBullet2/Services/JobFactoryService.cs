@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Models.Hits;
+﻿using Microsoft.Extensions.Configuration;
+using OpenBullet2.Models.Hits;
 using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
@@ -26,11 +27,13 @@ namespace OpenBullet2.Services
         private readonly IJobLogger logger;
         private readonly IProxyRepository proxyRepo;
         private readonly PluginRepository pluginRepo;
+        
+        public int BotLimit { get; init; } = 200;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
             HitStorageService hitStorage, ProxySourceFactoryService proxySourceFactory, DataPoolFactoryService dataPoolFactory,
             ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger,
-            IProxyRepository proxyRepo)
+            IProxyRepository proxyRepo, IConfiguration config)
         {
             this.configService = configService;
             this.settingsService = settingsService;
@@ -43,6 +46,13 @@ namespace OpenBullet2.Services
             this.rngProvider = rngProvider;
             this.logger = logger;
             this.proxyRepo = proxyRepo;
+
+            var botLimit = config.GetSection("Resources")["BotLimit"];
+
+            if (botLimit is not null)
+            {
+                BotLimit = int.Parse(botLimit);
+            }
         }
 
         public Job FromOptions(int id, int ownerId, JobOptions options)
@@ -77,6 +87,7 @@ namespace OpenBullet2.Services
                 PeriodicReloadInterval = TimeSpan.FromSeconds(options.PeriodicReloadIntervalSeconds),
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
+                BotLimit = BotLimit,
                 Skip = options.Skip,
                 HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
                 ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),
@@ -99,6 +110,7 @@ namespace OpenBullet2.Services
             {
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
+                BotLimit = BotLimit,
                 CheckOnlyUntested = options.CheckOnlyUntested,
                 Url = options.Target.Url,
                 SuccessKey = options.Target.SuccessKey,

@@ -36,6 +36,7 @@ namespace RuriLib.Models.Jobs
     {
         // Options
         public int Bots { get; set; } = 1;
+        public int BotLimit { get; init; } = 200;
         public int Skip { get; set; } = 0;
         public Config Config { get; set; }
         public DataPool DataPool { get; set; }
@@ -460,7 +461,9 @@ namespace RuriLib.Models.Jobs
             });
 
             parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
-                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, DataPool.Size, Skip);
+                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, 
+                    workFunction, Bots, DataPool.Size, Skip, BotLimit);
+
             parallelizer.CPMLimit = Config.Settings.GeneralSettings.MaximumCPM;
             parallelizer.NewResult += DataProcessed;
             parallelizer.StatusChanged += StatusChanged;

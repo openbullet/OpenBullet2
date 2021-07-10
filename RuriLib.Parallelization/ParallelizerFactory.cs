@@ -9,7 +9,7 @@ namespace RuriLib.Parallelization
     {
         public static Parallelizer<TInput, TOutput> Create(ParallelizerType type,
             IEnumerable<TInput> workItems, Func<TInput, CancellationToken, Task<TOutput>> workFunction,
-                int degreeOfParallelism, long totalAmount, int skip = 0)
+                int degreeOfParallelism, long totalAmount, int skip = 0, int maxDegreeOfParallelism = 200)
         {
             var pType = type switch
             {
@@ -18,7 +18,9 @@ namespace RuriLib.Parallelization
                 _ => throw new NotImplementedException()
             };
 
-            var instance = Activator.CreateInstance(pType, workItems, workFunction, degreeOfParallelism, totalAmount, skip);
+            var instance = Activator.CreateInstance(pType, workItems, workFunction, degreeOfParallelism, 
+                totalAmount, skip, maxDegreeOfParallelism);
+
             return instance as Parallelizer<TInput, TOutput>;
         }
     }

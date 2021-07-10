@@ -19,6 +19,7 @@ namespace RuriLib.Models.Jobs
     {
         // Options
         public int Bots { get; set; } = 1;
+        public int BotLimit { get; init; } = 200;
         public bool CheckOnlyUntested { get; set; } = true;
         public string Url { get; set; } = "https://google.com";
         public string SuccessKey { get; set; } = "title>Google";
@@ -162,7 +163,9 @@ namespace RuriLib.Models.Jobs
 
             var workItems = proxies.Select(p => new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider));
             parallelizer = ParallelizerFactory<ProxyCheckInput, Proxy>
-                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, workFunction, Bots, Proxies.Count(), 0);
+                .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems, 
+                workFunction, Bots, Proxies.Count(), 0, BotLimit);
+
             parallelizer.NewResult += UpdateProxy;
             parallelizer.StatusChanged += StatusChanged;
             parallelizer.TaskError += PropagateTaskError;

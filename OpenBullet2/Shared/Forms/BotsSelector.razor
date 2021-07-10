@@ -1,10 +1,11 @@
 ﻿@using OpenBullet2.Helpers
 @inject IModalService ModalService
+@inject JobFactoryService JobFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<BotsSelector> Loc
 
 <EditForm Model="Bots">
     <InputNumber TValue="int" Value="Bots" ValueExpression="() => Bots"
-                 ValueChanged="(value) => Bots = Math.Clamp(value, 1, 200)" />
+                 ValueChanged="(value) => Bots = Math.Clamp(value, 1, JobFactory.BotLimit)" />
 </EditForm>
 
 <button class="btn btn-outline-success" type="submit" @onclick="Confirm">@Loc["Ok"]</button>

@@ -115,10 +115,13 @@ namespace RuriLib.Parallelization
         /// <param name="totalAmount">The total amount of data that is expected from <paramref name="workItems"/></param>
         /// <param name="skip">The amount of <paramref name="workItems"/> to skip at the beginning</param>
         public Parallelizer(IEnumerable<TInput> workItems, Func<TInput, CancellationToken, Task<TOutput>> workFunction,
-            int degreeOfParallelism, long totalAmount, int skip = 0)
+            int degreeOfParallelism, long totalAmount, int skip = 0, int maxDegreeOfParallelism = 200)
         {
             if (degreeOfParallelism < 1)
                 throw new ArgumentException("The degree of parallelism must be greater than 1");
+
+            if (degreeOfParallelism > maxDegreeOfParallelism)
+                throw new ArgumentException("The degree of parallelism must not be greater than the maximum degree of parallelism");
 
             if (skip >= totalAmount)
                 throw new ArgumentException("The skip must be less than the total amount");
@@ -128,7 +131,7 @@ namespace RuriLib.Parallelization
             this.totalAmount = totalAmount;
             this.degreeOfParallelism = degreeOfParallelism;
             this.skip = skip;
-            MaxDegreeOfParallelism = Math.Max(200, degreeOfParallelism);
+            MaxDegreeOfParallelism = maxDegreeOfParallelism;
 
             // Assign the task function
             taskFunction = new Func<TInput, Task>(async item =>

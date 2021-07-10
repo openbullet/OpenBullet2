@@ -8,6 +8,7 @@
 @inject IRecordRepository RecordRepo
 @inject IModalService Modal
 @inject ConfigService ConfigService
+@inject JobFactoryService JobFactory
 @inject Microsoft.Extensions.Localization.IStringLocalizer<MultiRunOptions> Loc
 
 <div class="container-fluid px-0">
@@ -38,7 +39,7 @@
                 <br />
                 <label>@Loc["Bots"]</label>
                 <InputNumber style="max-width: 100px; display: inline;" TValue="int" Value="Options.Bots"
-                    ValueExpression="() => Options.Bots" ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, 200)" />
+                    ValueExpression="() => Options.Bots" ValueChanged="(value) => Options.Bots = Math.Clamp(value, 1, JobFactory.BotLimit)" />
                 <br />
                 <label>@Loc["Skip"]</label>
                 <InputNumber style="max-width: 100px; display: inline;" @bind-Value="Options.Skip" />
@@ -129,7 +130,7 @@
         {
             selectedConfig = result.Data as Config;
             Options.ConfigId = selectedConfig.Id;
-            Options.Bots = Math.Clamp(selectedConfig.Settings.GeneralSettings.SuggestedBots, 1, 200);
+            Options.Bots = Math.Clamp(selectedConfig.Settings.GeneralSettings.SuggestedBots, 1, JobFactory.BotLimit);
             await TryApplyRecord();
         }
     }
