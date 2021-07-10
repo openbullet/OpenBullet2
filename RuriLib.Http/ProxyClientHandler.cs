@@ -167,6 +167,12 @@ namespace RuriLib.Http
                 // Optionally perform auto redirection on 3xx response
                 if (((int)responseMessage.StatusCode) / 100 == 3 && AllowAutoRedirect)
                 {
+                    if (!responseMessage.Headers.Contains("Location"))
+                    {
+                        throw new Exception($"Status code was {(int)responseMessage.StatusCode} but no Location header received. " +
+                            $"Disable auto redirect and try again.");
+                    }
+
                     // Compute the redirection URI
                     var redirectUri = responseMessage.Headers.Location.IsAbsoluteUri
                         ? responseMessage.Headers.Location

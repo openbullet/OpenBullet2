@@ -151,7 +151,13 @@ namespace RuriLib.Http
                 {
                     // Compute the redirection URI
                     var locationHeaderName = responseMessage.Headers.Keys
-                        .First(k => k.Equals("Location", StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefault(k => k.Equals("Location", StringComparison.OrdinalIgnoreCase));
+
+                    if (locationHeaderName is null)
+                    {
+                        throw new Exception($"Status code was {(int)responseMessage.StatusCode} but no Location header received. " +
+                            $"Disable auto redirect and try again.");
+                    }
 
                     Uri.TryCreate(responseMessage.Headers[locationHeaderName], UriKind.RelativeOrAbsolute, out var newLocation);
 
