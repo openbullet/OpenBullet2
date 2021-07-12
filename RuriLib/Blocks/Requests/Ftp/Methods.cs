@@ -59,6 +59,12 @@ namespace RuriLib.Blocks.Requests.Ftp
 
             data.Objects["ftpClient"] = client;
             await client.AutoConnectAsync(data.CancellationToken);
+            
+            if (!client.IsConnected)
+            {
+                throw new Exception("Failed to connect to the FTP server with the given credentials");
+            }
+
             data.Logger.Log($"Connected to {host}:{port}", LogColors.Maize);
         }
 
