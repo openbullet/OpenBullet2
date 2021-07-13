@@ -27,7 +27,7 @@ namespace OpenBullet2.Shared
             var suggestions = new List<string> {
             "data.SOURCE", "data.ERROR", "data.ADDRESS",
             "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
-            "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE" };
+            "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE", "data.Line.Data" };
 
             var wordlistType = VolatileSettings.DebuggerOptions.WordlistType;
             foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices.Reverse())
