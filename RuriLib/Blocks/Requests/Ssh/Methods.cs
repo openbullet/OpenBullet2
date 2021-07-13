@@ -42,6 +42,38 @@ namespace RuriLib.Blocks.Requests.Ssh
             data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
         }
 
+        [Block("Logs in via SSH with no credentials", name = "Authenticate (None)")]
+        public static void SshAuthenticateWithNone(BotData data, string host, int port = 22, string username = "root",
+            int timeoutMilliseconds = 30000, int channelTimeoutMilliseconds = 1000, int retryAttempts = 10)
+        {
+            data.Logger.LogHeader();
+
+            ConnectionInfo info;
+
+            if (data.UseProxy)
+            {
+                info = new ConnectionInfo(host, port, username, TranslateProxyType(data.Proxy.Type), data.Proxy.Host,
+                    data.Proxy.Port, data.Proxy.Username, data.Proxy.Password,
+                    new NoneAuthenticationMethod(username));
+            }
+            else
+            {
+                info = new ConnectionInfo(host, port, username,
+                    new NoneAuthenticationMethod(username));
+            }
+
+            info.Timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+            info.ChannelCloseTimeout = TimeSpan.FromMilliseconds(channelTimeoutMilliseconds);
+            info.RetryAttempts = retryAttempts;
+
+            var client = new SshClient(info);
+            client.Connect();
+
+            data.Objects["sshClient"] = client;
+
+            data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
+        }
+
         [Block("Logs in via SSH with a private key stored in the given file", name = "Authenticate (Private Key)")]
         public static void SshAuthenticateWithPK(BotData data, string host, int port = 22, string username = "root",
             string keyFile = "rsa.key", string keyFilePassword = "", int timeoutMilliseconds = 30000,
