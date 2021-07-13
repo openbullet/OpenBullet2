@@ -10,12 +10,9 @@ using RuriLib.Http.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using static RuriLib.Functions.Time.TimeConverter;
 
@@ -24,12 +21,8 @@ namespace RuriLib.Blocks.Requests.Imap
     [BlockCategory("IMAP", "Blocks for working with the IMAP protocol", "#93c", "#fff")]
     public static class Methods
     {
-        private static readonly object hostsLocker = new();
-        private static ConcurrentDictionary<string, List<HostEntry>> hosts;
-        private static bool initialized = false;
         private static readonly List<string> subdomains = new() { "mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m" };
-        private static readonly string hosterFile = "UserData/imapdomains.dat";
-
+        
         [Block("Connects to an IMAP server by automatically detecting the host and port")]
         public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
@@ -48,54 +41,9 @@ namespace RuriLib.Blocks.Requests.Imap
             data.Objects["imapClient"] = client;
 
             var domain = email.Split('@')[1];
-            List<HostEntry> candidates = new();
-
-            // Load the dictionary if not initialized (only do this once)
-            lock (hostsLocker)
-            {
-                if (!initialized)
-                {
-                    hosts = new ConcurrentDictionary<string, List<HostEntry>>(StringComparer.OrdinalIgnoreCase);
-
-                    if (!File.Exists(hosterFile))
-                    {
-                        File.WriteAllText(hosterFile, string.Empty);
-                    }
-
-                    var lines = File.ReadAllLines(hosterFile);
-
-                    foreach (var line in lines)
-                    {
-                        try
-                        {
-                            var split = line.Split(':');
-                            var entry = new HostEntry(split[1], int.Parse(split[2]));
-
-                            // If we already added an entry for this domain, add it to the list
-                            if (hosts.ContainsKey(split[0]))
-                            {
-                                hosts[split[0]].Add(entry);
-                            }
-                            else
-                            {
-                                hosts[split[0]] = new List<HostEntry> { entry };
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-
-                    initialized = true;
-                }
-            }
 
             // Try the entries from imapdomains.dat
-            if (hosts.ContainsKey(domain))
-            {
-                candidates = hosts[domain];
-            }
+            var candidates = (await data.Providers.EmailDomains.GetImapServers(domain)).ToList();
 
             foreach (var c in candidates)
             {
@@ -108,6 +56,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Thunderbird autoconfig
+            data.Logger.Log("About to query thunderbird autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
@@ -132,6 +81,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Site autoconfig
+            data.Logger.Log("About to query site autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var autoconfigUrl = $"{"https"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
             var autoconfigUrlUnsecure = $"{"http"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
@@ -167,6 +117,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Site well-known
+            data.Logger.Log("About to query well-known autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var wellKnownUrl = $"{"https"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
             var wellKnownUrlUnsecure = $"{"http"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
@@ -202,6 +153,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Try MX records
+            data.Logger.Log("About to query MX records", LogColors.YellowGreen);
             candidates.Clear();
             try
             {
@@ -230,6 +182,7 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Try the domain itself and possible subdomains
+            data.Logger.Log("About to bruteforce subdomain", LogColors.YellowGreen);
             candidates.Clear();
             candidates.Add(new HostEntry(domain, 993));
             candidates.Add(new HostEntry(domain, 143));
@@ -261,21 +214,7 @@ namespace RuriLib.Blocks.Requests.Imap
             {
                 await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
                 data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
-
-                if (!hosts.ContainsKey(domain))
-                {
-                    hosts[domain] = new List<HostEntry> { entry };
-
-                    try
-                    {
-                        File.AppendAllText(hosterFile, $"{domain}:{entry.Host}:{entry.Port}{Environment.NewLine}");
-                    }
-                    catch
-                    {
-
-                    }
-                }
-
+                await data.Providers.EmailDomains.TryAddImapServer(domain, entry);
                 return true;
             }
             catch

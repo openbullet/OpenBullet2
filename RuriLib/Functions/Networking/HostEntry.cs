@@ -1,6 +1,6 @@
 ﻿namespace RuriLib.Functions.Networking
 {
-    public class HostEntry
+    public struct HostEntry
     {
         public string Host { get; set; }
         public int Port { get; set; }

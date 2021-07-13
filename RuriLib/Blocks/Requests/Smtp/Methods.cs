@@ -24,12 +24,8 @@ namespace RuriLib.Blocks.Requests.Smtp
     [BlockCategory("SMTP", "Blocks for working with the SMTP protocol", "#b5651d", "#fff")]
     public static class Methods
     {
-        private static readonly object hostsLocker = new();
-        private static ConcurrentDictionary<string, List<HostEntry>> hosts;
-        private static bool initialized = false;
         private static readonly List<string> subdomains = new() { "mail", "smtp-mail", "outbound", "out", "mx", "smtp", "smtps", "m" };
-        private static readonly string hosterFile = "UserData/smtpdomains.dat";
-
+        
         [Block("Connects to a SMTP server by automatically detecting the host and port")]
         public static async Task SmtpAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
@@ -54,55 +50,9 @@ namespace RuriLib.Blocks.Requests.Smtp
             data.Objects["smtpClient"] = client;
 
             var domain = email.Split('@')[1];
-            List<HostEntry> candidates = new();
-
-            // Load the dictionary if not initialized (only do this once)
-            lock (hostsLocker)
-            {
-                if (!initialized)
-                {
-                    hosts = new ConcurrentDictionary<string, List<HostEntry>>(StringComparer.OrdinalIgnoreCase);
-
-                    if (!File.Exists(hosterFile))
-                    {
-                        File.WriteAllText(hosterFile, string.Empty);
-                    }
-
-                    var lines = File.ReadAllLines(hosterFile);
-
-                    foreach (var line in lines)
-                    {
-                        try
-                        {
-                            var split = line.Split(':');
-                            var entry = new HostEntry(split[1], int.Parse(split[2]));
-
-                            // If we already added an entry for this domain, add it to the list
-                            if (hosts.ContainsKey(split[0]))
-                            {
-                                hosts[split[0]].Add(entry);
-                            }
-                            else
-                            {
-                                hosts[split[0]] = new List<HostEntry> { entry };
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-
-                    initialized = true;
-                }
-            }
 
             // Try the entries from smtpdomains.dat
-            if (hosts.ContainsKey(domain))
-            {
-                candidates = hosts[domain];
-            }
-
+            var candidates = (await data.Providers.EmailDomains.GetSmtpServers(domain)).ToList();
             foreach (var c in candidates)
             {
                 var success = await TryConnect(data, client, domain, c);
@@ -277,19 +227,7 @@ namespace RuriLib.Blocks.Requests.Smtp
                     return false;
                 }
 
-                if (!hosts.ContainsKey(domain))
-                {
-                    hosts[domain] = new List<HostEntry> { entry };
-
-                    try
-                    {
-                        File.AppendAllText(hosterFile, $"{domain}:{entry.Host}:{entry.Port}{Environment.NewLine}");
-                    }
-                    catch
-                    {
-
-                    }
-                }
+                await data.Providers.EmailDomains.TryAddSmtpServer(domain, entry);
 
                 return true;
             }

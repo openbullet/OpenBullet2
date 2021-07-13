@@ -1,4 +1,5 @@
 ﻿using RuriLib.Providers.Captchas;
+using RuriLib.Providers.Emails;
 using RuriLib.Providers.Proxies;
 using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
@@ -16,6 +17,7 @@ namespace RuriLib.Models.Bots
     {
         public IRandomUAProvider RandomUA { get; set; }
         public ICaptchaProvider Captcha { get; set; }
+        public IEmailDomainRepository EmailDomains { get; set; }
         public IRNGProvider RNG { get; set; }
         public IPuppeteerBrowserProvider PuppeteerBrowser { get; set; }
         public IGeneralSettingsProvider GeneralSettings { get; set; }
@@ -30,6 +32,7 @@ namespace RuriLib.Models.Bots
             if (settings != null)
             {
                 RandomUA = new DefaultRandomUAProvider(settings);
+                EmailDomains = new FileEmailDomainRepository();
                 Captcha = new CaptchaSharpProvider(settings);
                 PuppeteerBrowser = new DefaultPuppeteerBrowserProvider(settings);
                 GeneralSettings = new DefaultGeneralSettingsProvider(settings);
