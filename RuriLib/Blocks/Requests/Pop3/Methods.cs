@@ -20,12 +20,8 @@ namespace RuriLib.Blocks.Requests.Pop3
     [BlockCategory("POP3", "Blocks for working with the POP3 protocol", "#74c365", "#000")]
     public static class Methods
     {
-        private static readonly object hostsLocker = new();
-        private static ConcurrentDictionary<string, List<HostEntry>> hosts;
-        private static bool initialized = false;
         private static readonly List<string> subdomains = new() { "mail", "pop", "pop3", "m", "pop3-mail", "pop-mail", "inbound", "in", "mx" };
-        private static readonly string hosterFile = "UserData/pop3domains.dat";
-
+        
         [Block("Connects to a POP3 server by automatically detecting the host and port")]
         public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
         {
@@ -44,54 +40,9 @@ namespace RuriLib.Blocks.Requests.Pop3
             data.Objects["pop3Client"] = client;
 
             var domain = email.Split('@')[1];
-            List<HostEntry> candidates = new();
-
-            // Load the dictionary if not initialized (only do this once)
-            lock (hostsLocker)
-            {
-                if (!initialized)
-                {
-                    hosts = new ConcurrentDictionary<string, List<HostEntry>>(StringComparer.OrdinalIgnoreCase);
-
-                    if (!File.Exists(hosterFile))
-                    {
-                        File.WriteAllText(hosterFile, string.Empty);
-                    }
-
-                    var lines = File.ReadAllLines(hosterFile);
-
-                    foreach (var line in lines)
-                    {
-                        try
-                        {
-                            var split = line.Split(':');
-                            var entry = new HostEntry(split[1], int.Parse(split[2]));
-
-                            // If we already added an entry for this domain, add it to the list
-                            if (hosts.ContainsKey(split[0]))
-                            {
-                                hosts[split[0]].Add(entry);
-                            }
-                            else
-                            {
-                                hosts[split[0]] = new List<HostEntry> { entry };
-                            }
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-
-                    initialized = true;
-                }
-            }
 
             // Try the entries from pop3domains.dat
-            if (hosts.ContainsKey(domain))
-            {
-                candidates = hosts[domain];
-            }
+            var candidates = (await data.Providers.EmailDomains.GetPop3Servers(domain)).ToList();
 
             foreach (var c in candidates)
             {
@@ -257,21 +208,7 @@ namespace RuriLib.Blocks.Requests.Pop3
             {
                 await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
                 data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.Mantis);
-
-                if (!hosts.ContainsKey(domain))
-                {
-                    hosts[domain] = new List<HostEntry> { entry };
-
-                    try
-                    {
-                        File.AppendAllText(hosterFile, $"{domain}:{entry.Host}:{entry.Port}{Environment.NewLine}");
-                    }
-                    catch
-                    {
-
-                    }
-                }
-
+                await data.Providers.EmailDomains.TryAddPop3Server(domain, entry);
                 return true;
             }
             catch
