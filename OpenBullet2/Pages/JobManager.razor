@@ -11,7 +11,7 @@
             <button class="btn btn-sm btn-outline-danger" @onclick="RemoveAll"><span class="oi oi-x"></span> @Loc["RemoveAll"]</button>
         </div>
     </div>
-    @foreach (var job in Manager.Jobs.Where(j => CanSeeJob(j.OwnerId)))
+    @foreach (var job in Manager.Jobs.Where(j => CanSeeJob(j.OwnerId)).OrderBy(j => j.Id))
     {
         <div class="row mt-sm-2 mt-3">
             <div class="col-sm-auto job-overview-left-col d-flex align-items-center">
