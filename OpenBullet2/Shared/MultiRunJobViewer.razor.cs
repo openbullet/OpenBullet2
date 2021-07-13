@@ -72,6 +72,8 @@ namespace OpenBullet2.Shared
 
                 Job.Bots = newAmount;
                 changingBots = false;
+
+                _ = Task.Run(() => SaveJobOptions(this, EventArgs.Empty));
             }
         }
 
@@ -170,10 +172,12 @@ namespace OpenBullet2.Shared
                 return;
             }
 
-            // Update the skip (if not idle, also add the currently tested ones)
+            // Update the skip (if not idle, also add the currently tested ones) and the bots
             options.Skip = Job.Status == JobStatus.Idle
                 ? Job.Skip
                 : Job.Skip + Job.DataTested;
+
+            options.Bots = Job.Bots;
             
             // Wrap and serialize again
             var newWrapper = new JobOptionsWrapper { Options = options };
