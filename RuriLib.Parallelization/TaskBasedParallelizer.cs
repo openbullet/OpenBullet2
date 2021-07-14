@@ -159,7 +159,7 @@ namespace RuriLib.Parallelization
                     if (dopDecreaseRequested || IsCPMLimited())
                     {
                         UpdateCPM();
-                        semaphore.Release();
+                        semaphore?.Release();
                         goto WAIT;
                     }
 
@@ -178,12 +178,12 @@ namespace RuriLib.Parallelization
                     {
                         // The task will release its slot no matter what
                         _ = taskFunction.Invoke(item)
-                            .ContinueWith(_ => semaphore.Release())
+                            .ContinueWith(_ => semaphore?.Release())
                             .ConfigureAwait(false);
                     }
                     else
                     {
-                        semaphore.Release();
+                        semaphore?.Release();
                     }
                 }
 
@@ -209,10 +209,10 @@ namespace RuriLib.Parallelization
             {
                 OnCompleted();
                 Status = ParallelizerStatus.Idle;
-                hardCTS.Dispose();
-                softCTS.Dispose();
-                semaphore.Dispose();
-                stopwatch.Stop();
+                hardCTS?.Dispose();
+                softCTS?.Dispose();
+                semaphore?.Dispose();
+                stopwatch?.Stop();
             }
         }
         #endregion
