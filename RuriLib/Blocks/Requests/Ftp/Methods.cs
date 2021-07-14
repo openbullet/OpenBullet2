@@ -19,24 +19,14 @@ namespace RuriLib.Blocks.Requests.Ftp
         {
             data.Logger.LogHeader();
 
-            if (data.Proxy is not null && data.Proxy.Type != Models.Proxies.ProxyType.Http)
+            if (data.UseProxy && data.Proxy is not null && data.Proxy.Type != Models.Proxies.ProxyType.Http)
             {
                 throw new Exception("Currently, this block only supports HTTP proxies");
             }
 
             FtpClient client;
 
-            if (data.Proxy is null)
-            {
-                client = new FtpClient(host, port, username, password)
-                {
-                    ConnectTimeout = timeoutMilliseconds,
-                    DataConnectionConnectTimeout = timeoutMilliseconds,
-                    DataConnectionReadTimeout = timeoutMilliseconds,
-                    ReadTimeout = timeoutMilliseconds
-                };
-            }
-            else
+            if (data.UseProxy && data.Proxy is not null)
             {
                 var proxyInfo = new ProxyInfo
                 {
@@ -50,6 +40,16 @@ namespace RuriLib.Blocks.Requests.Ftp
                     Host = host,
                     Port = port,
                     Credentials = new NetworkCredential(username, password),
+                    ConnectTimeout = timeoutMilliseconds,
+                    DataConnectionConnectTimeout = timeoutMilliseconds,
+                    DataConnectionReadTimeout = timeoutMilliseconds,
+                    ReadTimeout = timeoutMilliseconds
+                };
+            }
+            else
+            {
+                client = new FtpClient(host, port, username, password)
+                {
                     ConnectTimeout = timeoutMilliseconds,
                     DataConnectionConnectTimeout = timeoutMilliseconds,
                     DataConnectionReadTimeout = timeoutMilliseconds,

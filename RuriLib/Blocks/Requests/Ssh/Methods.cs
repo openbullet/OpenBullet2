@@ -18,7 +18,7 @@ namespace RuriLib.Blocks.Requests.Ssh
 
             ConnectionInfo info;
 
-            if (data.UseProxy)
+            if (data.UseProxy && data.Proxy is not null)
             {
                 info = new ConnectionInfo(host, port, username, TranslateProxyType(data.Proxy.Type), data.Proxy.Host,
                     data.Proxy.Port, data.Proxy.Username, data.Proxy.Password,
@@ -50,7 +50,7 @@ namespace RuriLib.Blocks.Requests.Ssh
 
             ConnectionInfo info;
 
-            if (data.UseProxy)
+            if (data.UseProxy && data.Proxy is not null)
             {
                 info = new ConnectionInfo(host, port, username, TranslateProxyType(data.Proxy.Type), data.Proxy.Host,
                     data.Proxy.Port, data.Proxy.Username, data.Proxy.Password,
@@ -85,7 +85,7 @@ namespace RuriLib.Blocks.Requests.Ssh
             var pk = new PrivateKeyFile(keyFile, keyFilePassword);
             var keyFiles = new[] { pk };
 
-            if (data.UseProxy)
+            if (data.UseProxy && data.Proxy is not null)
             {
                 info = new ConnectionInfo(host, port, username, TranslateProxyType(data.Proxy.Type), data.Proxy.Host,
                     data.Proxy.Port, data.Proxy.Username, data.Proxy.Password,

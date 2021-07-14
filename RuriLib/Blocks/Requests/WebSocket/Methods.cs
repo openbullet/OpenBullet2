@@ -21,7 +21,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
             data.Logger.LogHeader();
 
             IWebProxy proxy = null;
-            if (data.UseProxy)
+            if (data.UseProxy && data.Proxy is not null)
             {
                 if (data.Proxy.Type != Models.Proxies.ProxyType.Http)
                 {
