@@ -137,57 +137,10 @@ namespace OpenBullet2.Shared
             JobManager.SaveRecord(Job).ConfigureAwait(false);
         }
 
-        // TODO: Move this to a separate service! It has no point of being here!
         private void SaveJobOptions(object sender, EventArgs e)
         {
-            JobEntity job = null;
-
-            // Get the job
-            lock (JobRepo)
-            {
-                job = JobRepo.Get(Job.Id).Result;
-            }
-
-            if (job == null || job.JobOptions == null)
-            {
-                Console.WriteLine("Skipped job options save because Job (or JobOptions) was null");
-                return;
-            }
-            
-            // Deserialize and unwrap the job options
-            var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-            var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(job.JobOptions, settings);
-            var options = ((MultiRunJobOptions)wrapper.Options);
-            
-            // Check if it's valid
-            if (string.IsNullOrEmpty(options.ConfigId))
-            {
-                Console.WriteLine("Skipped job options save because ConfigId was null");
-                return;
-            }
-
-            if (options.DataPool is WordlistDataPoolOptions x && x.WordlistId == -1)
-            {
-                Console.WriteLine("Skipped job options save because WordlistId was -1");
-                return;
-            }
-
-            // Update the skip (if not idle, also add the currently tested ones) and the bots
-            options.Skip = Job.Status == JobStatus.Idle
-                ? Job.Skip
-                : Job.Skip + Job.DataTested;
-
-            options.Bots = Job.Bots;
-            
-            // Wrap and serialize again
-            var newWrapper = new JobOptionsWrapper { Options = options };
-            job.JobOptions = JsonConvert.SerializeObject(newWrapper, settings);
-
-            // Update the job
-            lock (JobRepo)
-            {
-                JobRepo.Update(job).Wait();
-            }
+            // Fire and forget
+            JobManager.SaveJobOptions(Job).ConfigureAwait(false);
         }
 
         private async Task Start()
