@@ -51,8 +51,8 @@ namespace OpenBullet2.Services
 
             try
             {
-                var record = recordRepo.GetAll()
-                        .FirstOrDefault(r => r.ConfigId == job.Config.Id && r.WordlistId == pool.Wordlist.Id);
+                var record = await recordRepo.GetAll()
+                        .FirstOrDefaultAsync(r => r.ConfigId == job.Config.Id && r.WordlistId == pool.Wordlist.Id);
 
                 var checkpoint = job.Status == JobStatus.Idle
                     ? job.Skip
