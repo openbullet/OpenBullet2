@@ -212,6 +212,7 @@ namespace RuriLib.Parallelization
                 hardCTS?.Dispose();
                 softCTS?.Dispose();
                 semaphore?.Dispose();
+                semaphore = null;
                 stopwatch?.Stop();
             }
         }
