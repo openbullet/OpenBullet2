@@ -15,6 +15,22 @@ namespace OpenBullet2.Repositories
             
         }
 
+        public async override Task Update(ProxyEntity entity)
+        {
+            context.Entry(entity).State = EntityState.Modified;
+            await base.Update(entity);
+        }
+
+        public async override Task Update(IEnumerable<ProxyEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                context.Entry(entity).State = EntityState.Modified;
+            }
+
+            await base.Update(entities);
+        }
+
         public async Task RemoveDuplicates(int groupId)
         {
             var proxies = await GetAll()

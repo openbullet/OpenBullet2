@@ -26,7 +26,6 @@ namespace OpenBullet2.Repositories
             
             try
             {
-                context.Entry(entity).State = EntityState.Deleted;
                 context.Add(entity);
                 await context.SaveChangesAsync();
             }
@@ -45,11 +44,6 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                foreach (var entity in entities)
-                {
-                    context.Entry(entity).State = EntityState.Added;
-                }
-
                 context.AddRange(entities);
                 await context.SaveChangesAsync();
             }
@@ -68,7 +62,6 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                context.Entry(entity).State = EntityState.Deleted;
                 context.Remove(entity);
                 await context.SaveChangesAsync();
             }
@@ -87,11 +80,6 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                foreach (var entity in entities)
-                {
-                    context.Entry(entity).State = EntityState.Deleted;
-                }
-
                 context.RemoveRange(entities);
                 await context.SaveChangesAsync();
             }
@@ -133,7 +121,6 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                context.Entry(entity).State = EntityState.Modified;
                 context.Update(entity);
                 await context.SaveChangesAsync();
             }
@@ -152,11 +139,6 @@ namespace OpenBullet2.Repositories
 
             try
             {
-                foreach (var entity in entities)
-                {
-                    context.Entry(entity).State = EntityState.Modified;
-                }
-
                 context.UpdateRange(entities);
                 await context.SaveChangesAsync();
             }
