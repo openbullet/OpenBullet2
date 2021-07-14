@@ -408,6 +408,7 @@ namespace OpenBullet2.Shared
             
             Job.OnCompleted += SaveRecord;
             Job.OnTimerTick += SaveRecord;
+            Job.OnCompleted += SaveJobOptions;
             Job.OnTimerTick += SaveJobOptions;
         }
 
@@ -430,6 +431,7 @@ namespace OpenBullet2.Shared
             {
                 Job.OnCompleted -= SaveRecord;
                 Job.OnTimerTick -= SaveRecord;
+                Job.OnCompleted -= SaveJobOptions;
                 Job.OnTimerTick -= SaveJobOptions;
             }
             catch 
