@@ -60,13 +60,18 @@ namespace RuriLib.Models.Data
             foreach (var rule in rules)
             {
                 var slice = variables.FirstOrDefault(v => v.Name == rule.SliceName);
-                var value = slice.AsString();
                 
                 if (slice == null)
+                {
                     throw new ArgumentException($"Invalid slice name ({rule.SliceName}) in a data rule");
+                }
 
+                var value = slice.AsString();
+                
                 if (!rule.IsSatisfied(value))
+                {
                     return false;
+                }
             }
 
             return true;
