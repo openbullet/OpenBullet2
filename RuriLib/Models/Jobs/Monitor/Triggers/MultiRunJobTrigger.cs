@@ -137,7 +137,7 @@ namespace RuriLib.Models.Jobs.Monitor.Triggers
         public float Amount { get; set; }
 
         public override bool CheckStatus(MultiRunJob job)
-            => Functions.Conditions.Conditions.Check(job.Progress, Comparison, Amount);
+            => Functions.Conditions.Conditions.Check(job.Progress * 100, Comparison, Amount);
     }
 
     public class TimeElapsedTrigger : MultiRunJobTrigger

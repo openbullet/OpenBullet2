@@ -81,7 +81,7 @@
 
         case ProgressTrigger t:
             <span>@Loc["TriggerWhen"]</span>
-            <InputFloatComparison Label="Progress" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
+            <InputFloatComparison Label="Progress %" @bind-Amount="t.Amount" @bind-Comparison="t.Comparison" />
             break;
 
         case TimeElapsedTrigger t:
