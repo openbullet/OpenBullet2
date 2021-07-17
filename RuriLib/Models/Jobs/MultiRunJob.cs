@@ -646,6 +646,11 @@ namespace RuriLib.Models.Jobs
             }
 
             Interlocked.Increment(ref dataTested);
+
+            if (parallelizer.Status == ParallelizerStatus.Stopping)
+            {
+                details.Item.BotData.ExecutionInfo = "STOPPED";
+            }
         }
 
         private async Task RegisterHit(CheckResult result)
