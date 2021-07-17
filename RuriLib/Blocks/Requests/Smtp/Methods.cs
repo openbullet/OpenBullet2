@@ -157,6 +157,29 @@ namespace RuriLib.Blocks.Requests.Smtp
                 }
             }
 
+            // Try the domain itself and possible subdomains
+            candidates.Clear();
+            candidates.Add(new HostEntry(domain, 465));
+            candidates.Add(new HostEntry(domain, 587));
+            candidates.Add(new HostEntry(domain, 25));
+
+            foreach (var sub in subdomains)
+            {
+                candidates.Add(new HostEntry($"{sub}.{domain}", 465));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 587));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 25));
+            }
+
+            foreach (var c in candidates)
+            {
+                var success = await TryConnect(data, client, domain, c);
+
+                if (success)
+                {
+                    return;
+                }
+            }
+
             // Try MX records
             candidates.Clear();
             try
@@ -174,29 +197,6 @@ namespace RuriLib.Blocks.Requests.Smtp
             catch
             {
                 data.Logger.Log($"Failed to query the MX records", LogColors.LightBrown);
-            }
-
-            foreach (var c in candidates)
-            {
-                var success = await TryConnect(data, client, domain, c);
-
-                if (success)
-                {
-                    return;
-                }
-            }
-
-            // Try the domain itself and possible subdomains
-            candidates.Clear();
-            candidates.Add(new HostEntry(domain, 465));
-            candidates.Add(new HostEntry(domain, 587));
-            candidates.Add(new HostEntry(domain, 25));
-
-            foreach (var sub in subdomains)
-            {
-                candidates.Add(new HostEntry($"{sub}.{domain}", 465));
-                candidates.Add(new HostEntry($"{sub}.{domain}", 587));
-                candidates.Add(new HostEntry($"{sub}.{domain}", 25));
             }
 
             foreach (var c in candidates)

@@ -152,6 +152,28 @@ namespace RuriLib.Blocks.Requests.Imap
                 }
             }
 
+            // Try the domain itself and possible subdomains
+            data.Logger.Log("About to bruteforce subdomain", LogColors.YellowGreen);
+            candidates.Clear();
+            candidates.Add(new HostEntry(domain, 993));
+            candidates.Add(new HostEntry(domain, 143));
+
+            foreach (var sub in subdomains)
+            {
+                candidates.Add(new HostEntry($"{sub}.{domain}", 993));
+                candidates.Add(new HostEntry($"{sub}.{domain}", 143));
+            }
+
+            foreach (var c in candidates)
+            {
+                var success = await TryConnect(data, client, domain, c);
+
+                if (success)
+                {
+                    return;
+                }
+            }
+
             // Try MX records
             data.Logger.Log("About to query MX records", LogColors.YellowGreen);
             candidates.Clear();
@@ -169,28 +191,6 @@ namespace RuriLib.Blocks.Requests.Imap
             catch
             {
                 data.Logger.Log($"Failed to query the MX records", LogColors.DarkOrchid);
-            }
-
-            foreach (var c in candidates)
-            {
-                var success = await TryConnect(data, client, domain, c);
-
-                if (success)
-                {
-                    return;
-                }
-            }
-
-            // Try the domain itself and possible subdomains
-            data.Logger.Log("About to bruteforce subdomain", LogColors.YellowGreen);
-            candidates.Clear();
-            candidates.Add(new HostEntry(domain, 993));
-            candidates.Add(new HostEntry(domain, 143));
-
-            foreach (var sub in subdomains)
-            {
-                candidates.Add(new HostEntry($"{sub}.{domain}", 993));
-                candidates.Add(new HostEntry($"{sub}.{domain}", 143));
             }
 
             foreach (var c in candidates)
