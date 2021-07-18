@@ -62,7 +62,6 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Thunderbird autoconfig
-            data.Logger.Log("About to query thunderbird autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
@@ -87,7 +86,6 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Site autoconfig
-            data.Logger.Log("About to query site autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var autoconfigUrl = $"{"https"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
             var autoconfigUrlUnsecure = $"{"http"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
@@ -123,7 +121,6 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Site well-known
-            data.Logger.Log("About to query well-known autoconfig", LogColors.YellowGreen);
             candidates.Clear();
             var wellKnownUrl = $"{"https"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
             var wellKnownUrlUnsecure = $"{"http"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
@@ -159,7 +156,6 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Try the domain itself and possible subdomains
-            data.Logger.Log("About to bruteforce subdomain", LogColors.YellowGreen);
             candidates.Clear();
             candidates.Add(new HostEntry(domain, 993));
             candidates.Add(new HostEntry(domain, 143));
@@ -181,7 +177,6 @@ namespace RuriLib.Blocks.Requests.Imap
             }
 
             // Try MX records
-            data.Logger.Log("About to query MX records", LogColors.YellowGreen);
             candidates.Clear();
             try
             {
