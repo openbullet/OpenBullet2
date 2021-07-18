@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Requests.Pop3
@@ -276,13 +277,16 @@ namespace RuriLib.Blocks.Requests.Pop3
         }
 
         [Block("Logs into an account")]
-        public static async Task Pop3Login(BotData data, string email, string password)
+        public static async Task Pop3Login(BotData data, string email, string password, int timeoutMilliseconds = 10000)
         {
             data.Logger.LogHeader();
 
             var client = GetClient(data);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.AuthenticateAsync(email, password, data.CancellationToken);
+
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
+            await client.AuthenticateAsync(email, password, linkedCts.Token);
             data.Logger.Log($"Authenticated successfully, there are {client.Count} total messages", LogColors.Mantis);
         }
 

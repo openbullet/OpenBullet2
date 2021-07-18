@@ -18,6 +18,7 @@ using RuriLib.Extensions;
 using RuriLib.Functions.Networking;
 using MailKit;
 using System.Text;
+using System.Threading;
 
 namespace RuriLib.Blocks.Requests.Smtp
 {
@@ -296,14 +297,17 @@ namespace RuriLib.Blocks.Requests.Smtp
         }
 
         [Block("Logs into an account")]
-        public static async Task SmtpLogin(BotData data, string email, string password)
+        public static async Task SmtpLogin(BotData data, string email, string password, int timeoutMilliseconds = 10000)
         {
             data.Logger.LogHeader();
 
             var client = GetClient(data);
             using var logger = client.ProtocolLogger;
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.AuthenticateAsync(email, password, data.CancellationToken);
+
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
+            await client.AuthenticateAsync(email, password, linkedCts.Token);
             data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
         }
 

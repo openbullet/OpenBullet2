@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using static RuriLib.Functions.Time.TimeConverter;
 
@@ -282,13 +283,16 @@ namespace RuriLib.Blocks.Requests.Imap
         }
 
         [Block("Logs into an account")]
-        public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true)
+        public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true, int timeoutMilliseconds = 10000)
         {
             data.Logger.LogHeader();
 
             var client = GetClient(data);
             client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.AuthenticateAsync(email, password, data.CancellationToken);
+
+            using var cts = new CancellationTokenSource(timeoutMilliseconds);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
+            await client.AuthenticateAsync(email, password, linkedCts.Token);
             data.Logger.Log("Authenticated successfully", LogColors.DarkOrchid);
 
             if (openInbox)
