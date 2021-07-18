@@ -446,7 +446,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             if (data.Objects.ContainsKey("smtpLoggerStream") && data.Objects.ContainsKey("smtpLogger"))
             {
                 ((MemoryStream)data.Objects["smtpLoggerStream"])?.Dispose();
-                ((MemoryStream)data.Objects["smtpLogger"])?.Dispose();
+                ((ProtocolLogger)data.Objects["smtpLogger"])?.Dispose();
             }
 
             var ms = new MemoryStream();

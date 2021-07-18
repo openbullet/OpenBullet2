@@ -435,7 +435,7 @@ Body:
             if (data.Objects.ContainsKey("pop3LoggerStream") || data.Objects.ContainsKey("pop3Logger"))
             {
                 ((MemoryStream)data.Objects["pop3LoggerStream"])?.Dispose();
-                ((MemoryStream)data.Objects["pop3Logger"])?.Dispose();
+                ((ProtocolLogger)data.Objects["pop3Logger"])?.Dispose();
             }
 
             var ms = new MemoryStream();

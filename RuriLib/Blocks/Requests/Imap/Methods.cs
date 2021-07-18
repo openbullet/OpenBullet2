@@ -491,7 +491,7 @@ Body:
             if (data.Objects.ContainsKey("imapLoggerStream") && data.Objects.ContainsKey("imapLogger"))
             {
                 ((MemoryStream)data.Objects["imapLoggerStream"])?.Dispose();
-                ((MemoryStream)data.Objects["imapLogger"])?.Dispose();
+                ((ProtocolLogger)data.Objects["imapLogger"])?.Dispose();
             }
 
             var ms = new MemoryStream();
