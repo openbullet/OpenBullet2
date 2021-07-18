@@ -44,7 +44,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["imapClient"] = client;
+            data.SetObject("imapClient", client);
 
             var domain = email.Split('@')[1];
 
@@ -261,7 +261,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["imapClient"] = client;
+            data.SetObject("imapClient", client);
 
             await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
@@ -310,7 +310,7 @@ namespace RuriLib.Blocks.Requests.Imap
         {
             data.Logger.LogHeader();
 
-            var protocolLogger = (ProtocolLogger)data.Objects["imapLogger"];
+            var protocolLogger = data.TryGetObject<ProtocolLogger>("imapLogger");
             var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
             var log = Encoding.UTF8.GetString(bytes);
 
@@ -414,16 +414,7 @@ Body:
         }
 
         private static ImapClient GetClient(BotData data)
-        {
-            try
-            {
-                return (ImapClient)data.Objects["imapClient"];
-            }
-            catch
-            {
-                throw new Exception("Connect the IMAP client first!");
-            }
-        }
+            => data.TryGetObject<ImapClient>("imapClient") ?? throw new Exception("Connect the IMAP client first!");
 
         private static ImapClient GetAuthenticatedClient(BotData data)
         {
@@ -488,16 +479,10 @@ Body:
 
         private static ProtocolLogger InitLogger(BotData data)
         {
-            if (data.Objects.ContainsKey("imapLoggerStream") && data.Objects.ContainsKey("imapLogger"))
-            {
-                ((MemoryStream)data.Objects["imapLoggerStream"])?.Dispose();
-                ((ProtocolLogger)data.Objects["imapLogger"])?.Dispose();
-            }
-
             var ms = new MemoryStream();
             var protocolLogger = new ProtocolLogger(ms, true);
-            data.Objects["imapLoggerStream"] = ms;
-            data.Objects["imapLogger"] = protocolLogger;
+            data.SetObject("imapLoggerStream", ms);
+            data.SetObject("imapLogger", protocolLogger);
 
             return protocolLogger;
         }

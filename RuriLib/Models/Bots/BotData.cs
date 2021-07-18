@@ -38,7 +38,11 @@ namespace RuriLib.Models.Bots
         public string ERROR { get; set; } = string.Empty;
 
         // This dictionary will hold stateful objects like a captcha provider, a TCP client, a selenium webdriver...
-        public Dictionary<string, object> Objects { get; } = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> objects = new Dictionary<string, object>();
+        
+        [Obsolete("Do not use this property, it's only here for retro compatibility but it can cause memory leaks." +
+            " Use the SetObject and TryGetObject methods instead!")]
+        public Dictionary<string, object> Objects => objects;
 
         // This list will hold the names of all variables that are marked for capture
         public List<string> MarkedForCapture { get; } = new List<string>();
@@ -99,11 +103,29 @@ namespace RuriLib.Models.Bots
             DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
         }
 
+        public void SetObject(string name, object obj)
+        {
+            if (objects.ContainsKey(name))
+            {
+                var existing = objects[name];
+
+                if (existing is IDisposable d && existing is not null)
+                {
+                    d.Dispose();
+                }
+            }
+
+            objects[name] = obj;
+        }
+
+        public T TryGetObject<T>(string name) where T : class 
+            => objects.ContainsKey(name) && objects[name] is T t ? t : null;
+
         public void DisposeObjectsExcept(string[] except = null)
         {
             except ??= Array.Empty<string>();
 
-            foreach (var obj in Objects.Where(o => o.Value is IDisposable && !except.Contains(o.Key)))
+            foreach (var obj in objects.Where(o => o.Value is IDisposable && !except.Contains(o.Key)))
             {
                 try
                 {

@@ -45,7 +45,7 @@ namespace RuriLib.Blocks.Requests.Smtp
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["smtpClient"] = client;
+            data.SetObject("smtpClient", client);
 
             var domain = email.Split('@')[1];
 
@@ -272,7 +272,7 @@ namespace RuriLib.Blocks.Requests.Smtp
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["smtpClient"] = client;
+            data.SetObject("smtpClient", client);
 
             await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
@@ -316,7 +316,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var protocolLogger = (ProtocolLogger)data.Objects["smtpLogger"];
+            var protocolLogger = data.TryGetObject<ProtocolLogger>("smtpLogger");
             var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
             var log = Encoding.UTF8.GetString(bytes);
 
@@ -390,16 +390,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         }
 
         private static SmtpClient GetClient(BotData data)
-        {
-            try
-            {
-                return (SmtpClient)data.Objects["smtpClient"];
-            }
-            catch
-            {
-                throw new Exception("Connect the SMTP client first!");
-            }
-        }
+            => data.TryGetObject<SmtpClient>("smtpClient") ?? throw new Exception("Connect the SMTP client first!");
 
         private static SmtpClient GetAuthenticatedClient(BotData data)
         {
@@ -443,16 +434,10 @@ namespace RuriLib.Blocks.Requests.Smtp
 
         private static ProtocolLogger InitLogger(BotData data)
         {
-            if (data.Objects.ContainsKey("smtpLoggerStream") && data.Objects.ContainsKey("smtpLogger"))
-            {
-                ((MemoryStream)data.Objects["smtpLoggerStream"])?.Dispose();
-                ((ProtocolLogger)data.Objects["smtpLogger"])?.Dispose();
-            }
-
             var ms = new MemoryStream();
             var protocolLogger = new ProtocolLogger(ms, true);
-            data.Objects["smtpLoggerStream"] = ms;
-            data.Objects["smtpLogger"] = protocolLogger;
+            data.SetObject("smtpLoggerStream", ms);
+            data.SetObject("smtpLogger", protocolLogger);
 
             return protocolLogger;
         }

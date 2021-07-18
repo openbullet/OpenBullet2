@@ -27,7 +27,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             var netStream = tcpClient.GetStream();
 
-            data.Objects["netStream"] = netStream;
+            data.SetObject("netStream", netStream);
 
             if (useSSL)
             {
@@ -37,7 +37,7 @@ namespace RuriLib.Blocks.Requests.Tcp
                     TargetHost = host,
                 }, data.CancellationToken);
 
-                data.Objects["sslStream"] = sslStream;
+                data.SetObject("sslStream", sslStream);
             }
 
             data.Logger.Log($"The client connected to {host} on port {port}", LogColors.Mauve);
@@ -179,24 +179,22 @@ namespace RuriLib.Blocks.Requests.Tcp
         {
             data.Logger.LogHeader();
 
-            if (data.Objects.ContainsKey("sslStream"))
-                ((SslStream)data.Objects["sslStream"]).Close();
-
-            if (data.Objects.ContainsKey("netStream"))
-                ((NetworkStream)data.Objects["netStream"]).Close();
+            data.TryGetObject<SslStream>("sslStream")?.Dispose();
+            data.TryGetObject<NetworkStream>("netStream")?.Dispose();
 
             data.Logger.Log("Disconnected", LogColors.Mauve);
         }
 
         private static Stream GetStream(BotData data)
         {
-            if (data.Objects.ContainsKey("sslStream"))
-                return (SslStream)data.Objects["sslStream"];
+            var sslStream = data.TryGetObject<SslStream>("sslStream");
 
-            if (data.Objects.ContainsKey("netStream"))
-                return (NetworkStream)data.Objects["netStream"];
+            if (sslStream is not null)
+            {
+                return sslStream;
+            }
 
-            throw new NullReferenceException("You have to create a connection first!");
+            return data.TryGetObject<NetworkStream>("netStream") ?? throw new NullReferenceException("You have to create a connection first!");
         }
 
         private static int BinaryMatch(byte[] input, byte[] pattern)

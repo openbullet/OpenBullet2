@@ -37,7 +37,7 @@ namespace RuriLib.Blocks.Requests.Ssh
             var client = new SshClient(info);
             client.Connect();
 
-            data.Objects["sshClient"] = client;
+            data.SetObject("sshClient", client);
 
             data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
         }
@@ -69,7 +69,7 @@ namespace RuriLib.Blocks.Requests.Ssh
             var client = new SshClient(info);
             client.Connect();
 
-            data.Objects["sshClient"] = client;
+            data.SetObject("sshClient", client);
 
             data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
         }
@@ -104,7 +104,7 @@ namespace RuriLib.Blocks.Requests.Ssh
             var client = new SshClient(info);
             client.Connect();
 
-            data.Objects["sshClient"] = client;
+            data.SetObject("sshClient", client);
 
             data.Logger.Log($"Connected to {host} on port {port} as {username}", "#526ab4");
         }
@@ -114,7 +114,7 @@ namespace RuriLib.Blocks.Requests.Ssh
         {
             data.Logger.LogHeader();
 
-            var client = (SshClient)data.Objects["sshClient"];
+            var client = data.TryGetObject<SshClient>("sshClient");
 
             data.Logger.Log($"> {command}", "#526ab4");
             var cmd = client.RunCommand(command);

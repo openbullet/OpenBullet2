@@ -48,7 +48,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
             });
 
             var wsMessages = new List<string>();
-            data.Objects["wsMessages"] = wsMessages;
+            data.SetObject("wsMessages", wsMessages);
 
             var ws = new WebsocketClient(new Uri(url), factory)
             {
@@ -72,7 +72,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
                 throw new Exception("Failed to connect to the websocket");
             }
 
-            data.Objects["webSocket"] = ws;
+            data.SetObject("webSocket", ws);
 
             data.Logger.Log($"The Web Socket client connected to {url}", LogColors.MossGreen);
         }
@@ -117,19 +117,9 @@ namespace RuriLib.Blocks.Requests.WebSocket
         }
 
         private static WebsocketClient GetSocket(BotData data)
-        {
-            if (!data.Objects.ContainsKey("webSocket"))
-                throw new NullReferenceException("You must open a websocket connection first");
-
-            return (WebsocketClient)data.Objects["webSocket"];
-        }
+            => data.TryGetObject<WebsocketClient>("webSocket") ?? throw new NullReferenceException("You must open a websocket connection first");
 
         private static List<string> GetMessages(BotData data)
-        {
-            if (!data.Objects.ContainsKey("wsMessages"))
-                throw new NullReferenceException("You must open a websocket connection first");
-
-            return (List<string>)data.Objects["wsMessages"];
-        }
+            => data.TryGetObject<List<string>>("wsMessages") ?? throw new NullReferenceException("You must open a websocket connection first");
     }
 }

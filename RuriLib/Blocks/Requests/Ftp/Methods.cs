@@ -57,7 +57,7 @@ namespace RuriLib.Blocks.Requests.Ftp
                 };
             }
 
-            data.Objects["ftpClient"] = client;
+            data.SetObject("ftpClient", client);
             await client.AutoConnectAsync(data.CancellationToken);
             
             if (!client.IsConnected)
@@ -142,14 +142,7 @@ namespace RuriLib.Blocks.Requests.Ftp
         }
 
         private static FtpClient GetClient(BotData data)
-        {
-            if (!data.Objects.ContainsKey("ftpClient"))
-            {
-                throw new Exception("Connect to a server first!");
-            }
-
-            return data.Objects["ftpClient"] as FtpClient;
-        }
+            => data.TryGetObject<FtpClient>("ftpClient") ?? throw new Exception("Connect to a server first!");
     }
 
     public enum FtpItemKind

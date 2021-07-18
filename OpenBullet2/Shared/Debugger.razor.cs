@@ -107,12 +107,12 @@ namespace OpenBullet2.Shared
             var data = new BotData(providers, Config.Settings, logger, dataLine, proxy, options.UseProxy);
             data.CancellationToken = cts.Token;
             var httpClient = new HttpClient();
-            data.Objects.Add("httpClient", httpClient);
+            data.SetObject("httpClient", httpClient);
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
-            data.Objects.Add("ironPyEngine", pyengine);
+            data.SetObject("ironPyEngine", pyengine);
             data.AsyncLocker = new();
 
             dynamic globals = new ExpandoObject();
@@ -212,9 +212,7 @@ namespace OpenBullet2.Shared
                 logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
 
                 // Save the browser for later use
-                lastBrowser = data.Objects.ContainsKey("puppeteer") && data.Objects["puppeteer"] is Browser currentBrowser
-                    ? currentBrowser
-                    : null;// Dispose all disposable objects
+                lastBrowser = data.TryGetObject<Browser>("puppeteer");
 
                 // Dispose stuff in data.Objects
                 data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame" });

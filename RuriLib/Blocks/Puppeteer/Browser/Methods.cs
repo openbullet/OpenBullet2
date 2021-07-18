@@ -21,9 +21,10 @@ namespace RuriLib.Blocks.Puppeteer.Browser
         public static async Task PuppeteerOpenBrowser(BotData data)
         {
             data.Logger.LogHeader();
-         
+
             // Check if there is already an open browser
-            if (data.Objects.ContainsKey("puppeteer") && !((PuppeteerSharp.Browser)data.Objects["puppeteer"]).IsClosed)
+            var oldBrowser = data.TryGetObject<PuppeteerSharp.Browser>("puppeteer");
+            if (oldBrowser is not null && !oldBrowser.IsClosed)
             {
                 data.Logger.Log("The browser is already open, close it if you want to open a new browser", LogColors.DarkSalmon);
                 return;
@@ -43,7 +44,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                         data.Proxy.Host, data.Proxy.Port,
                         data.Proxy.Username, data.Proxy.Password, 
                         proxyType);
-                    data.Objects["puppeteer.yoveproxy"] = proxyClient;
+                    data.SetObject("puppeteer.yoveproxy", proxyClient);
                     args += $" --proxy-server={proxyClient.GetProxy(null).Authority}";
                 }
             }
@@ -66,7 +67,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             browser.IgnoreHTTPSErrors = data.ConfigSettings.PuppeteerSettings.IgnoreHttpsErrors;
 
             // Save the browser for further use
-            data.Objects["puppeteer"] = browser;
+            data.SetObject("puppeteer", browser);
             var page = (await browser.PagesAsync()).First();
             SetPageAndFrame(data, page);
             await SetPageLoadingOptions(data, page);
@@ -173,27 +174,22 @@ namespace RuriLib.Blocks.Puppeteer.Browser
         }
 
         private static PuppeteerSharp.Browser GetBrowser(BotData data)
-            => (PuppeteerSharp.Browser)data.Objects["puppeteer"] ?? throw new Exception("The browser is not open!");
+            => data.TryGetObject<PuppeteerSharp.Browser>("puppeteer") ?? throw new Exception("The browser is not open!");
 
         private static PuppeteerSharp.Page GetPage(BotData data)
-            => (PuppeteerSharp.Page)data.Objects["puppeteerPage"] ?? throw new Exception("No pages open!");
+            => data.TryGetObject<PuppeteerSharp.Page>("puppeteerPage") ?? throw new Exception("No pages open!");
 
         private static void SwitchToMainFramePrivate(BotData data)
-            => data.Objects["puppeteerFrame"] = GetPage(data).MainFrame;
+            => data.SetObject("puppeteerFrame", GetPage(data).MainFrame);
 
         private static void SetPageAndFrame(BotData data, PuppeteerSharp.Page page)
         {
-            data.Objects["puppeteerPage"] = page;
+            data.SetObject("puppeteerPage", page);
             SwitchToMainFramePrivate(data);
         }
 
         private static void StopYoveProxyInternalServer(BotData data)
-        {
-            if (data.Objects.GetValueOrDefault("puppeteer.yoveproxy") is ProxyClient proxyClient)
-            {
-                proxyClient.Dispose();
-            }
-        }
+            => data.TryGetObject<ProxyClient>("puppeteer.yoveproxy")?.Dispose();
 
         private static async Task SetPageLoadingOptions(BotData data, PuppeteerSharp.Page page)
         {

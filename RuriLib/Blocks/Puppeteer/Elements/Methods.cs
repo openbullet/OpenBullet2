@@ -306,7 +306,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
 
             var frame = GetFrame(data);
             var elem = await GetElement(frame, findBy, identifier, index);
-            data.Objects["puppeteerFrame"] = await elem.ContentFrameAsync();
+            data.SetObject("puppeteerFrame", await elem.ContentFrameAsync());
 
             data.Logger.Log($"Switched to iframe", LogColors.DarkSalmon);
         }
@@ -369,12 +369,12 @@ namespace RuriLib.Blocks.Puppeteer.Elements
             };
 
         private static PuppeteerSharp.Browser GetBrowser(BotData data)
-            => (PuppeteerSharp.Browser)data.Objects["puppeteer"] ?? throw new Exception("The browser is not open!");
+            => data.TryGetObject<PuppeteerSharp.Browser>("puppeteer") ?? throw new Exception("The browser is not open!");
 
         private static PuppeteerSharp.Page GetPage(BotData data)
-            => (PuppeteerSharp.Page)data.Objects["puppeteerPage"] ?? throw new Exception("No pages open!");
+            => data.TryGetObject<PuppeteerSharp.Page>("puppeteerPage") ?? throw new Exception("No pages open!");
 
-        private static PuppeteerSharp.Frame GetFrame(BotData data)
-            => (PuppeteerSharp.Frame)data.Objects["puppeteerFrame"] ?? GetPage(data).MainFrame;
+        private static Frame GetFrame(BotData data)
+            => data.TryGetObject<Frame>("puppeteerFrame") ?? GetPage(data).MainFrame;
     }
 }

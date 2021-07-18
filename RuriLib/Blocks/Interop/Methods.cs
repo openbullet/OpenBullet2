@@ -61,13 +61,13 @@ namespace RuriLib.Blocks.Interop
         {
             data.Logger.LogHeader();
             data.Logger.Log($"Getting a new IronPython scope.", LogColors.PaleChestnut);
-            var engine = (ScriptEngine)data.Objects["ironPyEngine"];
+            var engine = data.TryGetObject<ScriptEngine>("ironPyEngine");
             return engine.CreateScope();
         }
 
         public static void ExecuteIronPyScript(BotData data, ScriptScope scope, string scriptFile)
         {
-            var engine = (ScriptEngine)data.Objects["ironPyEngine"];
+            var engine = data.TryGetObject<ScriptEngine>("ironPyEngine");
             var code = engine.CreateScriptSourceFromFile(scriptFile);
             var result = code.Execute(scope);
             data.Logger.Log($"Executed IronPython script with result {result}", LogColors.PaleChestnut);

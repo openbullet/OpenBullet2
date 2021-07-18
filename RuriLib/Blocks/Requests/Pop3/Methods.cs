@@ -43,7 +43,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["pop3Client"] = client;
+            data.SetObject("pop3Client", client);
 
             var domain = email.Split('@')[1];
 
@@ -260,7 +260,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 client.ProxyClient = MapProxyClient(data);
             }
 
-            data.Objects["pop3Client"] = client;
+            data.SetObject("pop3Client", client);
 
             await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.Mantis);
@@ -303,7 +303,7 @@ namespace RuriLib.Blocks.Requests.Pop3
         {
             data.Logger.LogHeader();
 
-            var protocolLogger = (ProtocolLogger)data.Objects["pop3Logger"];
+            var protocolLogger = data.TryGetObject<ProtocolLogger>("pop3Logger");
             var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
             var log = Encoding.UTF8.GetString(bytes);
 
@@ -379,16 +379,7 @@ Body:
         }
 
         private static Pop3Client GetClient(BotData data)
-        {
-            try
-            {
-                return (Pop3Client)data.Objects["pop3Client"];
-            }
-            catch
-            {
-                throw new Exception("Connect the POP3 client first!");
-            }
-        }
+            => data.TryGetObject<Pop3Client>("pop3Client") ?? throw new Exception("Connect the POP3 client first!");
 
         private static Pop3Client GetAuthenticatedClient(BotData data)
         {
@@ -432,16 +423,10 @@ Body:
 
         private static ProtocolLogger InitLogger(BotData data)
         {
-            if (data.Objects.ContainsKey("pop3LoggerStream") || data.Objects.ContainsKey("pop3Logger"))
-            {
-                ((MemoryStream)data.Objects["pop3LoggerStream"])?.Dispose();
-                ((ProtocolLogger)data.Objects["pop3Logger"])?.Dispose();
-            }
-
             var ms = new MemoryStream();
             var protocolLogger = new ProtocolLogger(ms, true);
-            data.Objects["pop3LoggerStream"] = ms;
-            data.Objects["pop3Logger"] = protocolLogger;
+            data.SetObject("pop3LoggerStream", ms);
+            data.SetObject("pop3Logger", protocolLogger);
 
             return protocolLogger;
         }

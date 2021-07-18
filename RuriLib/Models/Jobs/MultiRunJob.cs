@@ -236,17 +236,13 @@ namespace RuriLib.Models.Jobs
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
 
                     // Close the browser if needed
-                    if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS)
-                        && botData.Objects.ContainsKey("puppeteer"))
+                    if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                     {
-                        try
-                        {
-                            var browser = (Browser)botData.Objects["puppeteer"];
-                            await browser.CloseAsync();
-                        }
-                        catch
-                        {
+                        var browser = botData.TryGetObject<Browser>("puppeteer");
 
+                        if (browser is not null)
+                        {
+                            await browser.CloseAsync();
                         }
                     }
 
@@ -453,8 +449,8 @@ namespace RuriLib.Models.Jobs
                 };
 
                 input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
-                input.BotData.Objects.Add("httpClient", httpClient); // Add the default HTTP client
-                input.BotData.Objects.Add("ironPyEngine", pyengine); // Add the IronPython engine
+                input.BotData.SetObject("httpClient", httpClient); // Add the default HTTP client
+                input.BotData.SetObject("ironPyEngine", pyengine); // Add the IronPython engine
                 input.BotData.AsyncLocker = asyncLocker;
 
                 return input;

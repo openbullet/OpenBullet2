@@ -308,9 +308,9 @@ namespace RuriLib.Blocks.Puppeteer.Page
         }
 
         private static PuppeteerSharp.Page GetPage(BotData data)
-            => (PuppeteerSharp.Page)data.Objects["puppeteerPage"] ?? throw new Exception("No pages open!");
+            => data.TryGetObject<PuppeteerSharp.Page>("puppeteerPage") ?? throw new Exception("No pages open!");
 
         private static void SwitchToMainFramePrivate(BotData data)
-            => data.Objects["puppeteerFrame"] = GetPage(data).MainFrame;
+            => data.SetObject("puppeteerFrame", GetPage(data).MainFrame);
     }
 }

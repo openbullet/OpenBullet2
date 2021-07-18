@@ -181,19 +181,18 @@ namespace RuriLib.Blocks.Captchas
         [Block("Reports an incorrectly solved captcha to the service in order to get funds back")]
         public static async Task ReportLastSolution(BotData data)
         {
-            var id = (long)data.Objects["lastCaptchaId"];
-            var type = (CaptchaType)data.Objects["lastCaptchaType"];
+            var lastCaptcha = data.TryGetObject<LastCaptchaInfo>("lastCaptchaInfo");
 
             data.Logger.LogHeader();
 
             try
             {
-                await data.Providers.Captcha.ReportSolution(id, type, false, data.CancellationToken);
-                data.Logger.Log($"Solution of task {id} reported correctly!", LogColors.ElectricBlue);
+                await data.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, data.CancellationToken);
+                data.Logger.Log($"Solution of task {lastCaptcha.Id} reported correctly!", LogColors.ElectricBlue);
             }
             catch (Exception ex)
             {
-                data.Logger.Log($"Could not report the solution of task {id} to the service: {ex.Message}", LogColors.ElectricBlue);
+                data.Logger.Log($"Could not report the solution of task {lastCaptcha.Id} to the service: {ex.Message}", LogColors.ElectricBlue);
             }
         }
 
@@ -218,14 +217,10 @@ namespace RuriLib.Blocks.Captchas
         }
 
         private static void AddCaptchaId(BotData data, long id, CaptchaType type)
-        {
-            data.Objects["lastCaptchaId"] = id;
-            data.Objects["lastCaptchaType"] = type;
-        }
+            => data.SetObject("lastCaptchaInfo", new LastCaptchaInfo { Id = id, Type = type });
 
-        private static Proxy SetupProxy(BotData data, bool useProxy, string userAgent)
-        {
-            return data.UseProxy && useProxy
+        private static Proxy SetupProxy(BotData data, bool useProxy, string userAgent) 
+            => data.UseProxy && useProxy
                 ? new Proxy
                 {
                     Host = data.Proxy.Host,
@@ -238,6 +233,11 @@ namespace RuriLib.Blocks.Captchas
                         .Select(c => (c.Key, c.Value)).ToArray()
                 }
                 : null;
-        }
+    }
+
+    public class LastCaptchaInfo
+    {
+        public long Id { get; set; }
+        public CaptchaType Type { get; set; }
     }
 }
