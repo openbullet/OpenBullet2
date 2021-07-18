@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Pop3;
+﻿using MailKit;
+using MailKit.Net.Pop3;
 using MailKit.Net.Proxy;
 using RuriLib.Attributes;
 using RuriLib.Functions.Http;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,9 +30,12 @@ namespace RuriLib.Blocks.Requests.Pop3
         {
             data.Logger.LogHeader();
 
-            var client = new Pop3Client
+            var protocolLogger = InitLogger(data);
+
+            var client = new Pop3Client(protocolLogger)
             {
-                Timeout = timeoutMilliseconds
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
             if (data.UseProxy && data.Proxy != null)
@@ -242,9 +247,12 @@ namespace RuriLib.Blocks.Requests.Pop3
         {
             data.Logger.LogHeader();
 
-            var client = new Pop3Client
+            var protocolLogger = InitLogger(data);
+
+            var client = new Pop3Client(protocolLogger)
             {
-                Timeout = timeoutMilliseconds
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
             if (data.UseProxy && data.Proxy != null)
@@ -288,6 +296,20 @@ namespace RuriLib.Blocks.Requests.Pop3
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
             await client.AuthenticateAsync(email, password, linkedCts.Token);
             data.Logger.Log($"Authenticated successfully, there are {client.Count} total messages", LogColors.Mantis);
+        }
+
+        [Block("Gets the protocol log", name = "Get Pop3 Log")]
+        public static string Pop3GetLog(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var protocolLogger = (ProtocolLogger)data.Objects["pop3Logger"];
+            var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
+            var log = Encoding.UTF8.GetString(bytes);
+
+            data.Logger.Log(log, LogColors.Mantis);
+
+            return log;
         }
 
         [Block("Gets a text (or HTML) representation of a mail at a specified index")]
@@ -406,6 +428,22 @@ Body:
                     _ => throw new NotImplementedException(),
                 };
             }
+        }
+
+        private static ProtocolLogger InitLogger(BotData data)
+        {
+            if (data.Objects.ContainsKey("pop3LoggerStream") || data.Objects.ContainsKey("pop3Logger"))
+            {
+                ((MemoryStream)data.Objects["pop3LoggerStream"])?.Dispose();
+                ((MemoryStream)data.Objects["pop3Logger"])?.Dispose();
+            }
+
+            var ms = new MemoryStream();
+            var protocolLogger = new ProtocolLogger(ms, true);
+            data.Objects["pop3LoggerStream"] = ms;
+            data.Objects["pop3Logger"] = protocolLogger;
+
+            return protocolLogger;
         }
     }
 }

@@ -11,8 +11,10 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static RuriLib.Functions.Time.TimeConverter;
@@ -29,9 +31,12 @@ namespace RuriLib.Blocks.Requests.Imap
         {
             data.Logger.LogHeader();
 
-            var client = new ImapClient
+            var protocolLogger = InitLogger(data);
+
+            var client = new ImapClient(protocolLogger)
             {
-                Timeout = timeoutMilliseconds
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
             if (data.UseProxy && data.Proxy != null)
@@ -248,9 +253,12 @@ namespace RuriLib.Blocks.Requests.Imap
         {
             data.Logger.LogHeader();
 
-            var client = new ImapClient
+            var protocolLogger = InitLogger(data);
+
+            var client = new ImapClient(protocolLogger)
             {
-                Timeout = timeoutMilliseconds
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
             if (data.UseProxy && data.Proxy != null)
@@ -300,6 +308,20 @@ namespace RuriLib.Blocks.Requests.Imap
                 await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken);
                 data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
             }
+        }
+
+        [Block("Gets the protocol log", name = "Get Imap Log")]
+        public static string ImapGetLog(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var protocolLogger = (ProtocolLogger)data.Objects["imapLogger"];
+            var bytes = (protocolLogger.Stream as MemoryStream).ToArray();
+            var log = Encoding.UTF8.GetString(bytes);
+
+            data.Logger.Log(log, LogColors.DarkOrchid);
+
+            return log;
         }
 
         [Block("Opens the inbox folder")]
@@ -468,5 +490,21 @@ Body:
             SearchField.Body => SearchTerm.BodyContains,
             _ => throw new NotImplementedException()
         };
+
+        private static ProtocolLogger InitLogger(BotData data)
+        {
+            if (data.Objects.ContainsKey("imapLoggerStream") && data.Objects.ContainsKey("imapLogger"))
+            {
+                ((MemoryStream)data.Objects["imapLoggerStream"])?.Dispose();
+                ((MemoryStream)data.Objects["imapLogger"])?.Dispose();
+            }
+
+            var ms = new MemoryStream();
+            var protocolLogger = new ProtocolLogger(ms, true);
+            data.Objects["imapLoggerStream"] = ms;
+            data.Objects["imapLogger"] = protocolLogger;
+
+            return protocolLogger;
+        }
     }
 }

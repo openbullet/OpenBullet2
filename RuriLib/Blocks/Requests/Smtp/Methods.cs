@@ -32,10 +32,7 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var ms = new MemoryStream();
-            var protocolLogger = new ProtocolLogger(ms, true);
-            data.Objects["smtpLoggerStream"] = ms;
-            data.Objects["smtpLogger"] = protocolLogger;
+            var protocolLogger = InitLogger(data);
 
             var client = new SmtpClient(protocolLogger)
             {
@@ -262,9 +259,12 @@ namespace RuriLib.Blocks.Requests.Smtp
         {
             data.Logger.LogHeader();
 
-            var client = new SmtpClient
+            var protocolLogger = InitLogger(data);
+
+            var client = new SmtpClient(protocolLogger)
             {
-                Timeout = timeoutMilliseconds
+                Timeout = timeoutMilliseconds,
+                ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
             if (data.UseProxy && data.Proxy != null)
@@ -439,6 +439,22 @@ namespace RuriLib.Blocks.Requests.Smtp
                     _ => throw new NotImplementedException(),
                 };
             }
+        }
+
+        private static ProtocolLogger InitLogger(BotData data)
+        {
+            if (data.Objects.ContainsKey("smtpLoggerStream") && data.Objects.ContainsKey("smtpLogger"))
+            {
+                ((MemoryStream)data.Objects["smtpLoggerStream"])?.Dispose();
+                ((MemoryStream)data.Objects["smtpLogger"])?.Dispose();
+            }
+
+            var ms = new MemoryStream();
+            var protocolLogger = new ProtocolLogger(ms, true);
+            data.Objects["smtpLoggerStream"] = ms;
+            data.Objects["smtpLogger"] = protocolLogger;
+
+            return protocolLogger;
         }
     }
 }
