@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Entities;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +55,7 @@ namespace OpenBullet2.Repositories
 
         public async Task Update(WordlistEntity entity)
         {
+            context.Entry(entity).State = EntityState.Modified;
             context.Update(entity);
             await context.SaveChangesAsync();
         }
