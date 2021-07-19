@@ -17,7 +17,7 @@
     <InputText @bind-Value="Wordlist.Name" />
     <label>@Loc["Purpose"]</label>
     <InputText @bind-Value="Wordlist.Purpose" />
-    <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Edit">@Loc["Edit"]</button>
+    <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Ok">@Loc["Edit"]</button>
 </EditForm>
 
 @code {
@@ -31,9 +31,8 @@
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
     }
 
-    private async Task Edit()
+    private async Task Ok()
     {
-        await WordlistRepo.Update(Wordlist);
         BlazoredModal.Close();
     }
 }

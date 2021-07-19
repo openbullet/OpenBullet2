@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Http;
 using OpenBullet2.Services;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Jobs;
+using OpenBullet2.Models.Data;
 
 namespace OpenBullet2.Pages
 {
@@ -32,6 +33,8 @@ namespace OpenBullet2.Pages
         [Inject] private IModalService Modal { get; set; }
         [Inject] private IWordlistRepository WordlistRepo { get; set; }
         [Inject] private IGuestRepository GuestRepo { get; set; }
+        [Inject] private DataPoolFactoryService DataPoolFactory { get; set; }
+        [Inject] private JobManagerService JobManager { get; set; }
         [Inject] private JobManagerService Manager { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
@@ -148,7 +151,21 @@ namespace OpenBullet2.Pages
             parameters.Add(nameof(WordlistEdit.Wordlist), selectedWordlist);
 
             var modal = Modal.Show<WordlistEdit>(Loc["EditWordlist"], parameters);
-            await modal.Result;
+            var result = await modal.Result;
+
+            if (!result.Cancelled)
+            {
+                await WordlistRepo.Update(selectedWordlist);
+
+                // Update the wordlist in existing jobs
+                foreach (var job in JobManager.Jobs.Where(j => j.Status == JobStatus.Idle && j is MultiRunJob).Cast<MultiRunJob>())
+                {
+                    if (job.DataPool is WordlistDataPool dp && dp.Wordlist.Id == selectedWordlist.Id)
+                    {
+                        job.DataPool = await DataPoolFactory.FromOptions(new WordlistDataPoolOptions { WordlistId = selectedWordlist.Id });
+                    }
+                }
+            }
 
             await RefreshList();
         }
