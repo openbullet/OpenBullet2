@@ -93,6 +93,7 @@ namespace RuriLib.Models.Bots
             SOURCE = string.Empty;
             RAWSOURCE = Array.Empty<byte>();
             ADDRESS = string.Empty;
+            ERROR = string.Empty;
             RESPONSECODE = 0;
             COOKIES.Clear();
             HEADERS.Clear();
