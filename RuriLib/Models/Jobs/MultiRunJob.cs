@@ -238,16 +238,12 @@ namespace RuriLib.Models.Jobs
                     // Close the browser if needed
                     if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                     {
-                        var browser = botData.TryGetObject<Browser>("puppeteer");
-
-                        if (browser is not null)
-                        {
-                            await browser.CloseAsync();
-                        }
+                        botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
                     }
-
-                    // Dispose all disposable objects
-                    botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
+                    else
+                    {
+                        botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
+                    }
                 }
 
                 // Update captcha credit
