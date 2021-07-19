@@ -24,7 +24,8 @@ using Microsoft.AspNetCore.Http;
 using OpenBullet2.Services;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Jobs;
-using OpenBullet2.Models.Data;
+using RuriLib.Models.Data;
+using RuriLib.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -33,7 +34,7 @@ namespace OpenBullet2.Pages
         [Inject] private IModalService Modal { get; set; }
         [Inject] private IWordlistRepository WordlistRepo { get; set; }
         [Inject] private IGuestRepository GuestRepo { get; set; }
-        [Inject] private DataPoolFactoryService DataPoolFactory { get; set; }
+        [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private JobManagerService JobManager { get; set; }
         [Inject] private JobManagerService Manager { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
@@ -162,7 +163,13 @@ namespace OpenBullet2.Pages
                 {
                     if (job.DataPool is WordlistDataPool dp && dp.Wordlist.Id == selectedWordlist.Id)
                     {
-                        job.DataPool = await DataPoolFactory.FromOptions(new WordlistDataPoolOptions { WordlistId = selectedWordlist.Id });
+                        var type = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == selectedWordlist.Type);
+                        job.DataPool = new WordlistDataPool(new Wordlist(
+                            selectedWordlist.Name, selectedWordlist.FileName, type, selectedWordlist.Purpose, false)
+                        {
+                            Id = selectedWordlist.Id,
+                            Total = selectedWordlist.Total
+                        });
                     }
                 }
             }
