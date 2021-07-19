@@ -4,6 +4,7 @@ using OpenBullet2.Models.Jobs;
 using OpenBullet2.Models.Proxies;
 using OpenBullet2.Repositories;
 using RuriLib.Logging;
+using RuriLib.Models.Bots;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
 using RuriLib.Providers.RandomNumbers;
@@ -88,6 +89,7 @@ namespace OpenBullet2.Services
                 StartCondition = options.StartCondition,
                 Bots = options.Bots,
                 BotLimit = BotLimit,
+                CurrentBotDatas = new BotData[BotLimit],
                 Skip = options.Skip,
                 HitOutputs = options.HitOutputs.Select(o => hitOutputsFactory.FromOptions(o)).ToList(),
                 ProxySources = options.ProxySources.Select(s => proxySourceFactory.FromOptions(s).Result).ToList(),

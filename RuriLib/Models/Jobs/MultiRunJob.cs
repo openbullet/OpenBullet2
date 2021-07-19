@@ -53,7 +53,7 @@ namespace RuriLib.Models.Jobs
         public Bots.Providers Providers { get; set; }
         public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
-        public BotData[] CurrentBotDatas { get; private set; }
+        public BotData[] CurrentBotDatas { get; set; }
 
         // Getters
         public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
@@ -129,7 +129,7 @@ namespace RuriLib.Models.Jobs
         public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
             : base(settings, pluginRepo, logger)
         {
-            CurrentBotDatas = new BotData[BotLimit];
+            
         }
 
         #region Work Function
