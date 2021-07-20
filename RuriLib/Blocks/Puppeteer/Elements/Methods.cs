@@ -338,6 +338,11 @@ namespace RuriLib.Blocks.Puppeteer.Elements
                 ? await frame.XPathAsync(identifier)
                 : await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
 
+            if (elements.Length < index + 1)
+            {
+                throw new Exception($"Expected at least {index + 1} elements to be found but {elements.Length} were found");
+            }
+
             return elements[index];
         }
 
