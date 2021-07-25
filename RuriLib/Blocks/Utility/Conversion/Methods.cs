@@ -105,6 +105,24 @@ namespace RuriLib.Blocks.Utility.Conversion
             return utf8;
         }
 
+        [Block("Converts an encoded string to a byte array", name = "String => Bytes")]
+        public static byte[] StringToBytes(BotData data, [Variable] string input, StringEncoding encoding = StringEncoding.UTF8)
+        {
+            data.Logger.LogHeader();
+            var bytes = MapEncoding(encoding).GetBytes(input);
+            data.Logger.Log($"Got bytes from {encoding} string", LogColors.Flavescent);
+            return bytes;
+        }
+
+        [Block("Converts a byte array to an encoded string", name = "Bytes => String")]
+        public static string BytesToString(BotData data, [Variable] byte[] input, StringEncoding encoding = StringEncoding.UTF8)
+        {
+            data.Logger.LogHeader();
+            var str = MapEncoding(encoding).GetString(input);
+            data.Logger.Log($"Decoded {encoding} string from byte array: {str}", LogColors.Flavescent);
+            return str;
+        }
+
         [Block("Converts a long number representing bytes into a readable string like 4.5 Gbit or 2.14 KiB")]
         public static string ReadableSize(BotData data, [Variable] string input,
             bool outputBits = false, bool binaryUnit = false, int decimalPlaces = 2)
@@ -114,5 +132,27 @@ namespace RuriLib.Blocks.Utility.Conversion
             data.Logger.Log($"Converted {input} bytes into the string {size}", LogColors.Flavescent);
             return size;
         }
+
+        private static Encoding MapEncoding(StringEncoding encoding)
+            => encoding switch
+            {
+                StringEncoding.UTF8 => Encoding.UTF8,
+                StringEncoding.ASCII => Encoding.ASCII,
+                StringEncoding.Unicode => Encoding.Unicode,
+                StringEncoding.BigEndianUnicode => Encoding.BigEndianUnicode,
+                StringEncoding.UTF32 => Encoding.UTF32,
+                StringEncoding.Latin1 => Encoding.Latin1,
+                _ => throw new NotImplementedException()
+            };
+    }
+
+    public enum StringEncoding
+    {
+        UTF8,
+        ASCII,
+        Unicode,
+        BigEndianUnicode,
+        UTF32,
+        Latin1
     }
 }
