@@ -63,5 +63,23 @@ namespace RuriLib.Blocks.Functions.Float
             data.Logger.Log($"Generated random value {random.AsString()} in the interval ({minimum.AsString()},{maximum.AsString()})", LogColors.YellowGreen);
             return random;
         }
+
+        [Block("Takes the maximum between two floats", name = "Maximum Float")]
+        public static float TakeMaxFloat(BotData data, float first, float second)
+        {
+            var max = Math.Max(first, second);
+            data.Logger.LogHeader();
+            data.Logger.Log($"The maximum between {first} and {second} is {max}", LogColors.YellowGreen);
+            return max;
+        }
+
+        [Block("Takes the minimum between two floats", name = "Minimum Float")]
+        public static float TakeMinFloat(BotData data, float first, float second)
+        {
+            var min = Math.Min(first, second);
+            data.Logger.LogHeader();
+            data.Logger.Log($"The minimum between {first} and {second} is {min}", LogColors.YellowGreen);
+            return min;
+        }
     }
 }
