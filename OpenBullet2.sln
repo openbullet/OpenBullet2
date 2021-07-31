@@ -26,9 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http.Tests", "RuriL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Parallelization", "RuriLib.Parallelization\RuriLib.Parallelization.csproj", "{C341976A-B669-40E8-A468-67518F381A0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Parallelization", "RuriLib.Parallelization\RuriLib.Parallelization.csproj", "{C341976A-B669-40E8-A468-67518F381A0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuriLib.Parallelization.Tests", "RuriLib.Parallelization.Tests\RuriLib.Parallelization.Tests.csproj", "{09E3D17D-29BE-4C96-A504-92D9406B2E4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Parallelization.Tests", "RuriLib.Parallelization.Tests\RuriLib.Parallelization.Tests.csproj", "{09E3D17D-29BE-4C96-A504-92D9406B2E4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBullet2.Core", "OpenBullet2.Core\OpenBullet2.Core.csproj", "{6D601FCE-D6E9-459B-96D8-27B998425950}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,10 @@ Global
 		{09E3D17D-29BE-4C96-A504-92D9406B2E4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E3D17D-29BE-4C96-A504-92D9406B2E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E3D17D-29BE-4C96-A504-92D9406B2E4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D601FCE-D6E9-459B-96D8-27B998425950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D601FCE-D6E9-459B-96D8-27B998425950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D601FCE-D6E9-459B-96D8-27B998425950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D601FCE-D6E9-459B-96D8-27B998425950}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

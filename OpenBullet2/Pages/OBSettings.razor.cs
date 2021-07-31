@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;

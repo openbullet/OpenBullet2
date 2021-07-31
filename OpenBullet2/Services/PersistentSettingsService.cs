@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using OpenBullet2.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;

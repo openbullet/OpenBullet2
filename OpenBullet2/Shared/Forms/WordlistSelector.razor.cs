@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using OpenBullet2.Auth;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;

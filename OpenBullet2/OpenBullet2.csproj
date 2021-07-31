@@ -76,6 +76,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj" />
     <ProjectReference Include="..\RuriLib\RuriLib.csproj" />
   </ItemGroup>
 

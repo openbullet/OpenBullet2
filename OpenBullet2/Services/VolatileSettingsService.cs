@@ -1,6 +1,6 @@
 ﻿using GridShared.Utility;
 using Microsoft.Extensions.Primitives;
-using OpenBullet2.Models.Debugger;
+using OpenBullet2.Core.Models.Debugger;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks;
 using RuriLib.Services;

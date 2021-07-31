@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Models.Data;
+﻿using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Data;
 using RuriLib.Models.Data.DataPools;

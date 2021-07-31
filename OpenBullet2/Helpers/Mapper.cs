@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Entities;
+﻿using OpenBullet2.Core.Entities;
 using RuriLib.Models.Proxies;
 
 namespace OpenBullet2.Helpers

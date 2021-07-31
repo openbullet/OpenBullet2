@@ -11,7 +11,7 @@ using IronPython.Hosting;
 using IronPython.Runtime;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Debugger;
+using OpenBullet2.Core.Models.Debugger;
 using OpenBullet2.Services;
 using PuppeteerSharp;
 using RuriLib.Helpers.Blocks;

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using OpenBullet2.Auth;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Jobs;
+using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Models.Jobs;

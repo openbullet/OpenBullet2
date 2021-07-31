@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OpenBullet2.Entities;
-using OpenBullet2.Models.Proxies;
+using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Repositories;
 using RuriLib.Models.Proxies;
 using System;

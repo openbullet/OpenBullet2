@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using OpenBullet2.Models.Hits;
-using OpenBullet2.Models.Jobs;
-using OpenBullet2.Models.Proxies;
+using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Repositories;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;

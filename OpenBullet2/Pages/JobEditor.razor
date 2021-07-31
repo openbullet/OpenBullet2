@@ -1,5 +1,5 @@
 ﻿@page "/jobs/edit/{JobId:int}"
-@using OpenBullet2.Models.Jobs
+@using OpenBullet2.Core.Models.Jobs
 @inject Microsoft.Extensions.Localization.IStringLocalizer<JobEditor> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 

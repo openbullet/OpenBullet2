@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Extensions;
