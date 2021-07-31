@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllDone" xml:space="preserve">
+    <value>Tất cả đã xong</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ ?</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="by" xml:space="preserve">
+    <value>bởi</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="CannotDownloadRemoteConfig" xml:space="preserve">
+    <value>Ko thể tải xuống remote config</value>
+  </data>
+  <data name="CannotEditRemoteConfig" xml:space="preserve">
+    <value>Ko thể chỉnh sửa remote config</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Loại</value>
+  </data>
+  <data name="ConfigReloadWarning" xml:space="preserve">
+    <value>Thao tác này sẽ đọc lại tất cả các Config. Các thay đổi chưa được lưu sẽ bị mất.. Bạn có muốn tiếp tục?</value>
+  </data>
+  <data name="ConfigsSuccessfullyUploaded" xml:space="preserve">
+    <value>Upload config thành công</value>
+  </data>
+  <data name="ConfigWarningMessage" xml:space="preserve">
+    <value>CẢNH BÁO! Nếu bạn đang sử dụng config của bên thứ ba, BẠN cần đảm bảo rằng các config đang làm chính xác nhiệm vụ của mình và không có hành vi độc hại. Nếu nguồn ko đáng tin cậy, xin hãy kiểm tra lại mã LoliCode / C # trước khi chạy</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Ngày phát hành</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Xoá</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Tải xuống</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Chỉnh sửa</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>Config là gì</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>A %Config% is a file that contains instructions for automating certain actions, usually towards web resources. Configs contain some %metadata% (like a name, an author and an icon), a %readme% with instructions on how to use it or what it's for, some settings, and then instructions that can either be in the custom %LoliCode% scripting language or in pure %C#%. On the disk, configs are saved as files with the %.opk% extension in the %UserData/Configs% subfolder.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>Configs can be used in jobs such as the %MultiRun Job% in order to execute some instructions on a given dataset (e.g. a wordlist) in parallel. For example, they can be used to check if certain subpaths of a given website return a valid response, or they can be used to scrape links from multiple pages of an online shop.</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Trình quản lý config hoạt động như thế nào?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>The %Config Manager% keeps track of all your configs. Configs are loaded from the `UserData/Configs` subfolder when OB2 starts up, and if some new configs are added to that folder you can simply hit %Reload% in order to start the loading process again. If you don't have easy access to the Configs folder (for example if OB2 is running on a vps) you can %Upload% a config with the related button. You can also %Download% existing configs in the same way.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>At the top you can find the %New% button that will create a new config. In order to %edit% a config you can click on the Edit button or double click on the config in the list. There is also a button to %change the view% to a more detailed grid view.</value>
+  </data>
+  <data name="Help3x00" xml:space="preserve">
+    <value>File .opk là gì?</value>
+  </data>
+  <data name="Help3x01" xml:space="preserve">
+    <value>A %.opk% file is a %zip archive% that contains some files inside it. The first file is %metadata.json%, which contains the name, author and icon of the config. The icon is a base64-encoded image which can also be a GIF. The %readme.md% file will contain a description of the config, it will be shown to the user when they open the config selection menu during the job setup process. It supports the markdown language. The %settings.json% file will contain the config-specific settings.</value>
+  </data>
+  <data name="Help3x02" xml:space="preserve">
+    <value>Finally, if your config uses stacker, the instructions will be saved as a LoliCode script inside the %script.loli% file. If instead you decided to convert your config to C# only, a file called %script.cs% will be created with the C# code to execute.</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>Lần sửa dổi cuối</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Đang tải</value>
+  </data>
+  <data name="LocalConfigs" xml:space="preserve">
+    <value>Local configs</value>
+  </data>
+  <data name="MissingPlugin" xml:space="preserve">
+    <value>Plugin bị mất</value>
+  </data>
+  <data name="MissingPluginText" xml:space="preserve">
+    <value>Config được tạo bằng plugin này, nhưng nó không tồn tại</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Tạo</value>
+  </data>
+  <data name="NoConfigSelectedWarning" xml:space="preserve">
+    <value>Không có config nào được chọn!</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Bạn có thực sự muốn xoá?</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Tải lại</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Remote Config</value>
+  </data>
+  <data name="RemoteConfigs" xml:space="preserve">
+    <value>Remote Configs</value>
+  </data>
+  <data name="ToggleView" xml:space="preserve">
+    <value>Chuyển đổi chế độ xem</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oh no</value>
+  </data>
+  <data name="UnsavedChanges" xml:space="preserve">
+    <value>Thay đổi chưa đc lưu</value>
+  </data>
+  <data name="UnsavedChangesText" xml:space="preserve">
+    <value>Thay đổi của config chưa được lưu! Bạn có muốn tiếp tục?</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Tải lên</value>
+  </data>
+  <data name="WARNING" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+  <data name="Wordlists" xml:space="preserve">
+    <value>Danh sách t.khoản</value>
+  </data>
+</root>

@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddConfig" xml:space="preserve">
+    <value>Thêm configs</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="CannotShareRemoteConfig" xml:space="preserve">
+    <value>Ko thể chia sẻ remote configs</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Loại</value>
+  </data>
+  <data name="ConfigRemovedSuccessfully" xml:space="preserve">
+    <value>Configs đc xoá thành công</value>
+  </data>
+  <data name="ConfigsRemovedSuccessfully" xml:space="preserve">
+    <value>Configs đc xoá thành công</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Đã tạo</value>
+  </data>
+  <data name="CreateEndpoint" xml:space="preserve">
+    <value>Create endpoint</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Ngày phát hành</value>
+  </data>
+  <data name="DeleteEndpoint" xml:space="preserve">
+    <value>Delete endpoint</value>
+  </data>
+  <data name="EditEndpoint" xml:space="preserve">
+    <value>Edit endpoint</value>
+  </data>
+  <data name="Endpoint" xml:space="preserve">
+    <value>Endpoint</value>
+  </data>
+  <data name="EndpointCreated" xml:space="preserve">
+    <value>Endpoint created</value>
+  </data>
+  <data name="ForThisEndpoint" xml:space="preserve">
+    <value>For this endpoint</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>What is this?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>This is where you can set up sharing %endpoints% for your configs so that other people can access them. You can %create% endpoints and %add% configs to them, and also specify the %Api Keys% that are authorized to receive the configs.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>In order to share configs with a friend, you have to create an endpoint, add configs to it, set up at least one api key and send it to your friend, along with the %URL% of your endpoint. Your friend will then have to set it up in the %OB Settings &gt; Remote% section. For example, if your OpenBullet 2 instance is reachable on `1.1.1.1:5000` your friend needs to type `http://1.1.1.1:5000/api/shared/configs/ROUTE` where %ROUTE% is the name you gave to the endpoint.</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>Lần sửa đổi cuối</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Đang tải</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="NoConfigSelected" xml:space="preserve">
+    <value>Ko có configs nào đc chọn</value>
+  </data>
+  <data name="NoEndpointSelected" xml:space="preserve">
+    <value>No endpoint selected</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxies</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Bạn có thực sự muốn xoá</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="RemoteConfig" xml:space="preserve">
+    <value>Remote config</value>
+  </data>
+  <data name="RemoveAllConfigs" xml:space="preserve">
+    <value>Xoá toàn bộ configs</value>
+  </data>
+  <data name="RemoveConfig" xml:space="preserve">
+    <value>Xoá config</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Đã xoá</value>
+  </data>
+  <data name="SelectConfig" xml:space="preserve">
+    <value>Chọn config</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oh no</value>
+  </data>
+</root>

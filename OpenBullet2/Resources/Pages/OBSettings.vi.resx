@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Thêm</value>
+  </data>
+  <data name="AdminSessionLifetimeHours" xml:space="preserve">
+    <value>Thời gian chạy tối đa của tài khoản admin (giờ)</value>
+  </data>
+  <data name="AdminUsername" xml:space="preserve">
+    <value>Tên tài khoản Admin</value>
+  </data>
+  <data name="AllDone" xml:space="preserve">
+    <value>Tất cả đã xong</value>
+  </data>
+  <data name="AllowSystemWideFileAccess" xml:space="preserve">
+    <value>Cho phép truy cập tệp trên toàn hệ thống</value>
+  </data>
+  <data name="ApiKey" xml:space="preserve">
+    <value>Api Key</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ</value>
+  </data>
+  <data name="AutoSetRecommendedBots" xml:space="preserve">
+    <value>Tự động chọn các bot được đề xuất khi một config được chọn trong trang tạo tác vụ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Đổi mật khẩu</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Xoá</value>
+  </data>
+  <data name="Customization" xml:space="preserve">
+    <value>Tuỳ biến giao diện</value>
+  </data>
+  <data name="DefaultAuthor" xml:space="preserve">
+    <value>Tác giả mặc định trên các configs mới</value>
+  </data>
+  <data name="DefaultJobDisplayMode" xml:space="preserve">
+    <value>Chế độ hiển thị tác vụ mặc định</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Hoàn thành</value>
+  </data>
+  <data name="EnableJobLogging" xml:space="preserve">
+    <value>Bật đăng nhập trong trang tác vụ</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Tổng quan</value>
+  </data>
+  <data name="GroupCapturesInDebugger" xml:space="preserve">
+    <value>Group captures in debugger</value>
+  </data>
+  <data name="GuestSessionLifetimeHours" xml:space="preserve">
+    <value>Thời gian chạy tối đa của tài khoản khách (giờ)</value>
+  </data>
+  <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
+    <value>Bỏ qua tên tài khoản trong khi xóa các dữ liệu trùng lặp</value>
+  </data>
+  <data name="JobManagerUpdateInterval" xml:space="preserve">
+    <value>Job Manager update interval</value>
+  </data>
+  <data name="JobUpdateInterval" xml:space="preserve">
+    <value>Job update interval</value>
+  </data>
+  <data name="LogMaxEntries" xml:space="preserve">
+    <value>Số mục tối đa trong nhật ký</value>
+  </data>
+  <data name="LogToFile" xml:space="preserve">
+    <value>Đăng nhập vào một tệp</value>
+  </data>
+  <data name="MonacoTheme" xml:space="preserve">
+    <value>Monaco Editor Theme</value>
+  </data>
+  <data name="NavigateOnEdit" xml:space="preserve">
+    <value>Khi chỉnh sửa configs, hãy điều hướng đến</value>
+  </data>
+  <data name="NewAdminPassword" xml:space="preserve">
+    <value>Mật khẩu admin mới</value>
+  </data>
+  <data name="NewPasswordSet" xml:space="preserve">
+    <value>Đã đặt mật khẩu mới</value>
+  </data>
+  <data name="PlaySoundOnHit" xml:space="preserve">
+    <value>Phát âm thanh khi hits</value>
+  </data>
+  <data name="ProxyCheckTargets" xml:space="preserve">
+    <value>Nguồn để kiểm tra proxy</value>
+  </data>
+  <data name="ProxyCheckTargetsDescription" xml:space="preserve">
+    <value>Đây là các nguồn để kiểm tra proxy. Các proxy sẽ được kiểm tra dựa trên URL đích và nếu truy cập thành công nguồn, proxy sẽ được đánh dấu là đang hoạt động.</value>
+  </data>
+  <data name="Remote" xml:space="preserve">
+    <value>Remote</value>
+  </data>
+  <data name="RemoteConfigsEndpoints" xml:space="preserve">
+    <value>Remote Configs Endpoints</value>
+  </data>
+  <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
+    <value>These are the remote endpoints that will be queried upon reload of the config repository in order to get configs hosted on another machine.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Loại bỏ</value>
+  </data>
+  <data name="RequireAdminLogin" xml:space="preserve">
+    <value>Yêu cầu đăng nhập tài khoản admin</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Khôi phục mặc định</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Bạn có muốn khôi phục về mặc định</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Đã lưu</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Bảo mật</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Cài đặt đã đc lưu thành công</value>
+  </data>
+  <data name="SuccessKey" xml:space="preserve">
+    <value>Success Key</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Giao diện</value>
+  </data>
+  <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
+    <value>Tải giao diện lên thành công</value>
+  </data>
+  <data name="UnsupportedThemeFormat" xml:space="preserve">
+    <value>Ko hỗ trợ định dạng giao diện này. Đijng dạng giao diện hỗ trợ: .css, .zip</value>
+  </data>
+  <data name="UploadTheme" xml:space="preserve">
+    <value>Tải giao diện</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="WarnConfigNotSaved" xml:space="preserve">
+    <value>Hiển thị cảnh báo khi configs hiện tại chưa được lưu và một configs khác được chạy</value>
+  </data>
+</root>

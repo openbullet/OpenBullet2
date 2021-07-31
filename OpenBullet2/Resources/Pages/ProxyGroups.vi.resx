@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddGroup" xml:space="preserve">
+    <value>Tạo nhóm</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Đã tạo</value>
+  </data>
+  <data name="CreateProxyGroup" xml:space="preserve">
+    <value>Đã tạo nhóm proxy</value>
+  </data>
+  <data name="DeleteAllProxies" xml:space="preserve">
+    <value>Xoá tất cả proxy</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Đã xoá</value>
+  </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Xoá proxy đang hiển thị</value>
+  </data>
+  <data name="DeleteGroup" xml:space="preserve">
+    <value>Xoá nhóm</value>
+  </data>
+  <data name="DeleteNotWorking" xml:space="preserve">
+    <value>Xoá proxy ko hoạt động</value>
+  </data>
+  <data name="DeleteSlow" xml:space="preserve">
+    <value>Xoá proxy chậm</value>
+  </data>
+  <data name="DeleteUntested" xml:space="preserve">
+    <value>Xoá proxy chưa đc test</value>
+  </data>
+  <data name="EditGroup" xml:space="preserve">
+    <value>Chỉnh sửa nhóm</value>
+  </data>
+  <data name="EditProxyGroup" xml:space="preserve">
+    <value>Chỉnh sửa nhóm proxy</value>
+  </data>
+  <data name="ExportProxies" xml:space="preserve">
+    <value>Xuất proxy</value>
+  </data>
+  <data name="ForThisGroup" xml:space="preserve">
+    <value>Cho nhóm này</value>
+  </data>
+  <data name="GroupInUse" xml:space="preserve">
+    <value>Nhóm đang sử dụng</value>
+  </data>
+  <data name="GroupInUseWarning" xml:space="preserve">
+    <value>Một tác vụ hiện đang sử dụng nhóm proxy này. Vui lòng dừng và xóa tác vụ và thử lại.</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>How does this work?</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Here you can import your proxies into several %groups%. Groups help keep proxies organized and give you the ability to use different proxies for different jobs. First of all you should create a group by clicking on the %Add Group% button above. Just give it a name. Make sure your new group is selected and then click on %Import Proxies%.</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>The %Import Proxies% menu will give you 3 ways to import your proxies. You can either %paste% them, %upload a file% or %type the URL% of a remote resource that provides proxies in a text format (usually one per line). You are also able to specify the default %type%, %username% and %password% for the proxies. Alternatively, you can use the %advanced syntax% described in the form in order to specify the type, username and password on a per-proxy basis.</value>
+  </data>
+  <data name="Help1x03" xml:space="preserve">
+    <value>Now you're all set and you will be able to select your proxy group when you create or edit a job. You can create a job of type %Proxy Check% in order to test if your proxies work before using them. The Proxy Check job will update the %country%, %status%, %ping% and %last check date% fields of your proxies in the data table of this page, so you can then %remove% proxies that don't work or have a ping that is too high for your needs. You can even decide to only keep proxies from a specific country!</value>
+  </data>
+  <data name="Host" xml:space="preserve">
+    <value>Máy chủ</value>
+  </data>
+  <data name="Imported" xml:space="preserve">
+    <value>Đã thêm</value>
+  </data>
+  <data name="ImportProxies" xml:space="preserve">
+    <value>Thêm proxy</value>
+  </data>
+  <data name="LastChecked" xml:space="preserve">
+    <value>Lần kiểm tra cuối</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Đang tải</value>
+  </data>
+  <data name="Moved" xml:space="preserve">
+    <value>Đã di chuyển</value>
+  </data>
+  <data name="MoveFiltered" xml:space="preserve">
+    <value>Di chuyển proxy đang hiển thị</value>
+  </data>
+  <data name="NeedTwoOrMoreGroups" xml:space="preserve">
+    <value>Cần trên 2 nhóm proxy</value>
+  </data>
+  <data name="NoGroupSelected" xml:space="preserve">
+    <value>Vui lòng chọn một nhóm</value>
+  </data>
+  <data name="NoRecordsToDisplay" xml:space="preserve">
+    <value>Không có bản ghi nào để hiển thị</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Chủ sở hữu</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="Ping" xml:space="preserve">
+    <value>Ping</value>
+  </data>
+  <data name="pingOver" xml:space="preserve">
+    <value>ping over</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Cổng</value>
+  </data>
+  <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
+    <value>Đã xoá proxy thành công</value>
+  </data>
+  <data name="ProxiesImportedSuccessfully" xml:space="preserve">
+    <value>Thêm proxy thành công</value>
+  </data>
+  <data name="proxiesMoved" xml:space="preserve">
+    <value>Di chuyển proxy</value>
+  </data>
+  <data name="ProxyGroup" xml:space="preserve">
+    <value>Nhóm proxy</value>
+  </data>
+  <data name="ProxyGroupCreated" xml:space="preserve">
+    <value>Nhóm prroxy đã đc tạo thành công</value>
+  </data>
+  <data name="ReallyDelete" xml:space="preserve">
+    <value>Bạn có thực sự muốn xoá proxy?</value>
+  </data>
+  <data name="results" xml:space="preserve">
+    <value>kết quả</value>
+  </data>
+  <data name="ResultsPerPage" xml:space="preserve">
+    <value>Số kết quả mỗi trang</value>
+  </data>
+  <data name="SelectProxyGroup" xml:space="preserve">
+    <value>Chọn nhóm proxy</value>
+  </data>
+  <data name="Slow" xml:space="preserve">
+    <value>Chậm</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Loại</value>
+  </data>
+  <data name="Uh-Oh" xml:space="preserve">
+    <value>Oh no</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Tên tài khoản</value>
+  </data>
+</root>

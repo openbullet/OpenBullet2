@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="2CaptchaApiKey" xml:space="preserve">
+    <value>2Captcha API Key</value>
+  </data>
+  <data name="AntiCaptchaApiKey" xml:space="preserve">
+    <value>Anti-Captcha API Key</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ</value>
+  </data>
+  <data name="AZCaptchaApiKey" xml:space="preserve">
+    <value>AZ Captcha API Key</value>
+  </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Số dư</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="CapMonsterHost" xml:space="preserve">
+    <value>Máy chủ CapMonster</value>
+  </data>
+  <data name="CapMonsterPort" xml:space="preserve">
+    <value>Cổng CapMonster</value>
+  </data>
+  <data name="Captchas" xml:space="preserve">
+    <value>Captchas</value>
+  </data>
+  <data name="CaptchasDotIoApiKey" xml:space="preserve">
+    <value>Captchas.IO API Key</value>
+  </data>
+  <data name="CheckBalance" xml:space="preserve">
+    <value>Kiểm tra số dư tài khoản</value>
+  </data>
+  <data name="CheckBalanceBeforeSolving" xml:space="preserve">
+    <value>Kiểm tra số dư tài khoản trước khi bypass captcha</value>
+  </data>
+  <data name="ChromeBinaryLocation" xml:space="preserve">
+    <value>Vị trí nhị phân của Google</value>
+  </data>
+  <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
+    <value>Thời gian chờ (mili giây)</value>
+  </data>
+  <data name="CurrentService" xml:space="preserve">
+    <value>Dịch vụ hiện tại</value>
+  </data>
+  <data name="Custom2CaptchaApiKey" xml:space="preserve">
+    <value>2Captcha API Key tuỳ chọn</value>
+  </data>
+  <data name="Custom2CaptchaHost" xml:space="preserve">
+    <value>Máy chủ 2Captcha tuỳ chọn</value>
+  </data>
+  <data name="Custom2CaptchaOverrideHostHeader" xml:space="preserve">
+    <value>Override Host header with 2captcha.com</value>
+  </data>
+  <data name="Custom2CaptchaPort" xml:space="preserve">
+    <value>Cổng 2Captcha tuỳ chọn</value>
+  </data>
+  <data name="DeathByCaptcha Username" xml:space="preserve">
+    <value>Tên tài khoản Death By Captcha</value>
+  </data>
+  <data name="DeathByCaptchaPassword" xml:space="preserve">
+    <value>Mật khẩu Death By Captcha</value>
+  </data>
+  <data name="DeCaptcherPassword" xml:space="preserve">
+    <value>Mật khẩu DeCaptcher</value>
+  </data>
+  <data name="DeCaptcherUsername" xml:space="preserve">
+    <value>Tên tài khoản DeCaptcher</value>
+  </data>
+  <data name="DrawMouseMovement" xml:space="preserve">
+    <value>Vẽ chuyển động của chuột</value>
+  </data>
+  <data name="EnableBotLogging" xml:space="preserve">
+    <value>Bật ghi nhật ký bot</value>
+  </data>
+  <data name="FirefoxBinaryLocation" xml:space="preserve">
+    <value>Vị trí nhị phân của Firefox</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Tổng quan</value>
+  </data>
+  <data name="GlobalBanKeys" xml:space="preserve">
+    <value>Global ban keys</value>
+  </data>
+  <data name="GlobalRetryKeys" xml:space="preserve">
+    <value>Global retry keys</value>
+  </data>
+  <data name="ImageTyperzApiKey" xml:space="preserve">
+    <value>Imagetyperz API Key</value>
+  </data>
+  <data name="LogJobActivityToFile" xml:space="preserve">
+    <value>Ghi hoạt động tác vụ vào hồ sơ</value>
+  </data>
+  <data name="ParallelizerType" xml:space="preserve">
+    <value>Parallelizer Type</value>
+  </data>
+  <data name="PollingIntervalMilliseconds" xml:space="preserve">
+    <value>Polling interval in milliseconds</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
+    <value>Thời gian chờ đọc / ghi (mili giây)</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Khôi phục mặc định</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Bạn có muốn khôi phục về cài đặt mặc định?</value>
+  </data>
+  <data name="RestrictBlocksToCWD" xml:space="preserve">
+    <value>Chỉ giới hạn khả năng I/O của khối đối với Thư mục làm việc hiện tại</value>
+  </data>
+  <data name="RuCaptchaApiKey" xml:space="preserve">
+    <value>RuCaptcha API Key</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Đã lưu</value>
+  </data>
+  <data name="SelectedBrowser" xml:space="preserve">
+    <value>Trình duyệt đã chọn</value>
+  </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Cài đặt đã đc lưu thành công</value>
+  </data>
+  <data name="SolveCaptchaApiKey" xml:space="preserve">
+    <value>SolveCaptcha API Key</value>
+  </data>
+  <data name="SolveRecaptchaApiKey" xml:space="preserve">
+    <value>SolveRecaptcha API Key</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Thành công</value>
+  </data>
+  <data name="TimeoutSeconds" xml:space="preserve">
+    <value>Thời gian chờ tính bằng giây</value>
+  </data>
+  <data name="TrueCaptchaApiKey" xml:space="preserve">
+    <value>TrueCaptcha API Key</value>
+  </data>
+  <data name="TrueCaptchaUsername" xml:space="preserve">
+    <value>Tên tài khoản TrueCaptcha</value>
+  </data>
+  <data name="UseCustomUserAgentsList" xml:space="preserve">
+    <value>Sử dụng danh sách User Agents tùy chỉnh</value>
+  </data>
+  <data name="UserAgents" xml:space="preserve">
+    <value>User Agents</value>
+  </data>
+  <data name="VerboseMode" xml:space="preserve">
+    <value>Chế độ chi tiết</value>
+  </data>
+</root>

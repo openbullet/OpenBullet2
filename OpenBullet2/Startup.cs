@@ -132,7 +132,8 @@ namespace OpenBullet2
                     new CultureInfo("tr"),
                     new CultureInfo("ro"),
                     new CultureInfo("fa"),
-                    new CultureInfo("ar")
+                    new CultureInfo("ar"),
+                    new CultureInfo("vi")
                 };
 
                 options.DefaultRequestCulture = new RequestCulture("en", "en");

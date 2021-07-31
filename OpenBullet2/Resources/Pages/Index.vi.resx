@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AuthenticatedAs" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="BuildNumber" xml:space="preserve">
+    <value>Phiên bản</value>
+  </data>
+  <data name="ClientIpAddress" xml:space="preserve">
+    <value>Địa chỉ IP</value>
+  </data>
+  <data name="CPUUsage" xml:space="preserve">
+    <value>Lượng CPU đang dùng</value>
+  </data>
+  <data name="CurrentWorkingDirectory" xml:space="preserve">
+    <value>Thư mục làm việc hiện tại</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Help1x00" xml:space="preserve">
+    <value>A warm welcome from Bảo</value>
+  </data>
+  <data name="Help1x01" xml:space="preserve">
+    <value>Hello and welcome to %Bảo Bullet%, I'm %Bảo% and I'll be your guide around here. Look for help links and I'll come to explain whatever you need!</value>
+  </data>
+  <data name="Help1x02" xml:space="preserve">
+    <value>I won't annoy you any longer, guess I'll see you around then. Byee!</value>
+  </data>
+  <data name="Help2x00" xml:space="preserve">
+    <value>Where are all my settings saved?</value>
+  </data>
+  <data name="Help2x01" xml:space="preserve">
+    <value>There are plenty of settings in Bảo Bullet, and they are saved inside the %UserData% folder. The %database% (by default SQLite) is the file that contains your proxies, jobs, hits, guests and also holds records of the location of your wordlists on disk. By default it's called %OpenBullet.db%. %Configs% are inside the Configs subfolder, while %Wordlists% that you imported through the browser's upload feature are inside the Wordlists subfolder. Refer to their specific sections for more information.</value>
+  </data>
+  <data name="Help2x02" xml:space="preserve">
+    <value>The Bảo Bullet and RuriLib settings are saved to two files: %OpenBulletSettings.json% and %RuriLibSettings.json%. These files are only created if some changes were made to the default configuration. The %Environment.ini% file specifies the %Wordlist Types%, %Custom Statuses% and %Export Formats% of your Bảo Bullet environment. This is a very important file, more information on Wordlists Types can be found in a separate guide.</value>
+  </data>
+  <data name="Help2x03" xml:space="preserve">
+    <value>The %sharingEndpoints.json% file holds the information of your endpoints for config sharing. Finally, the %triggeredActions.json% file holds all the %Triggered Actions% of your Job Monitor. Triggered actions are automatically saved to this file every 10 seconds.</value>
+  </data>
+  <data name="LocalTime" xml:space="preserve">
+    <value>Giờ địa phương</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="MemoryUsage" xml:space="preserve">
+    <value>Lượng RAM đang dùng</value>
+  </data>
+  <data name="NetworkUsage" xml:space="preserve">
+    <value>Lưu lượng mạng</value>
+  </data>
+  <data name="OperatingSystem" xml:space="preserve">
+    <value>Hệ điều hành</value>
+  </data>
+  <data name="WebserverUptime" xml:space="preserve">
+    <value>Thời gian hoạt động</value>
+  </data>
+  <data name="WelcomeMessage" xml:space="preserve">
+    <value>Chào mừng đến với Bảo Bullet!</value>
+  </data>
+</root>

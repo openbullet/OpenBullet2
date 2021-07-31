@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Thêm</value>
+  </data>
+  <data name="AddBlank" xml:space="preserve">
+    <value>Thêm blank</value>
+  </data>
+  <data name="AllowedProxyTypes" xml:space="preserve">
+    <value>Cho phép loại proxy</value>
+  </data>
+  <data name="AllowedWordlistTypes" xml:space="preserve">
+    <value>Cho phép loại tài khoản</value>
+  </data>
+  <data name="AlwaysOpenBrowser" xml:space="preserve">
+    <value>Luôn mở trình duyệt khi khởi động</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Bạn chắc chứ?</value>
+  </data>
+  <data name="BanLoopEvasion" xml:space="preserve">
+    <value>Sau bao nhiêu lần BAN, dữ liệu sẽ được đánh dấu là TOCHECK và proxy sẽ bị xoá (0 để tắt)</value>
+  </data>
+  <data name="BanStatuses" xml:space="preserve">
+    <value>BAN proxy khi bot kết thúc bằng một trong các trạng thái này</value>
+  </data>
+  <data name="BlockedUrls" xml:space="preserve">
+    <value>URLs đã bị chặn</value>
+  </data>
+  <data name="BlockedUrlsInfo" xml:space="preserve">
+    <value>If the URL of the resource contains any of the given texts it will not be loaded. Case insensitive.</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="CaseSensitive" xml:space="preserve">
+    <value>Case sensitive</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Xoá</value>
+  </data>
+  <data name="ContinueStopStatuses" xml:space="preserve">
+    <value>Các trạng thái mà bot sẽ tiếp tục / dừng lại</value>
+  </data>
+  <data name="CPMLimit" xml:space="preserve">
+    <value>Giới hạn CPM (0 cho ko giới hạn)</value>
+  </data>
+  <data name="CustomInputs" xml:space="preserve">
+    <value>Đầu vào tuỳ chọn</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Dữ liệu</value>
+  </data>
+  <data name="DataRules" xml:space="preserve">
+    <value>Quy tắc dữ liệu</value>
+  </data>
+  <data name="DefaultAnswer" xml:space="preserve">
+    <value>Câu hỏi mặc định</value>
+  </data>
+  <data name="DisableWebpagesNotifications" xml:space="preserve">
+    <value>Tắt thông báo từ  trang web</value>
+  </data>
+  <data name="DismissDialogs" xml:space="preserve">
+    <value>Loại bỏ hộp thoại</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Tổng quan</value>
+  </data>
+  <data name="Headless" xml:space="preserve">
+    <value>Headless</value>
+  </data>
+  <data name="IgnoreEmptyLines" xml:space="preserve">
+    <value>Bỏ qua các dòng trống</value>
+  </data>
+  <data name="IgnoreHttpsErrors" xml:space="preserve">
+    <value>Bỏ qua lỗi HTTPS</value>
+  </data>
+  <data name="IgnoreResponseErrors" xml:space="preserve">
+    <value>Bỏ qua lỗi phản hồi</value>
+  </data>
+  <data name="InputDescription" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="Inputs" xml:space="preserve">
+    <value>Đầu vào</value>
+  </data>
+  <data name="InputsDescription" xml:space="preserve">
+    <value>Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start a job and their answer will be inserted as a variable of type string that you can use as you please.</value>
+  </data>
+  <data name="Invert" xml:space="preserve">
+    <value>Hoán đổi</value>
+  </data>
+  <data name="LinesFromFile" xml:space="preserve">
+    <value>Lines from file</value>
+  </data>
+  <data name="LoadOnlyDocumentAndScript" xml:space="preserve">
+    <value>Chỉ tải tài liệu và script</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Vị trí</value>
+  </data>
+  <data name="LoopsAround" xml:space="preserve">
+    <value>Loops around</value>
+  </data>
+  <data name="MaxUsesPerProxy" xml:space="preserve">
+    <value>Số tài khoản mỗi proxy (0 là vô hạn)</value>
+  </data>
+  <data name="Proxies" xml:space="preserve">
+    <value>Proxy</value>
+  </data>
+  <data name="Puppeteer" xml:space="preserve">
+    <value>Puppeteer</value>
+  </data>
+  <data name="PuppeteerCommandLineArguments" xml:space="preserve">
+    <value>Command line arguments (e.g. --disable-notifications --incognito)</value>
+  </data>
+  <data name="PuppeteerUserAgent" xml:space="preserve">
+    <value>User Agent (mặc định nếu trống)</value>
+  </data>
+  <data name="QuitBrowserStatuses" xml:space="preserve">
+    <value>Thoát trình duyệt khi bots kết thucsa với trạng thái</value>
+  </data>
+  <data name="RandomLinesFromFile" xml:space="preserve">
+    <value>Random lines from file</value>
+  </data>
+  <data name="RandomUserAgent" xml:space="preserve">
+    <value>Random User Agent</value>
+  </data>
+  <data name="RegexRule" xml:space="preserve">
+    <value>Regex rule</value>
+  </data>
+  <data name="RegexToMatch" xml:space="preserve">
+    <value>Regex to match</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Xoá</value>
+  </data>
+  <data name="Requests" xml:space="preserve">
+    <value>Yêu cầu</value>
+  </data>
+  <data name="ResourceName" xml:space="preserve">
+    <value>Tên tài nguyên</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Tài nguyên</value>
+  </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Thiết lập lại</value>
+  </data>
+  <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
+    <value>Bạn có muốn thiết lập lại cài đặt?</value>
+  </data>
+  <data name="SaveEmptyCaptures" xml:space="preserve">
+    <value>Save empty captures too</value>
+  </data>
+  <data name="SimpleRule" xml:space="preserve">
+    <value>Simple rule</value>
+  </data>
+  <data name="SliceName" xml:space="preserve">
+    <value>Slice name</value>
+  </data>
+  <data name="SuggestedBots" xml:space="preserve">
+    <value>Số lượng Bots được đề xuất</value>
+  </data>
+  <data name="ToggleRegexHelper" xml:space="preserve">
+    <value>Toggle Regex Helper</value>
+  </data>
+  <data name="Unique" xml:space="preserve">
+    <value>Only unique lines</value>
+  </data>
+  <data name="UrlEncodeAfterSlicing" xml:space="preserve">
+    <value>URL Encode data after slicing</value>
+  </data>
+  <data name="UseProxies" xml:space="preserve">
+    <value>Sử dụng proxy</value>
+  </data>
+  <data name="VariableName" xml:space="preserve">
+    <value>Tên biến</value>
+  </data>
+</root>
