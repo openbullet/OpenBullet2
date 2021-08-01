@@ -36,7 +36,7 @@ namespace OpenBullet2.Pages
 
             var factory = new JobOptionsFactory();
             jobType = Enum.Parse<JobType>(Type);
-            jobOptions = factory.CreateNew(jobType);
+            jobOptions = JobOptionsFactory.CreateNew(jobType);
         }
 
         private async Task Create()

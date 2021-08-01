@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Proxies;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// A reload service that will reload proxies from an <see cref="IProxyGroupRepository"/>.
+    /// </summary>
     public class ProxyReloadService : IDisposable
     {
         private readonly IProxyGroupRepository proxyGroupsRepo;
@@ -24,8 +27,10 @@ namespace OpenBullet2.Services
             semaphore = new SemaphoreSlim(1, 1);
         }
 
-        public void Dispose() => semaphore?.Dispose();
-
+        /// <summary>
+        /// Reloads proxies from a group with a given <paramref name="groupId"/> of a user with a given
+        /// <paramref name="userId"/>.
+        /// </summary>
         public async Task<IEnumerable<Proxy>> Reload(int groupId, int userId)
         {
             List<ProxyEntity> entities;
@@ -36,6 +41,7 @@ namespace OpenBullet2.Services
 
             try
             {
+                // If the groupId is -1 reload all proxies
                 if (groupId == -1)
                 {
                     entities = userId == 0
@@ -57,7 +63,13 @@ namespace OpenBullet2.Services
             }
 
             var proxyFactory = new ProxyFactory();
-            return entities.Select(e => proxyFactory.FromEntity(e));
+            return entities.Select(e => ProxyFactory.FromEntity(e));
+        }
+
+        public void Dispose()
+        {
+            semaphore?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

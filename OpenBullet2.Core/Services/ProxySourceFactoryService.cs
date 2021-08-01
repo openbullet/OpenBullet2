@@ -5,7 +5,7 @@ using RuriLib.Models.Proxies.ProxySources;
 using System;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
     public class ProxySourceFactoryService
     {

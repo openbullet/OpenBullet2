@@ -36,7 +36,7 @@ namespace OpenBullet2.Pages
             var factory = new JobOptionsFactory();
             jobEntity = await JobRepo.Get(JobId);
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
-            jobOptions = factory.CloneExistant(oldOptions);
+            jobOptions = JobOptionsFactory.CloneExistant(oldOptions);
             jobType = jobEntity.JobType;
         }
 

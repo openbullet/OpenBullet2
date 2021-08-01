@@ -1,5 +1,5 @@
-﻿using OpenBullet2.Models.Hits;
-using OpenBullet2.Models.Proxies;
+﻿using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Proxies;
 using RuriLib.Helpers;
 using RuriLib.Models.Jobs.StartConditions;
 using System;
@@ -7,9 +7,15 @@ using System.Collections.Generic;
 
 namespace OpenBullet2.Core.Models.Jobs
 {
+    /// <summary>
+    /// A factory that creates a <see cref="JobOptions"/> object with default values.
+    /// </summary>
     public class JobOptionsFactory
     {
-        public JobOptions CreateNew(JobType type)
+        /// <summary>
+        /// Creates a new <see cref="JobOptions"/> object according to the provided <paramref name="type"/>.
+        /// </summary>
+        public static JobOptions CreateNew(JobType type)
         {
             JobOptions options = type switch
             {
@@ -22,34 +28,25 @@ namespace OpenBullet2.Core.Models.Jobs
             return options;
         }
 
-        private MultiRunJobOptions MakeMultiRun()
+        private static MultiRunJobOptions MakeMultiRun() => new()
         {
-            return new MultiRunJobOptions
-            {
-                HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() },
-                ProxySources = new List<ProxySourceOptions> { new GroupProxySourceOptions() { GroupId = -1 } }
-            };
-        }
+            HitOutputs = new List<HitOutputOptions> { new DatabaseHitOutputOptions() },
+            ProxySources = new List<ProxySourceOptions> { new GroupProxySourceOptions() { GroupId = -1 } }
+        };
 
-        private ProxyCheckJobOptions MakeProxyCheck()
+        private static ProxyCheckJobOptions MakeProxyCheck() => new ProxyCheckJobOptions
         {
-            return new ProxyCheckJobOptions
-            {
-                CheckOutput = new DatabaseProxyCheckOutputOptions()
-            };
-        }
+            CheckOutput = new DatabaseProxyCheckOutputOptions()
+        };
 
-        public JobOptions CloneExistant(JobOptions options)
+        public static JobOptions CloneExistant(JobOptions options) => options switch
         {
-            return options switch
-            {
-                MultiRunJobOptions x => CloneMultiRun(x),
-                ProxyCheckJobOptions x => Cloner.Clone(x),
-                _ => throw new NotImplementedException()
-            };
-        }
+            MultiRunJobOptions x => CloneMultiRun(x),
+            ProxyCheckJobOptions x => Cloner.Clone(x),
+            _ => throw new NotImplementedException()
+        };
 
-        private MultiRunJobOptions CloneMultiRun(MultiRunJobOptions options)
+        private static MultiRunJobOptions CloneMultiRun(MultiRunJobOptions options)
         {
             var newOptions = Cloner.Clone(options);
             newOptions.Skip = 0;
