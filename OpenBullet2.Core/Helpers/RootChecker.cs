@@ -1,12 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace OpenBullet2.Helpers
+namespace OpenBullet2.Core.Helpers
 {
     public static class RootChecker
     {
         [DllImport("libc")]
-        public static extern uint geteuid();
+        private static extern uint geteuid();
 
         public static bool IsRoot()
         {

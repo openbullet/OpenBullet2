@@ -15,7 +15,6 @@ using RuriLib.Services;
 using System.Globalization;
 using Blazored.LocalStorage;
 using BlazorDownloadFile;
-using OpenBullet2.Helpers;
 using System;
 using System.Threading;
 using OpenBullet2.Logging;
@@ -25,9 +24,9 @@ using RuriLib.Providers.UserAgents;
 using RuriLib.Providers.RandomNumbers;
 using System.Threading.Tasks;
 using OpenBullet2.Core;
-using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Repositories;
+using OpenBullet2.Core.Helpers;
 
 namespace OpenBullet2
 {
@@ -152,7 +151,9 @@ namespace OpenBullet2
             var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
 
             if (RootChecker.IsRoot())
+            {
                 Console.WriteLine(RootChecker.RootWarning);
+            }
 
             if (env.IsDevelopment())
             {

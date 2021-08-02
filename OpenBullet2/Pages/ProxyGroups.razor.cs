@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Helpers;
 
 namespace OpenBullet2.Pages
 {

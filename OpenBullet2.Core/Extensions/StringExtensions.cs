@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace OpenBullet2.Helpers
+namespace OpenBullet2.Core.Extensions
 {
     public static class StringExtensions
     {
