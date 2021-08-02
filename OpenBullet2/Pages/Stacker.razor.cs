@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
-using OpenBullet2.Services;
 using OpenBullet2.Shared;
-using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Configs;

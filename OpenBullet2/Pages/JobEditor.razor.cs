@@ -6,11 +6,10 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
-using OpenBullet2.Services;
-using RuriLib.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {

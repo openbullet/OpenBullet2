@@ -92,7 +92,8 @@ namespace OpenBullet2
             services.AddSingleton<DataPoolFactoryService>();
             services.AddSingleton<ProxySourceFactoryService>();
             services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
-            services.AddSingleton(_ => new PersistentSettingsService("UserData"));
+            services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));
+            services.AddSingleton<PersistentSettingsService>();
             services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
             services.AddSingleton<IRandomUAProvider>(_ => new IntoliRandomUAProvider("user-agents.json"));
             services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
@@ -116,9 +117,10 @@ namespace OpenBullet2
                 {
                     options.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(context =>
                     {
-                        var settingsService = context.RequestServices.GetService<PersistentSettingsService>();
-                        settingsService.UseCultureCookie = false;
-                        return Task.FromResult(new ProviderCultureResult(settingsService.OpenBulletSettings.GeneralSettings.Culture));
+                        var persistentSettings = context.RequestServices.GetService<PersistentSettingsService>();
+                        var obSettings = context.RequestServices.GetService<OpenBulletSettingsService>();
+                        persistentSettings.UseCultureCookie = false;
+                        return Task.FromResult(new ProviderCultureResult(obSettings.Settings.GeneralSettings.Culture));
                     }));
                 }
 
@@ -148,7 +150,7 @@ namespace OpenBullet2
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var obSettings = app.ApplicationServices.GetService<PersistentSettingsService>().OpenBulletSettings;
+            var obSettings = app.ApplicationServices.GetService<OpenBulletSettingsService>().Settings;
 
             if (RootChecker.IsRoot())
             {

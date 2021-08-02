@@ -13,6 +13,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using OpenBullet2.Core.Helpers;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Auth
 {
@@ -23,15 +24,15 @@ namespace OpenBullet2.Auth
     public class OBAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService localStorage;
-        private readonly PersistentSettingsService settings;
+        private readonly OpenBulletSettingsService settingsService;
         private readonly IGuestRepository guestRepo;
         private readonly JwtValidationService jwtValidator;
 
-        public OBAuthenticationStateProvider(ILocalStorageService localStorage, PersistentSettingsService settings,
+        public OBAuthenticationStateProvider(ILocalStorageService localStorage, OpenBulletSettingsService settings,
             IGuestRepository guestRepo, JwtValidationService jwtValidator)
         {
             this.localStorage = localStorage;
-            this.settings = settings;
+            this.settingsService = settings;
             this.guestRepo = guestRepo;
             this.jwtValidator = jwtValidator;
         }
@@ -40,11 +41,11 @@ namespace OpenBullet2.Auth
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             // If we didn't enable admin login, always return an authenticated admin user
-            if (!settings.OpenBulletSettings.SecuritySettings.RequireAdminLogin)
+            if (!settingsService.Settings.SecuritySettings.RequireAdminLogin)
             {
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, settings.OpenBulletSettings.SecuritySettings.AdminUsername),
+                    new Claim(ClaimTypes.Name, settingsService.Settings.SecuritySettings.AdminUsername),
                     new Claim(ClaimTypes.Role, "Admin")
                 };
 
@@ -106,7 +107,7 @@ namespace OpenBullet2.Auth
         /// </summary>
         public async Task AuthenticateUser(string username, string password, IPAddress ip)
         {
-            if (settings.OpenBulletSettings.SecuritySettings.AdminUsername == username)
+            if (settingsService.Settings.SecuritySettings.AdminUsername == username)
             {
                 await AuthenticateAdmin(username, password);
             }
@@ -118,7 +119,7 @@ namespace OpenBullet2.Auth
 
         private async Task AuthenticateAdmin(string username, string password)
         {
-            if (!BCrypt.Net.BCrypt.Verify(password, settings.OpenBulletSettings.SecuritySettings.AdminPasswordHash))
+            if (!BCrypt.Net.BCrypt.Verify(password, settingsService.Settings.SecuritySettings.AdminPasswordHash))
             {
                 throw new UnauthorizedAccessException("Invalid password");
             }
@@ -185,10 +186,10 @@ namespace OpenBullet2.Auth
 
         private string BuildAdminToken(IEnumerable<Claim> claims)
         {
-            var key = new SymmetricSecurityKey(settings.OpenBulletSettings.SecuritySettings.JwtKey);
+            var key = new SymmetricSecurityKey(settingsService.Settings.SecuritySettings.JwtKey);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(settings.OpenBulletSettings.SecuritySettings.AdminSessionLifetimeHours);
+            var expiration = DateTime.UtcNow.AddHours(settingsService.Settings.SecuritySettings.AdminSessionLifetimeHours);
 
             var token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -196,10 +197,10 @@ namespace OpenBullet2.Auth
 
         private string BuildGuestToken(IEnumerable<Claim> claims)
         {
-            var key = new SymmetricSecurityKey(settings.OpenBulletSettings.SecuritySettings.JwtKey);
+            var key = new SymmetricSecurityKey(settingsService.Settings.SecuritySettings.JwtKey);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(settings.OpenBulletSettings.SecuritySettings.GuestSessionLifetimeHours);
+            var expiration = DateTime.UtcNow.AddHours(settingsService.Settings.SecuritySettings.GuestSessionLifetimeHours);
 
             var token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
             return new JwtSecurityTokenHandler().WriteToken(token);

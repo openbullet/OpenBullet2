@@ -30,6 +30,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -43,7 +44,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobFactoryService JobFactory { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
@@ -177,7 +178,7 @@ namespace OpenBullet2.Pages
         private async Task DeleteDuplicates()
         {
             var duplicates = hits
-                .GroupBy(h => h.GetHashCode(PersistentSettings.OpenBulletSettings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
+                .GroupBy(h => h.GetHashCode(OBSettingsService.Settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
                 .Where(g => g.Count() > 1)
                 .SelectMany(g => g.OrderBy(h => h.Date)
                 .Reverse().Skip(1)).ToList();

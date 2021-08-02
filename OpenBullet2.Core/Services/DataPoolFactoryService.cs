@@ -7,8 +7,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DataPoolFactoryService
     {
         private readonly IWordlistRepository wordlistRepo;

@@ -3,7 +3,6 @@ using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Repositories;
-using OpenBullet2.Core.Services;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Jobs;
@@ -14,8 +13,11 @@ using RuriLib.Services;
 using System;
 using System.Linq;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// Factory that creates a <see cref="Job"/> from <see cref="JobOptions"/>.
+    /// </summary>
     public class JobFactoryService
     {
         private readonly ConfigService configService;
@@ -30,6 +32,9 @@ namespace OpenBullet2.Services
         private readonly IProxyRepository proxyRepo;
         private readonly PluginRepository pluginRepo;
         
+        /// <summary>
+        /// The maximum amount of bots that a job can use.
+        /// </summary>
         public int BotLimit { get; init; } = 200;
 
         public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
@@ -57,6 +62,12 @@ namespace OpenBullet2.Services
             }
         }
 
+        /// <summary>
+        /// Creates a <see cref="Job"/> with the provided <paramref name="id"/> and <paramref name="ownerId"/>
+        /// from <see cref="JobOptions"/>.
+        /// </summary>
+        /// <param name="id">The ID of the newly created job, must be unique</param>
+        /// <param name="ownerId">The ID of the user who owns the job. 0 for admin</param>
         public Job FromOptions(int id, int ownerId, JobOptions options)
         {
             Job job = options switch

@@ -1,7 +1,7 @@
 ﻿@using RuriLib.Models.Blocks.Custom
 @using RuriLib.Models.Blocks.Custom.Script
 @using RuriLib.Models.Variables
-@inject PersistentSettingsService Settings 
+@inject OpenBulletSettingsService OBSettingsService 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ScriptBlockSettingsViewer> Loc
 
 <EditForm Model="Block">
@@ -92,7 +92,7 @@
         {
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false },
-            Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
+            Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
             Language = GetLanguage(Block.Interpreter),
             Value = Block.Script,
             MatchBrackets = true

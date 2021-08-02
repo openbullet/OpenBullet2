@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Services;
+﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Services;
 using RuriLib.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,14 +23,17 @@ namespace OpenBullet2.Logging
         }
     }
 
+    /// <summary>
+    /// An in-memory logger for job operations.
+    /// </summary>
     public class MemoryJobLogger
     {
-        private readonly PersistentSettingsService settings;
-        private readonly Dictionary<int, List<JobLogEntry>> logs = new Dictionary<int, List<JobLogEntry>>();
+        private readonly Dictionary<int, List<JobLogEntry>> logs = new();
         private readonly object locker = new();
+        private readonly OpenBulletSettings settings;
         public event EventHandler<int> NewLog; // The integer is the id of the job for which a new log came
 
-        public MemoryJobLogger(PersistentSettingsService settings)
+        public MemoryJobLogger(OpenBulletSettings settings)
         {
             this.settings = settings;
         }
@@ -45,11 +49,13 @@ namespace OpenBullet2.Logging
 
         public void Log(int jobId, string message, LogKind kind = LogKind.Custom, string color = "white")
         {
-            if (!settings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+            if (!settings.GeneralSettings.EnableJobLogging)
+            {
                 return;
+            }
 
             var entry = new JobLogEntry(kind, message, color);
-            var maxBufferSize = settings.OpenBulletSettings.GeneralSettings.LogBufferSize;
+            var maxBufferSize = settings.GeneralSettings.LogBufferSize;
 
             lock (locker)
             {
@@ -64,7 +70,9 @@ namespace OpenBullet2.Logging
                         logs[jobId].Add(entry);
 
                         if (logs[jobId].Count > maxBufferSize && maxBufferSize > 0)
+                        {
                             logs[jobId].RemoveRange(0, logs[jobId].Count - maxBufferSize);
+                        }
                     }
                 }
             }
@@ -80,7 +88,9 @@ namespace OpenBullet2.Logging
         public void Clear(int jobId)
         {
             if (!logs.ContainsKey(jobId))
+            {
                 return;
+            }
 
             logs[jobId].Clear();
         }

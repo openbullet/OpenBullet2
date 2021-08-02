@@ -3,8 +3,8 @@ using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
-using OpenBullet2.Services;
 using RuriLib.Extensions;
 using RuriLib.Services;
 using System;
@@ -22,7 +22,7 @@ namespace OpenBullet2.Shared.Forms
 
         [Inject] private IFileReaderService FileReaderService { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
 
         private ElementReference inputTypeFileElement;
         private List<string> wordlistTypes;
@@ -99,7 +99,7 @@ namespace OpenBullet2.Shared.Forms
                 baseDirectory += '/';
             }
 
-            if (!PersistentSettings.OpenBulletSettings.SecuritySettings.AllowSystemWideFileAccess &&
+            if (!OBSettingsService.Settings.SecuritySettings.AllowSystemWideFileAccess &&
                 !baseDirectory.IsSubPathOf(Directory.GetCurrentDirectory()))
             {
                 await js.AlertError(Loc["Unauthorized"], Loc["SystemWideFileAccessDisabled"]);

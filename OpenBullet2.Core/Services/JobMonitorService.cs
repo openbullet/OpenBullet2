@@ -3,12 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// Monitors jobs, checks defined triggers every second and executes the corresponding actions.
+    /// </summary>
     public class JobMonitorService : IDisposable
     {
-        public bool Initialized { get; set; } = false;
+        /// <summary>
+        /// The list of triggered actions that can be executed by the job monitor.
+        /// </summary>
         public List<TriggeredAction> TriggeredActions { get; set; } = new List<TriggeredAction>();
+
+        /// <summary>
+        /// Whether the job monitor has been initialized.
+        /// </summary>
+        public bool Initialized { get; set; }
+
         private readonly Timer timer;
         private readonly JobManagerService jobManager;
 
@@ -31,6 +42,10 @@ namespace OpenBullet2.Services
             }
         }
 
-        public void Dispose() => timer?.Dispose();
+        public void Dispose()
+        {
+            timer?.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

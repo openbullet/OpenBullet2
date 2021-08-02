@@ -249,7 +249,7 @@
     </div>
 }
 
-@if (PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultJobDisplayMode == Core.Models.Settings.JobDisplayMode.Detailed)
+@if (OBSettingsService.Settings.GeneralSettings.DefaultJobDisplayMode == Core.Models.Settings.JobDisplayMode.Detailed)
 {
     <table class="table mt-3">
         <thead>
@@ -289,7 +289,7 @@
 
 <div class="container-fluid mt-3">
     <div class="row">
-        @if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+        @if (OBSettingsService.Settings.GeneralSettings.EnableJobLogging)
         {
             <div class="col-12 col-xl-6 px-0 pr-xl-2 job-viewer-log-container">
                 <GenericLogger JobId="Job.Id" />

@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
-@inject PersistentSettingsService PersistentSettings 
+@inject PersistentSettingsService PersistentSettings
+@inject OpenBulletSettingsService OBSettingsService
 @inject NavigationManager NavigationManager
 @inject IModalService ModalService 
 
@@ -78,10 +79,12 @@
         }
         else
         {
-            PersistentSettings.OpenBulletSettings.GeneralSettings.Culture = culture;
+            OBSettingsService.Settings.GeneralSettings.Culture = culture;
 
             if (SaveSettings)
-                await PersistentSettings.Save();
+            {
+                await OBSettingsService.Save();
+            }
 
             CultureInfo.CurrentCulture = new CultureInfo(culture);
             CultureInfo.CurrentUICulture = new CultureInfo(culture);

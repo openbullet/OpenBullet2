@@ -1,11 +1,11 @@
 ﻿@using RuriLib.Models.Variables
 @inject VolatileSettingsService VolatileSettings
-@inject PersistentSettingsService PersistentSettings 
+@inject OpenBulletSettingsService OBSettingsService 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<VariablesViewer> Loc
 
 <h5>@Loc["Variables"]</h5>
 <div class="debugger-log">
-    @if (PersistentSettings.OpenBulletSettings.GeneralSettings.GroupCapturesInDebugger)
+    @if (OBSettingsService.Settings.GeneralSettings.GroupCapturesInDebugger)
     {
         @foreach (var variable in variables.Where(v => !v.MarkedForCapture))
         {

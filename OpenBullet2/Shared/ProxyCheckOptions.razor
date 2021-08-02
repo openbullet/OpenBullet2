@@ -7,7 +7,7 @@
 @inject RuriLibSettingsService RuriLibSettings
 @inject IProxyGroupRepository ProxyGroupRepo
 @inject AuthenticationStateProvider Auth
-@inject PersistentSettingsService PersistentSettings
+@inject OpenBulletSettingsService OBSettingsService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckOptions> Loc
 
 <label style="color: orange;">@Loc["StartCondition"]</label>
@@ -64,7 +64,7 @@
             ? await ProxyGroupRepo.GetAll().ToListAsync()
             : await ProxyGroupRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
 
-        targets = PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets ?? new();
+        targets = OBSettingsService.Settings.GeneralSettings.ProxyCheckTargets ?? new();
 
         if (targets.Count == 0)
         {

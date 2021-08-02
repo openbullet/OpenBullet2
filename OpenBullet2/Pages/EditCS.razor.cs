@@ -1,8 +1,8 @@
 ﻿using BlazorMonaco;
 using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
-using OpenBullet2.Services;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
@@ -17,7 +17,7 @@ namespace OpenBullet2.Pages
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private BrowserConsoleLogger OBLogger { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
-        [Inject] private PersistentSettingsService Settings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
 
         private MonacoEditor _editor { get; set; }
 
@@ -54,7 +54,7 @@ namespace OpenBullet2.Pages
                 AutomaticLayout = true,
                 Minimap = new EditorMinimapOptions { Enabled = false },
                 ReadOnly = Config.Mode != ConfigMode.CSharp,
-                Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
+                Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
                 Language = "csharp",
                 MatchBrackets = true,
                 Value = Config.CSharpScript

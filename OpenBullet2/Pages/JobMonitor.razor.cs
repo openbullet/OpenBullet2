@@ -2,7 +2,7 @@
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using OpenBullet2.Services;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Functions.Crypto;
 using RuriLib.Models.Jobs.Monitor;
@@ -21,6 +21,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobMonitorService MonitorService { get; set; }
         [Inject] private IModalService Modal { get; set; }
 
+        // TODO: The service should be in charge of periodically saving, NOT the UI!!
         private Timer timer;
         private readonly string fileName = "UserData/triggeredActions.json";
         private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings 

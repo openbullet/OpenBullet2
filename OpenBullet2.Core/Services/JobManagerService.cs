@@ -12,10 +12,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// Manages multiple jobs.
+    /// </summary>
     public class JobManagerService
     {
+        // TODO: Make this return an IEnumerable
+        /// <summary>
+        /// The list of all created jobs.
+        /// </summary>
         public List<Job> Jobs { get; } = new List<Job>();
 
         private readonly SemaphoreSlim jobSemaphore = new(1, 1);
@@ -40,6 +47,12 @@ namespace OpenBullet2.Services
             this.recordRepo = recordRepo;
         }
 
+        // TODO: This shouldn't routinely be called from the job itself. It needs to be called by the manager
+        // on job completion (listen to the event) and on tick.
+        /// <summary>
+        /// Saves the record for a <see cref="MultiRunJob"/> in the <see cref="IRecordRepository"/>.
+        /// Thread safe.
+        /// </summary>
         public async Task SaveRecord(MultiRunJob job)
         {
             if (job.DataPool is not WordlistDataPool pool)
@@ -83,6 +96,12 @@ namespace OpenBullet2.Services
             }
         }
 
+        // TODO: This shouldn't routinely be called from the job itself. It needs to be called by the manager
+        // on job completion (listen to the event) and on tick.
+        /// <summary>
+        /// Saves the job options for the given <see cref="MultiRunJob"/> in the <see cref="IJobRepository"/>.
+        /// Thread safe.
+        /// </summary>
         public async Task SaveJobOptions(MultiRunJob job)
         {
             await jobSemaphore.WaitAsync();

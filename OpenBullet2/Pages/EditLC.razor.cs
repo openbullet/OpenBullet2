@@ -1,8 +1,8 @@
 ﻿using BlazorMonaco;
 using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
-using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using System;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ namespace OpenBullet2.Pages
     {
         [Inject] private BrowserConsoleLogger OBLogger { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
-        [Inject] private PersistentSettingsService Settings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
 
         private MonacoEditor _editor { get; set; }
@@ -63,7 +63,7 @@ namespace OpenBullet2.Pages
             await js.RegisterLoliCode();
             var model = await _editor.GetModel();
             await MonacoEditorBase.SetModelLanguage(model, "lolicode");
-            await MonacoThemeSetter.SetLolicodeTheme(Settings);
+            await MonacoThemeSetter.SetLolicodeTheme(OBSettingsService.Settings.CustomizationSettings);
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -72,7 +72,7 @@ namespace OpenBullet2.Pages
             {
                 AutomaticLayout = true,
                 Minimap = new EditorMinimapOptions { Enabled = false },
-                Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
+                Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
                 Language = "csharp",
                 MatchBrackets = true,
                 Value = config.LoliCodeScript

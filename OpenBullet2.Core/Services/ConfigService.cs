@@ -10,21 +10,38 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using RuriLib.Helpers;
 using System.IO;
-using RuriLib.Functions.Crypto;
 using RuriLib.Functions.Conversion;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
+    // TODO: The config service should also be in charge of calling methods of the IConfigRepository
+    /// <summary>
+    /// Manages the list of available configs.
+    /// </summary>
     public class ConfigService
     {
+        /// <summary>
+        /// The list of available configs.
+        /// </summary>
         public List<Config> Configs { get; set; } = new();
+
+        /// <summary>
+        /// Called when a new config is selected.
+        /// </summary>
         public event EventHandler<Config> OnConfigSelected;
+
+        /// <summary>
+        /// Called when all configs from configured remote endpoints are loaded.
+        /// </summary>
         public event EventHandler OnRemotesLoaded;
 
         private Config selectedConfig = null;
         private readonly IConfigRepository configRepo;
-        private readonly PersistentSettingsService persistentSettings;
+        private readonly OpenBulletSettingsService openBulletSettingsService;
 
+        /// <summary>
+        /// The currently selected config.
+        /// </summary>
         public Config SelectedConfig
         {
             get => selectedConfig;
@@ -35,12 +52,15 @@ namespace OpenBullet2.Services
             }
         }
 
-        public ConfigService(IConfigRepository configRepo, PersistentSettingsService persistentSettings)
+        public ConfigService(IConfigRepository configRepo, OpenBulletSettingsService openBulletSettingsService)
         {
             this.configRepo = configRepo;
-            this.persistentSettings = persistentSettings;
+            this.openBulletSettingsService = openBulletSettingsService;
         }
 
+        /// <summary>
+        /// Reloads all configs from the <see cref="IConfigRepository"/> and remote endpoints.
+        /// </summary>
         public async Task ReloadConfigs()
         {
             // Load from the main repository
@@ -62,13 +82,17 @@ namespace OpenBullet2.Services
                     // Get the file
                     using HttpClient client = new();
                     client.DefaultRequestHeaders.Add("Api-Key", endpoint.ApiKey);
-                    var response = await client.GetAsync(endpoint.Url);
+                    using var response = await client.GetAsync(endpoint.Url);
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
                         throw new UnauthorizedAccessException();
+                    }
 
                     if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
                         throw new FileNotFoundException();
+                    }
 
                     var fileStream = await response.Content.ReadAsStreamAsync();
 
@@ -77,7 +101,9 @@ namespace OpenBullet2.Services
                     foreach (var entry in archive.Entries)
                     {
                         if (!entry.Name.EndsWith(".opk"))
+                        {
                             continue;
+                        }
 
                         try
                         {
@@ -110,7 +136,7 @@ namespace OpenBullet2.Services
                 }
             });
 
-            var tasks = persistentSettings.OpenBulletSettings.RemoteSettings.ConfigsEndpoints
+            var tasks = openBulletSettingsService.Settings.RemoteSettings.ConfigsEndpoints
                 .Select(endpoint => func.Invoke(endpoint));
 
             await Task.WhenAll(tasks).ConfigureAwait(false);

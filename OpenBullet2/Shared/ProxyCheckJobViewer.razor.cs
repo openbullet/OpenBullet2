@@ -1,9 +1,9 @@
 ﻿using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
-using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Proxies;
@@ -19,7 +19,7 @@ namespace OpenBullet2.Shared
         [Parameter] public ProxyCheckJob Job { get; set; }
 
         [Inject] private IModalService Modal { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private MemoryJobLogger Logger { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
 
@@ -32,7 +32,7 @@ namespace OpenBullet2.Shared
         {
             if (firstRender)
             {
-                var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval);
+                var interval = Math.Max(50, OBSettingsService.Settings.GeneralSettings.JobUpdateInterval);
                 uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
                     null, interval, interval);
             }
@@ -171,7 +171,7 @@ namespace OpenBullet2.Shared
 
         private void AddEventHandlers()
         {
-            if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+            if (OBSettingsService.Settings.GeneralSettings.EnableJobLogging)
             {
                 Job.OnResult += LogResult;
                 Job.OnTaskError += LogTaskError;
