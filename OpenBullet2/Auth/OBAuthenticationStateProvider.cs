@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenBullet2.Exceptions;
 using OpenBullet2.Helpers;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using System;
 using System.Collections.Generic;

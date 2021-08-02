@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Jobs;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Jobs;
 using System;

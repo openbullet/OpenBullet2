@@ -1,6 +1,6 @@
 ﻿using Microsoft.Scripting.Utils;
 using OpenBullet2.Core.Models.Settings;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Configs;
 using System;
 using System.Linq;

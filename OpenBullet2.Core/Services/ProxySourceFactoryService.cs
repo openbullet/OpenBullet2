@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Services
 {
+    /// <summary>
+    /// Factory that creates a <see cref="ProxySource"/> from a <see cref="ProxySourceOptions"/> object.
+    /// </summary>
     public class ProxySourceFactoryService
     {
         private readonly ProxyReloadService reloadService;
@@ -16,6 +19,9 @@ namespace OpenBullet2.Core.Services
             this.reloadService = reloadService;
         }
 
+        /// <summary>
+        /// Creates a <see cref="ProxySource"/> from a <see cref="ProxySourceOptions"/> object.
+        /// </summary>
         public Task<ProxySource> FromOptions(ProxySourceOptions options)
         {
             ProxySource source = options switch

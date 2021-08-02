@@ -9,7 +9,7 @@ using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Jobs;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Logging;

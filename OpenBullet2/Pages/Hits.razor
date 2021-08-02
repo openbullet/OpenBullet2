@@ -1,5 +1,5 @@
 ﻿@page "/hits"
-@using OpenBullet2.Entities
+@using OpenBullet2.Core.Entities
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Hits> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
@@ -19,8 +19,7 @@
             @if (uid == -0)
             {
                 // Only the admin can purge all hits from the DB
-                <button class="btn btn-sm btn-outline-danger" @onclick="PurgeHits"><span class="oi oi-trash"></span> @Loc["Purge"]</button>
-            }
+<button class="btn btn-sm btn-outline-danger" @onclick="PurgeHits"><span class="oi oi-trash"></span> @Loc["Purge"]</button>            }
         </div>
     </div>
 </div>
@@ -30,8 +29,7 @@
     <InputSelect @bind-Value="actionTarget">
         @foreach (var t in Enum.GetNames(typeof(HitsActionTarget)))
         {
-            <option value="@t">@t</option>
-        }
+<option value="@t">@t</option>}
     </InputSelect>
     <br />
     <label>@Loc["Format"]</label>
@@ -40,16 +38,13 @@
         <option value="<DATA> | <CAPTURE>">&lt;DATA&gt; | &lt;CAPTURE&gt;</option>
         @foreach (var f in RuriLibSettings.Environment.ExportFormats)
         {
-            <option value="@(f.Format)">@(f.Format)</option>
-        }
+<option value="@(f.Format)">@(f.Format)</option>}
     </InputSelect>
 </EditForm>
 
 @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {
-    <GridComponent @ref="gridComponent" T="HitEntity" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent>
-}
-else
-{
-    <p><em>@Loc["Loading"]...</em></p>
-}
+<GridComponent @ref="gridComponent" T="HitEntity" Grid="@grid" OnRowClicked="@OnHitSelected"></GridComponent> }
+            else
+            {
+<p><em>@Loc["Loading"]...</em></p>}

@@ -5,7 +5,7 @@ using OpenBullet2.Auth;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Core.Models.Jobs;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using System;
 using System.Threading.Tasks;

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenBullet2.Auth;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Services;
 using System.Globalization;
@@ -24,6 +24,10 @@ using System.Net;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Providers.RandomNumbers;
 using System.Threading.Tasks;
+using OpenBullet2.Core;
+using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Repositories;
 
 namespace OpenBullet2
 {

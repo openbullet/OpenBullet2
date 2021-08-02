@@ -1,5 +1,5 @@
 ﻿@page "/proxies/groups"
-@using OpenBullet2.Entities
+@using OpenBullet2.Core.Entities
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroups> Loc
 @attribute [Authorize(Roles = "Admin,Guest")]
 
@@ -65,7 +65,8 @@ else
 
 <hr />
 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" />
-<br /><br />
+<br />
+<br />
 
 @code {
     private string help1x00 => Loc["Help1x00"];

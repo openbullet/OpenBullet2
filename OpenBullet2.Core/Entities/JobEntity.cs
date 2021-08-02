@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Models.Jobs;
+﻿using OpenBullet2.Core.Models.Jobs;
 using System;
 
 namespace OpenBullet2.Core.Entities

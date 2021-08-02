@@ -2,7 +2,8 @@
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Jobs;

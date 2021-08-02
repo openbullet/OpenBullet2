@@ -62,7 +62,7 @@
             return;
         }
 
-        var entity = new OpenBullet2.Entities.GuestEntity
+        var entity = new OpenBullet2.Core.Entities.GuestEntity
         {
             Username = guest.Username,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(guest.Password),
