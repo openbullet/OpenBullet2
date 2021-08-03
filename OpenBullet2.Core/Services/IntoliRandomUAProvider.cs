@@ -7,10 +7,16 @@ using System.Linq;
 
 namespace OpenBullet2.Services
 {
+    /// <summary>
+    /// Random UA provider that uses the User-Agents collected by intoli.com
+    /// </summary>
     public class IntoliRandomUAProvider : IRandomUAProvider
     {
         private readonly Dictionary<UAPlatform, UserAgent[]> distributions = new Dictionary<UAPlatform, UserAgent[]>();
         private readonly Random rand;
+
+        /// <inheritdoc/>
+        public int Total => distributions[UAPlatform.All].Length;
 
         public IntoliRandomUAProvider(string jsonFile)
         {
@@ -33,41 +39,10 @@ namespace OpenBullet2.Services
                 distributions[platform] = ComputeDistribution(agents, platform);
         }
 
-        private UserAgent[] ComputeDistribution(IEnumerable<UserAgent> agents, UAPlatform platform)
-        {
-            var valid = agents.Where(a => BelongsToPlatform(a.platform, platform));
+        /// <inheritdoc/>
+        public string Generate() => Generate(UAPlatform.All);
 
-            var distribution = new List<UserAgent>();
-            double cumulative = 0;
-            foreach (var elem in valid)
-            {
-                cumulative += elem.weight;
-                distribution.Add(new UserAgent(elem.userAgentString, elem.platform, elem.weight, cumulative));
-            }
-
-            return distribution.ToArray();
-        }
-
-        private UAPlatform ConvertPlatform(string platform) => platform switch
-        {
-            "iPad" => UAPlatform.iPad,
-            "iPhone" => UAPlatform.iPhone,
-            "Linux aarch64" => UAPlatform.Android,
-            "Linux armv71" => UAPlatform.Android,
-            "Linux armv81" => UAPlatform.Android,
-            "Linux x86_64" => UAPlatform.Linux,
-            "MacIntel" => UAPlatform.Mac,
-            "Win32" => UAPlatform.Windows,
-            "Win64" => UAPlatform.Windows,
-            "Windows" => UAPlatform.Windows,
-            _ => UAPlatform.Windows
-        };
-
-        public int Total => distributions[UAPlatform.All].Length;
-
-        public string Generate()
-            => Generate(UAPlatform.All);
-
+        /// <inheritdoc/>
         public string Generate(UAPlatform platform)
         {
             // Take the correct precomputed cumulative distribution
@@ -83,7 +58,37 @@ namespace OpenBullet2.Services
             return distribution.First(u => u.cumulative >= random).userAgentString;
         }
 
-        private bool BelongsToPlatform(UAPlatform current, UAPlatform required) => required switch
+        private static UserAgent[] ComputeDistribution(IEnumerable<UserAgent> agents, UAPlatform platform)
+        {
+            var valid = agents.Where(a => BelongsToPlatform(a.platform, platform));
+
+            var distribution = new List<UserAgent>();
+            double cumulative = 0;
+            foreach (var elem in valid)
+            {
+                cumulative += elem.weight;
+                distribution.Add(new UserAgent(elem.userAgentString, elem.platform, elem.weight, cumulative));
+            }
+
+            return distribution.ToArray();
+        }
+
+        private static UAPlatform ConvertPlatform(string platform) => platform switch
+        {
+            "iPad" => UAPlatform.iPad,
+            "iPhone" => UAPlatform.iPhone,
+            "Linux aarch64" => UAPlatform.Android,
+            "Linux armv71" => UAPlatform.Android,
+            "Linux armv81" => UAPlatform.Android,
+            "Linux x86_64" => UAPlatform.Linux,
+            "MacIntel" => UAPlatform.Mac,
+            "Win32" => UAPlatform.Windows,
+            "Win64" => UAPlatform.Windows,
+            "Windows" => UAPlatform.Windows,
+            _ => UAPlatform.Windows
+        };
+
+        private static bool BelongsToPlatform(UAPlatform current, UAPlatform required) => required switch
         {
             UAPlatform.All => true,
             UAPlatform.Desktop => current == UAPlatform.Linux || current == UAPlatform.Mac || current == UAPlatform.Windows,

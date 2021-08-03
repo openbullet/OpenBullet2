@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace OpenBullet2.Core.Services
 {
     /// <summary>
-    /// 
+    /// Factory that creates a <see cref="DataPool"/> from <see cref="DataPoolOptions"/>.
     /// </summary>
     public class DataPoolFactoryService
     {
@@ -23,6 +23,9 @@ namespace OpenBullet2.Core.Services
             this.ruriLibSettings = ruriLibSettings;
         }
 
+        /// <summary>
+        /// Creates a <see cref="DataPool"/> from <see cref="DataPoolOptions"/>.
+        /// </summary>
         public async Task<DataPool> FromOptions(DataPoolOptions options)
         {
             try
