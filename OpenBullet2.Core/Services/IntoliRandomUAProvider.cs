@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace OpenBullet2.Services
+namespace OpenBullet2.Core.Services
 {
     /// <summary>
     /// Random UA provider that uses the User-Agents collected by intoli.com
