@@ -1,5 +1,4 @@
 ﻿using OpenBullet2.Core.Models.Settings;
-using OpenBullet2.Services;
 using RuriLib.Logging;
 using System;
 using System.Collections.Generic;
