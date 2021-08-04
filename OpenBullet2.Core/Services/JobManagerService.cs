@@ -42,6 +42,7 @@ namespace OpenBullet2.Core.Services
                 if (entity.JobOptions.Contains("OpenBullet2.Models"))
                 {
                     entity.JobOptions = entity.JobOptions.Replace("OpenBullet2.Models", "OpenBullet2.Core.Models");
+                    jobRepo.Update(entity).Wait();
                 }
 
                 var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
