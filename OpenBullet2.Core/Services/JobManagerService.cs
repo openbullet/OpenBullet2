@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -9,6 +9,7 @@ using RuriLib.Models.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace OpenBullet2.Core.Services
             foreach (var entity in entities)
             {
                 // Convert old namespaces to support old databases
-                if (entity.JobOptions.Contains("OpenBullet2.Models"))
+                if (entity.JobOptions.Contains("OpenBullet2.Models") || entity.JobOptions.Contains(", OpenBullet2\""))
                 {
                     entity.JobOptions = entity.JobOptions
                         .Replace("OpenBullet2.Models", "OpenBullet2.Core.Models")
