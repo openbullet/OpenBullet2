@@ -21,31 +21,31 @@ namespace OpenBullet2.Native
     /// </summary>
     public partial class App : Application
     {
-        private readonly ServiceProvider _serviceProvider;
-        private readonly JObject _config;
+        private readonly ServiceProvider serviceProvider;
+        private readonly JObject config;
 
         public App()
         {
             Directory.CreateDirectory("UserData");
 
-            _config = JObject.Parse(File.ReadAllText("appsettings.json"));
+            config = JObject.Parse(File.ReadAllText("appsettings.json"));
 
-            ThreadPool.SetMinThreads(_config["Resources"].Value<int>("WorkerThreads"), _config["Resources"].Value<int>("IOThreads"));
-            ServicePointManager.DefaultConnectionLimit = _config["Resources"].Value<int>("ConnectionLimit");
+            ThreadPool.SetMinThreads(config["Resources"].Value<int>("WorkerThreads"), config["Resources"].Value<int>("IOThreads"));
+            ServicePointManager.DefaultConnectionLimit = config["Resources"].Value<int>("ConnectionLimit");
 
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Apply DB migrations or create a DB if it doesn't exist
-            using (var serviceScope = _serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
             }
 
             // Load the configs
-            var configService = _serviceProvider.GetService<ConfigService>();
+            var configService = serviceProvider.GetService<ConfigService>();
             configService.ReloadConfigs().Wait();
         }
 
@@ -56,14 +56,14 @@ namespace OpenBullet2.Native
 
             // EF
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(_config["ConnectionStrings"].Value<string>("DefaultConnection")));
+                options.UseSqlite(config["ConnectionStrings"].Value<string>("DefaultConnection"), 
+                b => b.MigrationsAssembly("OpenBullet2.Core")));
 
             // Repositories
             services.AddScoped<IProxyRepository, DbProxyRepository>();
             services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
             services.AddScoped<IHitRepository, DbHitRepository>();
             services.AddScoped<IJobRepository, DbJobRepository>();
-            services.AddScoped<IGuestRepository, DbGuestRepository>();
             services.AddScoped<IRecordRepository, DbRecordRepository>();
             services.AddScoped<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
             services.AddScoped<IWordlistRepository>(service =>
@@ -92,7 +92,7 @@ namespace OpenBullet2.Native
 
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            var mainWindow = _serviceProvider.GetService<MainWindow>();
+            var mainWindow = serviceProvider.GetService<MainWindow>();
             mainWindow.Show();
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace OpenBullet2.Migrations
+namespace OpenBullet2.Core.Migrations
 {
     public partial class Initial : Migration
     {

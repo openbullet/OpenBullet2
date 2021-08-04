@@ -58,7 +58,8 @@ namespace OpenBullet2
             services.AddFileReaderService();
             services.AddBlazorDownloadFile();
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("OpenBullet2.Core")));
             
             services.AddScoped<AuthenticationStateProvider, OBAuthenticationStateProvider>();
             services.AddBlazoredLocalStorage();

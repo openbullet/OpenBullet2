@@ -1,12 +1,63 @@
-﻿<Window x:Class="OpenBullet2.Native.MainWindow"
+﻿<mah:MetroWindow x:Class="OpenBullet2.Native.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenBullet2.Native"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="OpenBullet 2" Width="800" Height="600"
+        Background="{DynamicResource BackgroundMain}">
 
+    <Grid x:Name="Root" Margin="0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+
+
+        <!-- Top Menu StackPanel -->
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="topMenu" Grid.Column="0" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="Margin" Value="0 0 5 0" />
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </StackPanel.Resources>
+                <Label x:Name="menuOptionJobs" Content="Jobs" MouseDown="OpenJobsPage" />
+                <Label x:Name="menuOptionMonitor" Content="Monitor" MouseDown="OpenMonitorPage" />
+                <Label x:Name="menuOptionProxies" Content="Proxies" MouseDown="OpenProxiesPage" />
+                <Label x:Name="menuOptionWordlists" Content="Wordlists" MouseDown="OpenWordlistsPage" />
+                <Label x:Name="menuOptionConfigs" Content="Configs" MouseDown="OpenConfigsPage" />
+                <Label x:Name="menuOptionHits" Content="Hits" MouseDown="OpenHitsPage" />
+                <Label x:Name="menuOptionPlugins" Content="Plugins" MouseDown="OpenPluginsPage" />
+                <Label x:Name="menuOptionSettings" Content="Settings" MouseDown="OpenSettingsPage" />
+                <Label x:Name="menuOptionAbout" Content="About" MouseDown="OpenAboutPage" />
+            </StackPanel>
+
+            <Image x:Name="logoImage" Grid.Column="2" Source="Images/logohq.png" />
+        </Grid>
+
+        
     </Grid>
-</Window>
+
+</mah:MetroWindow>

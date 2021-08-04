@@ -2,22 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenBullet2.Core;
 
-namespace OpenBullet2.Migrations
+namespace OpenBullet2.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201228145119_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.1");
+                .HasAnnotation("ProductVersion", "5.0.8");
 
-            modelBuilder.Entity("OpenBullet2.Entities.GuestEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.GuestEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +39,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Guests");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.HitEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.HitEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,7 +83,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Hits");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.JobEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.JobEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +108,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.ProxyEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.ProxyEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -152,7 +151,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Proxies");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.ProxyGroupEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.ProxyGroupEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +170,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("ProxyGroups");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.RecordEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.RecordEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +190,7 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Records");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.WordlistEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.WordlistEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,36 +221,36 @@ namespace OpenBullet2.Migrations
                     b.ToTable("Wordlists");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.JobEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.JobEntity", b =>
                 {
-                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                    b.HasOne("OpenBullet2.Core.Entities.GuestEntity", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.ProxyEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.ProxyEntity", b =>
                 {
-                    b.HasOne("OpenBullet2.Entities.ProxyGroupEntity", "Group")
+                    b.HasOne("OpenBullet2.Core.Entities.ProxyGroupEntity", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId");
 
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.ProxyGroupEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.ProxyGroupEntity", b =>
                 {
-                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                    b.HasOne("OpenBullet2.Core.Entities.GuestEntity", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("OpenBullet2.Entities.WordlistEntity", b =>
+            modelBuilder.Entity("OpenBullet2.Core.Entities.WordlistEntity", b =>
                 {
-                    b.HasOne("OpenBullet2.Entities.GuestEntity", "Owner")
+                    b.HasOne("OpenBullet2.Core.Entities.GuestEntity", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 

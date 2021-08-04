@@ -4,6 +4,25 @@
              xmlns:local="clr-namespace:OpenBullet2.Native"
              Startup="OnStartup">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <!-- Colors -->
+            <SolidColorBrush x:Key="ThemeMain" Color="#1E90FF" />
+            <SolidColorBrush x:Key="BackgroundMain" Color="#222" />
+            <SolidColorBrush x:Key="BackgroundSecondary" Color="#111" />
+            <SolidColorBrush x:Key="ForegroundMain" Color="Gainsboro" />
+            <SolidColorBrush x:Key="ForegroundGood" Color="GreenYellow"/>
+            <SolidColorBrush x:Key="ForegroundBad" Color="Tomato"/>
+            <SolidColorBrush x:Key="ForegroundCustom" Color="DarkOrange"/>
+            <SolidColorBrush x:Key="ForegroundRetry" Color="Yellow"/>
+            <SolidColorBrush x:Key="ForegroundToCheck" Color="Aquamarine"/>
+            <SolidColorBrush x:Key="ForegroundMenuSelected" Color="DodgerBlue"/>
+            <SolidColorBrush x:Key="Headers" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
