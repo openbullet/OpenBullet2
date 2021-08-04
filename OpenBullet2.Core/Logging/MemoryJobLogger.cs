@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Services;
 using RuriLib.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace OpenBullet2.Logging
         private readonly OpenBulletSettings settings;
         public event EventHandler<int> NewLog; // The integer is the id of the job for which a new log came
 
-        public MemoryJobLogger(OpenBulletSettings settings)
+        public MemoryJobLogger(OpenBulletSettingsService settingsService)
         {
-            this.settings = settings;
+            settings = settingsService.Settings;
         }
 
         public IEnumerable<JobLogEntry> GetLog(int jobId)
