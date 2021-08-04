@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -41,7 +41,10 @@ namespace OpenBullet2.Core.Services
                 // Convert old namespaces to support old databases
                 if (entity.JobOptions.Contains("OpenBullet2.Models"))
                 {
-                    entity.JobOptions = entity.JobOptions.Replace("OpenBullet2.Models", "OpenBullet2.Core.Models");
+                    entity.JobOptions = entity.JobOptions
+                        .Replace("OpenBullet2.Models", "OpenBullet2.Core.Models")
+                        .Replace(", OpenBullet2\"", ", OpenBullet2.Core\"");
+
                     jobRepo.Update(entity).Wait();
                 }
 
