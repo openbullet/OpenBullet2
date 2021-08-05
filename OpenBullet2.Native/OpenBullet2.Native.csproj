@@ -9,6 +9,8 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="Images\logohq.png" />
+    <None Remove="Images\logohq_square_padded.png" />
+    <None Remove="Images\logohq_square_padded_bg.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,10 +19,17 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Images\logohq.png">
+    <Resource Include="Images\logohq.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\logohq_square_padded.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\logohq_square_padded_bg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

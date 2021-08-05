@@ -7,7 +7,14 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="OpenBullet 2" Width="800" Height="600"
-        Background="{DynamicResource BackgroundMain}">
+        Background="{DynamicResource BackgroundMain}"
+        BorderThickness="0"
+        GlowBrush="Black"
+        ResizeMode="CanResizeWithGrip"
+        WindowTitleBrush="#111"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Images/logohq_square_padded.png">
 
     <Grid x:Name="Root" Margin="0">
 
@@ -53,11 +60,9 @@
                 <Label x:Name="menuOptionSettings" Content="Settings" MouseDown="OpenSettingsPage" />
                 <Label x:Name="menuOptionAbout" Content="About" MouseDown="OpenAboutPage" />
             </StackPanel>
-
-            <Image x:Name="logoImage" Grid.Column="2" Source="Images/logohq.png" />
         </Grid>
 
-        
+        <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 
 </mah:MetroWindow>

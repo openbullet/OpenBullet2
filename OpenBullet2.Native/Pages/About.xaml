@@ -1,0 +1,67 @@
+﻿<Page x:Class="OpenBullet2.Native.Pages.About"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:local="clr-namespace:OpenBullet2.Native.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="About">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock
+                   FontSize="14" 
+                   TextWrapping="Wrap" 
+                   Foreground="{DynamicResource ForegroundMain}">
+                <Italic>OpenBullet 2</Italic> is an automation suite powered by .NET core. It allows to perform requests towards a target webapp and offers a lot of tools to work with the results. This software can be used for <Bold>scraping</Bold> and <Bold>parsing</Bold> data, automated <Bold>pentesting</Bold> and much more.
+                <LineBreak/><LineBreak/>
+                <Span Foreground="{DynamicResource ForegroundBad}"><Bold>IMPORTANT!</Bold> Performing (D)DoS attacks or credential stuffing on sites you do not own (or you do not have permission to test) is <Bold>illegal</Bold>! The developer will not be held responsible for improper use of this software.</Span>
+                <LineBreak/><LineBreak/>
+                <Bold>Collaborators</Bold>: demiurgo, meinname
+                <LineBreak/>
+                <Bold>Alpha testers</Bold>: CιdᥱR™, Flix88, kurosaki ichigo
+                <LineBreak/>
+                <Bold>Beta testers</Bold>: B1rdY, Br4uN, Fairy, FFaez1267, Itamai, Laiteux, Pure, Why001
+                <LineBreak/>
+                <Bold>Supporters</Bold>: <Span Foreground="Gold">FFaez1267, James | Lisse, Ikamai</Span>, <Span Foreground="Silver">TheFiendQQ, Patch2201, Spic, mastercho, Crackdealer, B1rdY, moon.Man</Span>, <Span Foreground="SandyBrown">Laiteux, HarveyS, Rael, boggy94, Pegasus, Phantøm, Joey, dew88, The anti SJW, ManoPlayBRL, Barmoley, Kurosaki Ichigo, Pool, k4k4r0to, Finlay1010, n00biE, kaatil, Speeedyyyy, AccountMast3r, Ruzzlzz, Itamai, alexparkin, MadmanDev, Plog, dankmemes43, Fr00tl00ps | Lisse</Span>
+                <LineBreak/><LineBreak/>
+                <Span Foreground="{DynamicResource ForegroundGood}">This software is <Italic>Open Source</Italic> and licensed under the MIT license. Please visit the <Bold>repository</Bold> using the button below.</Span>
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Button x:Name="donateButton" Click="OpenDonation" Margin="0 5 5 5">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Bitcoin" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Donate BTC</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="repoButton" Click="OpenRepository" Margin="0 5 5 5">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconSimpleIcons Kind="Git" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Repository</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="forumButton" Click="OpenForum" Margin="0 5 5 5">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconForkAwesome Kind="Users" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Official Forum</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="issuesButton" Click="OpenIssues" Margin="0 5 5 5">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconForkAwesome Kind="Bug" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Report an issue</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>
