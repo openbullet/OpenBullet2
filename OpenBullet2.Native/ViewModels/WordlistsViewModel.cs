@@ -30,8 +30,6 @@ namespace OpenBullet2.Native.ViewModels
 
         public int Total => WordlistsCollection.Count;
 
-        public IEnumerable<WordlistEntity> Wordlists => WordlistsCollection;
-
         public string SearchString
         {
             get => searchString;
@@ -44,10 +42,9 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public WordlistsViewModel(IWordlistRepository wordlistRepo)
+        public WordlistsViewModel()
         {
-            this.wordlistRepo = wordlistRepo;
-
+            wordlistRepo = SP.GetService<IWordlistRepository>();
             WordlistsCollection = new ObservableCollection<WordlistEntity>();
         }
 
