@@ -5,6 +5,7 @@ using OpenBullet2.Core;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Logging;
+using OpenBullet2.Native.Services;
 using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
@@ -36,6 +37,7 @@ namespace OpenBullet2.Native
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             serviceProvider = serviceCollection.BuildServiceProvider();
+            SP.Init(serviceProvider);
 
             // Apply DB migrations or create a DB if it doesn't exist
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
@@ -71,6 +73,7 @@ namespace OpenBullet2.Native
                 "UserData/Wordlists"));
 
             // Singletons
+            services.AddSingleton<ViewModelsService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<ProxyReloadService>();
             services.AddSingleton<JobFactoryService>();
@@ -93,6 +96,7 @@ namespace OpenBullet2.Native
         private void OnStartup(object sender, StartupEventArgs e)
         {
             var mainWindow = serviceProvider.GetService<MainWindow>();
+            mainWindow.Init();
             mainWindow.Show();
         }
     }

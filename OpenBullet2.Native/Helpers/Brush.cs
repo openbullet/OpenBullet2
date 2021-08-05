@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace OpenBullet2.Native.Helpers
 {
-    public static class Brushes
+    public static class Brush
     {
         public static Color GetColor(string propertyName)
         {

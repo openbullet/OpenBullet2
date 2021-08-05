@@ -44,5 +44,10 @@ namespace OpenBullet2.Core.Repositories
         /// <param name="entity"></param>
         /// <returns></returns>
         Task Update(WordlistEntity entity);
+
+        /// <summary>
+        /// Deletes all wordlists from the repository.
+        /// </summary>
+        void Purge();
     }
 }

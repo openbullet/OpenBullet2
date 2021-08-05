@@ -18,6 +18,11 @@
             <SolidColorBrush x:Key="ForegroundMenuSelected" Color="DodgerBlue"/>
             <SolidColorBrush x:Key="Headers" />
 
+            <SolidColorBrush x:Key="SuccessButton" Color="DarkGreen"/>
+            <SolidColorBrush x:Key="PrimaryButton" Color="DarkBlue"/>
+            <SolidColorBrush x:Key="WarningButton" Color="OrangeRed"/>
+            <SolidColorBrush x:Key="DangerButton" Color="DarkRed"/>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />

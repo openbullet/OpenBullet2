@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace OpenBullet2.Native.Pages
+namespace OpenBullet2.Native.Views.Pages
 {
     /// <summary>
     /// Interaction logic for About.xaml
