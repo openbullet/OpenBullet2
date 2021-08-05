@@ -38,7 +38,7 @@ namespace OpenBullet2.Native.Views.Pages
         }
 
         private void Add(object sender, RoutedEventArgs e)
-            => new MainDialog(new AddWordlistDialog(this), "Add wordlist").ShowDialog();
+            => new MainDialog(new AddWordlistDialog(this), "Add a wordlist").ShowDialog();
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {

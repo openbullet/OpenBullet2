@@ -93,7 +93,7 @@ namespace OpenBullet2.Native.ViewModels
         public async Task Delete(WordlistEntity wordlist)
         {
             WordlistsCollection.Remove(wordlist);
-            await wordlistRepo.Delete(wordlist);
+            await wordlistRepo.Delete(wordlist, false);
         }
 
         public void DeleteAll()

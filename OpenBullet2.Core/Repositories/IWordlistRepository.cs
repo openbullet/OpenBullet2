@@ -25,7 +25,7 @@ namespace OpenBullet2.Core.Repositories
         /// Deletes an <paramref name="entity"/> from the repository.
         /// </summary>
         /// <param name="deleteFile">Whether to delete the file as well</param>
-        Task Delete(WordlistEntity entity, bool deleteFile = true);
+        Task Delete(WordlistEntity entity, bool deleteFile = false);
 
         /// <summary>
         /// Gets an entity from the repository by <paramref name="id"/>.

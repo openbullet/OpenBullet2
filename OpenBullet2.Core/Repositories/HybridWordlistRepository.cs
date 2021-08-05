@@ -63,7 +63,7 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task Delete(WordlistEntity entity, bool deleteFile = true)
+        public async Task Delete(WordlistEntity entity, bool deleteFile = false)
         {
             if (deleteFile && File.Exists(entity.FileName))
                 File.Delete(entity.FileName);
