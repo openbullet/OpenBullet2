@@ -41,7 +41,7 @@
             <Button x:Name="donateButton" Click="OpenDonation" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Bitcoin" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Donate BTC</TextBlock>
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Donate</TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="repoButton" Click="OpenRepository" Margin="0 5 5 5">

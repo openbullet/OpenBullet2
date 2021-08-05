@@ -14,7 +14,7 @@ namespace OpenBullet2.Native.Pages
             InitializeComponent();
         }
 
-        private void OpenDonation(object sender, RoutedEventArgs e) => Url.Open("https://en.cryptobadges.io/donate/39yMkox6pP8tnSC7rZ5EM4nUUHgPbg1fKM");
+        private void OpenDonation(object sender, RoutedEventArgs e) => Url.Open("https://discourse.openbullet.dev/t/donations/3760");
 
         private void OpenRepository(object sender, RoutedEventArgs e) => Url.Open("https://github.com/openbullet/OpenBullet2");
 
