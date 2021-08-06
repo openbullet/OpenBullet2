@@ -67,7 +67,9 @@ namespace RuriLib.Blocks.Requests.WebSocket
             ws.DisconnectionHappened.Subscribe(msg =>
             {   
                 if (msg.Exception != null)
-                    throw new Exception(msg.Exception.ToString());
+                {
+                    throw msg.Exception;
+                }
             });
 
             // Connect
