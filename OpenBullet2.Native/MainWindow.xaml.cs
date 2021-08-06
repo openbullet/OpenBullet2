@@ -13,6 +13,7 @@ namespace OpenBullet2.Native
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private About aboutPage;
         private Page currentPage;
@@ -24,13 +25,14 @@ namespace OpenBullet2.Native
 
         public void Init()
         {
-            aboutPage = new();
+            proxiesPage = new();
             wordlistsPage = new();
+            aboutPage = new();
         }
 
         private void OpenJobsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenMonitorPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
-        private void OpenProxiesPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
+        private void OpenProxiesPage(object sender, MouseEventArgs e) => ChangePage(proxiesPage, menuOptionProxies);
         private void OpenWordlistsPage(object sender, MouseEventArgs e) => ChangePage(wordlistsPage, menuOptionWordlists);
         private void OpenConfigsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenHitsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();

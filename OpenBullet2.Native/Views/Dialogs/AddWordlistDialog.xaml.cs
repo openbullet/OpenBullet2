@@ -2,7 +2,9 @@
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Environment;
+using RuriLib.Models.Proxies;
 using RuriLib.Services;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -27,11 +29,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             env = SP.GetService<RuriLibSettingsService>().Environment;
 
-            foreach (var i in env.WordlistTypes.Select(w => w.Name))
-            {
-                typeCombobox.Items.Add(i);
-            }
-
+            typeCombobox.ItemsSource = env.WordlistTypes.Select(t => t.Name);
             typeCombobox.SelectedIndex = 0;
         }
 

@@ -20,7 +20,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -43,17 +42,16 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Group</TextBlock>
                 </StackPanel>
             </Button>
+            <Label VerticalAlignment="Center">Selected group:</Label>
+            <ComboBox
+                  Height="30"
+                  ItemsSource="{Binding Path=ProxyGroupsCollection}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Id"
+                  SelectedValue="{Binding Path=SelectedGroupId, Mode=TwoWay}" />
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Label VerticalAlignment="Center">Selected group:</Label>
-            <ComboBox ItemsSource="{Binding Path=ProxyGroupsCollection}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="Name"
-                  SelectedValue="{Binding Path=SelectedGroup}" />
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button x:Name="importButton" Click="Import" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="Import" />
@@ -78,12 +76,6 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Not Working</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteDuplicatesButton" Click="DeleteDuplicates" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes duplicate proxies.">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Close" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Duplicates</TextBlock>
-                </StackPanel>
-            </Button>
             <Button x:Name="deleteUntestedButton" Click="DeleteUntested" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes proxies that haven't been tested.">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
@@ -92,7 +84,7 @@
             </Button>
         </StackPanel>
 
-        <ListView x:Name="proxiesListView" Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=ProxiesCollection}" SelectionMode="Extended" BorderThickness="1" VirtualizingPanel.IsVirtualizing="True" AllowDrop="True" Drop="ProxyListViewDrop">
+        <ListView x:Name="proxiesListView" Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=ProxiesCollection}" SelectionMode="Extended" BorderThickness="1" VirtualizingPanel.IsVirtualizing="True" AllowDrop="True" Drop="ProxyListViewDrop">
 
             <!-- Show Headers by overriding the default style -->
             <ListView.Style>

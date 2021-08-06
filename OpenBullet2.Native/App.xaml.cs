@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -23,21 +23,29 @@ namespace OpenBullet2.Native
     public partial class App : Application
     {
         private readonly ServiceProvider serviceProvider;
-        private readonly JObject config;
+        private readonly IConfiguration config;
 
         public App()
         {
             Directory.CreateDirectory("UserData");
 
-            config = JObject.Parse(File.ReadAllText("appsettings.json"));
-
-            ThreadPool.SetMinThreads(config["Resources"].Value<int>("WorkerThreads"), config["Resources"].Value<int>("IOThreads"));
-            ServicePointManager.DefaultConnectionLimit = config["Resources"].Value<int>("ConnectionLimit");
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             var serviceCollection = new ServiceCollection();
+            serviceCollection.AddTransient<IConfiguration>(_ => builder.Build());
             ConfigureServices(serviceCollection);
             serviceProvider = serviceCollection.BuildServiceProvider();
             SP.Init(serviceProvider);
+
+            config = SP.GetService<IConfiguration>();
+            var workerThreads = config.GetSection("Resources").GetValue("WorkerThreads", 1000);
+            var ioThreads = config.GetSection("Resources").GetValue("IOThreads", 1000);
+            var connectionLimit = config.GetSection("Resources").GetValue("ConnectionLimit", 1000);
+
+            ThreadPool.SetMinThreads(workerThreads, ioThreads);
+            ServicePointManager.DefaultConnectionLimit = connectionLimit;
 
             // Apply DB migrations or create a DB if it doesn't exist
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
@@ -58,7 +66,7 @@ namespace OpenBullet2.Native
 
             // EF
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(config["ConnectionStrings"].Value<string>("DefaultConnection"), 
+                options.UseSqlite(config.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("OpenBullet2.Core")));
 
             // Repositories

@@ -1,10 +1,14 @@
-﻿using OpenBullet2.Core.Entities;
+﻿using Microsoft.Win32;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Native.DTOs;
+using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models.Proxies;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -21,9 +25,10 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class Proxies : Page
     {
         private readonly ProxiesViewModel vm;
-        private readonly MainWindow window;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
+
+        private IEnumerable<ProxyEntity> SelectedProxies => proxiesListView.SelectedItems.Cast<ProxyEntity>();
 
         public Proxies()
         {
@@ -32,19 +37,80 @@ namespace OpenBullet2.Native.Views.Pages
             _ = vm.Initialize();
 
             InitializeComponent();
-            window = SP.GetService<MainWindow>();
         }
 
-        private async void AddGroup(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void EditGroup(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void DeleteGroup(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void DeleteNotWorking(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void DeleteDuplicates(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void DeleteUntested(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void Import(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void ExportSelected(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void CopySelectedProxies(object sender, RoutedEventArgs e) => throw new NotImplementedException();
-        private async void CopySelectedProxiesFull(object sender, RoutedEventArgs e) => throw new NotImplementedException();
+        private void AddGroup(object sender, RoutedEventArgs e)
+            => new MainDialog(new AddProxyGroupDialog(this), "Add proxy group").ShowDialog();
+
+        private void EditGroup(object sender, RoutedEventArgs e)
+        {
+            if (!vm.GroupIsValid)
+            {
+                ShowInvalidGroupError();
+                return;
+            }
+
+            new MainDialog(new AddProxyGroupDialog(this, vm.SelectedGroup), "Edit proxy group").ShowDialog();
+        }
+
+        private async void DeleteGroup(object sender, RoutedEventArgs e)
+        {
+            if (!vm.GroupIsValid)
+            {
+                ShowInvalidGroupError();
+                return;
+            }
+
+            await vm.DeleteSelectedGroup();
+        }
+
+        private async void DeleteNotWorking(object sender, RoutedEventArgs e) => await vm.DeleteNotWorking();
+
+        private async void DeleteUntested(object sender, RoutedEventArgs e) => await vm.DeleteUntested();
+        
+        private void Import(object sender, RoutedEventArgs e)
+        {
+            if (!vm.GroupIsValid)
+            {
+                ShowInvalidGroupError();
+                return;
+            }
+
+            new MainDialog(new ImportProxiesDialog(this), "Import proxies").ShowDialog();
+        }
+
+        public async void AddGroup(ProxyGroupEntity entity) => await vm.AddGroup(entity);
+        public async void EditGroup(ProxyGroupEntity entity) => await vm.EditGroup(entity);
+
+        private void ExportSelected(object sender, RoutedEventArgs e)
+        {
+            var sfd = new SaveFileDialog
+            {
+                Filter = "Text File |*.txt",
+                Title = "Export proxies"
+            };
+            sfd.ShowDialog();
+
+            if (!string.IsNullOrWhiteSpace(sfd.FileName))
+            {
+                if (SelectedProxies.Any())
+                {
+                    SelectedProxies.SaveToFile(sfd.FileName, p => p.ToString());
+                }
+                else
+                {
+                    Alert.Error("Uh-oh", "No proxies selected");
+                }
+            }
+        }
+
+        private void CopySelectedProxies(object sender, RoutedEventArgs e)
+            => SelectedProxies.CopyToClipboard(p => $"{p.Host}:{p.Port}");
+
+        private void CopySelectedProxiesFull(object sender, RoutedEventArgs e)
+            => SelectedProxies.CopyToClipboard(p => p.ToString());
+
+        public async void AddProxies(ProxiesForImportDto dto) => await vm.AddProxies(dto);
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
@@ -114,6 +180,11 @@ namespace OpenBullet2.Native.Views.Pages
         private void ItemRightClick(object sender, MouseButtonEventArgs e)
         {
 
+        }
+
+        private void ShowInvalidGroupError()
+        {
+            Alert.Error("Invalid group", "Please select or create a valid group first!");
         }
     }
 }
