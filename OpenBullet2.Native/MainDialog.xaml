@@ -13,6 +13,7 @@
         GlowBrush="Black"
         WindowTitleBrush="#111"
         WindowTransitionsEnabled="False"
+        TitleCharacterCasing="Normal"
         WindowStartupLocation="CenterScreen">
     <Grid>
         

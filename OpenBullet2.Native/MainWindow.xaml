@@ -14,6 +14,7 @@
         WindowTitleBrush="#111"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
+        TitleCharacterCasing="Normal"
         Icon="/Images/logohq_square_padded.png">
 
     <Grid x:Name="Root" Margin="0">
