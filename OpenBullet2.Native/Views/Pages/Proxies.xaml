@@ -19,10 +19,41 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button x:Name="addGroupButton" Click="AddGroup" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Add Group</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="editGroupButton" Click="EditGroup" Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Edit Group</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="deleteGroupButton" Click="DeleteGroup" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Group</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label VerticalAlignment="Center">Selected group:</Label>
+            <ComboBox ItemsSource="{Binding Path=ProxyGroupsCollection}"
+                  DisplayMemberPath="Name"
+                  SelectedValuePath="Name"
+                  SelectedValue="{Binding Path=SelectedGroup}" />
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button x:Name="importButton" Click="Import" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="Import" />
@@ -39,12 +70,6 @@
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button x:Name="deleteGroupButton" Click="DeleteGroup" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Close" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Group</TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="deleteNotWorkingButton" Click="DeleteNotWorking" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes not working proxies.">
@@ -67,7 +92,7 @@
             </Button>
         </StackPanel>
 
-        <ListView x:Name="proxiesListView" Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=ProxiesCollection}" SelectionMode="Extended" BorderThickness="1" VirtualizingPanel.IsVirtualizing="True" AllowDrop="True" Drop="ProxyListViewDrop">
+        <ListView x:Name="proxiesListView" Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=ProxiesCollection}" SelectionMode="Extended" BorderThickness="1" VirtualizingPanel.IsVirtualizing="True" AllowDrop="True" Drop="ProxyListViewDrop">
 
             <!-- Show Headers by overriding the default style -->
             <ListView.Style>
@@ -131,7 +156,7 @@
                     <Setter Property="FontSize" Value="14" />
                 </Style>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <EventSetter Event="MouseRightButtonDown" Handler="ListViewItem_MouseRightButtonDown" />
+                    <EventSetter Event="MouseRightButtonDown" Handler="ItemRightClick" />
                     <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"/>
                     <Setter Property="Template">
                         <Setter.Value>

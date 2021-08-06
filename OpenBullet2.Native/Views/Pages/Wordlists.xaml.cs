@@ -116,7 +116,7 @@ namespace OpenBullet2.Native.Views.Pages
                 var imported = 0;
                 var errors = 0;
 
-                foreach (var file in files.Where(w => w.EndsWith(".txt")).ToArray())
+                foreach (var file in files.Where(f => f.EndsWith(".txt")))
                 {
                     try
                     {
