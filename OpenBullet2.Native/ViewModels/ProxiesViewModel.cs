@@ -110,7 +110,7 @@ namespace OpenBullet2.Native.ViewModels
         public async Task EditGroup(ProxyGroupEntity group)
         {
             await proxyGroupRepo.Update(group);
-            ProxyGroupsCollection.First(g => g.Id == group.Id).Name = group.Name;
+            await RefreshGroups();
         }
 
         public async Task DeleteSelectedGroup()
@@ -136,10 +136,10 @@ namespace OpenBullet2.Native.ViewModels
 
             var toRemove = selectedGroup;
             SelectedGroupId = allGroup.Id;
-            ProxyGroupsCollection.Remove(toRemove);
 
+            await proxyRepo.Delete(ProxiesCollection);
             await proxyGroupRepo.Delete(toRemove);
-            await RefreshList();
+            await RefreshGroups();
         }
 
         public async Task AddProxies(ProxiesForImportDto dto)
