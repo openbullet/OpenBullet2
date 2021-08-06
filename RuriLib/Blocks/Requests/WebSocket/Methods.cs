@@ -63,6 +63,12 @@ namespace RuriLib.Blocks.Requests.WebSocket
                     wsMessages.Add(msg.Text);
                 }
             });
+            
+            ws.DisconnectionHappened.Subscribe(msg =>
+            {   
+                if (msg.Exception != null)
+                    throw new Exception(msg.Exception.ToString());
+            });
 
             // Connect
             await ws.Start();
