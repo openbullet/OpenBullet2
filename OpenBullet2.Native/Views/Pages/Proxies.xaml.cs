@@ -28,7 +28,7 @@ namespace OpenBullet2.Native.Views.Pages
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
 
-        private IEnumerable<ProxyEntity> SelectedProxies => proxiesListView.SelectedItems.Cast<ProxyEntity>();
+        private IEnumerable<ProxyEntity> SelectedProxies => proxiesListView.SelectedItems.Cast<ProxyEntity>().ToList();
 
         public Proxies()
         {
@@ -114,7 +114,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
-            foreach (var wordlist in proxiesListView.SelectedItems.Cast<ProxyEntity>())
+            foreach (var wordlist in SelectedProxies)
             {
                 await vm.Delete(wordlist);
             }

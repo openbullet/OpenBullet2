@@ -135,5 +135,8 @@ namespace OpenBullet2.Core.Repositories
                 semaphore.Release();
             }
         }
+
+        /// <inheritdoc/>
+        public void Attach<TEntity>(TEntity entity) where TEntity : Entity => context.Attach(entity);
     }
 }

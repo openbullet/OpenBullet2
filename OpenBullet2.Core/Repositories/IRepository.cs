@@ -66,5 +66,11 @@ namespace OpenBullet2.Core.Repositories
         /// Deletes multiple <paramref name="entities"/> from the repository.
         /// </summary>
         Task Delete(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Attaches to a given entity so that EF doesn't try to create a new one
+        /// in a one to many relationship.
+        /// </summary>
+        public void Attach<TEntity>(TEntity entity) where TEntity : Entity;
     }
 }

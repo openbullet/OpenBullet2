@@ -16,18 +16,15 @@ namespace OpenBullet2.Native.ViewModels
 {
     public class ProxiesViewModel : ViewModelBase
     {
-        private List<ProxyGroupEntity> proxyGroups;
+        private ObservableCollection<ProxyGroupEntity> proxyGroupsCollection;
         private ObservableCollection<ProxyEntity> proxiesCollection;
         private readonly IProxyGroupRepository proxyGroupRepo;
         private readonly IProxyRepository proxyRepo;
         private readonly JobManagerService jobManager;
         private bool initialized;
-        private int selectedGroupId;
         private ProxyGroupEntity selectedGroup;
         private readonly ProxyGroupEntity allGroup = new() { Id = -1, Name = "All" };
-
-        public event Action<IEnumerable<int>> ProxyGroupsChanged;
-
+        
         public ObservableCollection<ProxyEntity> ProxiesCollection
         {
             get => proxiesCollection;
@@ -38,13 +35,22 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public ObservableCollection<ProxyGroupEntity> ProxyGroupsCollection
+        {
+            get => proxyGroupsCollection;
+            private set
+            {
+                proxyGroupsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int SelectedGroupId
         {
-            get => selectedGroupId;
+            get => selectedGroup.Id;
             set
             {
-                selectedGroupId = value;
-                _ = RefreshList();
+                selectedGroup = proxyGroupsCollection.First(g => g.Id == value);
                 OnPropertyChanged();
             }
         }
@@ -58,12 +64,12 @@ namespace OpenBullet2.Native.ViewModels
             proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
             proxyRepo = SP.GetService<IProxyRepository>();
             jobManager = SP.GetService<JobManagerService>();
-            proxyGroups = new List<ProxyGroupEntity>
+            ProxyGroupsCollection = new ObservableCollection<ProxyGroupEntity>
             {
                 allGroup
             };
             ProxiesCollection = new ObservableCollection<ProxyEntity>();
-            selectedGroup = allGroup;
+            SelectedGroupId = allGroup.Id;
         }
 
         public async Task Initialize()
@@ -71,7 +77,6 @@ namespace OpenBullet2.Native.ViewModels
             if (!initialized)
             {
                 await RefreshGroups();
-                await RefreshList();
                 initialized = true;
             }
         }
@@ -79,14 +84,15 @@ namespace OpenBullet2.Native.ViewModels
         public async Task RefreshGroups()
         {
             SelectedGroupId = allGroup.Id;
-            proxyGroups = await proxyGroupRepo.GetAll().ToListAsync();
-            proxyGroups.Insert(0, selectedGroup);
-            ProxyGroupsChanged?.Invoke(proxyGroups.Select(g => g.Id));
+            var entities = await proxyGroupRepo.GetAll().ToListAsync();
+            ProxyGroupsCollection = new ObservableCollection<ProxyGroupEntity>(new ProxyGroupEntity[] { allGroup }.Concat(entities));
+
+            await RefreshList();
         }
 
         public async Task RefreshList()
         {
-            var items = selectedGroup == null
+            var items = selectedGroup == allGroup
                 ? await proxyRepo.GetAll().ToListAsync()
                 : await proxyRepo.GetAll().Include(p => p.Group).Where(p => p.Group.Id == selectedGroup.Id).ToListAsync();
 
@@ -95,17 +101,16 @@ namespace OpenBullet2.Native.ViewModels
 
         public async Task AddGroup(ProxyGroupEntity group)
         {
-            ProxyGroupsChanged?.Invoke(proxyGroups.Select(g => g.Id));
-            proxyGroups.Add(group);
-            SelectedGroupId = group.Id;
+            ProxyGroupsCollection.Add(group);
+            SelectedGroupId = allGroup.Id;
+            
             await proxyGroupRepo.Add(group);
         }
 
         public async Task EditGroup(ProxyGroupEntity group)
         {
             await proxyGroupRepo.Update(group);
-            await RefreshGroups();
-            await RefreshList();
+            ProxyGroupsCollection.First(g => g.Id == group.Id).Name = group.Name;
         }
 
         public async Task DeleteSelectedGroup()
@@ -131,9 +136,9 @@ namespace OpenBullet2.Native.ViewModels
 
             var toRemove = selectedGroup;
             SelectedGroupId = allGroup.Id;
-            proxyGroups.Remove(toRemove);
+            ProxyGroupsCollection.Remove(toRemove);
+
             await proxyGroupRepo.Delete(toRemove);
-            await proxyRepo.Delete(ProxiesCollection);
             await RefreshList();
         }
 
@@ -159,7 +164,8 @@ namespace OpenBullet2.Native.ViewModels
             }
 
             var entities = proxies.Select(p => Mapper.MapProxyToProxyEntity(p)).ToList();
-            var currentGroup = await proxyGroupRepo.Get(SelectedGroupId);
+            var currentGroup = await proxyGroupRepo.Get(selectedGroup.Id);
+            proxyRepo.Attach(currentGroup);
             entities.ForEach(e => e.Group = currentGroup);
 
             await proxyRepo.Add(entities);
