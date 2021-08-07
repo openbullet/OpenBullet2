@@ -14,6 +14,7 @@ namespace OpenBullet2.Native
     {
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
+        private OBSettings obSettingsPage;
         private Plugins pluginsPage;
         private About aboutPage;
         private Page currentPage;
@@ -27,6 +28,7 @@ namespace OpenBullet2.Native
         {
             proxiesPage = new();
             wordlistsPage = new();
+            obSettingsPage = new();
             pluginsPage = new();
             aboutPage = new();
         }
@@ -38,7 +40,8 @@ namespace OpenBullet2.Native
         private void OpenConfigsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenHitsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenPluginsPage(object sender, MouseEventArgs e) => ChangePage(pluginsPage, menuOptionPlugins);
-        private void OpenSettingsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
+        private void OpenOBSettingsPage(object sender, MouseEventArgs e) => ChangePage(obSettingsPage, menuOptionOBSettings);
+        private void OpenRLSettingsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenAboutPage(object sender, MouseEventArgs e) => ChangePage(aboutPage, menuOptionAbout);
 
         private void ChangePage(Page newPage, Label newLabel)

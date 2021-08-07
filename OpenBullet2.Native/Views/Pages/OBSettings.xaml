@@ -1,0 +1,76 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.OBSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="OBSettings">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2">
+            <StackPanel>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Label>On config edit, navigate to</Label>
+                    <ComboBox x:Name="configSectionOnLoadCombobox"
+                              ItemsSource="{Binding Path=ConfigSections}"
+                              SelectedValue="{Binding Path=ConfigSectionOnLoad}"
+                              Width="150"
+                              HorizontalAlignment="Left"
+                              Margin="0 0 0 10"/>
+                </StackPanel>
+                <CheckBox Content="Automatically set Recommended Bots" 
+                          IsChecked="{Binding AutoSetRecommendedBots}" 
+                          VerticalContentAlignment="Center" 
+                          Margin="5 0 0 0"/>
+                <CheckBox Content="View warning when config is not saved and you try to close the program or edit another config" 
+                          IsChecked="{Binding WarnConfigNotSaved}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Default author for new configs</Label>
+                    <TextBox Text="{Binding DefaultAuthor}" 
+                             Width="250"></TextBox>
+                </StackPanel>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="saveButton" 
+                Grid.Row="1"
+                Grid.Column="0"
+                Click="Save" 
+                Margin="0 5 5 5" 
+                Background="{DynamicResource PrimaryButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="resetButton" 
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="Reset" 
+                Margin="0 5 5 5" 
+                Background="{DynamicResource DangerButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRadixIcons Kind="Reset" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

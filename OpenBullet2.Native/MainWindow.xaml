@@ -58,7 +58,8 @@
                 <Label x:Name="menuOptionConfigs" Content="Configs" MouseDown="OpenConfigsPage" />
                 <Label x:Name="menuOptionHits" Content="Hits" MouseDown="OpenHitsPage" />
                 <Label x:Name="menuOptionPlugins" Content="Plugins" MouseDown="OpenPluginsPage" />
-                <Label x:Name="menuOptionSettings" Content="Settings" MouseDown="OpenSettingsPage" />
+                <Label x:Name="menuOptionOBSettings" Content="OB Settings" MouseDown="OpenOBSettingsPage" />
+                <Label x:Name="menuOptionRLSettings" Content="RL Settings" MouseDown="OpenRLSettingsPage" />
                 <Label x:Name="menuOptionAbout" Content="About" MouseDown="OpenAboutPage" />
             </StackPanel>
         </Grid>
