@@ -197,6 +197,7 @@ namespace RuriLib.Models.Blocks.Custom
                 case ParseMode.Regex:
                     writer.Write(CSharpWriter.FromSetting(Settings["pattern"]) + ", ");
                     writer.Write(CSharpWriter.FromSetting(Settings["outputFormat"]) + ", ");
+                    writer.Write(CSharpWriter.FromSetting(Settings["multiLine"]) + ", ");
                     break;
             }
 
