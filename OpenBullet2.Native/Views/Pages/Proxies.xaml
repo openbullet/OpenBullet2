@@ -217,19 +217,14 @@
                             <GridViewColumnHeader Tag="Country" Click="ColumnHeaderClicked">Country</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Working}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Status}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Working" Click="ColumnHeaderClicked">Working</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Status" Click="ColumnHeaderClicked">Status</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Ping}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Ping" Click="ColumnHeaderClicked">Ping</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=HasNext}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="HasNext" Click="ColumnHeaderClicked">Chain</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=LastChecked}">

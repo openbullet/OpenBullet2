@@ -1,6 +1,5 @@
 ﻿using MahApps.Metro.Controls;
 using OpenBullet2.Native.Helpers;
-using OpenBullet2.Native.Services;
 using OpenBullet2.Native.Views.Pages;
 using System;
 using System.Windows.Controls;
@@ -15,6 +14,7 @@ namespace OpenBullet2.Native
     {
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
+        private Plugins pluginsPage;
         private About aboutPage;
         private Page currentPage;
 
@@ -27,6 +27,7 @@ namespace OpenBullet2.Native
         {
             proxiesPage = new();
             wordlistsPage = new();
+            pluginsPage = new();
             aboutPage = new();
         }
 
@@ -36,7 +37,7 @@ namespace OpenBullet2.Native
         private void OpenWordlistsPage(object sender, MouseEventArgs e) => ChangePage(wordlistsPage, menuOptionWordlists);
         private void OpenConfigsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenHitsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
-        private void OpenPluginsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
+        private void OpenPluginsPage(object sender, MouseEventArgs e) => ChangePage(pluginsPage, menuOptionPlugins);
         private void OpenSettingsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();
         private void OpenAboutPage(object sender, MouseEventArgs e) => ChangePage(aboutPage, menuOptionAbout);
 

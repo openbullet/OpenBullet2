@@ -6,11 +6,13 @@ namespace OpenBullet2.Native.Services
     {
         public ProxiesViewModel Proxies { get; set; }
         public WordlistsViewModel Wordlists { get; set; }
+        public PluginsViewModel Plugins { get; set; }
 
         public ViewModelsService()
         {
             Proxies = new ProxiesViewModel();
             Wordlists = new WordlistsViewModel();
+            Plugins = new PluginsViewModel();
         }
     }
 }
