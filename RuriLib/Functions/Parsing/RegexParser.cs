@@ -29,7 +29,10 @@ namespace RuriLib.Functions.Parsing
             if (outputFormat == null)
                 throw new ArgumentNullException(nameof(outputFormat));
 
-            return Regex.Matches(input.Replace("\r\n", "\n"), pattern, options)
+            // Replacing \r\n with \n if multiline enabled
+            input = options.HasFlag(RegexOptions.Multiline) ? input.Replace("\r\n", "\n") : input;
+
+            return Regex.Matches(input, pattern, options)
                 .Where(m => m.Success)
                 .Select(m => m.Groups.ToString(outputFormat));
         }
