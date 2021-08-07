@@ -37,6 +37,6 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void RemovePlugin(object sender, RoutedEventArgs e) => vm.Delete((string)(sender as Button).Tag);
+        private void RemovePlugin(object sender, RoutedEventArgs e) => vm.Delete((PluginInfo)(sender as Button).Tag);
     }
 }

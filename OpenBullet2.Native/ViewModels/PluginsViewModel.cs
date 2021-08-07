@@ -42,10 +42,10 @@ namespace OpenBullet2.Native.ViewModels
                 pluginRepo.GetPluginNames().Select(p => new PluginInfo(p)));
         }
 
-        public void Delete(string pluginName)
+        public void Delete(PluginInfo plugin)
         {
-            pluginRepo.DeletePlugin(pluginName);
-            RefreshList();
+            pluginRepo.DeletePlugin(plugin.Name);
+            PluginsCollection.Remove(plugin);
         }
     }
 
