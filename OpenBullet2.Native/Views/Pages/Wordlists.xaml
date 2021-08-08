@@ -146,9 +146,9 @@
                             <GridViewColumnHeader Tag="Name" Click="ColumnHeaderClicked">Name</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=Path}">
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=FileName}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Path" Click="ColumnHeaderClicked">Path</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="FileName" Click="ColumnHeaderClicked">Path</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Type}">

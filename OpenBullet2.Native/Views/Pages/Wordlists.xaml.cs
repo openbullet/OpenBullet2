@@ -6,6 +6,7 @@ using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models.Environment;
 using RuriLib.Services;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace OpenBullet2.Native.Views.Pages
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
 
+        private IEnumerable<WordlistEntity> SelectedWordlists => wordlistListView.SelectedItems.Cast<WordlistEntity>().ToList();
+
         public Wordlists()
         {
             vm = SP.GetService<ViewModelsService>().Wordlists;
@@ -42,7 +45,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
-            foreach (var wordlist in wordlistListView.SelectedItems.Cast<WordlistEntity>())
+            foreach (var wordlist in SelectedWordlists)
             {
                 await vm.Delete(wordlist);
             }
@@ -113,8 +116,6 @@ namespace OpenBullet2.Native.Views.Pages
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                var imported = 0;
-                var errors = 0;
 
                 foreach (var file in files.Where(f => f.EndsWith(".txt")))
                 {
@@ -141,15 +142,12 @@ namespace OpenBullet2.Native.Views.Pages
                         };
 
                         await vm.Add(entity);
-                        imported++;
                     }
-                    catch 
+                    catch
                     {
-                        errors++;
+
                     }
                 }
-
-                Alert.Info("Done", $"Imported: {imported} | Errors: {errors}");
             }
         }
     }
