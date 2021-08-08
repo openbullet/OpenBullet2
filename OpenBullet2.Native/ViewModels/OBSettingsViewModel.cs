@@ -118,12 +118,15 @@ namespace OpenBullet2.Native.ViewModels
             set
             {
                 proxyCheckTargetsCollection = value;
-                General.ProxyCheckTargets = proxyCheckTargetsCollection.ToList();
                 OnPropertyChanged();
             }
         }
 
-        public Task Save() => service.Save();
+        public async Task Save()
+        {
+            General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
+            await service.Save();
+        }
 
         public void Reset()
         {
@@ -138,6 +141,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public void AddProxyCheckTarget() => ProxyCheckTargetsCollection.Add(new ProxyCheckTarget());
         public void RemoveProxyCheckTarget(ProxyCheckTarget target) => ProxyCheckTargetsCollection.Remove(target);
 
         private void CreateCollections()

@@ -28,6 +28,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         private async void Save(object sender, RoutedEventArgs e) => await vm.Save();
         private void Reset(object sender, RoutedEventArgs e) => vm.Reset();
+        private void AddProxyCheckTarget(object sender, RoutedEventArgs e) => vm.AddProxyCheckTarget();
         private void RemoveProxyCheckTarget(object sender, RoutedEventArgs e) => vm.RemoveProxyCheckTarget((ProxyCheckTarget)(sender as Button).Tag);
     }
 }
