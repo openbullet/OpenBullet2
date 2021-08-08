@@ -52,6 +52,7 @@ namespace OpenBullet2.Native.ViewModels
             {
                 selectedGroup = proxyGroupsCollection.First(g => g.Id == value);
                 OnPropertyChanged();
+                _ = RefreshList();
             }
         }
 
