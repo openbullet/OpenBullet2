@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OBSettings">
@@ -23,14 +24,12 @@
         <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2">
             <StackPanel>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
                     <Label>On config edit, navigate to</Label>
                     <ComboBox x:Name="configSectionOnLoadCombobox"
-                              ItemsSource="{Binding Path=ConfigSections}"
                               SelectedValue="{Binding Path=ConfigSectionOnLoad}"
                               Width="150"
-                              HorizontalAlignment="Left"
-                              Margin="0 0 0 10"/>
+                              HorizontalAlignment="Left"/>
                 </StackPanel>
                 <CheckBox Content="Automatically set Recommended Bots" 
                           IsChecked="{Binding AutoSetRecommendedBots}" 
@@ -45,6 +44,67 @@
                     <TextBox Text="{Binding DefaultAuthor}" 
                              Width="250"></TextBox>
                 </StackPanel>
+                <CheckBox Content="Enable logging in the job viewer page" 
+                          IsChecked="{Binding EnableJobLogging}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Number of messages to keep in the job log (when enabled)</Label>
+                    <mah:NumericUpDown Minimum="20"
+                          Maximum="10000"
+                          Interval="1"
+                          Value="{Binding LogBufferSize}"
+                          Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                    <Label>Job display mode</Label>
+                    <ComboBox x:Name="jobDisplayModeCombobox"
+                              SelectedValue="{Binding Path=DefaultJobDisplayMode}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <CheckBox Content="Group captures in debugger" 
+                          IsChecked="{Binding GroupCapturesInDebugger}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Ignore the wordlist name when removing duplicates from hits" 
+                          IsChecked="{Binding IgnoreWordlistNameOnHitsDedupe}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Proxy check targets</Label>
+                <ItemsControl x:Name="proxyCheckTargetsControl" ItemsSource="{Binding ProxyCheckTargetsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Url" />
+                                    <TextBox Grid.Column="1" Text="{Binding Url}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Success Key" />
+                                    <TextBox Grid.Column="3" Text="{Binding SuccessKey}" Height="30" Margin="5 0" />
+                                    <Button x:Name="removeProxyCheckTargetButton" Tag="{Binding}" Grid.Column="4" 
+                                            Click="RemoveProxyCheckTarget" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                            <TextBlock VerticalAlignment="Center" Margin="5 0">Remove</TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
             </StackPanel>
         </ScrollViewer>
