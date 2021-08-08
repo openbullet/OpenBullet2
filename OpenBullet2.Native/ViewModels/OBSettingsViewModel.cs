@@ -2,7 +2,6 @@
 using OpenBullet2.Core.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Native.ViewModels
@@ -12,7 +11,6 @@ namespace OpenBullet2.Native.ViewModels
         private OpenBulletSettingsService service;
         private GeneralSettings General => service.Settings.GeneralSettings;
         private RemoteSettings Remote => service.Settings.RemoteSettings;
-        private SecuritySettings Security => service.Settings.SecuritySettings;
         private CustomizationSettings Customization => service.Settings.CustomizationSettings;
 
         public OBSettingsViewModel()
@@ -122,9 +120,31 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        private ObservableCollection<RemoteConfigsEndpoint> remoteConfigsEndointsCollection;
+        public ObservableCollection<RemoteConfigsEndpoint> RemoteConfigsEndpointsCollection
+        {
+            get => remoteConfigsEndointsCollection;
+            set
+            {
+                remoteConfigsEndointsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool PlaySoundOnHit
+        {
+            get => Customization.PlaySoundOnHit;
+            set
+            {
+                Customization.PlaySoundOnHit = value;
+                OnPropertyChanged();
+            }
+        }
+
         public async Task Save()
         {
             General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
+            Remote.ConfigsEndpoints = RemoteConfigsEndpointsCollection.ToList();
             await service.Save();
         }
 
@@ -144,9 +164,13 @@ namespace OpenBullet2.Native.ViewModels
         public void AddProxyCheckTarget() => ProxyCheckTargetsCollection.Add(new ProxyCheckTarget());
         public void RemoveProxyCheckTarget(ProxyCheckTarget target) => ProxyCheckTargetsCollection.Remove(target);
 
+        public void AddRemoteConfigsEndpoint() => RemoteConfigsEndpointsCollection.Add(new RemoteConfigsEndpoint());
+        public void RemoveRemoteConfigsEndpoint(RemoteConfigsEndpoint endpoint) => RemoteConfigsEndpointsCollection.Remove(endpoint);
+
         private void CreateCollections()
         {
             ProxyCheckTargetsCollection = new ObservableCollection<ProxyCheckTarget>(General.ProxyCheckTargets);
+            RemoteConfigsEndpointsCollection = new ObservableCollection<RemoteConfigsEndpoint>(Remote.ConfigsEndpoints);
         }
     }
 }

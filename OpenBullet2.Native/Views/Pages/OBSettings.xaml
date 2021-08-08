@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2">
-            <StackPanel>
+            <StackPanel Margin="0 0 0 10">
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
                     <Label>On config edit, navigate to</Label>
@@ -113,6 +113,55 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Remote</Label>
+                <Label Foreground="{DynamicResource ForegroundCustom}">Remote configs endpoints</Label>
+                <Button x:Name="addRemoteConfigsEndpointButton" Click="AddRemoteConfigsEndpoint" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Add</TextBlock>
+                    </StackPanel>
+                </Button>
+                <ItemsControl x:Name="remoteConfigsEndpointsControl" 
+                              ItemsSource="{Binding RemoteConfigsEndpointsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Url" />
+                                    <TextBox Grid.Column="1" Text="{Binding Url}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Success Key" />
+                                    <TextBox Grid.Column="3" Text="{Binding ApiKey}" Height="30" Margin="5 0" />
+                                    <Button x:Name="removeRemoteConfigsEndpointButton" Tag="{Binding}" Grid.Column="4" 
+                                            Click="RemoveRemoteConfigsEndpoint" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Customization</Label>
+                <CheckBox Content="Play a sound when a hit is found" 
+                          IsChecked="{Binding PlaySoundOnHit}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 0 0 0"/>
             </StackPanel>
         </ScrollViewer>
 
