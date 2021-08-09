@@ -133,7 +133,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public int TimeoutSeconds
+        public int CaptchaTimeoutSeconds
         {
             get => Captcha.TimeoutSeconds;
             set
@@ -143,7 +143,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public int PollingIntervalMilliseconds
+        public int CaptchaPollingIntervalMilliseconds
         {
             get => Captcha.PollingIntervalMilliseconds;
             set
@@ -163,7 +163,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public CaptchaServiceType CurrentService
+        public CaptchaServiceType CurrentCaptchaService
         {
             get => Captcha.CurrentService;
             set
@@ -383,6 +383,8 @@ namespace OpenBullet2.Native.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public Task<decimal> CheckCaptchaBalance() => CaptchaServiceFactory.GetService(Captcha).GetBalanceAsync();
 
         public Task Save() => service.Save();
 

@@ -1,6 +1,8 @@
 ﻿using OpenBullet2.Native.Extensions;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using RuriLib.Functions.Captchas;
 using RuriLib.Parallelization;
 using System;
 using System.Linq;
@@ -20,12 +22,15 @@ namespace OpenBullet2.Native.Views.Pages
         public RLSettings()
         {
             vm = SP.GetService<ViewModelsService>().RLSettings;
+            vm.CaptchaServiceChanged += UpdateCaptchaTabControl;
             DataContext = vm;
 
             InitializeComponent();
 
             parallelizerTypesCombobox.ItemsSource = Enum.GetValues(typeof(ParallelizerType)).Cast<ParallelizerType>();
+            captchaServiceCombobox.ItemsSource = Enum.GetValues(typeof(CaptchaServiceType)).Cast<CaptchaServiceType>();
 
+            UpdateCaptchaTabControl(vm.CurrentCaptchaService);
             SetRTBContents();
         }
 
@@ -44,6 +49,26 @@ namespace OpenBullet2.Native.Views.Pages
         {
             vm.Reset();
             SetRTBContents();
+        }
+
+        private async void CheckCaptchaBalance(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var balance = await vm.CheckCaptchaBalance();
+                Alert.Info("Success", $"Balance: {balance}");
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
+
+        private void UpdateCaptchaTabControl(CaptchaServiceType service)
+        {
+            var values = Enum.GetValues(typeof(CaptchaServiceType)).Cast<CaptchaServiceType>().ToList();
+            var index = values.IndexOf(service);
+            captchaServiceTabControl.SelectedIndex = index;
         }
 
         private void SetRTBContents()
