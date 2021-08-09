@@ -44,7 +44,8 @@ namespace RuriLib.Models.Blocks.Custom
 
                 // REGEX
                 { "pattern", new StringParameter("pattern") },
-                { "outputFormat", new StringParameter("outputFormat") }
+                { "outputFormat", new StringParameter("outputFormat") },
+                { "multiLine", new BoolParameter("multiLine", false) }
             };
         }
     }

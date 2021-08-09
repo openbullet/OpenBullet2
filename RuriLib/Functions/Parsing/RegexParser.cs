@@ -18,7 +18,7 @@ namespace RuriLib.Functions.Parsing
         /// [1] with the first group etc.</param>
         /// <param name="options">The Regex Options to use</param>
         public static IEnumerable<string> MatchGroupsToString
-            (string input, string pattern, string outputFormat, RegexOptions? options = null)
+            (string input, string pattern, string outputFormat, RegexOptions options = RegexOptions.None)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
@@ -29,7 +29,10 @@ namespace RuriLib.Functions.Parsing
             if (outputFormat == null)
                 throw new ArgumentNullException(nameof(outputFormat));
 
-            return Regex.Matches(input, pattern, options ?? new RegexOptions())
+            // Replacing \r\n with \n if multiline enabled
+            input = options.HasFlag(RegexOptions.Multiline) ? input.Replace("\r\n", "\n") : input;
+
+            return Regex.Matches(input, pattern, options)
                 .Where(m => m.Success)
                 .Select(m => m.Groups.ToString(outputFormat));
         }

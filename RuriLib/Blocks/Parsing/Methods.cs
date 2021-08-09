@@ -4,6 +4,7 @@ using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RuriLib.Blocks.Parsing
 {
@@ -112,9 +113,9 @@ namespace RuriLib.Blocks.Parsing
 
         #region REGEX
         public static List<string> MatchRegexGroupsRecursive(BotData data, string input,
-            string pattern, string outputFormat, string prefix = "", string suffix = "")
+            string pattern, string outputFormat, bool multiLine, string prefix = "", string suffix = "")
         {
-            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat)
+            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat, multiLine ? RegexOptions.Multiline : RegexOptions.None)
                 .Select(p => prefix + p + suffix).ToList();
 
             data.Logger.LogHeader();
@@ -124,9 +125,9 @@ namespace RuriLib.Blocks.Parsing
         }
 
         public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat,
-            string prefix = "", string suffix = "")
+            bool multiLine, string prefix = "", string suffix = "")
         {
-            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat).FirstOrDefault() ?? string.Empty;
+            var parsed = RegexParser.MatchGroupsToString(input, pattern, outputFormat, multiLine ? RegexOptions.Multiline : RegexOptions.None).FirstOrDefault() ?? string.Empty;
             parsed = prefix + parsed + suffix;
 
             data.Logger.LogHeader();
