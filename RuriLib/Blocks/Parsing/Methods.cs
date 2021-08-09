@@ -124,6 +124,11 @@ namespace RuriLib.Blocks.Parsing
             return parsed;
         }
 
+        // Old signature (without multiLine) for backwards compatibility
+        public static List<string> MatchRegexGroupsRecursive(BotData data, string input,
+            string pattern, string outputFormat, string prefix = "", string suffix = "")
+            => MatchRegexGroupsRecursive(data, input, pattern, outputFormat, false, prefix, suffix);
+
         public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat,
             bool multiLine, string prefix = "", string suffix = "")
         {
@@ -134,6 +139,11 @@ namespace RuriLib.Blocks.Parsing
             data.Logger.Log($"Parsed value: {parsed}", LogColors.Yellow);
             return parsed;
         }
+
+        // Old signature (without multiLine) for backwards compatibility
+        public static string MatchRegexGroups(BotData data, string input, string pattern, string outputFormat,
+            string prefix = "", string suffix = "")
+            => MatchRegexGroups(data, input, pattern, outputFormat, false, prefix, suffix);
         #endregion
     }
 }
