@@ -116,14 +116,14 @@
                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
                     <Label>Timeout for captcha solutions</Label>
                     <mah:NumericUpDown 
-                          Minimum="0"
-                          Maximum="100000000"
-                          Interval="1000"
+                          Minimum="1"
+                          Maximum="1000000"
+                          Interval="10"
                           Value="{Binding CaptchaTimeoutSeconds}"
                           Width="150"/>
                     <Label>(seconds) with polling interval</Label>
                     <mah:NumericUpDown 
-                          Minimum="0"
+                          Minimum="20"
                           Maximum="100000000"
                           Interval="1000"
                           Value="{Binding CaptchaPollingIntervalMilliseconds}"
