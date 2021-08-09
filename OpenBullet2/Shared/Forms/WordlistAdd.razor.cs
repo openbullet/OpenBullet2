@@ -140,7 +140,7 @@ namespace OpenBullet2.Shared.Forms
                 return;
             }
 
-            wordlist.FileName = selectedNode.Path;
+            wordlist.FileName = selectedNode.Path.Replace("\\", "/");
             wordlist.Total = File.ReadLines(selectedNode.Path).Count();
             BlazoredModal.Close(ModalResult.Ok(wordlist));
         }

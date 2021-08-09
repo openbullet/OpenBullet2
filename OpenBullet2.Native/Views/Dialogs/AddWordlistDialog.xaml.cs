@@ -74,7 +74,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             var entity = new WordlistEntity
             {
                 Name = nameTextbox.Text,
-                FileName = path,
+                FileName = path.Replace("\\", "/"),
                 Type = typeCombobox.Text,
                 Purpose = purposeTextbox.Text,
                 Total = File.ReadLines(path).Count()
