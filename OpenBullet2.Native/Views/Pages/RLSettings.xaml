@@ -1,0 +1,148 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.RLSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="1250" d:DesignWidth="800"
+      Title="RLSettings">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2">
+            <StackPanel Margin="0 0 0 10">
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                    <Label>Parallelizer Type (TaskBased gives the best performance)</Label>
+                    <ComboBox x:Name="parallelizerTypesCombobox"
+                              SelectedValue="{Binding Path=ParallelizerType}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <CheckBox Content="Log job activity to a file"
+                          IsChecked="{Binding LogJobActivityToFile}" 
+                          VerticalContentAlignment="Center" 
+                          Margin="5 0 0 0"/>
+                <CheckBox Content="Enable logging for bots in a MultiRunJob. Only enable for debugging configs as it increases the RAM usage by a lot!" 
+                          IsChecked="{Binding EnableBotLogging}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Enable verbose mode (more output and more insight on errors, useful for debugging)" 
+                          IsChecked="{Binding VerboseMode}"
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Restrict blocks to use resources inside the current working directory (CARE: does not work on Script blocks or pure LoliCode directives)" 
+                          IsChecked="{Binding RestrictBlocksToCWD}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Use the custom user agents list specified below instead of the default provider (intoli). Specify one user-agent per line" 
+                          IsChecked="{Binding UseCustomUserAgentsList}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <RichTextBox x:Name="customUserAgentsListRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas" 
+                             Margin="5 10 5 0"
+                             Height="100"
+                             TextChanged="CustomUserAgentsChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Proxies</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Timeout for proxy connections</Label>
+                    <mah:NumericUpDown Minimum="20"
+                          Maximum="10000"
+                          Interval="1"
+                          Value="{Binding ProxyConnectTimeoutMilliseconds}"
+                          Width="150"/>
+                    <Label>and read/write</Label>
+                    <mah:NumericUpDown Minimum="20"
+                          Maximum="10000"
+                          Interval="1"
+                          Value="{Binding ProxyReadWriteTimeoutMilliseconds}"
+                          Width="150"/>
+                    <Label>(in milliseconds)</Label>
+                </StackPanel>
+                <Label>Global BAN keys (one per line)</Label>
+                <RichTextBox x:Name="globalBanKeysRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas"
+                             Margin="5"
+                             Height="100"
+                             TextChanged="GlobalBanKeysChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Label>Global RETRY keys (one per line)</Label>
+                <RichTextBox x:Name="globalRetryKeysRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas" 
+                             Margin="5"
+                             Height="100"
+                             TextChanged="GlobalRetryKeysChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Captchas</Label>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Puppeteer</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Path of the chrome.exe binary on disk</Label>
+                    <TextBox Text="{Binding ChromeBinaryLocation}"
+                             Width="250"></TextBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="saveButton" 
+                Grid.Row="1"
+                Grid.Column="0"
+                Click="Save" 
+                Margin="0 5 5 5" 
+                Background="{DynamicResource PrimaryButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="resetButton" 
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="Reset" 
+                Margin="0 5 5 5" 
+                Background="{DynamicResource DangerButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRadixIcons Kind="Reset" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>
