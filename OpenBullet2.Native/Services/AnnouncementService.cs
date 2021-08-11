@@ -33,7 +33,7 @@ namespace OpenBullet2.Native.Services
                 }
                 catch
                 {
-                    return string.Empty;
+                    return "Could not load the announcement... are you offline?";
                 }
             }
 
