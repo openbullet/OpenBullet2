@@ -51,6 +51,7 @@
                         <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </StackPanel.Resources>
+                <Label x:Name="menuOptionHome" Content="Home" MouseDown="OpenHomePage" />
                 <Label x:Name="menuOptionJobs" Content="Jobs" MouseDown="OpenJobsPage" />
                 <Label x:Name="menuOptionMonitor" Content="Monitor" MouseDown="OpenMonitorPage" />
                 <Label x:Name="menuOptionProxies" Content="Proxies" MouseDown="OpenProxiesPage" />

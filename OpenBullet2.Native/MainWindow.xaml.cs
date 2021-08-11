@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Services;
 using OpenBullet2.Native.Views.Pages;
 using System;
 using System.Windows.Controls;
@@ -12,6 +13,9 @@ namespace OpenBullet2.Native
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private UpdateService updateService;
+
+        private Home homePage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private OBSettings obSettingsPage;
@@ -23,16 +27,29 @@ namespace OpenBullet2.Native
         public MainWindow()
         {
             InitializeComponent();
+
+            updateService = SP.GetService<UpdateService>();
+            Title = $"OpenBullet 2 - {updateService.CurrentVersion} [{updateService.CurrentVersionType}]";
         }
 
         public void Init()
         {
+            homePage = new();
             proxiesPage = new();
             wordlistsPage = new();
             obSettingsPage = new();
             rlSettingsPage = new();
             pluginsPage = new();
             aboutPage = new();
+
+            ChangePage(homePage, menuOptionHome);
+        }
+
+        // We recreate the homepage each time to display updated announcements
+        private void OpenHomePage(object sender, MouseEventArgs e)
+        {
+            homePage = new Home();
+            ChangePage(homePage, menuOptionHome);
         }
 
         private void OpenJobsPage(object sender, MouseEventArgs e) => throw new NotImplementedException();

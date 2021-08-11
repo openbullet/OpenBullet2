@@ -82,6 +82,8 @@ namespace OpenBullet2.Native
 
             // Singletons
             services.AddSingleton<ViewModelsService>();
+            services.AddSingleton<AnnouncementService>();
+            services.AddSingleton<UpdateService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<ProxyReloadService>();
             services.AddSingleton<JobFactoryService>();
