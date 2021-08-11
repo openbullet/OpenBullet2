@@ -1,8 +1,10 @@
 ﻿using MahApps.Metro.Controls;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
+using OpenBullet2.Native.Utils;
 using OpenBullet2.Native.Views.Pages;
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -77,5 +79,8 @@ namespace OpenBullet2.Native
 
             newLabel.Foreground = Brush.Get("ForegroundMenuSelected");
         }
+
+        private void TakeScreenshot(object sender, RoutedEventArgs e)
+            => Screenshot.Take((int)Width, (int)Height, (int)Top, (int)Left);
     }
 }

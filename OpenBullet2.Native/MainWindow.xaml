@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenBullet2.Native"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         Title="OpenBullet 2 - Preview" Width="800" Height="600"
         Background="{DynamicResource BackgroundMain}"
@@ -37,7 +38,6 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <StackPanel x:Name="topMenu" Grid.Column="0" Orientation="Horizontal">
@@ -63,6 +63,14 @@
                 <Label x:Name="menuOptionRLSettings" Content="RL Settings" MouseDown="OpenRLSettingsPage" />
                 <Label x:Name="menuOptionAbout" Content="About" MouseDown="OpenAboutPage" />
             </StackPanel>
+
+            <Button x:Name="screenshotButton" 
+                    Click="TakeScreenshot"
+                    Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Camera" />
+                </StackPanel>
+            </Button>
         </Grid>
 
         <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
