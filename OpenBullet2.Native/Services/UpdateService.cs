@@ -20,6 +20,8 @@ namespace OpenBullet2.Native.Services
             ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
             : "Release";
 
+        public event Action UpdateAvailable;
+
         public UpdateService()
         {
             // Try to read the current version from disk
@@ -68,6 +70,11 @@ namespace OpenBullet2.Native.Services
 
                 // Try to parse that name to a Version object
                 RemoteVersion = Version.Parse(releaseName);
+
+                if (IsUpdateAvailable)
+                {
+                    UpdateAvailable?.Invoke();
+                }
             }
             catch
             {

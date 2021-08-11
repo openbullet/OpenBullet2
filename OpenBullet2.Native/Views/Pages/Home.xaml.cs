@@ -2,7 +2,7 @@
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
-using System.Threading.Tasks;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,7 +13,7 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class Home : Page
     {
-        private HomeViewModel vm;
+        private readonly HomeViewModel vm;
 
         public Home()
         {
@@ -23,16 +23,24 @@ namespace OpenBullet2.Native.Views.Pages
             DataContext = vm;
         }
 
-        private void OpenInstallationTutorial(object sender, RoutedEventArgs e) 
+        private void OpenInstallationTutorial(object sender, RoutedEventArgs e)
             => Url.Open("https://discourse.openbullet.dev/t/how-to-download-and-start-openbullet-2/29");
 
         private void ShowChangelog(object sender, RoutedEventArgs e)
-            => new MainDialog(new ShowChangelogDialog(this), "Changelog").ShowDialog();
+            => new MainDialog(new ShowChangelogDialog(), "Changelog").ShowDialog();
+
+        private void ShowUpdateConfirmation(object sender, RoutedEventArgs e)
+            => new MainDialog(new UpdateConfirmationDialog(vm.CurrentVersion, vm.RemoteVersion), "Update confirmation").ShowDialog();
     }
 
     public class HomeViewModel : ViewModelBase
     {
-        private AnnouncementService annService;
+        private readonly AnnouncementService annService;
+        private readonly UpdateService updateService;
+
+        public bool UpdateAvailable => updateService.IsUpdateAvailable;
+        public Version CurrentVersion => updateService.CurrentVersion;
+        public Version RemoteVersion => updateService.RemoteVersion;
 
         private string announcement = "Loading announcement...";
         public string Announcement
@@ -48,8 +56,20 @@ namespace OpenBullet2.Native.Views.Pages
         public HomeViewModel()
         {
             annService = SP.GetService<AnnouncementService>();
+            updateService = SP.GetService<UpdateService>();
 
-            _ = Task.Run(() => Announcement = annService.FetchAnnouncement().Result);
+            updateService.UpdateAvailable += NotifyUpdateAvailable;
+
+            FetchAnnouncement();
+        }
+
+        private async void FetchAnnouncement() => Announcement = await annService.FetchAnnouncement();
+
+        private void NotifyUpdateAvailable()
+        {
+            OnPropertyChanged(nameof(UpdateAvailable));
+            OnPropertyChanged(nameof(CurrentVersion));
+            OnPropertyChanged(nameof(RemoteVersion));
         }
     }
 }

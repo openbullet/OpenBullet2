@@ -12,7 +12,7 @@ namespace OpenBullet2.Native.Views.Dialogs
     {
         private ChangelogViewModel vm;
 
-        public ShowChangelogDialog(object _)
+        public ShowChangelogDialog()
         {
             InitializeComponent();
             vm = new ChangelogViewModel();
