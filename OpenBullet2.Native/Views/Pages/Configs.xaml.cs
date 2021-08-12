@@ -34,6 +34,10 @@ namespace OpenBullet2.Native.Views.Pages
             InitializeComponent();
         }
 
+        // This is needed otherwise if properties of a config are updated by another page this page will not
+        // get notified and will show the old values.
+        public void UpdateViewModel() => vm.SelectedConfig?.UpdateViewModel();
+
         private void Create(object sender, RoutedEventArgs e)
             => new MainDialog(new CreateConfigDialog(this), "Create config").ShowDialog();
 
