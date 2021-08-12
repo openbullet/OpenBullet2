@@ -11,6 +11,8 @@ namespace OpenBullet2.Native.Controls
     /// </summary>
     public partial class MarkdownViewer : UserControl
     {
+        private string queuedRender = string.Empty;
+        
         public string MarkdownText
         {
             get => (string)GetValue(MarkdownTextProperty);
@@ -43,11 +45,28 @@ namespace OpenBullet2.Native.Controls
         {
             InitializeComponent();
 
-            // TODO: Fix the fact that you need to show this UC twice before it actually starts working!
+            // TODO: Find out why WebBrowser still won't display content the first time...
+            // I hate WPF with all my heart...
+
+            // Load the last string queued for render if any
+            browser.Loaded += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(queuedRender))
+                {
+                    Render(queuedRender);
+                }
+            };
         }
 
         public void Render(string html)
         {
+            // If the browser is not loaded yet, queue the render
+            if (!browser.IsLoaded)
+            {
+                queuedRender = html;
+                return;
+            }
+
             // Add the styling
             var final = new HtmlStyler(html)
                 .WithStyle("background-color", "#222")
