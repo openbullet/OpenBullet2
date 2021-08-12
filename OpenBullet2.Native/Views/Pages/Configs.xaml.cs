@@ -82,7 +82,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "UserData/Configs"));
+                Process.Start("explorer.exe", Path.Combine(Directory.GetCurrentDirectory(), "UserData\\Configs"));
             }
             catch (Exception ex)
             {

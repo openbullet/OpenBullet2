@@ -21,6 +21,7 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="150" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -244,7 +245,14 @@
             </ListView.View>
         </ListView>
 
-        <Grid Grid.Row="3" Height="150">
+        <GridSplitter 
+            ResizeDirection="Rows"
+            ResizeBehavior="PreviousAndNext"
+            Grid.Row="3" 
+            Height="5"
+            HorizontalAlignment="Stretch" />
+        
+        <Grid Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
