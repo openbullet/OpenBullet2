@@ -12,6 +12,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Visibility="Hidden"
+            Navigating="Navigating"
             x:Name="browser" />
     </Grid>
     

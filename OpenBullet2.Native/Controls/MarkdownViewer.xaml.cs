@@ -1,7 +1,7 @@
 ﻿using Ganss.XSS;
 using Markdig;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Utils;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -76,6 +76,19 @@ namespace OpenBullet2.Native.Controls
                 .ToString();
 
             browser.NavigateToString(final);
+        }
+
+        private void Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            // The Uri is not null if the user clicked on a link inside the markdown
+            if (e.Uri is not null)
+            {
+                // Do not propagate
+                e.Cancel = true;
+
+                // Handle it with the default browser
+                Url.Open(e.Uri.ToString());
+            }
         }
     }
 }
