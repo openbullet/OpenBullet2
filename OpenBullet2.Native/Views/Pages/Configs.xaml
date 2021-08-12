@@ -65,7 +65,7 @@
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="deleteButton" Click="Save" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+                <Button x:Name="deleteButton" Click="Delete" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="Close" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>

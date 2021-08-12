@@ -74,19 +74,23 @@ namespace OpenBullet2.Native.ViewModels
         {
             // Create it in the repo
             var fileName = FileUtils.ReplaceInvalidFileNameChars($"{dto.Name}.opk");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserData/Configs", fileName);
 
-            if (File.Exists(fileName))
+            if (File.Exists(filePath))
             {
-                fileName = FileUtils.GetFirstAvailableFileName(fileName);
+                filePath = FileUtils.GetFirstAvailableFileName(filePath);
             }
 
-            var newConfig = await configRepo.Create(Path.GetFileNameWithoutExtension(fileName));
+            var newConfig = await configRepo.Create(Path.GetFileNameWithoutExtension(filePath));
             newConfig.Metadata.Name = dto.Name;
             newConfig.Metadata.Category = dto.Category;
             newConfig.Metadata.Author = dto.Author;
 
+            var newConfigVM = new ConfigViewModel(newConfig);
+            await Save(newConfigVM);
+
             // Add it to the observable collection
-            ConfigsCollection.Insert(0, new ConfigViewModel(newConfig));
+            ConfigsCollection.Insert(0, newConfigVM);
 
             // Add it to the service
             configService.SelectedConfig = newConfig;

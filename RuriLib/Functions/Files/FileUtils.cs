@@ -20,15 +20,15 @@ namespace RuriLib.Functions.Files
 
             string path;
             string newName;
-            int i = 0;
-            do 
-            { 
+            var i = 0;
+            do
+            {
                 i++;
                 newName = Path.GetFileNameWithoutExtension(fileName) + i + Path.GetExtension(fileName);
                 path = Path.Combine(Path.GetDirectoryName(fileName), newName);
             }
             while (File.Exists(path));
-            
+
             return path;
         }
 
