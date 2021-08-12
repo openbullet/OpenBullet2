@@ -20,6 +20,7 @@ namespace OpenBullet2.Native
         private Home homePage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
+        private Configs configsPage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -39,6 +40,7 @@ namespace OpenBullet2.Native
             homePage = new();
             proxiesPage = new();
             wordlistsPage = new();
+            configsPage = new();
             obSettingsPage = new();
             rlSettingsPage = new();
             pluginsPage = new();
@@ -58,7 +60,7 @@ namespace OpenBullet2.Native
         private void OpenMonitorPage(object sender, MouseEventArgs e) { }
         private void OpenProxiesPage(object sender, MouseEventArgs e) => ChangePage(proxiesPage, menuOptionProxies);
         private void OpenWordlistsPage(object sender, MouseEventArgs e) => ChangePage(wordlistsPage, menuOptionWordlists);
-        private void OpenConfigsPage(object sender, MouseEventArgs e) { }
+        private void OpenConfigsPage(object sender, MouseEventArgs e) => ChangePage(configsPage, menuOptionConfigs);
         private void OpenHitsPage(object sender, MouseEventArgs e) { }
         private void OpenPluginsPage(object sender, MouseEventArgs e) => ChangePage(pluginsPage, menuOptionPlugins);
         private void OpenOBSettingsPage(object sender, MouseEventArgs e) => ChangePage(obSettingsPage, menuOptionOBSettings);

@@ -1,6 +1,7 @@
 ﻿using Ganss.XSS;
 using Markdig;
 using OpenBullet2.Native.Utils;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -51,6 +52,9 @@ namespace OpenBullet2.Native.Controls
 
             // This is needed to avoid going blind before the page is loaded
             browser.Navigated += (s, e) => browser.Visibility = Visibility.Visible;
+
+            // TODO: Switch to the WinForms WebBrowser, the WPF one is underfeatured
+            // disabling the context menu is extremely difficult
         }
 
         public void Render(string html)

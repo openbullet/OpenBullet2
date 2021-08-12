@@ -2,7 +2,6 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;

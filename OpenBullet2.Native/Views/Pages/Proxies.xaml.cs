@@ -183,8 +183,6 @@ namespace OpenBullet2.Native.Views.Pages
         }
 
         private void ShowInvalidGroupError()
-        {
-            Alert.Error("Invalid group", "Please select or create a valid group first!");
-        }
+            => Alert.Error("Invalid group", "Please select or create a valid group first!");
     }
 }

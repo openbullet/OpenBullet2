@@ -86,6 +86,17 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
+        public async Task<Config> Create(string id)
+        {
+            var config = new Config
+            {
+                Id = id
+            };
+            await Save(config);
+            return config;
+        }
+
+        /// <inheritdoc/>
         public async Task Upload(Stream stream)
         {
             var config = await ConfigPacker.Unpack(stream);

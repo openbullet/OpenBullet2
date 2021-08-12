@@ -16,6 +16,11 @@ namespace OpenBullet2.Core.Repositories
         Task<Config> Create();
 
         /// <summary>
+        /// Creates a new config with a given id.
+        /// </summary>
+        Task<Config> Create(string id);
+
+        /// <summary>
         /// Deletes a config from the repository.
         /// </summary>
         void Delete(Config config);
