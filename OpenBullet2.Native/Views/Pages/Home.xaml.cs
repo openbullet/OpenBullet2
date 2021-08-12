@@ -27,7 +27,7 @@ namespace OpenBullet2.Native.Views.Pages
             => Url.Open("https://discourse.openbullet.dev/t/how-to-download-and-start-openbullet-2/29");
 
         private void ShowChangelog(object sender, RoutedEventArgs e)
-            => new MainDialog(new ShowChangelogDialog(), "Changelog").ShowDialog();
+            => new MainDialog(new ShowChangelogDialog(), "Changelog", true).ShowDialog();
 
         private void ShowUpdateConfirmation(object sender, RoutedEventArgs e)
             => new MainDialog(new UpdateConfirmationDialog(vm.CurrentVersion, vm.RemoteVersion), "Update confirmation").ShowDialog();

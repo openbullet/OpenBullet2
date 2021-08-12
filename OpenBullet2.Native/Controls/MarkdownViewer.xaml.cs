@@ -36,26 +36,22 @@ namespace OpenBullet2.Native.Controls
             {
                 var dangerous = Markdown.ToHtml(newValue);
                 html = new HtmlSanitizer().Sanitize(dangerous);
+                source.Render(html);
             }
-
-            source.Render(html);
         }
 
         public MarkdownViewer()
         {
             InitializeComponent();
 
-            // TODO: Find out why WebBrowser still won't display content the first time...
-            // I hate WPF with all my heart...
-
             // Load the last string queued for render if any
-            browser.Loaded += (s, e) =>
+            if (!string.IsNullOrEmpty(queuedRender))
             {
-                if (!string.IsNullOrEmpty(queuedRender))
-                {
-                    Render(queuedRender);
-                }
-            };
+                Render(queuedRender);
+            }
+
+            // This is needed to avoid going blind before the page is loaded
+            browser.Navigated += (s, e) => browser.Visibility = Visibility.Visible;
         }
 
         public void Render(string html)
@@ -73,6 +69,7 @@ namespace OpenBullet2.Native.Controls
                 .WithStyle("color", "white")
                 .WithStyle("font-family", "Verdana, sans-serif")
                 .WithStyle("font-size", "12px")
+                .WithStyle("overflow", "hidden")
                 .ToString();
 
             browser.NavigateToString(final);

@@ -8,12 +8,13 @@ namespace OpenBullet2.Native
     /// </summary>
     public partial class MainDialog : MetroWindow
     {
-        public MainDialog(Page content, string title)
+        public MainDialog(Page content, string title, bool canResize = false)
         {
             InitializeComponent();
 
             Content = content;
             Title = title;
+            ResizeMode = canResize ? System.Windows.ResizeMode.CanResize : System.Windows.ResizeMode.NoResize;
         }
     }
 }

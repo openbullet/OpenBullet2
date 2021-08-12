@@ -5,6 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenBullet2.Native.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <WebBrowser x:Name="browser" />
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <WebBrowser
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Visibility="Hidden"
+            x:Name="browser" />
+    </Grid>
+    
 </UserControl>
