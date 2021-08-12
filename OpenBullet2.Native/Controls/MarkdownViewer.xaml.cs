@@ -30,12 +30,11 @@ namespace OpenBullet2.Native.Controls
         {
             var newValue = e.NewValue as string;
             var source = d as MarkdownViewer;
-            var html = string.Empty;
 
             if (!string.IsNullOrEmpty(newValue))
             {
                 var dangerous = Markdown.ToHtml(newValue);
-                html = new HtmlSanitizer().Sanitize(dangerous);
+                var html = new HtmlSanitizer().Sanitize(dangerous);
                 source.Render(html);
             }
         }
