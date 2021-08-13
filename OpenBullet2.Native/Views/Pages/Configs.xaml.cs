@@ -80,6 +80,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
+        // TODO: Check if current config is not saved and prompt warning
         private async void Rescan(object sender, RoutedEventArgs e) => await vm.Rescan();
 
         private void OpenFolder(object sender, RoutedEventArgs e)

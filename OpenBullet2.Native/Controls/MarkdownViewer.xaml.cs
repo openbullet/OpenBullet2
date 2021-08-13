@@ -13,7 +13,7 @@ namespace OpenBullet2.Native.Controls
     public partial class MarkdownViewer : UserControl
     {
         private string queuedRender = string.Empty;
-        
+
         public string MarkdownText
         {
             get => (string)GetValue(MarkdownTextProperty);
@@ -71,7 +71,7 @@ namespace OpenBullet2.Native.Controls
                 .WithStyle("background-color", "#222")
                 .WithStyle("color", "white")
                 .WithStyle("font-family", "Verdana, sans-serif")
-                .WithStyle("font-size", "12px")
+                .WithStyle("font-size", $"{(int)FontSize}px")
                 .WithStyle("overflow", "hidden")
                 .ToString();
 

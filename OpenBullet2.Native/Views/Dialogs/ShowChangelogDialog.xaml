@@ -21,6 +21,10 @@
                    Text="{Binding Text}">
         </TextBlock>
         -->
-        <uc:MarkdownViewer MaxHeight="600" MaxWidth="800" MarkdownText="{Binding Text}"/>
+        <uc:MarkdownViewer 
+            MaxHeight="600" 
+            MaxWidth="800" 
+            FontSize="14"
+            MarkdownText="{Binding Text}"/>
     </Grid>
 </Page>

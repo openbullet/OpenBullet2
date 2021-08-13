@@ -112,6 +112,8 @@ namespace OpenBullet2.Native.ViewModels
 
         public async Task Rescan()
         {
+            SelectedConfig = null;
+            HoveredConfig = null;
             await configService.ReloadConfigs();
             CreateCollection();
         }

@@ -260,7 +260,10 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0">Information provided by the author:</Label>
-                <uc:MarkdownViewer MarkdownText="{Binding HoveredConfig.Readme}" Grid.Row="1" />
+                <uc:MarkdownViewer 
+                    MarkdownText="{Binding HoveredConfig.Readme}" 
+                    Grid.Row="1"
+                    FontSize="12"/>
             </Grid>
         </Grid>
     </Grid>
