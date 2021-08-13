@@ -51,10 +51,9 @@
         <Label
             Grid.Row="0" Grid.Column="2"
             Foreground="{DynamicResource ForegroundCustom}"
-            >Readme (preview)</Label>
+            >Preview (type something to update)</Label>
 
         <uc:MarkdownViewer 
-            x:Name="markdownViewer"
             Grid.Row="1" Grid.Column="2"
             VerticalAlignment="Stretch"
             MarkdownText="{Binding Readme}" />

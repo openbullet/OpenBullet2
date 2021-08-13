@@ -1,7 +1,6 @@
 ﻿using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace OpenBullet2.Native.Views.Pages
@@ -21,6 +20,7 @@ namespace OpenBullet2.Native.Views.Pages
             InitializeComponent();
         }
 
+        // TODO: Find out why the preview doesn't update when navigating to the page
         public void UpdateViewModel()
         {
             vm.UpdateViewModel();
