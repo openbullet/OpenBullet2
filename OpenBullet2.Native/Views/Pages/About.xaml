@@ -25,6 +25,8 @@
                 <LineBreak/><LineBreak/>
                 <Span Foreground="{DynamicResource ForegroundBad}"><Bold>IMPORTANT!</Bold> Performing (D)DoS attacks or credential stuffing on sites you do not own (or you do not have permission to test) is <Bold>illegal</Bold>! The developer will not be held responsible for improper use of this software.</Span>
                 <LineBreak/><LineBreak/>
+                <Bold>Developer</Bold>: <Span Foreground="LightPink">Ruri</Span>
+                <LineBreak/>
                 <Bold>Collaborators</Bold>: demiurgo, meinname
                 <LineBreak/>
                 <Bold>Alpha testers</Bold>: CιdᥱR™, Flix88, kurosaki ichigo
