@@ -21,7 +21,7 @@ namespace OpenBullet2.Native.ViewModels
         /// <summary>
         /// Calls OnPropertyChanged on all public properties of this class.
         /// </summary>
-        public void UpdateViewModel()
+        public virtual void UpdateViewModel()
         {
             foreach (var property in GetType().GetProperties())
             {

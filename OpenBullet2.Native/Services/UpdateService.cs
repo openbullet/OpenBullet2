@@ -49,38 +49,46 @@ namespace OpenBullet2.Native.Services
 
         private async Task FetchRemoteVersion()
         {
+            var isDebug = false;
+
 #if DEBUG
-            Console.WriteLine("Skipped updates check in debug mode");
-            await Task.Delay(1);
-            return;
-#else
+            isDebug = true;
+#endif
 
-            try
+            if (isDebug)
             {
-                // Query the github api to get a list of the latest releases
-                using HttpClient client = new();
-                client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-                var response = await client.GetAsync("releases/latest");
-
-                // Take the first and get its name
-                var json = await response.Content.ReadAsStringAsync();
-                var release = JToken.Parse(json);
-                var releaseName = release["name"].ToString();
-
-                // Try to parse that name to a Version object
-                RemoteVersion = Version.Parse(releaseName);
-
-                if (IsUpdateAvailable)
+                Console.WriteLine("Skipped updates check in debug mode");
+                await Task.Delay(1);
+                return;
+            }
+            else
+            {
+                try
                 {
-                    UpdateAvailable?.Invoke();
+                    // Query the github api to get a list of the latest releases
+                    using HttpClient client = new();
+                    client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+                    var response = await client.GetAsync("releases/latest");
+
+                    // Take the first and get its name
+                    var json = await response.Content.ReadAsStringAsync();
+                    var release = JToken.Parse(json);
+                    var releaseName = release["name"].ToString();
+
+                    // Try to parse that name to a Version object
+                    RemoteVersion = Version.Parse(releaseName);
+
+                    if (IsUpdateAvailable)
+                    {
+                        UpdateAvailable?.Invoke();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to check for updates. I will retry in 1 day.");
                 }
             }
-            catch
-            {
-                Console.WriteLine("Failed to check for updates. I will retry in 1 day.");
-            }
-#endif
         }
 
         public void Dispose() => timer?.Dispose();

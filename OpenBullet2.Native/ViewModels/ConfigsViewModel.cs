@@ -120,7 +120,11 @@ namespace OpenBullet2.Native.ViewModels
             CreateCollection();
         }
 
-        public void UpdateViewModel() => configsCollection.ToList().ForEach(c => c.UpdateViewModel());
+        public override void UpdateViewModel()
+        {
+            configsCollection.ToList().ForEach(c => c.UpdateViewModel());
+            base.UpdateViewModel();
+        }
 
         private void CreateCollection()
         {
