@@ -206,6 +206,13 @@
 
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Width="30">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Path=Icon}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Name" Click="ColumnHeaderClicked">Name</GridViewColumnHeader>
@@ -231,12 +238,12 @@
                             <GridViewColumnHeader Tag="AllowedWordlistTypes" Click="ColumnHeaderClicked">Wordlists</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=CreationDate}">
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=CreationDate}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="CreationDate" Click="ColumnHeaderClicked">Creation Date</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=LastModified}">
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=LastModified}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="LastModified" Click="ColumnHeaderClicked">Last Modified</GridViewColumnHeader>
                         </GridViewColumn.Header>

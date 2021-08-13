@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace OpenBullet2.Native.ViewModels
 {
@@ -132,6 +133,7 @@ namespace OpenBullet2.Native.ViewModels
         public Config Config { get; init; }
 
         public string Id => Config.Id;
+        public BitmapImage Icon => ConvertIcon();
         public string Name => Config.Metadata.Name;
         public string Author => Config.Metadata.Author;
         public string Category => Config.Metadata.Category;
@@ -153,6 +155,20 @@ namespace OpenBullet2.Native.ViewModels
             {
                 OnPropertyChanged(property.Name);
             }
+        }
+
+        private BitmapImage ConvertIcon()
+        {
+            var bytes = Convert.FromBase64String(Config.Metadata.Base64Image);
+
+            using var ms = new MemoryStream(bytes);
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.StreamSource = ms;
+            image.EndInit();
+
+            return image;
         }
     }
 }
