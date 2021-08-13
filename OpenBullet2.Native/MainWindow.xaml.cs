@@ -121,12 +121,14 @@ namespace OpenBullet2.Native
                 // so we save some RAM (especially the heavy ones that involve a WebBrowser control)
 
                 case MainWindowPage.ConfigMetadata:
+                    CloseSubmenu();
                     if (configMetadataPage is null) configMetadataPage = new();
                     configMetadataPage.UpdateViewModel();
                     ChangePage(configMetadataPage, menuOptionMetadata);
                     break;
 
                 case MainWindowPage.ConfigReadme:
+                    CloseSubmenu();
                     if (configReadmePage is null) configReadmePage = new();
                     configReadmePage.UpdateViewModel();
                     ChangePage(configReadmePage, menuOptionReadme);
@@ -210,6 +212,8 @@ namespace OpenBullet2.Native
                 configSubmenu.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void CloseSubmenu() => configSubmenu.Visibility = Visibility.Collapsed;
         #endregion
     }
 
