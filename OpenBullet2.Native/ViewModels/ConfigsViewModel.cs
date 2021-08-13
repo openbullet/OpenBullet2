@@ -37,7 +37,7 @@ namespace OpenBullet2.Native.ViewModels
             set
             {
                 selectedConfig = value;
-                configService.SelectedConfig = value.Config;
+                configService.SelectedConfig = value?.Config;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(IsConfigSelected));
