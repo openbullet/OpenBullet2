@@ -33,6 +33,7 @@ namespace OpenBullet2.Native
         private Configs configsPage;
         private Views.Pages.ConfigMetadata configMetadataPage;
         private ConfigReadme configReadmePage;
+        private Views.Pages.ConfigSettings configSettingsPage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -133,6 +134,13 @@ namespace OpenBullet2.Native
                     configReadmePage.UpdateViewModel();
                     ChangePage(configReadmePage, menuOptionReadme);
                     break;
+
+                case MainWindowPage.ConfigSettings:
+                    CloseSubmenu();
+                    if (configSettingsPage is null) configSettingsPage = new();
+                    configSettingsPage.UpdateViewModel();
+                    ChangePage(configSettingsPage, menuOptionConfigSettings);
+                    break;
             }
         }
 
@@ -150,10 +158,10 @@ namespace OpenBullet2.Native
 
         private void OpenMetadataPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigMetadata);
         private void OpenReadmePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigReadme);
-        private void OpenStackerPage(object sender, MouseEventArgs e) { }
-        private void OpenLoliCodePage(object sender, MouseEventArgs e) { }
-        private void OpenConfigSettingsPage(object sender, MouseEventArgs e) { }
-        private void OpenCSharpCodePage(object sender, MouseEventArgs e) { }
+        private void OpenStackerPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigStacker);
+        private void OpenLoliCodePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigLoliCode);
+        private void OpenConfigSettingsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigSettings);
+        private void OpenCSharpCodePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigCSharpCode);
 
         private void ChangePage(Page newPage, Label newLabel)
         {

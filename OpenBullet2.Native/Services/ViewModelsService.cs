@@ -13,6 +13,7 @@ namespace OpenBullet2.Native.Services
 
         public ConfigMetadataViewModel ConfigMetadata { get; set; }
         public ConfigReadmeViewModel ConfigReadme { get; set; }
+        public ConfigSettingsViewModel ConfigSettings { get; set; }
 
         public ViewModelsService()
         {
@@ -25,6 +26,7 @@ namespace OpenBullet2.Native.Services
 
             ConfigMetadata = new();
             ConfigReadme = new();
+            ConfigSettings = new();
         }
     }
 }

@@ -21,7 +21,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2">
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="0 0 0 10">
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
