@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:OpenBullet2.Native"
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
         mc:Ignorable="d"
         Title="OpenBullet 2 - Preview" Width="800" Height="600"
         Background="{DynamicResource BackgroundMain}"
@@ -17,6 +18,10 @@
         WindowStartupLocation="CenterScreen"
         TitleCharacterCasing="Normal"
         Icon="/Images/logohq_square_padded.png">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
 
     <Grid x:Name="Root" Margin="0">
 
@@ -56,7 +61,24 @@
                 <Label x:Name="menuOptionMonitor" Content="Monitor" MouseDown="OpenMonitorPage" />
                 <Label x:Name="menuOptionProxies" Content="Proxies" MouseDown="OpenProxiesPage" />
                 <Label x:Name="menuOptionWordlists" Content="Wordlists" MouseDown="OpenWordlistsPage" />
-                <Label x:Name="menuOptionConfigs" Content="Configs" MouseDown="OpenConfigsPage" />
+
+                <StackPanel 
+                    Orientation="Horizontal"
+                    MouseEnter="ConfigsMenuOptionMouseEnter"
+                    MouseLeave="ConfigsMenuOptionMouseLeave">
+                    <Label x:Name="menuOptionConfigs" 
+                       Content="Configs" 
+                       MouseDown="OpenConfigsPage" />
+                    <iconPacks:PackIconFontAwesome 
+                    Foreground="{DynamicResource ForegroundMain}"
+                    VerticalAlignment="Center"
+                    Margin="0 0 5 0"
+                    Height="10"
+                    Width="10"
+                    Visibility="{Binding IsConfigSelected, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Kind="CaretDownSolid" />
+                </StackPanel>
+                
                 <Label x:Name="menuOptionHits" Content="Hits" MouseDown="OpenHitsPage" />
                 <Label x:Name="menuOptionPlugins" Content="Plugins" MouseDown="OpenPluginsPage" />
                 <Label x:Name="menuOptionOBSettings" Content="OB Settings" MouseDown="OpenOBSettingsPage" />
@@ -74,6 +96,36 @@
             </Border>
         </Grid>
 
+        <StackPanel 
+            x:Name="configSubmenu"
+            Background="{DynamicResource BackgroundMain}"
+            Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+            Margin="310 30 0 0" Panel.ZIndex="1"
+            Height="160"
+            Width="80"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Visibility="Collapsed"
+            MouseEnter="ConfigSubmenuMouseEnter"
+            MouseLeave="ConfigSubmenuMouseLeave">
+            <StackPanel.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Margin" Value="0 0 5 0" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                    <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            <Label x:Name="menuOptionMetadata" Content="Metadata" MouseDown="OpenMetadataPage" />
+            <Label x:Name="menuOptionReadme" Content="Readme" MouseDown="OpenReadmePage" />
+            <Label x:Name="menuOptionStacker" Content="Stacker" MouseDown="OpenStackerPage" />
+            <Label x:Name="menuOptionLoliCode" Content="LoliCode" MouseDown="OpenLoliCodePage" />
+            <Label x:Name="menuOptionConfigSettings" Content="Settings" MouseDown="OpenConfigSettingsPage" />
+            <Label x:Name="menuOptionCSharpCode" Content="C# Code" MouseDown="OpenCSharpCodePage" />
+        </StackPanel>
+        
         <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 
