@@ -31,6 +31,7 @@ namespace OpenBullet2.Native
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private Configs configsPage;
+        private Views.Pages.ConfigMetadata configMetadataPage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -75,6 +76,7 @@ namespace OpenBullet2.Native
             proxiesPage = new();
             wordlistsPage = new();
             configsPage = new();
+            configMetadataPage = new();
             obSettingsPage = new();
             rlSettingsPage = new();
             pluginsPage = new();
@@ -105,7 +107,11 @@ namespace OpenBullet2.Native
         private void OpenRLSettingsPage(object sender, MouseEventArgs e) => ChangePage(rlSettingsPage, menuOptionRLSettings);
         private void OpenAboutPage(object sender, MouseEventArgs e) => ChangePage(aboutPage, menuOptionAbout);
 
-        private void OpenMetadataPage(object sender, MouseEventArgs e) { }
+        private void OpenMetadataPage(object sender, MouseEventArgs e)
+        {
+            configMetadataPage.UpdateViewModel();
+            ChangePage(configMetadataPage, menuOptionMetadata);
+        }
         private void OpenReadmePage(object sender, MouseEventArgs e) { }
         private void OpenStackerPage(object sender, MouseEventArgs e) { }
         private void OpenLoliCodePage(object sender, MouseEventArgs e) { }

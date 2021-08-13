@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.DTOs;
+using OpenBullet2.Native.Utils;
 using RuriLib.Functions.Files;
 using RuriLib.Models.Configs;
 using System;
@@ -133,7 +134,7 @@ namespace OpenBullet2.Native.ViewModels
         public Config Config { get; init; }
 
         public string Id => Config.Id;
-        public BitmapImage Icon => ConvertIcon();
+        public BitmapImage Icon => Images.Base64ToBitmapImage(Config.Metadata.Base64Image);
         public string Name => Config.Metadata.Name;
         public string Author => Config.Metadata.Author;
         public string Category => Config.Metadata.Category;
@@ -146,29 +147,6 @@ namespace OpenBullet2.Native.ViewModels
         public ConfigViewModel(Config config)
         {
             Config = config;
-        }
-
-        public void UpdateViewModel()
-        {
-            // Call OnPropertyChanged on all public properties
-            foreach (var property in GetType().GetProperties())
-            {
-                OnPropertyChanged(property.Name);
-            }
-        }
-
-        private BitmapImage ConvertIcon()
-        {
-            var bytes = Convert.FromBase64String(Config.Metadata.Base64Image);
-
-            using var ms = new MemoryStream(bytes);
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.StreamSource = ms;
-            image.EndInit();
-
-            return image;
         }
     }
 }

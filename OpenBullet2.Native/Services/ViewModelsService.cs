@@ -11,6 +11,8 @@ namespace OpenBullet2.Native.Services
         public RLSettingsViewModel RLSettings { get; set; }
         public PluginsViewModel Plugins { get; set; }
 
+        public ConfigMetadataViewModel ConfigMetadata { get; set; }
+
         public ViewModelsService()
         {
             Proxies = new();
@@ -19,6 +21,8 @@ namespace OpenBullet2.Native.Services
             OBSettings = new();
             RLSettings = new();
             Plugins = new();
+
+            ConfigMetadata = new();
         }
     }
 }

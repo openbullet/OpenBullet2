@@ -1,4 +1,5 @@
-﻿@using OpenBullet2.Helpers
+﻿@using OpenBullet2.Core.Helpers
+@using OpenBullet2.Helpers 
 @using System.IO
 @inject Microsoft.Extensions.Localization.IStringLocalizer<InputImage> Loc
 
@@ -85,7 +86,7 @@
         try
         {
             using var client = new HttpClient();
-            var response = await client.GetAsync(imageUrl);
+            using var response = await client.GetAsync(imageUrl);
             var bytes = ImageEditor.ToCompatibleFormat(await response.Content.ReadAsByteArrayAsync());
 
             var resize = false;

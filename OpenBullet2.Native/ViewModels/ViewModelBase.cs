@@ -17,5 +17,16 @@ namespace OpenBullet2.Native.ViewModels
         /// <param name="propertyName">The name of the property. If null, the name of the calling property will be used.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) 
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        /// <summary>
+        /// Calls OnPropertyChanged on all public properties of this class.
+        /// </summary>
+        public void UpdateViewModel()
+        {
+            foreach (var property in GetType().GetProperties())
+            {
+                OnPropertyChanged(property.Name);
+            }
+        }
     }
 }
