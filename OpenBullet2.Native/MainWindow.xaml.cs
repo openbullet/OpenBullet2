@@ -19,11 +19,11 @@ namespace OpenBullet2.Native
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private UpdateService updateService;
+        private readonly UpdateService updateService;
         private readonly MainWindowViewModel vm;
 
-        private bool hoveringConfigsMenuOption = false;
-        private bool hoveringConfigSubmenu = false;
+        private bool hoveringConfigsMenuOption;
+        private bool hoveringConfigSubmenu;
 
         private readonly Label[] labels;
 
@@ -32,11 +32,13 @@ namespace OpenBullet2.Native
         private Wordlists wordlistsPage;
         private Configs configsPage;
         private Views.Pages.ConfigMetadata configMetadataPage;
+        private ConfigReadme configReadmePage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
         private About aboutPage;
-        private Page currentPage;
+        
+        public Page CurrentPage { get; private set; }
 
         public MainWindow()
         {
@@ -70,49 +72,82 @@ namespace OpenBullet2.Native
             Title = $"OpenBullet 2 - {updateService.CurrentVersion} [{updateService.CurrentVersionType}]";
         }
 
-        public void Init()
+        public void NavigateTo(MainWindowPage page)
         {
-            homePage = new();
-            proxiesPage = new();
-            wordlistsPage = new();
-            configsPage = new();
-            configMetadataPage = new();
-            obSettingsPage = new();
-            rlSettingsPage = new();
-            pluginsPage = new();
-            aboutPage = new();
+            switch (page)
+            {
+                case MainWindowPage.Home:
+                    homePage = new Home(); // We recreate the homepage each time to display updated announcements
+                    ChangePage(homePage, menuOptionHome);
+                    break;
 
-            ChangePage(homePage, menuOptionHome);
+                case MainWindowPage.Proxies:
+                    if (proxiesPage is null) proxiesPage = new();
+                    ChangePage(proxiesPage, menuOptionProxies);
+                    break;
+
+                case MainWindowPage.Wordlists:
+                    if (wordlistsPage is null) wordlistsPage = new();
+                    ChangePage(wordlistsPage, menuOptionWordlists);
+                    break;
+
+                case MainWindowPage.Configs:
+                    if (configsPage is null) configsPage = new();
+                    configsPage.UpdateViewModel();
+                    ChangePage(configsPage, menuOptionConfigs);
+                    break;
+
+                case MainWindowPage.Plugins:
+                    if (pluginsPage is null) pluginsPage = new();
+                    ChangePage(pluginsPage, menuOptionPlugins);
+                    break;
+
+                case MainWindowPage.OBSettings:
+                    if (obSettingsPage is null) obSettingsPage = new();
+                    ChangePage(obSettingsPage, menuOptionOBSettings);
+                    break;
+
+                case MainWindowPage.RLSettings:
+                    if (rlSettingsPage is null) rlSettingsPage = new();
+                    ChangePage(rlSettingsPage, menuOptionRLSettings);
+                    break;
+
+                case MainWindowPage.About:
+                    if (aboutPage is null) aboutPage = new();
+                    ChangePage(aboutPage, menuOptionAbout);
+                    break;
+
+                // Initialize config pages when we click on them because a user might not even load them
+                // so we save some RAM (especially the heavy ones that involve a WebBrowser control)
+
+                case MainWindowPage.ConfigMetadata:
+                    if (configMetadataPage is null) configMetadataPage = new();
+                    configMetadataPage.UpdateViewModel();
+                    ChangePage(configMetadataPage, menuOptionMetadata);
+                    break;
+
+                case MainWindowPage.ConfigReadme:
+                    if (configReadmePage is null) configReadmePage = new();
+                    configReadmePage.UpdateViewModel();
+                    ChangePage(configReadmePage, menuOptionReadme);
+                    break;
+            }
         }
 
-        // We recreate the homepage each time to display updated announcements
-        private void OpenHomePage(object sender, MouseEventArgs e)
-        {
-            homePage = new Home();
-            ChangePage(homePage, menuOptionHome);
-        }
+        private void OpenHomePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Home);
+        private void OpenJobsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Jobs);
+        private void OpenMonitorPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Monitor);
+        private void OpenProxiesPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Proxies);
+        private void OpenWordlistsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Wordlists);
+        private void OpenConfigsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Configs);
+        private void OpenHitsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Hits);
+        private void OpenPluginsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Plugins);
+        private void OpenOBSettingsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.OBSettings);
+        private void OpenRLSettingsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.RLSettings);
+        private void OpenAboutPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.About);
 
-        private void OpenJobsPage(object sender, MouseEventArgs e) { }
-        private void OpenMonitorPage(object sender, MouseEventArgs e) { }
-        private void OpenProxiesPage(object sender, MouseEventArgs e) => ChangePage(proxiesPage, menuOptionProxies);
-        private void OpenWordlistsPage(object sender, MouseEventArgs e) => ChangePage(wordlistsPage, menuOptionWordlists);
-        private void OpenConfigsPage(object sender, MouseEventArgs e)
-        {
-            configsPage.UpdateViewModel();
-            ChangePage(configsPage, menuOptionConfigs);
-        }
-        private void OpenHitsPage(object sender, MouseEventArgs e) { }
-        private void OpenPluginsPage(object sender, MouseEventArgs e) => ChangePage(pluginsPage, menuOptionPlugins);
-        private void OpenOBSettingsPage(object sender, MouseEventArgs e) => ChangePage(obSettingsPage, menuOptionOBSettings);
-        private void OpenRLSettingsPage(object sender, MouseEventArgs e) => ChangePage(rlSettingsPage, menuOptionRLSettings);
-        private void OpenAboutPage(object sender, MouseEventArgs e) => ChangePage(aboutPage, menuOptionAbout);
-
-        private void OpenMetadataPage(object sender, MouseEventArgs e)
-        {
-            configMetadataPage.UpdateViewModel();
-            ChangePage(configMetadataPage, menuOptionMetadata);
-        }
-        private void OpenReadmePage(object sender, MouseEventArgs e) { }
+        private void OpenMetadataPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigMetadata);
+        private void OpenReadmePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigReadme);
         private void OpenStackerPage(object sender, MouseEventArgs e) { }
         private void OpenLoliCodePage(object sender, MouseEventArgs e) { }
         private void OpenConfigSettingsPage(object sender, MouseEventArgs e) { }
@@ -120,7 +155,7 @@ namespace OpenBullet2.Native
 
         private void ChangePage(Page newPage, Label newLabel)
         {
-            currentPage = newPage;
+            CurrentPage = newPage;
             mainFrame.Content = newPage;
 
             // Update the selected menu item
@@ -194,5 +229,26 @@ namespace OpenBullet2.Native
                 ConfigSelected?.Invoke(config);
             };
         }
+    }
+
+    public enum MainWindowPage
+    {
+        Home,
+        Jobs,
+        Monitor,
+        Proxies,
+        Wordlists,
+        Configs,
+        ConfigMetadata,
+        ConfigReadme,
+        ConfigStacker,
+        ConfigLoliCode,
+        ConfigSettings,
+        ConfigCSharpCode,
+        Hits,
+        Plugins,
+        OBSettings,
+        RLSettings,
+        About
     }
 }

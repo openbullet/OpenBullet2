@@ -106,7 +106,7 @@ namespace OpenBullet2.Native
         private void OnStartup(object sender, StartupEventArgs e)
         {
             var mainWindow = serviceProvider.GetService<MainWindow>();
-            mainWindow.Init();
+            mainWindow.NavigateTo(MainWindowPage.Home);
             mainWindow.Show();
         }
     }

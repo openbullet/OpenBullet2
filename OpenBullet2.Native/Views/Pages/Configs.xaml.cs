@@ -1,4 +1,6 @@
-﻿using OpenBullet2.Native.DTOs;
+﻿using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Native.DTOs;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
@@ -20,6 +22,7 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class Configs : Page
     {
+        private readonly OpenBulletSettingsService obSettingsService;
         private readonly ConfigsViewModel vm;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
@@ -28,6 +31,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         public Configs()
         {
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             vm = SP.GetService<ViewModelsService>().Configs;
             DataContext = vm;
 
@@ -52,7 +56,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
 
             vm.SelectedConfig = HoveredItem;
-            // TODO: Navigate to the correct page
+            NavigateToConfigSection();
         }
 
         private async void Save(object sender, RoutedEventArgs e)
@@ -99,6 +103,22 @@ namespace OpenBullet2.Native.Views.Pages
 
         private void ShowNoConfigSelectedError() => Alert.Error("No config selected", "Please select a config first!");
 
+        private void NavigateToConfigSection()
+        {
+            var page = obSettingsService.Settings.GeneralSettings.ConfigSectionOnLoad switch
+            {
+                ConfigSection.Metadata => MainWindowPage.ConfigMetadata,
+                ConfigSection.Readme => MainWindowPage.ConfigReadme,
+                ConfigSection.Stacker => MainWindowPage.ConfigStacker,
+                ConfigSection.LoliCode => MainWindowPage.ConfigLoliCode,
+                ConfigSection.Settings => MainWindowPage.ConfigSettings,
+                ConfigSection.CSharpCode => MainWindowPage.ConfigCSharpCode,
+                _ => throw new NotImplementedException(),
+            };
+
+            SP.GetService<MainWindow>().NavigateTo(page);
+        }
+
         private void ItemHovered(object sender, SelectionChangedEventArgs e)
         {
             var items = e.AddedItems as IList<object>;
@@ -118,7 +138,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
 
             vm.SelectedConfig = HoveredItem;
-            // TODO: Navigate to the correct page
+            NavigateToConfigSection();
         }
 
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)
