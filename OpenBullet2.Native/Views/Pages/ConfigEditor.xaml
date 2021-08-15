@@ -25,6 +25,7 @@
             VerticalAlignment="Stretch" />
 
         <Frame x:Name="debuggerFrame" 
+               NavigationUIVisibility="Hidden"
                Grid.Column="2" />
     </Grid>
 </Page>

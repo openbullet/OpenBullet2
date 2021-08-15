@@ -9,6 +9,7 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class ConfigEditor : Page
     {
         private readonly Debugger debugger;
+        private readonly ConfigStacker stackerPage;
         private readonly ConfigLoliCode loliCodePage;
         private readonly ConfigCSharpCode cSharpPage;
 
@@ -18,6 +19,7 @@ namespace OpenBullet2.Native.Views.Pages
 
             // Create the pages
             debugger = new();
+            stackerPage = new();
             loliCodePage = new();
             cSharpPage = new();
 
@@ -29,6 +31,8 @@ namespace OpenBullet2.Native.Views.Pages
             switch (section)
             {
                 case ConfigEditorSection.Stacker:
+                    stackerPage.UpdateViewModel();
+                    editorFrame.Content = stackerPage;
                     break;
 
                 case ConfigEditorSection.LoliCode:

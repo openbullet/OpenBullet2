@@ -1,0 +1,96 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.ConfigStacker"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ConfigStacker">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+            <Button Click="AddBlock" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Add a new block"
+                     Background="{DynamicResource SuccessButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Add" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="RemoveBlock" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Remove the selected block"
+                     Background="{DynamicResource DangerButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="MoveBlockUp" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Move the selected block up"
+                     Background="{DynamicResource PrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconUnicons Kind="AngleUp" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="MoveBlockDown" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Move the selected block down"
+                     Background="{DynamicResource PrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconUnicons Kind="AngleDown" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="CloneBlock" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Clone the selected block">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome Kind="CloneSolid" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="EnableDisableBlock"
+                     Width="25"
+                     Height="20"
+                     ToolTip="Enable/Disable the selected block">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconForkAwesome Kind="Ban" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+            <Button Click="Undo" 
+                     Width="25"
+                     Height="20"
+                     ToolTip="Undo">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMicrons Kind="Undo" Width="10" Height="10" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        
+        
+        <!-- Stack -->
+
+        <Label Content="Block information" 
+               FontSize="18"
+               Height="35"
+               Foreground="{DynamicResource ForegroundCustom}"
+               VerticalAlignment="Center"
+               Grid.Column="1" />
+
+    </Grid>
+</Page>

@@ -83,6 +83,7 @@ namespace OpenBullet2.Native
                 "UserData/Wordlists"));
 
             // Singletons
+            services.AddSingleton<VolatileSettingsService>();
             services.AddSingleton<ViewModelsService>();
             services.AddSingleton<AnnouncementService>();
             services.AddSingleton<UpdateService>();

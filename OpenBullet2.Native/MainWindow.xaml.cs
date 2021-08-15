@@ -140,6 +140,13 @@ namespace OpenBullet2.Native
                     ChangePage(configReadmePage, menuOptionReadme);
                     break;
 
+                case MainWindowPage.ConfigStacker:
+                    CloseSubmenu();
+                    if (configEditorPage is null) configEditorPage = new();
+                    configEditorPage.NavigateTo(ConfigEditorSection.Stacker);
+                    ChangePage(configEditorPage, menuOptionStacker);
+                    break;
+
                 case MainWindowPage.ConfigLoliCode:
                     CloseSubmenu();
                     if (configEditorPage is null) configEditorPage = new();
