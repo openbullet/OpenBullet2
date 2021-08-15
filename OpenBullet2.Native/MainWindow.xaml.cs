@@ -33,6 +33,7 @@ namespace OpenBullet2.Native
         private Configs configsPage;
         private Views.Pages.ConfigMetadata configMetadataPage;
         private ConfigReadme configReadmePage;
+        private ConfigLoliCode configLoliCodePage;
         private Views.Pages.ConfigSettings configSettingsPage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
@@ -133,6 +134,13 @@ namespace OpenBullet2.Native
                     if (configReadmePage is null) configReadmePage = new();
                     configReadmePage.UpdateViewModel();
                     ChangePage(configReadmePage, menuOptionReadme);
+                    break;
+
+                case MainWindowPage.ConfigLoliCode:
+                    CloseSubmenu();
+                    if (configLoliCodePage is null) configLoliCodePage = new();
+                    configLoliCodePage.UpdateViewModel();
+                    ChangePage(configLoliCodePage, menuOptionLoliCode);
                     break;
 
                 case MainWindowPage.ConfigSettings:

@@ -6,6 +6,7 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Logging;
 using OpenBullet2.Native.Services;
+using OpenBullet2.Native.Views.Pages.Shared;
 using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
@@ -61,8 +62,9 @@ namespace OpenBullet2.Native
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // Windows
+            // Windows and pages
             services.AddSingleton<MainWindow>();
+            services.AddSingleton<Debugger>();
 
             // EF
             services.AddDbContext<ApplicationDbContext>(options =>

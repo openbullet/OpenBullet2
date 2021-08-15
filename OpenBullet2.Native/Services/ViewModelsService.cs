@@ -15,6 +15,8 @@ namespace OpenBullet2.Native.Services
         public ConfigReadmeViewModel ConfigReadme { get; set; }
         public ConfigSettingsViewModel ConfigSettings { get; set; }
 
+        public DebuggerViewModel Debugger { get; set; }
+
         public ViewModelsService()
         {
             Proxies = new();
@@ -27,6 +29,8 @@ namespace OpenBullet2.Native.Services
             ConfigMetadata = new();
             ConfigReadme = new();
             ConfigSettings = new();
+
+            Debugger = new();
         }
     }
 }
