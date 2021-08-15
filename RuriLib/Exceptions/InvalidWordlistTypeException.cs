@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenBullet2.Core.Exceptions
+namespace RuriLib.Exceptions
 {
     /// <summary>
     /// An exception that is thrown when a Wordlist Type with the given name was not present

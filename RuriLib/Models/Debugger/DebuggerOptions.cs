@@ -1,11 +1,8 @@
-﻿using OpenBullet2.Core.Exceptions;
-using RuriLib.Models.Proxies;
+﻿using RuriLib.Models.Proxies;
 using RuriLib.Models.Variables;
-using RuriLib.Services;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace OpenBullet2.Core.Models.Debugger
+namespace RuriLib.Models.Debugger
 {
     /// <summary>
     /// Options for the OpenBullet 2 config debugger.
@@ -46,21 +43,5 @@ namespace OpenBullet2.Core.Models.Debugger
         /// The list of variables that were found during the last debug.
         /// </summary>
         public List<Variable> Variables { get; set; } = new List<Variable>();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="settings"></param>
-        public DebuggerOptions(RuriLibSettingsService settings)
-        {
-            var type = settings.Environment.WordlistTypes.FirstOrDefault();
-
-            if (type == null)
-            {
-                throw new NoWordlistTypesExceptions();
-            }
-
-            WordlistType = type.Name;
-        }
     }
 }

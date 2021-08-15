@@ -1,16 +1,34 @@
-﻿using RuriLib.Models.Proxies;
+﻿using OpenBullet2.Core.Services;
+using RuriLib.Logging;
+using RuriLib.Models.Debugger;
+using RuriLib.Models.Proxies;
+using RuriLib.Models.Variables;
+using RuriLib.Providers.RandomNumbers;
+using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace OpenBullet2.Native.ViewModels
 {
     public class DebuggerViewModel : ViewModelBase
     {
         private readonly RuriLibSettingsService rlSettingsService;
+        private readonly OpenBulletSettingsService obSettingsService;
+        private readonly ConfigService configService;
+        private readonly IRandomUAProvider randomUAProvider;
+        private readonly IRNGProvider rngProvider;
+        private readonly PluginRepository pluginRepo;
 
-        private string testData;
+        private DebuggerOptions options;
+        private BotLogger logger;
+        private ConfigDebugger debugger;
+
+        public event EventHandler<BotLoggerEntry> NewLogEntry;
+
+        private string testData = string.Empty;
         public string TestData
         {
             get => testData;
@@ -56,7 +74,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private string testProxy;
+        private string testProxy = string.Empty;
         public string TestProxy
         {
             get => testProxy;
@@ -80,13 +98,78 @@ namespace OpenBullet2.Native.ViewModels
 
         public IEnumerable<ProxyType> ProxyTypes => Enum.GetValues(typeof(ProxyType)).Cast<ProxyType>();
 
-        public bool CanStart => true;
-        public bool CanStop => false;
+        private bool isRunning;
+        public bool IsRunning
+        {
+            get => isRunning;
+            set
+            {
+                isRunning = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanStart));
+                OnPropertyChanged(nameof(CanStop));
+            }
+        }
+
+        public bool CanStart => !IsRunning;
+        public bool CanStop => IsRunning;
+        public List<Variable> Variables => obSettingsService.Settings.GeneralSettings.GroupCapturesInDebugger
+            ? options.Variables.OrderBy(v => v.MarkedForCapture).ToList()
+            : options.Variables;
 
         public DebuggerViewModel()
         {
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
+            configService = SP.GetService<ConfigService>();
+            randomUAProvider = SP.GetService<IRandomUAProvider>();
+            rngProvider = SP.GetService<IRNGProvider>();
+            pluginRepo = SP.GetService<PluginRepository>();
+
             WordlistType = WordlistTypes.First();
         }
+
+        public async Task Run()
+        {
+            if (!PersistLog)
+            {
+                logger = new();
+            }
+
+            options = new DebuggerOptions
+            {
+                TestData = TestData,
+                TestProxy = TestProxy,
+                WordlistType = WordlistType,
+                PersistLog = PersistLog,
+                ProxyType = ProxyType,
+                UseProxy = UseProxy
+            };
+
+            debugger = new ConfigDebugger(configService.SelectedConfig, options, logger)
+            {
+                PluginRepo = pluginRepo,
+                RandomUAProvider = randomUAProvider,
+                RNGProvider = rngProvider,
+                RuriLibSettings = rlSettingsService
+            };
+
+            debugger.Started += (s, e) => IsRunning = true;
+            debugger.Stopped += (s, e) => IsRunning = false;
+            debugger.NewLogEntry += (s, e) => NewLogEntry?.Invoke(this, e);
+
+            try
+            {
+                await debugger.Run();
+            }
+            finally
+            {
+                debugger.Started -= (s, e) => IsRunning = true;
+                debugger.Stopped -= (s, e) => IsRunning = false;
+                debugger.NewLogEntry -= (s, e) => NewLogEntry?.Invoke(this, e);
+            }
+        }
+
+        public void Stop() => debugger?.Stop();
     }
 }

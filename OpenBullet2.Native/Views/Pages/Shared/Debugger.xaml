@@ -6,6 +6,8 @@
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages.Shared"
       xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
+      xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Debugger">
@@ -16,7 +18,6 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
@@ -95,7 +96,16 @@
                         </StackPanel>
                     </Button>
                 </TabItem.Header>
-                One
+                <WindowsFormsHost Grid.Row="0">
+                    <wf:RichTextBox 
+                        x:Name="logRTB"
+                        Dock="Fill"
+                        ForeColor="Gainsboro"
+                        ReadOnly="True"
+                        ScrollBars="Vertical"
+                        BorderStyle="None"
+                        DetectUrls="False"/>
+                </WindowsFormsHost>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
@@ -108,7 +118,16 @@
                         </StackPanel>
                     </Button>
                 </TabItem.Header>
-                Two
+                <WindowsFormsHost Grid.Row="0">
+                    <wf:RichTextBox 
+                        x:Name="variablesRTB"
+                        Dock="Fill"
+                        ForeColor="Gainsboro"
+                        ReadOnly="True"
+                        ScrollBars="Vertical"
+                        BorderStyle="None"
+                        DetectUrls="False"/>
+                </WindowsFormsHost>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
@@ -121,7 +140,7 @@
                         </StackPanel>
                     </Button>
                 </TabItem.Header>
-                Three
+                <uc:HTMLViewer x:Name="htmlViewer" VerticalAlignment="Stretch" />
             </TabItem>
         </TabControl>
     </Grid>

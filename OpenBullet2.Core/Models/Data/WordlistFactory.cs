@@ -1,5 +1,5 @@
 ﻿using OpenBullet2.Core.Entities;
-using OpenBullet2.Core.Exceptions;
+using RuriLib.Exceptions;
 using RuriLib.Models.Data;
 using RuriLib.Services;
 using System.Linq;
