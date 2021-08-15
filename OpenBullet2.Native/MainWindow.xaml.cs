@@ -71,6 +71,10 @@ namespace OpenBullet2.Native
                 menuOptionWordlists
             };
 
+            // Pages to initialize as soon as the program starts. This is done to reduce the loading time
+            // when clicking on them, as it can be frustrating for the user on specific pages.
+            configsPage = new();
+
             updateService = SP.GetService<UpdateService>();
             Title = $"OpenBullet 2 - {updateService.CurrentVersion} [{updateService.CurrentVersionType}]";
         }
