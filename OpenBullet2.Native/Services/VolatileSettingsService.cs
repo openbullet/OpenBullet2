@@ -5,7 +5,7 @@ namespace OpenBullet2.Native.Services
 {
     public class VolatileSettingsService
     {
-        public List<BlockDescriptor> RecentDescriptors { get; set; }
+        public List<BlockDescriptor> RecentDescriptors { get; set; } = new();
 
         public void AddRecentDescriptor(BlockDescriptor descriptor)
         {

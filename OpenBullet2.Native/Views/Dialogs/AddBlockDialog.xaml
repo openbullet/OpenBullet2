@@ -6,56 +6,74 @@
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="410" d:DesignWidth="610"
       Title="AddBlockDialog">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
+    <Border Padding="5">
+        <Grid Height="400" Width="600">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
 
-            <Button Click="GoUp" 
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Click="GoUp" 
                 Grid.Column="0"
                 Width="30"
                 Margin="0 5 5 5"
                 Visibility="{Binding CanGoUp, Converter={StaticResource ResourceKey=BoolToVis}}"
                 Background="{DynamicResource WarningButton}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconUnicons Kind="AngleUp" />
-                </StackPanel>
-            </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconUnicons Kind="AngleUp" />
+                    </StackPanel>
+                </Button>
 
-            <TextBox 
+                <TextBox 
                 x:Name="filterTextBox"
                 KeyDown="FilterKeyDown"
                 Margin="0 5"
                 Grid.Column="1" />
 
-            <Button Click="Search"
+                <Button Click="Search"
                     Grid.Column="2"
                     Margin="5 5 0 5"
                     Background="{DynamicResource PrimaryButton}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterialDesign Kind="Search" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
-                </StackPanel>
-            </Button>
-            
-        </Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Search" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
+                    </StackPanel>
+                </Button>
 
-    </Grid>
+            </Grid>
+
+            <ItemsControl 
+            Grid.Row="1"
+            ItemsSource="{Binding SubCategories}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Name}" Margin="5" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Grid>
+    </Border>
+    
 </Page>

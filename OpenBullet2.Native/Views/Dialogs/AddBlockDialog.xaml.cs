@@ -59,6 +59,9 @@ namespace OpenBullet2.Native.Views.Dialogs
                 currentNode = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanGoUp));
+
+                SubCategories = new ObservableCollection<CategoryTreeNode>(currentNode.SubCategories);
+                Descriptors = new ObservableCollection<BlockDescriptor>(currentNode.Descriptors);
             }
         }
 
@@ -93,8 +96,17 @@ namespace OpenBullet2.Native.Views.Dialogs
             set
             {
                 filter = value;
-                Descriptors = new ObservableCollection<BlockDescriptor>(RuriLib.Globals.DescriptorsRepository.Descriptors.Values
-                    .Where(d => d.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)));
+
+                if (string.IsNullOrWhiteSpace(filter))
+                {
+                    Descriptors = new ObservableCollection<BlockDescriptor>(currentNode.Descriptors);
+                }
+                else
+                {
+                    Descriptors = new ObservableCollection<BlockDescriptor>(RuriLib.Globals.DescriptorsRepository.Descriptors.Values
+                        .Where(d => d.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)));
+                }
+                
                 OnPropertyChanged();
             }
         }
