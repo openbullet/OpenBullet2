@@ -8,7 +8,7 @@
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      d:DesignHeight="1250" d:DesignWidth="800"
+      d:DesignHeight="1350" d:DesignWidth="800"
       Title="Config Settings">
 
     <Grid>
@@ -83,10 +83,247 @@
                           IsChecked="{Binding UrlEncodeDataAfterSlicing}" 
                           VerticalContentAlignment="Center"
                           Margin="5 10 0 0"/>
+                <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Rules</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="AddSimpleDataRule" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Simple</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddRegexDataRule" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Regex</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding SimpleDataRulesCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Slice Name" />
+                                    <TextBox Grid.Column="1" Text="{Binding SliceName}" Height="30" Margin="5 0" />
+                                    <ComboBox Grid.Column="2" 
+                                              ItemsSource="{Binding DataContext.StringRules, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                              SelectedItem="{Binding Comparison}" Height="30" Margin="5 0" />
+                                    <TextBox Grid.Column="3" Text="{Binding StringToCompare}" Height="30" Margin="5 0" />
+                                    <CheckBox Grid.Column="4" Content="Case sensitive"
+                                      IsChecked="{Binding CaseSensitive}"
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <Button Tag="{Binding}" Grid.Column="5" 
+                                            Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding RegexDataRulesCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Slice Name" />
+                                    <TextBox Grid.Column="1" Text="{Binding SliceName}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Regex to match" />
+                                    <TextBox Grid.Column="3" Text="{Binding RegexToMatch}" Height="30" Margin="5 0" />
+                                    <Button Tag="{Binding}" Grid.Column="4" 
+                                            Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <!--Data Rules-->
-                <!--Resources-->
+                <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Resources</Label>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="AddLinesFromFileResource" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="110" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Lines from file</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddRandomLinesFromFileResource" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="150" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Random lines from file</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding LinesFromFileResourcesCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Name" />
+                                    <TextBox Grid.Column="1" Text="{Binding Name}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Location" />
+                                    <TextBox Grid.Column="3" Text="{Binding Location}" Height="30" Margin="5 0" />
+                                    <CheckBox Grid.Column="4" Content="Loops around"
+                                      IsChecked="{Binding LoopsAround}" 
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <CheckBox Grid.Column="5" Content="Ignore empty lines"
+                                      IsChecked="{Binding IgnoreEmptyLines}" 
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <Button Tag="{Binding}" Grid.Column="6" 
+                                            Click="RemoveResource" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding RandomLinesFromFileResourcesCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Name" />
+                                    <TextBox Grid.Column="1" Text="{Binding Name}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Location" />
+                                    <TextBox Grid.Column="3" Text="{Binding Location}" Height="30" Margin="5 0" />
+                                    <CheckBox Grid.Column="4" Content="Unique"
+                                      IsChecked="{Binding Unique}" 
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <CheckBox Grid.Column="5" Content="Ignore empty lines"
+                                      IsChecked="{Binding IgnoreEmptyLines}" 
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <Button Tag="{Binding}" Grid.Column="6" 
+                                            Click="RemoveResource" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Inputs</Label>
+                <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Custom inputs</Label>
+                <Button x:Name="addCustomInputButton" Click="AddCustomInput" Margin="5 5 5 5" 
+                        Background="{DynamicResource SuccessButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Add</TextBlock>
+                    </StackPanel>
+                </Button>
+                <ItemsControl x:Name="customInputsControl" ItemsSource="{Binding CustomInputsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Content="Description" />
+                                    <TextBox Grid.Column="1" Text="{Binding Description}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="2" VerticalAlignment="Center" Content="Variable name" />
+                                    <TextBox Grid.Column="3" Text="{Binding VariableName}" Height="30" Margin="5 0" />
+                                    <Label Grid.Column="4" VerticalAlignment="Center" Content="Default answer" />
+                                    <TextBox Grid.Column="5" Text="{Binding DefaultAnswer}" Height="30" Margin="5 0" />
+                                    <Button x:Name="removeCustomInputButton" Tag="{Binding}" Grid.Column="6" 
+                                            Click="RemoveCustomInput" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Puppeteer</Label>
                 <DockPanel>

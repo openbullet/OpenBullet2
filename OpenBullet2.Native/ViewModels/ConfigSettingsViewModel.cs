@@ -1,6 +1,9 @@
 ﻿using OpenBullet2.Core.Services;
+using RuriLib.Models;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
+using RuriLib.Models.Data.Resources.Options;
+using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;
 using System;
@@ -141,6 +144,63 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public IEnumerable<StringRule> StringRules => Enum.GetValues(typeof(StringRule)).Cast<StringRule>();
+
+        private ObservableCollection<SimpleDataRule> simpleDataRulesCollection;
+        public ObservableCollection<SimpleDataRule> SimpleDataRulesCollection
+        {
+            get => simpleDataRulesCollection;
+            set
+            {
+                simpleDataRulesCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<RegexDataRule> regexDataRulesCollection;
+        public ObservableCollection<RegexDataRule> RegexDataRulesCollection
+        {
+            get => regexDataRulesCollection;
+            set
+            {
+                regexDataRulesCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<LinesFromFileResourceOptions> linesFromFileResourcesCollection;
+        public ObservableCollection<LinesFromFileResourceOptions> LinesFromFileResourcesCollection
+        {
+            get => linesFromFileResourcesCollection;
+            set
+            {
+                linesFromFileResourcesCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<RandomLinesFromFileResourceOptions> randomLinesFromFileResourcesCollection;
+        public ObservableCollection<RandomLinesFromFileResourceOptions> RandomLinesFromFileResourcesCollection
+        {
+            get => randomLinesFromFileResourcesCollection;
+            set
+            {
+                randomLinesFromFileResourcesCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<CustomInput> customInputsCollection;
+        public ObservableCollection<CustomInput> CustomInputsCollection
+        {
+            get => customInputsCollection;
+            set
+            {
+                customInputsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string quitBrowserStatuses;
         public string QuitBrowserStatuses
         {
@@ -215,6 +275,76 @@ namespace OpenBullet2.Native.ViewModels
             base.UpdateViewModel();
         }
 
+        public void AddCustomInput()
+        {
+            CustomInputsCollection.Add(new CustomInput());
+            Input.CustomInputs = CustomInputsCollection.ToList();
+        }
+
+        public void RemoveCustomInput(CustomInput input)
+        {
+            CustomInputsCollection.Remove(input);
+            Input.CustomInputs = CustomInputsCollection.ToList();
+        }
+
+        public void AddLinesFromFileResource()
+        {
+            LinesFromFileResourcesCollection.Add(new LinesFromFileResourceOptions());
+            SaveResources();
+        }
+
+        public void AddRandomLinesFromFileResource()
+        {
+            RandomLinesFromFileResourcesCollection.Add(new RandomLinesFromFileResourceOptions());
+            SaveResources();
+        }
+
+        public void RemoveResource(ConfigResourceOptions resource)
+        {
+            if (resource is LinesFromFileResourceOptions lff)
+            {
+                LinesFromFileResourcesCollection.Remove(lff);
+            }
+            else if (resource is RandomLinesFromFileResourceOptions rlff)
+            {
+                RandomLinesFromFileResourcesCollection.Remove(rlff);
+            }
+
+            SaveResources();
+        }
+
+        public void AddSimpleDataRule()
+        {
+            SimpleDataRulesCollection.Add(new SimpleDataRule());
+            SaveDataRules();
+        }
+
+        public void AddRegexDataRule()
+        {
+            RegexDataRulesCollection.Add(new RegexDataRule());
+            SaveDataRules();
+        }
+
+        public void RemoveDataRule(DataRule rule)
+        {
+            if (rule is SimpleDataRule sdr)
+            {
+                SimpleDataRulesCollection.Remove(sdr);
+            }
+            else if (rule is RegexDataRule rdr)
+            {
+                RegexDataRulesCollection.Remove(rdr);
+            }
+
+            SaveDataRules();
+        }
+
+        private void SaveResources() => Data.Resources = LinesFromFileResourcesCollection.ToList().Cast<ConfigResourceOptions>()
+            .Concat(RandomLinesFromFileResourcesCollection.ToList().Cast<ConfigResourceOptions>()).ToList();
+
+        private void SaveDataRules() => Data.DataRules = SimpleDataRulesCollection.ToList().Cast<DataRule>()
+            .Concat(RegexDataRulesCollection.ToList().Cast<DataRule>()).ToList();
+
         private void CreateCollections()
         {
             ContinueStatuses = string.Join(',', General.ContinueStatuses);
@@ -222,6 +352,20 @@ namespace OpenBullet2.Native.ViewModels
             AllowedProxyTypes = string.Join(',', Proxy.AllowedProxyTypes);
             AllowedWordlistTypes = string.Join(',', Data.AllowedWordlistTypes);
             QuitBrowserStatuses = string.Join(',', Puppeteer.QuitBrowserStatuses);
+
+            CustomInputsCollection = new ObservableCollection<CustomInput>(Input.CustomInputs);
+            LinesFromFileResourcesCollection = new ObservableCollection<LinesFromFileResourceOptions>(
+                Data.Resources.Where(r => r is LinesFromFileResourceOptions)
+                .Cast<LinesFromFileResourceOptions>());
+            RandomLinesFromFileResourcesCollection = new ObservableCollection<RandomLinesFromFileResourceOptions>(
+                Data.Resources.Where(r => r is RandomLinesFromFileResourceOptions)
+                .Cast<RandomLinesFromFileResourceOptions>());
+            SimpleDataRulesCollection = new ObservableCollection<SimpleDataRule>(
+                Data.DataRules.Where(r => r is SimpleDataRule)
+                .Cast<SimpleDataRule>());
+            RegexDataRulesCollection = new ObservableCollection<RegexDataRule>(
+                Data.DataRules.Where(r => r is RegexDataRule)
+                .Cast<RegexDataRule>());
         }
     }
 }
