@@ -24,7 +24,7 @@ namespace OpenBullet2.Native.ViewModels
         private InputSettings Input => Config.Settings.InputSettings;
         private PuppeteerSettings Puppeteer => Config.Settings.PuppeteerSettings;
 
-        public int LogBufferSize
+        public int SuggestedBots
         {
             get => General.SuggestedBots;
             set
@@ -219,6 +219,16 @@ namespace OpenBullet2.Native.ViewModels
             set
             {
                 Puppeteer.Headless = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IgnoreHttpsErrors
+        {
+            get => Puppeteer.IgnoreHttpsErrors;
+            set
+            {
+                Puppeteer.IgnoreHttpsErrors = value;
                 OnPropertyChanged();
             }
         }
