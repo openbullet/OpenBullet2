@@ -5,11 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="780"
       Title="LoliCode"
       KeyDown="PageKeyDown">
-
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -17,8 +18,41 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <avalonEdit:TextEditor
-            Grid.Column="0"
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal">
+                <Button Click="ToggleUsings" 
+                    Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <RichTextBox x:Name="usingsRTB" 
+                Visibility="Collapsed"
+                Background="{DynamicResource BackgroundSecondary}" 
+                Foreground="{DynamicResource ForegroundMain}" 
+                FontFamily="Consolas"
+                Grid.Row="1"
+                Margin="0 0 0 5"
+                Height="100"
+                TextChanged="UsingsChanged">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+
+            <avalonEdit:TextEditor
+            Grid.Row="2"
             x:Name="editor"
             FontFamily="Consolas"
             FontSize="10pt"
@@ -29,6 +63,7 @@
             ShowLineNumbers="True"
             MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
             MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
+        </Grid>
 
         <GridSplitter 
             ResizeDirection="Columns"
