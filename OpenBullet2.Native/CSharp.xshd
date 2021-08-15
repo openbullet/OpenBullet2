@@ -1,42 +1,42 @@
 <?xml version="1.0"?>
 <SyntaxDefinition name="C#" extensions=".cs" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <!-- The named colors 'Comment' and 'String' are used in SharpDevelop to detect if a line is inside a multiline string/comment -->
-  <Color name="Comment" foreground="Green" exampleText="// comment" />
-  <Color name="String" foreground="Blue" exampleText="string text = &quot;Hello, World!&quot;"/>
-  <Color name="StringInterpolation" foreground="Black" exampleText="string text = $&quot;Hello, {name}!&quot;"/>
-  <Color name="Char" foreground="Magenta" exampleText="char linefeed = '\n';"/>
+  <Color name="Comment" foreground="#608B4E" exampleText="// comment" />
+  <Color name="String" foreground="#CE9178" exampleText="string text = &quot;Hello, World!&quot;"/>
+  <Color name="StringInterpolation" foreground="#FAD7A0" exampleText="string text = $&quot;Hello, {name}!&quot;"/>
+  <Color name="Char" foreground="#CE9178" exampleText="char linefeed = '\n';"/>
   <Color name="Preprocessor" foreground="Green" exampleText="#region Title" />
   <Color name="Punctuation" exampleText="a(b.c);" />
-  <Color name="ValueTypeKeywords" fontWeight="bold" foreground="Red" exampleText="bool b = true;" />
-  <Color name="ReferenceTypeKeywords" foreground="Red" exampleText="object o;" />
-  <Color name="MethodCall" foreground="MidnightBlue" fontWeight="bold" exampleText="o.ToString();"/>
-  <Color name="NumberLiteral" foreground="DarkBlue" exampleText="3.1415f"/>
+  <Color name="ValueTypeKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="bool b = true;" />
+  <Color name="ReferenceTypeKeywords" foreground="#5DADE2" exampleText="object o;" />
+  <Color name="MethodCall" foreground="#FAD7A0" fontWeight="bold" exampleText="o.ToString();"/>
+  <Color name="NumberLiteral" foreground="DarkSeaGreen" exampleText="3.1415f"/>
   <Color name="ThisOrBaseReference" fontWeight="bold" exampleText="this.Do(); base.Do();"/>
   <Color name="NullOrValueKeywords" fontWeight="bold" exampleText="if (value == null)"/>
-  <Color name="Keywords" fontWeight="bold" foreground="Blue" exampleText="if (a) {} else {}"/>
-  <Color name="GotoKeywords" foreground="Navy" exampleText="continue; return null;"/>
-  <Color name="ContextKeywords" foreground="Navy" exampleText="var a = from x in y select z;"/>
-  <Color name="ExceptionKeywords" fontWeight="bold" foreground="Teal" exampleText="try {} catch {} finally {}"/>
+  <Color name="Keywords" fontWeight="bold" foreground="#5DADE2" exampleText="if (a) {} else {}"/>
+  <Color name="GotoKeywords" foreground="#5DADE2" exampleText="continue; return null;"/>
+  <Color name="ContextKeywords" foreground="#5DADE2" exampleText="var a = from x in y select z;"/>
+  <Color name="ExceptionKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="try {} catch {} finally {}"/>
   <Color name="CheckedKeyword" fontWeight="bold" foreground="DarkGray" exampleText="checked {}"/>
-  <Color name="UnsafeKeywords" foreground="Olive" exampleText="unsafe { fixed (..) {} }"/>
-  <Color name="OperatorKeywords" fontWeight="bold" foreground="Pink" exampleText="public static implicit operator..."/>
-  <Color name="ParameterModifiers" fontWeight="bold" foreground="DeepPink" exampleText="(ref int a, params int[] b)"/>
-  <Color name="Modifiers" foreground="Brown" exampleText="static readonly int a;"/>
-  <Color name="Visibility" fontWeight="bold" foreground="Blue" exampleText="public override void ToString();"/>
-  <Color name="NamespaceKeywords" fontWeight="bold" foreground="Green" exampleText="namespace A.B { using System; }"/>
-  <Color name="GetSetAddRemove" foreground="SaddleBrown" exampleText="int Prop { get; set; }"/>
-  <Color name="TrueFalse" fontWeight="bold" foreground="DarkCyan" exampleText="b = false; a = true;" />
-  <Color name="TypeKeywords" fontWeight="bold" foreground="DarkCyan" exampleText="if (x is int) { a = x as int; type = typeof(int); size = sizeof(int); c = new object(); }"/>
-  <Color name="SemanticKeywords" fontWeight="bold" foreground="DarkCyan" exampleText="if (args == null) throw new ArgumentNullException(nameof(args));" />
+  <Color name="UnsafeKeywords" foreground="#5DADE2" exampleText="unsafe { fixed (..) {} }"/>
+  <Color name="OperatorKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="public static implicit operator..."/>
+  <Color name="ParameterModifiers" fontWeight="bold" foreground="#5DADE2" exampleText="(ref int a, params int[] b)"/>
+  <Color name="Modifiers" foreground="#5DADE2" exampleText="static readonly int a;"/>
+  <Color name="Visibility" fontWeight="bold" foreground="#5DADE2" exampleText="public override void ToString();"/>
+  <Color name="NamespaceKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="namespace A.B { using System; }"/>
+  <Color name="GetSetAddRemove" foreground="#5DADE2" exampleText="int Prop { get; set; }"/>
+  <Color name="TrueFalse" fontWeight="bold" foreground="#5DADE2" exampleText="b = false; a = true;" />
+  <Color name="TypeKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="if (x is int) { a = x as int; type = typeof(int); size = sizeof(int); c = new object(); }"/>
+  <Color name="SemanticKeywords" fontWeight="bold" foreground="#5DADE2" exampleText="if (args == null) throw new ArgumentNullException(nameof(args));" />
 
   <Property name="DocCommentMarker" value="///" />
 
   <RuleSet name="CommentMarkerSet">
-    <Keywords fontWeight="bold" foreground="Red">
+    <Keywords fontWeight="bold" foreground="Tomato">
       <Word>TODO</Word>
       <Word>FIXME</Word>
     </Keywords>
-    <Keywords fontWeight="bold" foreground="#E0E000">
+    <Keywords fontWeight="bold" foreground="Tomato">
       <Word>HACK</Word>
       <Word>UNDONE</Word>
     </Keywords>

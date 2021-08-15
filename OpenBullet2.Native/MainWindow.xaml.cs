@@ -35,6 +35,7 @@ namespace OpenBullet2.Native
         private ConfigReadme configReadmePage;
         private ConfigLoliCode configLoliCodePage;
         private Views.Pages.ConfigSettings configSettingsPage;
+        private ConfigCSharpCode configCSharpCodePage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -148,6 +149,13 @@ namespace OpenBullet2.Native
                     if (configSettingsPage is null) configSettingsPage = new();
                     configSettingsPage.UpdateViewModel();
                     ChangePage(configSettingsPage, menuOptionConfigSettings);
+                    break;
+
+                case MainWindowPage.ConfigCSharpCode:
+                    CloseSubmenu();
+                    if (configCSharpCodePage is null) configCSharpCodePage = new();
+                    configCSharpCodePage.UpdateViewModel();
+                    ChangePage(configCSharpCodePage, menuOptionCSharpCode);
                     break;
             }
         }

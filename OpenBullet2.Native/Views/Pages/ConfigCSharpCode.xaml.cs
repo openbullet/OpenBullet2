@@ -1,32 +1,29 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Views.Pages.Shared;
+using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 
 namespace OpenBullet2.Native.Views.Pages
 {
     /// <summary>
-    /// Interaction logic for ConfigLoliCode.xaml
+    /// Interaction logic for ConfigCSharpCode.xaml
     /// </summary>
-    public partial class ConfigLoliCode : Page
+    public partial class ConfigCSharpCode : Page
     {
         private readonly ConfigService configService;
-        private readonly IConfigRepository configRepo; // TODO: This should not be here
+        private Config Config => configService.SelectedConfig;
 
-        public ConfigLoliCode()
+        public ConfigCSharpCode()
         {
             InitializeComponent();
             configService = SP.GetService<ConfigService>();
-            configRepo = SP.GetService<IConfigRepository>();
             debuggerFrame.Content = SP.GetService<Debugger>();
 
             HighlightSyntax();
@@ -37,9 +34,15 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                // Try to change the mode to LoliCode and set the editor's text
-                configService.SelectedConfig.ChangeMode(ConfigMode.LoliCode);
-                editor.Text = configService.SelectedConfig.LoliCodeScript;
+                // Transpile if not in CSharp mode
+                if (Config != null && Config.Mode != ConfigMode.CSharp)
+                {
+                    Config.CSharpScript = Config.Mode == ConfigMode.Stack
+                            ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings)
+                            : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
+
+                    editor.Text = Config.CSharpScript;
+                }
             }
             catch (Exception ex)
             {
@@ -49,26 +52,12 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void EditorLostFocus(object sender, RoutedEventArgs e) 
-            => configService.SelectedConfig.LoliCodeScript = editor.Text;
-
         private void HighlightSyntax()
         {
-            using var reader = XmlReader.Create("LoliCode.xshd");
+            using var reader = XmlReader.Create("CSharp.xshd");
             editor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             editor.TextArea.TextView.LinkTextForegroundBrush = new SolidColorBrush(Colors.DodgerBlue);
             editor.TextArea.TextView.LinkTextUnderline = false;
-        }
-
-        private async void PageKeyDown(object sender, KeyEventArgs e)
-        {
-            // Save on CTRL+S
-            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
-            {
-                configService.SelectedConfig.LoliCodeScript = editor.Text;
-                await configRepo.Save(configService.SelectedConfig);
-                Alert.Info("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
-            }
         }
     }
 }

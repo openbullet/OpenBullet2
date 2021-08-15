@@ -82,8 +82,7 @@
 
         <TabControl Grid.Row="2" 
                     Margin="5 5 0 0"
-                    x:Name="tabControl"
-                    Style="{DynamicResource MahApps.Styles.TabControl.Animated}">
+                    x:Name="tabControl">
             <TabItem>
                 <TabItem.Header>
                     <Button Click="ShowLog"
