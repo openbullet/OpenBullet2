@@ -33,9 +33,8 @@ namespace OpenBullet2.Native
         private Configs configsPage;
         private Views.Pages.ConfigMetadata configMetadataPage;
         private ConfigReadme configReadmePage;
-        private ConfigLoliCode configLoliCodePage;
+        private ConfigEditor configEditorPage;
         private Views.Pages.ConfigSettings configSettingsPage;
-        private ConfigCSharpCode configCSharpCodePage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -143,9 +142,9 @@ namespace OpenBullet2.Native
 
                 case MainWindowPage.ConfigLoliCode:
                     CloseSubmenu();
-                    if (configLoliCodePage is null) configLoliCodePage = new();
-                    configLoliCodePage.UpdateViewModel();
-                    ChangePage(configLoliCodePage, menuOptionLoliCode);
+                    if (configEditorPage is null) configEditorPage = new();
+                    configEditorPage.NavigateTo(ConfigEditorSection.LoliCode);
+                    ChangePage(configEditorPage, menuOptionLoliCode);
                     break;
 
                 case MainWindowPage.ConfigSettings:
@@ -157,9 +156,9 @@ namespace OpenBullet2.Native
 
                 case MainWindowPage.ConfigCSharpCode:
                     CloseSubmenu();
-                    if (configCSharpCodePage is null) configCSharpCodePage = new();
-                    configCSharpCodePage.UpdateViewModel();
-                    ChangePage(configCSharpCodePage, menuOptionCSharpCode);
+                    if (configEditorPage is null) configEditorPage = new();
+                    configEditorPage.NavigateTo(ConfigEditorSection.CSharp);
+                    ChangePage(configEditorPage, menuOptionCSharpCode);
                     break;
             }
         }

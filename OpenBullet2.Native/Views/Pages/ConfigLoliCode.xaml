@@ -10,32 +10,25 @@
       d:DesignHeight="550" d:DesignWidth="780"
       Title="LoliCode"
       KeyDown="PageKeyDown">
-    
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <StackPanel Orientation="Horizontal">
-                <Button Click="ToggleUsings" 
+        <StackPanel Orientation="Horizontal">
+            <Button Click="ToggleUsings" 
                     Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}">
-                    <StackPanel Orientation="Horizontal">
-                        <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
-                        <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
-            <RichTextBox x:Name="usingsRTB" 
+        <RichTextBox x:Name="usingsRTB" 
                 Visibility="Collapsed"
                 Background="{DynamicResource BackgroundSecondary}" 
                 Foreground="{DynamicResource ForegroundMain}" 
@@ -44,14 +37,14 @@
                 Margin="0 0 0 5"
                 Height="100"
                 TextChanged="UsingsChanged">
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </RichTextBox.Resources>
-            </RichTextBox>
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </RichTextBox.Resources>
+        </RichTextBox>
 
-            <avalonEdit:TextEditor
+        <avalonEdit:TextEditor
             Grid.Row="2"
             x:Name="editor"
             FontFamily="Consolas"
@@ -63,16 +56,5 @@
             ShowLineNumbers="True"
             MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
             MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
-        </Grid>
-
-        <GridSplitter 
-            ResizeDirection="Columns"
-            ResizeBehavior="PreviousAndNext"
-            Grid.Column="1"
-            Width="5"
-            VerticalAlignment="Stretch" />
-
-        <Frame x:Name="debuggerFrame" 
-               Grid.Column="2" />
     </Grid>
 </Page>

@@ -10,12 +10,6 @@
       Title="C# Code">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
         <avalonEdit:TextEditor
             Grid.Column="0"
             x:Name="editor"
@@ -25,18 +19,6 @@
             Background="#111"
             HorizontalAlignment="Stretch"
             ShowLineNumbers="True"
-            IsReadOnly="True"
-            MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
-            MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
-
-        <GridSplitter 
-            ResizeDirection="Columns"
-            ResizeBehavior="PreviousAndNext"
-            Grid.Column="1"
-            Width="5"
-            VerticalAlignment="Stretch" />
-
-        <Frame x:Name="debuggerFrame" 
-               Grid.Column="2" />
+            IsReadOnly="True" />
     </Grid>
 </Page>

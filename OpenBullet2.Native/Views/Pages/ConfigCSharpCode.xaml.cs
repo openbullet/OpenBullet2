@@ -2,7 +2,6 @@
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
-using OpenBullet2.Native.Views.Pages.Shared;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Configs;
 using System;
@@ -24,10 +23,8 @@ namespace OpenBullet2.Native.Views.Pages
         {
             InitializeComponent();
             configService = SP.GetService<ConfigService>();
-            debuggerFrame.Content = SP.GetService<Debugger>();
 
             HighlightSyntax();
-            UpdateViewModel();
         }
 
         public void UpdateViewModel()

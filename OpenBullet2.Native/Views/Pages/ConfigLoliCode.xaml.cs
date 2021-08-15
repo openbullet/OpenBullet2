@@ -30,10 +30,8 @@ namespace OpenBullet2.Native.Views.Pages
             InitializeComponent();
             configService = SP.GetService<ConfigService>();
             configRepo = SP.GetService<IConfigRepository>();
-            debuggerFrame.Content = SP.GetService<Debugger>();
 
             HighlightSyntax();
-            UpdateViewModel();
         }
 
         public void UpdateViewModel()
