@@ -237,27 +237,33 @@
 
     <Span color="Keychain.Success">
       <Begin>KEYCHAIN SUCCESS</Begin>
-      <End>OR|AND</End>
+      <End>$</End>
     </Span>
 
     <Span color="Keychain.Fail">
       <Begin>KEYCHAIN FAIL</Begin>
-      <End>OR|AND</End>
+      <End>$</End>
     </Span>
 
     <Span color="Keychain.Retry">
       <Begin>KEYCHAIN RETRY</Begin>
-      <End>OR|AND</End>
+      <End>$</End>
     </Span>
 
     <Span color="Keychain.Ban">
       <Begin>KEYCHAIN BAN</Begin>
-      <End>OR|AND</End>
+      <End>$</End>
     </Span>
 
+    <Span color="Keychain.None">
+      <Begin>KEYCHAIN NONE</Begin>
+      <End>$</End>
+    </Span>
+
+    <!-- For some reason the ones above don't work -->
     <Span color="Keychain.Default">
-      <Begin>KEYCHAIN</Begin>
-      <End>OR|AND</End>
+      <Begin>KEYCHAIN (?!SUCCESS|FAIL|RETRY|BAN|NONE)</Begin>
+      <End>$</End>
     </Span>
 
     <Keywords color="Script.Output">
@@ -287,9 +293,14 @@
       <Word>True</Word>
     </Keywords>
 
-    <Span color="Key">
-      <Begin>(INTKEY|STRINGKEY|BOOLKEY|FLOATKEY|LISTKEY|DICTKEY)</Begin>
-    </Span>
+    <Keywords color="Key">
+      <Word>INTKEY</Word>
+      <Word>STRINGKEY</Word>
+      <Word>BOOLKEY</Word>
+      <Word>FLOATKEY</Word>
+      <Word>LISTKEY</Word>
+      <Word>DICTKEY</Word>
+    </Keywords>
 
     <!-- Digits -->
       <Rule foreground="DarkSeaGreen">
