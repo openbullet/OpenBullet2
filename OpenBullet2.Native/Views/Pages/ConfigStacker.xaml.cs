@@ -87,7 +87,7 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 var content = first.Block switch
                 {
-                    AutoBlockInstance x => new AutoBlockSettingsViewer(x),
+                    AutoBlockInstance => new AutoBlockSettingsViewer(first),
                     _ => null
                 };
 

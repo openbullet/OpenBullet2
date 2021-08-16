@@ -203,7 +203,7 @@ namespace OpenBullet2.Native.ViewModels
             get => Block.Label;
             set
             {
-                Label = value;
+                Block.Label = value;
                 OnPropertyChanged();
             }
         }

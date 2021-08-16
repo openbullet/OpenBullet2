@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Settings;
+using System;
 using System.Windows.Controls;
 
 namespace OpenBullet2.Native.Controls
@@ -12,9 +13,14 @@ namespace OpenBullet2.Native.Controls
     {
         private readonly AutoBlockSettingsViewerViewModel vm;
 
-        public AutoBlockSettingsViewer(AutoBlockInstance block)
+        public AutoBlockSettingsViewer(BlockViewModel blockVM)
         {
-            vm = new AutoBlockSettingsViewerViewModel(block);
+            if (blockVM.Block is not AutoBlockInstance)
+            {
+                throw new Exception("Wrong block type for this UC");
+            }
+
+            vm = new AutoBlockSettingsViewerViewModel(blockVM);
             DataContext = vm;
 
             InitializeComponent();
@@ -23,7 +29,7 @@ namespace OpenBullet2.Native.Controls
 
         private void CreateControls()
         {
-            foreach (var setting in vm.Block.Settings)
+            foreach (var setting in vm.BlockVM.Block.Settings)
             {
                 UserControl viewer = setting.Value.FixedSetting switch
                 {
@@ -48,11 +54,47 @@ namespace OpenBullet2.Native.Controls
 
     public class AutoBlockSettingsViewerViewModel : ViewModelBase
     {
-        public AutoBlockInstance Block { get; init; }
+        public BlockViewModel BlockVM { get; init; }
+        public AutoBlockInstance Block => BlockVM.Block as AutoBlockInstance;
 
-        public AutoBlockSettingsViewerViewModel(AutoBlockInstance block)
+        public string NameAndId => $"{BlockVM.Block.ReadableName} ({BlockVM.Block.Id})";
+
+        public string Label
         {
-            Block = block;
+            get => BlockVM.Label;
+            set
+            {
+                BlockVM.Label = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SafeMode
+        {
+            get => Block.Safe;
+            set
+            {
+                Block.Safe = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasReturnValue => Block.Descriptor.ReturnType is not null;
+        public string ReturnValueType => $"Output variable ({Block.Descriptor.ReturnType})";
+
+        public string OutputVariable
+        {
+            get => Block.OutputVariable;
+            set
+            {
+                Block.OutputVariable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AutoBlockSettingsViewerViewModel(BlockViewModel block)
+        {
+            BlockVM = block;
         }
     }
 }
