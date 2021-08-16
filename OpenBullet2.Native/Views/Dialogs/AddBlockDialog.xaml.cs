@@ -91,7 +91,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public bool CanGoUp() => CurrentNode.Parent is not null;
+        public bool CanGoUp => CurrentNode.Parent is not null;
 
         private CompositeCollection nodesCollection;
         public CompositeCollection NodesCollection
