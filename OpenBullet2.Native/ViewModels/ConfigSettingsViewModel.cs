@@ -146,46 +146,24 @@ namespace OpenBullet2.Native.ViewModels
 
         public IEnumerable<StringRule> StringRules => Enum.GetValues(typeof(StringRule)).Cast<StringRule>();
 
-        private ObservableCollection<SimpleDataRule> simpleDataRulesCollection;
-        public ObservableCollection<SimpleDataRule> SimpleDataRulesCollection
+        private ObservableCollection<DataRule> dataRulesCollection;
+        public ObservableCollection<DataRule> DataRulesCollection
         {
-            get => simpleDataRulesCollection;
+            get => dataRulesCollection;
             set
             {
-                simpleDataRulesCollection = value;
+                dataRulesCollection = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<RegexDataRule> regexDataRulesCollection;
-        public ObservableCollection<RegexDataRule> RegexDataRulesCollection
+        private ObservableCollection<ConfigResourceOptions> resourcesCollection;
+        public ObservableCollection<ConfigResourceOptions> ResourcesCollection
         {
-            get => regexDataRulesCollection;
+            get => resourcesCollection;
             set
             {
-                regexDataRulesCollection = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<LinesFromFileResourceOptions> linesFromFileResourcesCollection;
-        public ObservableCollection<LinesFromFileResourceOptions> LinesFromFileResourcesCollection
-        {
-            get => linesFromFileResourcesCollection;
-            set
-            {
-                linesFromFileResourcesCollection = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<RandomLinesFromFileResourceOptions> randomLinesFromFileResourcesCollection;
-        public ObservableCollection<RandomLinesFromFileResourceOptions> RandomLinesFromFileResourcesCollection
-        {
-            get => randomLinesFromFileResourcesCollection;
-            set
-            {
-                randomLinesFromFileResourcesCollection = value;
+                resourcesCollection = value;
                 OnPropertyChanged();
             }
         }
@@ -299,61 +277,42 @@ namespace OpenBullet2.Native.ViewModels
 
         public void AddLinesFromFileResource()
         {
-            LinesFromFileResourcesCollection.Add(new LinesFromFileResourceOptions());
+            ResourcesCollection.Add(new LinesFromFileResourceOptions());
             SaveResources();
         }
 
         public void AddRandomLinesFromFileResource()
         {
-            RandomLinesFromFileResourcesCollection.Add(new RandomLinesFromFileResourceOptions());
+            ResourcesCollection.Add(new RandomLinesFromFileResourceOptions());
             SaveResources();
         }
 
         public void RemoveResource(ConfigResourceOptions resource)
         {
-            if (resource is LinesFromFileResourceOptions lff)
-            {
-                LinesFromFileResourcesCollection.Remove(lff);
-            }
-            else if (resource is RandomLinesFromFileResourceOptions rlff)
-            {
-                RandomLinesFromFileResourcesCollection.Remove(rlff);
-            }
-
+            ResourcesCollection.Remove(resource);
             SaveResources();
         }
 
         public void AddSimpleDataRule()
         {
-            SimpleDataRulesCollection.Add(new SimpleDataRule());
+            DataRulesCollection.Add(new SimpleDataRule());
             SaveDataRules();
         }
 
         public void AddRegexDataRule()
         {
-            RegexDataRulesCollection.Add(new RegexDataRule());
+            DataRulesCollection.Add(new RegexDataRule());
             SaveDataRules();
         }
 
         public void RemoveDataRule(DataRule rule)
         {
-            if (rule is SimpleDataRule sdr)
-            {
-                SimpleDataRulesCollection.Remove(sdr);
-            }
-            else if (rule is RegexDataRule rdr)
-            {
-                RegexDataRulesCollection.Remove(rdr);
-            }
-
+            DataRulesCollection.Remove(rule);
             SaveDataRules();
         }
 
-        private void SaveResources() => Data.Resources = LinesFromFileResourcesCollection.ToList().Cast<ConfigResourceOptions>()
-            .Concat(RandomLinesFromFileResourcesCollection.ToList().Cast<ConfigResourceOptions>()).ToList();
-
-        private void SaveDataRules() => Data.DataRules = SimpleDataRulesCollection.ToList().Cast<DataRule>()
-            .Concat(RegexDataRulesCollection.ToList().Cast<DataRule>()).ToList();
+        private void SaveResources() => Data.Resources = ResourcesCollection.ToList();
+        private void SaveDataRules() => Data.DataRules = DataRulesCollection.ToList();
 
         private void CreateCollections()
         {
@@ -364,18 +323,8 @@ namespace OpenBullet2.Native.ViewModels
             QuitBrowserStatuses = string.Join(',', Puppeteer.QuitBrowserStatuses);
 
             CustomInputsCollection = new ObservableCollection<CustomInput>(Input.CustomInputs);
-            LinesFromFileResourcesCollection = new ObservableCollection<LinesFromFileResourceOptions>(
-                Data.Resources.Where(r => r is LinesFromFileResourceOptions)
-                .Cast<LinesFromFileResourceOptions>());
-            RandomLinesFromFileResourcesCollection = new ObservableCollection<RandomLinesFromFileResourceOptions>(
-                Data.Resources.Where(r => r is RandomLinesFromFileResourceOptions)
-                .Cast<RandomLinesFromFileResourceOptions>());
-            SimpleDataRulesCollection = new ObservableCollection<SimpleDataRule>(
-                Data.DataRules.Where(r => r is SimpleDataRule)
-                .Cast<SimpleDataRule>());
-            RegexDataRulesCollection = new ObservableCollection<RegexDataRule>(
-                Data.DataRules.Where(r => r is RegexDataRule)
-                .Cast<RegexDataRule>());
+            ResourcesCollection = new ObservableCollection<ConfigResourceOptions>(Data.Resources);
+            DataRulesCollection = new ObservableCollection<DataRule>(Data.DataRules);
         }
     }
 }
