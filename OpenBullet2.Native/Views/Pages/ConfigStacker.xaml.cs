@@ -8,6 +8,7 @@ using RuriLib.Models.Configs;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace OpenBullet2.Native.Views.Pages
 {
@@ -50,11 +51,18 @@ namespace OpenBullet2.Native.Views.Pages
         private void AddBlock(object sender, RoutedEventArgs e)
             => new MainDialog(new AddBlockDialog(this), "Add block").ShowDialog();
 
-        private void RemoveBlock(object sender, RoutedEventArgs e) { }
-        private void MoveBlockUp(object sender, RoutedEventArgs e) { }
-        private void MoveBlockDown(object sender, RoutedEventArgs e) { }
-        private void CloneBlock(object sender, RoutedEventArgs e) { }
-        private void EnableDisableBlock(object sender, RoutedEventArgs e) { }
-        private void Undo(object sender, RoutedEventArgs e) { }
+        private void RemoveBlock(object sender, RoutedEventArgs e) => vm.RemoveSelected();
+        private void MoveBlockUp(object sender, RoutedEventArgs e) => vm.MoveSelectedUp();
+        private void MoveBlockDown(object sender, RoutedEventArgs e) => vm.MoveSelectedDown();
+        private void CloneBlock(object sender, RoutedEventArgs e) => vm.CloneSelected();
+        private void EnableDisableBlock(object sender, RoutedEventArgs e) => vm.EnableDisableSelected();
+        private void Undo(object sender, RoutedEventArgs e) => vm.Undo();
+
+        private void SelectBlock(object sender, MouseEventArgs e)
+        {
+            var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            var block = (BlockViewModel)(sender as FrameworkElement).Tag;
+            vm.SelectBlock(block, ctrl);
+        }
     }
 }

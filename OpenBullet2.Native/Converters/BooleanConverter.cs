@@ -19,14 +19,10 @@ namespace OpenBullet2.Native.Converters
         public T False { get; set; }
 
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is bool b && b ? True : False;
-        }
+            => value is bool b && b ? True : False;
 
         public virtual object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is T convertedValue && EqualityComparer<T>.Default.Equals(convertedValue, True);
-        }
+            => value is T convertedValue && EqualityComparer<T>.Default.Equals(convertedValue, True);
     }
 
     public sealed class BoolToVisibilityConverter : BooleanConverter<Visibility>
@@ -34,6 +30,16 @@ namespace OpenBullet2.Native.Converters
         public BoolToVisibilityConverter() :
             base(Visibility.Visible, Visibility.Collapsed)
         {
+
+        }
+    }
+
+    public sealed class BoolToThicknessConverter : BooleanConverter<Thickness>
+    {
+        public BoolToThicknessConverter() :
+            base(new Thickness(1), new Thickness(0))
+        {
+
         }
     }
 }

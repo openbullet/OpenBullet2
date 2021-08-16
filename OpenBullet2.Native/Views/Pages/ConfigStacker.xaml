@@ -5,10 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ConfigStacker">
 
+    <Page.Resources>
+        <converters:BoolToThicknessConverter x:Key="BoolToThick" />
+    </Page.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180" />
@@ -81,12 +86,48 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-        
-        
-        <!-- Stack -->
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Hidden"
+                      Grid.Row="1">
+            <ItemsControl 
+                Margin="0 10 0 0"
+                ItemsSource="{Binding Stack}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Margin="-5" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button 
+                            BorderBrush="White"
+                            BorderThickness="{Binding Selected, Converter={StaticResource ResourceKey=BoolToThick}}"
+                            Background="{Binding Block.Descriptor.Category.BackgroundColor}"
+                            Width="180"
+                            Height="40"
+                            Tag="{Binding}"
+                            MouseDown="SelectBlock">
+
+                            <TextBlock 
+                                MouseDown="SelectBlock"
+                                Grid.Row="0"
+                                FontSize="12"
+                                HorizontalAlignment="Center"
+                                TextAlignment="Center"
+                                Foreground="{Binding Block.Descriptor.Category.ForegroundColor}"
+                                Text="{Binding Label}"
+                                Tag="{Binding}"
+                                TextWrapping="Wrap" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
         <Label Content="Block information" 
-               FontSize="18"
+               FontSize="12"
+               HorizontalAlignment="Center"
                Height="35"
                Foreground="{DynamicResource ForegroundCustom}"
                VerticalAlignment="Center"
