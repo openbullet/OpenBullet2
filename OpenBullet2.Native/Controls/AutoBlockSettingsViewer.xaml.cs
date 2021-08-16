@@ -32,6 +32,7 @@ namespace OpenBullet2.Native.Controls
                     FloatSetting => new FloatSettingViewer { Setting = setting.Value },
                     EnumSetting => new EnumSettingViewer { Setting = setting.Value },
                     ByteArraySetting => new ByteArraySettingViewer { Setting = setting.Value },
+                    BoolSetting => new BoolSettingViewer { Setting = setting.Value },
                     _ => null
                 };
 
