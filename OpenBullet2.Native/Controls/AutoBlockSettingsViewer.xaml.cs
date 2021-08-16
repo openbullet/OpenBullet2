@@ -25,9 +25,18 @@ namespace OpenBullet2.Native.Controls
         {
             foreach (var setting in vm.Block.Settings)
             {
-                if (setting.Value.FixedSetting is StringSetting)
+                UserControl viewer = setting.Value.FixedSetting switch
                 {
-                    var viewer = new StringSettingViewer { Setting = setting.Value };
+                    StringSetting => new StringSettingViewer { Setting = setting.Value },
+                    IntSetting => new IntSettingViewer { Setting = setting.Value },
+                    FloatSetting => new FloatSettingViewer { Setting = setting.Value },
+                    EnumSetting => new EnumSettingViewer { Setting = setting.Value },
+                    ByteArraySetting => new ByteArraySettingViewer { Setting = setting.Value },
+                    _ => null
+                };
+
+                if (viewer is not null)
+                {
                     settingsPanel.Children.Add(viewer);
                 }
             }

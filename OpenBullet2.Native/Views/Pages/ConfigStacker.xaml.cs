@@ -47,7 +47,7 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 // On fail, prompt it to the user and go back to the configs page
                 Alert.Exception(ex);
-                SP.GetService<MainWindow>().NavigateTo(MainWindowPage.Configs);
+                SP.GetService<MainWindow>().NavigateTo(MainWindowPage.ConfigLoliCode);
             }
 
             vm.SelectBlock(null, false);

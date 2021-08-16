@@ -90,6 +90,7 @@ namespace OpenBullet2.Native.ViewModels
                 }
             }
 
+            SelectBlock(null, false);
             SaveStack();
         }
 
