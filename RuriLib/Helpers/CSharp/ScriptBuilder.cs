@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace RuriLib.Helpers.CSharp
 {
@@ -75,11 +76,31 @@ namespace RuriLib.Helpers.CSharp
             return usings;
         }
 
-        private static IEnumerable<string> GetImports(ScriptSettings settings) 
-            => settings.CustomUsings == null 
-                ? GetUsings() 
+        private static IEnumerable<string> GetImports(ScriptSettings settings)
+            => settings.CustomUsings == null
+                ? GetUsings()
                 : GetUsings().Concat(settings.CustomUsings
                     .Where(u => !string.IsNullOrWhiteSpace(u))
-                    .Select(u => u.Trim()));
+                    .Select(u => ParseUsing(u)));
+
+        private static string ParseUsing(string u)
+        {
+            // If the user typed the whole 'using MyLib.Test;' line, parse it to 'MyLib.Test'
+            u = u.Trim();
+
+            if (u.StartsWith("using"))
+            {
+                try
+                {
+                    u = Regex.Match(u, "^using (.+);$").Groups[1].Value;
+                }
+                catch
+                {
+                    
+                }
+            }
+
+            return u;
+        }
     }
 }
