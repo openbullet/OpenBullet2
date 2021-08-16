@@ -29,6 +29,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             DataContext = vm;
 
             InitializeComponent();
+            filterTextBox.Focus();
         }
 
         private void GoUp(object sender, RoutedEventArgs e)

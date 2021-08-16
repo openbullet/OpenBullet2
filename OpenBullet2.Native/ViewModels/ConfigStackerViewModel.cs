@@ -13,7 +13,7 @@ namespace OpenBullet2.Native.ViewModels
     {
         private readonly ConfigService configService;
 
-        public event Action SelectionChanged;
+        public event Action<IEnumerable<BlockViewModel>> SelectionChanged;
 
         private readonly List<(BlockInstance, int)> deletedBlocks = new();
 
@@ -31,6 +31,7 @@ namespace OpenBullet2.Native.ViewModels
         public ConfigStackerViewModel()
         {
             configService = SP.GetService<ConfigService>();
+            Stack = new();
         }
 
         public void CreateBlock(BlockDescriptor descriptor)
@@ -71,6 +72,8 @@ namespace OpenBullet2.Native.ViewModels
                     block.Selected = true;
                 }
             }
+
+            SelectionChanged?.Invoke(Stack.Where(s => s.Selected));
         }
 
         public void RemoveSelected()

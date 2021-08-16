@@ -8,6 +8,7 @@
       xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
+      KeyDown="PageKeyDown"
       Title="ConfigStacker">
 
     <Page.Resources>
@@ -91,7 +92,7 @@
                       VerticalScrollBarVisibility="Hidden"
                       Grid.Row="1">
             <ItemsControl 
-                Margin="0 10 0 0"
+                Margin="0 5 0 0"
                 ItemsSource="{Binding Stack}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -107,7 +108,7 @@
                             Width="180"
                             Height="40"
                             Tag="{Binding}"
-                            MouseDown="SelectBlock">
+                            Click="SelectBlock">
 
                             <TextBlock 
                                 MouseDown="SelectBlock"
@@ -132,6 +133,13 @@
                Foreground="{DynamicResource ForegroundCustom}"
                VerticalAlignment="Center"
                Grid.Column="1" />
+
+        <ScrollViewer 
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            x:Name="blockInfo"
+            Grid.Row="1"
+            Grid.Column="1" />
 
     </Grid>
 </Page>

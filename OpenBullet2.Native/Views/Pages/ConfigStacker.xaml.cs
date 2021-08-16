@@ -1,4 +1,6 @@
-﻿using OpenBullet2.Core.Services;
+﻿using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Native.Controls;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
@@ -6,6 +8,8 @@ using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,12 +22,15 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class ConfigStacker : Page
     {
         private readonly ConfigService configService;
+        private readonly IConfigRepository configRepo;
         private readonly ConfigStackerViewModel vm;
 
         public ConfigStacker()
         {
             configService = SP.GetService<ConfigService>();
+            configRepo = SP.GetService<IConfigRepository>();
             vm = SP.GetService<ViewModelsService>().ConfigStacker;
+            vm.SelectionChanged += SelectionChanged;
             DataContext = vm;
 
             InitializeComponent();
@@ -43,6 +50,7 @@ namespace OpenBullet2.Native.Views.Pages
                 SP.GetService<MainWindow>().NavigateTo(MainWindowPage.Configs);
             }
 
+            vm.SelectBlock(null, false);
             vm.UpdateViewModel();
         }
 
@@ -58,11 +66,43 @@ namespace OpenBullet2.Native.Views.Pages
         private void EnableDisableBlock(object sender, RoutedEventArgs e) => vm.EnableDisableSelected();
         private void Undo(object sender, RoutedEventArgs e) => vm.Undo();
 
-        private void SelectBlock(object sender, MouseEventArgs e)
+        private void SelectBlock(object sender, MouseEventArgs e) => SelectBlock(sender);
+        private void SelectBlock(object sender, RoutedEventArgs e) => SelectBlock(sender);
+        private void SelectBlock(object sender)
         {
             var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
             var block = (BlockViewModel)(sender as FrameworkElement).Tag;
             vm.SelectBlock(block, ctrl);
+        }
+
+        private void SelectionChanged(IEnumerable<BlockViewModel> selected)
+        {
+            var first = selected.FirstOrDefault();
+
+            if (first is null)
+            {
+                blockInfo.Content = null;
+            }
+            else
+            {
+                var content = first.Block switch
+                {
+                    AutoBlockInstance x => new AutoBlockSettingsViewer(x),
+                    _ => null
+                };
+
+                blockInfo.Content = content;
+            }
+        }
+
+        private async void PageKeyDown(object sender, KeyEventArgs e)
+        {
+            // Save on CTRL+S
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+            {
+                await configRepo.Save(configService.SelectedConfig);
+                Alert.Info("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
+            }
         }
     }
 }
