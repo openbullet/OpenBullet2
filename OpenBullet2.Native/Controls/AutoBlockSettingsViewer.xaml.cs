@@ -33,6 +33,8 @@ namespace OpenBullet2.Native.Controls
                     EnumSetting => new EnumSettingViewer { Setting = setting.Value },
                     ByteArraySetting => new ByteArraySettingViewer { Setting = setting.Value },
                     BoolSetting => new BoolSettingViewer { Setting = setting.Value },
+                    ListOfStringsSetting => new ListOfStringsSettingViewer { Setting = setting.Value },
+                    DictionaryOfStringsSetting => new DictionaryOfStringsSettingViewer { Setting = setting.Value },
                     _ => null
                 };
 
