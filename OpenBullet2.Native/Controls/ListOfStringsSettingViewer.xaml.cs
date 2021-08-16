@@ -114,7 +114,7 @@ namespace OpenBullet2.Native.Controls
             {
                 interpValue = value;
                 var s = Setting.InterpolatedSetting as InterpolatedListOfStringsSetting;
-                s.Value = value.Split(Environment.NewLine, StringSplitOptions.None).ToList();
+                s.Value = value?.Split(Environment.NewLine, StringSplitOptions.None).ToList();
                 OnPropertyChanged();
             }
         }
@@ -127,7 +127,7 @@ namespace OpenBullet2.Native.Controls
             {
                 this.value = value;
                 var s = Setting.FixedSetting as ListOfStringsSetting;
-                s.Value = value.Split(Environment.NewLine, StringSplitOptions.None).ToList();
+                s.Value = value?.Split(Environment.NewLine, StringSplitOptions.None).ToList();
                 OnPropertyChanged();
             }
         }
