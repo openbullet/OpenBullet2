@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Core.Services;
+using RuriLib.Models.Blocks;
 
 namespace OpenBullet2.Native.ViewModels
 {
@@ -9,6 +10,11 @@ namespace OpenBullet2.Native.ViewModels
         public ConfigStackerViewModel()
         {
             configService = SP.GetService<ConfigService>();
+        }
+
+        public void CreateBlock(BlockDescriptor descriptor)
+        {
+
         }
 
         public override void UpdateViewModel()

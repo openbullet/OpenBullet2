@@ -5,6 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:trees="clr-namespace:RuriLib.Models.Trees;assembly=RuriLib"
+      xmlns:blocks="clr-namespace:RuriLib.Models.Blocks;assembly=RuriLib"
       mc:Ignorable="d" 
       d:DesignHeight="410" d:DesignWidth="610"
       Title="AddBlockDialog">
@@ -14,7 +16,7 @@
     </Page.Resources>
 
     <Border Padding="5">
-        <Grid Height="400" Width="600">
+        <Grid MinHeight="400" Width="600">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
@@ -60,17 +62,127 @@
 
             <ItemsControl 
             Grid.Row="1"
-            ItemsSource="{Binding SubCategories}">
+            ItemsSource="{Binding NodesCollection}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel />
+                        <WrapPanel Margin="-5" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Name}" Margin="5" />
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type trees:CategoryTreeNode}">
+                        <Button 
+                            Background="{Binding Category.BackgroundColor}"
+                            Width="142"
+                            Height="60"
+                            Margin="5"
+                            Tag="{Binding}"
+                            Click="SelectCategory">
+                            <TextBlock 
+                                FontSize="16"
+                                Foreground="{Binding Category.ForegroundColor}"
+                                Text="{Binding Category.Name}"
+                                TextWrapping="Wrap" />
+                        </Button>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type blocks:BlockDescriptor}">
+                        <Button 
+                            Background="{Binding Category.BackgroundColor}"
+                            Width="142"
+                            Height="60"
+                            Margin="5"
+                            Tag="{Binding}"
+                            Click="SelectDescriptor">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Hidden">
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock 
+                                        MouseDown="SelectDescriptor"
+                                        Grid.Row="0"
+                                        FontSize="12"
+                                        HorizontalAlignment="Center"
+                                        TextAlignment="Center"
+                                        Foreground="{Binding Category.ForegroundColor}"
+                                        Text="{Binding Name}"
+                                        Tag="{Binding}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        MouseDown="SelectDescriptor"
+                                        Grid.Row="1"
+                                        FontSize="10"
+                                        HorizontalAlignment="Center"
+                                        TextAlignment="Center"
+                                        Foreground="{Binding Category.ForegroundColor}"
+                                        Text="{Binding Description}"
+                                        Tag="{Binding}"
+                                        TextWrapping="Wrap" />
+                                </Grid>
+                            </ScrollViewer>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+
+            <Label Grid.Row="2" Content="Recently used blocks:" />
+
+            <ItemsControl 
+                Grid.Row="3"
+                ItemsSource="{Binding RecentDescriptors}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Margin="-5" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type blocks:BlockDescriptor}">
+                        <Button 
+                            Background="{Binding Category.BackgroundColor}"
+                            Width="142"
+                            Height="60"
+                            Margin="5"
+                            Tag="{Binding}"
+                            Click="SelectDescriptor">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Hidden">
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock 
+                                        MouseDown="SelectDescriptor"
+                                        Grid.Row="0"
+                                        FontSize="12"
+                                        HorizontalAlignment="Center"
+                                        TextAlignment="Center"
+                                        Foreground="{Binding Category.ForegroundColor}"
+                                        Text="{Binding Name}"
+                                        Tag="{Binding}"
+                                        TextWrapping="Wrap" />
+
+                                    <TextBlock
+                                        MouseDown="SelectDescriptor"
+                                        Grid.Row="1"
+                                        FontSize="10"
+                                        HorizontalAlignment="Center"
+                                        TextAlignment="Center"
+                                        Foreground="{Binding Category.ForegroundColor}"
+                                        Text="{Binding Description}"
+                                        Tag="{Binding}"
+                                        TextWrapping="Wrap" />
+                                </Grid>
+                            </ScrollViewer>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.Resources>
             </ItemsControl>
 
         </Grid>

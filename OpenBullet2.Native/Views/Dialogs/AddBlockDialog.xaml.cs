@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Trees;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace OpenBullet2.Native.Views.Dialogs
@@ -42,8 +44,32 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
+        private void SelectCategory(object sender, RoutedEventArgs e)
+            => vm.SelectCategory((CategoryTreeNode)(sender as Button).Tag);
+
+        private void SelectDescriptor(object sender, RoutedEventArgs e) => SelectDescriptor(sender);
+        private void SelectDescriptor(object sender, MouseEventArgs e) => SelectDescriptor(sender);
+        private void SelectDescriptor(object sender)
+        {
+            var descriptor = (BlockDescriptor)(sender as FrameworkElement).Tag;
+            vm.SelectDescriptor(descriptor);
+
+            if (caller is ConfigStacker page)
+            {
+                page.CreateBlock(descriptor);
+            }
+
+            ((MainDialog)Parent).Close();
+        }
+
         private void Search(object sender, RoutedEventArgs e) => vm.Filter = filterTextBox.Text;
-        private void FilterKeyDown(object sender, KeyEventArgs e) => vm.Filter = filterTextBox.Text;
+        private void FilterKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                vm.Filter = filterTextBox.Text;
+            }
+        }
     }
 
     public class AddBlockDialogViewModel : ViewModelBase
@@ -60,31 +86,19 @@ namespace OpenBullet2.Native.Views.Dialogs
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanGoUp));
 
-                SubCategories = new ObservableCollection<CategoryTreeNode>(currentNode.SubCategories);
-                Descriptors = new ObservableCollection<BlockDescriptor>(currentNode.Descriptors);
+                CreateCollection();
             }
         }
 
         public bool CanGoUp() => CurrentNode.Parent is not null;
 
-        private ObservableCollection<CategoryTreeNode> subCategories;
-        public ObservableCollection<CategoryTreeNode> SubCategories
+        private CompositeCollection nodesCollection;
+        public CompositeCollection NodesCollection
         {
-            get => subCategories;
+            get => nodesCollection;
             set
             {
-                subCategories = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<BlockDescriptor> descriptors;
-        public ObservableCollection<BlockDescriptor> Descriptors
-        {
-            get => descriptors;
-            set
-            {
-                descriptors = value;
+                nodesCollection = value;
                 OnPropertyChanged();
             }
         }
@@ -96,18 +110,8 @@ namespace OpenBullet2.Native.Views.Dialogs
             set
             {
                 filter = value;
-
-                if (string.IsNullOrWhiteSpace(filter))
-                {
-                    Descriptors = new ObservableCollection<BlockDescriptor>(currentNode.Descriptors);
-                }
-                else
-                {
-                    Descriptors = new ObservableCollection<BlockDescriptor>(RuriLib.Globals.DescriptorsRepository.Descriptors.Values
-                        .Where(d => d.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)));
-                }
-                
                 OnPropertyChanged();
+                CreateCollection();
             }
         }
 
@@ -131,7 +135,7 @@ namespace OpenBullet2.Native.Views.Dialogs
                 .SubCategories.First(s => s.Name == "RuriLib")
                 .SubCategories.First(s => s.Name == "Blocks");
 
-            RecentDescriptors = new ObservableCollection<BlockDescriptor>(volatileSettings.RecentDescriptors.Take(6));
+            RecentDescriptors = new ObservableCollection<BlockDescriptor>(volatileSettings.RecentDescriptors.Take(8));
         }
 
         public void SelectDescriptor(BlockDescriptor descriptor) => volatileSettings.AddRecentDescriptor(descriptor);
@@ -139,7 +143,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         public void SelectCategory(CategoryTreeNode node)
         {
             CurrentNode = node;
-            SubCategories = new ObservableCollection<CategoryTreeNode>(currentNode.SubCategories);
+            CreateCollection();
         }
 
         public void GoUp()
@@ -148,6 +152,32 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 CurrentNode = CurrentNode.Parent;
             }
+        }
+
+        private void CreateCollection()
+        {
+            ObservableCollection<CategoryTreeNode> subCategories;
+            ObservableCollection<BlockDescriptor> descriptors;
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                subCategories = new ObservableCollection<CategoryTreeNode>(currentNode.SubCategories);
+                descriptors = new ObservableCollection<BlockDescriptor>(currentNode.Descriptors);
+            }
+            else
+            {
+                subCategories = new();
+                descriptors = new ObservableCollection<BlockDescriptor>(RuriLib.Globals.DescriptorsRepository.Descriptors.Values
+                    .Where(d => d.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)));
+            }
+            
+            var composite = new CompositeCollection
+            {
+                new CollectionContainer { Collection = subCategories },
+                new CollectionContainer { Collection = descriptors }
+            };
+
+            NodesCollection = composite;
         }
     }
 }

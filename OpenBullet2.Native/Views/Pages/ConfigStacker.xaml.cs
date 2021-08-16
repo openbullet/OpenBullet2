@@ -3,6 +3,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
+using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using System;
 using System.Windows;
@@ -43,6 +44,8 @@ namespace OpenBullet2.Native.Views.Pages
 
             vm.UpdateViewModel();
         }
+
+        public void CreateBlock(BlockDescriptor descriptor) => vm.CreateBlock(descriptor);
 
         private void AddBlock(object sender, RoutedEventArgs e)
             => new MainDialog(new AddBlockDialog(this), "Add block").ShowDialog();

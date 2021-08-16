@@ -28,5 +28,8 @@ namespace OpenBullet2.Native.Helpers
                 return (SolidColorBrush)Application.Current.Resources["ForegroundMain"];
             }
         }
+
+        public static SolidColorBrush FromHex(string hex)
+            => new((Color)ColorConverter.ConvertFromString(hex));
     }
 }
