@@ -51,22 +51,29 @@ namespace OpenBullet2.Native.Controls
             InitializeComponent();
         }
 
+        // Interpolated -> Variable
         private void VariableMode(object sender, RoutedEventArgs e)
         {
             vm.Mode = SettingInputMode.Variable;
+            vm.VariableName = vm.InterpValue;
             tabControl.SelectedIndex = 0;
             buttonTabControl.SelectedIndex = 0;
         }
 
+        // Variable -> Constant
         private void ConstantMode(object sender, RoutedEventArgs e)
         {
             vm.Mode = SettingInputMode.Fixed;
+            vm.Value = vm.VariableName;
             tabControl.SelectedIndex = 1;
             buttonTabControl.SelectedIndex = 1;
         }
+
+        // Constant -> Interpolated
         private void InterpMode(object sender, RoutedEventArgs e)
         {
             vm.Mode = SettingInputMode.Interpolated;
+            vm.InterpValue = vm.Value;
             tabControl.SelectedIndex = 2;
             buttonTabControl.SelectedIndex = 2;
         }
