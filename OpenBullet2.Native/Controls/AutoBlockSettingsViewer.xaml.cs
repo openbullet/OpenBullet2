@@ -52,10 +52,53 @@ namespace OpenBullet2.Native.Controls
         }
     }
 
-    public class AutoBlockSettingsViewerViewModel : ViewModelBase
+    public class AutoBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
+    {
+        public AutoBlockInstance AutoBlock => Block as AutoBlockInstance;
+
+        public bool SafeMode
+        {
+            get => AutoBlock.Safe;
+            set
+            {
+                AutoBlock.Safe = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasReturnValue => Block.Descriptor.ReturnType is not null;
+        public string ReturnValueType => $"Output variable ({Block.Descriptor.ReturnType})";
+
+        public string OutputVariable
+        {
+            get => AutoBlock.OutputVariable;
+            set
+            {
+                AutoBlock.OutputVariable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsCapture
+        {
+            get => AutoBlock.IsCapture;
+            set
+            {
+                AutoBlock.IsCapture = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AutoBlockSettingsViewerViewModel(BlockViewModel block) : base(block)
+        {
+            
+        }
+    }
+
+    public class BlockSettingsViewerViewModel : ViewModelBase
     {
         public BlockViewModel BlockVM { get; init; }
-        public AutoBlockInstance Block => BlockVM.Block as AutoBlockInstance;
+        public BlockInstance Block => BlockVM.Block;
 
         public string NameAndId => $"{BlockVM.Block.ReadableName} ({BlockVM.Block.Id})";
 
@@ -69,30 +112,7 @@ namespace OpenBullet2.Native.Controls
             }
         }
 
-        public bool SafeMode
-        {
-            get => Block.Safe;
-            set
-            {
-                Block.Safe = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool HasReturnValue => Block.Descriptor.ReturnType is not null;
-        public string ReturnValueType => $"Output variable ({Block.Descriptor.ReturnType})";
-
-        public string OutputVariable
-        {
-            get => Block.OutputVariable;
-            set
-            {
-                Block.OutputVariable = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public AutoBlockSettingsViewerViewModel(BlockViewModel block)
+        public BlockSettingsViewerViewModel(BlockViewModel block)
         {
             BlockVM = block;
         }

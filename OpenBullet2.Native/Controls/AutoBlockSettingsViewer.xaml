@@ -58,6 +58,10 @@
                 Text="{Binding OutputVariable}"
                 DockPanel.Dock="Left" />
         </DockPanel>
+        <CheckBox
+            Margin="5 5 0 0"
+            Content="Is Capture"
+            IsChecked="{Binding IsCapture}"/>
         <Label 
             Content="Settings:"
             Margin="0 5"

@@ -6,6 +6,7 @@ using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
@@ -85,9 +86,10 @@ namespace OpenBullet2.Native.Views.Pages
             }
             else
             {
-                var content = first.Block switch
+                UserControl content = first.Block switch
                 {
                     AutoBlockInstance => new AutoBlockSettingsViewer(first),
+                    ParseBlockInstance => new ParseBlockSettingsViewer(first),
                     _ => null
                 };
 
