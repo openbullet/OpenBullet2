@@ -57,7 +57,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         private void HighlightSyntax()
         {
-            using var reader = XmlReader.Create("LoliCode.xshd");
+            using var reader = XmlReader.Create("Highlighting/LoliCode.xshd");
             editor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
             editor.TextArea.TextView.LinkTextForegroundBrush = new SolidColorBrush(Colors.DodgerBlue);
             editor.TextArea.TextView.LinkTextUnderline = false;
