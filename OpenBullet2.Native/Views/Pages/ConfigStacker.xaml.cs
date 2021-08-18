@@ -92,6 +92,7 @@ namespace OpenBullet2.Native.Views.Pages
                     ParseBlockInstance => new ParseBlockSettingsViewer(first),
                     ScriptBlockInstance => new ScriptBlockSettingsViewer(first),
                     HttpRequestBlockInstance => new HttpRequestBlockSettingsViewer(first),
+                    KeycheckBlockInstance => new KeycheckBlockSettingsViewer(first),
                     _ => null
                 };
 
