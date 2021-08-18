@@ -23,7 +23,7 @@
             to version
             <Bold>
             <Run Foreground="{DynamicResource ForegroundCustom}"
-                Text="{Binding CurrentVersion}"/></Bold>.
+                Text="{Binding RemoteVersion}"/></Bold>.
             <LineBreak/>
             OpenBullet 2 will close and reopen once the update is finished.
             <LineBreak/>
