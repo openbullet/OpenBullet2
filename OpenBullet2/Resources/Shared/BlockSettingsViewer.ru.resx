@@ -118,15 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IsCapture" xml:space="preserve">
-    <value>Is capture</value>
+    <value>Захват</value>
   </data>
   <data name="Label" xml:space="preserve">
-    <value>Label</value>
+    <value>Этикетка</value>
   </data>
   <data name="OutputVariable" xml:space="preserve">
-    <value>Output variable</value>
+    <value>Выходная переменная</value>
+  </data>
+  <data name="SafeMode" xml:space="preserve">
+    <value>Безопасный режим (перехват исключений в data.ERROR)</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Настройки</value>
   </data>
 </root>

@@ -118,36 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AdvancedSettings" xml:space="preserve">
-    <value>Advanced settings</value>
+    <value>Дополнительные настройки</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this block work?</value>
+    <value>Как работает этот блок?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>The %HTTP Request% block allows you to perform an HTTP request towards an endpoint. If you want to send a body alongside your headers and cookies you can do so by selecting one of the ways to send content. The %Standard% mode will simply take a String, encode it as UTF-8 and send it inside the request body. The %Content Type% field will be automatically converted into a %Content-Type% header and added to the request.</value>
+    <value>Блок %HTTP Request% позволяет выполнить HTTP-запрос к конечной точке. Если вы хотите отправить тело запроса вместе с заголовками и cookies, вы можете сделать это, выбрав один из способов отправки содержимого. Режим %Standard% просто возьмет строку, закодирует ее в UTF-8 и отправит внутрь тела запроса. Поле %Content Type% будет автоматически преобразовано в заголовок %Content-Type% и добавлено в запрос.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>The %Raw% mode basically does the same as the Standard mode if your content is a Byte Array and not a String. The %Basic Auth% is used for authenticating with Basic Access Authentication (the typical username/password popup you see inside your browser asking for credentials). Finally, the %Multipart% mode will send a content that can be made of multiple parts, like strings, raw bytes and files. This is useful for example in order to upload a file to a website.</value>
+    <value>Режим %Raw% в основном делает то же самое, что и режим Standard, если ваше содержимое представляет собой массив байтов, а не строку. Режим %Basic Auth% используется для аутентификации с помощью Basic Access Authentication (типичное всплывающее окно с именем пользователя/паролем, которое вы видите в браузере, запрашивающее учетные данные). Наконец, режим %Multipart% отправляет содержимое, которое может состоять из нескольких частей, таких как строки, необработанные байты и файлы. Это полезно, например, для загрузки файла на веб-сайт.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>The response will be parsed and divided into chunks which will be assigned to different default variables. The response %Address% (after the last redirect if you have %Auto Redirect% enabled) will be saved into the String variable `data.ADDRESS`. The response %body% (a.k.a source) will be inside the String variable `data.SOURCE` (as a UTF-8 string), and inside the Byte Array variable `data.RAWSOURCE` (after decompression of e.g. gzip).</value>
+    <value>Ответ будет разобран и разделен на фрагменты, которые будут присвоены различным переменным по умолчанию. Ответ %Address% (после последнего перенаправления, если у вас включена функция %Auto Redirect%) будет сохранен в строковой переменной `data.ADDRESS`. Ответ %body% (он же источник) будет находиться в строковой переменной `data.SOURCE` (в виде строки UTF-8) и в переменной массива байт `data.RAWSOURCE` (после распаковки, например, gzip).</value>
   </data>
   <data name="Help1x04" xml:space="preserve">
-    <value>The %Response Code% (e.g. 200) will be inserted in the Integer variable `data.RESPONSECODE`. The headers will be parsed to a dictionary and inserted in the Dictionary of Strings variable `data.HEADERS`, and likewise for cookies in the `data.COOKIES` variable. Remember that you can easily retrieve values from dictionaries by key with the syntax `data.HEADERS["header-name"]`. If the request fails, the `data.STATUS` variable will be set to `ERROR`.</value>
+    <value>Код %Response Code% (например, 200) будет вставлен в целочисленную переменную `data.RESPONSECODE`. Заголовки будут разобраны в словарь и вставлены в переменную `data.HEADERS`, а cookies - в переменную `data.COOKIES`. Помните, что вы можете легко получить значения из словарей по ключу с помощью синтаксиса `data.HEADERS["header-name"]`. Если запрос не удался, переменная `data.STATUS` будет установлена в `ERROR`.</value>
   </data>
   <data name="Help1x05" xml:space="preserve">
-    <value>One last thing to remember is that cookies inside the `data.COOKIES` variable are only added or overwritten, never deleted. This means that previously received cookies (which are inside the `data.COOKIES` variable) will be sent again inside the next requests, in addition to the %Custom Cookies% you can define for each new request. This happens unless `data.COOKIES` is cleared or reinitialized.</value>
+    <value>И последнее, о чем следует помнить: куки-файлы внутри переменной `data.COOKIES` только добавляются или перезаписываются, но никогда не удаляются. Это означает, что ранее полученные cookies (которые находятся в переменной `data.COOKIES`) будут снова отправляться при следующих запросах, в дополнение к %Custom Cookies%, которые вы можете определить для каждого нового запроса. Это произойдет, если `data.COOKIES` не будет очищена или переинициализирована.</value>
   </data>
   <data name="Hide" xml:space="preserve">
-    <value>Hide</value>
+    <value>Скрыть</value>
   </data>
   <data name="Label" xml:space="preserve">
-    <value>Label</value>
+    <value>Этикетка</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Настройки</value>
   </data>
   <data name="Show" xml:space="preserve">
-    <value>Show</value>
+    <value>Показать</value>
   </data>
 </root>

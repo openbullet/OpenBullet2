@@ -124,13 +124,13 @@
     <value>Файл</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>Имя Файла</value>
+    <value>Имя файла</value>
   </data>
   <data name="Group" xml:space="preserve">
     <value>Группа</value>
   </data>
   <data name="Remote" xml:space="preserve">
-    <value>Удалённо</value>
+    <value>Удаленный</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Удалить</value>

@@ -118,36 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AvatarURL" xml:space="preserve">
-    <value>Avatar URL</value>
+    <value>URL-адрес аватара</value>
   </data>
   <data name="BaseDirectory" xml:space="preserve">
-    <value>Base directory</value>
+    <value>Базовый каталог</value>
   </data>
   <data name="Database" xml:space="preserve">
-    <value>Database</value>
+    <value>База данных</value>
   </data>
   <data name="DiscordWebhook" xml:space="preserve">
-    <value>Discord webhook</value>
+    <value>Вебхук Discord</value>
+  </data>
+  <data name="TelegramBot" xml:space="preserve">
+    <value>Telegram-бот</value>
   </data>
   <data name="Token" xml:space="preserve">
-    <value>Bot token</value>
+    <value>Токен бота</value>
   </data>
   <data name="ChatId" xml:space="preserve">
-    <value>Chat ID</value>
+    <value>Идентификатор чата</value>
   </data>
   <data name="FileSystem" xml:space="preserve">
-    <value>File system</value>
+    <value>Файловая система</value>
   </data>
   <data name="NoSettingsRequired" xml:space="preserve">
-    <value>No settings required</value>
+    <value>Настройки не требуются</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Имя пользователя</value>
   </data>
   <data name="WebhookURL" xml:space="preserve">
-    <value>Webhook URL</value>
+    <value>URL Webhook</value>
+  </data>
+  <data name="ApiServer" xml:space="preserve">
+    <value>API-сервер</value>
+  </data>
+  <data name="OnlyHits" xml:space="preserve">
+    <value>Только хиты</value>
+  </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Пользовательский веб-крючок</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
   </data>
 </root>

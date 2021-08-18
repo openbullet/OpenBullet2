@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApiKeys" xml:space="preserve">
-    <value>Api-Ключи</value>
+    <value>Ключи Api</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Править</value>
+    <value>Редактировать</value>
   </data>
   <data name="onePerLine" xml:space="preserve">
-    <value>по одному в строчку</value>
+    <value>по одному на строку</value>
   </data>
   <data name="Route" xml:space="preserve">
     <value>Маршрут</value>

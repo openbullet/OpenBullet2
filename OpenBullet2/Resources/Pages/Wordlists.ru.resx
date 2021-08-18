@@ -118,90 +118,96 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="Added" xml:space="preserve">
-    <value>Added</value>
+    <value>Добавлено</value>
   </data>
   <data name="AddedWordlist" xml:space="preserve">
-    <value>The wordlist was added successfully!</value>
+    <value>Список слов был успешно добавлен!</value>
   </data>
   <data name="AddWordlist" xml:space="preserve">
-    <value>Add wordlist</value>
+    <value>Добавить список слов</value>
   </data>
   <data name="AlsoDeleteFile" xml:space="preserve">
-    <value>Delete the file too?</value>
+    <value>Удалить файл тоже?</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="DeleteFileText1" xml:space="preserve">
-    <value>Do you want to delete</value>
+    <value>Хотите ли вы удалить</value>
   </data>
   <data name="DeleteFileText2" xml:space="preserve">
-    <value>from the disk as well?</value>
+    <value>с диска?</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="EditWordlist" xml:space="preserve">
-    <value>Edit wordlist</value>
+    <value>Редактирование списка слов</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>File Name</value>
+    <value>Имя файла</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this work?</value>
+    <value>Как это работает?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Here you can import wordlists. First of all click on the %Add% button above. You will be able to specify a %Wordlist Type% (more information on this later), a %Name% and a %Purpose%. You have two options to upload your file. The first option is to %upload% it to the server that is running the instance of OpenBullet2. This is the preferred method %if the wordlist is on the client% from which you are accessing OB2 through the browser, but OB2 is being hosted on a different machine. This method of adding a wordlist adds some overhead as the wordlist needs to be uploaded through the browser.</value>
+    <value>Здесь вы можете импортировать списки слов. Прежде всего, нажмите на кнопку %Добавить%. Вы сможете указать тип %Wordlist Type% (подробнее об этом позже), %Name% и %Purpose%. У вас есть два варианта загрузки файла. Первый вариант - %загрузить% его на сервер, на котором запущен экземпляр OpenBullet2. Это предпочтительный метод %если список слов находится на клиенте%, с которого вы получаете доступ к OB2 через браузер, но OB2 размещен на другой машине. Этот метод добавления списка слов добавляет некоторые накладные расходы, поскольку список слов должен быть загружен через браузер.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>%If the wordlist is on the server%, which means you are trying to retrieve a file from the same machine in which OB2 is running, you can use the %File System% option, which will let you visually browse through folders in search of the file you want. Note that in order to access locations on the drive that are outside of the current working directory of OB2 you will need to go to OpenBullet's security options and allow system-wide file access.</value>
+    <value>%Если список слов находится на сервере%, то есть вы пытаетесь получить файл с той же машины, на которой запущен OB2, вы можете использовать опцию %File System%, которая позволит вам визуально просматривать папки в поисках нужного файла. Обратите внимание, что для доступа к местам на диске, которые находятся за пределами текущего рабочего каталога OB2, вам необходимо перейти к параметрам безопасности OpenBullet и разрешить общесистемный доступ к файлам.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Regarding the %Wordlist Type%, you will find the currently specified Wordlist Types in the %UserData/Environment.ini% file in your OB2 directory. Wordlist Types are loaded when OB2 starts up. You can change this file and add/remove/change Wordlist Types to match the format of your wordlists. You can read more about Wordlist Types on the official forum's guides section.</value>
+    <value>Что касается %Wordlist Type%, вы найдете указанные в данный момент типы Wordlist Types в файле %UserData/Environment.ini% в вашем каталоге OB2. Типы списков слов загружаются при запуске OB2. Вы можете изменить этот файл и добавить/удалить/изменить типы списков слов, чтобы они соответствовали формату ваших списков слов. Вы можете прочитать больше о типах списков слов в разделе руководств на официальном форуме.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
-    <value>No, keep the file</value>
+    <value>Нет, сохраните файл</value>
   </data>
   <data name="Lines" xml:space="preserve">
-    <value>Lines</value>
+    <value>Линии</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Loading</value>
+    <value>Загрузка</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Имя</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>No records to display</value>
+    <value>Нет записей для отображения</value>
   </data>
   <data name="NoWordlistSelected" xml:space="preserve">
-    <value>You must select a wordlist first</value>
+    <value>Сначала необходимо выбрать список слов</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Владелец</value>
   </data>
   <data name="Purpose" xml:space="preserve">
-    <value>Purpose</value>
+    <value>Назначение</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Do you really want to delete</value>
+    <value>Вы действительно хотите удалить</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>results</value>
+    <value>результаты</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Results per page</value>
+    <value>Результаты на страницу</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
+  </data>
+  <data name="WordlistInUse" xml:space="preserve">
+    <value>Этот список слов используется выполняющимся заданием, пожалуйста, прервите или удалите его до того, как</value>
   </data>
 </root>

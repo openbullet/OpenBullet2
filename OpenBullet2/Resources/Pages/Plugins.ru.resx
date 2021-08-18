@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="AllDone" xml:space="preserve">
-    <value>All done</value>
+    <value>Все сделано</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How to add and use plugins</value>
+    <value>Как добавлять и использовать плагины</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%Plugins% come as %.zip archives% that contain one or more libraries and their dependencies. They allow you to expand the functionalities of OpenBullet by %adding new blocks%. You can upload plugins by clicking on the %Add% button above. Once they are added, plugins reside in the %UserData/Plugins% folder inside the base folder of OpenBullet. You can add blocks from plugins to your configs by navigating to the top level category (press Back) in the %Available Blocks% and selecting the name of the plugin you intend to use.</value>
+    <value>%Плагины% поставляются в виде %.zip архивов%, содержащих одну или несколько библиотек и их зависимостей. Они позволяют расширить функциональные возможности OpenBullet путем %добавления новых блоков%. Вы можете загрузить плагины, нажав на кнопку %Добавить% выше. После добавления плагины помещаются в папку %UserData/Plugins% внутри основной папки OpenBullet. Вы можете добавить блоки из плагинов в свои конфигурации, перейдя к категории верхнего уровня (нажмите Back) в %Available Blocks% и выбрав название плагина, который вы собираетесь использовать.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Plugins can be deleted by clicking on the %Remove% button next to them. The files will be deleted from the %Plugins% folder so make sure you have a backup copy! It is recommended that you stop all jobs before removing plugins. Mind that once you remove a plugin, configs that have blocks from that plugin will probably stop working.</value>
+    <value>Плагины можно удалить, нажав на кнопку %Remove% рядом с ними. Файлы будут удалены из папки %Plugins%, поэтому убедитесь, что у вас есть резервная копия! Перед удалением плагинов рекомендуется остановить все задания. Помните, что после удаления плагина конфигурации, содержащие блоки от этого плагина, скорее всего, перестанут работать.</value>
   </data>
   <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
-    <value>Plugins successfully uploaded</value>
+    <value>Плагины успешно загружены</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
 </root>

@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FromFile" xml:space="preserve">
-    <value>Из Файла</value>
+    <value>Из файла</value>
   </data>
   <data name="FromUrl" xml:space="preserve">
     <value>Из URL</value>
   </data>
   <data name="ImageTooBig" xml:space="preserve">
-    <value>Ваше изображение T H I C C</value>
+    <value>Ваш образ - это Т И Н С К</value>
   </data>
   <data name="ImageTooBigText1" xml:space="preserve">
-    <value>Изображение весит больше чем</value>
+    <value>Изображение весит более</value>
   </data>
   <data name="ImageTooBigText2" xml:space="preserve">
-    <value>Изменить размер автоматически, чтобы уменьшить время загрузки при рендеринге?</value>
+    <value>Хотите ли вы автоматически изменять его размер, чтобы уменьшить время загрузки при его отображении?</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ок</value>
+    <value>Хорошо</value>
   </data>
 </root>

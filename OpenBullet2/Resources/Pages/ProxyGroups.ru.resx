@@ -118,138 +118,162 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddGroup" xml:space="preserve">
-    <value>Add Group</value>
+    <value>Добавить группу</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Country" xml:space="preserve">
-    <value>Country</value>
+    <value>Страна</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Created</value>
+    <value>Создано</value>
   </data>
   <data name="CreateProxyGroup" xml:space="preserve">
-    <value>Create proxy group</value>
+    <value>Создание прокси-группы</value>
   </data>
   <data name="DeleteAllProxies" xml:space="preserve">
-    <value>Delete all proxies</value>
+    <value>Удалить все прокси-серверы</value>
   </data>
   <data name="Deleted" xml:space="preserve">
-    <value>Deleted</value>
+    <value>Удалено</value>
+  </data>
+  <data name="DeleteFiltered" xml:space="preserve">
+    <value>Удалить отфильтрованное</value>
   </data>
   <data name="DeleteGroup" xml:space="preserve">
-    <value>Delete Group</value>
+    <value>Удалить группу</value>
   </data>
   <data name="DeleteNotWorking" xml:space="preserve">
-    <value>Delete not working</value>
+    <value>Удаление не работает</value>
   </data>
   <data name="DeleteSlow" xml:space="preserve">
-    <value>Delete slow</value>
+    <value>Удалить медленно</value>
   </data>
   <data name="DeleteUntested" xml:space="preserve">
-    <value>Delete untested</value>
+    <value>Удалить непроверенные</value>
   </data>
   <data name="EditGroup" xml:space="preserve">
-    <value>Edit Group</value>
+    <value>Группа редактирования</value>
   </data>
   <data name="EditProxyGroup" xml:space="preserve">
-    <value>Edit proxy group</value>
+    <value>Редактирование прокси-группы</value>
+  </data>
+  <data name="ExportProxies" xml:space="preserve">
+    <value>Экспорт прокси-серверов</value>
   </data>
   <data name="ForThisGroup" xml:space="preserve">
-    <value>For this group</value>
+    <value>Для этой группы</value>
   </data>
   <data name="GroupInUse" xml:space="preserve">
-    <value>Group in use</value>
+    <value>Используемая группа</value>
   </data>
   <data name="GroupInUseWarning" xml:space="preserve">
-    <value>A job is currently using this proxy group. Please stop and remove the job from the manager and try again.</value>
+    <value>В настоящее время задание использует эту прокси-группу. Пожалуйста, остановите и удалите задание из менеджера и повторите попытку.</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this work?</value>
+    <value>Как это работает?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Here you can import your proxies into several %groups%. Groups help keep proxies organized and give you the ability to use different proxies for different jobs. First of all you should create a group by clicking on the %Add Group% button above. Just give it a name. Make sure your new group is selected and then click on %Import Proxies%.</value>
+    <value>Здесь вы можете импортировать свои прокси в несколько %групп%. Группы помогают упорядочить прокси и дают возможность использовать разные прокси для разных задач. Прежде всего, необходимо создать группу, нажав на кнопку %Добавить группу% выше. Просто дайте ей название. Убедитесь, что новая группа выбрана, а затем нажмите на %Import Proxies%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>The %Import Proxies% menu will give you 3 ways to import your proxies. You can either %paste% them, %upload a file% or %type the URL% of a remote resource that provides proxies in a text format (usually one per line). You are also able to specify the default %type%, %username% and %password% for the proxies. Alternatively, you can use the %advanced syntax% described in the form in order to specify the type, username and password on a per-proxy basis.</value>
+    <value>В меню %Импорт прокси% вы найдете 3 способа импорта прокси. Вы можете либо %вставить% их, либо %загрузить файл%, либо %ввести URL% удаленного ресурса, который предоставляет прокси в текстовом формате (обычно по одному в строке). Вы также можете указать %тип% по умолчанию, %имя пользователя% и %пароль% для прокси. В качестве альтернативы вы можете использовать %расширенный синтаксис%, описанный в форме, чтобы указать тип, имя пользователя и пароль для каждого прокси.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Now you're all set and you will be able to select your proxy group when you create or edit a job. You can create a job of type %Proxy Check% in order to test if your proxies work before using them. The Proxy Check job will update the %country%, %status%, %ping% and %last check date% fields of your proxies in the data table of this page, so you can then %remove% proxies that don't work or have a ping that is too high for your needs. You can even decide to only keep proxies from a specific country!</value>
+    <value>Теперь все готово, и вы сможете выбрать группу прокси при создании или редактировании задания. Вы можете создать задание типа %Proxy Check%, чтобы проверить, работают ли ваши прокси, прежде чем использовать их. Задание Proxy Check обновит поля %country%, %status%, %ping% и %last check date% ваших прокси в таблице данных на этой странице, чтобы вы могли %удалить% прокси, которые не работают или имеют слишком высокий пинг для ваших нужд. Вы даже можете принять решение о сохранении только прокси из определенной страны!</value>
   </data>
   <data name="Host" xml:space="preserve">
-    <value>Host</value>
+    <value>Хозяин</value>
   </data>
   <data name="Imported" xml:space="preserve">
-    <value>Imported</value>
+    <value>Импортировано</value>
   </data>
   <data name="ImportProxies" xml:space="preserve">
-    <value>Import Proxies</value>
+    <value>Импорт прокси-серверов</value>
   </data>
   <data name="LastChecked" xml:space="preserve">
-    <value>Last Checked</value>
+    <value>Последняя проверка</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Loading</value>
+    <value>Загрузка</value>
+  </data>
+  <data name="Moved" xml:space="preserve">
+    <value>Перемещено</value>
+  </data>
+  <data name="MoveFiltered" xml:space="preserve">
+    <value>Переместить фильтрованный</value>
+  </data>
+  <data name="NeedTwoOrMoreGroups" xml:space="preserve">
+    <value>Нужны две или более прокси-групп</value>
   </data>
   <data name="NoGroupSelected" xml:space="preserve">
-    <value>Please select an actual group first</value>
+    <value>Пожалуйста, сначала выберите актуальную группу</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>No records to display</value>
+    <value>Нет записей для отображения</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Владелец</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Пароль</value>
   </data>
   <data name="Ping" xml:space="preserve">
-    <value>Ping</value>
+    <value>Пинг</value>
   </data>
   <data name="pingOver" xml:space="preserve">
-    <value>ping over</value>
+    <value>пинг по</value>
   </data>
   <data name="Port" xml:space="preserve">
-    <value>Port</value>
+    <value>Порт</value>
   </data>
   <data name="ProxiesDeletedSuccessfully" xml:space="preserve">
-    <value>Proxies deleted successfully</value>
+    <value>Прокси успешно удалены</value>
   </data>
   <data name="ProxiesImportedSuccessfully" xml:space="preserve">
-    <value>Proxies imported successfully</value>
+    <value>Прокси успешно импортированы</value>
+  </data>
+  <data name="proxiesMoved" xml:space="preserve">
+    <value>перемещение прокси-серверов</value>
   </data>
   <data name="ProxyGroup" xml:space="preserve">
-    <value>Proxy Group</value>
+    <value>Прокси-группа</value>
   </data>
   <data name="ProxyGroupCreated" xml:space="preserve">
-    <value>The proxy group was created successfully!</value>
+    <value>Прокси-группа была создана успешно!</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Do you really want to delete</value>
+    <value>Вы действительно хотите удалить</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>results</value>
+    <value>результаты</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Results per page</value>
+    <value>Результаты на страницу</value>
+  </data>
+  <data name="SelectProxyGroup" xml:space="preserve">
+    <value>Выберите группу прокси</value>
   </data>
   <data name="Slow" xml:space="preserve">
-    <value>Slow</value>
+    <value>Медленный</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Статус</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Имя пользователя</value>
   </data>
 </root>

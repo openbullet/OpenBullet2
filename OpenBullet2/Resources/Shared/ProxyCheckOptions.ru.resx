@@ -124,16 +124,16 @@
     <value>Боты</value>
   </data>
   <data name="CheckOnlyUntested" xml:space="preserve">
-    <value>Чекать только непроверенные</value>
+    <value>Проверяйте только непроверенные</value>
   </data>
   <data name="CheckOnWebsite" xml:space="preserve">
-    <value>Чекать на Веб-сайте</value>
+    <value>Проверьте на сайте</value>
   </data>
   <data name="ProxyGroup" xml:space="preserve">
-    <value>Группа Proxy</value>
+    <value>Прокси-группа</value>
   </data>
   <data name="StartCondition" xml:space="preserve">
-    <value>Условия Запуска</value>
+    <value>Стартовое условие</value>
   </data>
   <data name="TimeoutMilliseconds" xml:space="preserve">
     <value>Тайм-аут (миллисекунды)</value>

@@ -121,10 +121,10 @@
     <value>Автор</value>
   </data>
   <data name="by" xml:space="preserve">
-    <value>от</value>
+    <value>по</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Отменить</value>
+    <value>Отмена</value>
   </data>
   <data name="Category" xml:space="preserve">
     <value>Категория</value>
@@ -133,40 +133,40 @@
     <value>Опасность</value>
   </data>
   <data name="DangerousConfig" xml:space="preserve">
-    <value>Выбранная конфигурация может содержать код C#. Несмотря на то, что C# может быть полезен разработчикам конфигураций, использующих функциональные возможности, которые не реализованные посредством блоков. C# также может быть использован для нанесения вреда компьютеру или кражи информации. НАСТОЯТЕЛЬНО рекомендуется проверить код конфигурации и убедиться, что он не содержит ничего поддельного. Вы проверили код и убедились, что он полностью безопасен?</value>
+    <value>Выбранный вами конфиг может содержать код на C# (или блоки, вызывающие внешние программы). Хотя C# может быть полезен для создателей конфигов, которые хотят использовать функции, не реализованные через блоки, он также может быть использован для нанесения вреда вашему компьютеру или кражи информации. Настоятельно рекомендуется просмотреть код конфигурации и убедиться, что ничего подозрительного не происходит. Вы просмотрели конфиг и убедились, что его запуск полностью безопасен?</value>
   </data>
   <data name="LastModified" xml:space="preserve">
-    <value>Последнее изменение</value>
+    <value>Последняя модификация</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Загрузка</value>
   </data>
   <data name="MissingPlugin" xml:space="preserve">
-    <value>Отсутствует подключаемый модуль</value>
+    <value>Отсутствующий плагин</value>
   </data>
   <data name="MissingPluginText" xml:space="preserve">
-    <value>Конфигурация была создана с помощью этого плагина, но он отсутствует</value>
+    <value>Конфиг был создан с помощью этого плагина, но в нем отсутствуют</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Имя</value>
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
-    <value>Сначала необходимо выбрать Конфигурацию</value>
+    <value>Сначала необходимо выбрать конфигурацию</value>
   </data>
   <data name="NoGoBack" xml:space="preserve">
-    <value>Нет, возвращайся</value>
+    <value>Нет, вернитесь назад</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Прокси</value>
   </data>
   <data name="Remote" xml:space="preserve">
-    <value>Удалённый</value>
+    <value>Удаленный</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Выбрать</value>
+    <value>Выберите</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Ой-Ой</value>
+    <value></value>
   </data>
   <data name="Wordlists" xml:space="preserve">
     <value>Списки слов</value>

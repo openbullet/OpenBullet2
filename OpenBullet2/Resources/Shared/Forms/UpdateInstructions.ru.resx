@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CurrentVersion" xml:space="preserve">
-    <value>Current version</value>
+    <value>Текущая версия</value>
   </data>
   <data name="RemoteVersion" xml:space="preserve">
-    <value>Remote version</value>
+    <value>Удаленная версия</value>
   </data>
   <data name="UpdateInstructionsMarkdown" xml:space="preserve">
-    <value>To update OpenBullet 2, quit the current instance and then start the updater by typing `dotnet ./Updater.dll` (or by clicking on the `Updater.exe` file on Windows). Once the updater finishes its work, you can start OpenBullet 2 again.</value>
+    <value>Чтобы обновить OpenBullet 2, завершите работу текущего экземпляра, а затем запустите программу обновления, набрав `dotnet ./Updater.dll` (или щелкнув на файле `Updater.exe` в Windows). После того как программа обновления завершит свою работу, вы можете снова запустить OpenBullet 2.</value>
   </data>
 </root>

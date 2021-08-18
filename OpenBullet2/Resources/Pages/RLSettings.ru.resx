@@ -118,150 +118,162 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="2CaptchaApiKey" xml:space="preserve">
-    <value>2Captcha API Key</value>
+    <value>Ключ API 2Captcha</value>
   </data>
   <data name="AntiCaptchaApiKey" xml:space="preserve">
-    <value>Anti-Captcha API Key</value>
+    <value>Ключ API антикапчи</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="AZCaptchaApiKey" xml:space="preserve">
     <value>AZ Captcha API Key</value>
   </data>
   <data name="Balance" xml:space="preserve">
-    <value>Balance</value>
+    <value>Баланс</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="CapMonsterHost" xml:space="preserve">
     <value>CapMonster Host</value>
   </data>
   <data name="CapMonsterPort" xml:space="preserve">
-    <value>CapMonster Port</value>
+    <value>Порт CapMonster</value>
   </data>
   <data name="Captchas" xml:space="preserve">
     <value>Captchas</value>
   </data>
   <data name="CaptchasDotIoApiKey" xml:space="preserve">
-    <value>Captchas.IO API Key</value>
+    <value>Ключ API Captchas.IO</value>
   </data>
   <data name="CheckBalance" xml:space="preserve">
-    <value>Check balance</value>
+    <value>Проверьте баланс</value>
   </data>
   <data name="CheckBalanceBeforeSolving" xml:space="preserve">
-    <value>Check the account balance before solving the captcha</value>
+    <value>Проверьте баланс счета перед решением капчи</value>
   </data>
   <data name="ChromeBinaryLocation" xml:space="preserve">
-    <value>Chrome binary location</value>
+    <value>Расположение двоичных файлов Chrome</value>
   </data>
   <data name="ConnectTimeoutMilliseconds" xml:space="preserve">
-    <value>Connect timeout (milliseconds)</value>
+    <value>Тайм-аут подключения (миллисекунды)</value>
   </data>
   <data name="CurrentService" xml:space="preserve">
-    <value>Current service</value>
+    <value>Текущее обслуживание</value>
   </data>
   <data name="Custom2CaptchaApiKey" xml:space="preserve">
-    <value>Custom 2Captcha API Key</value>
+    <value>Пользовательский ключ API 2Captcha</value>
   </data>
   <data name="Custom2CaptchaHost" xml:space="preserve">
-    <value>Custom 2Captcha Host</value>
+    <value>Пользовательский хост 2Captcha</value>
+  </data>
+  <data name="Custom2CaptchaOverrideHostHeader" xml:space="preserve">
+    <value>Переопределить заголовок Host на 2captcha.com</value>
   </data>
   <data name="Custom2CaptchaPort" xml:space="preserve">
-    <value>Custom 2Captcha Port</value>
+    <value>Пользовательский порт 2Captcha</value>
   </data>
   <data name="DeathByCaptcha Username" xml:space="preserve">
-    <value>Death By Captcha Username</value>
+    <value>Смерть от имени пользователя Captcha</value>
   </data>
   <data name="DeathByCaptchaPassword" xml:space="preserve">
-    <value>Death By Captcha Password</value>
+    <value>Смерть от парольной капчи</value>
   </data>
   <data name="DeCaptcherPassword" xml:space="preserve">
-    <value>DeCaptcher Password</value>
+    <value>Пароль DeCaptcher</value>
   </data>
   <data name="DeCaptcherUsername" xml:space="preserve">
-    <value>DeCaptcher Username</value>
+    <value>Имя пользователя DeCaptcher</value>
   </data>
   <data name="DrawMouseMovement" xml:space="preserve">
-    <value>Draw mouse movement</value>
+    <value>Нарисовать движение мыши</value>
   </data>
   <data name="EnableBotLogging" xml:space="preserve">
-    <value>Enable bot logging</value>
+    <value>Включить протоколирование ботов</value>
   </data>
   <data name="FirefoxBinaryLocation" xml:space="preserve">
-    <value>Firefox binary location</value>
+    <value>Расположение двоичного файла Firefox</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>Общий</value>
   </data>
   <data name="GlobalBanKeys" xml:space="preserve">
-    <value>Global ban keys</value>
+    <value>Ключи глобального запрета</value>
   </data>
   <data name="GlobalRetryKeys" xml:space="preserve">
-    <value>Global retry keys</value>
+    <value>Глобальные ключи повторных попыток</value>
   </data>
   <data name="ImageTyperzApiKey" xml:space="preserve">
-    <value>Imagetyperz API Key</value>
+    <value>API-ключ Imagetyperz</value>
   </data>
   <data name="LogJobActivityToFile" xml:space="preserve">
-    <value>Log job activity to file</value>
+    <value>Вести журнал работы в файл</value>
   </data>
   <data name="ParallelizerType" xml:space="preserve">
-    <value>Parallelizer Type</value>
+    <value>Тип распараллеливателя</value>
+  </data>
+  <data name="PollingIntervalMilliseconds" xml:space="preserve">
+    <value>Интервал опроса в миллисекундах</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
+    <value>Прокси</value>
   </data>
   <data name="Puppeteer" xml:space="preserve">
-    <value>Puppeteer</value>
+    <value>Кукловод</value>
   </data>
   <data name="ReadWriteTimeoutMilliseconds" xml:space="preserve">
-    <value>Read/Write timeout (milliseconds)</value>
+    <value>Тайм-аут чтения/записи (миллисекунды)</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
-    <value>Restore Defaults</value>
+    <value>Восстановление настроек по умолчанию</value>
   </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
-    <value>Do you want to restore the default settings?</value>
+    <value>Хотите ли вы восстановить настройки по умолчанию?</value>
   </data>
   <data name="RestrictBlocksToCWD" xml:space="preserve">
-    <value>Restrict blocks I/O capabilities to the Current Working Directory only</value>
+    <value>Ограничить возможности ввода/вывода блоков только текущим рабочим каталогом</value>
   </data>
   <data name="RuCaptchaApiKey" xml:space="preserve">
     <value>RuCaptcha API Key</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Сохранить</value>
   </data>
   <data name="Saved" xml:space="preserve">
-    <value>Saved</value>
+    <value>Сохранено</value>
   </data>
   <data name="SelectedBrowser" xml:space="preserve">
-    <value>Selected browser</value>
+    <value>Выбранный браузер</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
-    <value>The settings were successfully saved.</value>
+    <value>Настройки были успешно сохранены.</value>
   </data>
   <data name="SolveCaptchaApiKey" xml:space="preserve">
-    <value>SolveCaptcha API Key</value>
+    <value>Ключ API SolveCaptcha</value>
   </data>
   <data name="SolveRecaptchaApiKey" xml:space="preserve">
-    <value>SolveRecaptcha API Key</value>
+    <value>Ключ API SolveRecaptcha</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Успех</value>
   </data>
   <data name="TimeoutSeconds" xml:space="preserve">
-    <value>Timeout in seconds</value>
+    <value>Тайм-аут в секундах</value>
   </data>
   <data name="TrueCaptchaApiKey" xml:space="preserve">
-    <value>TrueCaptcha API Key</value>
+    <value>Ключ API TrueCaptcha</value>
   </data>
   <data name="TrueCaptchaUsername" xml:space="preserve">
-    <value>TrueCaptcha Username</value>
+    <value>Имя пользователя TrueCaptcha</value>
   </data>
   <data name="UseCustomUserAgentsList" xml:space="preserve">
-    <value>Use custom User Agents list</value>
+    <value>Использовать пользовательский список пользовательских агентов</value>
   </data>
   <data name="UserAgents" xml:space="preserve">
-    <value>User Agents</value>
+    <value>Пользовательские агенты</value>
+  </data>
+  <data name="VerboseMode" xml:space="preserve">
+    <value>Подробный режим</value>
   </data>
 </root>

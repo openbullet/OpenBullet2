@@ -118,31 +118,31 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessExpiration" xml:space="preserve">
-    <value>Срок действия доступа</value>
+    <value>Истечение срока доступа</value>
   </data>
   <data name="allIfEmpty" xml:space="preserve">
     <value>все, если пусто</value>
   </data>
   <data name="AllowedAddresses" xml:space="preserve">
-    <value>Допустимые адреса</value>
+    <value>Разрешенные адреса</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Подтвердить пароль</value>
+    <value>Подтверждение пароля</value>
   </data>
   <data name="Example" xml:space="preserve">
     <value>Пример</value>
   </data>
   <data name="GuestAlreadyExists" xml:space="preserve">
-    <value>Гость с таким именем уже существует</value>
+    <value>Гость с таким же именем уже существует</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ок</value>
+    <value>Хорошо</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Ой-Ой</value>
+    <value></value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Имя пользователя</value>

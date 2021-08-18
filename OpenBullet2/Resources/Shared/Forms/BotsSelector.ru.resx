@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InvalidAmount" xml:space="preserve">
-    <value>Недопустимое значение</value>
+    <value>Неверная сумма</value>
   </data>
   <data name="InvalidAmountWarning" xml:space="preserve">
-    <value>Значение должно быть от 1 до 200</value>
+    <value>Сумма должна быть от 1 до 200</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ок</value>
+    <value>Хорошо</value>
   </data>
 </root>

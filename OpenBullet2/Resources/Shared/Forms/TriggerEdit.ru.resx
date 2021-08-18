@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="JobFinished" xml:space="preserve">
-    <value>Job finished</value>
+    <value>Работа завершена</value>
   </data>
   <data name="JobStatus" xml:space="preserve">
-    <value>Job status</value>
+    <value>Статус работы</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Прошедшее время</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Оставшееся время</value>
   </data>
   <data name="TriggerWhen" xml:space="preserve">
-    <value>Trigger when</value>
+    <value>Срабатывает, когда</value>
   </data>
 </root>

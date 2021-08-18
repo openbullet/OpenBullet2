@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="hours" xml:space="preserve">
-    <value>часов</value>
+    <value>часы</value>
   </data>
   <data name="minutes" xml:space="preserve">
     <value>минут</value>
   </data>
   <data name="seconds" xml:space="preserve">
-    <value>секунд</value>
+    <value>секунды</value>
   </data>
 </root>

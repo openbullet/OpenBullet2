@@ -118,90 +118,93 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Bots" xml:space="preserve">
-    <value>Bots</value>
+    <value>Боты</value>
   </data>
   <data name="by" xml:space="preserve">
-    <value>by</value>
+    <value>по</value>
   </data>
   <data name="Clone" xml:space="preserve">
-    <value>Clone</value>
+    <value>Клон</value>
   </data>
   <data name="Combinations" xml:space="preserve">
-    <value>Combinations</value>
+    <value>Комбинации</value>
   </data>
   <data name="Config" xml:space="preserve">
-    <value>Config</value>
+    <value>Конфигурация</value>
   </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Пользовательский</value>
   </data>
   <data name="DataPool" xml:space="preserve">
-    <value>Data pool</value>
+    <value>Пул данных</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this work?</value>
+    <value>Как это работает?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>This is the %Job Manager%, here you can %create% new jobs, %edit% or %remove% existing %jobs% and access a specific job's interface. To create a new job, click on the %New% button above. After you created some jobs you will be able to see an overview of their status on this page. You can also create a job by cloning an existing one in order to save time with all the configuration tasks.</value>
+    <value>Это %Менеджер заданий%, здесь вы можете %создать% новые задания, %редактировать% или %удалить% существующие задания% и получить доступ к интерфейсу конкретного задания. Чтобы создать новое задание, нажмите на кнопку %New% выше. После создания нескольких заданий вы сможете увидеть обзор их состояния на этой странице. Вы также можете создать задание путем клонирования уже существующего, чтобы сэкономить время на выполнение всех задач по настройке.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>In order to access the interface of a specific job you can just click on it! If you would like the manager to update your jobs' status less frequently in order to save bandwidth, you can find the %Job Manager update interval% option in the OB Settings page.</value>
+    <value>Для того чтобы перейти к интерфейсу конкретного задания, вы можете просто щелкнуть по нему! Если вы хотите, чтобы менеджер обновлял статус ваших заданий реже в целях экономии пропускной способности, вы можете найти опцию %Job Manager update interval% на странице OB Settings.</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+    <value>Хиты</value>
   </data>
   <data name="Infinite" xml:space="preserve">
-    <value>Infinite</value>
+    <value>Бесконечность</value>
   </data>
   <data name="JobNotIdle" xml:space="preserve">
-    <value>Job not idle</value>
+    <value>Работа не праздная</value>
   </data>
   <data name="JobNotIdleWarning" xml:space="preserve">
-    <value>Please stop or abort the job before deleting it</value>
+    <value>Пожалуйста, остановите или прервите выполнение задания перед его удалением</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>New</value>
+    <value>Новый</value>
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
-    <value>No Config selected</value>
+    <value>Конфигурация не выбрана</value>
   </data>
   <data name="NotWorking" xml:space="preserve">
-    <value>Not working</value>
+    <value>Не работает</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Владелец</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progress</value>
+    <value>Прогресс</value>
   </data>
   <data name="Proxies" xml:space="preserve">
-    <value>Proxies</value>
+    <value>Прокси</value>
   </data>
   <data name="Range" xml:space="preserve">
-    <value>Range</value>
+    <value>Диапазон</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="RemoveAll" xml:space="preserve">
-    <value>Remove All</value>
+    <value>Удалить все</value>
   </data>
   <data name="SelectJobType" xml:space="preserve">
-    <value>Select job type</value>
+    <value>Выберите тип задания</value>
   </data>
   <data name="ToCheck" xml:space="preserve">
-    <value>To check</value>
+    <value>Чтобы проверить</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Wordlist</value>
+    <value>Список слов</value>
   </data>
   <data name="Working" xml:space="preserve">
-    <value>Working</value>
+    <value>Работа</value>
   </data>
 </root>

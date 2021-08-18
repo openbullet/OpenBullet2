@@ -121,7 +121,7 @@
     <value>дней</value>
   </data>
   <data name="hours" xml:space="preserve">
-    <value>часов</value>
+    <value>часы</value>
   </data>
   <data name="inJob" xml:space="preserve">
     <value>в работе</value>
@@ -130,30 +130,39 @@
     <value>минут</value>
   </data>
   <data name="onWebhook" xml:space="preserve">
-    <value>на webhook</value>
+    <value>веб-крючок</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Перезагрузить прокси</value>
+    <value>Перезагрузка прокси-серверов</value>
   </data>
   <data name="seconds" xml:space="preserve">
-    <value>секунд</value>
+    <value>секунды</value>
   </data>
   <data name="Send" xml:space="preserve">
     <value>Отправить</value>
   </data>
   <data name="SetBotsTo" xml:space="preserve">
-    <value>Установите значение для ботов</value>
+    <value>Установите ботов на</value>
   </data>
   <data name="SetRelativeTimeTo" xml:space="preserve">
     <value>Установите относительное время на</value>
   </data>
   <data name="StartJob" xml:space="preserve">
-    <value>Запустить задание</value>
+    <value>Начать работу</value>
   </data>
   <data name="StopJob" xml:space="preserve">
-    <value>Остановить задание</value>
+    <value>Остановить работу</value>
   </data>
   <data name="Wait" xml:space="preserve">
     <value>Подождите</value>
+  </data>
+  <data name="inChat" xml:space="preserve">
+    <value>в чате</value>
+  </data>
+  <data name="onApiServer" xml:space="preserve">
+    <value>на сервере API</value>
+  </data>
+  <data name="AbortJob" xml:space="preserve">
+    <value>Прервать работу</value>
   </data>
 </root>

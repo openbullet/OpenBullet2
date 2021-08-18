@@ -118,30 +118,30 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this block work?</value>
+    <value>Как работает этот блок?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>The %Parse% block allows you to parse data from a string with many different parsing methods and store it into a String or List of Strings variable. The supported parsing modes are LR, CSS, JSON and REGEX. The %LR% (Left Right) mode allows to parse text between two given strings. The %CSS% (CSS Selector) mode allows to get an element's attribute from an HTML page.</value>
+    <value>Блок %Parse% позволяет разобрать данные из строки с помощью различных методов разбора и сохранить их в переменной String или List of Strings. Поддерживаются следующие режимы разбора: LR, CSS, JSON и REGEX. Режим %LR% (Left Right) позволяет разобрать текст между двумя заданными строками. Режим %CSS% (CSS Selector) позволяет получить атрибут элемента из HTML-страницы.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>The %JSON% (JavaScript Object Notation) mode allows to get the value of a JSON-serialized object or array by using a %JToken%. The JToken allows you to specify a path to reach the desired value inside the JSON structure. An example of this could be `field1.array[0]` to address the first element of the array `array` inside the object `field1`. If you write `field1.array[*]` instead, you will get all the elements of the array.</value>
+    <value>Режим %JSON% (JavaScript Object Notation) позволяет получить значение JSON-сериализованного объекта или массива с помощью %JToken%. JToken позволяет указать путь к нужному значению внутри структуры JSON. Примером может быть `field1.array[0]` для обращения к первому элементу массива `array` внутри объекта `field1`. Если вместо этого написать `field1.array[*]`, вы получите все элементы массива.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>The %REGEX% (REGular EXpression) mode is an advanced parsing method. You will need to build a regular expression and use %capturing groups% to specify what you want the output to be. Take for example the case in which we are parsing the sentence `hello friend 123` and we want to get the word `friend`, in the case where `123` is a changing value and we cannot use the LR mode. You could build a regex like `hello ([a-z]+) [d]{3}`. Notice how there is a capturing group, denoted by the round braces. Then in the %Output format% field you will be able to write `[0]` to output the full match, `[1]` to output the first captured group and so on... Note that you can use more than 1 group in the output format.</value>
+    <value>Режим %REGEX% (регулярное выражение) - это продвинутый метод парсинга. Вам потребуется построить регулярное выражение и использовать %capturing groups%, чтобы указать, что вы хотите получить на выходе. Возьмем, например, случай, когда мы разбираем предложение `hello friend 123` и хотим получить слово `friend`, в случае, когда `123` является изменяющимся значением и мы не можем использовать режим LR. Вы можете построить регекс типа `hello ([a-z]+) [\d]{3}`. Обратите внимание, что здесь есть группа захвата, обозначенная круглыми скобками. Затем в поле %Output format% вы сможете написать `[0]` для вывода полного совпадения, `[1]` для вывода первой захваченной группы и так далее... Обратите внимание, что в формате вывода можно использовать более 1 группы.</value>
   </data>
   <data name="Help1x04" xml:space="preserve">
-    <value>If you tick the %Recursive% checkbox, all the sequences of characters that meet the parsing criteria will be put inside a List of Strings variable; otherwise only the first match will be taken and put into a String variable.</value>
+    <value>Если установить флажок %Recursive%, то все последовательности символов, удовлетворяющие критериям разбора, будут помещены в переменную List of Strings; в противном случае будет взято только первое совпадение и помещено в переменную String.</value>
   </data>
   <data name="IsCapture" xml:space="preserve">
-    <value>Is capture</value>
+    <value>Захват</value>
   </data>
   <data name="Label" xml:space="preserve">
-    <value>Label</value>
+    <value>Этикетка</value>
   </data>
   <data name="OutputVariable" xml:space="preserve">
-    <value>Output variable</value>
+    <value>Выходная переменная</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Настройки</value>
   </data>
 </root>
