@@ -92,7 +92,7 @@
                       VerticalScrollBarVisibility="Hidden"
                       Grid.Row="1">
             <ItemsControl 
-                Margin="0 5 0 0"
+                Margin="0 4 0 0"
                 ItemsSource="{Binding Stack}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -107,6 +107,7 @@
                             Background="{Binding Block.Descriptor.Category.BackgroundColor}"
                             Width="180"
                             Height="40"
+                            Margin="0 1"
                             Tag="{Binding}"
                             Click="SelectBlock">
 
