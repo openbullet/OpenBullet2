@@ -141,6 +141,12 @@ namespace OpenBullet2.Native
                     break;
 
                 case MainWindowPage.ConfigStacker:
+
+                    if (vm.Config.Mode is not ConfigMode.Stack and not ConfigMode.LoliCode)
+                    {
+                        return;
+                    }
+
                     CloseSubmenu();
                     if (configEditorPage is null) configEditorPage = new();
                     configEditorPage.NavigateTo(ConfigEditorSection.Stacker);
@@ -148,6 +154,12 @@ namespace OpenBullet2.Native
                     break;
 
                 case MainWindowPage.ConfigLoliCode:
+
+                    if (vm.Config.Mode is not ConfigMode.Stack and not ConfigMode.LoliCode)
+                    {
+                        return;
+                    }
+
                     CloseSubmenu();
                     if (configEditorPage is null) configEditorPage = new();
                     configEditorPage.NavigateTo(ConfigEditorSection.LoliCode);
@@ -162,6 +174,12 @@ namespace OpenBullet2.Native
                     break;
 
                 case MainWindowPage.ConfigCSharpCode:
+
+                    if (vm.Config.Mode is not ConfigMode.Stack and not ConfigMode.LoliCode and not ConfigMode.CSharp)
+                    {
+                        return;
+                    }
+
                     CloseSubmenu();
                     if (configEditorPage is null) configEditorPage = new();
                     configEditorPage.NavigateTo(ConfigEditorSection.CSharp);
@@ -255,8 +273,9 @@ namespace OpenBullet2.Native
     {
         private readonly ConfigService configService;
         public event Action<Config> ConfigSelected;
+        public Config Config => configService.SelectedConfig;
 
-        public bool IsConfigSelected => configService.SelectedConfig != null;
+        public bool IsConfigSelected => Config != null;
 
         public MainWindowViewModel()
         {
