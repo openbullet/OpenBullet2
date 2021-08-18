@@ -50,19 +50,19 @@ namespace OpenBullet2.Native.Views.Pages
                 await vm.Delete(wordlist);
             }
 
-            Alert.Info("Done", "Successfully deleted the selected wordlist references from the DB");
+            Alert.Success("Done", "Successfully deleted the selected wordlist references from the DB");
         }
 
         private void DeleteAll(object sender, RoutedEventArgs e)
         {
             vm.DeleteAll();
-            Alert.Info("Done", "Successfully deleted all wordlist references from the DB");
+            Alert.Success("Done", "Successfully deleted all wordlist references from the DB");
         }
 
         private async void DeleteNotFound(object sender, RoutedEventArgs e)
         {
             var deleted = await vm.DeleteNotFound();
-            Alert.Info("Done", $"Successfully deleted {deleted} unresolved wordlist references from the DB");
+            Alert.Success("Done", $"Successfully deleted {deleted} unresolved wordlist references from the DB");
         }
 
         private void UpdateSearch(object sender, System.Windows.Input.KeyEventArgs e)

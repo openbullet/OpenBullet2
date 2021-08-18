@@ -119,7 +119,7 @@ namespace OpenBullet2.Native.Views.Pages
                 await vm.Delete(wordlist);
             }
 
-            Alert.Info("Done", "Successfully deleted the selected proxies from the group");
+            Alert.Success("Done", "Successfully deleted the selected proxies from the group");
         }
 
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)

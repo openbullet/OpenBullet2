@@ -56,7 +56,7 @@ namespace OpenBullet2.Native.Views.Pages
             try
             {
                 var balance = await vm.CheckCaptchaBalance();
-                Alert.Info("Success", $"Balance: {balance}");
+                Alert.Success("Success", $"Balance: {balance}");
             }
             catch (Exception ex)
             {
