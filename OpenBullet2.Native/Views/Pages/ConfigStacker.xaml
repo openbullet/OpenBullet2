@@ -104,7 +104,7 @@
                         <Button 
                             BorderBrush="White"
                             BorderThickness="{Binding Selected, Converter={StaticResource ResourceKey=BoolToThick}}"
-                            Background="{Binding Block.Descriptor.Category.BackgroundColor}"
+                            Background="{Binding BackgroundColor}"
                             Width="180"
                             Height="40"
                             Margin="0 1"
@@ -117,7 +117,7 @@
                                 FontSize="12"
                                 HorizontalAlignment="Center"
                                 TextAlignment="Center"
-                                Foreground="{Binding Block.Descriptor.Category.ForegroundColor}"
+                                Foreground="{Binding ForegroundColor}"
                                 Text="{Binding Label}"
                                 Tag="{Binding}"
                                 TextWrapping="Wrap" />
