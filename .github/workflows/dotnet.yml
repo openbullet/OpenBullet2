@@ -65,7 +65,7 @@ jobs:
       run: dotnet publish DiffCopy/DiffCopy.sln -c Release -o .tools/DiffCopy
     - name: Download Baseline
       shell: pwsh
-      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.1.5/OpenBullet2.zip" -OutFile "baseline.zip"
+      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.1.15/OpenBullet2.zip" -OutFile "baseline.zip"
     - name: Unzip Baseline
       shell: pwsh
       run: Expand-Archive  ./baseline.zip -DestinationPath ./baseline
