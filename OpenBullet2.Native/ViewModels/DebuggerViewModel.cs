@@ -164,6 +164,8 @@ namespace OpenBullet2.Native.ViewModels
             }
             finally
             {
+                IsRunning = false;
+
                 debugger.Started -= (s, e) => IsRunning = true;
                 debugger.Stopped -= (s, e) => IsRunning = false;
                 debugger.NewLogEntry -= (s, e) => NewLogEntry?.Invoke(this, e);
