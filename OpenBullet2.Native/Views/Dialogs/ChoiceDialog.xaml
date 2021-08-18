@@ -8,6 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       MinWidth="300"
+      Background="{DynamicResource BackgroundSecondary}"
       Title="Choice">
 
     <Border Padding="20">

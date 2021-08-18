@@ -9,6 +9,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       KeyDown="PageKeyDown"
       MinWidth="300"
+      Background="{DynamicResource BackgroundSecondary}"
       Title="Alert">
 
     <Border Padding="20">
