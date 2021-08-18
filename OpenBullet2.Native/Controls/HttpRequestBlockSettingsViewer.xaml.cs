@@ -63,6 +63,7 @@ namespace OpenBullet2.Native.Controls
                     break;
 
                 case HttpRequestMode.Multipart:
+                    multipartBoundarySetting.Setting = (vm.HttpRequestBlock.RequestParams as MultipartRequestParams).Boundary;
                     // TODO: write this
                     break;
             }
