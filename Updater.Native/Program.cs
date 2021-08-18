@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 
 namespace Updater.Native
 {
@@ -131,6 +132,7 @@ namespace Updater.Native
             }
 
             Console.WriteLine("The update was completed successfully. Restarting the client...");
+            Thread.Sleep(1000);
 
             // Reopen the native client
             Process.Start("OpenBullet2.Native.exe");
