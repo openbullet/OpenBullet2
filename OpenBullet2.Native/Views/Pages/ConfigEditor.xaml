@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Frame x:Name="editorFrame" Grid.Column="0" />
+        <Frame x:Name="editorFrame" Grid.Column="0" NavigationUIVisibility="Hidden" />
         
         <GridSplitter 
             ResizeDirection="Columns"
