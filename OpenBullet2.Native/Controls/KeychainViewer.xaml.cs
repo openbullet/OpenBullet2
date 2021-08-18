@@ -2,7 +2,6 @@
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -30,11 +29,30 @@ namespace OpenBullet2.Native.Controls
             Keychain = keychain;
 
             InitializeComponent();
+            keychain.Keys.ForEach(k => DisplayKey(k));
         }
 
         private void Delete(object sender, RoutedEventArgs e) => OnDeleted?.Invoke(this, EventArgs.Empty);
         private void MoveUp(object sender, RoutedEventArgs e) => OnMoveUp?.Invoke(this, EventArgs.Empty);
         private void MoveDown(object sender, RoutedEventArgs e) => OnMoveDown?.Invoke(this, EventArgs.Empty);
+
+        private void AddStringKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateStringKey());
+        private void AddBoolKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateBoolKey());
+        private void AddIntKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateIntKey());
+        private void AddFloatKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateFloatKey());
+        private void AddListKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateListKey());
+        private void AddDictionaryKey(object sender, RoutedEventArgs e) => DisplayKey(vm.CreateDictionaryKey());
+
+        private void DisplayKey(Key key)
+        {
+            var view = new KeyViewer(key);
+            view.OnDeleted += (s, e) =>
+            {
+                vm.DeleteKey(key);
+                keysPanel.Children.Remove(view);
+            };
+            keysPanel.Children.Add(view);
+        }
     }
 
     public class KeychainViewerViewModel : ViewModelBase
@@ -80,6 +98,50 @@ namespace OpenBullet2.Native.Controls
                 OnPropertyChanged();
             }
         }
+
+        public StringKey CreateStringKey()
+        {
+            var key = new StringKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public BoolKey CreateBoolKey()
+        {
+            var key = new BoolKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public IntKey CreateIntKey()
+        {
+            var key = new IntKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public FloatKey CreateFloatKey()
+        {
+            var key = new FloatKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public ListKey CreateListKey()
+        {
+            var key = new ListKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public DictionaryKey CreateDictionaryKey()
+        {
+            var key = new DictionaryKey();
+            keychain.Keys.Add(key);
+            return key;
+        }
+
+        public void DeleteKey(Key key) => keychain.Keys.Remove(key);
 
         public IEnumerable<KeychainMode> Modes => Enum.GetValues(typeof(KeychainMode)).Cast<KeychainMode>();
     }
