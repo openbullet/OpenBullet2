@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace OpenBullet2.Native.Controls
 {
@@ -47,6 +48,16 @@ namespace OpenBullet2.Native.Controls
             this.keychain = keychain;
         }
 
+        public SolidColorBrush BorderBrush => ResultStatus switch
+        {
+            "SUCCESS" => Brushes.YellowGreen,
+            "FAIL" => Brushes.Tomato,
+            "RETRY" => Brushes.Yellow,
+            "BAN" => Brushes.Plum,
+            "NONE" => Brushes.SkyBlue,
+            _ => Brushes.Orange
+        };
+
         public string ResultStatus
         {
             get => keychain.ResultStatus;
@@ -54,6 +65,7 @@ namespace OpenBullet2.Native.Controls
             {
                 keychain.ResultStatus = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(BorderBrush));
             }
         }
 

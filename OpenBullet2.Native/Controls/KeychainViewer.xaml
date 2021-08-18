@@ -8,8 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border 
-        BorderThickness="1" 
-        BorderBrush="White"
+        Margin="0 2"
+        BorderThickness="3"
+        BorderBrush="{Binding BorderBrush}"
+        CornerRadius="10"
         Padding="5">
         <Grid>
             <Grid.RowDefinitions>
