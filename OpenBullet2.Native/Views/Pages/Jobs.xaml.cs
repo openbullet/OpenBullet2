@@ -37,7 +37,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.RemoveJob((Job)(sender as Button).Tag);
+                await vm.RemoveJob((JobViewModel)(sender as Button).Tag);
             }
             catch (Exception ex)
             {

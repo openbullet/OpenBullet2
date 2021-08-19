@@ -60,17 +60,17 @@ namespace OpenBullet2.Native.ViewModels
             JobsCollection.Add(MakeViewModel(job));
         }
 
-        public async Task RemoveJob(Job job)
+        public async Task RemoveJob(JobViewModel jobVM)
         {
-            if (job.Status != JobStatus.Idle)
+            if (jobVM.Job.Status != JobStatus.Idle)
             {
                 throw new Exception("The job is not idle, please stop/abort the job first!");
             }
 
-            var entity = await jobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
+            var entity = await jobRepo.GetAll().FirstAsync(e => e.Id == jobVM.Id);
             await jobRepo.Delete(entity);
-            jobManager.Jobs.Remove(job);
-            JobsCollection.Remove(JobsCollection.First(jvm => jvm.Id == job.Id));
+            jobManager.Jobs.Remove(jobVM.Job);
+            JobsCollection.Remove(jobVM);
         }
 
         private static JobViewModel MakeViewModel(Job job) => job switch
@@ -97,21 +97,21 @@ namespace OpenBullet2.Native.ViewModels
 
     public class JobViewModel : ViewModelBase
     {
-        protected readonly Job job;
+        public Job Job { get; init; }
 
         public string IdAndStatus => $"#{Id} [{Status}]";
-        public int Id => job.Id;
-        public JobStatus Status => job.Status;
+        public int Id => Job.Id;
+        public JobStatus Status => Job.Status;
 
         public JobViewModel(Job job)
         {
-            this.job = job;
+            this.Job = job;
         }
     }
 
     public class MultiRunJobViewModel : JobViewModel
     {
-        private MultiRunJob MultiRunJob => job as MultiRunJob;
+        private MultiRunJob MultiRunJob => Job as MultiRunJob;
 
         public string ConfigName => MultiRunJob.Config is null ? "No config" : MultiRunJob.Config.Metadata.Name;
         public string DataPoolInfo => MultiRunJob.DataPool switch
@@ -158,7 +158,7 @@ namespace OpenBullet2.Native.ViewModels
 
     public class ProxyCheckJobViewModel : JobViewModel
     {
-        private ProxyCheckJob ProxyCheckJob => job as ProxyCheckJob;
+        private ProxyCheckJob ProxyCheckJob => Job as ProxyCheckJob;
 
         public int Bots => ProxyCheckJob.Bots;
         public int Total => ProxyCheckJob.Total;
