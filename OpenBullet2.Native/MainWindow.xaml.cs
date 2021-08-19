@@ -28,6 +28,7 @@ namespace OpenBullet2.Native
         private readonly Label[] labels;
 
         private Home homePage;
+        private Jobs jobsPage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private Configs configsPage;
@@ -85,6 +86,11 @@ namespace OpenBullet2.Native
                 case MainWindowPage.Home:
                     homePage = new Home(); // We recreate the homepage each time to display updated announcements
                     ChangePage(homePage, menuOptionHome);
+                    break;
+
+                case MainWindowPage.Jobs:
+                    if (jobsPage is null) jobsPage = new();
+                    ChangePage(jobsPage, menuOptionJobs);
                     break;
 
                 case MainWindowPage.Proxies:

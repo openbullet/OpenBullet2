@@ -4,6 +4,7 @@ namespace OpenBullet2.Native.Services
 {
     public class ViewModelsService
     {
+        public JobsViewModel Jobs { get; set; }
         public ProxiesViewModel Proxies { get; set; }
         public WordlistsViewModel Wordlists { get; set; }
         public ConfigsViewModel Configs { get; set; }
@@ -20,6 +21,7 @@ namespace OpenBullet2.Native.Services
 
         public ViewModelsService()
         {
+            Jobs = new();
             Proxies = new();
             Wordlists = new();
             Configs = new();
