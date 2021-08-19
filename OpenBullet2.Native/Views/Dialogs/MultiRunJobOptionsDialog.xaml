@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MultiRunJobOptionsDialog">
@@ -40,36 +41,14 @@
                     </Style>
                 </TabControl.ItemContainerStyle>
                 <TabItem>
-                    <StackPanel Orientation="Horizontal">
-                        <mah:NumericUpDown Minimum="0"
-                          Maximum="1000"
-                          Interval="1"
-                          HideUpDownButtons="True"
-                          Value="{Binding StartInHours}"
-                          Width="50"/>
-                        <Label Content="hours" />
-                        <mah:NumericUpDown Minimum="0"
-                          Maximum="1000"
-                          Interval="1"
-                          HideUpDownButtons="True"
-                          Value="{Binding StartInMinutes}"
-                          Width="50"/>
-                        <Label Content="minutes" />
-                        <mah:NumericUpDown Minimum="0"
-                          Maximum="1000"
-                          Interval="1"
-                          HideUpDownButtons="True"
-                          Value="{Binding StartInSeconds}"
-                          Width="50"/>
-                        <Label Content="seconds" />
-                    </StackPanel>
+                    <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
                 </TabItem>
                 <TabItem>
                     <StackPanel Orientation="Horizontal">
                         <mah:DateTimePicker
                             Width="200"
                             SelectedTimeFormat="Long"
-                            SelectedDateTime="{Binding StartAtTime}" />
+                            SelectedDateTime="{Binding StartAtTime, Mode=TwoWay}" />
                     </StackPanel>
                 </TabItem>
             </TabControl>

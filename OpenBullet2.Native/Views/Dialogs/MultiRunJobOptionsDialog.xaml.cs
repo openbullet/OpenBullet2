@@ -93,48 +93,6 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public int StartInHours
-        {
-            get => Options.StartCondition is RelativeTimeStartCondition rel ? rel.StartAfter.Hours : 0;
-            set
-            {
-                if (Options.StartCondition is RelativeTimeStartCondition rel)
-                {
-                    rel.StartAfter = new TimeSpan(value, StartInMinutes, StartInSeconds);
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        public int StartInMinutes
-        {
-            get => Options.StartCondition is RelativeTimeStartCondition rel ? rel.StartAfter.Minutes : 0;
-            set
-            {
-                if (Options.StartCondition is RelativeTimeStartCondition rel)
-                {
-                    rel.StartAfter = new TimeSpan(StartInHours, value, StartInSeconds);
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
-        public int StartInSeconds
-        {
-            get => Options.StartCondition is RelativeTimeStartCondition rel ? rel.StartAfter.Seconds : 0;
-            set
-            {
-                if (Options.StartCondition is RelativeTimeStartCondition rel)
-                {
-                    rel.StartAfter = new TimeSpan(StartInHours, StartInMinutes, value);
-                }
-
-                OnPropertyChanged();
-            }
-        }
-
         public DateTime StartAtTime
         {
             get => Options.StartCondition is AbsoluteTimeStartCondition abs ? abs.StartAt : DateTime.Now;
@@ -143,6 +101,20 @@ namespace OpenBullet2.Native.Views.Dialogs
                 if (Options.StartCondition is AbsoluteTimeStartCondition abs)
                 {
                     abs.StartAt = value;
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public TimeSpan StartIn
+        {
+            get => Options.StartCondition is RelativeTimeStartCondition rel ? rel.StartAfter : TimeSpan.Zero;
+            set
+            {
+                if (Options.StartCondition is RelativeTimeStartCondition rel)
+                {
+                    rel.StartAfter = value;
                 }
 
                 OnPropertyChanged();
