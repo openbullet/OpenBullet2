@@ -16,5 +16,8 @@
 
         /// <summary>The list of names of the variable that will be created by slicing the input data.</summary>
         public string[] Slices { get; set; } = new string[] { "DATA" };
+
+        /// <summary>Alias for the list of names of the variable that will be created by slicing the input data.</summary>
+        public string[] SlicesAlias { get; set; } = new string[] { };
     }
 }

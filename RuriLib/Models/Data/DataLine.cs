@@ -47,6 +47,9 @@ namespace RuriLib.Models.Data
             return toAdd
                 .Zip(Type.Slices, (k, v) => new { k, v })
                 .Select(x => new StringVariable(x.k) { Name = x.v })
+                .Concat(toAdd
+                .Zip(Type.SlicesAlias, (k, v) => new { k, v })
+                .Select(x => new StringVariable(x.k) { Name = x.v }))
                 .ToList();
         }
 
