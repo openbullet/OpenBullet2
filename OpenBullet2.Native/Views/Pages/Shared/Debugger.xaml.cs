@@ -58,33 +58,36 @@ namespace OpenBullet2.Native.Views.Pages.Shared
 
         private void NewLogEntry(object sender, BotLoggerEntry entry)
         {
-            // Append the log message
-            logRTB.AppendText(entry.Message + Environment.NewLine, entry.Color);
-
-            // Scroll to the bottom of the log
-            try
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                logRTB.SelectionStart = logRTB.TextLength;
-                logRTB.ScrollToCaret();
-            }
-            catch 
-            {
+                // Append the log message
+                logRTB.AppendText(entry.Message + Environment.NewLine, entry.Color);
 
-            }
+                // Scroll to the bottom of the log
+                try
+                {
+                    logRTB.SelectionStart = logRTB.TextLength;
+                    logRTB.ScrollToCaret();
+                }
+                catch
+                {
 
-            // Recreate the variables list
-            variablesRTB.Clear();
-            foreach (var variable in vm.Variables)
-            {
-                var color = variable.MarkedForCapture ? LogColors.Tomato : LogColors.Yellow;
-                variablesRTB.AppendText($"{variable.Name} ({variable.Type}) = {variable.AsString()}", color);
-            }
+                }
 
-            // Update the HTML view
-            if (entry.CanViewAsHtml)
-            {
-                htmlViewer.HTML = entry.Message;
-            }
+                // Recreate the variables list
+                variablesRTB.Clear();
+                foreach (var variable in vm.Variables)
+                {
+                    var color = variable.MarkedForCapture ? LogColors.Tomato : LogColors.Yellow;
+                    variablesRTB.AppendText($"{variable.Name} ({variable.Type}) = {variable.AsString()}", color);
+                }
+
+                // Update the HTML view
+                if (entry.CanViewAsHtml)
+                {
+                    htmlViewer.HTML = entry.Message;
+                }
+            });
         }
     }
 }
