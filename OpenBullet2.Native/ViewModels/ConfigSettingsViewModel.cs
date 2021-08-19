@@ -54,14 +54,18 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private string continueStatuses;
-        public string ContinueStatuses
+        public IEnumerable<string> AllStatuses => rlSettingsService.GetStatuses();
+        public IEnumerable<string> ProxyTypes => Enum.GetNames(typeof(ProxyType));
+        public IEnumerable<string> WordlistTypes => rlSettingsService.Environment.WordlistTypes.Select(w => w.Name);
+
+        private ObservableCollection<string> continueStatuses;
+        public ObservableCollection<string> ContinueStatuses
         {
             get => continueStatuses;
             set
             {
                 continueStatuses = value;
-                General.ContinueStatuses = continueStatuses.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                General.ContinueStatuses = continueStatuses.ToArray();
                 OnPropertyChanged();
             }
         }
@@ -96,40 +100,39 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private string proxyBanStatuses;
-        public string ProxyBanStatuses
+        private ObservableCollection<string> proxyBanStatuses;
+        public ObservableCollection<string> ProxyBanStatuses
         {
             get => proxyBanStatuses;
             set
             {
                 proxyBanStatuses = value;
-                Proxy.BanProxyStatuses = proxyBanStatuses.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Proxy.BanProxyStatuses = proxyBanStatuses.ToArray();
                 OnPropertyChanged();
             }
         }
 
-        private string allowedProxyTypes;
-        public string AllowedProxyTypes
+        private ObservableCollection<string> allowedProxyTypes;
+        public ObservableCollection<string> AllowedProxyTypes
         {
             get => allowedProxyTypes;
             set
             {
                 allowedProxyTypes = value;
-                Proxy.AllowedProxyTypes = allowedProxyTypes.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Where(t => Enum.TryParse(typeof(ProxyType), t, true, out var _))
+                Proxy.AllowedProxyTypes = allowedProxyTypes
                     .Select(t => (ProxyType)Enum.Parse(typeof(ProxyType), t, true)).ToArray();
                 OnPropertyChanged();
             }
         }
 
-        private string allowedWordlistTypes;
-        public string AllowedWordlistTypes
+        private ObservableCollection<string> allowedWordlistTypes;
+        public ObservableCollection<string> AllowedWordlistTypes
         {
             get => allowedWordlistTypes;
             set
             {
                 allowedWordlistTypes = value;
-                Data.AllowedWordlistTypes = allowedWordlistTypes.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Data.AllowedWordlistTypes = allowedWordlistTypes.ToArray();
                 OnPropertyChanged();
             }
         }
@@ -179,14 +182,14 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private string quitBrowserStatuses;
-        public string QuitBrowserStatuses
+        private ObservableCollection<string> quitBrowserStatuses;
+        public ObservableCollection<string> QuitBrowserStatuses
         {
             get => quitBrowserStatuses;
             set
             {
                 quitBrowserStatuses = value;
-                Puppeteer.QuitBrowserStatuses = quitBrowserStatuses.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                Puppeteer.QuitBrowserStatuses = quitBrowserStatuses.ToArray();
                 OnPropertyChanged();
             }
         }
@@ -316,11 +319,11 @@ namespace OpenBullet2.Native.ViewModels
 
         private void CreateCollections()
         {
-            ContinueStatuses = string.Join(',', General.ContinueStatuses);
-            ProxyBanStatuses = string.Join(',', Proxy.BanProxyStatuses);
-            AllowedProxyTypes = string.Join(',', Proxy.AllowedProxyTypes);
-            AllowedWordlistTypes = string.Join(',', Data.AllowedWordlistTypes);
-            QuitBrowserStatuses = string.Join(',', Puppeteer.QuitBrowserStatuses);
+            ContinueStatuses = new ObservableCollection<string>(General.ContinueStatuses);
+            ProxyBanStatuses = new ObservableCollection<string>(Proxy.BanProxyStatuses);
+            AllowedProxyTypes = new ObservableCollection<string>(Proxy.AllowedProxyTypes.Select(t => t.ToString()));
+            AllowedWordlistTypes = new ObservableCollection<string>(Data.AllowedWordlistTypes);
+            QuitBrowserStatuses = new ObservableCollection<string>(Puppeteer.QuitBrowserStatuses);
 
             CustomInputsCollection = new ObservableCollection<CustomInput>(Input.CustomInputs);
             ResourcesCollection = new ObservableCollection<ConfigResourceOptions>(Data.Resources);

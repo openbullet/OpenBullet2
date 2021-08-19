@@ -1,5 +1,6 @@
-﻿using OpenBullet2.Native.ViewModels;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,29 +22,54 @@ namespace OpenBullet2.Native.Controls
             nameof(SelectedValues),
             typeof(ObservableCollection<string>),
             typeof(MultipleSelector),
-            new PropertyMetadata(default(string), OnSelectedValuesPropertyChanged));
+            new PropertyMetadata(default(ObservableCollection<string>), OnSelectedValuesPropertyChanged));
 
         private static void OnSelectedValuesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
+            var source = d as MultipleSelector;
+            source.UpdateControls();
         }
 
-        public ObservableCollection<string> NotSelectedValues
+        public IEnumerable<string> PossibleValues
         {
-            get => (ObservableCollection<string>)GetValue(NotSelectedValuesProperty);
-            set => SetValue(NotSelectedValuesProperty, value);
+            get => (IEnumerable<string>)GetValue(PossibleValuesProperty);
+            set => SetValue(PossibleValuesProperty, value);
         }
 
-        public static readonly DependencyProperty NotSelectedValuesProperty =
+        public static readonly DependencyProperty PossibleValuesProperty =
         DependencyProperty.Register(
-            nameof(NotSelectedValues),
-            typeof(ObservableCollection<string>),
+            nameof(PossibleValues),
+            typeof(IEnumerable<string>),
             typeof(MultipleSelector),
-            new PropertyMetadata(default(string), OnNotSelectedValuesPropertyChanged));
+            new PropertyMetadata(default(IEnumerable<string>), OnPossibleValuesPropertyChanged));
 
-        private static void OnNotSelectedValuesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPossibleValuesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
+            var source = d as MultipleSelector;
+            source.UpdateControls();
+        }
+
+        public void UpdateControls()
+        {
+            if (SelectedValues is not null)
+            {
+                selectedValuesControl.Items.Clear();
+
+                foreach (var value in SelectedValues)
+                {
+                    selectedValuesControl.Items.Add(value);
+                }
+            }
+
+            if (PossibleValues is not null && SelectedValues is not null)
+            {
+                notSelectedValuesControl.Items.Clear();
+
+                foreach (var value in PossibleValues.Where(v => !SelectedValues.Contains(v)))
+                {
+                    notSelectedValuesControl.Items.Add(value);
+                }
+            }
         }
 
         public MultipleSelector()
@@ -53,22 +79,30 @@ namespace OpenBullet2.Native.Controls
 
         private void MoveAllRight(object sender, RoutedEventArgs e)
         {
-            foreach (var value in SelectedValues)
+            SelectedValues.Clear();
+            selectedValuesControl.Items.Clear();
+            notSelectedValuesControl.Items.Clear();
+
+            foreach (var value in PossibleValues)
             {
-                NotSelectedValues.Add(value);
+                notSelectedValuesControl.Items.Add(value);
             }
 
-            SelectedValues.Clear();
+            SelectedValues = SelectedValues; // HACK: Needed to notify...
         }
 
         private void MoveAllLeft(object sender, RoutedEventArgs e)
         {
-            foreach (var value in NotSelectedValues)
+            SelectedValues.Clear();
+            selectedValuesControl.Items.Clear();
+            notSelectedValuesControl.Items.Clear();
+
+            foreach (var value in PossibleValues)
             {
-                SelectedValues.Add(value);
+                selectedValuesControl.Items.Add(value);
             }
 
-            NotSelectedValues.Clear();
+            SelectedValues = SelectedValues;
         }
 
         private void MoveItem(object sender, RoutedEventArgs e)
@@ -78,44 +112,17 @@ namespace OpenBullet2.Native.Controls
             if (SelectedValues.Contains(value))
             {
                 SelectedValues.Remove(value);
-                NotSelectedValues.Add(value);
+                selectedValuesControl.Items.Remove(value);
+                notSelectedValuesControl.Items.Add(value);
             }
             else
             {
-                NotSelectedValues.Remove(value);
                 SelectedValues.Add(value);
+                selectedValuesControl.Items.Add(value);
+                notSelectedValuesControl.Items.Remove(value);
             }
-        }
-    }
 
-    public class MultipleSelectorViewModel : ViewModelBase
-    {
-        private ObservableCollection<string> selectedValues;
-        public ObservableCollection<string> SelectedValues
-        {
-            get => selectedValues;
-            set
-            {
-                selectedValues = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<string> notSelectedValues;
-        public ObservableCollection<string> NotSelectedValues
-        {
-            get => notSelectedValues;
-            set
-            {
-                notSelectedValues = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public MultipleSelectorViewModel()
-        {
-            SelectedValues = new ObservableCollection<string>();
-            NotSelectedValues = new ObservableCollection<string>();
+            SelectedValues = SelectedValues;
         }
     }
 }

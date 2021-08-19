@@ -6,12 +6,15 @@
              xmlns:local="clr-namespace:OpenBullet2.Native.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
+             Height="200"
+             Width="460"
+             HorizontalAlignment="Left"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
 
         <Border 
@@ -22,8 +25,7 @@
             <ScrollViewer 
                 VerticalScrollBarVisibility="Auto">
                 <ItemsControl 
-                    x:Name="selectedValuesControl" 
-                    ItemsSource="{Binding SelectedValues}">
+                    x:Name="selectedValuesControl">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Vertical"/>
@@ -32,9 +34,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border 
-                                BorderThickness="0 1 0 1"
+                                BorderThickness="0 0 0 1"
                                 BorderBrush="DarkGray"
-                                Padding="5">
+                                Padding="1">
                                 <Label VerticalAlignment="Center" 
                                        Content="{Binding}"
                                        MouseDown="MoveItem"/>
@@ -77,8 +79,7 @@
             <ScrollViewer 
                 VerticalScrollBarVisibility="Auto">
                 <ItemsControl 
-                    x:Name="notSelectedValuesControl" 
-                    ItemsSource="{Binding NotSelectedValues}">
+                    x:Name="notSelectedValuesControl" >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Vertical"/>
@@ -87,9 +88,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border 
-                                BorderThickness="0 1 0 1"
+                                BorderThickness="0 0 0 1"
                                 BorderBrush="DarkGray"
-                                Padding="5">
+                                Padding="1">
                                 <Label VerticalAlignment="Center" 
                                        Content="{Binding}"
                                        MouseDown="MoveItem"/>
