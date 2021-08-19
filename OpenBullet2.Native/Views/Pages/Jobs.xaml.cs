@@ -7,6 +7,7 @@ using RuriLib.Models.Jobs;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace OpenBullet2.Native.Views.Pages
 {
@@ -45,5 +46,7 @@ namespace OpenBullet2.Native.Views.Pages
         }
 
         public async void CreateJob(JobOptions options) => await vm.CreateJob(options);
+
+        private void ViewJob(object sender, MouseButtonEventArgs e) { }
     }
 }
