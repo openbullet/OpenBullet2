@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel x:Name="topMenu" Grid.Column="0" Orientation="Horizontal">
+            <StackPanel x:Name="topMenu" Margin="-5 2 0 0" Grid.Column="0" Orientation="Horizontal">
                 <StackPanel.Resources>
                     <Style TargetType="Label">
                         <Setter Property="FontWeight" Value="Bold" />
@@ -100,7 +100,7 @@
             x:Name="configSubmenu"
             Background="{DynamicResource BackgroundMain}"
             Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
-            Margin="310 30 0 0" Panel.ZIndex="1"
+            Margin="305 28 0 0" Panel.ZIndex="1"
             Height="160"
             Width="80"
             HorizontalAlignment="Left"

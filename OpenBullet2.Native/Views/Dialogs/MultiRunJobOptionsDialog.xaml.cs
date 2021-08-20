@@ -54,6 +54,9 @@ namespace OpenBullet2.Native.Views.Dialogs
         private void SelectConfig(object sender, RoutedEventArgs e)
             => new MainDialog(new SelectConfigDialog(this), "Select a config").ShowDialog();
 
+        private void SelectWordlist(object sender, RoutedEventArgs e) { }
+        private void AddWordlist(object sender, RoutedEventArgs e) { }
+
         private void Accept(object sender, RoutedEventArgs e)
         {
             onAccept?.Invoke(vm.Options);
@@ -533,13 +536,26 @@ namespace OpenBullet2.Native.Views.Dialogs
     public class WordlistDataPoolOptionsViewModel : DataPoolOptionsViewModel
     {
         private readonly IWordlistRepository wordlistRepo;
+        private WordlistEntity wordlist;
         private WordlistDataPoolOptions WordlistOptions => Options as WordlistDataPoolOptions;
 
-        // TODO: Write this
+        public string Info => WordlistOptions.WordlistId == -1 ? "No wordlist selected" : $"{wordlist.Name} ({wordlist.Total} lines)";
 
         public WordlistDataPoolOptionsViewModel(WordlistDataPoolOptions options) : base(options)
         {
             wordlistRepo = SP.GetService<IWordlistRepository>();
+
+            if (options.WordlistId != -1)
+            {
+                wordlist = wordlistRepo.Get(options.WordlistId).Result;
+            }
+        }
+
+        public void SetWordlist(WordlistEntity wordlist)
+        {
+            this.wordlist = wordlist;
+            WordlistOptions.WordlistId = wordlist.Id;
+            OnPropertyChanged(nameof(Info));
         }
     }
 

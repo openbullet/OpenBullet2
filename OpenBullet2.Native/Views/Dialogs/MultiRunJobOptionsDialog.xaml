@@ -339,6 +339,31 @@
                     Margin="0 10 0 0"
                     Content="{Binding DataPoolOptions}">
                     <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type local:WordlistDataPoolOptionsViewModel}">
+                            <StackPanel>
+                                <Label Content="{Binding Info}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Click="SelectWordlist"
+                                        Margin="5 10 0 0"
+                                        Width="100"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource PrimaryButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Margin="5 0">Select Wordlist</TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Click="AddWordlist"
+                                        Margin="5 10 0 0"
+                                        Width="100"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource PrimaryButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Margin="5 0">Add Wordlist</TextBlock>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
                         <DataTemplate DataType="{x:Type local:FileDataPoolOptionsViewModel}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
