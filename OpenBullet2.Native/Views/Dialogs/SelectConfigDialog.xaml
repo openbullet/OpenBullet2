@@ -160,6 +160,11 @@
                             <GridViewColumnHeader Tag="NeedsProxies" Click="ColumnHeaderClicked">Proxies</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=IsRemote}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="IsRemote" Click="ColumnHeaderClicked">Remote</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=AllowedWordlistTypes}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="AllowedWordlistTypes" Click="ColumnHeaderClicked">Wordlists</GridViewColumnHeader>

@@ -153,6 +153,7 @@ namespace OpenBullet2.Native.ViewModels
         public DateTime CreationDate => Config.Metadata.CreationDate;
         public DateTime LastModified => Config.Metadata.LastModified;
         public string Readme => Config.Readme;
+        public bool IsRemote => Config.IsRemote;
 
         public ConfigViewModel(Config config)
         {
