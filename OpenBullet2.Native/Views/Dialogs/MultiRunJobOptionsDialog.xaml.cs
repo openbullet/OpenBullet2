@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Core.Entities;
+﻿using Microsoft.Win32;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Repositories;
@@ -55,6 +56,18 @@ namespace OpenBullet2.Native.Views.Dialogs
         {
             onAccept?.Invoke(vm.Options);
             ((MainDialog)Parent).Close();
+        }
+
+        private void SelectFileForProxySource(object sender, RoutedEventArgs e)
+        {
+            var ofd = new OpenFileDialog
+            {
+                Filter = "Proxy files | *.txt",
+                FilterIndex = 1
+            };
+
+            ofd.ShowDialog();
+            ((FileProxySourceOptionsViewModel)(sender as Button).Tag).FileName = ofd.FileName;
         }
     }
 
@@ -172,6 +185,8 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
+        public bool IsConfigSelected => !string.IsNullOrEmpty(Options.ConfigId);
+
         public void SelectConfig(ConfigViewModel vm)
         {
             Options.ConfigId = vm.Config.Id;
@@ -186,6 +201,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 ConfigIcon = Images.Base64ToBitmapImage(config.Metadata.Base64Image);
                 ConfigNameAndAuthor = $"{config.Metadata.Name} by {config.Metadata.Author}";
+                OnPropertyChanged(nameof(IsConfigSelected));
             }
         }
 
