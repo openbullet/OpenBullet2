@@ -68,6 +68,12 @@ namespace OpenBullet2.Native.ViewModels
         public ConfigsViewModel()
         {
             configService = SP.GetService<ConfigService>();
+
+            configService.OnRemotesLoaded += (s, e) =>
+            {
+                CreateCollection();
+            };
+
             configRepo = SP.GetService<IConfigRepository>();
             CreateCollection();
         }
