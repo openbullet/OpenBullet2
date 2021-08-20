@@ -1,9 +1,20 @@
-﻿using OpenBullet2.Core.Models.Jobs;
+﻿using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Proxies;
+using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Native.Utils;
 using OpenBullet2.Native.ViewModels;
+using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
+using RuriLib.Models.Proxies;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace OpenBullet2.Native.Views.Dialogs
 {
@@ -28,6 +39,13 @@ namespace OpenBullet2.Native.Views.Dialogs
             startConditionTabControl.SelectedIndex = (int)vm.StartConditionMode;
         }
 
+        private void AddGroupProxySource(object sender, RoutedEventArgs e) => vm.AddGroupProxySource();
+        private void AddFileProxySource(object sender, RoutedEventArgs e) => vm.AddFileProxySource();
+        private void AddRemoteProxySource(object sender, RoutedEventArgs e) => vm.AddRemoteProxySource();
+
+        private void RemoveProxySource(object sender, RoutedEventArgs e)
+            => vm.RemoveProxySource((ProxySourceOptionsViewModel)(sender as Button).Tag);
+
         private void Accept(object sender, RoutedEventArgs e)
         {
             onAccept?.Invoke(vm.Options);
@@ -37,8 +55,11 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class MultiRunJobOptionsViewModel : ViewModelBase
     {
+        private readonly JobFactoryService jobFactory;
+        private readonly IProxyGroupRepository proxyGroupRepo;
         public MultiRunJobOptions Options { get; init; }
 
+        #region Start Condition
         public event Action<StartConditionMode> StartConditionModeChanged;
 
         public StartConditionMode StartConditionMode
@@ -120,11 +141,223 @@ namespace OpenBullet2.Native.Views.Dialogs
                 OnPropertyChanged();
             }
         }
+        #endregion
+
+        #region Config and Proxy options
+        private BitmapImage configIcon;
+        public BitmapImage ConfigIcon
+        {
+            get => configIcon;
+            private set
+            {
+                configIcon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string configNameAndAuthor;
+        public string ConfigNameAndAuthor
+        {
+            get => configNameAndAuthor;
+            set
+            {
+                configNameAndAuthor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void SelectConfig(ConfigViewModel vm)
+        {
+            ConfigIcon = Images.Base64ToBitmapImage(vm.Config.Metadata.Base64Image);
+            ConfigNameAndAuthor = $"{vm.Config.Metadata.Name} by {vm.Config.Metadata.Author}";
+        }
+
+        public int Bots
+        {
+            get => Options.Bots;
+            set
+            {
+                Options.Bots = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int BotLimit => jobFactory.BotLimit;
+
+        public int Skip
+        {
+            get => Options.Skip;
+            set
+            {
+                Options.Skip = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<JobProxyMode> ProxyModes => Enum.GetValues(typeof(JobProxyMode)).Cast<JobProxyMode>();
+
+        public JobProxyMode ProxyMode
+        {
+            get => Options.ProxyMode;
+            set
+            {
+                Options.ProxyMode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<NoValidProxyBehaviour> NoValidProxyBehaviours => Enum.GetValues(typeof(NoValidProxyBehaviour)).Cast<NoValidProxyBehaviour>();
+
+        public NoValidProxyBehaviour NoValidProxyBehaviour
+        {
+            get => Options.NoValidProxyBehaviour;
+            set
+            {
+                Options.NoValidProxyBehaviour = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShuffleProxies
+        {
+            get => Options.ShuffleProxies;
+            set
+            {
+                Options.ShuffleProxies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MarkAsToCheckOnAbort
+        {
+            get => Options.MarkAsToCheckOnAbort;
+            set
+            {
+                Options.MarkAsToCheckOnAbort = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool NeverBanProxies
+        {
+            get => Options.NeverBanProxies;
+            set
+            {
+                Options.NeverBanProxies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ConcurrentProxyMode
+        {
+            get => Options.ConcurrentProxyMode;
+            set
+            {
+                Options.ConcurrentProxyMode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int PeriodicReloadIntervalSeconds
+        {
+            get => Options.PeriodicReloadIntervalSeconds;
+            set
+            {
+                Options.PeriodicReloadIntervalSeconds = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProxyBanTimeSeconds
+        {
+            get => Options.ProxyBanTimeSeconds;
+            set
+            {
+                Options.ProxyBanTimeSeconds = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
 
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
             Options = options ?? new MultiRunJobOptions();
+            jobFactory = SP.GetService<JobFactoryService>();
+            proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
+
+            proxyGroups = proxyGroupRepo.GetAll().ToList();
+            PopulateProxySources();
         }
+
+        #region Proxy Sources
+        private readonly IEnumerable<ProxyGroupEntity> proxyGroups;
+        public IEnumerable<string> ProxyGroupNames => new string[] { "All" }.Concat(proxyGroups.Select(g => g.Name));
+        public IEnumerable<ProxyType> ProxyTypes => Enum.GetValues(typeof(ProxyType)).Cast<ProxyType>();
+
+        private ObservableCollection<ProxySourceOptionsViewModel> proxySourcesCollection;
+        public ObservableCollection<ProxySourceOptionsViewModel> ProxySourcesCollection
+        {
+            get => proxySourcesCollection;
+            set
+            {
+                proxySourcesCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void AddGroupProxySource()
+        {
+            var options = new GroupProxySourceOptions();
+            Options.ProxySources.Add(options);
+            var vm = new GroupProxySourceOptionsViewModel(options, proxyGroups);
+            ProxySourcesCollection.Add(vm);
+        }
+
+        public void AddFileProxySource()
+        {
+            var options = new FileProxySourceOptions();
+            Options.ProxySources.Add(options);
+            var vm = new FileProxySourceOptionsViewModel(options);
+            ProxySourcesCollection.Add(vm);
+        }
+
+        public void AddRemoteProxySource()
+        {
+            var options = new RemoteProxySourceOptions();
+            Options.ProxySources.Add(options);
+            var vm = new RemoteProxySourceOptionsViewModel(options);
+            ProxySourcesCollection.Add(vm);
+        }
+
+        public void RemoveProxySource(ProxySourceOptionsViewModel vm)
+        {
+            ProxySourcesCollection.Remove(vm);
+            Options.ProxySources.Remove(vm.Options);
+        }
+
+        private void PopulateProxySources()
+        {
+            ProxySourcesCollection = new ObservableCollection<ProxySourceOptionsViewModel>();
+
+            foreach (var source in Options.ProxySources)
+            {
+                switch (source)
+                {
+                    case GroupProxySourceOptions group:
+                        ProxySourcesCollection.Add(new GroupProxySourceOptionsViewModel(group, proxyGroups));
+                        break;
+
+                    case FileProxySourceOptions file:
+                        ProxySourcesCollection.Add(new FileProxySourceOptionsViewModel(file));
+                        break;
+
+                    case RemoteProxySourceOptions remote:
+                        ProxySourcesCollection.Add(new RemoteProxySourceOptionsViewModel(remote));
+                        break;
+                }
+            }
+        }
+        #endregion
     }
 
     public enum StartConditionMode
@@ -132,4 +365,99 @@ namespace OpenBullet2.Native.Views.Dialogs
         Relative,
         Absolute
     }
+
+    #region Other ViewModels
+    public class ProxySourceOptionsViewModel : ViewModelBase
+    {
+        public ProxySourceOptions Options { get; init; }
+
+        public ProxySourceOptionsViewModel(ProxySourceOptions options)
+        {
+            Options = options;
+        }
+    }
+
+    public class GroupProxySourceOptionsViewModel : ProxySourceOptionsViewModel
+    {
+        private GroupProxySourceOptions GroupOptions => Options as GroupProxySourceOptions;
+
+        private readonly IEnumerable<ProxyGroupEntity> proxyGroups;
+
+        public string GroupName
+        {
+            get => GroupOptions.GroupId == -1 ? "All" : proxyGroups.First(g => g.Id == GroupOptions.GroupId).Name;
+            set
+            {
+                GroupOptions.GroupId = value == "All" ? -1 : proxyGroups.First(g => g.Name == value).Id;
+                OnPropertyChanged();
+            }
+        }
+
+        public GroupProxySourceOptionsViewModel(GroupProxySourceOptions options,
+            IEnumerable<ProxyGroupEntity> proxyGroups) : base(options)
+        {
+            this.proxyGroups = proxyGroups;
+        }
+    }
+
+    public class FileProxySourceOptionsViewModel : ProxySourceOptionsViewModel
+    {
+        private FileProxySourceOptions FileOptions => Options as FileProxySourceOptions;
+
+        public string FileName
+        {
+            get => FileOptions.FileName;
+            set
+            {
+                FileOptions.FileName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ProxyType DefaultType
+        {
+            get => FileOptions.DefaultType;
+            set
+            {
+                FileOptions.DefaultType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FileProxySourceOptionsViewModel(FileProxySourceOptions options) : base(options)
+        {
+
+        }
+    }
+
+    public class RemoteProxySourceOptionsViewModel : ProxySourceOptionsViewModel
+    {
+        private RemoteProxySourceOptions RemoteOptions => Options as RemoteProxySourceOptions;
+
+        public string Url
+        {
+            get => RemoteOptions.Url;
+            set
+            {
+                RemoteOptions.Url = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ProxyType DefaultType
+        {
+            get => RemoteOptions.DefaultType;
+            set
+            {
+                RemoteOptions.DefaultType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RemoteProxySourceOptionsViewModel(RemoteProxySourceOptions options) : base(options)
+        {
+
+        }
+    }
+    #endregion
 }
