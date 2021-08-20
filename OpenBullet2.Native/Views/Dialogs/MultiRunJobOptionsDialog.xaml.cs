@@ -352,7 +352,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
-            Options = options ?? new MultiRunJobOptions();
+            Options = options ?? JobOptionsFactory.CreateNew(JobType.MultiRun) as MultiRunJobOptions;
             wordlistRepo = SP.GetService<IWordlistRepository>();
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
             configService = SP.GetService<ConfigService>();
@@ -360,11 +360,6 @@ namespace OpenBullet2.Native.Views.Dialogs
             proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
 
             SetConfigData();
-
-            if (Options.DataPool is null)
-            {
-                Options.DataPool = new WordlistDataPoolOptions();
-            }
 
             DataPoolOptions = Options.DataPool switch
             {
