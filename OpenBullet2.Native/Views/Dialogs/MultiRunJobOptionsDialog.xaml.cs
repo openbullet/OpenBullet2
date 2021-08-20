@@ -46,6 +46,11 @@ namespace OpenBullet2.Native.Views.Dialogs
         private void RemoveProxySource(object sender, RoutedEventArgs e)
             => vm.RemoveProxySource((ProxySourceOptionsViewModel)(sender as Button).Tag);
 
+        public void SelectConfig(ConfigViewModel config) => vm.SelectConfig(config);
+
+        private void SelectConfig(object sender, RoutedEventArgs e)
+            => new MainDialog(new SelectConfigDialog(this), "Select a config").ShowDialog();
+
         private void Accept(object sender, RoutedEventArgs e)
         {
             onAccept?.Invoke(vm.Options);
@@ -55,6 +60,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class MultiRunJobOptionsViewModel : ViewModelBase
     {
+        private readonly ConfigService configService;
         private readonly JobFactoryService jobFactory;
         private readonly IProxyGroupRepository proxyGroupRepo;
         public MultiRunJobOptions Options { get; init; }
@@ -168,8 +174,19 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         public void SelectConfig(ConfigViewModel vm)
         {
-            ConfigIcon = Images.Base64ToBitmapImage(vm.Config.Metadata.Base64Image);
-            ConfigNameAndAuthor = $"{vm.Config.Metadata.Name} by {vm.Config.Metadata.Author}";
+            Options.ConfigId = vm.Config.Id;
+            SetConfigData();
+        }
+
+        private void SetConfigData()
+        {
+            var config = configService.Configs.FirstOrDefault(c => c.Id == Options.ConfigId);
+
+            if (config is not null)
+            {
+                ConfigIcon = Images.Base64ToBitmapImage(config.Metadata.Base64Image);
+                ConfigNameAndAuthor = $"{config.Metadata.Name} by {config.Metadata.Author}";
+            }
         }
 
         public int Bots
@@ -282,8 +299,11 @@ namespace OpenBullet2.Native.Views.Dialogs
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
             Options = options ?? new MultiRunJobOptions();
+            configService = SP.GetService<ConfigService>();
             jobFactory = SP.GetService<JobFactoryService>();
             proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
+
+            SetConfigData();
 
             proxyGroups = proxyGroupRepo.GetAll().ToList();
             PopulateProxySources();

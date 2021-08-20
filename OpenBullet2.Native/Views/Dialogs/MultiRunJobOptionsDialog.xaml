@@ -72,7 +72,7 @@
                 HorizontalAlignment="Left"
                 Margin="5 0 0 0"/>
             <Label Content="{Binding ConfigNameAndAuthor}" />
-            <Button Click="Accept"
+            <Button Click="SelectConfig"
                 Margin="5 10 0 0"
                 Width="100"
                 HorizontalAlignment="Left"
