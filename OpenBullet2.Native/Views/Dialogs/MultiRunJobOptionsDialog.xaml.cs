@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -51,11 +52,19 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         public void SelectConfig(ConfigViewModel config) => vm.SelectConfig(config);
 
+        public void SelectWordlist(WordlistEntity entity)
+            => (vm.DataPoolOptions as WordlistDataPoolOptionsViewModel).SelectWordlist(entity);
+
+        private void AddWordlist(object sender, RoutedEventArgs e)
+            => new MainDialog(new AddWordlistDialog(this), "Add a wordlist").ShowDialog();
+
+        public async void AddWordlist(WordlistEntity entity) => await vm.AddWordlist(entity);
+
         private void SelectConfig(object sender, RoutedEventArgs e)
             => new MainDialog(new SelectConfigDialog(this), "Select a config").ShowDialog();
 
-        private void SelectWordlist(object sender, RoutedEventArgs e) { }
-        private void AddWordlist(object sender, RoutedEventArgs e) { }
+        private void SelectWordlist(object sender, RoutedEventArgs e)
+            => new MainDialog(new SelectWordlistDialog(this), "Select a wordlist").ShowDialog();
 
         private void Accept(object sender, RoutedEventArgs e)
         {
@@ -90,6 +99,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class MultiRunJobOptionsViewModel : ViewModelBase
     {
+        private readonly IWordlistRepository wordlistRepo;
         private readonly RuriLibSettingsService rlSettingsService;
         private readonly ConfigService configService;
         private readonly JobFactoryService jobFactory;
@@ -333,6 +343,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
             Options = options ?? new MultiRunJobOptions();
+            wordlistRepo = SP.GetService<IWordlistRepository>();
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
             configService = SP.GetService<ConfigService>();
             jobFactory = SP.GetService<JobFactoryService>();
@@ -514,6 +525,8 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         public IEnumerable<string> WordlistTypes => rlSettingsService.Environment.WordlistTypes.Select(t => t.Name);
         #endregion
+
+        public Task AddWordlist(WordlistEntity entity) => wordlistRepo.Add(entity);
     }
 
     public enum StartConditionMode
@@ -551,7 +564,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public void SetWordlist(WordlistEntity wordlist)
+        public void SelectWordlist(WordlistEntity wordlist)
         {
             this.wordlist = wordlist;
             WordlistOptions.WordlistId = wordlist.Id;

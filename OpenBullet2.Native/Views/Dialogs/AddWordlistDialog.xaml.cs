@@ -84,6 +84,10 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 page.AddWordlist(entity);
             }
+            else if (caller is MultiRunJobOptionsDialog dialog)
+            {
+                dialog.AddWordlist(entity);
+            }
 
             ((MainDialog)Parent).Close();
         }

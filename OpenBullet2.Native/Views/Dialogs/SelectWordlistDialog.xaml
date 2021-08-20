@@ -1,4 +1,4 @@
-﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.SelectConfigDialog"
+﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.SelectWordlistDialog"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,24 +19,16 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        
-        <!-- Configs List View -->
+
         <ListView 
-            x:Name="configsListView" 
+            x:Name="wordlistListView" 
             Grid.Row="0" 
-            Foreground="{DynamicResource ForegroundMain}" 
+            Foreground="{DynamicResource ForegroundMain}"
             Background="Transparent" 
-            ItemsSource="{Binding Path=ConfigsCollection}" 
-            SelectionMode="Extended" 
-            BorderThickness="1" 
-            VirtualizingPanel.IsVirtualizing="True" 
+            ItemsSource="{Binding Path=WordlistsCollection}" 
+            SelectionMode="Extended"
+            BorderThickness="1"
             SelectionChanged="ItemHovered">
-
-            <!-- Show Headers by overriding the default style -->
-            <ListView.Style>
-                <Style TargetType="{x:Type ListView}" />
-            </ListView.Style>
-
             <!-- Align Headers to the Left -->
             <ListView.Resources>
                 <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
@@ -94,8 +86,6 @@
                     <Setter Property="FontSize" Value="14" />
                 </Style>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <EventSetter Event="MouseDoubleClick" Handler="ListItemDoubleClick" />
-                    <!-- <EventSetter Event="Selected" Handler="ListViewItemSelected" /> -->
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -121,58 +111,38 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-
             </ListView.Resources>
 
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel>
-                    </VirtualizingStackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+            <!-- Show Headers by overriding the default style -->
+            <ListView.Style>
+                <Style TargetType="{x:Type ListView}" />
+            </ListView.Style>
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="30">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Path=Icon}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="Name" Click="ColumnHeaderClicked">Name</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Author}">
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=FileName}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Author" Click="ColumnHeaderClicked">Author</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="FileName" Click="ColumnHeaderClicked">Path</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=Category}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Type}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Category" Click="ColumnHeaderClicked">Category</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Type" Click="ColumnHeaderClicked">Type</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=NeedsProxies}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Purpose}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="NeedsProxies" Click="ColumnHeaderClicked">Proxies</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Purpose" Click="ColumnHeaderClicked">Purpose</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=AllowedWordlistTypes}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Total}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="AllowedWordlistTypes" Click="ColumnHeaderClicked">Wordlists</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=CreationDate}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="CreationDate" Click="ColumnHeaderClicked">Creation Date</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=LastModified}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="LastModified" Click="ColumnHeaderClicked">Last Modified</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="Total" Click="ColumnHeaderClicked">Total</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView>
@@ -187,18 +157,11 @@
             HorizontalAlignment="Stretch" />
 
         <Grid Grid.Row="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0">Information provided by the author:</Label>
-                <uc:MarkdownViewer 
-                    MarkdownText="{Binding HoveredConfig.Readme}" 
-                    Grid.Row="1"
-                    FontSize="12"/>
-            </Grid>
+            <TextBox
+                FontFamily="Consolas"
+                IsReadOnly="True"
+                AcceptsReturn="True"
+                Text="{Binding LinesPreview}" />
         </Grid>
 
         <Button Click="Accept"
