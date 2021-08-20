@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Repositories;
@@ -49,6 +50,15 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void RemoveProxySource(object sender, RoutedEventArgs e)
             => vm.RemoveProxySource((ProxySourceOptionsViewModel)(sender as Button).Tag);
+
+        private void AddDatabaseHitOutput(object sender, RoutedEventArgs e) => vm.AddDatabaseHitOutput();
+        private void AddFileSystemHitOutput(object sender, RoutedEventArgs e) => vm.AddFileSystemHitOutput();
+        private void AddDiscordWebhookHitOutput(object sender, RoutedEventArgs e) => vm.AddDiscordWebhookHitOutput();
+        private void AddTelegramBotHitOutput(object sender, RoutedEventArgs e) => vm.AddTelegramBotHitOutput();
+        private void AddCustomWebhookHitOutput(object sender, RoutedEventArgs e) => vm.AddCustomWebhookHitOutput();
+
+        private void RemoveHitOutput(object sender, RoutedEventArgs e)
+            => vm.RemoveHitOutput((HitOutputOptions)(sender as Button).Tag);
 
         public void SelectConfig(ConfigViewModel config) => vm.SelectConfig(config);
 
@@ -368,7 +378,47 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             proxyGroups = proxyGroupRepo.GetAll().ToList();
             PopulateProxySources();
+
+            HitOutputsCollection = new ObservableCollection<HitOutputOptions>(Options.HitOutputs);
         }
+
+        #region Hit Outputs
+        private ObservableCollection<HitOutputOptions> hitOutputsCollection;
+        public ObservableCollection<HitOutputOptions> HitOutputsCollection
+        {
+            get => hitOutputsCollection;
+            set
+            {
+                hitOutputsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void AddDatabaseHitOutput()
+        {
+            if (!Options.HitOutputs.Any(o => o is DatabaseHitOutputOptions))
+            {
+                AddHitOutput(new DatabaseHitOutputOptions());
+            }
+        }
+
+        public void AddFileSystemHitOutput() => AddHitOutput(new FileSystemHitOutputOptions());
+        public void AddDiscordWebhookHitOutput() => AddHitOutput(new DiscordWebhookHitOutputOptions());
+        public void AddTelegramBotHitOutput() => AddHitOutput(new TelegramBotHitOutputOptions());
+        public void AddCustomWebhookHitOutput() => AddHitOutput(new CustomWebhookHitOutputOptions());
+
+        private void AddHitOutput(HitOutputOptions options)
+        {
+            Options.HitOutputs.Add(options);
+            HitOutputsCollection.Add(options);
+        }
+
+        public void RemoveHitOutput(HitOutputOptions hitOutput)
+        {
+            HitOutputsCollection.Remove(hitOutput);
+            Options.HitOutputs.Remove(hitOutput);
+        }
+        #endregion
 
         #region Proxy Sources
         private readonly IEnumerable<ProxyGroupEntity> proxyGroups;

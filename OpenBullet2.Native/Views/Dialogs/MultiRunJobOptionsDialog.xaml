@@ -7,8 +7,9 @@
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
+      xmlns:ho="clr-namespace:OpenBullet2.Core.Models.Hits;assembly=OpenBullet2.Core"
       mc:Ignorable="d" 
-      d:DesignHeight="1050" d:DesignWidth="800"
+      d:DesignHeight="1050" d:DesignWidth="1200"
       Title="MultiRunJobOptionsDialog">
 
     <Page.Resources>
@@ -155,155 +156,8 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0 10 0 0">
-                <Label Foreground="{DynamicResource ForegroundCustom}"
-                   Content="Proxy sources:" />
-                <StackPanel Orientation="Horizontal">
-                    <Button Click="AddGroupProxySource" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
-                        Width="70" HorizontalAlignment="Left" >
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialDesign Kind="Add" />
-                            <TextBlock VerticalAlignment="Center" Margin="5 0">Group</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Click="AddFileProxySource" Margin="0 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
-                        Width="70" HorizontalAlignment="Left" >
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialDesign Kind="Add" />
-                            <TextBlock VerticalAlignment="Center" Margin="5 0">File</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Click="AddRemoteProxySource" Margin="0 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
-                        Width="70" HorizontalAlignment="Left" >
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconMaterialDesign Kind="Add" />
-                            <TextBlock VerticalAlignment="Center" Margin="5 0">Remote</TextBlock>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-                <ScrollViewer 
-                Height="100"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding ProxySourcesCollection}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type local:GroupProxySourceOptionsViewModel}">
-                                <Border Padding="0 5 0 0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label 
-                                    Grid.Column="0" 
-                                    VerticalAlignment="Center" 
-                                    Content="Group"
-                                    Foreground="{DynamicResource ForegroundToCheck}"/>
-                                        <ComboBox
-                                    Grid.Column="1"
-                                    ItemsSource="{Binding DataContext.ProxyGroupNames, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                    SelectedValue="{Binding GroupName}" />
-                                        <Button Tag="{Binding}" Grid.Column="3" 
-                                        Click="RemoveProxySource" 
-                                        Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <iconPacks:PackIconMaterial Kind="Close" />
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type local:FileProxySourceOptionsViewModel}">
-                                <Border Padding="0 5 0 0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label 
-                                    Grid.Column="0" 
-                                    VerticalAlignment="Center" 
-                                    Content="File name"
-                                    Foreground="{DynamicResource ForegroundGood}"/>
-                                        <TextBox
-                                    Grid.Column="1"
-                                    Text="{Binding FileName, Mode=TwoWay}" />
-                                        <Button Tag="{Binding}" Grid.Column="2" 
-                                        Click="SelectFileForProxySource" 
-                                        Margin="5 0 5 0" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <iconPacks:PackIconRemixIcon Kind="Folder2Fill" />
-                                            </StackPanel>
-                                        </Button>
-                                        <ComboBox
-                                    Grid.Column="3"
-                                    Margin="5 0 0 0"
-                                    ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                    SelectedValue="{Binding DefaultType}" />
-                                        <Button Tag="{Binding}" Grid.Column="4" 
-                                        Click="RemoveProxySource" 
-                                        Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <iconPacks:PackIconMaterial Kind="Close" />
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type local:RemoteProxySourceOptionsViewModel}">
-                                <Border Padding="0 5 0 0">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <Label 
-                                    Grid.Column="0" 
-                                    VerticalAlignment="Center" 
-                                    Content="Url"
-                                    Foreground="{DynamicResource ForegroundRetry}"/>
-                                        <TextBox
-                                    Grid.Column="1"
-                                    Text="{Binding Url}" />
-                                        <ComboBox
-                                    Grid.Column="2"
-                                    Margin="5 0 0 0"
-                                    ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                    SelectedValue="{Binding DefaultType}" />
-                                        <Button Tag="{Binding}" Grid.Column="3" 
-                                        Click="RemoveProxySource" 
-                                        Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
-                                            <StackPanel Orientation="Horizontal">
-                                                <iconPacks:PackIconMaterial Kind="Close" />
-                                            </StackPanel>
-                                        </Button>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.Resources>
-                    </ItemsControl>
-                </ScrollViewer>
-            </StackPanel>
-
-            <StackPanel Grid.Row="1"
+            <StackPanel Grid.Row="0"
+                        Grid.RowSpan="2"
                     Grid.Column="1">
                 <Label Foreground="{DynamicResource ForegroundCustom}"
                    Content="Data pool:" />
@@ -494,6 +348,435 @@
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>
+                <Label Foreground="{DynamicResource ForegroundCustom}"
+                   Content="Proxy sources:" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="AddGroupProxySource" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                        HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Group</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddFileProxySource" Margin="0 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                        HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">File</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddRemoteProxySource" Margin="0 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                        HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Remote</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ScrollViewer 
+                Height="250"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding ProxySourcesCollection}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:GroupProxySourceOptionsViewModel}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                    Grid.Column="0" 
+                                    VerticalAlignment="Center" 
+                                    Content="Group"
+                                    Foreground="{DynamicResource ForegroundToCheck}"/>
+                                        <ComboBox
+                                    Grid.Column="1"
+                                    ItemsSource="{Binding DataContext.ProxyGroupNames, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    SelectedValue="{Binding GroupName}" />
+                                        <Button Tag="{Binding}" Grid.Column="3" 
+                                        Click="RemoveProxySource" 
+                                        Margin="5 0 5 0" 
+                                        Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:FileProxySourceOptionsViewModel}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                    Grid.Column="0" 
+                                    VerticalAlignment="Center" 
+                                    Content="File name"
+                                    Foreground="{DynamicResource ForegroundGood}"/>
+                                        <TextBox
+                                    Grid.Column="1"
+                                    Text="{Binding FileName, Mode=TwoWay}" />
+                                        <Button Tag="{Binding}" Grid.Column="2" 
+                                        Click="SelectFileForProxySource" 
+                                        Margin="5 0 5 0" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconRemixIcon Kind="Folder2Fill" />
+                                            </StackPanel>
+                                        </Button>
+                                        <ComboBox
+                                    Grid.Column="3"
+                                    Margin="5 0 0 0"
+                                    ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    SelectedValue="{Binding DefaultType}" />
+                                        <Button Tag="{Binding}" Grid.Column="4" 
+                                        Click="RemoveProxySource" 
+                                        Margin="5 0 5 0" 
+                                        Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:RemoteProxySourceOptionsViewModel}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                    Grid.Column="0" 
+                                    VerticalAlignment="Center" 
+                                    Content="Url"
+                                    Foreground="{DynamicResource ForegroundRetry}"/>
+                                        <TextBox
+                                    Grid.Column="1"
+                                    Text="{Binding Url}" />
+                                        <ComboBox
+                                    Grid.Column="2"
+                                    Margin="5 0 0 0"
+                                    ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                    SelectedValue="{Binding DefaultType}" />
+                                        <Button Tag="{Binding}" Grid.Column="3" 
+                                        Click="RemoveProxySource" 
+                                        Margin="5 0 5 0" 
+                                        Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 10 0 0">
+                <Label Foreground="{DynamicResource ForegroundCustom}"
+                   Content="Hit outputs:" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="AddDatabaseHitOutput" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                         HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Database</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddFileSystemHitOutput" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                         HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">File System</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddDiscordWebhookHitOutput" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                         HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Discord</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddTelegramBotHitOutput" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                         HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Telegram</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="AddCustomWebhookHitOutput" Margin="5 5 5 5" 
+                        Background="{DynamicResource PrimaryButton}"
+                         HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Custom Webhook</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <ScrollViewer 
+                Height="100"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding HitOutputsCollection}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type ho:DatabaseHitOutputOptions}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Grid.Column="0" 
+                                            VerticalAlignment="Center" 
+                                            Content="Database"
+                                            Foreground="{DynamicResource ForegroundToCheck}"/>
+                                        <Label 
+                                            Grid.Column="1" 
+                                            VerticalAlignment="Center" 
+                                            Content="No settings required"/>
+                                        <Button Tag="{Binding}" Grid.Column="3" 
+                                            Click="RemoveHitOutput" 
+                                            Margin="5 0 5 0" 
+                                            Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type ho:FileSystemHitOutputOptions}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Grid.Column="0" 
+                                            VerticalAlignment="Center" 
+                                            Content="File System"
+                                            Foreground="{DynamicResource ForegroundGood}"/>
+                                        <Label 
+                                            Grid.Column="1" 
+                                            VerticalAlignment="Center"
+                                            Content="Base folder"/>
+                                        <TextBox
+                                            Grid.Column="2"
+                                            Text="{Binding BaseDir}" />
+                                        <Button Tag="{Binding}" Grid.Column="3" 
+                                            Click="RemoveHitOutput" 
+                                            Margin="5 0 5 0" 
+                                            Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type ho:DiscordWebhookHitOutputOptions}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Grid.Column="0" 
+                                            VerticalAlignment="Center"
+                                            Content="Discord"
+                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                        <Label 
+                                            Grid.Column="1" 
+                                            VerticalAlignment="Center"
+                                            Content="Webhook"/>
+                                        <TextBox
+                                            Grid.Column="2"
+                                            Text="{Binding Webhook}" />
+                                        <Label 
+                                            Grid.Column="3" 
+                                            VerticalAlignment="Center"
+                                            Content="Username"/>
+                                        <TextBox
+                                            Grid.Column="4"
+                                            Text="{Binding Username}" />
+                                        <Label 
+                                            Grid.Column="5" 
+                                            VerticalAlignment="Center"
+                                            Content="Avatar URL"/>
+                                        <TextBox
+                                            Grid.Column="6"
+                                            Text="{Binding AvatarUrl}" />
+                                        <CheckBox
+                                            Margin="5 0 0 0"
+                                            Grid.Column="7"
+                                            Content="Only hits"
+                                            IsChecked="{Binding OnlyHits}" />
+                                        <Button Tag="{Binding}" Grid.Column="8" 
+                                            Click="RemoveHitOutput" 
+                                            Margin="5 0 5 0" 
+                                            Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type ho:TelegramBotHitOutputOptions}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Grid.Column="0" 
+                                            VerticalAlignment="Center"
+                                            Content="Telegram"
+                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                        <Label 
+                                            Grid.Column="1" 
+                                            VerticalAlignment="Center"
+                                            Content="API Server"/>
+                                        <TextBox
+                                            Grid.Column="2"
+                                            Text="{Binding ApiServer}" />
+                                        <Label 
+                                            Grid.Column="3" 
+                                            VerticalAlignment="Center"
+                                            Content="Bot Token"/>
+                                        <TextBox
+                                            Grid.Column="4"
+                                            Text="{Binding Token}" />
+                                        <Label 
+                                            Grid.Column="5" 
+                                            VerticalAlignment="Center"
+                                            Content="Chat ID"/>
+                                        <mah:NumericUpDown 
+                                            Grid.Column="6"
+                                            Minimum="-2147483648"
+                                            Maximum="2147483647"
+                                            Interval="1"
+                                            Value="{Binding ChatId}"/>     
+                                        <CheckBox
+                                            Margin="5 0 0 0"
+                                            Grid.Column="7"
+                                            Content="Only hits"
+                                            IsChecked="{Binding OnlyHits}" />
+                                        <Button Tag="{Binding}" Grid.Column="8" 
+                                            Click="RemoveHitOutput" 
+                                            Margin="5 0 5 0" 
+                                            Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type ho:CustomWebhookHitOutputOptions}">
+                                <Border Padding="0 5 0 0">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label 
+                                            Grid.Column="0" 
+                                            VerticalAlignment="Center"
+                                            Content="Custom Webhook"
+                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                        <Label 
+                                            Grid.Column="1" 
+                                            VerticalAlignment="Center"
+                                            Content="URL"/>
+                                        <TextBox
+                                            Grid.Column="2"
+                                            Text="{Binding Url}" />
+                                        <Label 
+                                            Grid.Column="3" 
+                                            VerticalAlignment="Center"
+                                            Content="User"/>
+                                        <TextBox
+                                            Grid.Column="4"
+                                            Text="{Binding User}" />
+                                        <CheckBox
+                                            Margin="5 0 0 0"
+                                            Grid.Column="5"
+                                            Content="Only hits"
+                                            IsChecked="{Binding OnlyHits}" />
+                                        <Button Tag="{Binding}" Grid.Column="6" 
+                                            Click="RemoveHitOutput" 
+                                            Margin="5 0 5 0" 
+                                            Background="{DynamicResource DangerButton}" >
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial Kind="Close" />
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                </ScrollViewer>
             </StackPanel>
 
             <Button Click="Accept"
