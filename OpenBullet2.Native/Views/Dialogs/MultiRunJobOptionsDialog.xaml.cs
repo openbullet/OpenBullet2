@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Repositories;
@@ -9,6 +10,7 @@ using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Models.Proxies;
+using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -69,10 +71,23 @@ namespace OpenBullet2.Native.Views.Dialogs
             ofd.ShowDialog();
             ((FileProxySourceOptionsViewModel)(sender as Button).Tag).FileName = ofd.FileName;
         }
+
+        private void SelectFileForDataPool(object sender, RoutedEventArgs e)
+        {
+            var ofd = new OpenFileDialog
+            {
+                Filter = "Wordlist files | *.txt",
+                FilterIndex = 1
+            };
+
+            ofd.ShowDialog();
+            (vm.DataPoolOptions as FileDataPoolOptionsViewModel).FileName = ofd.FileName;
+        }
     }
 
     public class MultiRunJobOptionsViewModel : ViewModelBase
     {
+        private readonly RuriLibSettingsService rlSettingsService;
         private readonly ConfigService configService;
         private readonly JobFactoryService jobFactory;
         private readonly IProxyGroupRepository proxyGroupRepo;
@@ -315,11 +330,27 @@ namespace OpenBullet2.Native.Views.Dialogs
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
             Options = options ?? new MultiRunJobOptions();
+            rlSettingsService = SP.GetService<RuriLibSettingsService>();
             configService = SP.GetService<ConfigService>();
             jobFactory = SP.GetService<JobFactoryService>();
             proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
 
             SetConfigData();
+
+            if (Options.DataPool is null)
+            {
+                Options.DataPool = new WordlistDataPoolOptions();
+            }
+
+            DataPoolOptions = Options.DataPool switch
+            {
+                WordlistDataPoolOptions w => new WordlistDataPoolOptionsViewModel(w),
+                FileDataPoolOptions f => new FileDataPoolOptionsViewModel(f),
+                RangeDataPoolOptions r => new RangeDataPoolOptionsViewModel(r),
+                CombinationsDataPoolOptions c => new CombinationsDataPoolOptionsViewModel(c),
+                InfiniteDataPoolOptions i => new InfiniteDataPoolOptionsViewModel(i),
+                _ => throw new NotImplementedException()
+            };
 
             proxyGroups = proxyGroupRepo.GetAll().ToList();
             PopulateProxySources();
@@ -394,6 +425,92 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
         #endregion
+
+        #region Data Pool
+        private DataPoolOptionsViewModel dataPoolOptions;
+        public DataPoolOptionsViewModel DataPoolOptions
+        {
+            get => dataPoolOptions;
+            set
+            {
+                dataPoolOptions = value;
+                Options.DataPool = dataPoolOptions.Options;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool WordlistDataPoolMode
+        {
+            get => DataPoolOptions is WordlistDataPoolOptionsViewModel;
+            set
+            {
+                if (value)
+                {
+                    DataPoolOptions = new WordlistDataPoolOptionsViewModel(new WordlistDataPoolOptions());
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool FileDataPoolMode
+        {
+            get => DataPoolOptions is FileDataPoolOptionsViewModel;
+            set
+            {
+                if (value)
+                {
+                    DataPoolOptions = new FileDataPoolOptionsViewModel(new FileDataPoolOptions());
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool RangeDataPoolMode
+        {
+            get => DataPoolOptions is RangeDataPoolOptionsViewModel;
+            set
+            {
+                if (value)
+                {
+                    DataPoolOptions = new RangeDataPoolOptionsViewModel(new RangeDataPoolOptions());
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool CombinationsDataPoolMode
+        {
+            get => DataPoolOptions is CombinationsDataPoolOptionsViewModel;
+            set
+            {
+                if (value)
+                {
+                    DataPoolOptions = new CombinationsDataPoolOptionsViewModel(new CombinationsDataPoolOptions());
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool InfiniteDataPoolMode
+        {
+            get => DataPoolOptions is InfiniteDataPoolOptionsViewModel;
+            set
+            {
+                if (value)
+                {
+                    DataPoolOptions = new InfiniteDataPoolOptionsViewModel(new InfiniteDataPoolOptions());
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<string> WordlistTypes => rlSettingsService.Environment.WordlistTypes.Select(t => t.Name);
+        #endregion
     }
 
     public enum StartConditionMode
@@ -402,7 +519,186 @@ namespace OpenBullet2.Native.Views.Dialogs
         Absolute
     }
 
-    #region Other ViewModels
+    #region Data Pool ViewModels
+    public class DataPoolOptionsViewModel : ViewModelBase
+    {
+        public DataPoolOptions Options { get; init; }
+
+        public DataPoolOptionsViewModel(DataPoolOptions options)
+        {
+            Options = options;
+        }
+    }
+
+    public class WordlistDataPoolOptionsViewModel : DataPoolOptionsViewModel
+    {
+        private readonly IWordlistRepository wordlistRepo;
+        private WordlistDataPoolOptions WordlistOptions => Options as WordlistDataPoolOptions;
+
+        // TODO: Write this
+
+        public WordlistDataPoolOptionsViewModel(WordlistDataPoolOptions options) : base(options)
+        {
+            wordlistRepo = SP.GetService<IWordlistRepository>();
+        }
+    }
+
+    public class FileDataPoolOptionsViewModel : DataPoolOptionsViewModel
+    {
+        private FileDataPoolOptions FileOptions => Options as FileDataPoolOptions;
+
+        public string FileName
+        {
+            get => FileOptions.FileName;
+            set
+            {
+                FileOptions.FileName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string WordlistType
+        {
+            get => FileOptions.WordlistType;
+            set
+            {
+                FileOptions.WordlistType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FileDataPoolOptionsViewModel(FileDataPoolOptions options) : base(options)
+        {
+
+        }
+    }
+
+    public class RangeDataPoolOptionsViewModel : DataPoolOptionsViewModel
+    {
+        private RangeDataPoolOptions RangeOptions => Options as RangeDataPoolOptions;
+
+        public long Start
+        {
+            get => RangeOptions.Start;
+            set
+            {
+                RangeOptions.Start = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int Amount
+        {
+            get => RangeOptions.Amount;
+            set
+            {
+                RangeOptions.Amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int Step
+        {
+            get => RangeOptions.Step;
+            set
+            {
+                RangeOptions.Step = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Pad
+        {
+            get => RangeOptions.Pad;
+            set
+            {
+                RangeOptions.Pad = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string WordlistType
+        {
+            get => RangeOptions.WordlistType;
+            set
+            {
+                RangeOptions.WordlistType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RangeDataPoolOptionsViewModel(RangeDataPoolOptions options) : base(options)
+        {
+
+        }
+    }
+
+    public class CombinationsDataPoolOptionsViewModel : DataPoolOptionsViewModel
+    {
+        private CombinationsDataPoolOptions CombinationsOptions => Options as CombinationsDataPoolOptions;
+
+        public string CharSet
+        {
+            get => CombinationsOptions.CharSet;
+            set
+            {
+                CombinationsOptions.CharSet = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(GeneratedAmountText));
+            }
+        }
+
+        public int Length
+        {
+            get => CombinationsOptions.Length;
+            set
+            {
+                CombinationsOptions.Length = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(GeneratedAmountText));
+            }
+        }
+
+        public string WordlistType
+        {
+            get => CombinationsOptions.WordlistType;
+            set
+            {
+                CombinationsOptions.WordlistType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string GeneratedAmountText => $"{(long)Math.Pow(CharSet.Length, Length)} combinations will be generated";
+
+        public CombinationsDataPoolOptionsViewModel(CombinationsDataPoolOptions options) : base(options)
+        {
+
+        }
+    }
+
+    public class InfiniteDataPoolOptionsViewModel : DataPoolOptionsViewModel
+    {
+        private InfiniteDataPoolOptions InfiniteOptions => Options as InfiniteDataPoolOptions;
+
+        public string WordlistType
+        {
+            get => InfiniteOptions.WordlistType;
+            set
+            {
+                InfiniteOptions.WordlistType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public InfiniteDataPoolOptionsViewModel(InfiniteDataPoolOptions options) : base(options)
+        {
+
+        }
+    }
+    #endregion
+
+    #region Proxy Sources ViewModels
     public class ProxySourceOptionsViewModel : ViewModelBase
     {
         public ProxySourceOptions Options { get; init; }
