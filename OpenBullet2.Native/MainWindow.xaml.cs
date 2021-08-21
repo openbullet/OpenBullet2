@@ -29,6 +29,7 @@ namespace OpenBullet2.Native
 
         private Home homePage;
         private Jobs jobsPage;
+        private MultiRunJobViewer multiRunJobViewerPage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private Configs configsPage;
@@ -194,6 +195,20 @@ namespace OpenBullet2.Native
             }
         }
 
+        public void DisplayJob(JobViewModel jobVM)
+        {
+            if (multiRunJobViewerPage is null)
+            {
+                multiRunJobViewerPage = new();
+            }
+
+            if (jobVM is MultiRunJobViewModel mrj)
+            {
+                multiRunJobViewerPage.UpdateViewModel(mrj);
+                ChangePage(multiRunJobViewerPage, null);
+            }
+        }
+
         private void OpenHomePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Home);
         private void OpenJobsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Jobs);
         private void OpenMonitorPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Monitor);
@@ -224,7 +239,10 @@ namespace OpenBullet2.Native
                 label.Foreground = Brush.Get("ForegroundMain");
             }
 
-            newLabel.Foreground = Brush.Get("ForegroundMenuSelected");
+            if (newLabel is not null)
+            {
+                newLabel.Foreground = Brush.Get("ForegroundMenuSelected");
+            }
         }
 
         private void TakeScreenshot(object sender, RoutedEventArgs e)

@@ -97,6 +97,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         public async void CreateJob(JobOptions options) => await vm.CreateJob(options);
 
-        private void ViewJob(object sender, MouseButtonEventArgs e) { }
+        private void ViewJob(object sender, MouseButtonEventArgs e)
+            => SP.GetService<MainWindow>().DisplayJob((JobViewModel)(sender as WrapPanel).Tag);
     }
 }

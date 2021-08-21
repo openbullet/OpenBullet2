@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenBullet2.Native.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace OpenBullet2.Native.Views.Pages
 {
@@ -20,9 +9,26 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class MultiRunJobViewer : Page
     {
+        private MultiRunJobViewerViewModel vm;
+
         public MultiRunJobViewer()
         {
             InitializeComponent();
         }
+
+        public void UpdateViewModel(MultiRunJobViewModel jobVM)
+        {
+            vm?.Dispose();
+
+            vm = new MultiRunJobViewerViewModel(jobVM);
+            DataContext = vm;
+        }
+
+        private void Start(object sender, RoutedEventArgs e) { }
+        private void Stop(object sender, RoutedEventArgs e) { }
+        private void Pause(object sender, RoutedEventArgs e) { }
+        private void Resume(object sender, RoutedEventArgs e) { }
+        private void Abort(object sender, RoutedEventArgs e) { }
+        private void SkipWait(object sender, RoutedEventArgs e) { }
     }
 }

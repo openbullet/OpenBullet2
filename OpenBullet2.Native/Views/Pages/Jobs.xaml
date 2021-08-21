@@ -78,6 +78,7 @@
 
                                 <WrapPanel 
                                     Cursor="Hand"
+                                    Tag="{Binding}"
                                     MouseDown="ViewJob"
                                     Margin="5 0 0 0"
                                     VerticalAlignment="Center"

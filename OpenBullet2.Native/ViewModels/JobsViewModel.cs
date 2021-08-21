@@ -209,6 +209,10 @@ namespace OpenBullet2.Native.ViewModels
         public float Progress => MultiRunJob.Progress;
         public string ProgressString => $"{DataTested + Skip} / {MultiRunJob.DataPool.Size} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
 
+        public decimal CaptchaCredit => MultiRunJob.CaptchaCredit;
+        public string ElapsedString => $"{(int)MultiRunJob.Elapsed.TotalDays} day(s) {MultiRunJob.Elapsed:hh\\:mm\\:ss}";
+        public string RemainingString => $"{(int)MultiRunJob.Remaining.TotalDays} day(s) {MultiRunJob.Remaining:hh\\:mm\\:ss}";
+
         public int CPM => MultiRunJob.CPM;
 
         public MultiRunJobViewModel(MultiRunJob job) : base(job)

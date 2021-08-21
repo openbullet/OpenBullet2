@@ -67,8 +67,15 @@ namespace OpenBullet2.Native.Views.Pages
                 return;
             }
 
-            await vm.Save(vm.SelectedConfig);
-            Alert.Success("Success", $"{vm.SelectedConfig.Config.Metadata.Name} was saved successfully!");
+            try
+            {
+                await vm.Save(vm.SelectedConfig);
+                Alert.Success("Success", $"{vm.SelectedConfig.Config.Metadata.Name} was saved successfully!");
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
         }
 
         private void Delete(object sender, RoutedEventArgs e)

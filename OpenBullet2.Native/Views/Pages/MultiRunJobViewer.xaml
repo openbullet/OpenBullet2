@@ -4,11 +4,123 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MultiRunJobViewer">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+    
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Job options -->
+            <StackPanel Grid.Column="0">
+                <Image 
+                    Source="{Binding ConfigIcon}"
+                    Width="48"
+                    Height="48"
+                    HorizontalAlignment="Left"
+                    Margin="5 0 0 0"/>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Skip:</Label>
+                    <Label Content="{Binding Job.Skip}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Bots:</Label>
+                    <Label Content="{Binding Job.Bots}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Config:</Label>
+                    <Label Content="{Binding ConfigNameAndAuthor}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Data pool:</Label>
+                    <Label Content="{Binding DataPoolInfo}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Proxy mode:</Label>
+                    <Label Content="{Binding Job.ProxyMode}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Proxy sources:</Label>
+                    <Label Content="{Binding ProxySourcesInfo}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Hit outputs:</Label>
+                    <Label Content="{Binding HitOutputsInfo}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Content="{Binding RemainingWaitString}"
+                       Visibility="{Binding IsWaiting, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Label Content="Stopping..."
+                       Visibility="{Binding IsStopping, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Label Content="Pausing..."
+                       Visibility="{Binding IsPausing, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Button Click="Start"
+                    Visibility="{Binding CanStart, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Background="{DynamicResource SuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Pause"
+                    Visibility="{Binding CanPause, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="0 2 0 0" Background="{DynamicResource WarningButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Kind="ControlPause" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Pause</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Resume"
+                    Visibility="{Binding CanResume, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="0 2 0 0" Background="{DynamicResource SuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Resume</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="SkipWait"
+                    Visibility="{Binding CanSkipWait, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="0 2 0 0" Background="{DynamicResource PrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconFontAwesome Kind="ForwardSolid" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Skip wait</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Stop"
+                    Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="0 2 0 0" Background="{DynamicResource DangerButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerStop" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Abort"
+                    Visibility="{Binding CanAbort, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="0 2 0 0" Background="{DynamicResource DangerButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="CloseOutline" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Abort</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </Grid>
     </Grid>
 </Page>
