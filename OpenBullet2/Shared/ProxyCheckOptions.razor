@@ -70,5 +70,10 @@
         {
             targets.Add(new ProxyCheckTarget { Url = "https://google.com", SuccessKey = "title>Google" });
         }
+
+        if (Options.Target is null)
+        {
+            Options.Target = targets[0];
+        }
     }
 }

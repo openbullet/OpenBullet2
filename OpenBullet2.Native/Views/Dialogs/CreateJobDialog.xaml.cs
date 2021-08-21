@@ -40,7 +40,7 @@ namespace OpenBullet2.Native.Views.Dialogs
                     break;
 
                 case JobType.ProxyCheck:
-                    // TODO: Add this
+                    new MainDialog(new ProxyCheckJobOptionsDialog(null, onAccept), "Create Proxy Check Job").ShowDialog();
                     break;
             }
 

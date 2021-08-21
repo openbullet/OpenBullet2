@@ -39,6 +39,8 @@ namespace OpenBullet2.Core.Models.Settings
         /// to mark the proxy as working. Case sensitive.
         /// </summary>
         public string SuccessKey { get; set; } = "title>Google";
+
+        public override string ToString() => $"{Url} | {SuccessKey}";
     }
 
     /// <summary>
