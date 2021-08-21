@@ -33,7 +33,6 @@ namespace OpenBullet2.Pages
         {
             uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
 
-            var factory = new JobOptionsFactory();
             jobEntity = await JobRepo.Get(JobId);
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
             jobOptions = JobOptionsFactory.CloneExistant(oldOptions);

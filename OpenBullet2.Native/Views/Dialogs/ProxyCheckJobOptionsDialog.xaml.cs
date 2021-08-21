@@ -144,7 +144,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             var proxyCheckTargets = obSettingsService.Settings.GeneralSettings.ProxyCheckTargets;
             Targets = proxyCheckTargets.Any()
                 ? proxyCheckTargets
-                : new ProxyCheckTarget[] { new() { Url = "https://google.com", SuccessKey = "title>Google" } };
+                : new ProxyCheckTarget[] { new() };
 
             // TODO: Move this to the factory!
             if (Target is null)
@@ -209,7 +209,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public ProxyCheckTarget Target
+        public ProxyCheckTarget? Target
         {
             get => Options.Target;
             set

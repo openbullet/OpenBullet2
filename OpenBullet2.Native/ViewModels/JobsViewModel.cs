@@ -37,8 +37,11 @@ namespace OpenBullet2.Native.ViewModels
             jobManager = SP.GetService<JobManagerService>();
             jobFactory = SP.GetService<JobFactoryService>();
 
-            JobsCollection = new ObservableCollection<JobViewModel>(jobManager.Jobs.Select(j => MakeViewModel(j)));
+            CreateCollection();
         }
+
+        private void CreateCollection()
+            => JobsCollection = new ObservableCollection<JobViewModel>(jobManager.Jobs.Select(j => MakeViewModel(j)));
 
         public async Task CreateJob(JobOptions options)
         {
@@ -58,6 +61,64 @@ namespace OpenBullet2.Native.ViewModels
 
             jobManager.Jobs.Add(job);
             JobsCollection.Add(MakeViewModel(job));
+        }
+
+        public async Task EditJob(JobEntity entity, JobOptions options)
+        {
+            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var wrapper = new JobOptionsWrapper { Options = options };
+            entity.JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings);
+
+            await jobRepo.Update(entity);
+
+            var oldJob = jobManager.Jobs.First(j => j.Id == entity.Id);
+            var newJob = jobFactory.FromOptions(entity.Id, 0, options);
+
+            jobManager.Jobs.Remove(oldJob);
+            jobManager.Jobs.Add(newJob);
+
+            CreateCollection();
+        }
+
+        public async Task CloneJob(JobType type, JobOptions options)
+        {
+            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var wrapper = new JobOptionsWrapper { Options = options };
+            var entity = new JobEntity
+            {
+                CreationDate = DateTime.Now,
+                JobType = type,
+                JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
+            };
+
+            await jobRepo.Add(entity);
+
+            var job = jobFactory.FromOptions(entity.Id, 0, options);
+            jobManager.Jobs.Add(job);
+
+            JobViewModel jobVM = type switch
+            {
+                JobType.MultiRun => new MultiRunJobViewModel(job as MultiRunJob),
+                JobType.ProxyCheck => new ProxyCheckJobViewModel(job as ProxyCheckJob),
+                _ => throw new NotImplementedException()
+            };
+
+            JobsCollection.Add(jobVM);
+        }
+
+        public void RemoveAll()
+        {
+            var notIdleJobs = jobManager.Jobs.Where(j => j.Status != JobStatus.Idle);
+
+            if (notIdleJobs.Any())
+            {
+                throw new Exception($"The job #{notIdleJobs.First().Id} is not idle, please stop/abort the job first!");
+            }
+
+            // If admin, just purge all
+            jobRepo.Purge();
+            jobManager.Jobs.Clear();
+            JobsCollection.Clear();
         }
 
         public async Task RemoveJob(JobViewModel jobVM)
@@ -105,7 +166,7 @@ namespace OpenBullet2.Native.ViewModels
 
         public JobViewModel(Job job)
         {
-            this.Job = job;
+            Job = job;
         }
     }
 

@@ -27,18 +27,24 @@ namespace OpenBullet2.Core.Models.Settings
     /// <summary>
     /// A target to be used as proxy check.
     /// </summary>
-    public class ProxyCheckTarget
+    public struct ProxyCheckTarget
     {
         /// <summary>
         /// The URL of the website that the proxy will send a GET query to.
         /// </summary>
-        public string Url { get; set; } = "https://google.com";
+        public string Url { get; set; }
 
         /// <summary>
         /// A keyword that must be present in the HTTP response body in order
         /// to mark the proxy as working. Case sensitive.
         /// </summary>
-        public string SuccessKey { get; set; } = "title>Google";
+        public string SuccessKey { get; set; }
+
+        public ProxyCheckTarget(string url = "https://google.com", string successKey = "title>Google")
+        {
+            Url = url;
+            SuccessKey = successKey;
+        }
 
         public override string ToString() => $"{Url} | {SuccessKey}";
     }
