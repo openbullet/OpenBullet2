@@ -138,8 +138,82 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vms:ProxyCheckJobViewModel}">
-                        <Border Padding="0 5">
-                            
+                        <Border 
+                            Margin="0 0 0 3"
+                            BorderThickness="1"
+                            BorderBrush="Gray">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid
+                                    Grid.Column="0"
+                                    Background="{DynamicResource BackgroundSecondary}"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Left">
+                                    <Label 
+                                        FontWeight="Bold"
+                                        FontSize="16"
+                                        VerticalAlignment="Center"
+                                        Content="{Binding IdAndStatus}" />
+                                </Grid>
+
+                                <WrapPanel 
+                                    Cursor="Hand"
+                                    MouseDown="ViewJob"
+                                    Margin="5 0 0 0"
+                                    VerticalAlignment="Center"
+                                    Grid.Column="1">
+                                    <Label FontWeight="Bold" Content="Bots:" Margin="-5 0 0 0" />
+                                    <Label Content="{Binding Bots}" Margin="-5 0 0 0" />
+                                    <Label FontWeight="Bold" Content="Working:" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                                    <Label Content="{Binding Working}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                                    <Label FontWeight="Bold" Content="Not working:" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                                    <Label Content="{Binding NotWorking}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                                    <Label FontWeight="Bold" Content="Progress:" Margin="-5 0 0 0" />
+                                    <Label Content="{Binding ProgressString}" Margin="-5 0 0 0" />
+                                    <Label FontWeight="Bold" Content="CPM:" Margin="-5 0 0 0" />
+                                    <Label Content="{Binding CPM}" Margin="-5 0 0 0" />
+                                </WrapPanel>
+
+                                <Button Tag="{Binding}" Grid.Column="2" 
+                                        Click="EditJob" Margin="0 0 5 0"
+                                        ToolTip="Edit this job"
+                                        VerticalAlignment="Center"
+                                        Height="30"
+                                        Background="{DynamicResource PrimaryButton}" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Tag="{Binding}" Grid.Column="3" 
+                                        Click="CloneJob" Margin="0 0 5 0"
+                                        ToolTip="Clone this job"
+                                        VerticalAlignment="Center"
+                                        Height="30"
+                                        Background="{DynamicResource PrimaryButton}" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconFontAwesome Kind="CloneSolid" />
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Tag="{Binding}" Grid.Column="4" 
+                                        Click="RemoveJob"
+                                        ToolTip="Remove this job"
+                                        VerticalAlignment="Center"
+                                        Height="30"
+                                        Background="{DynamicResource DangerButton}" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterial Kind="Close" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.Resources>
