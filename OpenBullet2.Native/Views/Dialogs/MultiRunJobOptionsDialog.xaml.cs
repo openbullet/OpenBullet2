@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
@@ -60,10 +61,17 @@ namespace OpenBullet2.Native.Views.Dialogs
         private void RemoveHitOutput(object sender, RoutedEventArgs e)
             => vm.RemoveHitOutput((HitOutputOptions)(sender as Button).Tag);
 
-        public void SelectConfig(ConfigViewModel config) => vm.SelectConfig(config);
+        public async void SelectConfig(ConfigViewModel config)
+        {
+            vm.SelectConfig(config);
+            await vm.TrySetRecord();
+        }
 
-        public void SelectWordlist(WordlistEntity entity)
-            => (vm.DataPoolOptions as WordlistDataPoolOptionsViewModel).SelectWordlist(entity);
+        public async void SelectWordlist(WordlistEntity entity)
+        {
+            (vm.DataPoolOptions as WordlistDataPoolOptionsViewModel).SelectWordlist(entity);
+            await vm.TrySetRecord();
+        }
 
         private void AddWordlist(object sender, RoutedEventArgs e)
             => new MainDialog(new AddWordlistDialog(this), "Add a wordlist").ShowDialog();
@@ -109,6 +117,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class MultiRunJobOptionsViewModel : ViewModelBase
     {
+        private readonly IRecordRepository recordRepo;
         private readonly IWordlistRepository wordlistRepo;
         private readonly RuriLibSettingsService rlSettingsService;
         private readonly ConfigService configService;
@@ -228,6 +237,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         public void SelectConfig(ConfigViewModel vm)
         {
             Options.ConfigId = vm.Config.Id;
+            Bots = vm.Config.Settings.GeneralSettings.SuggestedBots;
             SetConfigData();
         }
 
@@ -240,6 +250,20 @@ namespace OpenBullet2.Native.Views.Dialogs
                 ConfigIcon = Images.Base64ToBitmapImage(config.Metadata.Base64Image);
                 ConfigNameAndAuthor = $"{config.Metadata.Name} by {config.Metadata.Author}";
                 OnPropertyChanged(nameof(IsConfigSelected));
+            }
+        }
+
+        public async Task TrySetRecord()
+        {
+            if (Options.DataPool is WordlistDataPoolOptions wdpo)
+            {
+                var record = await recordRepo.GetAll()
+                    .FirstOrDefaultAsync(r => r.ConfigId == Options.ConfigId && r.WordlistId == wdpo.WordlistId);
+
+                if (record is not null)
+                {
+                    Skip = record.Checkpoint;
+                }
             }
         }
 
@@ -353,6 +377,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         public MultiRunJobOptionsViewModel(MultiRunJobOptions options)
         {
             Options = options ?? JobOptionsFactory.CreateNew(JobType.MultiRun) as MultiRunJobOptions;
+            recordRepo = SP.GetService<IRecordRepository>();
             wordlistRepo = SP.GetService<IWordlistRepository>();
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
             configService = SP.GetService<ConfigService>();

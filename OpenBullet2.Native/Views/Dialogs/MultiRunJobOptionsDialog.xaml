@@ -95,7 +95,7 @@
                     <mah:NumericUpDown Minimum="1"
                           Maximum="{Binding BotLimit}"
                           Interval="1"
-                          Value="{Binding Bots}"
+                          Value="{Binding Bots, Mode=TwoWay}"
                           Width="100"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
@@ -103,7 +103,7 @@
                     <mah:NumericUpDown Minimum="0"
                           Maximum="2147483647"
                           Interval="1"
-                          Value="{Binding Skip}"
+                          Value="{Binding Skip, Mode=TwoWay}"
                           Width="100"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
