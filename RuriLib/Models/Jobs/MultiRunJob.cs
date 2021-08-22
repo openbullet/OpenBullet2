@@ -83,6 +83,7 @@ namespace RuriLib.Models.Jobs
         public event EventHandler<JobStatus> OnStatusChanged;
         public event EventHandler OnCompleted;
         public event EventHandler OnTimerTick;
+        public event EventHandler<Hit> OnHit;
 
         /*********
          * STATS *
@@ -667,6 +668,7 @@ namespace RuriLib.Models.Jobs
 
             // Add it to the local list of hits
             Hits.Add(hit);
+            OnHit?.Invoke(this, hit);
 
             foreach (var hitOutput in HitOutputs)
             {

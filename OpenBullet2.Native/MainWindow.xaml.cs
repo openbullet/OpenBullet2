@@ -204,7 +204,7 @@ namespace OpenBullet2.Native
 
             if (jobVM is MultiRunJobViewModel mrj)
             {
-                multiRunJobViewerPage.UpdateViewModel(mrj);
+                multiRunJobViewerPage.BindViewModel(mrj);
                 ChangePage(multiRunJobViewerPage, null);
             }
         }

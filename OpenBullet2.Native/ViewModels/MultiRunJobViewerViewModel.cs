@@ -2,24 +2,36 @@
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Utils;
 using RuriLib.Extensions;
+using RuriLib.Models.Bots;
 using RuriLib.Models.Data.DataPools;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Models.Proxies.ProxySources;
+using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace OpenBullet2.Native.ViewModels
 {
     public class MultiRunJobViewerViewModel : ViewModelBase, IDisposable
     {
-        private List<ProxyGroupEntity> proxyGroups;
+        private readonly OpenBulletSettingsService obSettingsService;
+        private readonly List<ProxyGroupEntity> proxyGroups;
+        private readonly Timer timer;
+
+        public event Action<object, string, Color> NewMessage;
 
         public MultiRunJobViewModel Job { get; set; }
         private MultiRunJob MultiRunJob => Job.Job as MultiRunJob;
@@ -53,7 +65,7 @@ namespace OpenBullet2.Native.ViewModels
             InfiniteDataPool => "Infinite",
             RangeDataPool r => $"Range (start: {r.Start}, amount: {r.Amount}, step: {r.Step}, pad: {r.Pad})",
             CombinationsDataPool c => $"Combinations (charset: {c.CharSet}, length: {c.Length})",
-            _ => throw new System.NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         private string proxySourcesInfo;
@@ -95,8 +107,49 @@ namespace OpenBullet2.Native.ViewModels
         public bool IsWaiting => MultiRunJob.Status is JobStatus.Waiting;
         public bool IsPausing => MultiRunJob.Status is JobStatus.Pausing;
 
+        public double Progress => Math.Clamp(MultiRunJob.Progress * 100, 0, 100);
+
+        private ObservableCollection<BotViewModel> botsCollection;
+        public ObservableCollection<BotViewModel> BotsCollection
+        {
+            get => botsCollection;
+            set
+            {
+                botsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
+
+        private ObservableCollection<HitViewModel> hitsCollection;
+        public ObservableCollection<HitViewModel> HitsCollection
+        {
+            get => hitsCollection;
+            set
+            {
+                hitsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<HitsFilter> HitsFilters => Enum.GetValues(typeof(HitsFilter)).Cast<HitsFilter>();
+
+        private HitsFilter hitsFilter = HitsFilter.Hits;
+        public HitsFilter HitsFilter
+        {
+            get => hitsFilter;
+            set
+            {
+                hitsFilter = value;
+                OnPropertyChanged();
+                UpdateHitsCollection();
+            }
+        }
+
         public MultiRunJobViewerViewModel(MultiRunJobViewModel jobVM)
         {
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             Job = jobVM;
 
             if (MultiRunJob.Config is not null)
@@ -116,7 +169,7 @@ namespace OpenBullet2.Native.ViewModels
                     GroupProxySource g => $"Group ({GetProxyGroupName(g.GroupId)})",
                     FileProxySource f => $"File ({f.FileName})",
                     RemoteProxySource r => $"Remote ({r.Url})",
-                    _ => throw new System.NotImplementedException()
+                    _ => throw new NotImplementedException()
                 };
 
                 sb.Append(info);
@@ -139,7 +192,7 @@ namespace OpenBullet2.Native.ViewModels
                     DiscordWebhookHitOutput d => $"Discord ({d.Webhook.TruncatePretty(70)})",
                     TelegramBotHitOutput t => $"Telegram ({t.Token.Split(':')[0]})",
                     CustomWebhookHitOutput c => $"Custom Webhook ({c.Url.TruncatePretty(70)})",
-                    _ => throw new System.NotImplementedException()
+                    _ => throw new NotImplementedException()
                 };
 
                 sb.Append(info);
@@ -152,17 +205,96 @@ namespace OpenBullet2.Native.ViewModels
 
             HitOutputsInfo = sb.ToString();
 
-            // TODO: Hook events
-            MultiRunJob.OnCompleted += (s, e) =>
-            {
+            MultiRunJob.OnCompleted += UpdateViewModel;
+            MultiRunJob.OnResult += UpdateViewModel;
+            MultiRunJob.OnStatusChanged += UpdateViewModel;
+            MultiRunJob.OnProgress += UpdateViewModel;
 
-            };
+            MultiRunJob.OnResult += OnResult;
+            MultiRunJob.OnTaskError += OnTaskError;
+            MultiRunJob.OnError += OnError;
+            MultiRunJob.OnHit += OnHit;
+
+            timer = new Timer(new TimerCallback(_ => RefreshBotsInfo()), null, 100, 100);
+            UpdateHitsCollection();
         }
 
-        public override void UpdateViewModel()
+        private void RefreshBotsInfo()
         {
-            
+            if (BotsCollection is not null)
+            {
+                foreach (var bot in BotsCollection)
+                {
+                    bot.UpdateViewModel();
+                }
+            }
         }
+
+        private void UpdateViewModel(object sender, EventArgs e) => UpdateViewModel();
+        private void UpdateViewModel(object sender, ResultDetails<MultiRunInput, CheckResult> details) => UpdateViewModel();
+        private void UpdateViewModel(object sender, JobStatus status) => UpdateViewModel();
+        private void UpdateViewModel(object sender, float progress) => UpdateViewModel();
+
+        private void OnResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
+        {
+            var botData = details.Result.BotData;
+            var data = botData.Line.Data;
+            var proxy = botData.Proxy != null
+                ? $"{botData.Proxy.Host}:{botData.Proxy.Port}"
+                : string.Empty;
+
+            var message = $"Line checked ({data})({proxy}) with status {botData.STATUS}";
+            var color = botData.STATUS switch
+            {
+                "SUCCESS" => Colors.YellowGreen,
+                "FAIL" => Colors.Tomato,
+                "BAN" => Colors.Plum,
+                "RETRY" => Colors.Yellow,
+                "ERROR" => Colors.Red,
+                "NONE" => Colors.SkyBlue,
+                _ => Colors.Orange
+            };
+
+            NewMessage?.Invoke(this, message, color);
+        }
+
+        private void OnTaskError(object sender, ErrorDetails<MultiRunInput> details)
+        {
+            var botData = details.Item.BotData;
+            var data = botData.Line.Data;
+            var proxy = botData.Proxy != null
+                ? $"{botData.Proxy.Host}:{botData.Proxy.Port}"
+                : string.Empty;
+
+            var message = $"Task error ({data})({proxy})! {details.Exception.Message}";
+            NewMessage?.Invoke(this, message, Colors.Tomato);
+        }
+
+        private void OnError(object sender, Exception ex)
+            => NewMessage?.Invoke(this, $"Job error: {ex.Message}", Colors.Tomato);
+
+        private void OnHit(object sender, Hit hit)
+        {
+            if ((HitsFilter == HitsFilter.Hits && hit.Type == "SUCCESS") || (HitsFilter == HitsFilter.ToCheck && hit.Type == "NONE")
+                || (HitsFilter == HitsFilter.Custom && hit.Type != "SUCCESS" && hit.Type != "NONE"))
+            {
+                // TODO: Add the hit to the observable (it was giving inconsistency errors when i tried)
+                // For now we just update the entire thing
+                UpdateHitsCollection();
+            }
+        }
+
+        public async Task Start()
+        {
+            await MultiRunJob.Start();
+            UpdateBotsCollection();
+        }
+
+        public Task Stop() => MultiRunJob.Stop();
+        public Task Abort() => MultiRunJob.Abort();
+        public Task Pause() => MultiRunJob.Pause();
+        public Task Resume() => MultiRunJob.Resume();
+        public void SkipWait() => MultiRunJob.SkipWait();
 
         private string GetProxyGroupName(int id)
         {
@@ -181,9 +313,90 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        // Call this at the start and when bots are changed
+        private void UpdateBotsCollection()
+        {
+            var bots = Enumerable.Range(0, MultiRunJob.Bots)
+                .Select(i => new BotViewModel(i, MultiRunJob.CurrentBotDatas));
+
+            BotsCollection = new ObservableCollection<BotViewModel>(bots);
+        }
+
+        private void UpdateHitsCollection()
+        {
+            var hits = HitsFilter switch
+            {
+                HitsFilter.Hits => MultiRunJob.Hits.Where(h => h.Type == "SUCCESS"),
+                HitsFilter.ToCheck => MultiRunJob.Hits.Where(h => h.Type == "NONE"),
+                HitsFilter.Custom => MultiRunJob.Hits.Where(h => h.Type != "SUCCESS" && h.Type != "NONE"),
+                _ => throw new NotImplementedException()
+            };
+
+            HitsCollection = new ObservableCollection<HitViewModel>(hits.Select(h => new HitViewModel(h)));
+        }
+
         public void Dispose()
         {
-            // TODO: Unhook events
+            try
+            {
+                timer?.Dispose();
+
+                MultiRunJob.OnCompleted -= UpdateViewModel;
+                MultiRunJob.OnResult -= UpdateViewModel;
+                MultiRunJob.OnStatusChanged -= UpdateViewModel;
+                MultiRunJob.OnProgress -= UpdateViewModel;
+
+                MultiRunJob.OnResult -= OnResult;
+                MultiRunJob.OnTaskError -= OnTaskError;
+                MultiRunJob.OnError -= OnError;
+                MultiRunJob.OnHit -= OnHit;
+            }
+            catch
+            {
+
+            }
         }
+    }
+
+    public class BotViewModel : ViewModelBase
+    {
+        private readonly int index;
+        private readonly BotData[] datas;
+
+        private BotData BotData => datas.Length > index ? datas[index] : null;
+
+        public int Id => index + 1;
+        public string Data => BotData?.Line?.Data;
+        public string Proxy => BotData?.Proxy?.ToString();
+        public string Info => BotData?.ExecutionInfo;
+
+        public BotViewModel(int index, BotData[] datas)
+        {
+            this.index = index;
+            this.datas = datas;
+        }
+    }
+
+    public class HitViewModel : ViewModelBase
+    {
+        private readonly Hit hit;
+
+        public DateTime Time => hit.Date;
+        public string Data => hit.Data.Data;
+        public string Proxy => hit.Proxy?.ToString();
+        public string Type => hit.Type;
+        public string Capture => hit.CapturedDataString;
+
+        public HitViewModel(Hit hit)
+        {
+            this.hit = hit;
+        }
+    }
+
+    public enum HitsFilter
+    {
+        Hits,
+        Custom,
+        ToCheck
     }
 }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Native.ViewModels
@@ -19,6 +20,7 @@ namespace OpenBullet2.Native.ViewModels
         private readonly IJobRepository jobRepo;
         private readonly JobManagerService jobManager;
         private readonly JobFactoryService jobFactory;
+        private readonly Timer timer;
 
         private ObservableCollection<JobViewModel> jobsCollection;
         public ObservableCollection<JobViewModel> JobsCollection
@@ -38,6 +40,15 @@ namespace OpenBullet2.Native.ViewModels
             jobFactory = SP.GetService<JobFactoryService>();
 
             CreateCollection();
+            timer = new Timer(new TimerCallback(_ => RefreshJobs()), null, 1000, 1000);
+        }
+
+        private void RefreshJobs()
+        {
+            foreach (var job in JobsCollection)
+            {
+                job.UpdateViewModel();
+            }
         }
 
         private void CreateCollection()

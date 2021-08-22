@@ -14,6 +14,7 @@
             <SolidColorBrush x:Key="ForegroundBad" Color="Tomato"/>
             <SolidColorBrush x:Key="ForegroundCustom" Color="DarkOrange"/>
             <SolidColorBrush x:Key="ForegroundRetry" Color="Yellow"/>
+            <SolidColorBrush x:Key="ForegroundBanned" Color="Plum"/>
             <SolidColorBrush x:Key="ForegroundToCheck" Color="Aquamarine"/>
             <SolidColorBrush x:Key="ForegroundMenuSelected" Color="DodgerBlue"/>
             <SolidColorBrush x:Key="Headers" />

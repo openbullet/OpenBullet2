@@ -6,15 +6,27 @@
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="650" d:DesignWidth="800"
       Title="MultiRunJobViewer">
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <ContextMenu x:Key="hitsContextMenu">
+            <MenuItem Header="Copy Selected Data" Click="CopySelectedHits"/>
+            <MenuItem Header="Copy Selected Proxy" Click="CopySelectedProxies"/>
+            <MenuItem Header="Copy Selected Data with Capture" Click="CopySelectedHitsCapture"/>
+            <MenuItem Header="Send To Debugger" Click="SendToDebugger"/>
+            <MenuItem Header="Select All" Click="SelectAll"/>
+            <MenuItem Header="Show Bot Log" Click="ShowBotLog"/>
+        </ContextMenu>
     </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
@@ -26,7 +38,7 @@
             </Grid.ColumnDefinitions>
             
             <!-- Job options -->
-            <StackPanel Grid.Column="0">
+            <StackPanel Grid.Column="0" Margin="-5 0 0 0">
                 <Image 
                     Source="{Binding ConfigIcon}"
                     Width="48"
@@ -42,29 +54,29 @@
                     <Label Content="{Binding Job.Bots}" />
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" Grid.ColumnSpan="2">
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Config:</Label>
-                    <Label Content="{Binding ConfigNameAndAuthor}" />
+                    <Label Content="{Binding ConfigNameAndAuthor}" Margin="-5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Data pool:</Label>
-                    <Label Content="{Binding DataPoolInfo}" />
+                    <Label Content="{Binding DataPoolInfo}" Margin="-5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Proxy mode:</Label>
-                    <Label Content="{Binding Job.ProxyMode}" />
+                    <Label Content="{Binding Job.ProxyMode}" Margin="-5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Proxy sources:</Label>
-                    <Label Content="{Binding ProxySourcesInfo}" />
+                    <Label Content="{Binding ProxySourcesInfo}" Margin="-5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Hit outputs:</Label>
-                    <Label Content="{Binding HitOutputsInfo}" />
+                    <Label Content="{Binding HitOutputsInfo}" Margin="-5 0 0 0" />
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Column="2">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">
                 <Label Content="{Binding RemainingWaitString}"
                        Visibility="{Binding IsWaiting, Converter={StaticResource ResourceKey=BoolToVis}}" />
                 <Label Content="Stopping..."
@@ -79,25 +91,25 @@
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Click="Pause"
-                    Visibility="{Binding CanPause, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="0 2 0 0" Background="{DynamicResource WarningButton}">
-                    <StackPanel Orientation="Horizontal">
-                        <iconPacks:PackIconModern Kind="ControlPause" />
-                        <TextBlock VerticalAlignment="Center" Margin="5 0">Pause</TextBlock>
-                    </StackPanel>
-                </Button>
                 <Button Click="Resume"
                     Visibility="{Binding CanResume, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="0 2 0 0" Background="{DynamicResource SuccessButton}">
+                    Margin="2 0 0 0" Background="{DynamicResource SuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="ControllerPlay" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Resume</TextBlock>
                     </StackPanel>
                 </Button>
+                <Button Click="Pause"
+                    Visibility="{Binding CanPause, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Background="{DynamicResource WarningButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Kind="ControlPause" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Pause</TextBlock>
+                    </StackPanel>
+                </Button>
                 <Button Click="SkipWait"
                     Visibility="{Binding CanSkipWait, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="0 2 0 0" Background="{DynamicResource PrimaryButton}">
+                    Margin="2 0 0 0" Background="{DynamicResource PrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconFontAwesome Kind="ForwardSolid" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Skip wait</TextBlock>
@@ -105,7 +117,7 @@
                 </Button>
                 <Button Click="Stop"
                     Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="0 2 0 0" Background="{DynamicResource DangerButton}">
+                    Margin="2 0 0 0" Background="{DynamicResource DangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="ControllerStop" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
@@ -113,12 +125,374 @@
                 </Button>
                 <Button Click="Abort"
                     Visibility="{Binding CanAbort, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="0 2 0 0" Background="{DynamicResource DangerButton}">
+                    Margin="2 0 0 0" Background="{DynamicResource DangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="CloseOutline" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Abort</TextBlock>
                     </StackPanel>
                 </Button>
+            </StackPanel>
+
+        </Grid>
+
+        <Border Grid.Row="1" Padding="0 5">
+            <ProgressBar
+                Minimum="0"
+                Maximum="100"
+                Height="20"
+                Value="{Binding Progress, Mode=OneWay}" />
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Bots List View -->
+            <ListView
+                x:Name="botsListView"
+                Grid.Column="0"
+                Foreground="{DynamicResource ForegroundMain}"
+                Background="Transparent"
+                ItemsSource="{Binding BotsCollection}"
+                SelectionMode="Extended"
+                BorderThickness="1">
+                <!-- Align Headers to the Left -->
+                <ListView.Resources>
+                    <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+                        <Setter Property="Width" Value="18" />
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStopCollection>
+                                            <GradientStop Color="{DynamicResource BorderLightColor}" Offset="0.0" />
+                                            <GradientStop Color="{DynamicResource BorderDarkColor}" Offset="1.0" />
+                                        </GradientStopCollection>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Thumb}">
+                                    <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                                        <Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="BorderBrush">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black" Offset="0" />
+                                    <GradientStop Color="White" Offset="1" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                    <Grid>
+                                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="Transparent">
+                                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Left" />
+                                        </Border>
+                                        <Thumb x:Name="PART_HeaderGripper"
+                                         HorizontalAlignment="Right"
+                                         Margin="0,0,-9,0"
+                                         Style="{StaticResource GridViewColumnHeaderGripper}" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                        <Setter Property="FontSize" Value="14" />
+                    </Style>
+
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="0" SnapsToDevicePixels="true">
+                                        <GridViewRowPresenter 
+                        HorizontalAlignment="Left" 
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Resources>
+
+                <!-- Show Headers by overriding the default style -->
+                <ListView.Style>
+                    <Style TargetType="{x:Type ListView}" />
+                </ListView.Style>
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="40" Header="Id" DisplayMemberBinding="{Binding Id}" />
+                        <GridViewColumn Width="200" Header="Data" DisplayMemberBinding="{Binding Data}" />
+                        <GridViewColumn Width="150" Header="Proxy" DisplayMemberBinding="{Binding Proxy}" />
+                        <GridViewColumn Width="1000" Header="Info" DisplayMemberBinding="{Binding Info}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <GridSplitter 
+                ResizeDirection="Columns"
+                ResizeBehavior="PreviousAndNext"
+                Grid.Column="1"
+                Width="1"
+                VerticalAlignment="Stretch" />
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <ListView
+                x:Name="hitsListView"
+                Foreground="{DynamicResource ForegroundMain}"
+                Background="Transparent"
+                ItemsSource="{Binding HitsCollection}"
+                SelectionMode="Extended"
+                BorderThickness="1">
+                    <!-- Align Headers to the Left -->
+                    <ListView.Resources>
+                        <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+                            <Setter Property="Width" Value="18" />
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStopCollection>
+                                                <GradientStop Color="{DynamicResource BorderLightColor}" Offset="0.0" />
+                                                <GradientStop Color="{DynamicResource BorderDarkColor}" Offset="1.0" />
+                                            </GradientStopCollection>
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                        <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                                            <Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="BorderBrush">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="0" />
+                                        <GradientStop Color="White" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                        <Grid>
+                                            <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="Transparent">
+                                                <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Left" />
+                                            </Border>
+                                            <Thumb x:Name="PART_HeaderGripper"
+                                         HorizontalAlignment="Right"
+                                         Margin="0,0,-9,0"
+                                         Style="{StaticResource GridViewColumnHeaderGripper}" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                            <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                            <Setter Property="FontSize" Value="14" />
+                        </Style>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <EventSetter Event="MouseRightButtonDown" Handler="LVIRightClick" />
+                            <Setter Property="ContextMenu" Value="{StaticResource hitsContextMenu}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        Background="{TemplateBinding Background}" 
+                                        Padding="0"
+                                        SnapsToDevicePixels="true">
+                                            <GridViewRowPresenter 
+                                            HorizontalAlignment="Left" 
+                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+
+                    <!-- Show Headers by overriding the default style -->
+                    <ListView.Style>
+                        <Style TargetType="{x:Type ListView}" />
+                    </ListView.Style>
+
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=Time}" />
+                            <GridViewColumn Header="Data" DisplayMemberBinding="{Binding Path=Data}" />
+                            <GridViewColumn Header="Proxy" DisplayMemberBinding="{Binding Path=Proxy}" />
+                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Path=Type}"/>
+                            <GridViewColumn Width="2000" Header="Capture" DisplayMemberBinding="{Binding Path=CapturedData}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <ComboBox
+                    Grid.Row="1"
+                    ItemsSource="{Binding HitsFilters}"
+                    SelectedValue="{Binding HitsFilter}"/>
+
+            </Grid>
+            
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <RichTextBox
+                x:Name="jobLogRTB"
+                Grid.Column="0"
+                IsReadOnly="True"
+                BorderThickness="0"
+                Background="{DynamicResource BackgroundSecondary}"
+                Padding="5"
+                FontFamily="Consolas"
+                MaxHeight="165"
+                VerticalScrollBarVisibility="Visible">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+
+            <StackPanel Grid.Column="1">
+                <Label FontWeight="Bold">DATA</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Tested:</Label>
+                    <Label Content="{Binding Job.DataTested}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Hits:</Label>
+                    <Label Content="{Binding Job.DataHits}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundCustom}">Custom:</Label>
+                    <Label Content="{Binding Job.DataCustom}" Foreground="{DynamicResource ForegroundCustom}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Fails:</Label>
+                    <Label Content="{Binding Job.DataFails}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Invalid:</Label>
+                    <Label Content="{Binding Job.DataInvalid}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundRetry}">Retried:</Label>
+                    <Label Content="{Binding Job.DataRetried}" Foreground="{DynamicResource ForegroundRetry}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</Label>
+                    <Label Content="{Binding Job.DataBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundToCheck}">To check:</Label>
+                    <Label Content="{Binding Job.DataToCheck}" Foreground="{DynamicResource ForegroundToCheck}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Errors:</Label>
+                    <Label Content="{Binding Job.DataErrors}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2">
+                <Label FontWeight="Bold">PROXIES</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Total:</Label>
+                    <Label Content="{Binding Job.ProxiesTotal}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Alive:</Label>
+                    <Label Content="{Binding Job.ProxiesAlive}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Bad:</Label>
+                    <Label Content="{Binding Job.ProxiesBad}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</Label>
+                    <Label Content="{Binding Job.ProxiesBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="-5 0 0 0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3">
+                <Label FontWeight="Bold">OTHERS</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">CPM:</Label>
+                    <Label Content="{Binding Job.CPM}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Captcha credit:</Label>
+                    <Label Content="{Binding Job.CaptchaCredit}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Elapsed:</Label>
+                    <Label Content="{Binding Job.ElapsedString}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Remaining:</Label>
+                    <Label Content="{Binding Job.RemainingString}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Progress:</Label>
+                    <Label Content="{Binding Job.ProgressString}" Margin="-5 0 0 0" />
+                </StackPanel>
             </StackPanel>
 
         </Grid>
