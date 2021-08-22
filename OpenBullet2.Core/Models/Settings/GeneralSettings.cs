@@ -27,7 +27,7 @@ namespace OpenBullet2.Core.Models.Settings
     /// <summary>
     /// A target to be used as proxy check.
     /// </summary>
-    public struct ProxyCheckTarget
+    public class ProxyCheckTarget
     {
         /// <summary>
         /// The URL of the website that the proxy will send a GET query to.

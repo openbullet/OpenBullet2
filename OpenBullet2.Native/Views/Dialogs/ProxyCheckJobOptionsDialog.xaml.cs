@@ -209,7 +209,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public ProxyCheckTarget? Target
+        public ProxyCheckTarget Target
         {
             get => Options.Target;
             set

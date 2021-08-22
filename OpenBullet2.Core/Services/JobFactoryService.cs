@@ -126,8 +126,8 @@ namespace OpenBullet2.Core.Services
                 Bots = options.Bots,
                 BotLimit = BotLimit,
                 CheckOnlyUntested = options.CheckOnlyUntested,
-                Url = options.Target.Value.Url,
-                SuccessKey = options.Target.Value.SuccessKey,
+                Url = options.Target.Url,
+                SuccessKey = options.Target.SuccessKey,
                 Timeout = TimeSpan.FromMilliseconds(options.TimeoutMilliseconds)
             };
 
