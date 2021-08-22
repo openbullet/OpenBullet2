@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.Views.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -81,6 +82,7 @@ namespace OpenBullet2.Native.Views.Pages
                 Alert.Exception(ex);
             }
         }
+
         private async void Resume(object sender, RoutedEventArgs e)
         {
             try
@@ -92,6 +94,7 @@ namespace OpenBullet2.Native.Views.Pages
                 Alert.Exception(ex);
             }
         }
+
         private async void Abort(object sender, RoutedEventArgs e)
         {
             try
@@ -103,11 +106,27 @@ namespace OpenBullet2.Native.Views.Pages
                 Alert.Exception(ex);
             }
         }
+
         private void SkipWait(object sender, RoutedEventArgs e)
         {
             try
             {
                 vm.SkipWait();
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
+
+        private void ChangeBots(object sender, MouseButtonEventArgs e)
+            => new MainDialog(new ChangeBotsDialog(this, vm.Job.Bots), "Change bots").ShowDialog();
+
+        public async void ChangeBots(int newValue)
+        {
+            try
+            {
+                await vm.ChangeBots(newValue);
             }
             catch (Exception ex)
             {

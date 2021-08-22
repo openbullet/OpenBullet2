@@ -52,6 +52,13 @@
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Bots:</Label>
                     <Label Content="{Binding Job.Bots}" />
+                    <iconPacks:PackIconRemixIcon
+                        Foreground="{DynamicResource ForegroundMain}"
+                        Margin="0 10 0 0"
+                        Height="10"
+                        Width="10"
+                        MouseDown="ChangeBots"
+                        Kind="Edit2Fill" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.ColumnSpan="2">

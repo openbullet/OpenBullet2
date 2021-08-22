@@ -193,7 +193,7 @@ namespace OpenBullet2.Native.ViewModels
             InfiniteDataPool => "Infinite",
             RangeDataPool => "Range",
             FileDataPool f => $"{Path.GetFileName(f.FileName)} (File)",
-            _ => throw new System.NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         public int Bots => MultiRunJob.Bots;
@@ -212,10 +212,10 @@ namespace OpenBullet2.Native.ViewModels
         public int DataInvalid => MultiRunJob.DataInvalid;
 
         // Proxy stats
-        public int ProxiesAlive => MultiRunJob.ProxiesAlive;
-        public int ProxiesBanned => MultiRunJob.ProxiesBanned;
-        public int ProxiesBad => MultiRunJob.ProxiesBad;
         public int ProxiesTotal => MultiRunJob.ProxiesTotal;
+        public int ProxiesAlive => MultiRunJob.ProxiesAlive;
+        public int ProxiesBad => MultiRunJob.ProxiesBad;
+        public int ProxiesBanned => MultiRunJob.ProxiesBanned;
 
         public float Progress => MultiRunJob.Progress;
         public string ProgressString => $"{DataTested + Skip} / {MultiRunJob.DataPool.Size} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
@@ -229,6 +229,56 @@ namespace OpenBullet2.Native.ViewModels
         public MultiRunJobViewModel(MultiRunJob job) : base(job)
         {
 
+        }
+
+        /// <summary>
+        /// Update properties that only need to be updated every second.
+        /// </summary>
+        public void PeriodicUpdate()
+        {
+            OnPropertyChanged(nameof(ElapsedString));
+            OnPropertyChanged(nameof(RemainingString));
+            OnPropertyChanged(nameof(CPM));
+            OnPropertyChanged(nameof(CaptchaCredit));
+
+            OnPropertyChanged(nameof(DataRetried));
+            OnPropertyChanged(nameof(DataBanned));
+            OnPropertyChanged(nameof(DataErrors));
+            OnPropertyChanged(nameof(DataInvalid));
+
+            OnPropertyChanged(nameof(ProxiesTotal));
+            OnPropertyChanged(nameof(ProxiesAlive));
+            OnPropertyChanged(nameof(ProxiesBad));
+            OnPropertyChanged(nameof(ProxiesBanned));
+        }
+
+        /// <summary>
+        /// Update properties that need to be updated every time there is a result.
+        /// </summary>
+        public void UpdateStats()
+        {
+            OnPropertyChanged(nameof(DataTested));
+            OnPropertyChanged(nameof(DataHits));
+            OnPropertyChanged(nameof(DataCustom));
+            OnPropertyChanged(nameof(DataToCheck));
+            OnPropertyChanged(nameof(DataFails));
+
+            OnPropertyChanged(nameof(Progress));
+            OnPropertyChanged(nameof(ProgressString));
+        }
+
+        /// <summary>
+        /// Update the Bots property.
+        /// </summary>
+        public void UpdateBots() => OnPropertyChanged(nameof(Bots));
+
+        /// <summary>
+        /// Updates the status of the job.
+        /// </summary>
+        public void UpdateStatus()
+        {
+            OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(IdAndStatus));
         }
     }
 

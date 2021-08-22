@@ -29,13 +29,15 @@ namespace OpenBullet2.Native.ViewModels
     {
         private readonly OpenBulletSettingsService obSettingsService;
         private readonly List<ProxyGroupEntity> proxyGroups;
-        private readonly Timer timer;
+        private readonly Timer botsInfoTimer;
+        private readonly Timer secondsTicker;
 
         public event Action<object, string, Color> NewMessage;
 
         public MultiRunJobViewModel Job { get; set; }
         private MultiRunJob MultiRunJob => Job.Job as MultiRunJob;
 
+        #region Properties that don't need to be updated during the run
         private BitmapImage configIcon;
         public BitmapImage ConfigIcon
         {
@@ -90,25 +92,36 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
+        #endregion
+
+        #region Properties that need to be updated every second
         public string RemainingWaitString => MultiRunJob.StartCondition switch
         {
             RelativeTimeStartCondition r => (MultiRunJob.StartTime + r.StartAfter - DateTime.Now).ToString(@"hh\:mm\:ss"),
             AbsoluteTimeStartCondition a => (a.StartAt - DateTime.Now).ToString(@"hh\:mm\:ss"),
             _ => throw new NotImplementedException()
         };
+        #endregion
 
+        #region Properties that need to be updated when the status changes
         public bool CanStart => MultiRunJob.Status is JobStatus.Idle;
         public bool CanSkipWait => MultiRunJob.Status is JobStatus.Waiting;
         public bool CanPause => MultiRunJob.Status is JobStatus.Running;
         public bool CanResume => MultiRunJob.Status is JobStatus.Paused;
         public bool CanStop => MultiRunJob.Status is JobStatus.Running or JobStatus.Paused;
         public bool CanAbort => MultiRunJob.Status is JobStatus.Running or JobStatus.Paused or JobStatus.Pausing or JobStatus.Stopping;
+
         public bool IsStopping => MultiRunJob.Status is JobStatus.Stopping;
         public bool IsWaiting => MultiRunJob.Status is JobStatus.Waiting;
         public bool IsPausing => MultiRunJob.Status is JobStatus.Pausing;
+        #endregion
 
+        #region Properties that need to be updated when a new result comes in
         public double Progress => Math.Clamp(MultiRunJob.Progress * 100, 0, 100);
+        #endregion
 
+        #region Collections
         private ObservableCollection<BotViewModel> botsCollection;
         public ObservableCollection<BotViewModel> BotsCollection
         {
@@ -119,8 +132,6 @@ namespace OpenBullet2.Native.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
 
         private ObservableCollection<HitViewModel> hitsCollection;
         public ObservableCollection<HitViewModel> HitsCollection
@@ -146,12 +157,14 @@ namespace OpenBullet2.Native.ViewModels
                 UpdateHitsCollection();
             }
         }
+        #endregion
 
         public MultiRunJobViewerViewModel(MultiRunJobViewModel jobVM)
         {
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
             Job = jobVM;
 
+            #region Setup
             if (MultiRunJob.Config is not null)
             {
                 ConfigIcon = Images.Base64ToBitmapImage(MultiRunJob.Config.Metadata.Base64Image);
@@ -202,12 +215,14 @@ namespace OpenBullet2.Native.ViewModels
                     sb.Append(" | ");
                 }
             }
-
+            
             HitOutputsInfo = sb.ToString();
+            #endregion
 
-            MultiRunJob.OnCompleted += UpdateViewModel;
+            #region Bind events and timers
+            MultiRunJob.OnCompleted += UpdateOnCompleted;
             MultiRunJob.OnResult += UpdateViewModel;
-            MultiRunJob.OnStatusChanged += UpdateViewModel;
+            MultiRunJob.OnStatusChanged += UpdateStatus;
             MultiRunJob.OnProgress += UpdateViewModel;
 
             MultiRunJob.OnResult += OnResult;
@@ -215,10 +230,15 @@ namespace OpenBullet2.Native.ViewModels
             MultiRunJob.OnError += OnError;
             MultiRunJob.OnHit += OnHit;
 
-            timer = new Timer(new TimerCallback(_ => RefreshBotsInfo()), null, 100, 100);
+            botsInfoTimer = new Timer(new TimerCallback(_ => RefreshBotsInfo()), null, 200, 200);
+            secondsTicker = new Timer(new TimerCallback(_ => PeriodicUpdate()), null, 1000, 1000);
+            #endregion
+
             UpdateHitsCollection();
         }
 
+        #region Update methods
+        // Updates the VM of all the current BotViewModel instances
         private void RefreshBotsInfo()
         {
             if (BotsCollection is not null)
@@ -230,11 +250,54 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private void UpdateViewModel(object sender, EventArgs e) => UpdateViewModel();
-        private void UpdateViewModel(object sender, ResultDetails<MultiRunInput, CheckResult> details) => UpdateViewModel();
-        private void UpdateViewModel(object sender, JobStatus status) => UpdateViewModel();
+        // Periodic update for stuff that needs to be updated every second
+        private void PeriodicUpdate()
+        {
+            if (MultiRunJob.Status == JobStatus.Waiting)
+            {
+                OnPropertyChanged(nameof(RemainingWaitString));
+            }
+
+            Job.PeriodicUpdate();
+
+            // Account for bots changes
+            if (BotsCollection is not null && BotsCollection.Count != MultiRunJob.Bots)
+            {
+                UpdateBots();
+            }
+        }
+
+        // Updates everything (only when a job completes, just to be safe, not expensive)
+        private void UpdateOnCompleted(object sender, EventArgs e) => UpdateViewModel();
+
+        // Updates the stats after every successful check
+        private void UpdateViewModel(object sender, ResultDetails<MultiRunInput, CheckResult> details)
+        {
+            OnPropertyChanged(nameof(Progress));
+            Job.UpdateStats();
+        }
+
+        // Update the stuff related to a job's status change
+        private void UpdateStatus(object sender, JobStatus status)
+        {
+            Job.UpdateStatus();
+
+            OnPropertyChanged(nameof(CanStart));
+            OnPropertyChanged(nameof(CanSkipWait));
+            OnPropertyChanged(nameof(CanResume));
+            OnPropertyChanged(nameof(CanPause));
+            OnPropertyChanged(nameof(CanStop));
+            OnPropertyChanged(nameof(CanAbort));
+
+            OnPropertyChanged(nameof(IsStopping));
+            OnPropertyChanged(nameof(IsWaiting));
+            OnPropertyChanged(nameof(IsPausing));
+        }
+
+
         private void UpdateViewModel(object sender, float progress) => UpdateViewModel();
 
+        #region Logging
         private void OnResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
         {
             var botData = details.Result.BotData;
@@ -272,6 +335,7 @@ namespace OpenBullet2.Native.ViewModels
 
         private void OnError(object sender, Exception ex)
             => NewMessage?.Invoke(this, $"Job error: {ex.Message}", Colors.Tomato);
+        #endregion
 
         private void OnHit(object sender, Hit hit)
         {
@@ -284,37 +348,8 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public async Task Start()
-        {
-            await MultiRunJob.Start();
-            UpdateBotsCollection();
-        }
-
-        public Task Stop() => MultiRunJob.Stop();
-        public Task Abort() => MultiRunJob.Abort();
-        public Task Pause() => MultiRunJob.Pause();
-        public Task Resume() => MultiRunJob.Resume();
-        public void SkipWait() => MultiRunJob.SkipWait();
-
-        private string GetProxyGroupName(int id)
-        {
-            try
-            {
-                if (id == -1)
-                {
-                    return "All";
-                }
-
-                return proxyGroups.First(g => g.Id == id).Name;
-            }
-            catch
-            {
-                return "Invalid";
-            }
-        }
-
         // Call this at the start and when bots are changed
-        private void UpdateBotsCollection()
+        private void UpdateBots()
         {
             var bots = Enumerable.Range(0, MultiRunJob.Bots)
                 .Select(i => new BotViewModel(i, MultiRunJob.CurrentBotDatas));
@@ -334,16 +369,60 @@ namespace OpenBullet2.Native.ViewModels
 
             HitsCollection = new ObservableCollection<HitViewModel>(hits.Select(h => new HitViewModel(h)));
         }
+        #endregion
+
+        #region Controls
+        public async Task Start()
+        {
+            await MultiRunJob.Start();
+            UpdateBots();
+        }
+
+        public Task Stop() => MultiRunJob.Stop();
+        public Task Abort() => MultiRunJob.Abort();
+        public Task Pause() => MultiRunJob.Pause();
+        public Task Resume() => MultiRunJob.Resume();
+        public void SkipWait() => MultiRunJob.SkipWait();
+        
+        public async Task ChangeBots(int newValue)
+        {
+            // TODO: Also edit the job options! So the number of bots is persisted
+
+            await MultiRunJob.ChangeBots(newValue);
+            MultiRunJob.Bots = newValue;
+            Job.UpdateBots();
+        }
+        #endregion
+
+        #region Utils
+        private string GetProxyGroupName(int id)
+        {
+            try
+            {
+                if (id == -1)
+                {
+                    return "All";
+                }
+
+                return proxyGroups.First(g => g.Id == id).Name;
+            }
+            catch
+            {
+                return "Invalid";
+            }
+        }
+        #endregion
 
         public void Dispose()
         {
             try
             {
-                timer?.Dispose();
+                botsInfoTimer?.Dispose();
+                secondsTicker?.Dispose();
 
-                MultiRunJob.OnCompleted -= UpdateViewModel;
+                MultiRunJob.OnCompleted -= UpdateOnCompleted;
                 MultiRunJob.OnResult -= UpdateViewModel;
-                MultiRunJob.OnStatusChanged -= UpdateViewModel;
+                MultiRunJob.OnStatusChanged -= UpdateStatus;
                 MultiRunJob.OnProgress -= UpdateViewModel;
 
                 MultiRunJob.OnResult -= OnResult;
@@ -358,6 +437,7 @@ namespace OpenBullet2.Native.ViewModels
         }
     }
 
+    #region Other ViewModels
     public class BotViewModel : ViewModelBase
     {
         private readonly int index;
@@ -374,6 +454,13 @@ namespace OpenBullet2.Native.ViewModels
         {
             this.index = index;
             this.datas = datas;
+        }
+
+        public override void UpdateViewModel()
+        {
+            OnPropertyChanged(nameof(Data));
+            OnPropertyChanged(nameof(Proxy));
+            OnPropertyChanged(nameof(Info));
         }
     }
 
@@ -392,6 +479,7 @@ namespace OpenBullet2.Native.ViewModels
             this.hit = hit;
         }
     }
+    #endregion
 
     public enum HitsFilter
     {
