@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -342,9 +343,7 @@ namespace OpenBullet2.Native.ViewModels
             if ((HitsFilter == HitsFilter.Hits && hit.Type == "SUCCESS") || (HitsFilter == HitsFilter.ToCheck && hit.Type == "NONE")
                 || (HitsFilter == HitsFilter.Custom && hit.Type != "SUCCESS" && hit.Type != "NONE"))
             {
-                // TODO: Add the hit to the observable (it was giving inconsistency errors when i tried)
-                // For now we just update the entire thing
-                UpdateHitsCollection();
+                Application.Current.Dispatcher.Invoke(() => HitsCollection.Add(new HitViewModel(hit)));
             }
         }
 
