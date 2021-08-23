@@ -375,11 +375,11 @@
 
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=Time}" />
-                            <GridViewColumn Header="Data" DisplayMemberBinding="{Binding Path=Data}" />
-                            <GridViewColumn Header="Proxy" DisplayMemberBinding="{Binding Path=Proxy}" />
-                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Path=Type}"/>
-                            <GridViewColumn Width="2000" Header="Capture" DisplayMemberBinding="{Binding Path=CapturedData}" />
+                            <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Time}" />
+                            <GridViewColumn Header="Data" DisplayMemberBinding="{Binding Data}" />
+                            <GridViewColumn Header="Proxy" DisplayMemberBinding="{Binding Proxy}" />
+                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}"/>
+                            <GridViewColumn Width="2000" Header="Capture" DisplayMemberBinding="{Binding Capture}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
