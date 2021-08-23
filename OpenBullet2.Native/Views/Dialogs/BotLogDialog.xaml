@@ -6,6 +6,8 @@
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
       xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
       mc:Ignorable="d" 
+      Height="600"
+      Width="800"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="BotLogDialog">
 

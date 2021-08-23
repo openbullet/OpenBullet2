@@ -17,6 +17,12 @@ namespace OpenBullet2.Native.Views.Dialogs
             logRTB.Font = new System.Drawing.Font("Consolas", 10);
             logRTB.BackColor = System.Drawing.Color.FromArgb(22, 22, 22);
 
+            if (logger is null)
+            {
+                logRTB.AppendText("Bot log was not enabled when this hit was obtained", LogColors.Tomato);
+                return;
+            }
+
             foreach (var entry in logger.Entries)
             {
                 // Append the log message
