@@ -405,6 +405,7 @@
                 x:Name="jobLogRTB"
                 Grid.Column="0"
                 IsReadOnly="True"
+                IsUndoEnabled="False"
                 BorderThickness="0"
                 Background="{DynamicResource BackgroundSecondary}"
                 Padding="5"

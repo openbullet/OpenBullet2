@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Native.Extensions;
+﻿using OpenBullet2.Core.Services;
+using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
@@ -20,6 +21,7 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class MultiRunJobViewer : Page
     {
+        private readonly OpenBulletSettingsService obSettingsService;
         private MultiRunJobViewerViewModel vm;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
@@ -28,6 +30,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         public MultiRunJobViewer()
         {
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             InitializeComponent();
         }
 
@@ -214,6 +217,11 @@ namespace OpenBullet2.Native.Views.Pages
                     // TODO: Add buffering for the logs otherwise this is calling for trouble!!!
                     jobLogRTB.AppendText(message + Environment.NewLine, color);
                     jobLogRTB.ScrollToEnd();
+
+                    if (jobLogRTB.Document.Blocks.Count > obSettingsService.Settings.GeneralSettings.LogBufferSize)
+                    {
+                        jobLogRTB.Document.Blocks.Remove(jobLogRTB.Document.Blocks.FirstBlock);
+                    }
                 }
             });
     }
