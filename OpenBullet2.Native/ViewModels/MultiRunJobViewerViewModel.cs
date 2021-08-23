@@ -466,17 +466,17 @@ namespace OpenBullet2.Native.ViewModels
 
     public class HitViewModel : ViewModelBase
     {
-        private readonly Hit hit;
+        public Hit Hit { get; init; }
 
-        public DateTime Time => hit.Date;
-        public string Data => hit.Data.Data;
-        public string Proxy => hit.Proxy?.ToString();
-        public string Type => hit.Type;
-        public string Capture => hit.CapturedDataString;
+        public DateTime Time => Hit.Date;
+        public string Data => Hit.Data.Data;
+        public string Proxy => Hit.Proxy?.ToString();
+        public string Type => Hit.Type;
+        public string Capture => Hit.CapturedDataString;
 
         public HitViewModel(Hit hit)
         {
-            this.hit = hit;
+            Hit = hit;
         }
     }
     #endregion

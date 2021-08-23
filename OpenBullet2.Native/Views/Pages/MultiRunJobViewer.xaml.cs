@@ -1,9 +1,12 @@
 ﻿using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -20,6 +23,8 @@ namespace OpenBullet2.Native.Views.Pages
         private MultiRunJobViewerViewModel vm;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
+
+        private IEnumerable<HitViewModel> SelectedHits => hitsListView.SelectedItems.Cast<HitViewModel>().ToList();
 
         public MultiRunJobViewer()
         {
@@ -134,12 +139,43 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void CopySelectedHits(object sender, RoutedEventArgs e) { }
-        private void CopySelectedProxies(object sender, RoutedEventArgs e) { }
-        private void CopySelectedHitsCapture(object sender, RoutedEventArgs e) { }
-        private void SendToDebugger(object sender, RoutedEventArgs e) { }
-        private void SelectAll(object sender, RoutedEventArgs e) { }
-        private void ShowBotLog(object sender, RoutedEventArgs e) { }
+        private void CopySelectedHits(object sender, RoutedEventArgs e) 
+            => SelectedHits.CopyToClipboard(h => h.Data);
+
+        private void CopySelectedProxies(object sender, RoutedEventArgs e)
+            => SelectedHits.CopyToClipboard(h => h.Proxy);
+
+        private void CopySelectedHitsCapture(object sender, RoutedEventArgs e)
+            => SelectedHits.CopyToClipboard(h => $"{h.Data} | {h.Capture}");
+
+        private void SendToDebugger(object sender, RoutedEventArgs e)
+        {
+            var hitVM = SelectedHits.FirstOrDefault();
+
+            if (hitVM is not null)
+            {
+                var debugger = SP.GetService<ViewModelsService>().Debugger;
+                debugger.TestData = hitVM.Data;
+
+                if (hitVM.Hit.Proxy is not null)
+                {
+                    debugger.TestProxy = hitVM.Hit.Proxy.ToString();
+                    debugger.ProxyType = hitVM.Hit.Proxy.Type;
+                }
+            }
+        }
+
+        private void SelectAll(object sender, RoutedEventArgs e) => hitsListView.SelectAll();
+
+        private void ShowBotLog(object sender, RoutedEventArgs e)
+        {
+            var hitVM = SelectedHits.FirstOrDefault();
+
+            if (hitVM is not null)
+            {
+                new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}", true).ShowDialog();
+            }
+        }
 
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)
         {
