@@ -47,17 +47,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         public async void CreateConfig(ConfigForCreationDto dto) => await vm.Create(dto);
 
-        private void Edit(object sender, RoutedEventArgs e)
-        {
-            if (HoveredItem is null)
-            {
-                ShowNoConfigSelectedError();
-                return;
-            }
-
-            vm.SelectedConfig = HoveredItem;
-            NavigateToConfigSection();
-        }
+        private void Edit(object sender, RoutedEventArgs e) => EditConfig();
 
         private async void Save(object sender, RoutedEventArgs e)
         {
@@ -136,11 +126,19 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void ListItemDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ListItemDoubleClick(object sender, MouseButtonEventArgs e) => EditConfig();
+
+        private void EditConfig()
         {
             if (HoveredItem is null)
             {
                 ShowNoConfigSelectedError();
+                return;
+            }
+
+            if (HoveredItem.Config.IsRemote)
+            {
+                Alert.Error("Remote", "You cannot edit remote configs!");
                 return;
             }
 
