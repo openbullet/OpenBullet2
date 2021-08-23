@@ -151,10 +151,10 @@
     <value>Nó hoạt động như thế nào?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>This is the %Job Manager%, here you can %create% new jobs, %edit% or %remove% existing %jobs% and access a specific job's interface. To create a new job, click on the %New% button above. After you created some jobs you will be able to see an overview of their status on this page. You can also create a job by cloning an existing one in order to save time with all the configuration tasks.</value>
+    <value>Đây là %Trình quản lý tác vụ, bạn có thể %tạo% các tác vụ mới, %chỉnh% hoặc %loại bỏ% %các tác vụ% hiện có và truy cập giao diện của một tác vụ nhất định. Để tạo tác vụ mới, click nút %Tạo% ở trên. Sau khi đã tạo vài tác vụ bạn có thể thấy tổng quan trạng thái của chúng trên trang này. Bạn cũng có thể tạo một tác vụ bằng cách tạo bản sao của cái hiện có để tiết kiệm thời gian.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>In order to access the interface of a specific job you can just click on it! If you would like the manager to update your jobs' status less frequently in order to save bandwidth, you can find the %Job Manager update interval% option in the OB Settings page.</value>
+    <value>Để truy cập vào giao diện của một tác vụ nhất định, bạn chỉ cần click vào nó! Nếu bạn muốn Trình quản lý cập nhật trạng thái của các tác vụ ít hơn để tiết kiệm băng thông, bạn có thể tìm lựa chọn %Thời gian Cập nhật của Trình quản lý Tác vụ% trong trang Cài đặt của OB.</value>
   </data>
   <data name="Hits" xml:space="preserve">
     <value>Hits</value>
@@ -172,10 +172,10 @@
     <value>Tạo</value>
   </data>
   <data name="NoConfigSelected" xml:space="preserve">
-    <value>Ko có config nào đc chọn</value>
+    <value>Không có config nào đc chọn</value>
   </data>
   <data name="NotWorking" xml:space="preserve">
-    <value>Ko hoạt động</value>
+    <value>Không hoạt động</value>
   </data>
   <data name="Owner" xml:space="preserve">
     <value>Chủ sở hữu</value>
@@ -202,7 +202,7 @@
     <value>To check</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Danh sách t.khoản</value>
+    <value>Danh sách tài khoản</value>
   </data>
   <data name="Working" xml:space="preserve">
     <value>Hoạt động</value>

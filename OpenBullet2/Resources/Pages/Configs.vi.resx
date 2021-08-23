@@ -133,10 +133,10 @@
     <value>Thoát</value>
   </data>
   <data name="CannotDownloadRemoteConfig" xml:space="preserve">
-    <value>Ko thể tải xuống remote config</value>
+    <value>Không thể tải xuống remote config</value>
   </data>
   <data name="CannotEditRemoteConfig" xml:space="preserve">
-    <value>Ko thể chỉnh sửa remote config</value>
+    <value>Không thể chỉnh sửa remote config</value>
   </data>
   <data name="Category" xml:space="preserve">
     <value>Loại</value>
@@ -148,7 +148,7 @@
     <value>Upload config thành công</value>
   </data>
   <data name="ConfigWarningMessage" xml:space="preserve">
-    <value>CẢNH BÁO! Nếu bạn đang sử dụng config của bên thứ ba, BẠN cần đảm bảo rằng các config đang làm chính xác nhiệm vụ của mình và không có hành vi độc hại. Nếu nguồn ko đáng tin cậy, xin hãy kiểm tra lại mã LoliCode / C # trước khi chạy</value>
+    <value>CẢNH BÁO! Nếu bạn đang sử dụng config của bên thứ ba, BẠN cần đảm bảo rằng các config đang làm chính xác nhiệm vụ của nó và không có hành vi độc hại. Nếu nguồn không đáng tin cậy, xin hãy kiểm tra lại mã LoliCode / C # trước khi chạy</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Ngày phát hành</value>
@@ -163,31 +163,31 @@
     <value>Chỉnh sửa</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Config là gì</value>
+    <value>Config là gì?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>A %Config% is a file that contains instructions for automating certain actions, usually towards web resources. Configs contain some %metadata% (like a name, an author and an icon), a %readme% with instructions on how to use it or what it's for, some settings, and then instructions that can either be in the custom %LoliCode% scripting language or in pure %C#%. On the disk, configs are saved as files with the %.opk% extension in the %UserData/Configs% subfolder.</value>
+    <value>%Config% là một file chứa code cho những hành động nhất định, thường hướng về tài nguyên của web. Các config chứa vài thông tin chung (như tên, tác giả và icon), phần %readme% với hướng dẫn cách dùng và mục đích, vài tùy chỉnh, và phần hướng dẫn có thể nằm trong phần %LoliCode% tùy chỉnh hoặc %C#%. Trên ổ đĩa, các config được lưu dưới dạng file với đuôi %.opk% trong folder con %UserData/Configs%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Configs can be used in jobs such as the %MultiRun Job% in order to execute some instructions on a given dataset (e.g. a wordlist) in parallel. For example, they can be used to check if certain subpaths of a given website return a valid response, or they can be used to scrape links from multiple pages of an online shop.</value>
+    <value>Các config được dùng trong những việc như %Đa Tác Vụ% để thực hiện những code với tập dữ liệu sẵn (ví dụ: một danh sách tài khoản) song song với nhau. Ví dụ, chúng có thể được dùng để kiểm tra các subpath của một website có phản hồi hợp lệ hay không, hoặc chúng có thể dùng để cào links từ nhiều trang của một shop online.</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
     <value>Trình quản lý config hoạt động như thế nào?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>The %Config Manager% keeps track of all your configs. Configs are loaded from the `UserData/Configs` subfolder when OB2 starts up, and if some new configs are added to that folder you can simply hit %Reload% in order to start the loading process again. If you don't have easy access to the Configs folder (for example if OB2 is running on a vps) you can %Upload% a config with the related button. You can also %Download% existing configs in the same way.</value>
+    <value>%Trình quản lý Config% giúp theo dõi tất cả các config của bạn. Các config được tải từ folder con `UserData/Configs` khi OB2 khởi động, và nếu vài config mới được thêm vào folder đấy bạn đơn giản có thể bấm %Tải lại% để bắt đầu quá trình tải lần nữa. Nếu bạn gặp khó khi truy cập Configs folder (ví dụ nếu OB2 đang chạy trên một vps) bạn có thể %Tải lên% một config với nút thực hiện tính năng đấy. Bạn cũng có thể %Tải xuống% các config hiện có với cách tương tự.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
-    <value>At the top you can find the %New% button that will create a new config. In order to %edit% a config you can click on the Edit button or double click on the config in the list. There is also a button to %change the view% to a more detailed grid view.</value>
+    <value>Ở phía trên bạn có thể tìm thấy nút %tạo% để tạo một config mới. Để %tùy chỉnh% một config bạn có thể click vào nút Edit hoặc đúp chuột vào confi ở trên danh sách có sẵn. Còn có một nút để %thay đổi định dạng% thành cuộn thông tin chi tiết hơn về các config.</value>
   </data>
   <data name="Help3x00" xml:space="preserve">
     <value>File .opk là gì?</value>
   </data>
   <data name="Help3x01" xml:space="preserve">
-    <value>A %.opk% file is a %zip archive% that contains some files inside it. The first file is %metadata.json%, which contains the name, author and icon of the config. The icon is a base64-encoded image which can also be a GIF. The %readme.md% file will contain a description of the config, it will be shown to the user when they open the config selection menu during the job setup process. It supports the markdown language. The %settings.json% file will contain the config-specific settings.</value>
+    <value>Một file %.opk% là một %kho lưu trữ zip% chứa một vài file ở trong nó. File đầu tiên là %metadata.json%, nó chưa tên, tác giả và icon của config. Icon là một bức ảnh được mã hóa bởi base64, nó cũng có thể là một GIF. File %readme.md% sẽ chứa miêu tả về config, nó sẽ hiện ra khi người dùng mở menu chọn config trong lúc quá trình setup một tác vụ. Nó có hỗ trợ ngôn ngữ markdown. File %settings.json% sẽ chứa những cài đặt nhất định về config.</value>
   </data>
   <data name="Help3x02" xml:space="preserve">
-    <value>Finally, if your config uses stacker, the instructions will be saved as a LoliCode script inside the %script.loli% file. If instead you decided to convert your config to C# only, a file called %script.cs% will be created with the C# code to execute.</value>
+    <value>Cuối cùng, nếu config của bạn dùng Stack, code sẽ được lưu dưới dạng Lolicode ở trong file %script.loli%. Còn nếu, bạn quyết định chuyển đổi config sang C#, một file %script.cs% sẽ được tạo bằng code C#.</value>
   </data>
   <data name="LastModified" xml:space="preserve">
     <value>Lần sửa dổi cuối</value>
@@ -235,10 +235,10 @@
     <value>Chuyển đổi chế độ xem</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oh no</value>
+    <value>Uh-Oh</value>
   </data>
   <data name="UnsavedChanges" xml:space="preserve">
-    <value>Thay đổi chưa đc lưu</value>
+    <value>Thay đổi chưa được lưu</value>
   </data>
   <data name="UnsavedChangesText" xml:space="preserve">
     <value>Thay đổi của config chưa được lưu! Bạn có muốn tiếp tục?</value>
@@ -250,6 +250,6 @@
     <value>Cảnh báo</value>
   </data>
   <data name="Wordlists" xml:space="preserve">
-    <value>Danh sách t.khoản</value>
+    <value>Danh sách tài khoản</value>
   </data>
 </root>

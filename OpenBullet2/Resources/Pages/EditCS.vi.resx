@@ -124,22 +124,23 @@
     <value>Khi bạn chỉ chuyển config thành C #, bạn sẽ không thể chỉnh sửa nó bằng stacker nữa! Bạn có THỰC SỰ muốn chuyển đổi không?</value>
   </data>
   <data name="ConvertToCSharpConfig" xml:space="preserve">
-    <value>Chuyển đổi thành C# Config</value>
+    <value>Chuyển đổi thành Config C#</value>
   </data>
   <data name="CSharpEditor" xml:space="preserve">
     <value>Trình chỉnh sửa C#</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>What is this section for?</value>
+    <value>Phần này dùng để làm gì?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>This section serves two purposes. If you plan on using %Stacker/LoliCode% for building your config, you can use this read-only editor to see how the final code looks like after the blocks get translated to C# instructions for the execution. This helps solve most of the issues you get, especially when the %debugger% gives you %exceptions%.</value>
+    <value>
+Phần này phục vụ 2 mục đích. Nếu bạn muốn dùng %Stacker/LoliCode% để làm config, bạn có thể dùng trình chỉnh sửa read-only này để thấy được code cuối như thế nào sau khi blocks được dịch qua code C# để thực hiện được. Phần này sẽ giúp bạn giải quyết phần lớn vấn đề mà bạn gặp được, đặc biệt khi %debugger% chỉ ra lỗi.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>If instead you decided to code your config using %only C#%, you can click on the %Convert to C# config% button and you will be able to edit the C# code directly. You will be able to use the same API that is used for blocks, so I suggest studying it a little bit by checking either the codebase or how the blocks get translated automatically. Note that C# only configs are meant for %very advanced% users, and everything you can do here can also be done in LoliCode by integrating blocks and C# code which can result in a much more readable script for people who are not well-versed with code.</value>
+    <value>Còn nếu bạn quyết định tạo config %chỉ bằng C#%, bạn có thể click vào nút %Chuyển đổi thanh config C#% và bạn sẽ có thể trực tiếp tùy chỉnh code C#. Bạn có thể dùng cùng API, được dùng cho các block, vậy nên tôi khuyên học về nó một chút bằng cách kiểm tra codebase hoặc cách các block được dịch tự động. Lưu ý rằng config C# dành cho người dùng %có trịnh độ cao%, và mọi thứ bạn có thể thực hiện với C# đều có thể làm với LoliCode bằng cách tích hợp các block và code C# có thể trở nên dễ độc hơn cho người không thành thạo với code.</value>
   </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
-    <value>Transpile from blocks</value>
+    <value>Vận chuyển từ các block.</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
     <value>Cảnh báo! Hãy đọc!</value>

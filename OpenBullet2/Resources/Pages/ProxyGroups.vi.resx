@@ -178,16 +178,16 @@
     <value>Một tác vụ hiện đang sử dụng nhóm proxy này. Vui lòng dừng và xóa tác vụ và thử lại.</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this work?</value>
+    <value>Cái này hoạt động thế nào?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Here you can import your proxies into several %groups%. Groups help keep proxies organized and give you the ability to use different proxies for different jobs. First of all you should create a group by clicking on the %Add Group% button above. Just give it a name. Make sure your new group is selected and then click on %Import Proxies%.</value>
+    <value>Tại đây bạn có thể thêm proxy của bạn vào nhiều %nhóm%. Các nhóm giúp giữ cho proxy có tổ chức và cho bạn khả năng dùng các proxy khác nhau cho các tác vụ khác nhau. Trước tiên bạn nên tạo một nhóm bằng cách click vào nút %Tạo nhóm% ở trên. Đặt tên cho nhóm và đảm bảo rằng nhóm mới của bạn được chọn vào click vào %Thêm proxy%.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>The %Import Proxies% menu will give you 3 ways to import your proxies. You can either %paste% them, %upload a file% or %type the URL% of a remote resource that provides proxies in a text format (usually one per line). You are also able to specify the default %type%, %username% and %password% for the proxies. Alternatively, you can use the %advanced syntax% described in the form in order to specify the type, username and password on a per-proxy basis.</value>
+    <value>Menu %Thêm proxy% sẽ cho bạn 3 cách để thêm proxy của bạn vào. Bạn có thể %dán% chúng, %tải lên một file% hoặc %gõ vào URL% của tài nguyên từ xa, nó cung cấp proxy ở dạng văn bản (mỗi proxy một dòng). Bạn cũng có thể xác định %loại%, %tên tài khoản%, %mật khẩu% mặc dịnh cho các proxy. Ngoài ra, bạn còn có thể dùng %cú pháp nâng cao% được miêu tả để xác định loại, tên tải khoản và mật khẩu.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Now you're all set and you will be able to select your proxy group when you create or edit a job. You can create a job of type %Proxy Check% in order to test if your proxies work before using them. The Proxy Check job will update the %country%, %status%, %ping% and %last check date% fields of your proxies in the data table of this page, so you can then %remove% proxies that don't work or have a ping that is too high for your needs. You can even decide to only keep proxies from a specific country!</value>
+    <value>Bây giờ bạn đã xong và bạn sẽ có thể chọn loại proxy khi bạn tạo và chỉnh một tác vụ. Bạn có thể tạo một tác vụ kiểu %Kiểm tra Proxy% để kiểm tra xem liệu proxy của bạn còn hoạt động không trước khi dùng chúng. Tác vụ kiểm tra Proxy sẽ cập nhật %quốc gia%, %trạng thái%, %ping% và %lần kiểm tra cuối% của proxy của bạn trên bảng dữ liệu của trang này, nên bạn có thể %xóa% proxy không còn hoạt động hoặc có ping quá cao, không phù hợp nhu cầu. Bạn thậm chí có thể quyết định chỉ giữ proxy từ một quốc gia nhất định!</value>
   </data>
   <data name="Host" xml:space="preserve">
     <value>Máy chủ</value>

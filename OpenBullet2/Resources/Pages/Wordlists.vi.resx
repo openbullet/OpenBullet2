@@ -124,16 +124,16 @@
     <value>Đã thêm</value>
   </data>
   <data name="AddedWordlist" xml:space="preserve">
-    <value>Danh sách t.khoản đã đc thêm thành công</value>
+    <value>Danh sách tài khoản đã đc thêm thành công!</value>
   </data>
   <data name="AddWordlist" xml:space="preserve">
-    <value>Thêm danh sách t.khoản</value>
+    <value>Thêm danh sách tài khoản</value>
   </data>
   <data name="AlsoDeleteFile" xml:space="preserve">
-    <value>Bạn có muốn xoá file ko?</value>
+    <value>Bạn có muốn xoá file không?</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Bạn chắc chứ</value>
+    <value>Bạn chắc chứ?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Thoát</value>
@@ -142,10 +142,10 @@
     <value>Xoá</value>
   </data>
   <data name="DeleteFileText1" xml:space="preserve">
-    <value>Bạn có muốn xoá ko?</value>
+    <value>Bạn có muốn xoá không?</value>
   </data>
   <data name="DeleteFileText2" xml:space="preserve">
-    <value>Bạn có muốn xoá trong ổ cững luôn ko</value>
+    <value>Bạn có muốn xoá trong ổ cững luôn không?</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Chỉnh sửa</value>
@@ -157,19 +157,19 @@
     <value>Tên files</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>Nó hoạt động thế nào</value>
+    <value>Nó hoạt động thế nào?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Here you can import wordlists. First of all click on the %Add% button above. You will be able to specify a %Wordlist Type% (more information on this later), a %Name% and a %Purpose%. You have two options to upload your file. The first option is to %upload% it to the server that is running the instance of OpenBullet2. This is the preferred method %if the wordlist is on the client% from which you are accessing OB2 through the browser, but OB2 is being hosted on a different machine. This method of adding a wordlist adds some overhead as the wordlist needs to be uploaded through the browser.</value>
+    <value>>Tại đây bạn có thể thêm danh sách tài khoản. Trước tiên click vào nút %Thêm% ở trên. Bạn sẽ có thể xác định một %Loại Danh sách tài khoản% (sẽ có thêm thông tin ở sau), một %Tên% và một %Mục đích%. Bạn có hai lựa chọn để tải lên file của bạn. Lựa chọn đầu là %tải lên% server đang chạy OpenBullet 2. Đây là cách được ưu tiên %nếu danh sách tài khoản nằm trên máy chủ% mà bạn có thể truy cập vào OB2 qua trình duyệt, nhưng OB2 được bật trên một máy khác.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>%If the wordlist is on the server%, which means you are trying to retrieve a file from the same machine in which OB2 is running, you can use the %File System% option, which will let you visually browse through folders in search of the file you want. Note that in order to access locations on the drive that are outside of the current working directory of OB2 you will need to go to OpenBullet's security options and allow system-wide file access.</value>
+    <value>%Nếu danh sách tài khoản nằm trên server%, nghĩa là bạn đang cố khôi phục một file từ cùng máy mà OB2 đang chạy, bạn có thể chọn lựa chọn %Hệ thống File%, nó sẽ cho bạn lướt cách folder một cách trực quan để tìm file bạn cần. Lưu ý rằng để truy cập vào các vị trí trên ổ đĩa ngoài thự mục hiện tại của OB2 bạn sẽ cần vào các lựa chọn bảo mật của OpenBullet và cho phép truy cập vào file toàn hệ thống.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>Regarding the %Wordlist Type%, you will find the currently specified Wordlist Types in the %UserData/Environment.ini% file in your OB2 directory. Wordlist Types are loaded when OB2 starts up. You can change this file and add/remove/change Wordlist Types to match the format of your wordlists. You can read more about Wordlist Types on the official forum's guides section.</value>
+    <value>Về %Loại Danh sách tài khoản%, bạn sẽ thấy Loại Danh sách tài khoản nhất định hiện có trong file %UserData/Environment.ini% trong thư mục OB2 của bạn. Loại Danh sách tài khoản được tải khi OB2 khởi động. Bạn có thể thay đổi file này và thêm/xóa/thay đổi Loại Danh sách tài khoản để khớp với định dạng của Danh sách tài khoản của bạn. Bạn có thể đọc thêm về Loại Danh sách tài khoản trong phần guides trên diễn dàn chính thức của OB.</value>
   </data>
   <data name="KeepFile" xml:space="preserve">
-    <value>Ko, giữ file này lại</value>
+    <value>Không, giữ file này lại</value>
   </data>
   <data name="Lines" xml:space="preserve">
     <value>Dòng</value>
@@ -184,7 +184,7 @@
     <value>Không có bản ghi nào để hiển thị</value>
   </data>
   <data name="NoWordlistSelected" xml:space="preserve">
-    <value>Bạn cần chọn danh sách t.khoản trước</value>
+    <value>Bạn cần chọn danh sách tài khoản trước</value>
   </data>
   <data name="Owner" xml:space="preserve">
     <value>Chủ sở hữu</value>
@@ -193,21 +193,21 @@
     <value>Mục đích</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Bạn có thực sự muốn xoá</value>
+    <value>Bạn có thực sự muốn xoá?</value>
   </data>
   <data name="results" xml:space="preserve">
     <value>kết quả</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Số kết quả mỗi trang</value>
+    <value>Số kết quả mỗi trang.</value>
   </data>
   <data name="Type" xml:space="preserve">
     <value>Loại</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oh-no</value>
+    <value>Uh-Oh</value>
   </data>
   <data name="WordlistInUse" xml:space="preserve">
-    <value>Danh sách tài khoản này đang được sử dụng bởi một tác vụ, vui lòng hủy bỏ hoặc xóa nó</value>
+    <value>Danh sách tài khoản này đang được sử dụng bởi một tác vụ, vui lòng hủy bỏ hoặc xóa nó.</value>
   </data>
 </root>

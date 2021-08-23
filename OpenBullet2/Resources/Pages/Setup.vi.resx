@@ -169,7 +169,7 @@
     <value>Tên tài khoản</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Chào mừng bạn đến với Bảo Bullet. Hãy thiết lập một số thứ !</value>
+    <value>Chào mừng bạn đến với OpenBullet 2. Hãy thiết lập một số thứ !</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Có</value>

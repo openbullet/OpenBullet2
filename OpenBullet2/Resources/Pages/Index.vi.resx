@@ -136,25 +136,25 @@
     <value>Help</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>A warm welcome from Bảo</value>
+    <value>Bulletta gửi lời chào đón tới bạn.</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>Hello and welcome to %Bảo Bullet%, I'm %Bảo% and I'll be your guide around here. Look for help links and I'll come to explain whatever you need!</value>
+    <value>Xin chào và chào mừng tới %OpenBullet 2%, tôi là %Bulletta% và tôi sẽ là người hướng dẫn của bạn. Hãy tìm các mục help và tôi sẽ giải thích những gì bạn cần</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>I won't annoy you any longer, guess I'll see you around then. Byee!</value>
+    <value>Không làm phiền bạn nữa, tôi sẽ gặp bạn sau. Byee!</value>
   </data>
   <data name="Help2x00" xml:space="preserve">
-    <value>Where are all my settings saved?</value>
+    <value>Tất cả các cài đặt của tôi được lưu ở đâu?</value>
   </data>
   <data name="Help2x01" xml:space="preserve">
-    <value>There are plenty of settings in Bảo Bullet, and they are saved inside the %UserData% folder. The %database% (by default SQLite) is the file that contains your proxies, jobs, hits, guests and also holds records of the location of your wordlists on disk. By default it's called %OpenBullet.db%. %Configs% are inside the Configs subfolder, while %Wordlists% that you imported through the browser's upload feature are inside the Wordlists subfolder. Refer to their specific sections for more information.</value>
+    <value>Có rất nhiều cài đặt trong OpenBullet 2, và chúng được lưu trong foler %Dữ liệu người dùng%. %Cơ sở dữ liệu% (bởi SQLite mặc định) là một file chứa các proxy, tác vụ, hit, người dùng khách và còn giữ các bản ghi về vị trí danh sách tài khoản của bạn trên ổ đĩa. Mặc định, nó tên là %OpenBullet.db%. Các %config% ở trong folder con Configs, trong khi các %danh sách tài khoản% mà bạn thêm vào thông quan chức năng tải lên của trình duyệt ở trong thư mục con Wordlists. Tìm về các mục riêng của chúng nếu bạn cần thêm thông tin.</value>
   </data>
   <data name="Help2x02" xml:space="preserve">
-    <value>The Bảo Bullet and RuriLib settings are saved to two files: %OpenBulletSettings.json% and %RuriLibSettings.json%. These files are only created if some changes were made to the default configuration. The %Environment.ini% file specifies the %Wordlist Types%, %Custom Statuses% and %Export Formats% of your Bảo Bullet environment. This is a very important file, more information on Wordlists Types can be found in a separate guide.</value>
+    <value>Cài đặt của OpenBullet 2 và RuriLib được lưu trong 2 file: %OpenBulletSettings.json% và %RuriLibSettings.json%. Những file này chỉ được tạo nếu có một vài thay đổi so với mặc định. File %Environment.ini% xác định rõ %Loại Danh sách tài khoản%, %Trạng thái Tùy chỉnh% và %Định dạng xuất ra% trong môi trường OpenBullet 2 của bạn. File này là một file rất quan trọng, thông tin thêm về Loại Danh sách tài khoản có thể tìm thấy ở hướng dẫn khác.</value>
   </data>
   <data name="Help2x03" xml:space="preserve">
-    <value>The %sharingEndpoints.json% file holds the information of your endpoints for config sharing. Finally, the %triggeredActions.json% file holds all the %Triggered Actions% of your Job Monitor. Triggered actions are automatically saved to this file every 10 seconds.</value>
+    <value>File %sharingEndpoints.json% giữ thông tin của endpoints của bạn để chia sẽ config. Cuối cùng, file %triggeredActions.json% giữ tất cả %Triggered Actions% của trình Giám sát Tác vụ. Triggered Actions được tự động lưu vào file này mỗi 10 giây.</value>
   </data>
   <data name="LocalTime" xml:space="preserve">
     <value>Giờ địa phương</value>
@@ -175,6 +175,6 @@
     <value>Thời gian hoạt động</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Chào mừng đến với Bảo Bullet!</value>
+    <value>Chào mừng đến với OpenBullet 2!</value>
   </data>
 </root>
