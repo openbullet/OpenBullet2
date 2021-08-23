@@ -214,7 +214,6 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 if (vm.EnableJobLog)
                 {
-                    // TODO: Add buffering for the logs otherwise this is calling for trouble!!!
                     jobLogRTB.AppendText(message + Environment.NewLine, color);
                     jobLogRTB.ScrollToEnd();
 
