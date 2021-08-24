@@ -39,13 +39,9 @@ namespace OpenBullet2.Native.Controls
 
         private void NumberChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            try
+            if (hours is not null && minutes is not null && seconds is not null)
             {
                 TimeSpan = new TimeSpan((int)hours.Value, (int)minutes.Value, (int)seconds.Value);
-            }
-            catch
-            {
-
             }
         }
     }
