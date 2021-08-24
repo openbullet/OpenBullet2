@@ -13,6 +13,7 @@
                           Interval="1"
                           HideUpDownButtons="True"
                           x:Name="hours"
+                          Value="0"
                           ValueChanged="NumberChanged"
                           Width="50"/>
         <Label Content="hours" />
@@ -21,6 +22,7 @@
                           Interval="1"
                           HideUpDownButtons="True"
                           x:Name="minutes"
+                          Value="0"
                           ValueChanged="NumberChanged"
                           Width="50"/>
         <Label Content="minutes" />
@@ -29,6 +31,7 @@
                           Interval="1"
                           HideUpDownButtons="True"
                           x:Name="seconds"
+                          Value="0"
                           ValueChanged="NumberChanged"
                           Width="50"/>
         <Label Content="seconds" />
