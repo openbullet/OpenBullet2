@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace OpenBullet2.Native.ViewModels
         private readonly List<ProxyGroupEntity> proxyGroups;
         private readonly Timer botsInfoTimer;
         private readonly Timer secondsTicker;
+        private readonly SoundPlayer soundPlayer;
 
         public event Action<object, string, Color> NewMessage;
 
@@ -227,12 +229,14 @@ namespace OpenBullet2.Native.ViewModels
             MultiRunJob.OnProgress += UpdateViewModel;
 
             MultiRunJob.OnResult += OnResult;
+            MultiRunJob.OnResult += PlayHitSound;
             MultiRunJob.OnTaskError += OnTaskError;
             MultiRunJob.OnError += OnError;
             MultiRunJob.OnHit += OnHit;
 
             botsInfoTimer = new Timer(new TimerCallback(_ => RefreshBotsInfo()), null, 200, 200);
             secondsTicker = new Timer(new TimerCallback(_ => PeriodicUpdate()), null, 1000, 1000);
+            soundPlayer = new SoundPlayer("Sounds/hit.wav");
             #endregion
 
             UpdateHitsCollection();
@@ -298,6 +302,38 @@ namespace OpenBullet2.Native.ViewModels
 
         private void UpdateViewModel(object sender, float progress) => UpdateViewModel();
 
+        private void OnHit(object sender, Hit hit)
+        {
+            if ((HitsFilter == HitsFilter.Hits && hit.Type == "SUCCESS") || (HitsFilter == HitsFilter.ToCheck && hit.Type == "NONE")
+                || (HitsFilter == HitsFilter.Custom && hit.Type != "SUCCESS" && hit.Type != "NONE"))
+            {
+                Application.Current.Dispatcher.Invoke(() => HitsCollection.Add(new HitViewModel(hit)));
+            }
+        }
+
+        // Call this at the start and when bots are changed
+        private void UpdateBots()
+        {
+            var bots = Enumerable.Range(0, MultiRunJob.Bots)
+                .Select(i => new BotViewModel(i, MultiRunJob.CurrentBotDatas));
+
+            BotsCollection = new ObservableCollection<BotViewModel>(bots);
+        }
+
+        private void UpdateHitsCollection()
+        {
+            var hits = HitsFilter switch
+            {
+                HitsFilter.Hits => MultiRunJob.Hits.Where(h => h.Type == "SUCCESS"),
+                HitsFilter.ToCheck => MultiRunJob.Hits.Where(h => h.Type == "NONE"),
+                HitsFilter.Custom => MultiRunJob.Hits.Where(h => h.Type != "SUCCESS" && h.Type != "NONE"),
+                _ => throw new NotImplementedException()
+            };
+
+            HitsCollection = new ObservableCollection<HitViewModel>(hits.Select(h => new HitViewModel(h)));
+        }
+        #endregion
+
         #region Logging
         private void OnResult(object sender, ResultDetails<MultiRunInput, CheckResult> details)
         {
@@ -338,37 +374,20 @@ namespace OpenBullet2.Native.ViewModels
             => NewMessage?.Invoke(this, $"Job error: {ex.Message}", Colors.Tomato);
         #endregion
 
-        private void OnHit(object sender, Hit hit)
+        private void PlayHitSound(object sender, ResultDetails<MultiRunInput, CheckResult> details)
         {
-            if ((HitsFilter == HitsFilter.Hits && hit.Type == "SUCCESS") || (HitsFilter == HitsFilter.ToCheck && hit.Type == "NONE")
-                || (HitsFilter == HitsFilter.Custom && hit.Type != "SUCCESS" && hit.Type != "NONE"))
+            if (obSettingsService.Settings.CustomizationSettings.PlaySoundOnHit && details.Result.BotData.STATUS == "SUCCESS")
             {
-                Application.Current.Dispatcher.Invoke(() => HitsCollection.Add(new HitViewModel(hit)));
+                try
+                {
+                    soundPlayer.Play();
+                }
+                catch
+                {
+
+                }
             }
         }
-
-        // Call this at the start and when bots are changed
-        private void UpdateBots()
-        {
-            var bots = Enumerable.Range(0, MultiRunJob.Bots)
-                .Select(i => new BotViewModel(i, MultiRunJob.CurrentBotDatas));
-
-            BotsCollection = new ObservableCollection<BotViewModel>(bots);
-        }
-
-        private void UpdateHitsCollection()
-        {
-            var hits = HitsFilter switch
-            {
-                HitsFilter.Hits => MultiRunJob.Hits.Where(h => h.Type == "SUCCESS"),
-                HitsFilter.ToCheck => MultiRunJob.Hits.Where(h => h.Type == "NONE"),
-                HitsFilter.Custom => MultiRunJob.Hits.Where(h => h.Type != "SUCCESS" && h.Type != "NONE"),
-                _ => throw new NotImplementedException()
-            };
-
-            HitsCollection = new ObservableCollection<HitViewModel>(hits.Select(h => new HitViewModel(h)));
-        }
-        #endregion
 
         #region Controls
         public async Task Start()
@@ -418,6 +437,7 @@ namespace OpenBullet2.Native.ViewModels
             {
                 botsInfoTimer?.Dispose();
                 secondsTicker?.Dispose();
+                soundPlayer?.Dispose();
 
                 MultiRunJob.OnCompleted -= UpdateOnCompleted;
                 MultiRunJob.OnResult -= UpdateViewModel;
@@ -425,6 +445,7 @@ namespace OpenBullet2.Native.ViewModels
                 MultiRunJob.OnProgress -= UpdateViewModel;
 
                 MultiRunJob.OnResult -= OnResult;
+                MultiRunJob.OnResult -= PlayHitSound;
                 MultiRunJob.OnTaskError -= OnTaskError;
                 MultiRunJob.OnError -= OnError;
                 MultiRunJob.OnHit -= OnHit;
