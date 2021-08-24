@@ -16,6 +16,13 @@ namespace OpenBullet2.Core.Repositories
 
         }
 
+        public override async Task<JobEntity> Get(int id)
+        {
+            var entity = await base.Get(id);
+            context.Entry(entity).Reload();
+            return entity;
+        }
+
         public async override Task Update(JobEntity entity)
         {
             context.Entry(entity).State = EntityState.Modified;
