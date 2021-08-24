@@ -5,16 +5,20 @@ using OpenBullet2.Core;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Logging;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.Views.Pages.Shared;
 using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace OpenBullet2.Native
 {
@@ -28,6 +32,9 @@ namespace OpenBullet2.Native
 
         public App()
         {
+            Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+            TaskScheduler.UnobservedTaskException += OnTaskException;
+
             Directory.CreateDirectory("UserData");
 
             var builder = new ConfigurationBuilder()
@@ -111,6 +118,23 @@ namespace OpenBullet2.Native
             var mainWindow = serviceProvider.GetService<MainWindow>();
             mainWindow.NavigateTo(MainWindowPage.Home);
             mainWindow.Show();
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            ReportCrash(e.Exception);
+            e.Handled = false; // Set to true to avoid closing the app
+        }
+
+        private void OnTaskException(object sender, UnobservedTaskExceptionEventArgs e) => ReportCrash(e.Exception);
+
+        private static void ReportCrash(Exception ex)
+        {
+            File.WriteAllText("crash.log", $"Unhandled exception thrown on {DateTime.Now}\r\n{ex}");
+
+            Alert.Error("Unhandled exception", $"An unhandled exception was thrown, the application will now close." +
+                $" Please open the crash.log file, copy the error message inside it and open an issue on the official github repository." +
+                $" A few details about the exception: {ex.Message}");
         }
     }
 }

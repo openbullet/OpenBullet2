@@ -384,7 +384,7 @@ namespace OpenBullet2.Native.ViewModels
                 }
                 catch
                 {
-
+                    
                 }
             }
         }

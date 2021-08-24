@@ -17,31 +17,35 @@
         MaxWidth="600"
         HorizontalAlignment="Center">
             <iconPacks:PackIconOcticons 
-            x:Name="icon"
-            Margin="0 20 0 0"
-            Width="50"
-            Height="50"
-            HorizontalAlignment="Center"
-            Foreground="YellowGreen"
-            Kind="Check" />
+                x:Name="icon"
+                Margin="0 20 0 0"
+                Width="50"
+                Height="50"
+                HorizontalAlignment="Center"
+                Foreground="YellowGreen"
+                Kind="Check" />
 
             <TextBlock
-            x:Name="title"
-            Margin="0 20 0 0"
-            FontSize="20"
-            Text="Success"
-            HorizontalAlignment="Center"
-            Foreground="Gainsboro"
-            />
+                x:Name="title"
+                Margin="0 20 0 0"
+                FontSize="20"
+                Text="Success"
+                TextWrapping="Wrap"
+                HorizontalAlignment="Center"
+                TextAlignment="Center"
+                Foreground="Gainsboro"
+                />
 
             <TextBlock
-            x:Name="message"
-            Margin="0 10 0 20"
-            FontSize="14"
-            Text="Success"
-            HorizontalAlignment="Center"
-            Foreground="Gainsboro"
-            />
+                x:Name="message"
+                Margin="0 10 0 20"
+                FontSize="14"
+                Text="Success"
+                TextWrapping="Wrap"
+                HorizontalAlignment="Center"
+                TextAlignment="Center"
+                Foreground="Gainsboro"
+                />
 
             <Button Click="Ok" x:Name="okButton"
                 Width="50"

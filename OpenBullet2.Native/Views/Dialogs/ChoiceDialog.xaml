@@ -16,31 +16,35 @@
         MaxWidth="600"
         HorizontalAlignment="Center">
             <iconPacks:PackIconOcticons 
-            x:Name="icon"
-            Margin="0 20 0 0"
-            Width="50"
-            Height="50"
-            HorizontalAlignment="Center"
-            Foreground="Orange"
-            Kind="Alert" />
+                x:Name="icon"
+                Margin="0 20 0 0"
+                Width="50"
+                Height="50"
+                HorizontalAlignment="Center"
+                Foreground="Orange"
+                Kind="Alert" />
 
             <TextBlock
-            x:Name="title"
-            Margin="0 20 0 0"
-            FontSize="20"
-            Text="Success"
-            HorizontalAlignment="Center"
-            Foreground="Gainsboro"
-            />
+                x:Name="title"
+                Margin="0 20 0 0"
+                FontSize="20"
+                Text="Success"
+                TextWrapping="Wrap"
+                TextAlignment="Center"
+                HorizontalAlignment="Center"
+                Foreground="Gainsboro"
+                />
 
             <TextBlock
-            x:Name="message"
-            Margin="0 10 0 20"
-            FontSize="14"
-            Text="Success"
-            HorizontalAlignment="Center"
-            Foreground="Gainsboro"
-            />
+                x:Name="message"
+                Margin="0 10 0 20"
+                FontSize="14"
+                Text="Success"
+                TextWrapping="Wrap"
+                TextAlignment="Center"
+                HorizontalAlignment="Center"
+                Foreground="Gainsboro"
+                />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Click="Yes" x:Name="yesButton"
