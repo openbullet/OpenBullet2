@@ -543,33 +543,33 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Propagation of Parallelizer events
-        private void PropagateTaskError(object sender, ErrorDetails<MultiRunInput> details)
+        private void PropagateTaskError(object _, ErrorDetails<MultiRunInput> details)
         {
-            OnTaskError?.Invoke(sender, details);
+            OnTaskError?.Invoke(this, details);
             logger?.LogException(Id, details.Exception);
         }
 
-        private void PropagateError(object sender, Exception ex)
+        private void PropagateError(object _, Exception ex)
         {
-            OnError?.Invoke(sender, ex);
+            OnError?.Invoke(this, ex);
             logger?.LogException(Id, ex);
         }
 
-        private void PropagateResult(object sender, ResultDetails<MultiRunInput, CheckResult> result)
+        private void PropagateResult(object _, ResultDetails<MultiRunInput, CheckResult> result)
         {
-            OnResult?.Invoke(sender, result);
+            OnResult?.Invoke(this, result);
             // We're not logging results to the IJobLogger because they could arrive at a very high rate
             // and not be very useful, we're mostly interested in errors here.
         }
 
-        private void PropagateProgress(object sender, float progress)
+        private void PropagateProgress(object _, float progress)
         {
-            OnProgress?.Invoke(sender, progress);
+            OnProgress?.Invoke(this, progress);
         }
 
-        private void PropagateCompleted(object sender, EventArgs e)
+        private void PropagateCompleted(object _, EventArgs e)
         {
-            OnCompleted?.Invoke(sender, e);
+            OnCompleted?.Invoke(this, e);
             logger?.LogInfo(Id, "Execution completed");
         }
         #endregion
