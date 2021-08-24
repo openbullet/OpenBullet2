@@ -29,6 +29,7 @@ namespace OpenBullet2.Native
 
         private Home homePage;
         private Jobs jobsPage;
+        private Monitor monitorPage;
         private MultiRunJobViewer multiRunJobViewerPage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
@@ -92,6 +93,11 @@ namespace OpenBullet2.Native
                 case MainWindowPage.Jobs:
                     if (jobsPage is null) jobsPage = new();
                     ChangePage(jobsPage, menuOptionJobs);
+                    break;
+
+                case MainWindowPage.Monitor:
+                    if (monitorPage is null) monitorPage = new();
+                    ChangePage(monitorPage, menuOptionMonitor);
                     break;
 
                 case MainWindowPage.Proxies:
