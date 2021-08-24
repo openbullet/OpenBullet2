@@ -70,7 +70,7 @@ namespace OpenBullet2.Native.ViewModels
 
             var job = jobFactory.FromOptions(entity.Id, 0, options);
 
-            jobManager.Jobs.Add(job);
+            jobManager.AddJob(job);
             JobsCollection.Add(MakeViewModel(job));
         }
 
@@ -85,8 +85,8 @@ namespace OpenBullet2.Native.ViewModels
             var oldJob = jobManager.Jobs.First(j => j.Id == entity.Id);
             var newJob = jobFactory.FromOptions(entity.Id, 0, options);
 
-            jobManager.Jobs.Remove(oldJob);
-            jobManager.Jobs.Add(newJob);
+            jobManager.RemoveJob(oldJob);
+            jobManager.AddJob(newJob);
 
             CreateCollection();
         }
@@ -105,7 +105,7 @@ namespace OpenBullet2.Native.ViewModels
             await jobRepo.Add(entity);
 
             var job = jobFactory.FromOptions(entity.Id, 0, options);
-            jobManager.Jobs.Add(job);
+            jobManager.AddJob(job);
 
             JobViewModel jobVM = type switch
             {
@@ -128,7 +128,7 @@ namespace OpenBullet2.Native.ViewModels
 
             // If admin, just purge all
             jobRepo.Purge();
-            jobManager.Jobs.Clear();
+            jobManager.Clear();
             JobsCollection.Clear();
         }
 
@@ -141,7 +141,7 @@ namespace OpenBullet2.Native.ViewModels
 
             var entity = await jobRepo.GetAll().FirstAsync(e => e.Id == jobVM.Id);
             await jobRepo.Delete(entity);
-            jobManager.Jobs.Remove(jobVM.Job);
+            jobManager.RemoveJob(jobVM.Job);
             JobsCollection.Remove(jobVM);
         }
 
@@ -218,7 +218,14 @@ namespace OpenBullet2.Native.ViewModels
         public int ProxiesBanned => MultiRunJob.ProxiesBanned;
 
         public float Progress => MultiRunJob.Progress;
-        public string ProgressString => $"{DataTested + Skip} / {MultiRunJob.DataPool.Size} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
+        public string ProgressString
+        {
+            get
+            {
+                var tested = MultiRunJob.Status == JobStatus.Idle ? Skip : DataTested + Skip;
+                return $"{tested} / {MultiRunJob.DataPool.Size} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
+            }
+        }
 
         public decimal CaptchaCredit => MultiRunJob.CaptchaCredit;
         public string ElapsedString => $"{(int)MultiRunJob.Elapsed.TotalDays} day(s) {MultiRunJob.Elapsed:hh\\:mm\\:ss}";

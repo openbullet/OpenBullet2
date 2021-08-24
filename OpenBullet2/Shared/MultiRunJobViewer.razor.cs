@@ -69,8 +69,6 @@ namespace OpenBullet2.Shared
 
                 Job.Bots = newAmount;
                 changingBots = false;
-
-                _ = Task.Run(() => SaveJobOptions(this, EventArgs.Empty));
             }
         }
 
@@ -126,18 +124,6 @@ namespace OpenBullet2.Shared
         private void LogCompleted(object sender, EventArgs e)
         {
             Logger.LogInfo(Job.Id, Loc["TaskManagerCompleted"]);
-        }
-
-        private void SaveRecord(object sender, EventArgs e)
-        {
-            // Fire and forget
-            JobManager.SaveRecord(Job).ConfigureAwait(false);
-        }
-
-        private void SaveJobOptions(object sender, EventArgs e)
-        {
-            // Fire and forget
-            JobManager.SaveJobOptions(Job).ConfigureAwait(false);
         }
 
         private async Task Start()
@@ -402,11 +388,6 @@ namespace OpenBullet2.Shared
                 Job.OnError += LogError;
                 Job.OnCompleted += LogCompleted;
             }
-            
-            Job.OnCompleted += SaveRecord;
-            Job.OnTimerTick += SaveRecord;
-            Job.OnCompleted += SaveJobOptions;
-            Job.OnTimerTick += SaveJobOptions;
         }
 
         private void RemoveEventHandlers()
@@ -420,18 +401,6 @@ namespace OpenBullet2.Shared
                 Job.OnCompleted -= LogCompleted;
             }
             catch
-            {
-
-            }
-
-            try
-            {
-                Job.OnCompleted -= SaveRecord;
-                Job.OnTimerTick -= SaveRecord;
-                Job.OnCompleted -= SaveJobOptions;
-                Job.OnTimerTick -= SaveJobOptions;
-            }
-            catch 
             {
 
             }

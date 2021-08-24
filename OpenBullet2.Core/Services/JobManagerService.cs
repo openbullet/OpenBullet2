@@ -9,22 +9,20 @@ using RuriLib.Models.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Services
 {
     /// <summary>
     /// Manages multiple jobs.
     /// </summary>
-    public class JobManagerService
+    public class JobManagerService : IDisposable
     {
-        // TODO: Make this return an IEnumerable
         /// <summary>
         /// The list of all created jobs.
         /// </summary>
-        public List<Job> Jobs { get; } = new List<Job>();
+        public IEnumerable<Job> Jobs => jobs;
+        private readonly List<Job> jobs = new();
 
         private readonly SemaphoreSlim jobSemaphore = new(1, 1);
         private readonly SemaphoreSlim recordSemaphore = new(1, 1);
@@ -51,22 +49,58 @@ namespace OpenBullet2.Core.Services
 
                 var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
                 var job = jobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, options);
-                Jobs.Add(job);
+                AddJob(job);
             }
 
             this.jobRepo = jobRepo;
             this.recordRepo = recordRepo;
         }
 
-        // TODO: This shouldn't routinely be called from the job itself. It needs to be called by the manager
-        // on job completion (listen to the event) and on tick.
-        /// <summary>
-        /// Saves the record for a <see cref="MultiRunJob"/> in the <see cref="IRecordRepository"/>.
-        /// Thread safe.
-        /// </summary>
-        public async Task SaveRecord(MultiRunJob job)
+        public void AddJob(Job job)
         {
-            if (job.DataPool is not WordlistDataPool pool)
+            jobs.Add(job);
+
+            if (job is MultiRunJob mrj)
+            {
+                mrj.OnCompleted += SaveRecord;
+                mrj.OnTimerTick += SaveRecord;
+                mrj.OnCompleted += SaveMultiRunJobOptions;
+                mrj.OnTimerTick += SaveMultiRunJobOptions;
+                mrj.OnBotsChanged += SaveMultiRunJobOptions;
+            }
+        }
+
+        public void RemoveJob(Job job)
+        {
+            jobs.Remove(job);
+
+            if (job is MultiRunJob mrj)
+            {
+                try
+                {
+                    mrj.OnCompleted -= SaveRecord;
+                    mrj.OnTimerTick -= SaveRecord;
+                    mrj.OnCompleted -= SaveMultiRunJobOptions;
+                    mrj.OnTimerTick -= SaveMultiRunJobOptions;
+                    mrj.OnBotsChanged -= SaveMultiRunJobOptions;
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            UnbindAllEvents();
+            jobs.Clear();
+        }
+
+        // Saves the record for a MultiRunJob in the IRecordRepository. Thread safe.
+        private async void SaveRecord(object sender, EventArgs e)
+        {
+            if (sender is not MultiRunJob job || job.DataPool is not WordlistDataPool pool)
             {
                 return;
             }
@@ -107,14 +141,14 @@ namespace OpenBullet2.Core.Services
             }
         }
 
-        // TODO: This shouldn't routinely be called from the job itself. It needs to be called by the manager
-        // on job completion (listen to the event) and on tick.
-        /// <summary>
-        /// Saves the job options for the given <see cref="MultiRunJob"/> in the <see cref="IJobRepository"/>.
-        /// Thread safe.
-        /// </summary>
-        public async Task SaveJobOptions(MultiRunJob job)
+        // Saves the options for a MultiRunJob in the IRecordRepository. Thread safe.
+        private async void SaveMultiRunJobOptions(object sender, EventArgs e)
         {
+            if (sender is not MultiRunJob job)
+            {
+                return;
+            }
+
             await jobSemaphore.WaitAsync();
 
             try
@@ -130,7 +164,7 @@ namespace OpenBullet2.Core.Services
                 // Deserialize and unwrap the job options
                 var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
                 var wrapper = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, settings);
-                var options = ((MultiRunJobOptions)wrapper.Options);
+                var options = (MultiRunJobOptions)wrapper.Options;
 
                 // Check if it's valid
                 if (string.IsNullOrEmpty(options.ConfigId))
@@ -168,5 +202,29 @@ namespace OpenBullet2.Core.Services
                 jobSemaphore.Release();
             }
         }
+
+        private void UnbindAllEvents()
+        {
+            foreach (var job in jobs)
+            {
+                if (job is MultiRunJob mrj)
+                {
+                    try
+                    {
+                        mrj.OnCompleted -= SaveRecord;
+                        mrj.OnTimerTick -= SaveRecord;
+                        mrj.OnCompleted -= SaveMultiRunJobOptions;
+                        mrj.OnTimerTick -= SaveMultiRunJobOptions;
+                        mrj.OnBotsChanged -= SaveMultiRunJobOptions;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+        }
+
+        public void Dispose() => UnbindAllEvents();
     }
 }

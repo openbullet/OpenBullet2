@@ -50,8 +50,8 @@ namespace OpenBullet2.Pages
                 var oldJob = Manager.Jobs.First(j => j.Id == JobId);
                 var newJob = JobFactory.FromOptions(JobId, jobEntity.Owner == null ? 0 : jobEntity.Owner.Id, jobOptions);
 
-                Manager.Jobs.Remove(oldJob);
-                Manager.Jobs.Add(newJob);
+                Manager.RemoveJob(oldJob);
+                Manager.AddJob(newJob);
                 Nav.NavigateTo($"job/{JobId}");
             }
             catch (Exception ex)

@@ -81,6 +81,7 @@ namespace RuriLib.Models.Jobs
         public event EventHandler<Exception> OnError;
         public event EventHandler<float> OnProgress;
         public event EventHandler<JobStatus> OnStatusChanged;
+        public event EventHandler OnBotsChanged;
         public event EventHandler OnCompleted;
         public event EventHandler OnTimerTick;
         public event EventHandler<Hit> OnHit;
@@ -464,7 +465,10 @@ namespace RuriLib.Models.Jobs
             parallelizer.Error += PropagateError;
             parallelizer.NewResult += PropagateResult;
             parallelizer.Completed += PropagateCompleted;
-            parallelizer.Completed += (s, e) => Skip += DataTested;
+            parallelizer.Completed += (s, e) =>
+            {
+                Skip += DataTested;
+            };
 
             ResetStats();
             StartTimers();
@@ -533,6 +537,7 @@ namespace RuriLib.Models.Jobs
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
+                OnBotsChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         #endregion

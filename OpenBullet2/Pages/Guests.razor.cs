@@ -176,7 +176,10 @@ namespace OpenBullet2.Pages
                     await JobRepo.Delete(jobsToDelete);
 
                     // Delete jobs from the service
-                    JobManager.Jobs.RemoveAll(j => j.OwnerId == selectedGuest.Id);
+                    foreach (var job in JobManager.Jobs.Where(j => j.OwnerId == selectedGuest.Id))
+                    {
+                        JobManager.RemoveJob(job);
+                    }
 
                     // Delete proxy groups and their proxies
                     var proxyGroupsToDelete = await ProxyGroupRepo.GetAll().Include(g => g.Owner)

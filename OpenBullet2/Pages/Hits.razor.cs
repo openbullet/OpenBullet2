@@ -274,7 +274,7 @@ namespace OpenBullet2.Pages
             {
                 var job = JobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
 
-                JobManager.Jobs.Add(job);
+                JobManager.AddJob(job);
                 Nav.NavigateTo($"jobs/edit/{job.Id}");
             }
             catch (Exception ex)

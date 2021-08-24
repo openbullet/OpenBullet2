@@ -102,7 +102,7 @@ namespace OpenBullet2.Pages
             {
                 var entity = await JobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
                 await JobRepo.Delete(entity);
-                Manager.Jobs.Remove(job);
+                Manager.RemoveJob(job);
             }
             finally
             {
@@ -124,7 +124,7 @@ namespace OpenBullet2.Pages
             if (uid == 0)
             {
                 JobRepo.Purge();
-                Manager.Jobs.Clear();
+                Manager.Clear();
             }
             else
             {
@@ -132,7 +132,11 @@ namespace OpenBullet2.Pages
                 .Where(j => j.Owner.Id == uid).ToListAsync();
 
                 await JobRepo.Delete(entities);
-                Manager.Jobs.RemoveAll(j => j.OwnerId == uid);
+
+                foreach (var job in Manager.Jobs.Where(j => j.OwnerId == uid))
+                {
+                    Manager.RemoveJob(job);
+                }
             }
         }
 
