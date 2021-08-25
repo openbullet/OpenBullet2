@@ -8,6 +8,7 @@ namespace OpenBullet2.Native.Services
         public ProxiesViewModel Proxies { get; set; }
         public WordlistsViewModel Wordlists { get; set; }
         public ConfigsViewModel Configs { get; set; }
+        public HitsViewModel Hits { get; set; }
         public OBSettingsViewModel OBSettings { get; set; }
         public RLSettingsViewModel RLSettings { get; set; }
         public PluginsViewModel Plugins { get; set; }
@@ -25,6 +26,7 @@ namespace OpenBullet2.Native.Services
             Proxies = new();
             Wordlists = new();
             Configs = new();
+            Hits = new();
             OBSettings = new();
             RLSettings = new();
             Plugins = new();

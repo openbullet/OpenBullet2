@@ -12,11 +12,11 @@ namespace OpenBullet2.Native.ViewModels
 {
     public class WordlistsViewModel : ViewModelBase
     {
-        private ObservableCollection<WordlistEntity> wordlistsCollection;
         private readonly IWordlistRepository wordlistRepo;
         private string searchString = string.Empty;
-        private bool initialized = false;
+        private bool initialized;
 
+        private ObservableCollection<WordlistEntity> wordlistsCollection;
         public ObservableCollection<WordlistEntity> WordlistsCollection
         {
             get => wordlistsCollection;
@@ -62,7 +62,7 @@ namespace OpenBullet2.Native.ViewModels
             view.Filter = WordlistsFilter;
         }
 
-        private bool WordlistsFilter(object item) => (item as WordlistEntity).Name.ToLower().Contains(searchString.ToLower());
+        private bool WordlistsFilter(object item) => (item as WordlistEntity).Name.Contains(searchString, StringComparison.OrdinalIgnoreCase);
 
         public WordlistEntity GetWordlistByName(string name) => WordlistsCollection.First(w => w.Name == name);
 

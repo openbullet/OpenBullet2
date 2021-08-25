@@ -39,6 +39,7 @@ namespace OpenBullet2.Native
         private ConfigReadme configReadmePage;
         private ConfigEditor configEditorPage;
         private Views.Pages.ConfigSettings configSettingsPage;
+        private Hits hitsPage;
         private OBSettings obSettingsPage;
         private RLSettings rlSettingsPage;
         private Plugins pluginsPage;
@@ -116,6 +117,11 @@ namespace OpenBullet2.Native
                     if (configsPage is null) configsPage = new();
                     configsPage.UpdateViewModel();
                     ChangePage(configsPage, menuOptionConfigs);
+                    break;
+
+                case MainWindowPage.Hits:
+                    if (hitsPage is null) hitsPage = new();
+                    ChangePage(hitsPage, menuOptionHits);
                     break;
 
                 case MainWindowPage.Plugins:
