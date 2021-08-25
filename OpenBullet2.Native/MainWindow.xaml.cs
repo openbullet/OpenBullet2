@@ -31,6 +31,7 @@ namespace OpenBullet2.Native
         private Jobs jobsPage;
         private Monitor monitorPage;
         private MultiRunJobViewer multiRunJobViewerPage;
+        private ProxyCheckJobViewer proxyCheckJobViewerPage;
         private Proxies proxiesPage;
         private Wordlists wordlistsPage;
         private Configs configsPage;
@@ -203,15 +204,22 @@ namespace OpenBullet2.Native
 
         public void DisplayJob(JobViewModel jobVM)
         {
-            if (multiRunJobViewerPage is null)
+            switch (jobVM)
             {
-                multiRunJobViewerPage = new();
-            }
+                case MultiRunJobViewModel mrj:
+                    if (multiRunJobViewerPage is null) multiRunJobViewerPage = new();
+                    multiRunJobViewerPage.BindViewModel(mrj);
+                    ChangePage(multiRunJobViewerPage, null);
+                    break;
 
-            if (jobVM is MultiRunJobViewModel mrj)
-            {
-                multiRunJobViewerPage.BindViewModel(mrj);
-                ChangePage(multiRunJobViewerPage, null);
+                case ProxyCheckJobViewModel pcj:
+                    if (proxyCheckJobViewerPage is null) proxyCheckJobViewerPage = new();
+                    proxyCheckJobViewerPage.BindViewModel(pcj);
+                    ChangePage(proxyCheckJobViewerPage, null);
+                    break;
+
+                default:
+                    break;
             }
         }
 

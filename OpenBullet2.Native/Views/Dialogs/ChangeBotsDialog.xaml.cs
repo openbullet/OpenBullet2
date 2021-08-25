@@ -23,9 +23,13 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void Accept(object sender, RoutedEventArgs e)
         {
-            if (caller is MultiRunJobViewer page)
+            if (caller is MultiRunJobViewer mr)
             {
-                page.ChangeBots((int)bots.Value);
+                mr.ChangeBots((int)bots.Value);
+            }
+            else if (caller is ProxyCheckJobViewer pc)
+            {
+                pc.ChangeBots((int)bots.Value);
             }
 
             ((MainDialog)Parent).Close();

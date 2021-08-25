@@ -294,6 +294,11 @@ namespace OpenBullet2.Native.ViewModels
         private ProxyCheckJob ProxyCheckJob => Job as ProxyCheckJob;
 
         public int Bots => ProxyCheckJob.Bots;
+        public string Url => ProxyCheckJob.Url;
+        public string SuccessKey => ProxyCheckJob.SuccessKey;
+        public bool CheckOnlyUntested => ProxyCheckJob.CheckOnlyUntested;
+        public int TimeoutMilliseconds => (int)ProxyCheckJob.Timeout.TotalMilliseconds;
+
         public int Total => ProxyCheckJob.Total;
         public int Tested => ProxyCheckJob.Tested;
         public int Working => ProxyCheckJob.Working;
@@ -303,10 +308,50 @@ namespace OpenBullet2.Native.ViewModels
         public string ProgressString => $"{Tested} / {Total} ({(Progress == -1 ? 0 : Progress * 100):0.00}%)";
 
         public int CPM => ProxyCheckJob.CPM;
+        public string ElapsedString => $"{(int)ProxyCheckJob.Elapsed.TotalDays} day(s) {ProxyCheckJob.Elapsed:hh\\:mm\\:ss}";
+        public string RemainingString => $"{(int)ProxyCheckJob.Remaining.TotalDays} day(s) {ProxyCheckJob.Remaining:hh\\:mm\\:ss}";
 
         public ProxyCheckJobViewModel(ProxyCheckJob job) : base(job)
         {
 
+        }
+
+        /// <summary>
+        /// Update properties that only need to be updated every second.
+        /// </summary>
+        public void PeriodicUpdate()
+        {
+            OnPropertyChanged(nameof(ElapsedString));
+            OnPropertyChanged(nameof(RemainingString));
+            OnPropertyChanged(nameof(CPM));
+
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(Tested));
+            OnPropertyChanged(nameof(Working));
+            OnPropertyChanged(nameof(NotWorking));
+        }
+
+        /// <summary>
+        /// Update properties that need to be updated every time there is a result.
+        /// </summary>
+        public void UpdateStats()
+        {
+           OnPropertyChanged(nameof(Progress));
+            OnPropertyChanged(nameof(ProgressString));
+        }
+
+        /// <summary>
+        /// Update the Bots property.
+        /// </summary>
+        public void UpdateBots() => OnPropertyChanged(nameof(Bots));
+
+        /// <summary>
+        /// Updates the status of the job.
+        /// </summary>
+        public void UpdateStatus()
+        {
+            OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(IdAndStatus));
         }
     }
 }
