@@ -28,21 +28,16 @@
             </Button>
         </StackPanel>
 
-        <RichTextBox x:Name="usingsRTB" 
-                Visibility="Collapsed"
-                Background="{DynamicResource BackgroundSecondary}" 
-                Foreground="{DynamicResource ForegroundMain}" 
-                FontFamily="Consolas"
-                Grid.Row="1"
-                Margin="0 0 0 5"
-                Height="100"
-                TextChanged="UsingsChanged">
-            <RichTextBox.Resources>
-                <Style TargetType="{x:Type Paragraph}">
-                    <Setter Property="Margin" Value="0"/>
-                </Style>
-            </RichTextBox.Resources>
-        </RichTextBox>
+        <TextBox x:Name="usingsTextBox"
+            Visibility="Collapsed"
+            Background="{DynamicResource BackgroundSecondary}" 
+            Foreground="{DynamicResource ForegroundMain}" 
+            FontFamily="Consolas"
+            Grid.Row="1"
+            Margin="0 0 0 5"
+            Height="100"
+            AcceptsReturn="True"
+            Text="{Binding UsingsString}" />
 
         <avalonEdit:TextEditor
             Grid.Row="2"
