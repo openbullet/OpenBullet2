@@ -50,6 +50,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
+                Application.Current.Dispatcher.Invoke(() => jobLogRTB.Document.Blocks.Clear());
                 await vm.Start();
             }
             catch (Exception ex)
