@@ -43,9 +43,10 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public IEnumerable<string> ConfigNames => HitsCollection.GroupBy(h => h.ConfigName).Select(g => g.First().ConfigName);
+        public IEnumerable<string> ConfigNames => new string[] { "All" }.Concat(
+            HitsCollection.GroupBy(h => h.ConfigName).Select(g => g.First().ConfigName));
 
-        private string configFilter = string.Empty;
+        private string configFilter = "All";
         public string ConfigFilter
         {
             get => configFilter;
@@ -58,9 +59,10 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public IEnumerable<string> HitTypes => HitsCollection.GroupBy(h => h.Type).Select(g => g.First().Type);
+        public IEnumerable<string> HitTypes => new string[] { "All" }.Concat(
+            HitsCollection.GroupBy(h => h.Type).Select(g => g.First().Type));
         
-        private string typeFilter = string.Empty;
+        private string typeFilter = "All";
         public string TypeFilter
         {
             get => typeFilter;
@@ -99,8 +101,8 @@ namespace OpenBullet2.Native.ViewModels
         {
             var hit = item as HitEntity;
             var captureOk = string.IsNullOrEmpty(searchString) || hit.CapturedData.Contains(searchString, StringComparison.OrdinalIgnoreCase);
-            var configOk = string.IsNullOrEmpty(configFilter) || hit.ConfigName == configFilter;
-            var typeOk = string.IsNullOrEmpty(typeFilter) || hit.Type == typeFilter;
+            var configOk = configFilter == "All" || hit.ConfigName == configFilter;
+            var typeOk = typeFilter == "All" || hit.Type == typeFilter;
 
             return captureOk && configOk && typeOk;
         }
