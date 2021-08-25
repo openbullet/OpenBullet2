@@ -144,5 +144,11 @@ namespace OpenBullet2.Native.ViewModels
 
             return duplicates.Count;
         }
+
+        public override void UpdateViewModel()
+        {
+            _ = RefreshList();
+            base.UpdateViewModel();
+        }
     }
 }

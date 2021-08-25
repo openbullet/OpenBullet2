@@ -54,7 +54,7 @@ namespace OpenBullet2.Native.ViewModels
         private void CreateCollection()
             => JobsCollection = new ObservableCollection<JobViewModel>(jobManager.Jobs.Select(j => MakeViewModel(j)));
 
-        public async Task CreateJob(JobOptions options)
+        public async Task<JobViewModel> CreateJob(JobOptions options)
         {
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
@@ -69,9 +69,12 @@ namespace OpenBullet2.Native.ViewModels
             await jobRepo.Add(entity);
 
             var job = jobFactory.FromOptions(entity.Id, 0, options);
+            var jobVM = MakeViewModel(job);
 
             jobManager.AddJob(job);
-            JobsCollection.Add(MakeViewModel(job));
+            JobsCollection.Add(jobVM);
+
+            return jobVM;
         }
 
         public async Task EditJob(JobEntity entity, JobOptions options)

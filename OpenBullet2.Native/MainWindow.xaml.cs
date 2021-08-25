@@ -121,6 +121,7 @@ namespace OpenBullet2.Native
 
                 case MainWindowPage.Hits:
                     if (hitsPage is null) hitsPage = new();
+                    hitsPage.UpdateViewModel();
                     ChangePage(hitsPage, menuOptionHits);
                     break;
 

@@ -1,5 +1,10 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
@@ -9,6 +14,7 @@ using RuriLib.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -23,7 +29,9 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class Hits : Page
     {
         private readonly HitsViewModel vm;
+        private readonly ConfigService configService;
         private readonly MainWindow window;
+        private readonly RuriLibSettingsService rlSettingsService;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
 
@@ -47,6 +55,8 @@ namespace OpenBullet2.Native.Views.Pages
 
             InitializeComponent();
             window = SP.GetService<MainWindow>();
+            configService = SP.GetService<ConfigService>();
+            rlSettingsService = SP.GetService<RuriLibSettingsService>();
             var env = SP.GetService<RuriLibSettingsService>().Environment;
 
             // HACK: Hardcoded stuff
@@ -67,6 +77,8 @@ namespace OpenBullet2.Native.Views.Pages
                 ((MenuItem)saveMenu.Items[3]).Items.Add(saveItem);
             }
         }
+
+        public void UpdateViewModel() => vm.UpdateViewModel();
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
@@ -129,7 +141,59 @@ namespace OpenBullet2.Native.Views.Pages
 
         private void SelectAll(object sender, RoutedEventArgs e) => hitsListView.SelectAll();
 
-        private void SendToRecheck(object sender, RoutedEventArgs e) { }
+        private async void SendToRecheck(object sender, RoutedEventArgs e)
+        {
+            if (!SelectedHits.Any())
+            {
+                return;
+            }
+
+            var firstHit = SelectedHits.First();
+
+            var jobOptions = (MultiRunJobOptions)JobOptionsFactory.CreateNew(JobType.MultiRun);
+            var wordlistType = rlSettingsService.Environment.RecognizeWordlistType(firstHit.Data);
+
+            // Get the config
+            var config = configService.Configs.FirstOrDefault(c => c.Metadata.Name == firstHit.ConfigName);
+
+            // If we cannot find a config with that id anymore, don't set it
+            if (config == null)
+            {
+                Alert.Warning("Config not found", $"Could not find the config these hits refer to ({firstHit.ConfigName})");
+            }
+            else
+            {
+                jobOptions.ConfigId = config.Id;
+                jobOptions.Bots = config.Settings.GeneralSettings.SuggestedBots;
+                wordlistType = config.Settings.DataSettings.AllowedWordlistTypes.First();
+            }
+
+            // Write the temporary file
+            var tempFile = Path.GetTempFileName();
+            File.WriteAllLines(tempFile, SelectedHits.Select(h => h.Data));
+            var dataPoolOptions = new FileDataPoolOptions
+            {
+                FileName = tempFile,
+                WordlistType = wordlistType
+            };
+            jobOptions.DataPool = dataPoolOptions;
+
+            // Create the job entity and add it to the database
+            var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            var jobOptionsWrapper = new JobOptionsWrapper { Options = jobOptions };
+
+            var entity = new JobEntity
+            {
+                CreationDate = DateTime.Now,
+                JobType = JobType.MultiRun,
+                JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
+            };
+
+            var jobs = SP.GetService<ViewModelsService>().Jobs;
+            var jobVM = await jobs.CreateJob(jobOptions);
+
+            window.DisplayJob(jobVM);
+        }
 
         private void CopySelected(object sender, RoutedEventArgs e)
             => SelectedHits.CopyToClipboard(h => h.Data);
