@@ -123,16 +123,20 @@ namespace OpenBullet2.Native
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             ReportCrash(e.Exception);
-            e.Handled = false; // Set to true to avoid closing the app
+            e.Handled = true; // Set to false to close the app on exception
         }
 
-        private void OnTaskException(object sender, UnobservedTaskExceptionEventArgs e) => ReportCrash(e.Exception);
+        private void OnTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            ReportCrash(e.Exception);
+            e.SetObserved(); // Comment this line to close the app on task exception
+        }
 
         private static void ReportCrash(Exception ex)
         {
             File.WriteAllText("crash.log", $"Unhandled exception thrown on {DateTime.Now}\r\n{ex}");
 
-            Alert.Error("Unhandled exception", $"An unhandled exception was thrown, the application will now close." +
+            Alert.Error("Unhandled exception", $"An unhandled exception was thrown, the application will try to continue running." +
                 $" Please open the crash.log file, copy the error message inside it and open an issue on the official github repository." +
                 $" A few details about the exception: {ex.Message}");
         }
