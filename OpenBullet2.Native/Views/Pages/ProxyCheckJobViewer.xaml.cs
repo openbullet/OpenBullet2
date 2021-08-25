@@ -137,12 +137,10 @@ namespace OpenBullet2.Native.Views.Pages
         private void OnResultMessage(object sender, string message, Color color)
             => Application.Current.Dispatcher.Invoke(() =>
             {
-                jobLogRTB.AppendText(message + Environment.NewLine, color);
-                jobLogRTB.ScrollToEnd();
-
-                if (jobLogRTB.Document.Blocks.Count > obSettingsService.Settings.GeneralSettings.LogBufferSize)
+                if (obSettingsService.Settings.GeneralSettings.EnableJobLogging)
                 {
-                    jobLogRTB.Document.Blocks.Remove(jobLogRTB.Document.Blocks.FirstBlock);
+                    jobLogRTB.AppendText(message + Environment.NewLine, color);
+                    jobLogRTB.ScrollToEnd();
                 }
             });
     }

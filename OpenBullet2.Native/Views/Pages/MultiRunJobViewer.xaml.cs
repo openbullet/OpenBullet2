@@ -212,7 +212,7 @@ namespace OpenBullet2.Native.Views.Pages
         private void OnResultMessage(object sender, string message, Color color)
             => Application.Current.Dispatcher.Invoke(() =>
             {
-                if (vm.EnableJobLog)
+                if (obSettingsService.Settings.GeneralSettings.EnableJobLogging)
                 {
                     jobLogRTB.AppendText(message + Environment.NewLine, color);
                     jobLogRTB.ScrollToEnd();
