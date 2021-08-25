@@ -109,6 +109,7 @@ namespace OpenBullet2.Native.ViewModels
         {
             var items = await hitRepo.GetAll().ToListAsync();
             HitsCollection = new ObservableCollection<HitEntity>(items);
+            OnPropertyChanged(nameof(Total));
             HookFilters();
         }
 
@@ -118,12 +119,14 @@ namespace OpenBullet2.Native.ViewModels
         {
             HitsCollection.Remove(hit);
             await hitRepo.Delete(hit);
+            OnPropertyChanged(nameof(Total));
         }
 
         public void Purge()
         {
             HitsCollection.Clear();
             hitRepo.Purge();
+            OnPropertyChanged(nameof(Total));
         }
 
         public async Task<int> DeleteDuplicates()

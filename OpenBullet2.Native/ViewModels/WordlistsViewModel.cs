@@ -90,12 +90,14 @@ namespace OpenBullet2.Native.ViewModels
         {
             WordlistsCollection.Remove(wordlist);
             await wordlistRepo.Delete(wordlist, false);
+            OnPropertyChanged(nameof(Total));
         }
 
         public void DeleteAll()
         {
             WordlistsCollection.Clear();
             wordlistRepo.Purge();
+            OnPropertyChanged(nameof(Total));
         }
 
         public async Task<int> DeleteNotFound()
