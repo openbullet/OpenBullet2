@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace OpenBullet2.Core.Repositories
     /// Stores data.
     /// </summary>
     /// <typeparam name="T">The type of data to store</typeparam>
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T> : IDisposable where T : Entity
     {
         // ------
         // CREATE

@@ -74,5 +74,12 @@ namespace OpenBullet2.Core.Repositories
 
         /// <inheritdoc/>
         public void Purge() => _ = context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(ApplicationDbContext.Wordlists)}");
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            context?.Dispose();
+        }
     }
 }

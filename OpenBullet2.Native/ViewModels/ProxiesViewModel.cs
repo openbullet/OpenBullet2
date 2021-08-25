@@ -18,8 +18,8 @@ namespace OpenBullet2.Native.ViewModels
     {
         private ObservableCollection<ProxyGroupEntity> proxyGroupsCollection;
         private ObservableCollection<ProxyEntity> proxiesCollection;
-        private readonly IProxyGroupRepository proxyGroupRepo;
-        private readonly IProxyRepository proxyRepo;
+        private IProxyGroupRepository proxyGroupRepo;
+        private IProxyRepository proxyRepo;
         private readonly JobManagerService jobManager;
         private bool initialized;
         private ProxyGroupEntity selectedGroup;
@@ -192,6 +192,18 @@ namespace OpenBullet2.Native.ViewModels
             var toRemove = proxiesCollection.Where(p => p.Status == ProxyWorkingStatus.Untested);
             await proxyRepo.Delete(toRemove);
             await RefreshList();
+        }
+
+        public override void UpdateViewModel()
+        {
+            proxyRepo?.Dispose();
+            proxyGroupRepo?.Dispose();
+
+            proxyRepo = SP.GetService<IProxyRepository>();
+            proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
+            _ = RefreshList();
+
+            base.UpdateViewModel();
         }
     }
 }

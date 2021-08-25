@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -138,5 +139,12 @@ namespace OpenBullet2.Core.Repositories
 
         /// <inheritdoc/>
         public void Attach<TEntity>(TEntity entity) where TEntity : Entity => context.Attach(entity);
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            context?.Dispose();
+        }
     }
 }

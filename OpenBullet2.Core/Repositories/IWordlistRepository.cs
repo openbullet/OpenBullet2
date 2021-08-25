@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Core.Entities;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace OpenBullet2.Core.Repositories
     /// <summary>
     /// Stores wordlists.
     /// </summary>
-    public interface IWordlistRepository
+    public interface IWordlistRepository : IDisposable
     {
         /// <summary>
         /// Adds an <paramref name="entity"/> to the repository.

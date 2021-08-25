@@ -82,6 +82,8 @@ namespace OpenBullet2.Native.Views.Pages
         public async void AddGroup(ProxyGroupEntity entity) => await vm.AddGroup(entity);
         public async void EditGroup(ProxyGroupEntity entity) => await vm.EditGroup(entity);
 
+        public void UpdateViewModel() => vm.UpdateViewModel();
+
         private void ExportSelected(object sender, RoutedEventArgs e)
         {
             var sfd = new SaveFileDialog

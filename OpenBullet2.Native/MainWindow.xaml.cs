@@ -103,6 +103,7 @@ namespace OpenBullet2.Native
 
                 case MainWindowPage.Proxies:
                     if (proxiesPage is null) proxiesPage = new();
+                    proxiesPage.UpdateViewModel();
                     ChangePage(proxiesPage, menuOptionProxies);
                     break;
 

@@ -12,17 +12,12 @@ namespace OpenBullet2.Native.ViewModels
 {
     public class ProxyCheckJobViewerViewModel : ViewModelBase, IDisposable
     {
-        private readonly OpenBulletSettingsService obSettingsService;
         private readonly Timer secondsTicker;
 
         public event Action<object, string, Color> NewMessage;
 
         public ProxyCheckJobViewModel Job { get; set; }
         private ProxyCheckJob ProxyCheckJob => Job.Job as ProxyCheckJob;
-
-        #region Properties that don't need to be updated during the run
-        public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
-        #endregion
 
         #region Properties that need to be updated every second
         public string RemainingWaitString => ProxyCheckJob.StartCondition switch
@@ -52,7 +47,6 @@ namespace OpenBullet2.Native.ViewModels
 
         public ProxyCheckJobViewerViewModel(ProxyCheckJobViewModel jobVM)
         {
-            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             Job = jobVM;
 
             #region Bind events and timers
