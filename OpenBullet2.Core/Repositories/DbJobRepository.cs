@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,6 +26,7 @@ namespace OpenBullet2.Core.Repositories
 
         public async override Task Update(JobEntity entity)
         {
+            context.DetachLocal<JobEntity>(entity.Id);
             context.Entry(entity).State = EntityState.Modified;
             await base.Update(entity);
         }
@@ -33,6 +35,7 @@ namespace OpenBullet2.Core.Repositories
         {
             foreach (var entity in entities)
             {
+                context.DetachLocal<JobEntity>(entity.Id);
                 context.Entry(entity).State = EntityState.Modified;
             }
 
