@@ -205,7 +205,7 @@
                             <GridViewColumnHeader Tag="Proxy" Click="ColumnHeaderClicked">Proxy</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="5000" DisplayMemberBinding="{Binding CapturedString}">
+                    <GridViewColumn Width="5000" DisplayMemberBinding="{Binding CapturedData}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Tag="CapturedString" Click="ColumnHeaderClicked">Captured Data</GridViewColumnHeader>
                         </GridViewColumn.Header>
