@@ -11,7 +11,7 @@ namespace OpenBullet2.Core
         public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
-
+            
         }
 
         public DbSet<ProxyEntity> Proxies { get; set; }

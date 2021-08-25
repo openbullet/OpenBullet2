@@ -16,6 +16,20 @@ namespace OpenBullet2.Core
 
             var dbContextBuilder = new DbContextOptionsBuilder();
 
+            var sensitiveLogging = false;
+
+            try
+            {
+                sensitiveLogging = bool.Parse(configuration.GetSection("Logging")
+                    .GetSection("EntityFrameworkCore")["EnableSensitiveDataLogging"]);
+            }
+            catch
+            {
+
+            }
+
+            dbContextBuilder.EnableSensitiveDataLogging(sensitiveLogging);
+
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             dbContextBuilder.UseSqlite(connectionString);
