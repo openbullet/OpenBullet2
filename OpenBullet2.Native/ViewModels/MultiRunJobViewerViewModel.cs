@@ -392,6 +392,7 @@ namespace OpenBullet2.Native.ViewModels
         #region Controls
         public async Task Start()
         {
+            HitsCollection = new();
             await MultiRunJob.Start();
             UpdateBots();
         }
