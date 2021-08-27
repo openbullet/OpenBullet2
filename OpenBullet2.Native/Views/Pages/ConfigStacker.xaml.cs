@@ -93,6 +93,7 @@ namespace OpenBullet2.Native.Views.Pages
                     ScriptBlockInstance => new ScriptBlockSettingsViewer(first),
                     HttpRequestBlockInstance => new HttpRequestBlockSettingsViewer(first),
                     KeycheckBlockInstance => new KeycheckBlockSettingsViewer(first),
+                    LoliCodeBlockInstance => new LoliCodeBlockSettingsViewer(first),
                     _ => null
                 };
 
