@@ -7,8 +7,10 @@ using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Utils;
 using OpenBullet2.Native.ViewModels;
+using RuriLib.Models.Configs;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Models.Proxies;
@@ -86,6 +88,21 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void Accept(object sender, RoutedEventArgs e)
         {
+            if (!vm.IsConfigSelected)
+            {
+                Alert.Error("No config selected", "Please select a config before proceeding");
+                return;
+            }
+
+            if (vm.SelectedConfig.HasCSharpCode())
+            {
+                Alert.Warning("Potentially dangerous config", "The Config you selected might have some C# code in it" +
+                    " (or blocks that call external programs). Although C# can be helpful for config makers who want to" +
+                    " use functionalities that are not implemented through blocks, it can also be used to harm your computer" +
+                    " or steal information. It's STRONGLY advised that you review the code of the config and make sure nothing" +
+                    " fishy is going on. Please review the config and make sure it is completely safe to run!");
+            }
+
             onAccept?.Invoke(vm.Options);
             ((MainDialog)Parent).Close();
         }
@@ -232,7 +249,8 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
         }
 
-        public bool IsConfigSelected => !string.IsNullOrEmpty(Options.ConfigId);
+        public bool IsConfigSelected => SelectedConfig is not null;
+        public Config SelectedConfig { get; private set; }
 
         public void SelectConfig(ConfigViewModel vm)
         {
@@ -243,12 +261,12 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void SetConfigData()
         {
-            var config = configService.Configs.FirstOrDefault(c => c.Id == Options.ConfigId);
+            SelectedConfig = configService.Configs.FirstOrDefault(c => c.Id == Options.ConfigId);
 
-            if (config is not null)
+            if (SelectedConfig is not null)
             {
-                ConfigIcon = Images.Base64ToBitmapImage(config.Metadata.Base64Image);
-                ConfigNameAndAuthor = $"{config.Metadata.Name} by {config.Metadata.Author}";
+                ConfigIcon = Images.Base64ToBitmapImage(SelectedConfig.Metadata.Base64Image);
+                ConfigNameAndAuthor = $"{SelectedConfig.Metadata.Name} by {SelectedConfig.Metadata.Author}";
                 OnPropertyChanged(nameof(IsConfigSelected));
             }
         }
