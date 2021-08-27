@@ -23,6 +23,7 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class Configs : Page
     {
         private readonly OpenBulletSettingsService obSettingsService;
+        private readonly ConfigService configService;
         private readonly ConfigsViewModel vm;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
@@ -32,6 +33,7 @@ namespace OpenBullet2.Native.Views.Pages
         public Configs()
         {
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
+            configService = SP.GetService<ConfigService>();
             vm = SP.GetService<ViewModelsService>().Configs;
             DataContext = vm;
 
@@ -139,6 +141,16 @@ namespace OpenBullet2.Native.Views.Pages
             if (HoveredItem.Config.IsRemote)
             {
                 Alert.Error("Remote", "You cannot edit remote configs!");
+                return;
+            }
+
+            // Check if the config was saved
+            if (obSettingsService.Settings.GeneralSettings.WarnConfigNotSaved
+                && configService.SelectedConfig != null
+                && configService.SelectedConfig.HasUnsavedChanges()
+                && !Alert.Choice("Config not saved", $"The currently selected config ({configService.SelectedConfig.Metadata.Name}) has unsaved changes," +
+                    $" are you sure you want to edit another config?"))
+            {
                 return;
             }
 

@@ -7,6 +7,7 @@ using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Configs;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,6 +52,7 @@ namespace OpenBullet2.Native
         {
             vm = new MainWindowViewModel();
             DataContext = vm;
+            Closing += vm.OnWindowClosing;
 
             InitializeComponent();
 
@@ -323,6 +325,7 @@ namespace OpenBullet2.Native
 
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly OpenBulletSettingsService obSettingsService;
         private readonly ConfigService configService;
         public event Action<Config> ConfigSelected;
         public Config Config => configService.SelectedConfig;
@@ -331,12 +334,22 @@ namespace OpenBullet2.Native
 
         public MainWindowViewModel()
         {
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             configService = SP.GetService<ConfigService>();
             configService.OnConfigSelected += (sender, config) =>
             {
                 OnPropertyChanged(nameof(IsConfigSelected));
                 ConfigSelected?.Invoke(config);
             };
+        }
+
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            // Check if the config was saved
+            if (obSettingsService.Settings.GeneralSettings.WarnConfigNotSaved && Config != null && Config.HasUnsavedChanges())
+            {
+                e.Cancel = !Alert.Choice("Config not saved", $"The config you are editing ({Config.Metadata.Name}) has unsaved changes, are you sure you want to quit?");
+            }
         }
     }
 
