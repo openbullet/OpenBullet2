@@ -3,6 +3,7 @@ using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Utils;
 using RuriLib.Extensions;
 using RuriLib.Models.Bots;
@@ -393,6 +394,7 @@ namespace OpenBullet2.Native.ViewModels
         public async Task Start()
         {
             HitsCollection = new();
+            AskCustomInputs();
             await MultiRunJob.Start();
             UpdateBots();
         }
@@ -414,6 +416,16 @@ namespace OpenBullet2.Native.ViewModels
         #endregion
 
         #region Utils
+        private void AskCustomInputs()
+        {
+            MultiRunJob.CustomInputsAnswers.Clear();
+
+            foreach (var input in MultiRunJob.Config.Settings.InputSettings.CustomInputs)
+            {
+                MultiRunJob.CustomInputsAnswers[input.VariableName] = Alert.CustomInput(input.Description, input.DefaultAnswer);
+            }
+        }
+
         private string GetProxyGroupName(int id)
         {
             try

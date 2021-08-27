@@ -17,6 +17,13 @@ namespace OpenBullet2.Native.Helpers
             return choice;
         }
 
+        public static string CustomInput(string question, string defaultAnswer)
+        {
+            var answer = string.Empty;
+            new MainDialog(new CustomInputDialog(question, defaultAnswer, a => answer = a), "Custom input").ShowDialog();
+            return answer;
+        }
+
         private static void ShowAlert(AlertType type, string title, string message)
             => new MainDialog(new AlertDialog(type, title, message), title).ShowDialog();
 
