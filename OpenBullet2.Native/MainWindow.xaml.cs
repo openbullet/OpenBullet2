@@ -85,6 +85,12 @@ namespace OpenBullet2.Native
 
         public void NavigateTo(MainWindowPage page)
         {
+            // Needed to save the content of the LoliCode editor when changing page
+            if (CurrentPage == configEditorPage)
+            {
+                configEditorPage?.OnPageChanged();
+            }
+
             switch (page)
             {
                 case MainWindowPage.Home:

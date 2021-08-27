@@ -49,6 +49,18 @@ namespace OpenBullet2.Native.Views.Pages
                     break;
             }
         }
+
+        /// <summary>
+        /// Call this when changing page via the dropdown menu otherwise it
+        /// will not save the content of the LoliCode editor.
+        /// </summary>
+        public void OnPageChanged()
+        {
+            if (editorFrame.Content == loliCodePage)
+            {
+                loliCodePage.OnPageChanged();
+            }
+        }
     }
 
     public enum ConfigEditorSection

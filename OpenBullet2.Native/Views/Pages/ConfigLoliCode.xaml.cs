@@ -54,6 +54,12 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
+        /// <summary>
+        /// Call this when changing page via the dropdown menu otherwise it
+        /// will not trigger the LostFocus event on the editor.
+        /// </summary>
+        public void OnPageChanged() => configService.SelectedConfig.LoliCodeScript = editor.Text;
+
         private void EditorLostFocus(object sender, RoutedEventArgs e) 
             => configService.SelectedConfig.LoliCodeScript = editor.Text;
 
