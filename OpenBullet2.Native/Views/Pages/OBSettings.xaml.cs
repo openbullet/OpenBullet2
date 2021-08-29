@@ -23,7 +23,6 @@ namespace OpenBullet2.Native.Views.Pages
             InitializeComponent();
 
             configSectionOnLoadCombobox.ItemsSource = Enum.GetValues(typeof(ConfigSection)).Cast<ConfigSection>();
-            jobDisplayModeCombobox.ItemsSource = Enum.GetValues(typeof(JobDisplayMode)).Cast<JobDisplayMode>();
         }
 
         private async void Save(object sender, RoutedEventArgs e) => await vm.Save();
