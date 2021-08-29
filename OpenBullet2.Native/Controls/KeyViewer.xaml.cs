@@ -1,8 +1,10 @@
 ﻿using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Conditions.Comparisons;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -59,9 +61,33 @@ namespace OpenBullet2.Native.Controls
             get => (key as dynamic).Comparison.ToString();
             set
             {
-                var dyn = key as dynamic;
-                Type type = dyn.Comparison.GetType();
-                dyn.Comparison = Enum.Parse(type, value);
+                switch (key)
+                {
+                    case StringKey stringKey:
+                        stringKey.Comparison = (StrComparison)Enum.Parse(typeof(StrComparison), value);
+                        break;
+
+                    case IntKey intKey:
+                        intKey.Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), value);
+                        break;
+
+                    case BoolKey boolKey:
+                        boolKey.Comparison = (BoolComparison)Enum.Parse(typeof(BoolComparison), value);
+                        break;
+
+                    case ListKey listKey:
+                        listKey.Comparison = (ListComparison)Enum.Parse(typeof(ListComparison), value);
+                        break;
+
+                    case DictionaryKey dictKey:
+                        dictKey.Comparison = (DictComparison)Enum.Parse(typeof(DictComparison), value);
+                        break;
+
+                    case FloatKey floatKey:
+                        floatKey.Comparison = (NumComparison)Enum.Parse(typeof(NumComparison), value);
+                        break;
+                }
+
                 OnPropertyChanged();
             }
         }
