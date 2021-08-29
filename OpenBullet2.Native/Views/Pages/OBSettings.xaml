@@ -56,13 +56,6 @@
                           Value="{Binding LogBufferSize}"
                           Width="150"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                    <Label>Job display mode</Label>
-                    <ComboBox x:Name="jobDisplayModeCombobox"
-                              SelectedValue="{Binding Path=DefaultJobDisplayMode}"
-                              Width="150"
-                              HorizontalAlignment="Left"/>
-                </StackPanel>
                 <CheckBox Content="Group captures in debugger" 
                           IsChecked="{Binding GroupCapturesInDebugger}" 
                           VerticalContentAlignment="Center"
