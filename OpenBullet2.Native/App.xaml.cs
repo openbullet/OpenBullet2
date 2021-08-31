@@ -76,16 +76,16 @@ namespace OpenBullet2.Native
             // EF
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("OpenBullet2.Core")));
+                b => b.MigrationsAssembly("OpenBullet2.Core")), ServiceLifetime.Transient);
 
             // Repositories
-            services.AddScoped<IProxyRepository, DbProxyRepository>();
-            services.AddScoped<IProxyGroupRepository, DbProxyGroupRepository>();
-            services.AddScoped<IHitRepository, DbHitRepository>();
-            services.AddScoped<IJobRepository, DbJobRepository>();
-            services.AddScoped<IRecordRepository, DbRecordRepository>();
-            services.AddScoped<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
-            services.AddScoped<IWordlistRepository>(service =>
+            services.AddSingleton<IProxyRepository, DbProxyRepository>();
+            services.AddSingleton<IProxyGroupRepository, DbProxyGroupRepository>();
+            services.AddSingleton<IHitRepository, DbHitRepository>();
+            services.AddSingleton<IJobRepository, DbJobRepository>();
+            services.AddSingleton<IRecordRepository, DbRecordRepository>();
+            services.AddSingleton<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
+            services.AddSingleton<IWordlistRepository>(service =>
                 new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
                 "UserData/Wordlists"));
 
