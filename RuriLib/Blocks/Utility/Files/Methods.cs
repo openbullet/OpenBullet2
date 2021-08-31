@@ -80,10 +80,10 @@ namespace RuriLib.Blocks.Utility.Files
             FileEncoding encoding = FileEncoding.UTF8)
         {
             path = SanitizePath(path);
-            await ExecuteFileOperation(data, path, content, async (p, c) => 
-            { 
+            await ExecuteFileOperation(data, path, content, async (p, c) =>
+            {
                 await File.WriteAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken);
-                return true; 
+                return true;
             }, isWriteOperation: true);
 
             data.Logger.LogHeader();
@@ -287,30 +287,22 @@ namespace RuriLib.Blocks.Utility.Files
             {
                 if (isWriteOperation)
                 {
-                    // If we need write access, try to acquire a write lock periodically every 5 seconds
-                    while (!fileLock.TryEnterWriteLock(5000))
-                    {
-                        await Task.Delay(10, data.CancellationToken);
-                    }
+                    await fileLock.EnterWriteLock(data.CancellationToken);
                 }
                 else
                 {
-                    // If we need read access, try to acquire a read lock periodically every 5 seconds
-                    while (!fileLock.TryEnterReadLock(5000))
-                    {
-                        await Task.Delay(10, data.CancellationToken);
-                    }
+                    await fileLock.EnterReadLock(data.CancellationToken);
                 }
-                
+
                 result = await func.Invoke(path, parameter);
             }
             finally
             {
-                if (isWriteOperation && fileLock.IsWriteLockHeld)
+                if (isWriteOperation)
                 {
                     fileLock.ExitWriteLock();
                 }
-                else if (fileLock.IsReadLockHeld)
+                else
                 {
                     fileLock.ExitReadLock();
                 }
