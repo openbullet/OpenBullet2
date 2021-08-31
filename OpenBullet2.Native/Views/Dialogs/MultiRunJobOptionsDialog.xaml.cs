@@ -650,6 +650,12 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 wordlist = wordlistRepo.Get(options.WordlistId).Result;
             }
+
+            // If the wordlist was not found (e.g. deleted)
+            if (wordlist is null)
+            {
+                options.WordlistId = -1;
+            }
         }
 
         public void SelectWordlist(WordlistEntity wordlist)
