@@ -175,7 +175,7 @@ namespace OpenBullet2.Native.ViewModels
                 ConfigNameAndAuthor = $"{MultiRunJob.Config.Metadata.Name} by {MultiRunJob.Config.Metadata.Author}";
             }
 
-            using var proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
+            var proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
             proxyGroups = proxyGroupRepo.GetAll().ToList();
 
             var sb = new StringBuilder();

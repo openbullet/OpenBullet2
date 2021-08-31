@@ -196,11 +196,6 @@ namespace OpenBullet2.Native.ViewModels
 
         public override void UpdateViewModel()
         {
-            proxyRepo?.Dispose();
-            proxyGroupRepo?.Dispose();
-
-            proxyRepo = SP.GetService<IProxyRepository>();
-            proxyGroupRepo = SP.GetService<IProxyGroupRepository>();
             _ = RefreshList();
 
             base.UpdateViewModel();
