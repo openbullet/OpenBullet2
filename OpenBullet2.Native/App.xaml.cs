@@ -79,13 +79,13 @@ namespace OpenBullet2.Native
                 b => b.MigrationsAssembly("OpenBullet2.Core")), ServiceLifetime.Transient);
 
             // Repositories
-            services.AddSingleton<IProxyRepository, DbProxyRepository>();
-            services.AddSingleton<IProxyGroupRepository, DbProxyGroupRepository>();
-            services.AddSingleton<IHitRepository, DbHitRepository>();
-            services.AddSingleton<IJobRepository, DbJobRepository>();
-            services.AddSingleton<IRecordRepository, DbRecordRepository>();
-            services.AddSingleton<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
-            services.AddSingleton<IWordlistRepository>(service =>
+            services.AddTransient<IProxyRepository, DbProxyRepository>();
+            services.AddTransient<IProxyGroupRepository, DbProxyGroupRepository>();
+            services.AddTransient<IHitRepository, DbHitRepository>();
+            services.AddTransient<IJobRepository, DbJobRepository>();
+            services.AddTransient<IRecordRepository, DbRecordRepository>();
+            services.AddTransient<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
+            services.AddTransient<IWordlistRepository>(service =>
                 new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
                 "UserData/Wordlists"));
 
