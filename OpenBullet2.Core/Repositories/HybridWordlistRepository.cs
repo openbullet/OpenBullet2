@@ -3,6 +3,7 @@ using OpenBullet2.Core.Entities;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories
@@ -35,7 +36,10 @@ namespace OpenBullet2.Core.Repositories
         public async Task Add(WordlistEntity entity, MemoryStream stream)
         {
             // Generate a unique filename
-            entity.FileName = Path.Combine(baseFolder, $"{Guid.NewGuid()}.txt").Replace('\\', '/');
+            var path = Path.Combine(baseFolder, $"{Guid.NewGuid()}.txt");
+            entity.FileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? path.Replace('/', '\\')
+                : path.Replace('\\', '/');
 
             // Create the file on disk
             await File.WriteAllBytesAsync(entity.FileName, stream.ToArray());
