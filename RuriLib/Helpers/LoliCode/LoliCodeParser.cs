@@ -61,9 +61,6 @@ namespace RuriLib.Helpers.LoliCode
                 input = input[1..];
                 var variableName = LineParser.ParseToken(ref input);
 
-                if (string.IsNullOrWhiteSpace(variableName))
-                    throw new Exception("Variable name cannot be empty");
-
                 setting.InputMode = SettingInputMode.Variable;
                 setting.InputVariableName = variableName;
                 setting.InterpolatedSetting = param switch
