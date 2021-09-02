@@ -234,7 +234,7 @@ namespace RuriLib.Models.Jobs
                 }
                 finally
                 {
-                    var endMessage = $"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
+                    var endMessage = $"[{DateTime.Now.ToLongTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
                     botData.ExecutingBlock(endMessage);
                     botData.Logger.Log(endMessage);
 
