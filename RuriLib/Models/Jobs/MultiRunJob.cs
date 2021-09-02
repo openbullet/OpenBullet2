@@ -23,7 +23,6 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
-using PuppeteerSharp;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Helpers;
@@ -235,7 +234,9 @@ namespace RuriLib.Models.Jobs
                 }
                 finally
                 {
-                    botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}");
+                    var endMessage = $"[{DateTime.Now.ToShortTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
+                    botData.ExecutingBlock(endMessage);
+                    botData.Logger.Log(endMessage);
 
                     // Close the browser if needed
                     if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS))
