@@ -240,6 +240,7 @@ namespace OpenBullet2.Native.ViewModels
             soundPlayer = new SoundPlayer("Sounds/hit.wav");
             #endregion
 
+            UpdateBots();
             UpdateHitsCollection();
         }
 
@@ -266,7 +267,7 @@ namespace OpenBullet2.Native.ViewModels
 
             Job.PeriodicUpdate();
 
-            // Account for bots changes
+            // Update the bots collection if the number of bots was changed
             if (BotsCollection is not null && BotsCollection.Count != MultiRunJob.Bots)
             {
                 UpdateBots();
