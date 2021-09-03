@@ -65,6 +65,8 @@ namespace OpenBullet2.Native
             // Load the configs
             var configService = serviceProvider.GetService<ConfigService>();
             configService.ReloadConfigs().Wait();
+
+            AutocompletionProvider.Init();
         }
 
         private void ConfigureServices(IServiceCollection services)

@@ -1,4 +1,7 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
+﻿using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -23,7 +26,7 @@ namespace OpenBullet2.Native.Views.Pages
         private readonly ConfigLoliCodeViewModel vm;
         private readonly ConfigService configService;
         private readonly IConfigRepository configRepo; // TODO: This should not be here
-        private Config Config => configService.SelectedConfig;
+        private CompletionWindow completionWindow;
 
         public ConfigLoliCode()
         {
@@ -35,6 +38,7 @@ namespace OpenBullet2.Native.Views.Pages
             configRepo = SP.GetService<IConfigRepository>();
 
             HighlightSyntax();
+            AddAutoCompletion();
         }
 
         public void UpdateViewModel()
@@ -71,6 +75,68 @@ namespace OpenBullet2.Native.Views.Pages
             editor.TextArea.TextView.LinkTextUnderline = false;
         }
 
+        private void AddAutoCompletion()
+        {
+            editor.TextArea.TextEntering += TextEntering;
+            editor.TextArea.TextEntered += TextEntered;
+        }
+
+        private void TextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length > 0 && completionWindow != null)
+            {
+                if (!char.IsLetterOrDigit(e.Text[0]))
+                {
+                    // Whenever a non-letter is typed while the completion window is open,
+                    // insert the currently selected element.
+                    completionWindow.CompletionList.RequestInsertion(e);
+                }
+            }
+            // Do not set e.Handled=true.
+            // We still want to insert the character that was typed.
+        }
+
+        private void TextEntered(object sender, TextCompositionEventArgs e)
+        {
+            try
+            {
+                var offset = editor.CaretOffset;
+                var documentLine = editor.Document.GetLineByOffset(offset);
+                var line = editor.Document.GetText(documentLine.Offset, documentLine.Length);
+
+                if (line.StartsWith("BLOCK:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var partialId = line.Replace("BLOCK:", "");
+
+                    // Open code completion:
+                    completionWindow = new CompletionWindow(editor.TextArea)
+                    {
+                        Foreground = Brushes.Gainsboro,
+                        Background = Helpers.Brush.FromHex("#222")
+                    };
+
+                    var data = completionWindow.CompletionList.CompletionData;
+                    var snippets = partialId == ""
+                        ? AutocompletionProvider.GetBlockSnippets()
+                        : AutocompletionProvider.GetBlockSnippets()
+                            .Where(s => s.Id.StartsWith(partialId, StringComparison.OrdinalIgnoreCase));
+
+                    foreach (var snippet in snippets)
+                    {
+                        var completeSnippet = $"BLOCK:{snippet.Id}\r\n{snippet.Snippet}ENDBLOCK";
+                        data.Add(new LoliCodeCompletionData($"BLOCK:{snippet.Id}", completeSnippet, snippet.Description));
+                    }
+
+                    completionWindow.Show();
+                    completionWindow.Closed += (_, _) => completionWindow = null;
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
         private async void PageKeyDown(object sender, KeyEventArgs e)
         {
             // Save on CTRL+S
@@ -103,6 +169,48 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 Config.Settings.ScriptSettings.CustomUsings = value.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
                 OnPropertyChanged();
+            }
+        }
+    }
+
+    public class LoliCodeCompletionData : ICompletionData
+    {
+        private readonly string text;
+        private readonly string snippet;
+        private readonly string description;
+
+        public LoliCodeCompletionData(string text, string snippet, string description)
+        {
+            this.text = text;
+            this.snippet = snippet;
+            this.description = description;
+        }
+
+        public ImageSource Image => null;
+
+        public string Text => text;
+
+        // Use this property if you want to show a fancy UIElement in the list.
+        public object Content => text;
+
+        public object Description => description;
+
+        public double Priority => 0;
+
+        public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
+        {
+            try
+            {
+                var offset = textArea.Caret.Offset;
+                var documentLine = textArea.Document.GetLineByOffset(offset);
+                var line = textArea.Document.GetText(documentLine.Offset, documentLine.Length);
+
+                textArea.Document.Remove(documentLine);
+                textArea.Document.Insert(documentLine.Offset, snippet);
+            }
+            catch
+            {
+
             }
         }
     }
