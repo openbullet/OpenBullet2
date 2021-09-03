@@ -36,7 +36,7 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "[0-9]*");
+            var match = Regex.Match(input, "-?[0-9]*");
 
             if (!match.Success)
                 throw new Exception("Could not parse the int");
@@ -54,7 +54,7 @@ namespace RuriLib.Helpers.LoliCode
         {
             input = input.TrimStart();
 
-            var match = Regex.Match(input, "[0-9\\.]*");
+            var match = Regex.Match(input, "-?[0-9\\.]*");
 
             if (!match.Success)
                 throw new Exception("Could not parse the int");

@@ -138,10 +138,10 @@ namespace RuriLib.Helpers.LoliCode
             if (Regex.IsMatch(input, "^([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])( |$)"))
                 return VariableType.Bool;
 
-            if (Regex.IsMatch(input, "^[0-9]+( |$)"))
+            if (Regex.IsMatch(input, "^-?[0-9]+( |$)"))
                 return VariableType.Int;
 
-            if (Regex.IsMatch(input, "^[0-9\\.]+( |$)"))
+            if (Regex.IsMatch(input, "^-?[0-9\\.]+( |$)"))
                 return VariableType.Float;
 
             if (input.StartsWith('['))
