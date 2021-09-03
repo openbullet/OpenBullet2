@@ -9,14 +9,18 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace OpenBullet2.Native.ViewModels
 {
     public class ConfigsViewModel : ViewModelBase
     {
-        private ObservableCollection<ConfigViewModel> configsCollection;
+        private readonly ConfigService configService;
+        private readonly IConfigRepository configRepo;
 
+        private ObservableCollection<ConfigViewModel> configsCollection;
         public ObservableCollection<ConfigViewModel> ConfigsCollection
         {
             get => configsCollection;
@@ -29,8 +33,18 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        private readonly ConfigService configService;
-        private readonly IConfigRepository configRepo;
+        private string searchString = string.Empty;
+        public string SearchString
+        {
+            get => searchString;
+            set
+            {
+                searchString = value;
+                OnPropertyChanged();
+                CollectionViewSource.GetDefaultView(ConfigsCollection).Refresh();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
 
         private ConfigViewModel selectedConfig;
         public ConfigViewModel SelectedConfig
@@ -63,16 +77,12 @@ namespace OpenBullet2.Native.ViewModels
 
         public bool IsConfigHovered => HoveredConfig != null;
 
-        public int Total => configsCollection.Count;
+        public int Total => ConfigsCollection.Count;
 
         public ConfigsViewModel()
         {
             configService = SP.GetService<ConfigService>();
-
-            configService.OnRemotesLoaded += (s, e) =>
-            {
-                CreateCollection();
-            };
+            configService.OnRemotesLoaded += (s, e) => CreateCollection();
 
             configRepo = SP.GetService<IConfigRepository>();
             CreateCollection();
@@ -136,15 +146,25 @@ namespace OpenBullet2.Native.ViewModels
 
         public override void UpdateViewModel()
         {
-            configsCollection.ToList().ForEach(c => c.UpdateViewModel());
+            ConfigsCollection.ToList().ForEach(c => c.UpdateViewModel());
             base.UpdateViewModel();
         }
 
-        private void CreateCollection()
+        public void CreateCollection()
         {
             var viewModels = configService.Configs.Select(c => new ConfigViewModel(c));
             ConfigsCollection = new ObservableCollection<ConfigViewModel>(viewModels);
+            Application.Current.Dispatcher.Invoke(() => HookFilters());
         }
+
+        private void HookFilters()
+        {
+            var view = (CollectionView)CollectionViewSource.GetDefaultView(ConfigsCollection);
+            view.Filter = ConfigsFilter;
+        }
+
+        private bool ConfigsFilter(object item) => (item as ConfigViewModel).Config
+            .Metadata.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase);
     }
 
     public class ConfigViewModel : ViewModelBase

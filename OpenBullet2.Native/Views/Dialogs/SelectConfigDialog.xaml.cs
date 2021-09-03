@@ -1,12 +1,15 @@
 ﻿using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 
@@ -31,6 +34,16 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             InitializeComponent();
         }
+
+        private void UpdateSearch(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                vm.SearchString = filterTextbox.Text;
+            }
+        }
+
+        private void Search(object sender, RoutedEventArgs e) => vm.SearchString = filterTextbox.Text;
 
         private void ItemHovered(object sender, SelectionChangedEventArgs e)
         {
@@ -90,10 +103,10 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class SelectConfigDialogViewModel : ViewModelBase
     {
+        private readonly ConfigsViewModel configsViewModel;
         private readonly ConfigService configService;
 
         private ObservableCollection<ConfigViewModel> configsCollection;
-
         public ObservableCollection<ConfigViewModel> ConfigsCollection
         {
             get => configsCollection;
@@ -101,6 +114,24 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 configsCollection = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private string searchString = string.Empty;
+        public string SearchString
+        {
+            get => searchString;
+            set
+            {
+                searchString = value;
+
+                if (configsViewModel is not null)
+                {
+                    configsViewModel.SearchString = value;
+                }
+
+                OnPropertyChanged();
+                CollectionViewSource.GetDefaultView(ConfigsCollection).Refresh();
             }
         }
 
@@ -123,12 +154,29 @@ namespace OpenBullet2.Native.Views.Dialogs
         {
             configService = SP.GetService<ConfigService>();
             CreateCollection();
+
+            configsViewModel = SP.GetService<ViewModelsService>().Configs;
+
+            if (configsViewModel is not null)
+            {
+                SearchString = configsViewModel.SearchString;
+            }
         }
 
         private void CreateCollection()
         {
             var viewModels = configService.Configs.Select(c => new ConfigViewModel(c));
             ConfigsCollection = new ObservableCollection<ConfigViewModel>(viewModels);
+            Application.Current.Dispatcher.Invoke(() => HookFilters());
         }
+
+        public void HookFilters()
+        {
+            var view = (CollectionView)CollectionViewSource.GetDefaultView(ConfigsCollection);
+            view.Filter = ConfigsFilter;
+        }
+
+        private bool ConfigsFilter(object item) => (item as ConfigViewModel).Config
+            .Metadata.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase);
     }
 }

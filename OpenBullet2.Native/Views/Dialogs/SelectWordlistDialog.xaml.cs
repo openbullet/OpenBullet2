@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 
@@ -34,6 +36,16 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             InitializeComponent();
         }
+
+        private void UpdateSearch(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                vm.SearchString = filterTextbox.Text;
+            }
+        }
+
+        private void Search(object sender, RoutedEventArgs e) => vm.SearchString = filterTextbox.Text;
 
         private void ItemHovered(object sender, SelectionChangedEventArgs e)
         {
@@ -93,10 +105,10 @@ namespace OpenBullet2.Native.Views.Dialogs
 
     public class SelectWordlistDialogViewModel : ViewModelBase
     {
+        private readonly WordlistsViewModel wordlistsViewModel;
         private readonly IWordlistRepository wordlistRepo;
 
         private ObservableCollection<WordlistEntity> wordlistsCollection;
-
         public ObservableCollection<WordlistEntity> WordlistsCollection
         {
             get => wordlistsCollection;
@@ -104,6 +116,24 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 wordlistsCollection = value;
                 OnPropertyChanged();
+            }
+        }
+
+        private string searchString = string.Empty;
+        public string SearchString
+        {
+            get => searchString;
+            set
+            {
+                searchString = value;
+
+                if (wordlistsViewModel is not null)
+                {
+                    wordlistsViewModel.SearchString = value;
+                }
+                
+                OnPropertyChanged();
+                CollectionViewSource.GetDefaultView(WordlistsCollection).Refresh();
             }
         }
 
@@ -142,12 +172,28 @@ namespace OpenBullet2.Native.Views.Dialogs
         {
             wordlistRepo = SP.GetService<IWordlistRepository>();
             CreateCollection();
+
+            wordlistsViewModel = SP.GetService<ViewModelsService>().Wordlists;
+
+            if (wordlistsViewModel is not null)
+            {
+                SearchString = wordlistsViewModel.SearchString;
+            }
         }
 
         private void CreateCollection()
         {
             var entities = wordlistRepo.GetAll().ToList();
             WordlistsCollection = new ObservableCollection<WordlistEntity>(entities);
+            Application.Current.Dispatcher.Invoke(() => HookFilters());
         }
+
+        private void HookFilters()
+        {
+            var view = (CollectionView)CollectionViewSource.GetDefaultView(WordlistsCollection);
+            view.Filter = WordlistsFilter;
+        }
+
+        private bool WordlistsFilter(object item) => (item as WordlistEntity).Name.Contains(SearchString, StringComparison.OrdinalIgnoreCase);
     }
 }

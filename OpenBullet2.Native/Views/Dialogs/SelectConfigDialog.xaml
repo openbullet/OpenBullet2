@@ -14,16 +14,31 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="filterTextbox" HorizontalAlignment="Stretch" Grid.Column="0" Text="{Binding SearchString}" Margin="0 5 5 5" KeyDown="UpdateSearch"/>
+            <Button x:Name="searchButton" Grid.Column="1" Click="Search" Margin="0 5 5 5" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Search" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
+                </StackPanel>
+            </Button>
+        </Grid>
+
         <!-- Configs List View -->
         <ListView 
             x:Name="configsListView" 
-            Grid.Row="0" 
+            Grid.Row="1" 
             Foreground="{DynamicResource ForegroundMain}" 
             Background="Transparent" 
             ItemsSource="{Binding Path=ConfigsCollection}" 
@@ -187,11 +202,11 @@
         <GridSplitter 
             ResizeDirection="Rows"
             ResizeBehavior="PreviousAndNext"
-            Grid.Row="1" 
+            Grid.Row="2" 
             Height="5"
             HorizontalAlignment="Stretch" />
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -207,7 +222,7 @@
         </Grid>
 
         <Button Click="Accept"
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Margin="0 10 0 0"

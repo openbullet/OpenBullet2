@@ -36,7 +36,7 @@ namespace OpenBullet2.Native.Views.Pages
             configService = SP.GetService<ConfigService>();
             vm = SP.GetService<ViewModelsService>().Configs;
             DataContext = vm;
-
+            
             InitializeComponent();
         }
 
@@ -117,6 +117,16 @@ namespace OpenBullet2.Native.Views.Pages
 
             SP.GetService<MainWindow>().NavigateTo(page);
         }
+
+        private void UpdateSearch(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                vm.SearchString = filterTextbox.Text;
+            }
+        }
+
+        private void Search(object sender, RoutedEventArgs e) => vm.SearchString = filterTextbox.Text;
 
         private void ItemHovered(object sender, SelectionChangedEventArgs e)
         {

@@ -72,6 +72,13 @@
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
                     </StackPanel>
                 </Button>
+                <TextBox x:Name="filterTextbox" Text="{Binding SearchString}" Margin="0 5 5 5" Width="150" KeyDown="UpdateSearch"/>
+                <Button x:Name="searchButton" Click="Search" Margin="0 5 5 5" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Search" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
+                    </StackPanel>
+                </Button>
             </StackPanel>
 
             <!--

@@ -13,7 +13,6 @@ namespace OpenBullet2.Native.ViewModels
     public class WordlistsViewModel : ViewModelBase
     {
         private readonly IWordlistRepository wordlistRepo;
-        private string searchString = string.Empty;
         private bool initialized;
 
         private ObservableCollection<WordlistEntity> wordlistsCollection;
@@ -29,6 +28,7 @@ namespace OpenBullet2.Native.ViewModels
 
         public int Total => WordlistsCollection.Count;
 
+        private string searchString = string.Empty;
         public string SearchString
         {
             get => searchString;
@@ -44,7 +44,7 @@ namespace OpenBullet2.Native.ViewModels
         public WordlistsViewModel()
         {
             wordlistRepo = SP.GetService<IWordlistRepository>();
-            WordlistsCollection = new ObservableCollection<WordlistEntity>();
+            WordlistsCollection = new();
         }
 
         public async Task Initialize()
@@ -56,7 +56,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public void HookFilters()
+        private void HookFilters()
         {
             var view = (CollectionView)CollectionViewSource.GetDefaultView(WordlistsCollection);
             view.Filter = WordlistsFilter;
