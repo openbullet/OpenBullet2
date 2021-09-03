@@ -189,7 +189,7 @@ namespace RuriLib.Extensions
             string invalidChars = Regex.Escape(new string(Path.GetInvalidFileNameChars()));
             string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
 
-            return Regex.Replace(fileName, invalidRegStr, underscore ? "_" : "");
+            return Regex.Replace(fileName, invalidRegStr, underscore ? "_" : "").Trim();
         }
 
         /// <summary>
