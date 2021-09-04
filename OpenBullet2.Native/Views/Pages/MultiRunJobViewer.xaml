@@ -150,6 +150,18 @@
                 Value="{Binding Progress, Mode=OneWay}" />
         </Border>
 
+        <Border Grid.Row="1" Padding="0 5">
+            <StackPanel
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Label
+                    Foreground="{DynamicResource BackgroundSecondary}"
+                    Content="{Binding Job.ProgressString}"
+                    FontWeight="Bold"
+                    Margin="-5 0 0 0" />
+            </StackPanel>
+        </Border>
+
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
