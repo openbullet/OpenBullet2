@@ -109,6 +109,7 @@ namespace OpenBullet2.Native.ViewModels
         #endregion
 
         #region Properties that need to be updated when the status changes
+        public bool CanChangeOptions => MultiRunJob.Status is JobStatus.Idle;
         public bool CanStart => MultiRunJob.Status is JobStatus.Idle;
         public bool CanSkipWait => MultiRunJob.Status is JobStatus.Waiting;
         public bool CanPause => MultiRunJob.Status is JobStatus.Running;

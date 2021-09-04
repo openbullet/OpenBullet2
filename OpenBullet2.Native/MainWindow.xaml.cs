@@ -239,6 +239,12 @@ namespace OpenBullet2.Native
             }
         }
 
+        public void EditJob(JobViewModel jobVM)
+        {
+            NavigateTo(MainWindowPage.Jobs);
+            jobsPage.EditJob(jobVM);
+        }
+
         private void OpenHomePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Home);
         private void OpenJobsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Jobs);
         private void OpenMonitorPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.Monitor);

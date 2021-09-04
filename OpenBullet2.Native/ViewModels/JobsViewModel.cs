@@ -94,7 +94,7 @@ namespace OpenBullet2.Native.ViewModels
             CreateCollection();
         }
 
-        public async Task CloneJob(JobType type, JobOptions options)
+        public async Task<JobViewModel> CloneJob(JobType type, JobOptions options)
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
@@ -118,6 +118,7 @@ namespace OpenBullet2.Native.ViewModels
             };
 
             JobsCollection.Add(jobVM);
+            return jobVM;
         }
 
         public void RemoveAll()

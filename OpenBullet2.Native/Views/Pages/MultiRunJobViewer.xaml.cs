@@ -21,6 +21,7 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class MultiRunJobViewer : Page
     {
+        private readonly MainWindow mainWindow;
         private readonly OpenBulletSettingsService obSettingsService;
         private MultiRunJobViewerViewModel vm;
         private GridViewColumnHeader listViewSortCol;
@@ -30,6 +31,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         public MultiRunJobViewer()
         {
+            mainWindow = SP.GetService<MainWindow>();
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
             InitializeComponent();
         }
@@ -126,6 +128,8 @@ namespace OpenBullet2.Native.Views.Pages
                 Alert.Exception(ex);
             }
         }
+
+        private void ChangeOptions(object sender, RoutedEventArgs e) => mainWindow.EditJob(vm.Job);
 
         private void ChangeBots(object sender, MouseButtonEventArgs e)
             => new MainDialog(new ChangeBotsDialog(this, vm.Job.Bots), "Change bots").ShowDialog();

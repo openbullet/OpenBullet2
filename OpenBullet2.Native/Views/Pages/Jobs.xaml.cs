@@ -17,11 +17,13 @@ namespace OpenBullet2.Native.Views.Pages
     /// </summary>
     public partial class Jobs : Page
     {
+        private readonly MainWindow mainWindow;
         private readonly IJobRepository jobRepo;
         private readonly JobsViewModel vm;
 
         public Jobs()
         {
+            mainWindow = SP.GetService<MainWindow>();
             jobRepo = SP.GetService<IJobRepository>();
             vm = SP.GetService<ViewModelsService>().Jobs;
             DataContext = vm;
@@ -44,13 +46,18 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private async void EditJob(object sender, RoutedEventArgs e)
+        private void EditJob(object sender, RoutedEventArgs e) => EditJob((JobViewModel)(sender as Button).Tag);
+
+        public async void EditJob(JobViewModel jobVM)
         {
-            var jobVM = (JobViewModel)(sender as Button).Tag;
             var entity = await jobRepo.Get(jobVM.Id);
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
-            Action<JobOptions> onAccept = options => _ = vm.EditJob(entity, options);
+            Action<JobOptions> onAccept = async options =>
+            {
+                await vm.EditJob(entity, options);
+                mainWindow.DisplayJob(jobVM);
+            };
 
             Page page = jobVM switch
             {
@@ -70,7 +77,11 @@ namespace OpenBullet2.Native.Views.Pages
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
             var newOptions = JobOptionsFactory.CloneExistant(oldOptions);
 
-            Action<JobOptions> onAccept = options => _ = vm.CloneJob(entity.JobType, options);
+            Action<JobOptions> onAccept = async options =>
+            {
+                var cloned = await vm.CloneJob(entity.JobType, options);
+                mainWindow.DisplayJob(cloned);
+            };
 
             Page page = jobVM switch
             {

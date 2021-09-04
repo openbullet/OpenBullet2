@@ -138,6 +138,14 @@
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Abort</TextBlock>
                     </StackPanel>
                 </Button>
+                <Button Click="ChangeOptions"
+                    Visibility="{Binding CanChangeOptions, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Background="{DynamicResource PrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Options</TextBlock>
+                    </StackPanel>
+                </Button>
             </StackPanel>
 
         </Grid>
