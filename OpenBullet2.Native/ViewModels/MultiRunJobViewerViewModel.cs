@@ -290,6 +290,7 @@ namespace OpenBullet2.Native.ViewModels
         {
             Job.UpdateStatus();
 
+            OnPropertyChanged(nameof(CanChangeOptions));
             OnPropertyChanged(nameof(CanStart));
             OnPropertyChanged(nameof(CanSkipWait));
             OnPropertyChanged(nameof(CanResume));
