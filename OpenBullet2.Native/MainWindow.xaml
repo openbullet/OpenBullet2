@@ -88,6 +88,7 @@
 
             <Border Padding="1" Grid.Column="1">
                 <Button x:Name="screenshotButton" 
+                    Style="{StaticResource StyledButton}"
                     Click="TakeScreenshot">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="Camera" />

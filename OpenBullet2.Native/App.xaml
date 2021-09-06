@@ -45,11 +45,14 @@
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
                     </Style>
                     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                        <Style.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                            </Style>
+                        </Style.Resources>
                     </Style>
                     <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
-                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
                     </Style>
                     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
@@ -151,7 +154,12 @@
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
                     </Style>
-                    
+
+                    <Style TargetType="{x:Type mah:ColorPicker}" BasedOn="{StaticResource {x:Type mah:ColorPicker}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+
                     <!-- BUTTONS -->
                     <Style x:Key="StyledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
@@ -264,6 +272,10 @@
 
                     <Style x:Key="StyledPrimaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource StyledButton}">
                         <Setter Property="Background" Value="{DynamicResource PrimaryButton}" />
+                    </Style>
+
+                    <Style x:Key="StyledGoodLabel" TargetType="{x:Type Label}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundGood}"/>
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
