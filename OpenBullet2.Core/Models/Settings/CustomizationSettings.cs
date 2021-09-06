@@ -107,6 +107,16 @@
         public string BackgroundButton { get; set; } = "#282828";
 
         /// <summary>
+        /// The path to the background image. Native UI only.
+        /// </summary>
+        public string BackgroundImagePath { get; set; } = "";
+
+        /// <summary>
+        /// The opacity of the background image (from 0 to 100). Native UI only.
+        /// </summary>
+        public double BackgroundOpacity { get; set; } = 100;
+
+        /// <summary>
         /// Whether to play a sound when a hit is found.
         /// </summary>
         public bool PlaySoundOnHit { get; set; } = false;

@@ -9,6 +9,7 @@ using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Configs;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -334,7 +335,7 @@ namespace OpenBullet2.Native
         private void CloseSubmenu() => configSubmenu.Visibility = Visibility.Collapsed;
         #endregion
 
-        private static void SetTheme(CustomizationSettings customization)
+        public void SetTheme(CustomizationSettings customization)
         {
             Brush.SetAppColor("BackgroundMain", customization.BackgroundMain);
             Brush.SetAppColor("BackgroundSecondary", customization.BackgroundSecondary);
@@ -354,6 +355,21 @@ namespace OpenBullet2.Native
             Brush.SetAppColor("DangerButton", customization.DangerButton);
             Brush.SetAppColor("ForegroundButton", customization.ForegroundButton);
             Brush.SetAppColor("BackgroundButton", customization.BackgroundButton);
+
+            // BACKGROUND
+            if (File.Exists(customization.BackgroundImagePath))
+            {
+                Background = new System.Windows.Media.ImageBrush(
+                    new System.Windows.Media.Imaging.BitmapImage(
+                        new Uri(customization.BackgroundImagePath)))
+                {
+                    Opacity = customization.BackgroundOpacity / 100
+                };
+            }
+            else
+            {
+                Background = Brush.Get("BackgroundMain");
+            }
         }
     }
 

@@ -10,6 +10,10 @@
       d:DesignHeight="1550" d:DesignWidth="800"
       Title="OBSettings">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -163,15 +167,15 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Main</Label>
                         <mah:ColorPicker SelectedColor="{Binding BackgroundMain}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Secondary</Label>
                         <mah:ColorPicker SelectedColor="{Binding BackgroundSecondary}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Inputs</Label>
                         <mah:ColorPicker SelectedColor="{Binding BackgroundInput}" Width="150" />
                     </StackPanel>
@@ -189,39 +193,39 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Main</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundMain}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Good</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundGood}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Bad</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundBad}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Custom</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundCustom}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Retry</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundRetry}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Banned</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundBanned}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>To Check</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundToCheck}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Menu Selected</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundMenuSelected}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Inputs</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundInput}" Width="150" />
                     </StackPanel>
@@ -238,32 +242,79 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    
-                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Success</Label>
                         <mah:ColorPicker SelectedColor="{Binding SuccessButton}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Primary</Label>
                         <mah:ColorPicker SelectedColor="{Binding PrimaryButton}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Warning</Label>
                         <mah:ColorPicker SelectedColor="{Binding WarningButton}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Danger</Label>
                         <mah:ColorPicker SelectedColor="{Binding DangerButton}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Foreground</Label>
                         <mah:ColorPicker SelectedColor="{Binding ForegroundButton}" Width="150" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0 10 0 0">
+                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="0 5 0 0">
                         <Label>Background</Label>
                         <mah:ColorPicker SelectedColor="{Binding BackgroundButton}" Width="150" />
                     </StackPanel>
                 </Grid>
+                <Grid Margin="0 5 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Background image" />
+                    <TextBox Grid.Column="1" Text="{Binding BackgroundImagePath, Mode=OneWay}" IsReadOnly="True" />
+                    <Label Grid.Column="2" Content="Opacity" />
+                    <mah:NumericUpDown
+                        Grid.Column="3"
+                        Minimum="0"
+                        Maximum="100"
+                        Interval="1"
+                        Value="{Binding BackgroundOpacity}"
+                        Width="150"/>
+                    <Button
+                        Grid.Column="5"
+                        Margin="5 0"
+                        Click="ChooseBackgroundImage"
+                        Style="{StaticResource StyledPrimaryButton}" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconForkAwesome Kind="File" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Choose</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+                <Image 
+                    Source="{Binding BackgroundImage}"
+                    MaxWidth="150"
+                    MaxHeight="150"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding ShowBackgroundImage, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="5 5 0 0"/>
+                <Button
+                    Click="ResetCustomization" 
+                    Width="130"
+                    Margin="5" 
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource StyledWarningButton}" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconRadixIcons Kind="Reset" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Reset customization</TextBlock>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </ScrollViewer>
 

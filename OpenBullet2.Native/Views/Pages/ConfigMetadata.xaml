@@ -38,9 +38,9 @@
             <StackPanel Orientation="Horizontal" Margin="0 10">
                 <Label>Select a new image from disk</Label>
                 <Button x:Name="openImageButton" 
-                Grid.Column="2"
-                Click="OpenIcon" 
-                Style="{StaticResource StyledPrimaryButton}" >
+                    Grid.Column="2"
+                    Click="OpenIcon" 
+                    Style="{StaticResource StyledPrimaryButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconForkAwesome Kind="File" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Open</TextBlock>

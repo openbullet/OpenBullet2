@@ -1,15 +1,17 @@
 ﻿using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace OpenBullet2.Native.ViewModels
 {
     public class OBSettingsViewModel : ViewModelBase
     {
-        private OpenBulletSettingsService service;
+        private readonly OpenBulletSettingsService service;
         private GeneralSettings General => service.Settings.GeneralSettings;
         private RemoteSettings Remote => service.Settings.RemoteSettings;
         private CustomizationSettings Customization => service.Settings.CustomizationSettings;
@@ -148,7 +150,11 @@ namespace OpenBullet2.Native.ViewModels
             set
             {
                 Customization.BackgroundMain = value;
-                Brush.SetAppColor("BackgroundMain", value);
+                
+                // Call this instead of SetAppColor because otherwise it will not
+                // update the background if we previously set an image
+                RefreshTheme();
+
                 OnPropertyChanged();
             }
         }
@@ -340,6 +346,46 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public string BackgroundImagePath
+        {
+            get => Customization.BackgroundImagePath;
+            private set
+            {
+                Customization.BackgroundImagePath = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowBackgroundImage));
+
+                BackgroundImage = new(new Uri(value));
+            }
+        }
+
+        public double BackgroundOpacity
+        {
+            get => Customization.BackgroundOpacity;
+            set
+            {
+                Customization.BackgroundOpacity = value;
+                OnPropertyChanged();
+                RefreshTheme();
+            }
+        }
+
+        private BitmapImage backgroundImage;
+        public BitmapImage BackgroundImage
+        {
+            get => backgroundImage;
+            set
+            {
+                backgroundImage = value;
+                OnPropertyChanged();
+                RefreshTheme();
+            }
+        }
+
+        public bool ShowBackgroundImage => !string.IsNullOrEmpty(BackgroundImagePath);
+
+        public void SetBackgroundImage(string path) => BackgroundImagePath = path;
+
         public async Task Save()
         {
             General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
@@ -350,35 +396,19 @@ namespace OpenBullet2.Native.ViewModels
         public void Reset()
         {
             service.Recreate();
-
             CreateCollections();
-
-            // Call OnPropertyChanged on all public properties
-            foreach (var property in GetType().GetProperties())
-            {
-                OnPropertyChanged(property.Name);
-            }
-
-            // Reset the theme colors
-            Brush.SetAppColor("BackgroundMain", Customization.BackgroundMain);
-            Brush.SetAppColor("BackgroundSecondary", Customization.BackgroundSecondary);
-            Brush.SetAppColor("BackgroundInput", Customization.BackgroundInput);
-            Brush.SetAppColor("ForegroundMain", Customization.ForegroundMain);
-            Brush.SetAppColor("ForegroundInput", Customization.ForegroundInput);
-            Brush.SetAppColor("ForegroundGood", Customization.ForegroundGood);
-            Brush.SetAppColor("ForegroundBad", Customization.ForegroundBad);
-            Brush.SetAppColor("ForegroundCustom", Customization.ForegroundCustom);
-            Brush.SetAppColor("ForegroundRetry", Customization.ForegroundRetry);
-            Brush.SetAppColor("ForegroundBanned", Customization.ForegroundBanned);
-            Brush.SetAppColor("ForegroundToCheck", Customization.ForegroundToCheck);
-            Brush.SetAppColor("ForegroundMenuSelected", Customization.ForegroundMenuSelected);
-            Brush.SetAppColor("SuccessButton", Customization.SuccessButton);
-            Brush.SetAppColor("PrimaryButton", Customization.PrimaryButton);
-            Brush.SetAppColor("WarningButton", Customization.WarningButton);
-            Brush.SetAppColor("DangerButton", Customization.DangerButton);
-            Brush.SetAppColor("ForegroundButton", Customization.ForegroundButton);
-            Brush.SetAppColor("BackgroundButton", Customization.BackgroundButton);
+            UpdateViewModel();
+            RefreshTheme();
         }
+
+        public void ResetCustomization()
+        {
+            service.Settings.CustomizationSettings = new CustomizationSettings();
+            UpdateViewModel();
+            RefreshTheme();
+        }
+
+        private void RefreshTheme() => SP.GetService<MainWindow>().SetTheme(Customization);
 
         public void AddProxyCheckTarget() => ProxyCheckTargetsCollection.Add(new ProxyCheckTarget());
         public void RemoveProxyCheckTarget(ProxyCheckTarget target) => ProxyCheckTargetsCollection.Remove(target);
