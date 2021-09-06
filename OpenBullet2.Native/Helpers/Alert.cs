@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Native.Views.Dialogs;
 using System;
+using System.Windows;
 
 namespace OpenBullet2.Native.Helpers
 {
@@ -13,19 +14,29 @@ namespace OpenBullet2.Native.Helpers
         public static bool Choice(string title, string message, string yesText = "Yes", string noText = "No")
         {
             var choice = false;
-            new MainDialog(new ChoiceDialog(title, message, b => choice = b, yesText, noText), title).ShowDialog();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                new MainDialog(new ChoiceDialog(title, message, b => choice = b, yesText, noText), title).ShowDialog();
+            });
+
             return choice;
         }
 
         public static string CustomInput(string question, string defaultAnswer)
         {
             var answer = string.Empty;
-            new MainDialog(new CustomInputDialog(question, defaultAnswer, a => answer = a), "Custom input").ShowDialog();
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                new MainDialog(new CustomInputDialog(question, defaultAnswer, a => answer = a), "Custom input").ShowDialog();
+            });
+
             return answer;
         }
 
         private static void ShowAlert(AlertType type, string title, string message)
-            => new MainDialog(new AlertDialog(type, title, message), title).ShowDialog();
+            => Application.Current.Dispatcher.Invoke(() => new MainDialog(new AlertDialog(type, title, message), title).ShowDialog());
 
         public static void Exception(Exception ex)  => Error(ex.GetType().Name, ex.Message);
     }
