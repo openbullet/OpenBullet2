@@ -363,7 +363,8 @@ namespace OpenBullet2.Native
                     new System.Windows.Media.Imaging.BitmapImage(
                         new Uri(customization.BackgroundImagePath)))
                 {
-                    Opacity = customization.BackgroundOpacity / 100
+                    Opacity = customization.BackgroundOpacity / 100,
+                    Stretch = System.Windows.Media.Stretch.UniformToFill
                 };
             }
             else
