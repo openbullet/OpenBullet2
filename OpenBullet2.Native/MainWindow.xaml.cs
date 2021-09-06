@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
@@ -83,6 +84,11 @@ namespace OpenBullet2.Native
 
             updateService = SP.GetService<UpdateService>();
             Title = $"OpenBullet 2 - {updateService.CurrentVersion} [{updateService.CurrentVersionType}]";
+
+            // Set the theme
+            var obSettingsService = SP.GetService<OpenBulletSettingsService>();
+            var customization = obSettingsService.Settings.CustomizationSettings;
+            SetTheme(customization);
         }
 
         public void NavigateTo(MainWindowPage page)
@@ -327,6 +333,28 @@ namespace OpenBullet2.Native
 
         private void CloseSubmenu() => configSubmenu.Visibility = Visibility.Collapsed;
         #endregion
+
+        private static void SetTheme(CustomizationSettings customization)
+        {
+            Brush.SetAppColor("BackgroundMain", customization.BackgroundMain);
+            Brush.SetAppColor("BackgroundSecondary", customization.BackgroundSecondary);
+            Brush.SetAppColor("BackgroundInput", customization.BackgroundInput);
+            Brush.SetAppColor("ForegroundMain", customization.ForegroundMain);
+            Brush.SetAppColor("ForegroundInput", customization.ForegroundInput);
+            Brush.SetAppColor("ForegroundGood", customization.ForegroundGood);
+            Brush.SetAppColor("ForegroundBad", customization.ForegroundBad);
+            Brush.SetAppColor("ForegroundCustom", customization.ForegroundCustom);
+            Brush.SetAppColor("ForegroundRetry", customization.ForegroundRetry);
+            Brush.SetAppColor("ForegroundBanned", customization.ForegroundBanned);
+            Brush.SetAppColor("ForegroundToCheck", customization.ForegroundToCheck);
+            Brush.SetAppColor("ForegroundMenuSelected", customization.ForegroundMenuSelected);
+            Brush.SetAppColor("SuccessButton", customization.SuccessButton);
+            Brush.SetAppColor("PrimaryButton", customization.PrimaryButton);
+            Brush.SetAppColor("WarningButton", customization.WarningButton);
+            Brush.SetAppColor("DangerButton", customization.DangerButton);
+            Brush.SetAppColor("ForegroundButton", customization.ForegroundButton);
+            Brush.SetAppColor("BackgroundButton", customization.BackgroundButton);
+        }
     }
 
     public class MainWindowViewModel : ViewModelBase

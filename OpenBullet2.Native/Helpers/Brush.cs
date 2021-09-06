@@ -31,5 +31,8 @@ namespace OpenBullet2.Native.Helpers
 
         public static SolidColorBrush FromHex(string hex)
             => new((Color)ColorConverter.ConvertFromString(hex));
+
+        public static void SetAppColor(string resourceName, string color)
+            => Application.Current.Resources[resourceName] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
     }
 }

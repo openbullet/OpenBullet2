@@ -2,6 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:OpenBullet2.Native"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              Startup="OnStartup">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,25 +11,261 @@
             <SolidColorBrush x:Key="ThemeMain" Color="#1E90FF" />
             <SolidColorBrush x:Key="BackgroundMain" Color="#222" />
             <SolidColorBrush x:Key="BackgroundSecondary" Color="#111" />
-            <SolidColorBrush x:Key="ForegroundMain" Color="Gainsboro" />
-            <SolidColorBrush x:Key="ForegroundGood" Color="GreenYellow"/>
-            <SolidColorBrush x:Key="ForegroundBad" Color="Tomato"/>
-            <SolidColorBrush x:Key="ForegroundCustom" Color="DarkOrange"/>
-            <SolidColorBrush x:Key="ForegroundRetry" Color="Yellow"/>
-            <SolidColorBrush x:Key="ForegroundBanned" Color="Plum"/>
-            <SolidColorBrush x:Key="ForegroundToCheck" Color="Aquamarine"/>
-            <SolidColorBrush x:Key="ForegroundMenuSelected" Color="DodgerBlue"/>
+            <SolidColorBrush x:Key="BackgroundInput" Color="#282828" />
+            <SolidColorBrush x:Key="ForegroundMain" Color="#DCDCDC" />
+            <SolidColorBrush x:Key="ForegroundInput" Color="#DCDCDC" />
+            <SolidColorBrush x:Key="ForegroundGood" Color="#ADFF2F"/>
+            <SolidColorBrush x:Key="ForegroundBad" Color="#FF6347"/>
+            <SolidColorBrush x:Key="ForegroundCustom" Color="#FF8C00"/>
+            <SolidColorBrush x:Key="ForegroundRetry" Color="#FFFF00"/>
+            <SolidColorBrush x:Key="ForegroundBanned" Color="#DDA0DD"/>
+            <SolidColorBrush x:Key="ForegroundToCheck" Color="#7FFFD4"/>
+            <SolidColorBrush x:Key="ForegroundMenuSelected" Color="#1E90FF"/>
             <SolidColorBrush x:Key="Headers" />
 
             <SolidColorBrush x:Key="SuccessButton" Color="#2f5738"/>
             <SolidColorBrush x:Key="PrimaryButton" Color="#3b3a63"/>
             <SolidColorBrush x:Key="WarningButton" Color="#7a552a"/>
             <SolidColorBrush x:Key="DangerButton" Color="#693838"/>
+            <SolidColorBrush x:Key="ForegroundButton" Color="#DCDCDC"/>
+            <SolidColorBrush x:Key="BackgroundButton" Color="#282828"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
+
+                <ResourceDictionary>
+                    
+                    <!-- BUILTIN TYPES -->
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+                    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+                    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+
+                    <!-- ICONS -->
+                    <Style TargetType="{x:Type iconPacks:PackIconBootstrapIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconBootstrapIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconBoxIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconBoxIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconCodicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconCodicons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconEntypo}" BasedOn="{StaticResource {x:Type iconPacks:PackIconEntypo}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconEvaIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconEvaIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFeatherIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFeatherIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFileIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFileIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFontaudio}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontaudio}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconFontAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconForkAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconForkAwesome}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconIonicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconIonicons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconJamIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconJamIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterial}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconMaterialDesign}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterialDesign}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconMaterialLight}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterialLight}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconMicrons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMicrons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconOcticons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconOcticons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconPicolIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconPicolIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconPixelartIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconPixelartIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconRadixIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRadixIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconRemixIcon}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRemixIcon}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconRPGAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRPGAwesome}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconSimpleIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconSimpleIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconTypicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconTypicons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconUnicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconUnicons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconVaadinIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconVaadinIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconWeatherIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconWeatherIcons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+                    <Style TargetType="{x:Type iconPacks:PackIconZondicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconZondicons}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
+                    </Style>
+
+                    <!-- OTHERS -->
+                    <Style TargetType="{x:Type mah:NumericUpDown}" BasedOn="{StaticResource {x:Type mah:NumericUpDown}}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+                    
+                    <!-- BUTTONS -->
+                    <Style x:Key="StyledButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundButton}"/>
+                        <Style.Resources>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconBootstrapIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconBootstrapIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconBoxIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconBoxIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconCodicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconCodicons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconEntypo}" BasedOn="{StaticResource {x:Type iconPacks:PackIconEntypo}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconEvaIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconEvaIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFeatherIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFeatherIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFileIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFileIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFontaudio}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontaudio}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconFontAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconFontAwesome}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconForkAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconForkAwesome}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconIonicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconIonicons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconJamIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconJamIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterial}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconMaterialDesign}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterialDesign}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconMaterialLight}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterialLight}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconMicrons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconMicrons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource {x:Type iconPacks:PackIconModern}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconOcticons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconOcticons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconPicolIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconPicolIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconPixelartIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconPixelartIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconRadixIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRadixIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconRemixIcon}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRemixIcon}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconRPGAwesome}" BasedOn="{StaticResource {x:Type iconPacks:PackIconRPGAwesome}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconSimpleIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconSimpleIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconTypicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconTypicons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconUnicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconUnicons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconVaadinIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconVaadinIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconWeatherIcons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconWeatherIcons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                            <Style TargetType="{x:Type iconPacks:PackIconZondicons}" BasedOn="{StaticResource {x:Type iconPacks:PackIconZondicons}}">
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundButton}"/>
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+
+                    <Style x:Key="StyledDangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource StyledButton}">
+                        <Setter Property="Background" Value="{DynamicResource DangerButton}" />
+                    </Style>
+
+                    <Style x:Key="StyledSuccessButton" TargetType="{x:Type Button}" BasedOn="{StaticResource StyledButton}">
+                        <Setter Property="Background" Value="{DynamicResource SuccessButton}" />
+                    </Style>
+
+                    <Style x:Key="StyledWarningButton" TargetType="{x:Type Button}" BasedOn="{StaticResource StyledButton}">
+                        <Setter Property="Background" Value="{DynamicResource WarningButton}" />
+                    </Style>
+
+                    <Style x:Key="StyledPrimaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource StyledButton}">
+                        <Setter Property="Background" Value="{DynamicResource PrimaryButton}" />
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
