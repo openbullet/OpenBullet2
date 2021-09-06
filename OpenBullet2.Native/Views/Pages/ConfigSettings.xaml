@@ -10,7 +10,7 @@
       xmlns:resources="clr-namespace:RuriLib.Models.Data.Resources.Options;assembly=RuriLib"
       xmlns:rules="clr-namespace:RuriLib.Models.Data.Rules;assembly=RuriLib"
       mc:Ignorable="d" 
-      d:DesignHeight="1750" d:DesignWidth="800"
+      d:DesignHeight="2750" d:DesignWidth="800"
       Title="Config Settings">
 
     <Grid>
@@ -127,6 +127,7 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" VerticalAlignment="Center" Content="Slice Name" />
                                     <TextBox Grid.Column="1" Text="{Binding SliceName}" Height="30" Margin="5 0" />
@@ -138,7 +139,11 @@
                                       IsChecked="{Binding CaseSensitive}"
                                       Margin="5 0"
                                       VerticalContentAlignment="Center"/>
-                                    <Button Tag="{Binding}" Grid.Column="5" 
+                                    <CheckBox Grid.Column="5" Content="Invert"
+                                      IsChecked="{Binding Invert}"
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <Button Tag="{Binding}" Grid.Column="6" 
                                             Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
@@ -156,12 +161,17 @@
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" VerticalAlignment="Center" Content="Slice Name" />
                                     <TextBox Grid.Column="1" Text="{Binding SliceName}" Height="30" Margin="5 0" />
                                     <Label Grid.Column="2" VerticalAlignment="Center" Content="Regex to match" />
                                     <TextBox Grid.Column="3" Text="{Binding RegexToMatch}" Height="30" Margin="5 0" />
-                                    <Button Tag="{Binding}" Grid.Column="4" 
+                                    <CheckBox Grid.Column="4" Content="Invert"
+                                      IsChecked="{Binding Invert}"
+                                      Margin="5 0"
+                                      VerticalContentAlignment="Center"/>
+                                    <Button Tag="{Binding}" Grid.Column="5" 
                                             Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
