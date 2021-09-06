@@ -324,7 +324,7 @@
                         Margin="5 10 5 0"
                         Width="150"
                         HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryButton}" >
+                        Style="{StaticResource StyledPrimaryButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconUnicons Kind="DollarSign" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Check Balance</TextBlock>
@@ -345,7 +345,7 @@
                 Grid.Column="0"
                 Click="Save" 
                 Margin="0 5 5 5" 
-                Background="{DynamicResource PrimaryButton}" >
+                Style="{StaticResource StyledPrimaryButton}" >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
                 <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
@@ -357,7 +357,7 @@
                 Grid.Column="1"
                 Click="Reset" 
                 Margin="0 5 5 5" 
-                Background="{DynamicResource DangerButton}" >
+                Style="{StaticResource StyledDangerButton}" >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconRadixIcons Kind="Reset" />
                 <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>

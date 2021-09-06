@@ -20,7 +20,7 @@
 
         <StackPanel Orientation="Horizontal">
             <Button Click="ToggleUsings" 
-                    Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>

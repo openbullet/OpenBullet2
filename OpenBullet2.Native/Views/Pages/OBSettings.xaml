@@ -66,7 +66,7 @@
                           Margin="5 10 0 0"/>
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Proxy check targets</Label>
                 <Button x:Name="addProxyCheckTargetButton" Click="AddProxyCheckTarget" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -95,7 +95,7 @@
                                     <Label Grid.Column="2" VerticalAlignment="Center" Content="Success Key" />
                                     <TextBox Grid.Column="3" Text="{Binding SuccessKey}" Height="30" Margin="5 0" />
                                     <Button x:Name="removeProxyCheckTargetButton" Tag="{Binding}" Grid.Column="4" 
-                                            Click="RemoveProxyCheckTarget" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveProxyCheckTarget" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -109,7 +109,7 @@
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Remote</Label>
                 <Label Foreground="{DynamicResource ForegroundCustom}">Remote configs endpoints</Label>
                 <Button x:Name="addRemoteConfigsEndpointButton" Click="AddRemoteConfigsEndpoint" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -139,7 +139,7 @@
                                     <Label Grid.Column="2" VerticalAlignment="Center" Content="Success Key" />
                                     <TextBox Grid.Column="3" Text="{Binding ApiKey}" Height="30" Margin="5 0" />
                                     <Button x:Name="removeRemoteConfigsEndpointButton" Tag="{Binding}" Grid.Column="4" 
-                                            Click="RemoveRemoteConfigsEndpoint" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveRemoteConfigsEndpoint" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -272,7 +272,7 @@
                 Grid.Column="0"
                 Click="Save" 
                 Margin="0 5 5 5" 
-                Background="{DynamicResource PrimaryButton}" >
+                Style="{StaticResource StyledPrimaryButton}" >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
                 <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>

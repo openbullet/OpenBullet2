@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button x:Name="addPluginButton" Click="AddPlugin" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+            <Button x:Name="addPluginButton" Click="AddPlugin" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Add" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Add Plugin</TextBlock>
@@ -41,7 +41,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" VerticalAlignment="Center" Content="{Binding Name}" />
 
-                                <Button x:Name="removePluginButton" Tag="{Binding}" Grid.Column="1" Click="RemovePlugin" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+                                <Button x:Name="removePluginButton" Tag="{Binding}" Grid.Column="1" Click="RemovePlugin" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                                     <StackPanel Orientation="Horizontal">
                                         <iconPacks:PackIconMaterial Kind="Close" />
                                         <TextBlock VerticalAlignment="Center" Margin="5 0">Remove</TextBlock>

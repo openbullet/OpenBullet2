@@ -57,7 +57,7 @@
                 ItemsSource="{Binding ProxyTypes}"
                 SelectedItem="{Binding ProxyType}" Height="30" Margin="5 0" />
             <Button Click="Start"
-                    Background="{DynamicResource SuccessButton}"
+                    Style="{StaticResource StyledSuccessButton}"
                     Width="60"
                     Grid.Column="4"
                     HorizontalAlignment="Left"
@@ -68,7 +68,7 @@
                 </StackPanel>
             </Button>
             <Button Click="Stop"
-                    Background="{DynamicResource DangerButton}"
+                    Style="{StaticResource StyledDangerButton}"
                     Width="60"
                     Grid.Column="4"
                     HorizontalAlignment="Left"
@@ -87,7 +87,7 @@
                 <TabItem.Header>
                     <Button Click="ShowLog"
                         Margin="-5 0 0 0"
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="60" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
@@ -109,7 +109,7 @@
             <TabItem>
                 <TabItem.Header>
                     <Button Click="ShowVariables"
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                         Width="80" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="Variable" />
@@ -131,7 +131,7 @@
             <TabItem>
                 <TabItem.Header>
                     <Button Click="ShowHTML"
-                        Background="{DynamicResource WarningButton}"
+                        Style="{StaticResource StyledWarningButton}"
                         Width="70" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconEntypo Kind="Browser" />

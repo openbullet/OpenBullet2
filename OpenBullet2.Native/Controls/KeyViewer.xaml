@@ -30,7 +30,7 @@
                 Width="25"
                 Height="20"
                 ToolTip="Remove the key"
-                Background="{DynamicResource DangerButton}">
+                Style="{StaticResource StyledDangerButton}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="Close" Width="10" Height="10" />
             </StackPanel>

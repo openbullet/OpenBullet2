@@ -49,7 +49,7 @@
 
             <Button Click="Ok" x:Name="okButton"
                 Width="50"
-                    Margin="0 5 5 5" Background="{DynamicResource SuccessButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
                 <TextBlock VerticalAlignment="Center">Ok</TextBlock>
             </Button>
 

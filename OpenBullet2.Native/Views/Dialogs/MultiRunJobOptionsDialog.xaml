@@ -85,7 +85,7 @@
                 Margin="5 10 0 0"
                 Width="100"
                 HorizontalAlignment="Left"
-                Background="{DynamicResource PrimaryButton}">
+                Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Select Config</TextBlock>
                     </StackPanel>
@@ -201,7 +201,7 @@
                                         Margin="5 10 0 0"
                                         Width="100"
                                         HorizontalAlignment="Left"
-                                        Background="{DynamicResource PrimaryButton}">
+                                        Style="{StaticResource StyledPrimaryButton}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Margin="5 0">Select Wordlist</TextBlock>
                                         </StackPanel>
@@ -210,7 +210,7 @@
                                         Margin="5 10 0 0"
                                         Width="100"
                                         HorizontalAlignment="Left"
-                                        Background="{DynamicResource PrimaryButton}">
+                                        Style="{StaticResource StyledPrimaryButton}">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Margin="5 0">Add Wordlist</TextBlock>
                                         </StackPanel>
@@ -352,7 +352,7 @@
                    Content="Proxy sources:" />
                 <StackPanel Orientation="Horizontal">
                     <Button Click="AddGroupProxySource" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                         HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -360,7 +360,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddFileProxySource" Margin="0 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                         HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -368,7 +368,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddRemoteProxySource" Margin="0 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                         HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -408,7 +408,7 @@
                                         <Button Tag="{Binding}" Grid.Column="3" 
                                         Click="RemoveProxySource" 
                                         Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
+                                        Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -449,7 +449,7 @@
                                         <Button Tag="{Binding}" Grid.Column="4" 
                                         Click="RemoveProxySource" 
                                         Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
+                                        Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -482,7 +482,7 @@
                                         <Button Tag="{Binding}" Grid.Column="3" 
                                         Click="RemoveProxySource" 
                                         Margin="5 0 5 0" 
-                                        Background="{DynamicResource DangerButton}" >
+                                        Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -500,7 +500,7 @@
                    Content="Hit outputs:" />
                 <StackPanel Orientation="Horizontal">
                     <Button Click="AddDatabaseHitOutput" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                          HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -508,7 +508,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddFileSystemHitOutput" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                          HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -516,7 +516,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddDiscordWebhookHitOutput" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                          HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -524,7 +524,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddTelegramBotHitOutput" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                          HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -532,7 +532,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddCustomWebhookHitOutput" Margin="5 5 5 5" 
-                        Background="{DynamicResource PrimaryButton}"
+                        Style="{StaticResource StyledPrimaryButton}"
                          HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -572,7 +572,7 @@
                                         <Button Tag="{Binding}" Grid.Column="3" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
-                                            Background="{DynamicResource DangerButton}" >
+                                            Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -604,7 +604,7 @@
                                         <Button Tag="{Binding}" Grid.Column="3" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
-                                            Background="{DynamicResource DangerButton}" >
+                                            Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -660,7 +660,7 @@
                                         <Button Tag="{Binding}" Grid.Column="8" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
-                                            Background="{DynamicResource DangerButton}" >
+                                            Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -719,7 +719,7 @@
                                         <Button Tag="{Binding}" Grid.Column="8" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
-                                            Background="{DynamicResource DangerButton}" >
+                                            Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -766,7 +766,7 @@
                                         <Button Tag="{Binding}" Grid.Column="6" 
                                             Click="RemoveHitOutput" 
                                             Margin="5 0 5 0" 
-                                            Background="{DynamicResource DangerButton}" >
+                                            Style="{StaticResource StyledDangerButton}" >
                                             <StackPanel Orientation="Horizontal">
                                                 <iconPacks:PackIconMaterial Kind="Close" />
                                             </StackPanel>
@@ -784,7 +784,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Margin="0 10 0 0"
-                Background="{DynamicResource SuccessButton}"
+                Style="{StaticResource StyledSuccessButton}"
                 HorizontalAlignment="Stretch" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconOcticons Kind="Check" />

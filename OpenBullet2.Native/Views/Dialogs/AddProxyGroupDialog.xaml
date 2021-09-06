@@ -29,6 +29,6 @@
         <Label Grid.Column="0" Grid.Row="0" Content="Name:" />
         <TextBox x:Name="nameTextbox" Grid.Column="1" Grid.Row="0" Margin="5" />
         
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Background="{DynamicResource SuccessButton}" Margin="5"/>
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Style="{StaticResource StyledSuccessButton}" Margin="5"/>
     </Grid>
 </Page>

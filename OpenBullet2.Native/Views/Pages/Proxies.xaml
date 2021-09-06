@@ -24,19 +24,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button x:Name="addGroupButton" Click="AddGroup" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+            <Button x:Name="addGroupButton" Click="AddGroup" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Add" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Add Group</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="editGroupButton" Click="EditGroup" Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}" >
+            <Button x:Name="editGroupButton" Click="EditGroup" Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Edit Group</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteGroupButton" Click="DeleteGroup" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button x:Name="deleteGroupButton" Click="DeleteGroup" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Group</TextBlock>
@@ -52,31 +52,31 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button x:Name="importButton" Click="Import" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+            <Button x:Name="importButton" Click="Import" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="Import" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Import</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="exportButton" Click="ExportSelected" Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}" >
+            <Button x:Name="exportButton" Click="ExportSelected" Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="Export" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Export</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteButton" Click="DeleteSelected" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button x:Name="deleteButton" Click="DeleteSelected" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteNotWorkingButton" Click="DeleteNotWorking" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes not working proxies.">
+            <Button x:Name="deleteNotWorkingButton" Click="DeleteNotWorking" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes not working proxies.">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Not Working</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteUntestedButton" Click="DeleteUntested" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes proxies that haven't been tested.">
+            <Button x:Name="deleteUntestedButton" Click="DeleteUntested" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes proxies that haven't been tested.">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Untested</TextBlock>

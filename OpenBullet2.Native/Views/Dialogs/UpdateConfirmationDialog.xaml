@@ -33,14 +33,14 @@
         <StackPanel Orientation="Horizontal" Margin="0 10"
                     HorizontalAlignment="Center">
             <Button x:Name="confirmButton" Click="Confirm" 
-                    Margin="0 5 5 5" Background="{DynamicResource SuccessButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="Check" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Yes, update</TextBlock>
                 </StackPanel>
             </Button>
             <Button x:Name="backButton" Click="GoBack" 
-                    Margin="0 5 5 5" Background="{DynamicResource DangerButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">No, take me back</TextBlock>

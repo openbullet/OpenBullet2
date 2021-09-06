@@ -16,32 +16,32 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button x:Name="addButton" Click="Add" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+            <Button x:Name="addButton" Click="Add" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Add" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Add</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteButton" Click="DeleteSelected" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button x:Name="deleteButton" Click="DeleteSelected" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteAllButton" Click="DeleteAll" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button x:Name="deleteAllButton" Click="DeleteAll" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete All</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="deleteNotFoundWordlistsButton" Click="DeleteNotFound" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes missing wordlists from the list.">
+            <Button x:Name="deleteNotFoundWordlistsButton" Click="DeleteNotFound" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes missing wordlists from the list.">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Not Found</TextBlock>
                 </StackPanel>
             </Button>
             <TextBox x:Name="filterTextbox" Text="{Binding SearchString}" Margin="10 5 5 5" Width="150" KeyDown="UpdateSearch"/>
-            <Button x:Name="searchButton" Click="Search" Margin="0 5 5 5" >
+            <Button Style="{StaticResource StyledButton}" x:Name="searchButton" Click="Search" Margin="0 5 5 5" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Search" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>

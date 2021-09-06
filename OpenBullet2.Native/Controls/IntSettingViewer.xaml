@@ -55,7 +55,7 @@
                      Width="30"
                      Height="30"
                      ToolTip="Switch to constant mode"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="9">VAR</TextBlock>
                     </StackPanel>
@@ -67,7 +67,7 @@
                      Width="30"
                      Height="30"
                      ToolTip="Switch to variable mode"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconModern Kind="TextSerif" Width="15" Height="15" />
                     </StackPanel>

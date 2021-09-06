@@ -92,7 +92,7 @@
                        Visibility="{Binding IsPausing, Converter={StaticResource ResourceKey=BoolToVis}}" />
                 <Button Click="Start"
                     Visibility="{Binding CanStart, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Background="{DynamicResource SuccessButton}">
+                    Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="ControllerPlay" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
@@ -100,7 +100,7 @@
                 </Button>
                 <Button Click="Resume"
                     Visibility="{Binding CanResume, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource SuccessButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="ControllerPlay" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Resume</TextBlock>
@@ -108,7 +108,7 @@
                 </Button>
                 <Button Click="Pause"
                     Visibility="{Binding CanPause, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource WarningButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledWarningButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconModern Kind="ControlPause" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Pause</TextBlock>
@@ -116,7 +116,7 @@
                 </Button>
                 <Button Click="SkipWait"
                     Visibility="{Binding CanSkipWait, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource PrimaryButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconFontAwesome Kind="ForwardSolid" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Skip wait</TextBlock>
@@ -124,7 +124,7 @@
                 </Button>
                 <Button Click="Stop"
                     Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource DangerButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledDangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="ControllerStop" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
@@ -132,7 +132,7 @@
                 </Button>
                 <Button Click="Abort"
                     Visibility="{Binding CanAbort, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource DangerButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledDangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="CloseOutline" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Abort</TextBlock>
@@ -140,7 +140,7 @@
                 </Button>
                 <Button Click="ChangeOptions"
                     Visibility="{Binding CanChangeOptions, Converter={StaticResource ResourceKey=BoolToVis}}"
-                    Margin="2 0 0 0" Background="{DynamicResource PrimaryButton}">
+                    Margin="2 0 0 0" Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Options</TextBlock>

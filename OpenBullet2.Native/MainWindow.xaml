@@ -13,7 +13,7 @@
         BorderThickness="0"
         GlowBrush="Black"
         ResizeMode="CanResizeWithGrip"
-        WindowTitleBrush="#111"
+        WindowTitleBrush="{DynamicResource BackgroundSecondary}"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         TitleCharacterCasing="Normal"

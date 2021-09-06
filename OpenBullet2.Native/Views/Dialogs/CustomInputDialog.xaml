@@ -34,7 +34,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Click="Ok"
-                    Margin="0 5 5 5" Background="{DynamicResource SuccessButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconOcticons Kind="Check" />
                         <TextBlock 

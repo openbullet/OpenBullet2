@@ -94,7 +94,7 @@
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Rules</Label>
                 <StackPanel Orientation="Horizontal">
                     <Button Click="AddSimpleDataRule" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -102,7 +102,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddRegexDataRule" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -144,7 +144,7 @@
                                       Margin="5 0"
                                       VerticalContentAlignment="Center"/>
                                     <Button Tag="{Binding}" Grid.Column="6" 
-                                            Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveDataRule" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -172,7 +172,7 @@
                                       Margin="5 0"
                                       VerticalContentAlignment="Center"/>
                                     <Button Tag="{Binding}" Grid.Column="5" 
-                                            Click="RemoveDataRule" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveDataRule" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -185,7 +185,7 @@
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Resources</Label>
                 <StackPanel Orientation="Horizontal">
                     <Button Click="AddLinesFromFileResource" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="110" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -193,7 +193,7 @@
                         </StackPanel>
                     </Button>
                     <Button Click="AddRandomLinesFromFileResource" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="150" HorizontalAlignment="Left" >
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -233,7 +233,7 @@
                                       Margin="5 0"
                                       VerticalContentAlignment="Center"/>
                                     <Button Tag="{Binding}" Grid.Column="6" 
-                                            Click="RemoveResource" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveResource" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -266,7 +266,7 @@
                                       Margin="5 0"
                                       VerticalContentAlignment="Center"/>
                                     <Button Tag="{Binding}" Grid.Column="6" 
-                                            Click="RemoveResource" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveResource" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>
@@ -280,7 +280,7 @@
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Inputs</Label>
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Custom inputs</Label>
                 <Button x:Name="addCustomInputButton" Click="AddCustomInput" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -313,7 +313,7 @@
                                     <Label Grid.Column="4" VerticalAlignment="Center" Content="Default answer" />
                                     <TextBox Grid.Column="5" Text="{Binding DefaultAnswer}" Height="30" Margin="5 0" />
                                     <Button x:Name="removeCustomInputButton" Tag="{Binding}" Grid.Column="6" 
-                                            Click="RemoveCustomInput" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveCustomInput" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Kind="Close" />
                                         </StackPanel>

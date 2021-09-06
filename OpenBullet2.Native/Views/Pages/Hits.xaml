@@ -37,19 +37,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Click="DeleteSelected" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button Click="DeleteSelected" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
                 </StackPanel>
             </Button>
-            <Button Click="DeleteDuplicates" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+            <Button Click="DeleteDuplicates" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Duplicates</TextBlock>
                 </StackPanel>
             </Button>
-            <Button Click="Purge" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" ToolTip="Deletes missing wordlists from the list.">
+            <Button Click="Purge" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes missing wordlists from the list.">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Purge</TextBlock>
@@ -231,7 +231,7 @@
                 Text="{Binding SearchString}"
                 Margin="10 5 5 5"
                 KeyDown="UpdateSearch"/>
-            <Button Click="Search" Margin="0 5 5 5" Grid.Column="2" >
+            <Button Style="{StaticResource StyledButton}" Click="Search" Margin="0 5 5 5" Grid.Column="2" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Search" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Search Capture</TextBlock>

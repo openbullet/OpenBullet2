@@ -72,7 +72,7 @@
         <Label Content="Output variables:" />
 
         <Button x:Name="addOutputVariableButton" Click="AddOutputVariable" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -105,7 +105,7 @@
                             <Label Grid.Column="2" VerticalAlignment="Center" Content="Name" />
                             <TextBox Grid.Column="3" Text="{Binding Name}" Height="30" Margin="5 0" />
                             <Button x:Name="removeOutputVariable" Tag="{Binding}" Grid.Column="4" 
-                                            Click="RemoveOutputVariable" Margin="0 0 5 0" Background="{DynamicResource DangerButton}" >
+                                            Click="RemoveOutputVariable" Margin="0 0 5 0" Style="{StaticResource StyledDangerButton}" >
                                 <StackPanel Orientation="Horizontal">
                                     <iconPacks:PackIconMaterial Kind="Close" />
                                 </StackPanel>

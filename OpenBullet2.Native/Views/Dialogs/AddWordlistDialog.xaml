@@ -40,6 +40,6 @@
         <ComboBox x:Name="typeCombobox" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="5"/>
         <Label Grid.Column="0" Grid.Row="3" Content="Purpose:" />
         <TextBox x:Name="purposeTextbox" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="5"/>
-        <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Background="{DynamicResource SuccessButton}" Margin="5"/>
+        <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Style="{StaticResource StyledSuccessButton}" Margin="5"/>
     </Grid>
 </Page>

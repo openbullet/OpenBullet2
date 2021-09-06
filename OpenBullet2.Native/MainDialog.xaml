@@ -11,7 +11,7 @@
         SizeToContent="WidthAndHeight" ResizeMode="NoResize"
         BorderThickness="0"
         GlowBrush="Black"
-        WindowTitleBrush="#111"
+        WindowTitleBrush="{DynamicResource BackgroundSecondary}"
         WindowTransitionsEnabled="False"
         TitleCharacterCasing="Normal"
         WindowStartupLocation="CenterScreen">

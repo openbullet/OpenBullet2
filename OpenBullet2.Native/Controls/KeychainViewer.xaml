@@ -49,7 +49,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Move the keychain up"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconUnicons Kind="AngleUp" Width="10" Height="10" />
                     </StackPanel>
@@ -59,7 +59,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Move the keychain down"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconUnicons Kind="AngleDown" Width="10" Height="10" />
                     </StackPanel>
@@ -69,7 +69,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Remove the keychain"
-                     Background="{DynamicResource DangerButton}">
+                     Style="{StaticResource StyledDangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="Close" Width="10" Height="10" />
                     </StackPanel>
@@ -81,7 +81,7 @@
                         Margin="0 5"
                         Grid.Row="1">
                 <Button Click="AddStringKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -89,7 +89,7 @@
                     </StackPanel>
                 </Button>
                 <Button Click="AddBoolKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="60" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -97,7 +97,7 @@
                     </StackPanel>
                 </Button>
                 <Button Click="AddIntKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="50" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -105,7 +105,7 @@
                     </StackPanel>
                 </Button>
                 <Button Click="AddFloatKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="60" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -113,7 +113,7 @@
                     </StackPanel>
                 </Button>
                 <Button Click="AddListKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="60" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
@@ -121,7 +121,7 @@
                     </StackPanel>
                 </Button>
                 <Button Click="AddDictionaryKey" Margin="0 0 5 0" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="90" HorizontalAlignment="Left" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />

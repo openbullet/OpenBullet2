@@ -40,25 +40,25 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2">
-            <Button x:Name="donateButton" Click="OpenDonation" Margin="0 5 5 5">
+            <Button x:Name="donateButton" Style="{StaticResource StyledButton}" Click="OpenDonation" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Bitcoin" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Donate</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="repoButton" Click="OpenRepository" Margin="0 5 5 5">
+            <Button x:Name="repoButton" Style="{StaticResource StyledButton}" Click="OpenRepository" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconSimpleIcons Kind="Git" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Repository</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="forumButton" Click="OpenForum" Margin="0 5 5 5">
+            <Button x:Name="forumButton" Style="{StaticResource StyledButton}" Click="OpenForum" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconForkAwesome Kind="Users" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Official Forum</TextBlock>
                 </StackPanel>
             </Button>
-            <Button x:Name="issuesButton" Click="OpenIssues" Margin="0 5 5 5">
+            <Button x:Name="issuesButton" Style="{StaticResource StyledButton}" Click="OpenIssues" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconForkAwesome Kind="Bug" />
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Report an issue</TextBlock>

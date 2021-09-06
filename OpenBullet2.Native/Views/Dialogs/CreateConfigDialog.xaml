@@ -42,7 +42,7 @@
             x:Name="acceptButton" 
             Content="ACCEPT"
             Height="30"
-            Background="{DynamicResource SuccessButton}"
+            Style="{StaticResource StyledSuccessButton}"
             Click="Accept" Margin="5"/>
     </Grid>
 </Page>

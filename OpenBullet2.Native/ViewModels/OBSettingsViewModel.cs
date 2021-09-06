@@ -358,6 +358,26 @@ namespace OpenBullet2.Native.ViewModels
             {
                 OnPropertyChanged(property.Name);
             }
+
+            // Reset the theme colors
+            Brush.SetAppColor("BackgroundMain", Customization.BackgroundMain);
+            Brush.SetAppColor("BackgroundSecondary", Customization.BackgroundSecondary);
+            Brush.SetAppColor("BackgroundInput", Customization.BackgroundInput);
+            Brush.SetAppColor("ForegroundMain", Customization.ForegroundMain);
+            Brush.SetAppColor("ForegroundInput", Customization.ForegroundInput);
+            Brush.SetAppColor("ForegroundGood", Customization.ForegroundGood);
+            Brush.SetAppColor("ForegroundBad", Customization.ForegroundBad);
+            Brush.SetAppColor("ForegroundCustom", Customization.ForegroundCustom);
+            Brush.SetAppColor("ForegroundRetry", Customization.ForegroundRetry);
+            Brush.SetAppColor("ForegroundBanned", Customization.ForegroundBanned);
+            Brush.SetAppColor("ForegroundToCheck", Customization.ForegroundToCheck);
+            Brush.SetAppColor("ForegroundMenuSelected", Customization.ForegroundMenuSelected);
+            Brush.SetAppColor("SuccessButton", Customization.SuccessButton);
+            Brush.SetAppColor("PrimaryButton", Customization.PrimaryButton);
+            Brush.SetAppColor("WarningButton", Customization.WarningButton);
+            Brush.SetAppColor("DangerButton", Customization.DangerButton);
+            Brush.SetAppColor("ForegroundButton", Customization.ForegroundButton);
+            Brush.SetAppColor("BackgroundButton", Customization.BackgroundButton);
         }
 
         public void AddProxyCheckTarget() => ProxyCheckTargetsCollection.Add(new ProxyCheckTarget());

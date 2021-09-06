@@ -99,7 +99,7 @@
             <Label Grid.Column="0" Grid.Row="4" Content="Password:" />
             <TextBox x:Name="passwordTextbox" Grid.Column="1" Grid.Row="4" Margin="5"/>
 
-            <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Background="{DynamicResource SuccessButton}" Margin="5"/>
+            <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" x:Name="acceptButton" Content="ACCEPT" Click="Accept" Style="{StaticResource StyledSuccessButton}" Margin="5"/>
         </Grid>
     </Grid>
 </Page>

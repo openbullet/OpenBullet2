@@ -55,7 +55,7 @@
                     Click="MoveAllRight"
                     Height="30"
                     Width="30"
-                    Margin="0 10" Background="{DynamicResource PrimaryButton}" >
+                    Margin="0 10" Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconFontAwesome Kind="AngleDoubleRightSolid"/>
                 </StackPanel>
@@ -64,7 +64,7 @@
                     Click="MoveAllLeft"
                     Height="30"
                     Width="30"
-                    Margin="0 10" Background="{DynamicResource PrimaryButton}" >
+                    Margin="0 10" Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconFontAwesome Kind="AngleDoubleLeftSolid"/>
                 </StackPanel>

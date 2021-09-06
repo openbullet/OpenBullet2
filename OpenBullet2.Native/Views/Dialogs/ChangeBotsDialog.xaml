@@ -28,7 +28,7 @@
             Grid.Row="1"
             Content="ACCEPT"
             Click="Accept"
-            Background="{DynamicResource SuccessButton}"
+            Style="{StaticResource StyledSuccessButton}"
             Margin="0 5 0 0"/>
         
     </Grid>

@@ -30,7 +30,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Add a new block"
-                     Background="{DynamicResource SuccessButton}">
+                     Style="{StaticResource StyledSuccessButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterialDesign Kind="Add" Width="10" Height="10" />
                 </StackPanel>
@@ -39,7 +39,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Remove the selected block"
-                     Background="{DynamicResource DangerButton}">
+                     Style="{StaticResource StyledDangerButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Close" Width="10" Height="10" />
                 </StackPanel>
@@ -48,7 +48,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Move the selected block up"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="AngleUp" Width="10" Height="10" />
                 </StackPanel>
@@ -57,7 +57,7 @@
                      Width="25"
                      Height="20"
                      ToolTip="Move the selected block down"
-                     Background="{DynamicResource PrimaryButton}">
+                     Style="{StaticResource StyledPrimaryButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconUnicons Kind="AngleDown" Width="10" Height="10" />
                 </StackPanel>
@@ -65,7 +65,8 @@
             <Button Click="CloneBlock" 
                      Width="25"
                      Height="20"
-                     ToolTip="Clone the selected block">
+                     ToolTip="Clone the selected block"
+                     Style="{StaticResource StyledButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconFontAwesome Kind="CloneSolid" Width="10" Height="10" />
                 </StackPanel>
@@ -73,7 +74,8 @@
             <Button Click="EnableDisableBlock"
                      Width="25"
                      Height="20"
-                     ToolTip="Enable/Disable the selected block">
+                     ToolTip="Enable/Disable the selected block"
+                     Style="{StaticResource StyledButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconForkAwesome Kind="Ban" Width="10" Height="10" />
                 </StackPanel>
@@ -81,7 +83,8 @@
             <Button Click="Undo" 
                      Width="25"
                      Height="20"
-                     ToolTip="Undo">
+                     ToolTip="Undo"
+                     Style="{StaticResource StyledButton}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMicrons Kind="Undo" Width="10" Height="10" />
                 </StackPanel>

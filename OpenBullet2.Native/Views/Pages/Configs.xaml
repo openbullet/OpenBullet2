@@ -48,25 +48,25 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Button x:Name="newButton" Click="Create" Margin="0 5 5 5" Background="{DynamicResource SuccessButton}" >
+                <Button x:Name="newButton" Click="Create" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterialDesign Kind="Add" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">New</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="editButton" Click="Edit" Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}" >
+                <Button x:Name="editButton" Click="Edit" Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRemixIcon Kind="Edit2Fill" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Edit</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="saveButton" Click="Save" Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}" >
+                <Button x:Name="saveButton" Click="Save" Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="deleteButton" Click="Delete" Margin="0 5 5 5" Background="{DynamicResource DangerButton}" >
+                <Button x:Name="deleteButton" Click="Delete" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconMaterial Kind="Close" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
@@ -94,13 +94,13 @@
             -->
 
             <StackPanel Grid.Column="3" Orientation="Horizontal">
-                <Button x:Name="openFolderButton" Click="OpenFolder" Margin="0 5 5 5">
+                <Button Style="{StaticResource StyledButton}" x:Name="openFolderButton" Click="OpenFolder" Margin="0 5 5 5">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRemixIcon Kind="Folder2Fill" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Open Folder</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="rescanButton" Click="Rescan" Margin="0 5 5 5">
+                <Button Style="{StaticResource StyledButton}" x:Name="rescanButton" Click="Rescan" Margin="0 5 5 5">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRadixIcons Kind="Update" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Rescan</TextBlock>

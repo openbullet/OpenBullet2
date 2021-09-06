@@ -36,14 +36,14 @@
             <StackPanel HorizontalAlignment="Center" 
                         Orientation="Horizontal">
                 <Button x:Name="webUIButton" Click="ShowChangelog" 
-                    Margin="0 5 5 5" Background="{DynamicResource PrimaryButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Show changelog</TextBlock>
                     </StackPanel>
                 </Button>
                 <Button x:Name="changelogButton" Click="OpenInstallationTutorial"
-                    Margin="0 5 5 5" Background="{DynamicResource SuccessButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="Browser" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Try the cross-platform web UI</TextBlock>
@@ -55,7 +55,7 @@
                         Orientation="Horizontal"
                         Visibility="{Binding UpdateAvailable, Converter={StaticResource ResourceKey=BoolToVis}}">
                 <Button x:Name="updateButton" Click="ShowUpdateConfirmation"
-                    Margin="0 5 5 5" Background="{DynamicResource WarningButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledWarningButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRadixIcons Kind="Update" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Update Available! Click here to update</TextBlock>

@@ -58,7 +58,7 @@
             Foreground="{DynamicResource ForegroundCustom}" />
 
         <Button x:Name="addKeycheckButton" Click="AddKeychain" Margin="5 5 5 5" 
-                        Background="{DynamicResource SuccessButton}"
+                        Style="{StaticResource StyledSuccessButton}"
                         Width="70" HorizontalAlignment="Left" >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterialDesign Kind="Add" />

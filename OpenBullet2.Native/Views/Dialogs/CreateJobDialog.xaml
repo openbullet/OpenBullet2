@@ -12,14 +12,14 @@
         <StackPanel Orientation="Vertical" 
                     HorizontalAlignment="Center">
             <Button Click="CreateMultiRunJob" Margin="0 0 0 5" 
-                        Background="{DynamicResource PrimaryButton}" >
+                        Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Multi Run</TextBlock>
                 </StackPanel>
             </Button>
 
             <Button Click="CreateProxyCheckJob"
-                        Background="{DynamicResource PrimaryButton}" >
+                        Style="{StaticResource StyledPrimaryButton}" >
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Proxy Check</TextBlock>
                 </StackPanel>

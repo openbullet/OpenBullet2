@@ -40,7 +40,7 @@
                 <Button x:Name="openImageButton" 
                 Grid.Column="2"
                 Click="OpenIcon" 
-                Background="{DynamicResource PrimaryButton}" >
+                Style="{StaticResource StyledPrimaryButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconForkAwesome Kind="File" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Open</TextBlock>
@@ -62,7 +62,7 @@
                 <Button x:Name="downloadButton" 
                 Grid.Column="2"
                 Click="DownloadIcon" 
-                Background="{DynamicResource SuccessButton}" >
+                Style="{StaticResource StyledSuccessButton}" >
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconForkAwesome Kind="Download" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Download</TextBlock>

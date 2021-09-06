@@ -48,7 +48,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Click="Yes" x:Name="yesButton"
-                    Margin="0 5 5 5" Background="{DynamicResource SuccessButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconOcticons Kind="Check" />
                         <TextBlock 
@@ -59,7 +59,7 @@
                 </Button>
 
                 <Button Click="No" x:Name="noButton"
-                    Margin="0 5 5 5" Background="{DynamicResource DangerButton}">
+                    Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconOcticons 
                         Height="13"

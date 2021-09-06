@@ -33,7 +33,7 @@
                 <Button Click="OpenStacker"
                     x:Name="stackerButton"
                     HorizontalAlignment="Stretch"
-                    Background="{DynamicResource PrimaryButton}">
+                    Style="{StaticResource StyledPrimaryButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconFontAwesome Kind="LayerGroupSolid" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">Stacker</TextBlock>
@@ -42,7 +42,7 @@
                 <Button Click="OpenLoliCode"
                     x:Name="loliCodeButton"
                     HorizontalAlignment="Stretch"
-                    Background="{DynamicResource SuccessButton}">
+                    Style="{StaticResource StyledSuccessButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="Code" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">LoliCode</TextBlock>
@@ -51,13 +51,13 @@
                 <Button Click="OpenCSharpCode"
                     x:Name="cSharpButton"
                     HorizontalAlignment="Stretch"
-                    Background="{DynamicResource WarningButton}">
+                    Style="{StaticResource StyledWarningButton}">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconEntypo Kind="Code" />
                         <TextBlock VerticalAlignment="Center" Margin="5 0">C#</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Click="Save"
+                <Button Click="Save" Style="{StaticResource StyledButton}"
                     HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
