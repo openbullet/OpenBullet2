@@ -78,26 +78,31 @@
                 Content="LR"
                 x:Name="lrButton"
                 IsChecked="{Binding LRMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="CSS"
                 x:Name="cssButton"
                 IsChecked="{Binding CSSMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="XPath"
                 x:Name="xpathButton"
                 IsChecked="{Binding XPathMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="Json"
                 x:Name="jsonButton"
                 IsChecked="{Binding JsonMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="Regex"
                 x:Name="regexButton"
                 IsChecked="{Binding RegexMode}"
+                Background="Transparent"
                 Margin="5 0"/>
         </StackPanel>
 

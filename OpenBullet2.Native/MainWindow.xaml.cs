@@ -27,7 +27,7 @@ namespace OpenBullet2.Native
         private bool hoveringConfigsMenuOption;
         private bool hoveringConfigSubmenu;
 
-        private readonly Label[] labels;
+        private readonly TextBlock[] labels;
 
         private Home homePage;
         private Jobs jobsPage;
@@ -57,7 +57,7 @@ namespace OpenBullet2.Native
 
             InitializeComponent();
 
-            labels = new Label[]
+            labels = new TextBlock[]
             {
                 menuOptionAbout,
                 menuOptionConfigs,
@@ -270,7 +270,7 @@ namespace OpenBullet2.Native
         private void OpenConfigSettingsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigSettings);
         private void OpenCSharpCodePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigCSharpCode);
 
-        private void ChangePage(Page newPage, Label newLabel)
+        private void ChangePage(Page newPage, TextBlock newLabel)
         {
             CurrentPage = newPage;
             mainFrame.Content = newPage;

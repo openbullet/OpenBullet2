@@ -140,13 +140,13 @@
                     <Label FontWeight="Bold">Tested:</Label>
                     <Label Content="{Binding Job.Tested}" Margin="-5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Working:</Label>
-                    <Label Content="{Binding Job.Working}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Working:</TextBlock>
+                    <TextBlock Text="{Binding Job.Working}" Foreground="{DynamicResource ForegroundGood}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Not working:</Label>
-                    <Label Content="{Binding Job.NotWorking}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Not working:</TextBlock>
+                    <TextBlock Text="{Binding Job.NotWorking}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
                 </StackPanel>
             </StackPanel>
 

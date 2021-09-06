@@ -40,11 +40,13 @@
                 Content="Start in"
                 x:Name="startInButton"
                 IsChecked="{Binding StartInMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                     <RadioButton 
                 Content="Start at"
                 x:Name="startAtButton"
                 IsChecked="{Binding StartAtMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                 </StackPanel>
 
@@ -166,26 +168,31 @@
                 Content="Wordlist"
                 x:Name="wordlistDataPoolButton"
                 IsChecked="{Binding WordlistDataPoolMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                     <RadioButton 
                 Content="File"
                 x:Name="fileDataPoolButton"
                 IsChecked="{Binding FileDataPoolMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                     <RadioButton 
                 Content="Range"
                 x:Name="rangeDataPoolButton"
                 IsChecked="{Binding RangeDataPoolMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                     <RadioButton 
                 Content="Combinations"
                 x:Name="combinationsDataPoolButton"
                 IsChecked="{Binding CombinationsDataPoolMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                     <RadioButton 
                 Content="Infinite"
                 x:Name="infiniteDataPoolButton"
                 IsChecked="{Binding InfiniteDataPoolMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                 </StackPanel>
 
@@ -399,8 +406,7 @@
                                         <Label 
                                     Grid.Column="0" 
                                     VerticalAlignment="Center" 
-                                    Content="Group"
-                                    Foreground="{DynamicResource ForegroundToCheck}"/>
+                                    Content="Group"/>
                                         <ComboBox
                                     Grid.Column="1"
                                     ItemsSource="{Binding DataContext.ProxyGroupNames, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
@@ -429,8 +435,7 @@
                                         <Label 
                                     Grid.Column="0" 
                                     VerticalAlignment="Center" 
-                                    Content="File name"
-                                    Foreground="{DynamicResource ForegroundGood}"/>
+                                    Content="File name"/>
                                         <TextBox
                                     Grid.Column="1"
                                     Text="{Binding FileName, Mode=TwoWay}" />
@@ -469,8 +474,7 @@
                                         <Label 
                                     Grid.Column="0" 
                                     VerticalAlignment="Center" 
-                                    Content="Url"
-                                    Foreground="{DynamicResource ForegroundRetry}"/>
+                                    Content="Url"/>
                                         <TextBox
                                     Grid.Column="1"
                                     Text="{Binding Url}" />
@@ -563,8 +567,7 @@
                                         <Label 
                                             Grid.Column="0" 
                                             VerticalAlignment="Center" 
-                                            Content="Database"
-                                            Foreground="{DynamicResource ForegroundToCheck}"/>
+                                            Content="Database"/>
                                         <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center" 
@@ -592,8 +595,7 @@
                                         <Label 
                                             Grid.Column="0" 
                                             VerticalAlignment="Center" 
-                                            Content="File System"
-                                            Foreground="{DynamicResource ForegroundGood}"/>
+                                            Content="File System"/>
                                         <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center"
@@ -629,8 +631,7 @@
                                         <Label 
                                             Grid.Column="0" 
                                             VerticalAlignment="Center"
-                                            Content="Discord"
-                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                            Content="Discord"/>
                                         <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center"
@@ -685,8 +686,7 @@
                                         <Label 
                                             Grid.Column="0" 
                                             VerticalAlignment="Center"
-                                            Content="Telegram"
-                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                            Content="Telegram"/>
                                         <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center"
@@ -742,8 +742,7 @@
                                         <Label 
                                             Grid.Column="0" 
                                             VerticalAlignment="Center"
-                                            Content="Custom Webhook"
-                                            Foreground="{DynamicResource ForegroundRetry}"/>
+                                            Content="Custom Webhook"/>
                                         <Label 
                                             Grid.Column="1" 
                                             VerticalAlignment="Center"

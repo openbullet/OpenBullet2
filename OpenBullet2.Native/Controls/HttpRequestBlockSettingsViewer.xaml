@@ -95,21 +95,25 @@
                 Content="Standard"
                 x:Name="standardButton"
                 IsChecked="{Binding StandardMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="Raw"
                 x:Name="rawButton"
                 IsChecked="{Binding RawMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="Basic Auth"
                 x:Name="basicAuthButton"
                 IsChecked="{Binding BasicAuthMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             <RadioButton 
                 Content="Multipart"
                 x:Name="multipartButton"
                 IsChecked="{Binding MultipartMode}"
+                Background="Transparent"
                 Margin="5 0"/>
         </StackPanel>
 

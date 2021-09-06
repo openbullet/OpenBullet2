@@ -91,12 +91,12 @@
                                     <Label Content="{Binding Bots}" Margin="-5 0 0 0" />
                                     <Label FontWeight="Bold" Content="Proxies:" Margin="-5 0 0 0" />
                                     <Label Content="{Binding ProxyMode}" Margin="-5 0 0 0" />
-                                    <Label FontWeight="Bold" Content="Hits:" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
-                                    <Label Content="{Binding DataHits}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
-                                    <Label FontWeight="Bold" Content="Custom:" Foreground="{DynamicResource ForegroundCustom}" Margin="-5 0 0 0" />
-                                    <Label Content="{Binding DataCustom}" Foreground="{DynamicResource ForegroundCustom}" Margin="-5 0 0 0" />
-                                    <Label FontWeight="Bold" Content="ToCheck:" Foreground="{DynamicResource ForegroundToCheck}" Margin="-5 0 0 0" />
-                                    <Label Content="{Binding DataToCheck}" Foreground="{DynamicResource ForegroundToCheck}" Margin="-5 0 0 0" />
+                                    <TextBlock FontWeight="Bold" Text="Hits:" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding DataHits}" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" Margin="5 0" />
+                                    <TextBlock FontWeight="Bold" Text="Custom:" Foreground="{DynamicResource ForegroundCustom}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding DataCustom}" Foreground="{DynamicResource ForegroundCustom}" VerticalAlignment="Center" Margin="5 0" />
+                                    <TextBlock FontWeight="Bold" Text="ToCheck:" Foreground="{DynamicResource ForegroundToCheck}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding DataToCheck}" Foreground="{DynamicResource ForegroundToCheck}" VerticalAlignment="Center" Margin="5 0" />
                                     <Label FontWeight="Bold" Content="Progress:" Margin="-5 0 0 0" />
                                     <Label Content="{Binding ProgressString}" Margin="-5 0 0 0" />
                                     <Label FontWeight="Bold" Content="CPM:" Margin="-5 0 0 0" />
@@ -173,10 +173,10 @@
                                     Grid.Column="1">
                                     <Label FontWeight="Bold" Content="Bots:" Margin="-5 0 0 0" />
                                     <Label Content="{Binding Bots}" Margin="-5 0 0 0" />
-                                    <Label FontWeight="Bold" Content="Working:" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
-                                    <Label Content="{Binding Working}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
-                                    <Label FontWeight="Bold" Content="Not working:" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
-                                    <Label Content="{Binding NotWorking}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                                    <TextBlock FontWeight="Bold" Text="Working:" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Working}" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" Margin="5 0" />
+                                    <TextBlock FontWeight="Bold" Text="Not working:" Foreground="{DynamicResource ForegroundBad}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding NotWorking}" Foreground="{DynamicResource ForegroundBad}" VerticalAlignment="Center" Margin="5 0" />
                                     <Label FontWeight="Bold" Content="Progress:" Margin="-5 0 0 0" />
                                     <Label Content="{Binding ProgressString}" Margin="-5 0 0 0" />
                                     <Label FontWeight="Bold" Content="CPM:" Margin="-5 0 0 0" />

@@ -36,12 +36,9 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Blue.xaml" />
 
                 <ResourceDictionary>
-                    
+
                     <!-- BUILTIN TYPES -->
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
-                    </Style>
-                    <Style TargetType="{x:Type Label}">
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}"/>
                     </Style>
                     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
@@ -56,6 +53,10 @@
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
                     </Style>
                     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
+                        <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                    </Style>
+                    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MahApps.Styles.ComboBoxItem}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
                     </Style>
@@ -274,9 +275,7 @@
                         <Setter Property="Background" Value="{DynamicResource PrimaryButton}" />
                     </Style>
 
-                    <Style x:Key="StyledGoodLabel" TargetType="{x:Type Label}">
-                        <Setter Property="Foreground" Value="{DynamicResource ForegroundGood}"/>
-                    </Style>
+                    
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

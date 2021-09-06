@@ -38,7 +38,7 @@
             </Grid.ColumnDefinitions>
             
             <!-- Job options -->
-            <StackPanel Grid.Column="0" Margin="-5 0 0 0">
+            <StackPanel Grid.Column="0" Margin="5 0 0 0">
                 <Image 
                     Source="{Binding ConfigIcon}"
                     Width="48"
@@ -64,23 +64,23 @@
             <StackPanel Grid.Column="1" Grid.ColumnSpan="2">
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Config:</Label>
-                    <Label Content="{Binding ConfigNameAndAuthor}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding ConfigNameAndAuthor}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Data pool:</Label>
-                    <Label Content="{Binding DataPoolInfo}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding DataPoolInfo}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Proxy mode:</Label>
-                    <Label Content="{Binding Job.ProxyMode}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.ProxyMode}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Proxy sources:</Label>
-                    <Label Content="{Binding ProxySourcesInfo}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding ProxySourcesInfo}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Hit outputs:</Label>
-                    <Label Content="{Binding HitOutputsInfo}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding HitOutputsInfo}" Margin="5 0 0 0" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">
@@ -166,7 +166,7 @@
                     Foreground="{DynamicResource BackgroundSecondary}"
                     Content="{Binding Job.ProgressString}"
                     FontWeight="Bold"
-                    Margin="-5 0 0 0" />
+                    Margin="5 0 0 0" />
             </StackPanel>
         </Border>
 
@@ -443,39 +443,39 @@
                 <Label FontWeight="Bold">DATA</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Tested:</Label>
-                    <Label Content="{Binding Job.DataTested}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.DataTested}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Hits:</Label>
-                    <Label Content="{Binding Job.DataHits}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Hits:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataHits}" Foreground="{DynamicResource ForegroundGood}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundCustom}">Custom:</Label>
-                    <Label Content="{Binding Job.DataCustom}" Foreground="{DynamicResource ForegroundCustom}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundCustom}">Custom:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataCustom}" Foreground="{DynamicResource ForegroundCustom}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Fails:</Label>
-                    <Label Content="{Binding Job.DataFails}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Fails:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataFails}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Invalid:</Label>
-                    <Label Content="{Binding Job.DataInvalid}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Invalid:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataInvalid}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundRetry}">Retried:</Label>
-                    <Label Content="{Binding Job.DataRetried}" Foreground="{DynamicResource ForegroundRetry}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundRetry}">Retried:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataRetried}" Foreground="{DynamicResource ForegroundRetry}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</Label>
-                    <Label Content="{Binding Job.DataBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundToCheck}">To check:</Label>
-                    <Label Content="{Binding Job.DataToCheck}" Foreground="{DynamicResource ForegroundToCheck}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundToCheck}">To check:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataToCheck}" Foreground="{DynamicResource ForegroundToCheck}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Errors:</Label>
-                    <Label Content="{Binding Job.DataErrors}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Errors:</TextBlock>
+                    <TextBlock Text="{Binding Job.DataErrors}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
                 </StackPanel>
             </StackPanel>
 
@@ -485,17 +485,17 @@
                     <Label FontWeight="Bold">Total:</Label>
                     <Label Content="{Binding Job.ProxiesTotal}" Margin="-5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Alive:</Label>
-                    <Label Content="{Binding Job.ProxiesAlive}" Foreground="{DynamicResource ForegroundGood}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Alive:</TextBlock>
+                    <TextBlock Text="{Binding Job.ProxiesAlive}" Foreground="{DynamicResource ForegroundGood}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Bad:</Label>
-                    <Label Content="{Binding Job.ProxiesBad}" Foreground="{DynamicResource ForegroundBad}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Bad:</TextBlock>
+                    <TextBlock Text="{Binding Job.ProxiesBad}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0 -5">
-                    <Label FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</Label>
-                    <Label Content="{Binding Job.ProxiesBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="-5 0 0 0" />
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBanned}">Banned:</TextBlock>
+                    <TextBlock Text="{Binding Job.ProxiesBanned}" Foreground="{DynamicResource ForegroundBanned}" Margin="5 0 0 0" />
                 </StackPanel>
             </StackPanel>
 
@@ -503,23 +503,23 @@
                 <Label FontWeight="Bold">OTHERS</Label>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">CPM:</Label>
-                    <Label Content="{Binding Job.CPM}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.CPM}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Captcha credit:</Label>
-                    <Label Content="{Binding Job.CaptchaCredit}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.CaptchaCredit}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Elapsed:</Label>
-                    <Label Content="{Binding Job.ElapsedString}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.ElapsedString}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Remaining:</Label>
-                    <Label Content="{Binding Job.RemainingString}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.RemainingString}" Margin="5 0 0 0" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0 -5">
                     <Label FontWeight="Bold">Progress:</Label>
-                    <Label Content="{Binding Job.ProgressString}" Margin="-5 0 0 0" />
+                    <Label Content="{Binding Job.ProgressString}" Margin="5 0 0 0" />
                 </StackPanel>
             </StackPanel>
 

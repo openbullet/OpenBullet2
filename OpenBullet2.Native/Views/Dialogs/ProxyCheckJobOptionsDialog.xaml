@@ -24,11 +24,13 @@
                 Content="Start in"
                 x:Name="startInButton"
                 IsChecked="{Binding StartInMode}"
+                Background="Transparent"
                 Margin="5 0"/>
                 <RadioButton 
                 Content="Start at"
                 x:Name="startAtButton"
                 IsChecked="{Binding StartAtMode}"
+                Background="Transparent"
                 Margin="5 0"/>
             </StackPanel>
 

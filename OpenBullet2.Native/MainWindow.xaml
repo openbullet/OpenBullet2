@@ -47,27 +47,27 @@
 
             <StackPanel x:Name="topMenu" Margin="-5 2 0 0" Grid.Column="0" Orientation="Horizontal">
                 <StackPanel.Resources>
-                    <Style TargetType="Label">
+                    <Style TargetType="TextBlock">
                         <Setter Property="FontWeight" Value="Bold" />
-                        <Setter Property="Margin" Value="0 0 5 0" />
+                        <Setter Property="Margin" Value="10 0 5 0" />
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
                         <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="VerticalAlignment" Value="Center" />
                     </Style>
                 </StackPanel.Resources>
-                <Label x:Name="menuOptionHome" Content="Home" MouseDown="OpenHomePage" />
-                <Label x:Name="menuOptionJobs" Content="Jobs" MouseDown="OpenJobsPage" />
-                <Label x:Name="menuOptionMonitor" Content="Monitor" MouseDown="OpenMonitorPage" />
-                <Label x:Name="menuOptionProxies" Content="Proxies" MouseDown="OpenProxiesPage" />
-                <Label x:Name="menuOptionWordlists" Content="Wordlists" MouseDown="OpenWordlistsPage" />
+                <TextBlock x:Name="menuOptionHome" Text="Home" MouseDown="OpenHomePage" />
+                <TextBlock x:Name="menuOptionJobs" Text="Jobs" MouseDown="OpenJobsPage" />
+                <TextBlock x:Name="menuOptionMonitor" Text="Monitor" MouseDown="OpenMonitorPage" />
+                <TextBlock x:Name="menuOptionProxies" Text="Proxies" MouseDown="OpenProxiesPage" />
+                <TextBlock x:Name="menuOptionWordlists" Text="Wordlists" MouseDown="OpenWordlistsPage" />
 
                 <StackPanel 
                     Orientation="Horizontal"
                     MouseEnter="ConfigsMenuOptionMouseEnter"
                     MouseLeave="ConfigsMenuOptionMouseLeave">
-                    <Label x:Name="menuOptionConfigs" 
-                       Content="Configs" 
+                    <TextBlock x:Name="menuOptionConfigs" 
+                       Text="Configs" 
                        MouseDown="OpenConfigsPage" />
                     <iconPacks:PackIconFontAwesome 
                     Foreground="{DynamicResource ForegroundMain}"
@@ -78,12 +78,12 @@
                     Visibility="{Binding IsConfigSelected, Converter={StaticResource ResourceKey=BoolToVis}}"
                     Kind="CaretDownSolid" />
                 </StackPanel>
-                
-                <Label x:Name="menuOptionHits" Content="Hits" MouseDown="OpenHitsPage" />
-                <Label x:Name="menuOptionPlugins" Content="Plugins" MouseDown="OpenPluginsPage" />
-                <Label x:Name="menuOptionOBSettings" Content="OB Settings" MouseDown="OpenOBSettingsPage" />
-                <Label x:Name="menuOptionRLSettings" Content="RL Settings" MouseDown="OpenRLSettingsPage" />
-                <Label x:Name="menuOptionAbout" Content="About" MouseDown="OpenAboutPage" />
+
+                <TextBlock x:Name="menuOptionHits" Text="Hits" MouseDown="OpenHitsPage" />
+                <TextBlock x:Name="menuOptionPlugins" Text="Plugins" MouseDown="OpenPluginsPage" />
+                <TextBlock x:Name="menuOptionOBSettings" Text="OB Settings" MouseDown="OpenOBSettingsPage" />
+                <TextBlock x:Name="menuOptionRLSettings" Text="RL Settings" MouseDown="OpenRLSettingsPage" />
+                <TextBlock x:Name="menuOptionAbout" Text="About" MouseDown="OpenAboutPage" />
             </StackPanel>
 
             <Border Padding="1" Grid.Column="1">
@@ -110,21 +110,21 @@
             MouseEnter="ConfigSubmenuMouseEnter"
             MouseLeave="ConfigSubmenuMouseLeave">
             <StackPanel.Resources>
-                <Style TargetType="Label">
+                <Style TargetType="TextBlock">
                     <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="Margin" Value="0 0 5 0" />
+                    <Setter Property="Margin" Value="10 0 5 0" />
                     <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
                     <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
                     <Setter Property="FontSize" Value="14" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                 </Style>
             </StackPanel.Resources>
-            <Label x:Name="menuOptionMetadata" Content="Metadata" MouseDown="OpenMetadataPage" />
-            <Label x:Name="menuOptionReadme" Content="Readme" MouseDown="OpenReadmePage" />
-            <Label x:Name="menuOptionStacker" Content="Stacker" MouseDown="OpenStackerPage" />
-            <Label x:Name="menuOptionLoliCode" Content="LoliCode" MouseDown="OpenLoliCodePage" />
-            <Label x:Name="menuOptionConfigSettings" Content="Settings" MouseDown="OpenConfigSettingsPage" />
-            <Label x:Name="menuOptionCSharpCode" Content="C# Code" MouseDown="OpenCSharpCodePage" />
+            <TextBlock x:Name="menuOptionMetadata" Text="Metadata" MouseDown="OpenMetadataPage" />
+            <TextBlock x:Name="menuOptionReadme" Text="Readme" MouseDown="OpenReadmePage" />
+            <TextBlock x:Name="menuOptionStacker" Text="Stacker" MouseDown="OpenStackerPage" />
+            <TextBlock x:Name="menuOptionLoliCode" Text="LoliCode" MouseDown="OpenLoliCodePage" />
+            <TextBlock x:Name="menuOptionConfigSettings" Text="Settings" MouseDown="OpenConfigSettingsPage" />
+            <TextBlock x:Name="menuOptionCSharpCode" Text="C# Code" MouseDown="OpenCSharpCodePage" />
         </StackPanel>
         
         <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
