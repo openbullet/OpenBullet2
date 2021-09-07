@@ -26,8 +26,8 @@ body:
   - type: input
     id: browser
     attributes:
-      label: Browser
-      description: Which browser are you using to access the web interface of OB2?
+      label: Browser / Native
+      description: Which browser are you using to access the web interface of OB2? If you are using the native client, just write Native
       placeholder: ex. Chrome 91
     validations:
       required: true
