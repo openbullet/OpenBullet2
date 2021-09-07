@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Auth;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Jobs;
-using OpenBullet2.Repositories;
-using OpenBullet2.Services;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
 using System;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -23,11 +23,11 @@ namespace OpenBullet2.Pages
         [Inject] private JobManagerService Manager { get; set; }
         [Inject] private IModalService Modal { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
         [Inject] private IGuestRepository GuestRepo { get; set; }
 
-        private readonly object removeLock = new object();
+        private readonly object removeLock = new();
         private int uid = -1;
         private Timer uiRefreshTimer;
         private Dictionary<int, string> guests = new();
@@ -52,7 +52,7 @@ namespace OpenBullet2.Pages
         {
             if (firstRender)
             {
-                var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobManagerUpdateInterval);
+                var interval = Math.Max(50, OBSettingsService.Settings.GeneralSettings.JobManagerUpdateInterval);
                 uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
                     null, interval, interval);
             }
@@ -102,7 +102,7 @@ namespace OpenBullet2.Pages
             {
                 var entity = await JobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
                 await JobRepo.Delete(entity);
-                Manager.Jobs.Remove(job);
+                Manager.RemoveJob(job);
             }
             finally
             {
@@ -124,7 +124,7 @@ namespace OpenBullet2.Pages
             if (uid == 0)
             {
                 JobRepo.Purge();
-                Manager.Jobs.Clear();
+                Manager.Clear();
             }
             else
             {
@@ -132,7 +132,11 @@ namespace OpenBullet2.Pages
                 .Where(j => j.Owner.Id == uid).ToListAsync();
 
                 await JobRepo.Delete(entities);
-                Manager.Jobs.RemoveAll(j => j.OwnerId == uid);
+
+                foreach (var job in Manager.Jobs.Where(j => j.OwnerId == uid))
+                {
+                    Manager.RemoveJob(job);
+                }
             }
         }
 

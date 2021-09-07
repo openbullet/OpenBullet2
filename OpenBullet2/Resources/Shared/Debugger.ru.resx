@@ -118,48 +118,48 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompleteLog" xml:space="preserve">
-    <value>Complete log</value>
+    <value>Полный журнал</value>
   </data>
   <data name="InvalidProxy" xml:space="preserve">
-    <value>Invalid proxy</value>
+    <value>Неверный прокси-сервер</value>
   </data>
   <data name="InvalidProxyMessage" xml:space="preserve">
-    <value>The test proxy you provided is invalid and cannot be parsed</value>
+    <value>Предоставленный вами тестовый прокси недействителен и не может быть разобран</value>
   </data>
   <data name="PersistLog" xml:space="preserve">
-    <value>Persist log</value>
+    <value>Сохраняйте журнал</value>
   </data>
   <data name="ShowLog" xml:space="preserve">
-    <value>Show log</value>
+    <value>Показать журнал</value>
   </data>
   <data name="ShowVariables" xml:space="preserve">
-    <value>Show variables</value>
+    <value>Показать переменные</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start</value>
+    <value>Начало</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Stop</value>
+    <value>Остановить</value>
   </data>
   <data name="TestData" xml:space="preserve">
-    <value>Test data</value>
+    <value>Данные испытаний</value>
   </data>
   <data name="TestProxy" xml:space="preserve">
-    <value>Test proxy</value>
+    <value>Тестовый прокси-сервер</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="UseProxy" xml:space="preserve">
-    <value>Use proxy</value>
+    <value>Используйте прокси-сервер</value>
   </data>
   <data name="Variables" xml:space="preserve">
-    <value>Variables</value>
+    <value>Переменные</value>
   </data>
   <data name="ViewAsHTML" xml:space="preserve">
-    <value>View as HTML</value>
+    <value>Просмотр в формате HTML</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Тип списка слов</value>
   </data>
 </root>

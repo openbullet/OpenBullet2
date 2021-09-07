@@ -1,0 +1,76 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="Home">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock
+                   Grid.Row="1"
+                   FontSize="24" 
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   Margin="0 0 0 20"
+                   Foreground="{DynamicResource ForegroundMain}">
+                Welcome to the native client of <Bold>OpenBullet 2</Bold>
+            </TextBlock>
+
+            <StackPanel HorizontalAlignment="Center" 
+                        Orientation="Horizontal">
+                <Button x:Name="webUIButton" Click="ShowChangelog" 
+                    Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Show changelog</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="changelogButton" Click="OpenInstallationTutorial"
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="Browser" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Try the cross-platform web UI</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Visibility="{Binding UpdateAvailable, Converter={StaticResource ResourceKey=BoolToVis}}">
+                <Button x:Name="updateButton" Click="ShowUpdateConfirmation"
+                    Margin="0 5 5 5" Style="{StaticResource StyledWarningButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconRadixIcons Kind="Update" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Update Available! Click here to update</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <TextBlock
+                   FontSize="14" 
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   Margin="50 20 50 0"
+                   Foreground="{DynamicResource ForegroundMain}"
+                   Text="{Binding Announcement}">
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Page>

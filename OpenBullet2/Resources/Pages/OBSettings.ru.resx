@@ -118,150 +118,150 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="AdminSessionLifetimeHours" xml:space="preserve">
-    <value>Admin session lifetime (hours)</value>
+    <value>Время жизни сеанса администратора (часы)</value>
   </data>
   <data name="AdminUsername" xml:space="preserve">
-    <value>Admin username</value>
+    <value>Имя пользователя администратора</value>
   </data>
   <data name="AllDone" xml:space="preserve">
-    <value>All done</value>
+    <value>Все сделано</value>
   </data>
   <data name="AllowSystemWideFileAccess" xml:space="preserve">
-    <value>Allow system-wide file access</value>
+    <value>Разрешить общесистемный доступ к файлам</value>
   </data>
   <data name="ApiKey" xml:space="preserve">
-    <value>Api Key</value>
+    <value>Ключ Api</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="AutoSetRecommendedBots" xml:space="preserve">
-    <value>Automatically set the recommended bots when a config is selected in the job creation page</value>
+    <value>Автоматическая установка рекомендуемых ботов при выборе конфигурации на странице создания задания</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="ChangePassword" xml:space="preserve">
-    <value>Change password</value>
+    <value>Изменить пароль</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Очистить</value>
   </data>
   <data name="Customization" xml:space="preserve">
-    <value>Customization</value>
+    <value>Персонализация</value>
   </data>
   <data name="DefaultAuthor" xml:space="preserve">
-    <value>The default author on newly created configs</value>
+    <value>Автор по умолчанию для вновь созданных конфигураций</value>
   </data>
   <data name="DefaultJobDisplayMode" xml:space="preserve">
-    <value>Default job display mode</value>
+    <value>Режим отображения заданий по умолчанию</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Done</value>
+    <value>Выполнено</value>
   </data>
   <data name="EnableJobLogging" xml:space="preserve">
-    <value>Enable logging in the job viewer page</value>
+    <value>Включить ведение журнала на странице просмотра заданий</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>Общий</value>
   </data>
   <data name="GroupCapturesInDebugger" xml:space="preserve">
-    <value>Group captures in debugger</value>
+    <value>Групповые захваты в отладчике</value>
   </data>
   <data name="GuestSessionLifetimeHours" xml:space="preserve">
-    <value>Guest session lifetime (hours)</value>
+    <value>Время работы гостевой сессии (часы)</value>
   </data>
   <data name="IgnoreWordlistNameOnHitsDedupe" xml:space="preserve">
-    <value>Ignore the wordlist name when removing duplicates from hits</value>
+    <value>Игнорирование имени списка слов при удалении дубликатов из хитов</value>
   </data>
   <data name="JobManagerUpdateInterval" xml:space="preserve">
-    <value>Job Manager update interval</value>
+    <value>Интервал обновления менеджера заданий</value>
   </data>
   <data name="JobUpdateInterval" xml:space="preserve">
-    <value>Job update interval</value>
+    <value>Интервал обновления заданий</value>
   </data>
   <data name="LogMaxEntries" xml:space="preserve">
-    <value>Maximum number of entries in the log</value>
+    <value>Максимальное количество записей в журнале</value>
   </data>
   <data name="LogToFile" xml:space="preserve">
-    <value>Log to a file as well</value>
+    <value>Запись в файл также</value>
   </data>
   <data name="MonacoTheme" xml:space="preserve">
-    <value>Monaco Editor Theme</value>
+    <value>Тема для редактора Monaco</value>
   </data>
   <data name="NavigateOnEdit" xml:space="preserve">
-    <value>When editing a config, navigate to</value>
+    <value>При редактировании конфигурации перейдите к</value>
   </data>
   <data name="NewAdminPassword" xml:space="preserve">
-    <value>New admin password</value>
+    <value>Новый пароль администратора</value>
   </data>
   <data name="NewPasswordSet" xml:space="preserve">
-    <value>The new password was set!</value>
+    <value>Новый пароль был установлен!</value>
   </data>
   <data name="PlaySoundOnHit" xml:space="preserve">
-    <value>Play sound on hit</value>
+    <value>Воспроизведение звука при ударе</value>
   </data>
   <data name="ProxyCheckTargets" xml:space="preserve">
-    <value>Proxy Check Targets</value>
+    <value>Цели проверки прокси</value>
   </data>
   <data name="ProxyCheckTargetsDescription" xml:space="preserve">
-    <value>These are the proxy targets available in a Proxy Check Job. The proxies will be checked against the target URL and if the success key is found in the downloaded source, the proxy will be marked as working.</value>
+    <value>Это цели прокси, доступные в задании проверки прокси. Прокси будут проверены по целевому URL, и если ключ успеха будет найден в загруженном источнике, прокси будет помечен как рабочий.</value>
   </data>
   <data name="Remote" xml:space="preserve">
-    <value>Remote</value>
+    <value>Удаленный</value>
   </data>
   <data name="RemoteConfigsEndpoints" xml:space="preserve">
-    <value>Remote Configs Endpoints</value>
+    <value>Удаленное конфигурирование конечных точек</value>
   </data>
   <data name="RemoteConfigsEndpointsDescription" xml:space="preserve">
-    <value>These are the remote endpoints that will be queried upon reload of the config repository in order to get configs hosted on another machine.</value>
+    <value>Это удаленные конечные точки, которые будут запрашиваться при перезагрузке хранилища конфигураций, чтобы получить конфигурации, размещенные на другой машине.</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="RequireAdminLogin" xml:space="preserve">
-    <value>Require admin login</value>
+    <value>Требуется вход в систему администратора</value>
   </data>
   <data name="RestoreDefaults" xml:space="preserve">
-    <value>Restore Defaults</value>
+    <value>Восстановление настроек по умолчанию</value>
   </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
-    <value>Do you want to restore the default settings?</value>
+    <value>Хотите ли вы восстановить настройки по умолчанию?</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Сохранить</value>
   </data>
   <data name="Saved" xml:space="preserve">
-    <value>Saved</value>
+    <value>Сохранено</value>
   </data>
   <data name="Security" xml:space="preserve">
-    <value>Security</value>
+    <value>Безопасность</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
-    <value>The settings were successfully saved.</value>
+    <value>Настройки были успешно сохранены.</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
-    <value>Success Key</value>
+    <value>Ключ к успеху</value>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
+    <value>Тема</value>
   </data>
   <data name="ThemeSuccessfullyUploaded" xml:space="preserve">
-    <value>Theme successfully uploaded</value>
+    <value>Тема успешно загружена</value>
   </data>
   <data name="UnsupportedThemeFormat" xml:space="preserve">
-    <value>Unsupported theme file format. Supported formats: .css, .zip</value>
+    <value>Неподдерживаемый формат файла темы. Поддерживаемые форматы: .css, .zip</value>
   </data>
   <data name="UploadTheme" xml:space="preserve">
-    <value>Upload theme</value>
+    <value>Загрузить тему</value>
   </data>
   <data name="URL" xml:space="preserve">
     <value>URL</value>
   </data>
   <data name="WarnConfigNotSaved" xml:space="preserve">
-    <value>Show a warning when the currently loaded config was not saved and another one is loaded</value>
+    <value>Показывать предупреждение, когда текущая загруженная конфигурация не была сохранена и загружается другая конфигурация</value>
   </data>
 </root>

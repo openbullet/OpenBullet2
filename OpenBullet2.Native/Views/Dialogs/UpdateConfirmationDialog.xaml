@@ -1,0 +1,51 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.UpdateConfirmationDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Update confirmation">
+
+    <StackPanel Margin="50">
+        <TextBlock
+            Grid.Row="1"
+                   FontSize="14" 
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   Foreground="{DynamicResource ForegroundMain}">
+            You are about to update from version
+            <Bold>
+            <Run Foreground="{DynamicResource ForegroundCustom}"
+                 Text="{Binding CurrentVersion}"/></Bold>
+            to version
+            <Bold>
+            <Run Foreground="{DynamicResource ForegroundCustom}"
+                Text="{Binding RemoteVersion}"/></Bold>.
+            <LineBreak/>
+            OpenBullet 2 will close and reopen once the update is finished.
+            <LineBreak/>
+            <Bold>Are you sure you want to do this?</Bold>
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal" Margin="0 10"
+                    HorizontalAlignment="Center">
+            <Button x:Name="confirmButton" Click="Confirm" 
+                    Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconUnicons Kind="Check" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Yes, update</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="backButton" Click="GoBack" 
+                    Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">No, take me back</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</Page>

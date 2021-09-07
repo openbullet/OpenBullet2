@@ -1,0 +1,195 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.ProxyCheckJobViewer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="650" d:DesignWidth="800"
+      Title="MultiRunJobViewer">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Job options -->
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Url:</Label>
+                    <Label Content="{Binding Job.Url}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Success key:</Label>
+                    <Label Content="{Binding Job.SuccessKey}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Check only untested:</Label>
+                    <Label Content="{Binding Job.CheckOnlyUntested}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Timeout (ms):</Label>
+                    <Label Content="{Binding Job.TimeoutMilliseconds}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Bots:</Label>
+                    <Label Content="{Binding Job.Bots}" />
+                    <iconPacks:PackIconRemixIcon
+                        Foreground="{DynamicResource ForegroundMain}"
+                        Margin="0 10 0 0"
+                        Height="10"
+                        Width="10"
+                        MouseDown="ChangeBots"
+                        Kind="Edit2Fill" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Label Content="{Binding RemainingWaitString}"
+                       Visibility="{Binding IsWaiting, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Label Content="Stopping..."
+                       Visibility="{Binding IsStopping, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Label Content="Pausing..."
+                       Visibility="{Binding IsPausing, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Button Click="Start"
+                    Visibility="{Binding CanStart, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Style="{StaticResource StyledSuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Resume"
+                    Visibility="{Binding CanResume, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Style="{StaticResource StyledSuccessButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Resume</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Pause"
+                    Visibility="{Binding CanPause, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Style="{StaticResource StyledWarningButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Kind="ControlPause" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Pause</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="SkipWait"
+                    Visibility="{Binding CanSkipWait, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Style="{StaticResource StyledPrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconFontAwesome Kind="ForwardSolid" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Skip wait</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Stop"
+                    Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Style="{StaticResource StyledDangerButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerStop" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Abort"
+                    Visibility="{Binding CanAbort, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Margin="2 0 0 0" Style="{StaticResource StyledDangerButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="CloseOutline" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Abort</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </Grid>
+
+        <Border Grid.Row="1" Padding="0 5">
+            <ProgressBar
+                Minimum="0"
+                Maximum="100"
+                Height="20"
+                Value="{Binding Progress, Mode=OneWay}" />
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <Label FontWeight="Bold">PROXIES</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Total:</Label>
+                    <Label Content="{Binding Job.Total}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Tested:</Label>
+                    <Label Content="{Binding Job.Tested}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}">Working:</TextBlock>
+                    <TextBlock Text="{Binding Job.Working}" Foreground="{DynamicResource ForegroundGood}" Margin="5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}">Not working:</TextBlock>
+                    <TextBlock Text="{Binding Job.NotWorking}" Foreground="{DynamicResource ForegroundBad}" Margin="5 0 0 0" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Label FontWeight="Bold">OTHERS</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">CPM:</Label>
+                    <Label Content="{Binding Job.CPM}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Elapsed:</Label>
+                    <Label Content="{Binding Job.ElapsedString}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Remaining:</Label>
+                    <Label Content="{Binding Job.RemainingString}" Margin="-5 0 0 0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0 -5">
+                    <Label FontWeight="Bold">Progress:</Label>
+                    <Label Content="{Binding Job.ProgressString}" Margin="-5 0 0 0" />
+                </StackPanel>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0 5 0 0">
+
+            <RichTextBox
+                x:Name="jobLogRTB"
+                IsReadOnly="True"
+                IsUndoEnabled="False"
+                BorderThickness="0"
+                Background="{DynamicResource BackgroundSecondary}"
+                Padding="5"
+                FontFamily="Consolas"
+                VerticalScrollBarVisibility="Visible">
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+
+        </Grid>
+    </Grid>
+</Page>

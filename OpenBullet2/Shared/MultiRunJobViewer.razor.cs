@@ -3,13 +3,9 @@ using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
-using OpenBullet2.Entities;
 using OpenBullet2.Helpers;
 using OpenBullet2.Logging;
-using OpenBullet2.Models.Data;
-using OpenBullet2.Models.Jobs;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Logging;
@@ -22,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Shared
 {
@@ -31,7 +28,7 @@ namespace OpenBullet2.Shared
 
         [Inject] private IModalService Modal { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private MemoryJobLogger Logger { get; set; }
         [Inject] private IJobRepository JobRepo { get; set; }
         [Inject] private JobManagerService JobManager { get; set; }
@@ -49,7 +46,7 @@ namespace OpenBullet2.Shared
         {
             if (firstRender)
             {
-                var interval = Math.Max(50, PersistentSettings.OpenBulletSettings.GeneralSettings.JobUpdateInterval);
+                var interval = Math.Max(50, OBSettingsService.Settings.GeneralSettings.JobUpdateInterval);
                 uiRefreshTimer = new Timer(new TimerCallback(async _ => await InvokeAsync(StateHasChanged)),
                     null, interval, interval);
             }
@@ -72,8 +69,6 @@ namespace OpenBullet2.Shared
 
                 Job.Bots = newAmount;
                 changingBots = false;
-
-                _ = Task.Run(() => SaveJobOptions(this, EventArgs.Empty));
             }
         }
 
@@ -106,7 +101,7 @@ namespace OpenBullet2.Shared
 
         private void PlaySoundOnHit(object sender, ResultDetails<MultiRunInput, CheckResult> details)
         {
-            if (details.Result.BotData.STATUS == "SUCCESS" && PersistentSettings.OpenBulletSettings.CustomizationSettings.PlaySoundOnHit)
+            if (details.Result.BotData.STATUS == "SUCCESS" && OBSettingsService.Settings.CustomizationSettings.PlaySoundOnHit)
             {
                 _ = js.InvokeVoidAsync("playHitSound");
             }
@@ -129,18 +124,6 @@ namespace OpenBullet2.Shared
         private void LogCompleted(object sender, EventArgs e)
         {
             Logger.LogInfo(Job.Id, Loc["TaskManagerCompleted"]);
-        }
-
-        private void SaveRecord(object sender, EventArgs e)
-        {
-            // Fire and forget
-            JobManager.SaveRecord(Job).ConfigureAwait(false);
-        }
-
-        private void SaveJobOptions(object sender, EventArgs e)
-        {
-            // Fire and forget
-            JobManager.SaveJobOptions(Job).ConfigureAwait(false);
         }
 
         private async Task Start()
@@ -397,7 +380,7 @@ namespace OpenBullet2.Shared
 
         private void AddEventHandlers()
         {
-            if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+            if (OBSettingsService.Settings.GeneralSettings.EnableJobLogging)
             {
                 Job.OnResult += LogResult;
                 Job.OnResult += PlaySoundOnHit;
@@ -405,11 +388,6 @@ namespace OpenBullet2.Shared
                 Job.OnError += LogError;
                 Job.OnCompleted += LogCompleted;
             }
-            
-            Job.OnCompleted += SaveRecord;
-            Job.OnTimerTick += SaveRecord;
-            Job.OnCompleted += SaveJobOptions;
-            Job.OnTimerTick += SaveJobOptions;
         }
 
         private void RemoveEventHandlers()
@@ -423,18 +401,6 @@ namespace OpenBullet2.Shared
                 Job.OnCompleted -= LogCompleted;
             }
             catch
-            {
-
-            }
-
-            try
-            {
-                Job.OnCompleted -= SaveRecord;
-                Job.OnTimerTick -= SaveRecord;
-                Job.OnCompleted -= SaveJobOptions;
-                Job.OnTimerTick -= SaveJobOptions;
-            }
-            catch 
             {
 
             }

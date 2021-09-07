@@ -1,9 +1,9 @@
 ﻿@using RuriLib.Models.Jobs
-@using OpenBullet2.Models.Hits
+@using OpenBullet2.Core.Models.Hits
 @using RuriLib.Models.Hits.HitOutputs
 @using RuriLib.Models.Proxies.ProxySources
 @using RuriLib.Models.Data.DataPools
-@using OpenBullet2.Models.Proxies.Sources
+@using OpenBullet2.Core.Models.Proxies.Sources
 @using System.Globalization
 @using RuriLib.Models.Jobs.StartConditions
 @using RuriLib.Extensions
@@ -166,7 +166,7 @@
                 <span class="font-weight-bold">@Loc["CaptchaCredit"]: </span><span>@Job.CaptchaCredit</span><br />
                 <span class="font-weight-bold">@Loc["Elapsed"]: </span><span>@((int)Job.Elapsed.TotalDays) @Loc["days"] @Job.Elapsed.ToString(@"hh\:mm\:ss")</span><br />
                 <span class="font-weight-bold">@Loc["Remaining"]: </span><span>@((int)Job.Remaining.TotalDays) @Loc["days"] @Job.Remaining.ToString(@"hh\:mm\:ss")</span><br />
-                <span class="font-weight-bold">@Loc["Progress"]: </span><span>@(Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span><br />
+                <span class="font-weight-bold">@Loc["Progress"]: </span><span>@(Job.Status == JobStatus.Idle ? Job.Skip : Job.DataTested + Job.Skip) / @Job.DataPool.Size (@((Job.Progress * 100).ToString("0.00"))%)</span><br />
                 <br />
             }
             else
@@ -249,7 +249,7 @@
     </div>
 }
 
-@if (PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultJobDisplayMode == Models.Settings.JobDisplayMode.Detailed)
+@if (OBSettingsService.Settings.GeneralSettings.DefaultJobDisplayMode == Core.Models.Settings.JobDisplayMode.Detailed)
 {
     <table class="table mt-3">
         <thead>
@@ -289,7 +289,7 @@
 
 <div class="container-fluid mt-3">
     <div class="row">
-        @if (PersistentSettings.OpenBulletSettings.GeneralSettings.EnableJobLogging)
+        @if (OBSettingsService.Settings.GeneralSettings.EnableJobLogging)
         {
             <div class="col-12 col-xl-6 px-0 pr-xl-2 job-viewer-log-container">
                 <GenericLogger JobId="Job.Id" />

@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using OpenBullet2.Auth;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Data;
-using OpenBullet2.Models.Hits;
-using OpenBullet2.Models.Jobs;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Extensions;
@@ -30,6 +30,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -43,7 +44,7 @@ namespace OpenBullet2.Pages
         [Inject] private JobFactoryService JobFactory { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private AuthenticationStateProvider Auth { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
@@ -177,7 +178,7 @@ namespace OpenBullet2.Pages
         private async Task DeleteDuplicates()
         {
             var duplicates = hits
-                .GroupBy(h => h.GetHashCode(PersistentSettings.OpenBulletSettings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
+                .GroupBy(h => h.GetHashCode(OBSettingsService.Settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
                 .Where(g => g.Count() > 1)
                 .SelectMany(g => g.OrderBy(h => h.Date)
                 .Reverse().Skip(1)).ToList();
@@ -273,7 +274,7 @@ namespace OpenBullet2.Pages
             {
                 var job = JobFactory.FromOptions(entity.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
 
-                JobManager.Jobs.Add(job);
+                JobManager.AddJob(job);
                 Nav.NavigateTo($"jobs/edit/{job.Id}");
             }
             catch (Exception ex)

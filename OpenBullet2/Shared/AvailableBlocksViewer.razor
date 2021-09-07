@@ -42,10 +42,10 @@ else
         <RadzenDataList WrapItems="true" AllowPaging="false" Data="@currentNode.SubCategories" TItem="CategoryTreeNode" PageSize="100" Style="margin-left: -5px;">
             <Template Context="node">
                 <RadzenCard Style="width:250px; max-width: 250px; margin: 0px; padding: 5px;">
-                    <div class="card" style="background-color: @GetCategory(node).BackgroundColor; cursor: pointer; border: solid 3px var(--bg-secondary);"
+                    <div class="card" style="background-color: @node.Category.BackgroundColor; cursor: pointer; border: solid 3px var(--bg-secondary);"
                          @onclick="@(() => SelectSubCategory(node))">
-                        <div class="card-body" style="color: @GetCategory(node).ForegroundColor;">
-                            <h5 class="card-text">@GetCategory(node).Name</h5>
+                        <div class="card-body" style="color: @node.Category.ForegroundColor;">
+                            <h5 class="card-text">@node.Category.Name</h5>
                         </div>
                     </div>
                 </RadzenCard>
@@ -123,16 +123,6 @@ else
         {
             currentNode = currentNode.Parent;
         }
-    }
-
-    private BlockCategory GetCategory(CategoryTreeNode node)
-    {
-        if (node.Descriptors.Count > 0)
-            return node.Descriptors.First().Category;
-
-        var category = GetCategory(node.SubCategories.First());
-        category.Name = node.Name;
-        return category;
     }
 
     private void OnSelectedDescriptor(BlockDescriptor descriptor)

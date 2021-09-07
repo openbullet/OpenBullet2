@@ -1,0 +1,146 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.Shared.Debugger"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages.Shared"
+      xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
+      xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Debugger">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" Margin="0 5 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Content="Data" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" Text="{Binding TestData}" Height="30" Margin="5 0" />
+            <Label Grid.Column="2" Content="Wordlist Type" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="3" 
+                ItemsSource="{Binding WordlistTypes}"
+                SelectedItem="{Binding WordlistType}" Height="30" Margin="5 0" />
+            <CheckBox Grid.Column="4" Content="Persist log" IsChecked="{Binding PersistLog}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="5 5 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="0" IsChecked="{Binding UseProxy}"/>
+            <Label Grid.Column="1" Content="Proxy" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" Text="{Binding TestProxy}" Height="30" Margin="5 0" />
+            <ComboBox Grid.Column="3" 
+                ItemsSource="{Binding ProxyTypes}"
+                SelectedItem="{Binding ProxyType}" Height="30" Margin="5 0" />
+            <Button Click="Start"
+                    Style="{StaticResource StyledSuccessButton}"
+                    Width="60"
+                    Grid.Column="4"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding CanStart, Converter={StaticResource ResourceKey=BoolToVis}}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Click="Stop"
+                    Style="{StaticResource StyledDangerButton}"
+                    Width="60"
+                    Grid.Column="4"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconEntypo Kind="ControllerStop" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <TabControl Grid.Row="2" 
+                    Margin="5 5 0 0"
+                    x:Name="tabControl">
+            <TabItem>
+                <TabItem.Header>
+                    <Button Click="ShowLog"
+                        Margin="-5 0 0 0"
+                        Style="{StaticResource StyledSuccessButton}"
+                        Width="60" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Log</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </TabItem.Header>
+                <WindowsFormsHost Grid.Row="0">
+                    <wf:RichTextBox 
+                        x:Name="logRTB"
+                        Dock="Fill"
+                        ForeColor="Gainsboro"
+                        ReadOnly="True"
+                        ScrollBars="Vertical"
+                        BorderStyle="None"
+                        DetectUrls="False"/>
+                </WindowsFormsHost>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Button Click="ShowVariables"
+                        Style="{StaticResource StyledPrimaryButton}"
+                        Width="80" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Variable" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Variables</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </TabItem.Header>
+                <WindowsFormsHost Grid.Row="0">
+                    <wf:RichTextBox 
+                        x:Name="variablesRTB"
+                        Dock="Fill"
+                        ForeColor="Gainsboro"
+                        ReadOnly="True"
+                        ScrollBars="Vertical"
+                        BorderStyle="None"
+                        DetectUrls="False"/>
+                </WindowsFormsHost>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Button Click="ShowHTML"
+                        Style="{StaticResource StyledWarningButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconEntypo Kind="Browser" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">HTML</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </TabItem.Header>
+                <uc:HTMLViewer x:Name="htmlViewer" VerticalAlignment="Stretch" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

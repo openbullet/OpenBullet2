@@ -118,90 +118,99 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="CapturedData" xml:space="preserve">
-    <value>Captured Data</value>
+    <value>Захваченные данные</value>
   </data>
   <data name="Config" xml:space="preserve">
-    <value>Config</value>
+    <value>Конфигурация</value>
   </data>
   <data name="ConfigMissing" xml:space="preserve">
-    <value>Cannot find config with id</value>
+    <value>Не удается найти конфигурацию с идентификатором</value>
   </data>
-  <data name="CopyData" xml:space="preserve">
-    <value>Copy data</value>
-  </data>
-  <data name="CopyDataCapture" xml:space="preserve">
-    <value>Copy data + capture</value>
+  <data name="Copy" xml:space="preserve">
+    <value>Копировать</value>
   </data>
   <data name="Data" xml:space="preserve">
-    <value>Data</value>
+    <value>Данные</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Date</value>
+    <value>Дата</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="DeleteFiltered" xml:space="preserve">
-    <value>Delete filtered</value>
+    <value>Удалить</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="EditHit" xml:space="preserve">
-    <value>Edit hit</value>
+    <value>Редактирование удара</value>
   </data>
   <data name="hits" xml:space="preserve">
-    <value>hits</value>
+    <value>попадает на</value>
   </data>
   <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
-    <value>Hits from different configs selected, please select hits obtained with the same config</value>
+    <value>Выбраны хиты из разных конфигураций, пожалуйста, выберите хиты, полученные с той же конфигурацией</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Loading</value>
+    <value>Загрузка</value>
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
-    <value>You must select a hit first</value>
+    <value>Сначала вы должны выбрать удар</value>
   </data>
   <data name="Proxy" xml:space="preserve">
-    <value>Proxy</value>
+    <value>Прокси</value>
   </data>
   <data name="Purge" xml:space="preserve">
-    <value>Purge</value>
+    <value>Очистка</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
-    <value>Do you really want to delete</value>
+    <value>Вы действительно хотите удалить</value>
   </data>
   <data name="ReallyDeleteAllHits" xml:space="preserve">
-    <value>Do you really want to DELETE ALL of your hits?</value>
+    <value>Вы действительно хотите УДАЛИТЬ ВСЕ свои хиты?</value>
   </data>
   <data name="results" xml:space="preserve">
-    <value>results</value>
+    <value>результаты</value>
   </data>
   <data name="ResultsPerPage" xml:space="preserve">
-    <value>Results per page</value>
+    <value>Результаты на страницу</value>
   </data>
   <data name="SendToRecheck" xml:space="preserve">
-    <value>Send to recheck</value>
+    <value>Отправить на повторную проверку</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Wordlist</value>
+    <value>Список слов</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>No records to display</value>
+    <value>Нет записей для отображения</value>
   </data>
   <data name="DeleteDuplicates" xml:space="preserve">
-    <value>Delete duplicates</value>
+    <value>Удаление дубликатов</value>
+  </data>
+  <data name="CopyToClipboardFailed" xml:space="preserve">
+    <value>Копирование в буфер обмена не удалось</value>
+  </data>
+  <data name="CopyToClipboardFailedMessage" xml:space="preserve">
+    <value>Копирование в буфер обмена не удалось. Примечание: Если вы обращаетесь к OB2 удаленно через HTTP (а не HTTPS), браузер будет блокировать копию, чтобы защитить вас от потенциальных рисков.</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="ExecuteOn" xml:space="preserve">
+    <value>Выполнить на</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Формат</value>
   </data>
 </root>

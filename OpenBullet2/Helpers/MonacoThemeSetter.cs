@@ -1,5 +1,5 @@
 ﻿using BlazorMonaco;
-using OpenBullet2.Services;
+using OpenBullet2.Core.Models.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,11 +7,11 @@ namespace OpenBullet2.Helpers
 {
     public static class MonacoThemeSetter
     {
-		public static async Task SetLolicodeTheme(PersistentSettingsService Settings)
+		public static async Task SetLolicodeTheme(CustomizationSettings settings)
         {
 			await MonacoEditorBase.DefineTheme("vs-loli", new StandaloneThemeData
 			{
-				Base = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
+				Base = settings.MonacoTheme,
 				Inherit = true,
 				Rules = new List<TokenThemeRule>
 				{

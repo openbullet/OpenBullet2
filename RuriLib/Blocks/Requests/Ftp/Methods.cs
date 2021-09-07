@@ -13,7 +13,7 @@ namespace RuriLib.Blocks.Requests.Ftp
     [BlockCategory("FTP", "Blocks to work with the FTP protocol", "#fbec5d")]
     public static class Methods
     {
-        [Block("Connects to an FTP server")]
+        [Block("Connects to an FTP server", extraInfo = "Currently, this block only supports HTTP proxies")]
         public static async Task FtpConnect(BotData data, string host, int port = 21, 
             string username = "", string password = "", int timeoutMilliseconds = 10000)
         {

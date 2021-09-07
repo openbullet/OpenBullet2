@@ -1,0 +1,48 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.CreateConfigDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Create a config">
+
+    <Grid Height="150" Width="250" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+            </Style>
+        </Grid.Resources>
+
+        <Label Grid.Column="0" Grid.Row="0" Content="Name:" />
+        <TextBox x:Name="nameTextbox" Grid.Column="1" Grid.Row="0" Margin="5" KeyDown="TextboxKeyDown"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Category:" />
+        <ComboBox x:Name="categoryCombobox" Grid.Column="1" Grid.Row="1" Text="Default" IsEditable="True" Margin="5" KeyDown="TextboxKeyDown"/>
+        <Label Grid.Column="0" Grid.Row="2" Content="Author:" />
+        <TextBox x:Name="authorTextbox" Grid.Column="1" Grid.Row="2" Margin="5" KeyDown="TextboxKeyDown"/>
+        <Button 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2" 
+            Grid.Row="4" 
+            x:Name="acceptButton" 
+            Content="ACCEPT"
+            Height="30"
+            Style="{StaticResource StyledSuccessButton}"
+            Click="Accept" Margin="5"/>
+    </Grid>
+</Page>

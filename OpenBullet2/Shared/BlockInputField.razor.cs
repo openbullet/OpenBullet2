@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Services;
 using RuriLib.Extensions;
 using RuriLib.Models.Blocks;
@@ -29,8 +30,9 @@ namespace OpenBullet2.Shared
             "data.HEADERS[\"name\"]", "data.COOKIES[\"name\"]",
             "data.STATUS", "data.RESPONSECODE", "data.RAWSOURCE", "data.Line.Data" };
 
-            var wordlistType = VolatileSettings.DebuggerOptions.WordlistType;
-            foreach (var slice in RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistType).Slices.Reverse())
+            var wordlistTypeName = VolatileSettings.DebuggerOptions.WordlistType;
+            var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == wordlistTypeName);
+            foreach (var slice in wordlistType.Slices.Concat(wordlistType.SlicesAlias).Reverse())
             {
                 suggestions.Insert(0, $"input.{slice}");
             }

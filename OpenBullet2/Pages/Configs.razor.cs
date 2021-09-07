@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Settings;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -32,7 +33,7 @@ namespace OpenBullet2.Pages
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
         private Config selectedConfig;
@@ -161,7 +162,7 @@ namespace OpenBullet2.Pages
             ConfigService.SelectedConfig = selectedConfig;
             ConfigService.Configs.Add(selectedConfig);
             
-            selectedConfig.Metadata.Author = PersistentSettings.OpenBulletSettings.GeneralSettings.DefaultAuthor;
+            selectedConfig.Metadata.Author = OBSettingsService.Settings.GeneralSettings.DefaultAuthor;
             VolatileSettings.DebuggerLog = new();
             Nav.NavigateTo("config/edit/metadata");
         }
@@ -267,7 +268,7 @@ namespace OpenBullet2.Pages
 
             ConfigService.SelectedConfig = selectedConfig;
 
-            var section = PersistentSettings.OpenBulletSettings.GeneralSettings.ConfigSectionOnLoad;
+            var section = OBSettingsService.Settings.GeneralSettings.ConfigSectionOnLoad;
             var uri = string.Empty;
 
             if (selectedConfig.Mode == ConfigMode.DLL)

@@ -118,57 +118,57 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddWordlist" xml:space="preserve">
-    <value>Add wordlist</value>
+    <value>Добавить список слов</value>
   </data>
   <data name="Amount" xml:space="preserve">
-    <value>Amount</value>
+    <value>Сумма</value>
   </data>
   <data name="CharacterSet" xml:space="preserve">
-    <value>Character set</value>
+    <value>Набор символов</value>
   </data>
   <data name="Combinations" xml:space="preserve">
-    <value>Combinations</value>
+    <value>Комбинации</value>
   </data>
   <data name="combinationsWillBeGenerated" xml:space="preserve">
-    <value>combinations will be generated</value>
+    <value>будут создаваться комбинации</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="FileName" xml:space="preserve">
-    <value>File name</value>
+    <value>Имя файла</value>
   </data>
   <data name="Infinite" xml:space="preserve">
-    <value>Infinite</value>
+    <value>Бесконечность</value>
   </data>
   <data name="Length" xml:space="preserve">
-    <value>Length</value>
+    <value>Длина</value>
   </data>
   <data name="lines" xml:space="preserve">
-    <value>lines</value>
+    <value>строки</value>
   </data>
   <data name="NoWordlistSelected" xml:space="preserve">
-    <value>No wordlist selected</value>
+    <value>Не выбран список слов</value>
   </data>
   <data name="Pad" xml:space="preserve">
     <value>Pad</value>
   </data>
   <data name="Range" xml:space="preserve">
-    <value>Range</value>
+    <value>Диапазон</value>
   </data>
   <data name="SelectWordlist" xml:space="preserve">
-    <value>Select wordlist</value>
+    <value>Выберите список слов</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start</value>
+    <value>Начало</value>
   </data>
   <data name="Step" xml:space="preserve">
-    <value>Step</value>
+    <value>Шаг</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Wordlist</value>
+    <value>Список слов</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Тип списка слов</value>
   </data>
 </root>

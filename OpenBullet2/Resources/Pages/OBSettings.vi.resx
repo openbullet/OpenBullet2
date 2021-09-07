@@ -178,10 +178,10 @@
     <value>Bỏ qua tên tài khoản trong khi xóa các dữ liệu trùng lặp</value>
   </data>
   <data name="JobManagerUpdateInterval" xml:space="preserve">
-    <value>Job Manager update interval</value>
+    <value>Thời gian Cập nhật của Trình quản lý Tác vụ</value>
   </data>
   <data name="JobUpdateInterval" xml:space="preserve">
-    <value>Job update interval</value>
+    <value>Thời gian Cập nhật của Tác vụ</value>
   </data>
   <data name="LogMaxEntries" xml:space="preserve">
     <value>Số mục tối đa trong nhật ký</value>
@@ -253,7 +253,7 @@
     <value>Tải giao diện lên thành công</value>
   </data>
   <data name="UnsupportedThemeFormat" xml:space="preserve">
-    <value>Ko hỗ trợ định dạng giao diện này. Đijng dạng giao diện hỗ trợ: .css, .zip</value>
+    <value>Ko hỗ trợ định dạng giao diện này. Định dạng giao diện hỗ trợ: .css, .zip</value>
   </data>
   <data name="UploadTheme" xml:space="preserve">
     <value>Tải giao diện</value>
@@ -262,6 +262,6 @@
     <value>URL</value>
   </data>
   <data name="WarnConfigNotSaved" xml:space="preserve">
-    <value>Hiển thị cảnh báo khi configs hiện tại chưa được lưu và một configs khác được chạy</value>
+    <value>Hiển thị cảnh báo khi config hiện tại chưa được lưu và một config khác được chạy</value>
   </data>
 </root>

@@ -1,0 +1,173 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.Wordlists"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="Wordlists">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button x:Name="addButton" Click="Add" Margin="0 5 5 5" Style="{StaticResource StyledSuccessButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Add</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="deleteButton" Click="DeleteSelected" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="deleteAllButton" Click="DeleteAll" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete All</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button x:Name="deleteNotFoundWordlistsButton" Click="DeleteNotFound" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" ToolTip="Deletes missing wordlists from the list.">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Not Found</TextBlock>
+                </StackPanel>
+            </Button>
+            <TextBox x:Name="filterTextbox" Text="{Binding SearchString}" Margin="10 5 5 5" Width="150" KeyDown="UpdateSearch"/>
+            <Button Style="{StaticResource StyledButton}" x:Name="searchButton" Click="Search" Margin="0 5 5 5" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Search" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <ListView x:Name="wordlistListView" Grid.Row="1" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=WordlistsCollection}" SelectionMode="Extended" BorderThickness="1" AllowDrop="True" Drop="HandleDrop">
+            <!-- Align Headers to the Left -->
+            <ListView.Resources>
+                <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+                    <Setter Property="Width" Value="18" />
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStopCollection>
+                                        <GradientStop Color="{DynamicResource BorderLightColor}" Offset="0.0" />
+                                        <GradientStop Color="{DynamicResource BorderDarkColor}" Offset="1.0" />
+                                    </GradientStopCollection>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                                    <Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="BorderBrush">
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black" Offset="0" />
+                                <GradientStop Color="White" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="{x:Type GridViewColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                <Grid>
+                                    <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="Transparent">
+                                        <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Left" />
+                                    </Border>
+                                    <Thumb x:Name="PART_HeaderGripper"
+                                         HorizontalAlignment="Right"
+                                         Margin="0,0,-9,0"
+                                         Style="{StaticResource GridViewColumnHeaderGripper}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="OverridesDefaultStyle" Value="True" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                    <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                    <Setter Property="FontSize" Value="14" />
+                </Style>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" 
+                    Padding="0"
+                    SnapsToDevicePixels="true">
+                                    <GridViewRowPresenter 
+                    HorizontalAlignment="Left" 
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource BackgroundSecondary}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Resources>
+
+            <!-- Show Headers by overriding the default style -->
+            <ListView.Style>
+                <Style TargetType="{x:Type ListView}" />
+            </ListView.Style>
+
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="ColumnHeaderClicked">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250" DisplayMemberBinding="{Binding Path=FileName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="FileName" Click="ColumnHeaderClicked">Path</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Type}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Type" Click="ColumnHeaderClicked">Type</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Purpose}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Purpose" Click="ColumnHeaderClicked">Purpose</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Total}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Total" Click="ColumnHeaderClicked">Total</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

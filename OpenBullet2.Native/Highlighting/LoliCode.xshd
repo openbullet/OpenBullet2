@@ -1,0 +1,315 @@
+<SyntaxDefinition name="C#"
+      xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <Color name="Block" foreground="#98CFFF" />
+  <Color name="Block.End" foreground="#98CFFF" />
+  <Color name="Block.Disabled" foreground="#EC7063" />
+  <Color name="Block.Safe" foreground="#BCFF70" />
+  <Color name="Block.Label" foreground="#58D68D" />
+  <Color name="Block.Var" foreground="#F7DC6F" />
+  <Color name="Block.Cap" foreground="#F1948A" />
+  <Color name="Block.Arrow" foreground="#BB8FCE" />
+  <Color name="Block.Interp" foreground="#BB8FCE" />
+  <Color name="Block.Variable" foreground="#FAD7A0" />
+  <Color name="Block.CustomParam" foreground="#A8FFD2" />
+
+  <Color name="String.Variable" foreground="#FAD7A0" />
+  <Color name="JumpLabel" foreground="#F78686" />
+  <Color name="Key" foreground="#6F81FF" />
+  <Color name="False" foreground="#FF6347" />
+  <Color name="True" foreground="#9ACD32" />
+  
+  <Color name="Keychain.Success" foreground="#9ACD32" />
+  <Color name="Keychain.Fail" foreground="#FF6347" />
+  <Color name="Keychain.Retry" foreground="#FFFF00" />
+  <Color name="Keychain.Ban" foreground="#DDA0DD" />
+  <Color name="Keychain.None" foreground="#87CEEB" />
+  <Color name="Keychain.Default" foreground="#FFA500" />
+
+  <Color name="Script.Delimiter" foreground="#6F81FF" />
+  <Color name="Script.Output" foreground="#FFBC80" />
+  
+  <Color name="Comment" foreground="#608B4E" />
+  <Color name="String" foreground="#CE9178" />
+  <Color name="Keyword" foreground="#98CFFF" />
+  <Color name="CSKeyword" foreground="#5DADE2" />
+  
+    <!-- This is the main ruleset. -->
+  <RuleSet>
+    <!--<Span color="Comment" begin="##" />-->
+    <Span color="Comment" begin="//" end="$" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+    <!-- Interpolated string -->
+    <Span color="String">
+      <Begin>$"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="." />
+        <Rule color="String.Variable">
+          &lt;[^&gt;|&quot;]*&gt;
+        </Rule>
+      </RuleSet>
+    </Span>
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+
+    <Keywords color="CSKeyword">
+      <Word>extern</Word>
+      <Word>alias</Word>
+      <Word>using</Word>
+      <Word>bool</Word>
+      <Word>decimal</Word>
+      <Word>sbyte</Word>
+      <Word>byte</Word>
+      <Word>short</Word>
+      <Word>ushort</Word>
+      <Word>int</Word>
+      <Word>uint</Word>
+      <Word>long</Word>
+      <Word>ulong</Word>
+      <Word>char</Word>
+      <Word>float</Word>
+      <Word>double</Word>
+      <Word>object</Word>
+      <Word>dynamic</Word>
+      <Word>string</Word>
+      <Word>assembly</Word>
+      <Word>is</Word>
+      <Word>as</Word>
+      <Word>ref</Word>
+      <Word>out</Word>
+      <Word>this</Word>
+      <Word>base</Word>
+      <Word>new</Word>
+      <Word>typeof</Word>
+      <Word>void</Word>
+      <Word>checked</Word>
+      <Word>unchecked</Word>
+      <Word>default</Word>
+      <Word>delegate</Word>
+      <Word>var</Word>
+      <Word>const</Word>
+      <Word>if</Word>
+      <Word>else</Word>
+      <Word>switch</Word>
+      <Word>case</Word>
+      <Word>while</Word>
+      <Word>do</Word>
+      <Word>for</Word>
+      <Word>foreach</Word>
+      <Word>in</Word>
+      <Word>break</Word>
+      <Word>continue</Word>
+      <Word>goto</Word>
+      <Word>return</Word>
+      <Word>throw</Word>
+      <Word>try</Word>
+      <Word>catch</Word>
+      <Word>finally</Word>
+      <Word>lock</Word>
+      <Word>yield</Word>
+      <Word>from</Word>
+      <Word>let</Word>
+      <Word>where</Word>
+      <Word>join</Word>
+      <Word>on</Word>
+      <Word>equals</Word>
+      <Word>into</Word>
+      <Word>orderby</Word>
+      <Word>ascending</Word>
+      <Word>descending</Word>
+      <Word>select</Word>
+      <Word>group</Word>
+      <Word>by</Word>
+      <Word>namespace</Word>
+      <Word>partial</Word>
+      <Word>class</Word>
+      <Word>field</Word>
+      <Word>event</Word>
+      <Word>method</Word>
+      <Word>param</Word>
+      <Word>property</Word>
+      <Word>public</Word>
+      <Word>protected</Word>
+      <Word>internal</Word>
+      <Word>private</Word>
+      <Word>abstract</Word>
+      <Word>sealed</Word>
+      <Word>static</Word>
+      <Word>struct</Word>
+      <Word>readonly</Word>
+      <Word>volatile</Word>
+      <Word>virtual</Word>
+      <Word>override</Word>
+      <Word>params</Word>
+      <Word>get</Word>
+      <Word>set</Word>
+      <Word>add</Word>
+      <Word>remove</Word>
+      <Word>operator</Word>
+      <Word>true</Word>
+      <Word>false</Word>
+      <Word>implicit</Word>
+      <Word>explicit</Word>
+      <Word>interface</Word>
+      <Word>enum</Word>
+      <Word>null</Word>
+      <Word>async</Word>
+      <Word>await</Word>
+      <Word>fixed</Word>
+      <Word>sizeof</Word>
+      <Word>stackalloc</Word>
+      <Word>unsafe</Word>
+      <Word>nameof</Word>
+      <Word>when</Word>
+    </Keywords>
+
+    <Keywords color="Keyword">
+      <Word>JUMP</Word>
+      <Word>REPEAT</Word>
+      <Word>END</Word>
+      <Word>FOREACH</Word>
+      <Word>IN</Word>
+      <Word>LOG</Word>
+      <Word>CLOG</Word>
+      <Word>WHILE</Word>
+      <Word>IF</Word>
+      <Word>ELSE</Word>
+      <Word>TRY</Word>
+      <Word>CATCH</Word>
+      <Word>LOCK</Word>
+      <Word>SET</Word>
+      <Word>TAKE</Word>
+      <Word>TAKEONE</Word>
+      <Word>FROM</Word>
+      <Word>FINALLY</Word>
+      <Word>ACQUIRELOCK</Word>
+      <Word>RELEASELOCK</Word>
+    </Keywords>
+
+    <Span color="Block">
+      <Begin>BLOCK:</Begin>
+      <End>$</End>
+    </Span>
+    
+    <Keywords color="Block.End">
+      <Word>ENDBLOCK</Word>
+    </Keywords>
+
+    <Keywords color="Block.Disabled">
+      <Word>DISABLED</Word>
+    </Keywords>
+
+    <Keywords color="Block.Safe">
+      <Word>SAFE</Word>
+    </Keywords>
+
+    <Span color="Block.Label">
+      <Begin>LABEL:</Begin>
+      <End>$</End>
+    </Span>
+
+    <Keywords color="Block.Var">
+      <Word>VAR</Word>
+    </Keywords>
+
+    <Keywords color="Block.Cap">
+      <Word>CAP</Word>
+    </Keywords>
+    
+    <Keywords color="Block.Arrow">
+      <Word>=&gt;</Word>
+    </Keywords>
+
+    <Span color="Block.Variable">
+      <Begin>@</Begin>
+      <End>[^ ]+</End>
+    </Span>
+
+    <Span color="JumpLabel">
+      <Begin>\#</Begin>
+      <End>[^ ]+</End>
+    </Span>
+
+    <Span color="Keychain.Success">
+      <Begin>KEYCHAIN SUCCESS</Begin>
+      <End>$</End>
+    </Span>
+
+    <Span color="Keychain.Fail">
+      <Begin>KEYCHAIN FAIL</Begin>
+      <End>$</End>
+    </Span>
+
+    <Span color="Keychain.Retry">
+      <Begin>KEYCHAIN RETRY</Begin>
+      <End>$</End>
+    </Span>
+
+    <Span color="Keychain.Ban">
+      <Begin>KEYCHAIN BAN</Begin>
+      <End>$</End>
+    </Span>
+
+    <Span color="Keychain.None">
+      <Begin>KEYCHAIN NONE</Begin>
+      <End>$</End>
+    </Span>
+
+    <!-- For some reason the ones above don't work -->
+    <Span color="Keychain.Default">
+      <Begin>KEYCHAIN (?!SUCCESS|FAIL|RETRY|BAN|NONE)</Begin>
+      <End>$</End>
+    </Span>
+
+    <Keywords color="Script.Output">
+      <Word>INPUT</Word>
+      <Word>OUTPUT</Word>
+    </Keywords>
+
+    <Keywords color="Script.Delimiter">
+      <Word>BEGIN SCRIPT</Word>
+      <Word>END SCRIPT</Word>
+    </Keywords>
+
+    <Keywords color="Block.CustomParam">
+      <Word>RECURSIVE</Word>
+    </Keywords>
+
+    <Span color="Block.CustomParam">
+      <Begin>(INTERPRETER|MODE|TYPE|CONTENT):</Begin>
+      <End>[A-Za-z0-9]+</End>
+    </Span>
+
+    <Keywords color="False">
+      <Word>False</Word>
+    </Keywords>
+
+    <Keywords color="True">
+      <Word>True</Word>
+    </Keywords>
+
+    <Keywords color="Key">
+      <Word>INTKEY</Word>
+      <Word>STRINGKEY</Word>
+      <Word>BOOLKEY</Word>
+      <Word>FLOATKEY</Word>
+      <Word>LISTKEY</Word>
+      <Word>DICTKEY</Word>
+    </Keywords>
+
+    <!-- Digits -->
+      <Rule foreground="DarkSeaGreen">
+          \b0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+          (    \d+(\.[0-9]+)?   #number with optional floating point
+          |    \.[0-9]+         #or just starting with floating point
+          )
+          ([eE][+-]?[0-9]+)? # optional exponent
+      </Rule>
+  </RuleSet>
+</SyntaxDefinition>

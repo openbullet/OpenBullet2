@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this block work?</value>
+    <value>Как работает этот блок?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>The %Keycheck% block allows you to change the value of the `data.STATUS` predefined variable according to the result of some conditions. You can add %Keychains% to the block, and you can select how the status will change if a specific keychain is matched. The keychain also has a %mode% that can be %AND% or %OR%. In the first case, the condition of the keychain will be true if all the keys inside it are true. In the second case, it's enough that at least one key is true.</value>
+    <value>Блок %Keycheck% позволяет изменять значение предопределенной переменной `data.STATUS` в зависимости от результата выполнения некоторых условий. Вы можете добавить %Keychains% в блок, и выбрать, как будет изменяться статус, если совпадет определенный брелок. У связки ключей также есть %mode%, который может быть %AND% или %OR%. В первом случае состояние связки ключей будет истинным, если все ключи внутри нее истинны. Во втором случае достаточно, чтобы хотя бы один ключ был истинным.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Keys can be of various type, with respect to the type of the variable you're trying to compare.
-Keychains are checked from the first to the last, and as soon as the condition of one keychain is true the others will be skipped. If no keychain is matched, the status will be unchanged (note that the initial status of the bot at the start of the script is always `NONE`) or it will be set to `BAN` if the %Ban if no match% option was selected.</value>
+    <value>Ключи могут быть разного типа, в зависимости от типа переменной, которую вы пытаетесь сравнить.
+Связки ключей проверяются от первой до последней, и как только условие одной связки будет истинным, остальные будут пропущены. Если ни одна связка ключей не совпадает, статус будет неизменным (обратите внимание, что начальный статус бота при запуске скрипта всегда `NONE`) или он будет установлен в `BAN`, если была выбрана опция %Ban if no match%.</value>
   </data>
   <data name="Label" xml:space="preserve">
-    <value>Label</value>
+    <value>Этикетка</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Настройки</value>
   </data>
 </root>

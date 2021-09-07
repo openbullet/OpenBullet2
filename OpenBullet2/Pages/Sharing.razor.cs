@@ -8,7 +8,7 @@ using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Primitives;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Sharing;
+using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Configs;
@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {

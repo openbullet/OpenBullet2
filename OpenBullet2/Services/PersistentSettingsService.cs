@@ -1,56 +1,18 @@
-﻿using Newtonsoft.Json;
-using OpenBullet2.Models.Settings;
-using System.IO;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using System.IO;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Services
 {
     public class PersistentSettingsService
     {
-        private string BaseFolder { get; init; }
-        private readonly JsonSerializerSettings jsonSettings;
-        private string ObSettFile => Path.Combine(BaseFolder, "OpenBulletSettings.json");
+        private readonly OpenBulletSettingsService openBulletSettingsService;
 
-        public OpenBulletSettings OpenBulletSettings { get; set; }
-        public bool SetupComplete => File.Exists(ObSettFile);
+        public bool SetupComplete => File.Exists(openBulletSettingsService.FileName);
         public bool UseCultureCookie { get; set; } = true;
 
-        public PersistentSettingsService(string baseFolder)
+        public PersistentSettingsService(OpenBulletSettingsService openBulletSettingsService)
         {
-            BaseFolder = baseFolder;
-            Directory.CreateDirectory(baseFolder);
-
-            jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Auto
-            };
-
-            if (File.Exists(ObSettFile))
-            {
-                OpenBulletSettings = JsonConvert.DeserializeObject<OpenBulletSettings>(File.ReadAllText(ObSettFile), jsonSettings);
-            }
-            else
-            {
-                Recreate();
-            }
-        }
-
-        public async Task Save()
-        {
-            await File.WriteAllTextAsync(ObSettFile, JsonConvert.SerializeObject(OpenBulletSettings, jsonSettings));
-        }
-
-        public void Recreate()
-        {
-            OpenBulletSettings = new OpenBulletSettings 
-            {
-                GeneralSettings = new GeneralSettings { ProxyCheckTargets = new List<ProxyCheckTarget> { new ProxyCheckTarget() } },
-                RemoteSettings = new RemoteSettings(),
-                SecuritySettings = new SecuritySettings().GenerateJwtKey().SetupAdminPassword("admin"),
-                CustomizationSettings = new CustomizationSettings()
-            };
+            this.openBulletSettingsService = openBulletSettingsService;
         }
     }
 }

@@ -1,0 +1,367 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.RLSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="1250" d:DesignWidth="800"
+      Title="RLSettings">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0 0 0 10">
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">General</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                    <Label>Parallelizer Type (TaskBased gives the best performance)</Label>
+                    <ComboBox x:Name="parallelizerTypesCombobox"
+                              SelectedValue="{Binding Path=ParallelizerType}"
+                              Width="150"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <CheckBox Content="Log job activity to a file"
+                          IsChecked="{Binding LogJobActivityToFile}" 
+                          VerticalContentAlignment="Center" 
+                          Margin="5 0 0 0"/>
+                <CheckBox Content="Enable logging for bots in a MultiRunJob. Only enable for debugging configs as it increases the RAM usage by a lot!" 
+                          IsChecked="{Binding EnableBotLogging}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Enable verbose mode (more output and more insight on errors, useful for debugging)" 
+                          IsChecked="{Binding VerboseMode}"
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Restrict blocks to use resources inside the current working directory (CARE: does not work on Script blocks or pure LoliCode directives)" 
+                          IsChecked="{Binding RestrictBlocksToCWD}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <CheckBox Content="Use the custom user agents list specified below instead of the default provider (intoli). Specify one user-agent per line" 
+                          IsChecked="{Binding UseCustomUserAgentsList}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <RichTextBox x:Name="customUserAgentsListRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas" 
+                             Margin="5 10 5 0"
+                             Height="100"
+                             TextChanged="CustomUserAgentsChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Proxies</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Timeout for proxy connections</Label>
+                    <mah:NumericUpDown 
+                          Minimum="0"
+                          Maximum="100000000"
+                          Interval="1000"
+                          Value="{Binding ProxyConnectTimeoutMilliseconds}"
+                          Width="150"/>
+                    <Label>and read/write</Label>
+                    <mah:NumericUpDown 
+                          Minimum="0"
+                          Maximum="100000000"
+                          Interval="1000"
+                          Value="{Binding ProxyReadWriteTimeoutMilliseconds}"
+                          Width="150"/>
+                    <Label>(in milliseconds)</Label>
+                </StackPanel>
+                <Label>Global BAN keys (one per line)</Label>
+                <RichTextBox x:Name="globalBanKeysRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas"
+                             Margin="5"
+                             Height="100"
+                             TextChanged="GlobalBanKeysChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Label>Global RETRY keys (one per line)</Label>
+                <RichTextBox x:Name="globalRetryKeysRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas" 
+                             Margin="5"
+                             Height="100"
+                             TextChanged="GlobalRetryKeysChanged">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
+                </RichTextBox>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Captchas</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Timeout for captcha solutions</Label>
+                    <mah:NumericUpDown 
+                          Minimum="1"
+                          Maximum="1000000"
+                          Interval="10"
+                          Value="{Binding CaptchaTimeoutSeconds}"
+                          Width="150"/>
+                    <Label>(seconds) with polling interval</Label>
+                    <mah:NumericUpDown 
+                          Minimum="20"
+                          Maximum="100000000"
+                          Interval="1000"
+                          Value="{Binding CaptchaPollingIntervalMilliseconds}"
+                          Width="150"/>
+                    <Label>(milliseconds)</Label>
+                </StackPanel>
+                <CheckBox Content="Check the captcha balance before solving" 
+                          IsChecked="{Binding UseCustomUserAgentsList}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 5">
+                    <Label>Captcha Service</Label>
+                    <ComboBox x:Name="captchaServiceCombobox"
+                              SelectedValue="{Binding Path=CurrentCaptchaService}"
+                              Width="250"
+                              HorizontalAlignment="Left"/>
+                </StackPanel>
+                <TabControl x:Name="captchaServiceTabControl" Background="Transparent" BorderThickness="0">
+                    <TabControl.ItemContainerStyle>
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </Style>
+                    </TabControl.ItemContainerStyle>
+
+                    <!-- TwoCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding TwoCaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+                    
+                    <!-- AntiCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding AntiCaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- CustomTwoCaptcha -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Api Key</Label>
+                                <TextBox Text="{Binding CustomTwoCaptchaApiKey}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Domain</Label>
+                                <TextBox Text="{Binding CustomTwoCaptchaDomain}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Port</Label>
+                                <mah:NumericUpDown 
+                                    Minimum="1"
+                                    Maximum="65535"
+                                    Interval="1"
+                                    Value="{Binding CustomTwoCaptchaPort}"
+                                    Width="150"/>
+                            </StackPanel>
+                            <CheckBox Content="Override the Host header with 2captcha.com" 
+                                  IsChecked="{Binding CustomTwoCaptchaOverrideHostHeader}" 
+                                  VerticalContentAlignment="Center"
+                                  Margin="5 10 0 0"/>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- DeathByCaptcha -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Username</Label>
+                                <TextBox Text="{Binding DeathByCaptchaUsername}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Password</Label>
+                                <TextBox Text="{Binding DeathByCaptchaPassword}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- DeCaptcher -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Username</Label>
+                                <TextBox Text="{Binding DeCaptcherUsername}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Password</Label>
+                                <TextBox Text="{Binding DeCaptcherPassword}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- ImageTyperz -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding ImageTyperzApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+                    
+                    <!-- CapMonster -->
+                    <TabItem>
+                        <StackPanel>
+                            <Label>This is only for the old CapMonster application</Label>
+                            <Label>For CapMonster cloud, use the CustomTwoCaptcha service and disable the override for the Host header option</Label>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Host</Label>
+                                <TextBox Text="{Binding CapMonsterHost}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Port</Label>
+                                <mah:NumericUpDown 
+                                    Minimum="1"
+                                    Maximum="65535"
+                                    Interval="1"
+                                    Value="{Binding CapMonsterPort}"
+                                    Width="150"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- AZCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding AZCaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- Captchas.io -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding CaptchasDotIoApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- RuCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding RuCaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- SolveCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding SolveCaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- SolveReCaptcha -->
+                    <TabItem>
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <Label>Api Key</Label>
+                            <TextBox Text="{Binding SolveRecaptchaApiKey}"
+                                Width="400"></TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- TrueCaptcha -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Api Key</Label>
+                                <TextBox Text="{Binding TrueCaptchaApiKey}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Username</Label>
+                                <TextBox Text="{Binding TrueCaptchaUsername}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+                <Button x:Name="checkBalanceButton" 
+                        Click="CheckCaptchaBalance" 
+                        Margin="5 10 5 0"
+                        Width="150"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource StyledPrimaryButton}" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconUnicons Kind="DollarSign" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Check Balance</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Separator Opacity="0.5" Margin="5 20"></Separator>
+                <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Puppeteer</Label>
+                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                    <Label>Path of the chrome.exe binary on disk</Label>
+                    <TextBox Text="{Binding ChromeBinaryLocation}"
+                             Width="500"></TextBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="saveButton" 
+                Grid.Row="1"
+                Grid.Column="0"
+                Click="Save" 
+                Margin="0 5 5 5" 
+                Style="{StaticResource StyledPrimaryButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRemixIcon Kind="Save3Fill" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Save</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="resetButton" 
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="Reset" 
+                Margin="0 5 5 5" 
+                Style="{StaticResource StyledDangerButton}" >
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconRadixIcons Kind="Reset" />
+                <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>
+            </StackPanel>
+        </Button>
+    </Grid>
+</Page>

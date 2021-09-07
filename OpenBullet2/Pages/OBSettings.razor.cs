@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Settings;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Repositories;
-using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
     public partial class OBSettings
     {
-        [Inject] private PersistentSettingsService PersistentSettings { get; set; }
+        [Inject] private OpenBulletSettingsService SettingsService { get; set; }
         [Inject] private IThemeRepository ThemeRepo { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
         [Inject] private IModalService Modal { get; set; }
@@ -26,7 +26,7 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            settings = PersistentSettings.OpenBulletSettings;
+            settings = SettingsService.Settings;
 
             try
             {
@@ -38,20 +38,20 @@ namespace OpenBullet2.Pages
             }
         }
 
-        async Task RestoreDefaults()
+        private async Task RestoreDefaults()
         {
             if (await js.Confirm(Loc["AreYouSure"], Loc["RestoreDefaultSettingsConfirmation"], Loc["Cancel"]))
             {
-                PersistentSettings.Recreate();
+                SettingsService.Recreate();
                 Nav.NavigateTo("/settings/openbullet", true);
             }
         }
 
-        async Task Save()
+        private async Task Save()
         {
             try
             {
-                await PersistentSettings.Save();
+                await SettingsService.Save();
                 await js.AlertSuccess(Loc["Saved"], Loc["SettingsSaved"]);
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace OpenBullet2.Pages
             }
         }
 
-        async Task ChangePassword()
+        private async Task ChangePassword()
         {
             var modal = Modal.Show<NewPasswordForm>(Loc["NewAdminPassword"]);
             var result = await modal.Result;

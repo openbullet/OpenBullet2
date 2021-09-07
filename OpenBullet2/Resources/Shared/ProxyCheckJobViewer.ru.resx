@@ -118,129 +118,129 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Abort" xml:space="preserve">
-    <value>Экстренная остановка</value>
+    <value>Прервать</value>
   </data>
   <data name="andCountry" xml:space="preserve">
-    <value>и Страна</value>
+    <value>и страна</value>
   </data>
   <data name="asNotWorking" xml:space="preserve">
-    <value>как неработающий</value>
+    <value>не работает</value>
   </data>
   <data name="Bots" xml:space="preserve">
     <value>Боты</value>
   </data>
   <data name="ChangingPleaseWait" xml:space="preserve">
-    <value>Изменение...подождите, пожалуйста</value>
+    <value>Изменение... пожалуйста, подождите</value>
   </data>
   <data name="CheckOnlyUntested" xml:space="preserve">
-    <value>Чекать только непроверенные</value>
+    <value>Проверяйте только непроверенные</value>
   </data>
   <data name="CompletedMessage" xml:space="preserve">
     <value>Диспетчер задач завершил всю свою работу</value>
   </data>
   <data name="Controls" xml:space="preserve">
-    <value>Контроллеры</value>
+    <value>Управление</value>
   </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
   <data name="days" xml:space="preserve">
-    <value>дней</value>
+    <value>день(ы)</value>
   </data>
   <data name="EditBotsAmount" xml:space="preserve">
-    <value>Изменить кол-во Ботов</value>
+    <value>Редактировать количество ботов</value>
   </data>
   <data name="Elapsed" xml:space="preserve">
-    <value>Протечка</value>
+    <value>Истекший</value>
   </data>
   <data name="HardStopMessage" xml:space="preserve">
-    <value>Отправка сигнала жесткой остановки</value>
+    <value>Отправка сигнала жесткого прерывания</value>
   </data>
   <data name="JobOptions" xml:space="preserve">
-    <value>Параметры задания</value>
+    <value>Варианты работы</value>
   </data>
   <data name="NotWorking" xml:space="preserve">
     <value>Не работает</value>
   </data>
   <data name="OtherStats" xml:space="preserve">
-    <value>Остальные данные статистики</value>
+    <value>Другая статистика</value>
   </data>
   <data name="Pause" xml:space="preserve">
     <value>Пауза</value>
   </data>
   <data name="PauseMessage" xml:space="preserve">
-    <value>Передача сигнала паузы</value>
+    <value>Отправка сигнала паузы</value>
   </data>
   <data name="PausingMessage" xml:space="preserve">
-    <value>Приостановка... дождитесь завершения обработки текущих задач</value>
+    <value>Пауза... пожалуйста, подождите, пока текущие задачи закончат обработку</value>
   </data>
   <data name="Progress" xml:space="preserve">
     <value>Прогресс</value>
   </data>
   <data name="ProxyChecked" xml:space="preserve">
-    <value>Проверенные Прокси</value>
+    <value>Проверка прокси-сервера</value>
   </data>
   <data name="ProxyStats" xml:space="preserve">
-    <value>Статистика Прокси</value>
+    <value>Статистика прокси</value>
   </data>
   <data name="Remaining" xml:space="preserve">
-    <value>Сохранение</value>
+    <value>Оставшиеся</value>
   </data>
   <data name="Resume" xml:space="preserve">
-    <value>Возобновить</value>
+    <value>Резюме</value>
   </data>
   <data name="ResumeMessage" xml:space="preserve">
-    <value>Возобновленная проверка</value>
+    <value>Возобновление проверки</value>
   </data>
   <data name="SoftStopMessage" xml:space="preserve">
-    <value>Передача сигнала деликатной остановки</value>
+    <value>Подача сигнала плавной остановки</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Начать</value>
+    <value>Начало</value>
   </data>
   <data name="StartedChecking" xml:space="preserve">
-    <value>Начата проверка</value>
+    <value>Начал проверку</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Остановить</value>
   </data>
   <data name="StoppingMessage" xml:space="preserve">
-    <value>Остановка... Дождитесь завершения обработки текущих задач. Или, вы знаете, вы всегда можете</value>
+    <value>Остановка... пожалуйста, подождите, пока текущие задачи закончат обработку. Или, знаете, вы всегда можете</value>
   </data>
   <data name="SuccessKey" xml:space="preserve">
-    <value>Верный ключ</value>
+    <value>Ключ к успеху</value>
   </data>
   <data name="TaskError" xml:space="preserve">
-    <value>Ошибка задачи!</value>
+    <value>Ошибка задания!</value>
   </data>
   <data name="TaskManagerError" xml:space="preserve">
     <value>Ошибка диспетчера задач!</value>
   </data>
   <data name="TaskManagerPaused" xml:space="preserve">
-    <value>Диспетчер задач приостановлен</value>
+    <value>Диспетчер задач был приостановлен</value>
   </data>
   <data name="Tested" xml:space="preserve">
-    <value>Протестировано</value>
+    <value>Проверено</value>
   </data>
   <data name="TimeLeft" xml:space="preserve">
-    <value>Времени прошло</value>
+    <value>Оставшееся время</value>
   </data>
   <data name="TimeoutMilliseconds" xml:space="preserve">
-    <value>Тайм-Айт (миллисекунды)</value>
+    <value>Тайм-аут (миллисекунды)</value>
   </data>
   <data name="Total" xml:space="preserve">
-    <value>Итого</value>
+    <value>Всего</value>
   </data>
   <data name="Url" xml:space="preserve">
-    <value>URL</value>
+    <value>Url</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>Ожидание</value>
   </data>
   <data name="withPing" xml:space="preserve">
-    <value>с Пингом</value>
+    <value>с пингом</value>
   </data>
   <data name="Working" xml:space="preserve">
-    <value>В процессе</value>
+    <value>Работа</value>
   </data>
 </root>

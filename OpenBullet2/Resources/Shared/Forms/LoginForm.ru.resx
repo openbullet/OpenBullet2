@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Login" xml:space="preserve">
-    <value>Войти в систему</value>
+    <value>Вход в систему</value>
   </data>
   <data name="NotAuthedPleaseLogin" xml:space="preserve">
-    <value>Вы не прошли проверку подлинности, войдите в систему</value>
+    <value>Вы не авторизованы, пожалуйста, войдите в систему</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>

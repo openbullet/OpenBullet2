@@ -121,7 +121,7 @@
     <value>Добавить</value>
   </data>
   <data name="Clone" xml:space="preserve">
-    <value>Клонировать</value>
+    <value>Клон</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Удалить</value>

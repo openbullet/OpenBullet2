@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RuriLib.Functions.Files
 {
@@ -11,17 +13,45 @@ namespace RuriLib.Functions.Files
         private static readonly Hashtable hashtable = new();
 
         /// <summary>
-        /// Gets a <see cref="ReaderWriterLockSlim"/> associated to a file name or creates one if it doesn't exist.
+        /// Gets a <see cref="RWLock"/> associated to a file name or creates one if it doesn't exist.
         /// </summary>
         /// <param name="fileName">The name of the file to access</param>
-        public static ReaderWriterLockSlim GetHandle(string fileName)
+        public static RWLock GetHandle(string fileName)
         {
             if (!hashtable.ContainsKey(fileName))
             {
-                hashtable.Add(fileName, new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion));
+                hashtable.Add(fileName, new RWLock());
             }
 
-            return (ReaderWriterLockSlim)hashtable[fileName];
+            return (RWLock)hashtable[fileName];
+        }
+    }
+
+    public class RWLock : IDisposable
+    {
+        private readonly SemaphoreSlim readLock = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim writeLock = new SemaphoreSlim(1, 1);
+
+        public async Task EnterReadLock(CancellationToken cancellationToken = default) => await readLock.WaitAsync(cancellationToken);
+
+        public async Task EnterWriteLock(CancellationToken cancellationToken = default)
+        {
+            await readLock.WaitAsync(cancellationToken);
+            await writeLock.WaitAsync(cancellationToken);
+        }
+
+        public void ExitReadLock() => readLock.Release();
+
+        public void ExitWriteLock()
+        {
+            readLock.Release();
+            writeLock.Release();
+        }
+
+        public void Dispose()
+        {
+            readLock?.Dispose();
+            writeLock?.Dispose();
         }
     }
 }

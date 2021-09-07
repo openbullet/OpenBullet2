@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using OpenBullet2.Auth;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Models.Jobs;
-using OpenBullet2.Repositories;
-using OpenBullet2.Services;
-using RuriLib.Services;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -51,8 +50,8 @@ namespace OpenBullet2.Pages
                 var oldJob = Manager.Jobs.First(j => j.Id == JobId);
                 var newJob = JobFactory.FromOptions(JobId, jobEntity.Owner == null ? 0 : jobEntity.Owner.Id, jobOptions);
 
-                Manager.Jobs.Remove(oldJob);
-                Manager.Jobs.Add(newJob);
+                Manager.RemoveJob(oldJob);
+                Manager.AddJob(newJob);
                 Nav.NavigateTo($"job/{JobId}");
             }
             catch (Exception ex)

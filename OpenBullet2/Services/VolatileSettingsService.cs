@@ -1,11 +1,11 @@
 ﻿using GridShared.Utility;
 using Microsoft.Extensions.Primitives;
-using OpenBullet2.Models.Debugger;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks;
+using RuriLib.Models.Debugger;
 using RuriLib.Services;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenBullet2.Services
 {
@@ -19,7 +19,10 @@ namespace OpenBullet2.Services
 
         public VolatileSettingsService(RuriLibSettingsService ruriLibSettings)
         {
-            DebuggerOptions = new(ruriLibSettings);
+            DebuggerOptions = new DebuggerOptions
+            {
+                WordlistType = ruriLibSettings.Environment.WordlistTypes.First().Name 
+            };
             DebuggerLog = new();
             RecentDescriptors = new();
         }

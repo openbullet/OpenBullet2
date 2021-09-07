@@ -1,0 +1,61 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.ConfigReadme"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="Readme">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label
+            Grid.Row="0" Grid.Column="0"
+            Foreground="{DynamicResource ForegroundCustom}"
+            >Readme</Label>
+
+        <RichTextBox x:Name="readmeRTB" 
+                             Background="{DynamicResource BackgroundSecondary}" 
+                             Foreground="{DynamicResource ForegroundMain}" 
+                             FontFamily="Consolas"
+                             VerticalAlignment="Stretch"
+                             Grid.Row="1" Grid.Column="0"
+                             TextChanged="ReadmeChanged">
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </RichTextBox.Resources>
+        </RichTextBox>
+
+        <GridSplitter 
+            ResizeDirection="Columns"
+            ResizeBehavior="PreviousAndNext"
+            Grid.Column="1"
+            Grid.RowSpan="2" 
+            Width="5"
+            VerticalAlignment="Stretch" />
+
+        <Label
+            Grid.Row="0" Grid.Column="2"
+            Foreground="{DynamicResource ForegroundCustom}"
+            >Preview (type something to update)</Label>
+
+        <uc:MarkdownViewer 
+            Grid.Row="1" Grid.Column="2"
+            VerticalAlignment="Stretch"
+            MarkdownText="{Binding Readme}" />
+    </Grid>
+</Page>

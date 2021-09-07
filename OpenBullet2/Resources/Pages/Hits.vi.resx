@@ -154,7 +154,7 @@
     <value>hits</value>
   </data>
   <data name="HitsFromMultipleConfigsSelected" xml:space="preserve">
-    <value>Hits từ các configs khác nhau đang đc chọn, vui lòng chọn hits trong cùng 1 configs</value>
+    <value>Hits từ các config khác nhau đang đc chọn, vui lòng chọn hits trong cùng 1 config</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Đang tải</value>
@@ -187,10 +187,10 @@
     <value>Loại</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oh no</value>
+    <value>Uh-Oh</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Danh sách t.khoản</value>
+    <value>Danh sách tài khoản</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Không có bản ghi nào để hiển thị</value>

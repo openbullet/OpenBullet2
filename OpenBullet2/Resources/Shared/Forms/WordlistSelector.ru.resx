@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FileName" xml:space="preserve">
-    <value>File name</value>
+    <value>Имя файла</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Имя</value>
   </data>
   <data name="Purpose" xml:space="preserve">
-    <value>Purpose</value>
+    <value>Назначение</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Выберите</value>
   </data>
   <data name="SelectWordlistFirst" xml:space="preserve">
-    <value>You must select a wordlist first</value>
+    <value>Сначала необходимо выбрать список слов</value>
   </data>
   <data name="Total" xml:space="preserve">
-    <value>Total</value>
+    <value>Всего</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
   </data>
 </root>

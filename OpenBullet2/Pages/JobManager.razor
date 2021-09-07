@@ -68,7 +68,7 @@
                             <span class="fg-hit"><b>@Loc["Hits"]: </b>@x.DataHits</span>
                             <span class="fg-custom"><b>@Loc["Custom"]: </b>@x.DataCustom</span>
                             <span class="fg-tocheck"><b>@Loc["ToCheck"]: </b>@x.DataToCheck</span>
-                            <span><b>@Loc["Progress"]: </b>@(x.DataTested + x.Skip) / @x.DataPool.Size (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
+                            <span><b>@Loc["Progress"]: </b>@(x.Status == JobStatus.Idle ? x.Skip : x.DataTested + x.Skip) / @x.DataPool.Size (@((x.Progress == -1 ? 0 : x.Progress * 100).ToString("0.00"))%)</span>
                             <span><b>@Loc["CPM"]: </b>@x.CPM</span>
                             break;
 

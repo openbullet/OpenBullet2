@@ -1,0 +1,133 @@
+﻿<mah:MetroWindow x:Class="OpenBullet2.Native.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenBullet2.Native"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:converters="clr-namespace:OpenBullet2.Native.Converters"
+        mc:Ignorable="d"
+        Title="OpenBullet 2 - Preview" Width="800" Height="600"
+        Background="{DynamicResource BackgroundMain}"
+        BorderThickness="0"
+        GlowBrush="Black"
+        ResizeMode="CanResizeWithGrip"
+        WindowTitleBrush="{DynamicResource BackgroundSecondary}"
+        WindowTransitionsEnabled="False"
+        WindowStartupLocation="CenterScreen"
+        TitleCharacterCasing="Normal"
+        Icon="/Images/logohq_square_padded.png">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+
+    <Grid x:Name="Root" Margin="0">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+
+
+        <!-- Top Menu StackPanel -->
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel x:Name="topMenu" Margin="-5 2 0 0" Grid.Column="0" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Setter Property="Margin" Value="10 0 5 0" />
+                        <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock x:Name="menuOptionHome" Text="Home" MouseDown="OpenHomePage" />
+                <TextBlock x:Name="menuOptionJobs" Text="Jobs" MouseDown="OpenJobsPage" />
+                <TextBlock x:Name="menuOptionMonitor" Text="Monitor" MouseDown="OpenMonitorPage" />
+                <TextBlock x:Name="menuOptionProxies" Text="Proxies" MouseDown="OpenProxiesPage" />
+                <TextBlock x:Name="menuOptionWordlists" Text="Wordlists" MouseDown="OpenWordlistsPage" />
+
+                <StackPanel 
+                    Orientation="Horizontal"
+                    MouseEnter="ConfigsMenuOptionMouseEnter"
+                    MouseLeave="ConfigsMenuOptionMouseLeave">
+                    <TextBlock x:Name="menuOptionConfigs" 
+                       Text="Configs" 
+                       MouseDown="OpenConfigsPage" />
+                    <iconPacks:PackIconFontAwesome 
+                    Foreground="{DynamicResource ForegroundMain}"
+                    VerticalAlignment="Center"
+                    Margin="0 0 5 0"
+                    Height="10"
+                    Width="10"
+                    Visibility="{Binding IsConfigSelected, Converter={StaticResource ResourceKey=BoolToVis}}"
+                    Kind="CaretDownSolid" />
+                </StackPanel>
+
+                <TextBlock x:Name="menuOptionHits" Text="Hits" MouseDown="OpenHitsPage" />
+                <TextBlock x:Name="menuOptionPlugins" Text="Plugins" MouseDown="OpenPluginsPage" />
+                <TextBlock x:Name="menuOptionOBSettings" Text="OB Settings" MouseDown="OpenOBSettingsPage" />
+                <TextBlock x:Name="menuOptionRLSettings" Text="RL Settings" MouseDown="OpenRLSettingsPage" />
+                <TextBlock x:Name="menuOptionAbout" Text="About" MouseDown="OpenAboutPage" />
+            </StackPanel>
+
+            <Border Padding="1" Grid.Column="1">
+                <Button x:Name="screenshotButton" 
+                    Style="{StaticResource StyledButton}"
+                    Click="TakeScreenshot">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Camera" />
+                    </StackPanel>
+                </Button>
+            </Border>
+        </Grid>
+
+        <StackPanel 
+            x:Name="configSubmenu"
+            Background="{DynamicResource BackgroundMain}"
+            Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+            Margin="305 28 0 0" Panel.ZIndex="1"
+            Height="160"
+            Width="80"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Visibility="Collapsed"
+            MouseEnter="ConfigSubmenuMouseEnter"
+            MouseLeave="ConfigSubmenuMouseLeave">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Margin" Value="10 0 5 0" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+                    <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock x:Name="menuOptionMetadata" Text="Metadata" MouseDown="OpenMetadataPage" />
+            <TextBlock x:Name="menuOptionReadme" Text="Readme" MouseDown="OpenReadmePage" />
+            <TextBlock x:Name="menuOptionStacker" Text="Stacker" MouseDown="OpenStackerPage" />
+            <TextBlock x:Name="menuOptionLoliCode" Text="LoliCode" MouseDown="OpenLoliCodePage" />
+            <TextBlock x:Name="menuOptionConfigSettings" Text="Settings" MouseDown="OpenConfigSettingsPage" />
+            <TextBlock x:Name="menuOptionCSharpCode" Text="C# Code" MouseDown="OpenCSharpCodePage" />
+        </StackPanel>
+        
+        <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />
+    </Grid>
+
+</mah:MetroWindow>

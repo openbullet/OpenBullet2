@@ -1,4 +1,4 @@
-﻿@using OpenBullet2.Models.Jobs
+﻿@using OpenBullet2.Core.Models.Jobs
 @using RuriLib.Models.Jobs
 @using RuriLib.Models.Proxies 
 @using OpenBullet2.Shared.Forms
@@ -137,7 +137,7 @@
 
     private async Task TryApplyRecord()
     {
-        if (Options.DataPool is OpenBullet2.Models.Data.WordlistDataPoolOptions pool)
+        if (Options.DataPool is OpenBullet2.Core.Models.Data.WordlistDataPoolOptions pool)
         {
             var record = await RecordRepo.GetAll()
                 .FirstOrDefaultAsync(r => r.ConfigId == Options.ConfigId && r.WordlistId == pool.WordlistId);

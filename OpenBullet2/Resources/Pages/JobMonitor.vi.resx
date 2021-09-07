@@ -169,13 +169,13 @@
     <value>Nó hoạt động như thế nào?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>This is the %Job Monitor%, which contains a list of %triggered actions%. Triggered Actions are in charge of monitoring a job, checking for triggers and executing actions. First of all you should define the %id% of the job to monitor in the numeric textbox. Remember to uncheck the %active% checkbox when setting up the triggers and actions to avoid having them execute accidentally when you're not yet finished with them.</value>
+    <value>Đây là %Trình giám sát Tác vụ%, nó chưa một danh sách %triggered actions%. Triggered Actions có nhiệm vụ giám sát một tác vụ, kiểm tra để thực hiện các hành động. Trước tiên bạn nên khai báo %id% của tác vụ cần giám sát trong hộp văn bản số. Nhớ bỏ chọn hộp đánh dấu %active% khi cài đặt triggers và các hành động để tránh việc tình cờ thực hiện chúng khi chúng chưa được hoàn thành.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Then you should add some %triggers% and %actions%. Once all of the triggering conditions are true, the Job Monitor will execute all the %actions% you specified in a sequential order until they are exhausted. After executing the actions, the %executions% counter will increase. If the Triggered Action is marked as %repeatable%, triggers will be matches multiple times, otherwise the Triggered Action will set itself as inactive and not trigger ever again.</value>
+    <value>Sau đó, bạn nên thêm một vài %triggers% và %các hành đống%. Một khi điều kiện được kích hoạt, Trình giám sát Tác vụ sẽ thực hiện tất cả các %hành động% mà bạn đã xác định với thứ tự nối tiếp cho tới khi chúng cạn kiệt. Sau khi thực hiện xong các hành động, bộ đếm số lần %thực hiện% sẽ tăng lên. Nếu Triggered Action được cho là có thể lặp lại, triggers sẽ được hợp lại nhiều lần, nếu không thì the Triggered Action sẽ đặt chúng là không hoạt động và không bao giờ trigger lần nữa.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>The %Reset% button will reset the number of executions to 0. Triggered Actions are saved in the %triggeredActions.json% file, so if you want to back them up or transfer them to another OB instance you should copy this file.</value>
+    <value>Nút %Đặt lại% sẽ đặt lại một vài lần thực hiện thành 0. Triggered Actions được lưu trong file %triggeredActions.json%, nên nếu bạn muốn sao lưu chúng hoặc chuyển chúng tới phiên bản OB khác, bạn nên thử copy file này.</value>
   </data>
   <data name="Hits" xml:space="preserve">
     <value>Hits</value>

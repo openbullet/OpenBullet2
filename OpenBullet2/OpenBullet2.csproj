@@ -54,8 +54,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.8.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -64,18 +64,17 @@
     <PackageReference Include="PuppeteerExtraSharp" Version="1.2.1" />
     <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
     <PackageReference Include="Radzen.Blazor" Version="2.18.8" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     <PackageReference Include="Tewr.Blazor.FileReader" Version="1.6.0.20166" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj" />
     <ProjectReference Include="..\RuriLib\RuriLib.csproj" />
   </ItemGroup>
 

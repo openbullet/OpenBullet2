@@ -61,9 +61,6 @@ namespace RuriLib.Helpers.LoliCode
                 input = input[1..];
                 var variableName = LineParser.ParseToken(ref input);
 
-                if (string.IsNullOrWhiteSpace(variableName))
-                    throw new Exception("Variable name cannot be empty");
-
                 setting.InputMode = SettingInputMode.Variable;
                 setting.InputVariableName = variableName;
                 setting.InterpolatedSetting = param switch
@@ -141,10 +138,10 @@ namespace RuriLib.Helpers.LoliCode
             if (Regex.IsMatch(input, "^([Tt][Rr][Uu][Ee])|([Ff][Aa][Ll][Ss][Ee])( |$)"))
                 return VariableType.Bool;
 
-            if (Regex.IsMatch(input, "^[0-9]+( |$)"))
+            if (Regex.IsMatch(input, "^-?[0-9]+( |$)"))
                 return VariableType.Int;
 
-            if (Regex.IsMatch(input, "^[0-9\\.]+( |$)"))
+            if (Regex.IsMatch(input, "^-?[0-9\\.]+( |$)"))
                 return VariableType.Float;
 
             if (input.StartsWith('['))

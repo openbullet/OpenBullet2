@@ -118,109 +118,136 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Add" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="AddBlank" xml:space="preserve">
-    <value>Add Blank</value>
+    <value>Добавить пустоту</value>
   </data>
   <data name="AllowedProxyTypes" xml:space="preserve">
-    <value>Allowed proxy types</value>
+    <value>Разрешенные типы прокси</value>
   </data>
   <data name="AllowedWordlistTypes" xml:space="preserve">
-    <value>Allowed wordlist types</value>
+    <value>Разрешенные типы списков слов</value>
   </data>
   <data name="AlwaysOpenBrowser" xml:space="preserve">
-    <value>Always open the browser at the start</value>
+    <value>Всегда открывайте браузер в самом начале</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="BanLoopEvasion" xml:space="preserve">
-    <value>Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 to disable)</value>
+    <value>Уклонение от цикла запрета a.k.a. после скольких статусов BAN линия данных должна быть помечена как TOCHECK и прокси должен быть запрещен (0 - запретить).</value>
   </data>
   <data name="BanStatuses" xml:space="preserve">
-    <value>Ban the proxy when the bot ends with one of these statuses</value>
+    <value>Запретить прокси, когда бот завершает работу с одним из этих статусов</value>
+  </data>
+  <data name="BlockedUrls" xml:space="preserve">
+    <value>Заблокированные URL-адреса</value>
+  </data>
+  <data name="BlockedUrlsInfo" xml:space="preserve">
+    <value>Если URL ресурса содержит любой из заданных текстов, он не будет загружен. Нечувствительность к регистру.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="CaseSensitive" xml:space="preserve">
-    <value>Case sensitive</value>
+    <value>С учетом регистра</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Очистить</value>
   </data>
   <data name="ContinueStopStatuses" xml:space="preserve">
-    <value>Statuses for which the bot will continue / stop</value>
+    <value>Статусы, для которых бот будет продолжать / останавливаться</value>
   </data>
   <data name="CPMLimit" xml:space="preserve">
-    <value>CPM Limit (0 for no limit)</value>
+    <value>Ограничение CPM (0 - без ограничения)</value>
   </data>
   <data name="CustomInputs" xml:space="preserve">
-    <value>Custom Inputs</value>
+    <value>Пользовательские входы</value>
   </data>
   <data name="Data" xml:space="preserve">
-    <value>Data</value>
+    <value>Данные</value>
   </data>
   <data name="DataRules" xml:space="preserve">
-    <value>Data Rules</value>
+    <value>Правила работы с данными</value>
   </data>
   <data name="DefaultAnswer" xml:space="preserve">
-    <value>Default Answer</value>
+    <value>Ответ по умолчанию</value>
   </data>
   <data name="DisableWebpagesNotifications" xml:space="preserve">
-    <value>Disable notifications from webpages</value>
+    <value>Отключение уведомлений с веб-страниц</value>
+  </data>
+  <data name="DismissDialogs" xml:space="preserve">
+    <value>Отказ от диалоговых окон</value>
   </data>
   <data name="General" xml:space="preserve">
-    <value>General</value>
+    <value>Общий</value>
   </data>
   <data name="Headless" xml:space="preserve">
-    <value>Headless</value>
+    <value>Безголовый</value>
+  </data>
+  <data name="IgnoreEmptyLines" xml:space="preserve">
+    <value>Игнорировать пустые строки</value>
   </data>
   <data name="IgnoreHttpsErrors" xml:space="preserve">
-    <value>Ignore HTTPS errors</value>
+    <value>Игнорировать ошибки HTTPS</value>
   </data>
   <data name="IgnoreResponseErrors" xml:space="preserve">
-    <value>Ignore response errors</value>
+    <value>Игнорировать ошибки ответа</value>
   </data>
   <data name="InputDescription" xml:space="preserve">
-    <value>Description (question for the user)</value>
+    <value>Описание (вопрос для пользователя)</value>
   </data>
   <data name="Inputs" xml:space="preserve">
-    <value>Inputs</value>
+    <value>Входы</value>
   </data>
   <data name="InputsDescription" xml:space="preserve">
-    <value>Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start a job and their answer will be inserted as a variable of type string that you can use as you please.</value>
+    <value>Пользовательские входы - это способ определить некоторые значения непосредственно во время выполнения. Пользователи конфигурации получат несколько всплывающих окон при запуске задания, а их ответ будет вставлен как переменная типа string, которую вы можете использовать по своему усмотрению.</value>
   </data>
   <data name="Invert" xml:space="preserve">
-    <value>Invert</value>
+    <value>Инвертировать</value>
+  </data>
+  <data name="LinesFromFile" xml:space="preserve">
+    <value>Строки из файла</value>
+  </data>
+  <data name="LoadOnlyDocumentAndScript" xml:space="preserve">
+    <value>Загрузите только документ и сценарий</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Местонахождение</value>
+  </data>
+  <data name="LoopsAround" xml:space="preserve">
+    <value>Петли вокруг</value>
   </data>
   <data name="MaxUsesPerProxy" xml:space="preserve">
-    <value>Maximum uses per proxy (0 is infinite)</value>
+    <value>Максимальное количество использований для одного прокси (0 - бесконечность)</value>
   </data>
   <data name="Proxies" xml:space="preserve">
     <value>Прокси</value>
   </data>
   <data name="Puppeteer" xml:space="preserve">
-    <value>Puppeteer</value>
+    <value>Кукловод</value>
   </data>
   <data name="PuppeteerCommandLineArguments" xml:space="preserve">
-    <value>Command line arguments (e.g. --disable-notifications --incognito)</value>
+    <value>Аргументы командной строки (например, --disable-notifications --incognito)</value>
   </data>
   <data name="PuppeteerUserAgent" xml:space="preserve">
-    <value>User-Agent (по умолчанию, если оставить поле пустым)</value>
+    <value>Агент пользователя (по умолчанию, если пусто)</value>
   </data>
   <data name="QuitBrowserStatuses" xml:space="preserve">
-    <value>Выйти из браузера, когда бот закончит в одном из этих состояний</value>
+    <value>Выйдите из браузера, когда бот завершает работу с одним из этих статусов</value>
+  </data>
+  <data name="RandomLinesFromFile" xml:space="preserve">
+    <value>Произвольные строки из файла</value>
   </data>
   <data name="RandomUserAgent" xml:space="preserve">
-    <value>Случайный User-Agent</value>
+    <value>Случайный пользовательский агент</value>
   </data>
   <data name="RegexRule" xml:space="preserve">
-    <value>правило Regex</value>
+    <value>Правило регекса</value>
   </data>
   <data name="RegexToMatch" xml:space="preserve">
-    <value>Regex для соответствия</value>
+    <value>Регекс для сопоставления</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Удалить</value>
@@ -228,34 +255,43 @@
   <data name="Requests" xml:space="preserve">
     <value>Запросы</value>
   </data>
+  <data name="ResourceName" xml:space="preserve">
+    <value>Название ресурса</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Ресурсы</value>
+  </data>
   <data name="RestoreDefaults" xml:space="preserve">
-    <value>Восстановить значения по умолчанию</value>
+    <value>Восстановление настроек по умолчанию</value>
   </data>
   <data name="RestoreDefaultSettingsConfirmation" xml:space="preserve">
-    <value>Восстановить параметры и настройки по умолчанию?</value>
+    <value>Хотите ли вы восстановить настройки по умолчанию?</value>
   </data>
   <data name="SaveEmptyCaptures" xml:space="preserve">
-    <value>Сохранить также пустые записи</value>
+    <value>Сохраняйте также пустые захваты</value>
   </data>
   <data name="SimpleRule" xml:space="preserve">
     <value>Простое правило</value>
   </data>
   <data name="SliceName" xml:space="preserve">
-    <value>Имя среза</value>
+    <value>Название ломтика</value>
   </data>
   <data name="SuggestedBots" xml:space="preserve">
-    <value>Предполагаемое количество Ботов</value>
+    <value>Предполагаемое количество ботов</value>
   </data>
   <data name="ToggleRegexHelper" xml:space="preserve">
-    <value>Переключить Regex Помошник</value>
+    <value>Toggle Regex Helper</value>
+  </data>
+  <data name="Unique" xml:space="preserve">
+    <value>Только уникальные линии</value>
   </data>
   <data name="UrlEncodeAfterSlicing" xml:space="preserve">
-    <value>URL Кодирование данных после среза</value>
+    <value>URL Кодирование данных после нарезки</value>
   </data>
   <data name="UseProxies" xml:space="preserve">
-    <value>Использовать Прокси</value>
+    <value>Используйте прокси-серверы</value>
   </data>
   <data name="VariableName" xml:space="preserve">
-    <value>Имя Переменной</value>
+    <value>Имя переменной</value>
   </data>
 </root>

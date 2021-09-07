@@ -14,9 +14,9 @@ using Microsoft.Extensions.Primitives;
 using OpenBullet2.Auth;
 using OpenBullet2.Components;
 using OpenBullet2.DTOs;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using RuriLib.Models.Jobs;
@@ -27,6 +27,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Helpers;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {

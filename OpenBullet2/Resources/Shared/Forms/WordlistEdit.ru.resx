@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Редактировать</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Имя</value>
   </data>
   <data name="Purpose" xml:space="preserve">
-    <value>Purpose</value>
+    <value>Назначение</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Тип списка слов</value>
   </data>
 </root>

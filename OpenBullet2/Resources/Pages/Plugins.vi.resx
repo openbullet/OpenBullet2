@@ -127,10 +127,10 @@
     <value>Làm thế nào để thêm và sử dụng plugin</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>%Plugins% come as %.zip archives% that contain one or more libraries and their dependencies. They allow you to expand the functionalities of OpenBullet by %adding new blocks%. You can upload plugins by clicking on the %Add% button above. Once they are added, plugins reside in the %UserData/Plugins% folder inside the base folder of OpenBullet. You can add blocks from plugins to your configs by navigating to the top level category (press Back) in the %Available Blocks% and selecting the name of the plugin you intend to use.</value>
+    <value>Các %Plugin% là %kho lưu trữ .zip%, nó chứa một hoặc nhiều thư viện và dependencies của chúng. Chúng cho phép bạn mở rộng các chức năng của OpenBullet bằng cách %thêm các block mới%. Bạn có thể tải lên các plugin bằng cách click vào nút %Thêm% ở trên. Một khi chúng được thêm, các plugin nằm ở folder %UserData/Plugins% trong folder OpenBullet chính. Bạn có thể thêm các block từ các plugin vào config của bạn bằng cách điều hướng tới danh mục cao cấp (bấm Back) trong %Available Blocks% và chọn tên của plugin bạn muốn dùng.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Plugins can be deleted by clicking on the %Remove% button next to them. The files will be deleted from the %Plugins% folder so make sure you have a backup copy! It is recommended that you stop all jobs before removing plugins. Mind that once you remove a plugin, configs that have blocks from that plugin will probably stop working.</value>
+    <value>Các plugin có thể được xóa bằng cách click vào nút %Xóa% kế bên chúng. Các file sẽ bị xóa khỏi folder %Plugins% nên hãy chắc rằng bạn có một bản sao lưu! Tôi khuyên bạn nên dừng tất cả các tác vụ trước khi xóa các plugin. Nhớ rằng một khi bạn xóa một plugin, các config có các block lấy từ plugin sẽ không hoạt động được.</value>
   </data>
   <data name="PluginsSuccessfullyUploaded" xml:space="preserve">
     <value>Plugins đã đc tải lên thành công</value>

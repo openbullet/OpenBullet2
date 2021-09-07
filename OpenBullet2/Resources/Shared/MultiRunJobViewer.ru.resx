@@ -118,261 +118,279 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Abort" xml:space="preserve">
-    <value>Abort</value>
+    <value>Прервать</value>
   </data>
   <data name="Alive" xml:space="preserve">
-    <value>Alive</value>
+    <value>Живой</value>
   </data>
   <data name="Banned" xml:space="preserve">
-    <value>Banned</value>
+    <value>Запрещено</value>
   </data>
   <data name="BotLog" xml:space="preserve">
-    <value>Bot Log</value>
+    <value>Журнал бота</value>
   </data>
   <data name="BotLogDisabledError" xml:space="preserve">
-    <value>The bot log was disabled in settings, please enable it to be able to see the bot log for future hits</value>
+    <value>Журнал ботов был отключен в настройках, пожалуйста, включите его, чтобы иметь возможность видеть журнал ботов для будущих просмотров</value>
   </data>
   <data name="Bots" xml:space="preserve">
-    <value>Bots</value>
+    <value>Боты</value>
   </data>
   <data name="by" xml:space="preserve">
-    <value>by</value>
+    <value>по</value>
   </data>
   <data name="CaptchaCredit" xml:space="preserve">
-    <value>Captcha credit</value>
+    <value>Зачетная капча</value>
   </data>
   <data name="CapturedData" xml:space="preserve">
-    <value>Captured data</value>
+    <value>Захваченные данные</value>
   </data>
   <data name="Change" xml:space="preserve">
-    <value>Change</value>
+    <value>Изменить</value>
   </data>
   <data name="ChangingPleaseWait" xml:space="preserve">
-    <value>Changing... please wait</value>
+    <value>Изменение... пожалуйста, подождите</value>
   </data>
   <data name="CombinationsText" xml:space="preserve">
-    <value>Combinations of {0} with length {1}</value>
+    <value>Сочетания {0} с длиной {1}</value>
   </data>
   <data name="Config" xml:space="preserve">
-    <value>Config</value>
+    <value>Конфигурация</value>
   </data>
   <data name="Controls" xml:space="preserve">
-    <value>Controls</value>
+    <value>Управление</value>
   </data>
   <data name="CopyData" xml:space="preserve">
-    <value>Copy data</value>
+    <value>Копирование данных</value>
   </data>
   <data name="CopyDataCapture" xml:space="preserve">
-    <value>Copy data + capture</value>
+    <value>Копирование данных + захват</value>
   </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Пользовательский</value>
   </data>
   <data name="CustomInput" xml:space="preserve">
-    <value>Custom input</value>
+    <value>Пользовательский ввод</value>
   </data>
   <data name="Data" xml:space="preserve">
-    <value>Data</value>
+    <value>Данные</value>
   </data>
   <data name="Database" xml:space="preserve">
-    <value>Database</value>
+    <value>База данных</value>
   </data>
   <data name="DataPool" xml:space="preserve">
-    <value>Data pool</value>
+    <value>Пул данных</value>
   </data>
   <data name="DataStats" xml:space="preserve">
-    <value>Data stats</value>
+    <value>Статистика данных</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Date</value>
+    <value>Дата</value>
   </data>
   <data name="days" xml:space="preserve">
-    <value>day(s)</value>
+    <value>день(ы)</value>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Инвалид</value>
   </data>
   <data name="DiscordWebhook" xml:space="preserve">
-    <value>Discord webhook</value>
+    <value>Вебхук Discord</value>
+  </data>
+  <data name="TelegramBot" xml:space="preserve">
+    <value>Telegram-бот</value>
+  </data>
+  <data name="Token" xml:space="preserve">
+    <value>Токен</value>
+  </data>
+  <data name="ChatId" xml:space="preserve">
+    <value>Идентификатор чата</value>
   </data>
   <data name="EditBotsAmount" xml:space="preserve">
-    <value>Edit bots amount</value>
+    <value>Редактировать количество ботов</value>
   </data>
   <data name="Elapsed" xml:space="preserve">
-    <value>Elapsed</value>
+    <value>Истекший</value>
   </data>
   <data name="Errors" xml:space="preserve">
-    <value>Errors</value>
+    <value>Ошибки</value>
   </data>
   <data name="ExecutionInfo" xml:space="preserve">
-    <value>Execution information</value>
+    <value>Информация об исполнении</value>
   </data>
   <data name="Fails" xml:space="preserve">
-    <value>Fails</value>
+    <value>Провалы</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="FileSystem" xml:space="preserve">
-    <value>File system</value>
+    <value>Файловая система</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>Group</value>
+    <value>Группа</value>
   </data>
   <data name="HardStopMessage" xml:space="preserve">
-    <value>Sending hard abort signal</value>
+    <value>Отправка сигнала жесткого прерывания</value>
   </data>
   <data name="HitOutputs" xml:space="preserve">
-    <value>Hit outputs</value>
+    <value>Выходные данные</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+    <value>Хиты</value>
   </data>
   <data name="InfiniteDataPool" xml:space="preserve">
-    <value>Infinite data pool</value>
+    <value>Бесконечный пул данных</value>
   </data>
   <data name="Invalid" xml:space="preserve">
-    <value>Invalid</value>
+    <value>Неверный</value>
   </data>
   <data name="JobOptions" xml:space="preserve">
-    <value>Job options</value>
+    <value>Варианты работы</value>
   </data>
   <data name="LineCheckedMessage" xml:space="preserve">
-    <value>Line checked ({0})({1}) with status {2}</value>
+    <value>Линия проверена ({0})({1}) со статусом {2}</value>
   </data>
   <data name="Loading" xml:space="preserve">
-    <value>Loading</value>
+    <value>Загрузка</value>
   </data>
   <data name="NoConfig" xml:space="preserve">
-    <value>No config</value>
+    <value>Нет конфигурации</value>
   </data>
   <data name="NoHitSelectedWarning" xml:space="preserve">
-    <value>You must select a hit first</value>
+    <value>Сначала вы должны выбрать удар</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>No records to display</value>
+    <value>Нет записей для отображения</value>
   </data>
   <data name="OtherStats" xml:space="preserve">
-    <value>Other stats</value>
+    <value>Другая статистика</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Пауза</value>
   </data>
   <data name="PauseMessage" xml:space="preserve">
-    <value>Sending pause signal</value>
+    <value>Отправка сигнала паузы</value>
   </data>
   <data name="PausingMessage" xml:space="preserve">
-    <value>Pausing... please wait until the current tasks finished processing</value>
+    <value>Пауза... пожалуйста, подождите, пока текущие задачи закончат обработку</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progress</value>
+    <value>Прогресс</value>
   </data>
   <data name="Proxy" xml:space="preserve">
-    <value>Proxy</value>
+    <value>Прокси</value>
   </data>
   <data name="ProxyMode" xml:space="preserve">
-    <value>Proxy mode</value>
+    <value>Режим прокси</value>
   </data>
   <data name="ProxySources" xml:space="preserve">
-    <value>Proxy sources</value>
+    <value>Прокси-источники</value>
   </data>
   <data name="ProxyStats" xml:space="preserve">
-    <value>Proxy stats</value>
+    <value>Статистика прокси</value>
   </data>
   <data name="RangeText" xml:space="preserve">
-    <value>Range from {0} with amount {1} and step {2} (padding {3})</value>
+    <value>Диапазон от {0} с суммой {1} и шагом {2} (шаг {3})</value>
   </data>
   <data name="RefreshList" xml:space="preserve">
-    <value>Refresh list</value>
+    <value>Обновить список</value>
   </data>
   <data name="Remaining" xml:space="preserve">
-    <value>Remaining</value>
+    <value>Оставшиеся</value>
   </data>
   <data name="Remote" xml:space="preserve">
-    <value>Remote</value>
+    <value>Удаленный</value>
   </data>
   <data name="Resume" xml:space="preserve">
-    <value>Resume</value>
+    <value>Резюме</value>
   </data>
   <data name="ResumeMessage" xml:space="preserve">
-    <value>Resumed checking</value>
+    <value>Возобновление проверки</value>
   </data>
   <data name="Retried" xml:space="preserve">
     <value>Retried</value>
   </data>
   <data name="SendToDebugger" xml:space="preserve">
-    <value>Send to debugger</value>
+    <value>Отправить в отладчик</value>
   </data>
   <data name="ShowFullLog" xml:space="preserve">
-    <value>Show full log</value>
+    <value>Показать полный журнал</value>
   </data>
   <data name="Skip" xml:space="preserve">
-    <value>Skip</value>
+    <value>Скип</value>
   </data>
   <data name="SkippedWait" xml:space="preserve">
-    <value>Skipped the wait</value>
+    <value>Не пришлось ждать</value>
   </data>
   <data name="SkipWait" xml:space="preserve">
-    <value>Skip Wait</value>
+    <value>Пропустить ожидание</value>
   </data>
   <data name="SoftStopMessage" xml:space="preserve">
-    <value>Sending soft stop signal</value>
+    <value>Подача сигнала плавной остановки</value>
   </data>
   <data name="Start" xml:space="preserve">
-    <value>Start</value>
+    <value>Начало</value>
   </data>
   <data name="StartedChecking" xml:space="preserve">
-    <value>Started checking</value>
+    <value>Начал проверку</value>
   </data>
   <data name="StartedWaiting" xml:space="preserve">
-    <value>Started waiting</value>
+    <value>Начал ждать</value>
   </data>
   <data name="Stop" xml:space="preserve">
-    <value>Stop</value>
+    <value>Остановить</value>
   </data>
   <data name="StoppingMessage" xml:space="preserve">
-    <value>Stopping... please wait until the current tasks finished processing. Or, ya know, you could always</value>
+    <value>Остановка... пожалуйста, подождите, пока текущие задачи закончат обработку. Или, знаете, вы всегда можете</value>
   </data>
   <data name="TaskError" xml:space="preserve">
-    <value>Task error</value>
+    <value>Ошибка задачи</value>
   </data>
   <data name="TaskManagerCompleted" xml:space="preserve">
-    <value>The task manager completed all of its work</value>
+    <value>Менеджер задач выполнил всю свою работу</value>
   </data>
   <data name="TaskManagerError" xml:space="preserve">
-    <value>Task manager error!</value>
+    <value>Ошибка диспетчера задач!</value>
   </data>
   <data name="TaskManagerPaused" xml:space="preserve">
-    <value>The task manager was paused</value>
+    <value>Диспетчер задач был приостановлен</value>
   </data>
   <data name="Tested" xml:space="preserve">
-    <value>Tested</value>
+    <value>Проверено</value>
   </data>
   <data name="TimeLeft" xml:space="preserve">
-    <value>Time left</value>
+    <value>Оставшееся время</value>
   </data>
   <data name="ToCheck" xml:space="preserve">
-    <value>To check</value>
+    <value>Чтобы проверить</value>
   </data>
   <data name="Total" xml:space="preserve">
-    <value>Total</value>
+    <value>Всего</value>
   </data>
   <data name="Type" xml:space="preserve">
-    <value>Type</value>
+    <value>Тип</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
   </data>
   <data name="Waiting" xml:space="preserve">
-    <value>Waiting</value>
+    <value>Ожидание</value>
   </data>
   <data name="WaitingForData" xml:space="preserve">
-    <value>Waiting for data</value>
+    <value>Ожидание данных</value>
   </data>
   <data name="Wordlist" xml:space="preserve">
-    <value>Wordlist</value>
+    <value>Список слов</value>
+  </data>
+  <data name="CopyToClipboardFailed" xml:space="preserve">
+    <value>Копирование в буфер обмена не удалось</value>
+  </data>
+  <data name="CopyToClipboardFailedMessage" xml:space="preserve">
+    <value>Копирование в буфер обмена не удалось. Примечание: Если вы обращаетесь к OB2 удаленно через HTTP (а не HTTPS), браузер будет блокировать копию, чтобы защитить вас от потенциальных рисков.</value>
+  </data>
+  <data name="CustomWebhook" xml:space="preserve">
+    <value>Пользовательский веб-крючок</value>
   </data>
 </root>

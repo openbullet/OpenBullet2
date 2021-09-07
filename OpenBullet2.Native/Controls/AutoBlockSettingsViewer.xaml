@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="OpenBullet2.Native.Controls.AutoBlockSettingsViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenBullet2.Native.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
+    <StackPanel
+        Margin="5 0"
+        HorizontalAlignment="Stretch">
+        <TextBlock
+            Text="{Binding NameAndId}"
+            FontSize="12"
+            FontWeight="Bold"
+            Margin="5 0 0 0"
+            TextWrapping="Wrap" 
+            Foreground="#fec34d"/>
+        <TextBlock
+            Text="{Binding Block.Descriptor.Description}"
+            FontSize="12"
+            FontStyle="Italic"
+            Margin="5 5 0 0"
+            TextWrapping="Wrap" 
+            Foreground="#fec34d"/>
+        <TextBlock
+            Text="{Binding Block.Descriptor.ExtraInfo}"
+            FontSize="10" 
+            FontStyle="Italic"
+            Margin="5 5 0 0"
+            TextWrapping="Wrap" 
+            Foreground="#fec34d"/>
+        <DockPanel>
+            <Label 
+                DockPanel.Dock="Left"
+                Foreground="{DynamicResource ForegroundCustom}"
+                Content="Label:" />
+            <TextBox
+                Text="{Binding Label}"
+                DockPanel.Dock="Left" />
+        </DockPanel>
+        <CheckBox
+            Margin="5"
+            Content="Safe mode (catch exceptions to data.ERROR)"
+            IsChecked="{Binding SafeMode}" />
+        <DockPanel
+            Visibility="{Binding HasReturnValue, Converter={StaticResource ResourceKey=BoolToVis}}">
+            <Label 
+                DockPanel.Dock="Left"
+                Foreground="{DynamicResource ForegroundCustom}"
+                Content="{Binding ReturnValueType}" />
+            <TextBox
+                Text="{Binding OutputVariable}"
+                DockPanel.Dock="Left" />
+        </DockPanel>
+        <CheckBox
+            Margin="5 5 0 0"
+            Content="Is Capture"
+            IsChecked="{Binding IsCapture}"/>
+        <Label 
+            Content="Settings:"
+            Margin="0 5"
+            Foreground="{DynamicResource ForegroundCustom}" />
+        <StackPanel 
+            x:Name="settingsPanel"
+            HorizontalAlignment="Stretch" />
+    </StackPanel>
+</UserControl>

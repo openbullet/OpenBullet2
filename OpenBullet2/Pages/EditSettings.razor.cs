@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
-using OpenBullet2.Services;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Proxies;
 using RuriLib.Services;

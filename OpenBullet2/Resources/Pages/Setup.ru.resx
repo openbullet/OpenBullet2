@@ -118,60 +118,60 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Accept" xml:space="preserve">
-    <value>Accept</value>
+    <value>Принять</value>
   </data>
   <data name="AdminAccountInfo" xml:space="preserve">
-    <value>The administrator account will prevent other people from accessing your OpenBullet 2 instance without your permission.</value>
+    <value>Учетная запись администратора не позволит другим людям получить доступ к вашему экземпляру OpenBullet 2 без вашего разрешения.</value>
   </data>
   <data name="AskAccessType" xml:space="preserve">
-    <value>How are you going to access OpenBullet 2?</value>
+    <value>Как вы собираетесь получить доступ к OpenBullet 2?</value>
   </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
-    <value>Choose your language</value>
+    <value>Выберите свой язык</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm password</value>
+    <value>Подтверждение пароля</value>
   </data>
   <data name="Continue" xml:space="preserve">
-    <value>Continue</value>
+    <value>Продолжить</value>
   </data>
   <data name="Done" xml:space="preserve">
-    <value>Done</value>
+    <value>Выполнено</value>
   </data>
   <data name="LetsStart" xml:space="preserve">
-    <value>Let's start</value>
+    <value>Давайте начнем</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Лицензия</value>
   </data>
   <data name="Locally" xml:space="preserve">
-    <value>Locally</value>
+    <value>Местно</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>No</value>
+    <value>Нет</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Пароль</value>
   </data>
   <data name="Remotely" xml:space="preserve">
-    <value>Remotely</value>
+    <value>Удаленно</value>
   </data>
   <data name="SetupAdminAccount" xml:space="preserve">
-    <value>Please set up an administrator account.</value>
+    <value>Пожалуйста, настройте учетную запись администратора.</value>
   </data>
   <data name="SetupComplete" xml:space="preserve">
-    <value>Setup complete!</value>
+    <value>Настройка завершена!</value>
   </data>
   <data name="SetupLanguage" xml:space="preserve">
-    <value>First of all, choose your language.</value>
+    <value>Прежде всего, выберите язык.</value>
   </data>
   <data name="Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Имя пользователя</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Hello and welcome to OpenBullet 2. Let's set up some stuff, shall we?</value>
+    <value>Здравствуйте и добро пожаловать в OpenBullet 2. Давайте настроим некоторые вещи, не так ли?</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>Yes</value>
+    <value>Да</value>
   </data>
 </root>

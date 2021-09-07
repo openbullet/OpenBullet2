@@ -1,5 +1,6 @@
 ﻿using RuriLib.Models.Blocks;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RuriLib.Models.Trees
 {
@@ -11,5 +12,20 @@ namespace RuriLib.Models.Trees
         public string Name { get; set; } = null;
 
         public bool IsRoot => Parent == null;
+
+        public BlockCategory Category
+        {
+            get
+            {
+                if (Descriptors.Count > 0)
+                {
+                    return Descriptors.First().Category;
+                }
+
+                var category = SubCategories.First().Category;
+                category.Name = Name;
+                return category;
+            }
+        }
     }
 }

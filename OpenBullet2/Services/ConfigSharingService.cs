@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using OpenBullet2.Models.Sharing;
-using OpenBullet2.Repositories;
+﻿using Newtonsoft.Json;
+using OpenBullet2.Core.Models.Sharing;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System;

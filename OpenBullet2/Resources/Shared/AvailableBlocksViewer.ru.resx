@@ -118,9 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Назад</value>
   </data>
   <data name="RecentlyUsed" xml:space="preserve">
-    <value>Recently used</value>
+    <value>Недавно использованные</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="SearchBoxText" xml:space="preserve">
+    <value>Введите часть названия блока</value>
+  </data>
+  <data name="Up" xml:space="preserve">
+    <value>Вверх</value>
   </data>
 </root>

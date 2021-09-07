@@ -4,7 +4,7 @@
 <div class="container-fluid my-3">
     <div class="row">
         <div class="list-group list-group-horizontal mb-3">
-            @if (!isRunning)
+            @if (debugger is null || !debugger.IsRunning)
             {
                 <button class="btn btn-sm btn-outline-success" @onclick="Run"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             }

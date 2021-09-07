@@ -3,7 +3,7 @@ name: .NET
 on:
   push:
     tags:
-    - '*'    
+    - '*'
 jobs:
   build:
     runs-on: windows-2019
@@ -13,22 +13,47 @@ jobs:
       shell: bash
       id: tag_name
       run: echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-    - name: Setup .NET
+    - name: Setup .NET 5
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Setup .NET 2.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.x
     - name: Build OpenBullet2
       run: dotnet publish OpenBullet2/OpenBullet2.csproj -c Release -o .publish/OpenBullet2
     - name: Build Updater
       run: dotnet publish Updater/Updater.csproj -c Release -o .publish/OpenBullet2 
+    - name: Build Native
+      run: dotnet publish OpenBullet2.Native/OpenBullet2.Native.csproj  -c Release -o .publish/OB2Native
+    - name: Build Native Updater
+      run: dotnet publish Updater.Native/Updater.Native.csproj  -c Release -o .publish/OB2Native
+    - name: get ncbeauty
+      run: dotnet tool install --global nulastudio.ncbeauty
+    - name: run ncbeauty
+      run: ncbeauty D:/a/OpenBullet2/OpenBullet2/.publish/OB2Native/
+    - name: remove unwanted Files
+      shell: pwsh
+      run: Get-ChildItem .publish -recurse -include *.pdb,*.xml | remove-item -force
     - name: Zip OpenBullet2
       shell: pwsh
-      run: Compress-Archive -Path .publish/OpenBullet2 -DestinationPath .publish/OpenBullet2.zip
+      run: Compress-Archive -Path .publish/OpenBullet2/* -DestinationPath .publish/OpenBullet2.zip
+    - name: Zip OB2Native
+      shell: pwsh
+      run: Compress-Archive -Path .publish/OB2Native/* -DestinationPath .publish/OpenBullet2.Native.zip
     - name: Upload OpenBullet2
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: '.publish/OpenBullet2.zip'
+        tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
+        overwrite: true
+    - name: Upload OB2Native
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: '.publish/OpenBullet2.Native.zip'
         tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         overwrite: true
     - name: Checkout Diffcopy repo
@@ -37,13 +62,13 @@ jobs:
         repository: openbullet/DiffCopy
         path: DiffCopy
     - name: Build Diffcopy
-      run: dotnet publish DiffCopy/DiffCopy.sln -c Release -o .tools/DiffCopy   
+      run: dotnet publish DiffCopy/DiffCopy.sln -c Release -o .tools/DiffCopy
     - name: Download Baseline
       shell: pwsh
-      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.1.1/OpenBullet2.zip" -OutFile "baseline.zip"
+      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.1.15/OpenBullet2.zip" -OutFile "baseline.zip"
     - name: Unzip Baseline
       shell: pwsh
-      run: Expand-Archive  ./baseline.zip -DestinationPath ./baseline  
+      run: Expand-Archive  ./baseline.zip -DestinationPath ./baseline
     - name: run Diffcopy
       run: dotnet .tools/DiffCopy/DiffCopy.dll -s baseline/OpenBullet2 -n .publish/OpenBullet2 -o .publish/Patch
     - name: Zip Patch
@@ -63,7 +88,7 @@ jobs:
       with:
         release_name: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         body: Please refer to [this post](https://discourse.openbullet.dev/t/wip-how-to-download-and-start-openbullet-2/29) on the official forum to learn how to launch OpenBullet 2.
-      
+
   push_to_docker:
       name: Push Docker image to Docker Hub
       needs: build

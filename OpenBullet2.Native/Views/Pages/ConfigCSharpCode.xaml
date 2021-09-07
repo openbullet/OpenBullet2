@@ -1,0 +1,24 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Pages.ConfigCSharpCode"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="C# Code">
+
+    <Grid>
+        <avalonEdit:TextEditor
+            Grid.Column="0"
+            x:Name="editor"
+            FontFamily="Consolas"
+            FontSize="10pt"
+            Foreground="Gainsboro"
+            Background="#111"
+            HorizontalAlignment="Stretch"
+            ShowLineNumbers="True"
+            IsReadOnly="True" />
+    </Grid>
+</Page>

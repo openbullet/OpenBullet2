@@ -74,6 +74,7 @@ Regex=^.*:.*$
 Verify=True
 Separator=:
 Slices=USERNAME,PASSWORD
+SlicesAlias=USER,PASS
 
 [WORDLIST TYPE]
 Name=Numeric

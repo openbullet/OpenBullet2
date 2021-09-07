@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
-@inject PersistentSettingsService Settings
+@inject OpenBulletSettingsService OBSettingsService
 @inject IThemeRepository ThemeRepo
 @inherits LayoutComponentBase
 
@@ -25,7 +25,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Settings.OpenBulletSettings.CustomizationSettings.Theme != "Default")
-            themePath = (await ThemeRepo.GetPath(Settings.OpenBulletSettings.CustomizationSettings.Theme)).Replace("wwwroot/", "");
+        if (OBSettingsService.Settings.CustomizationSettings.Theme != "Default")
+            themePath = (await ThemeRepo.GetPath(OBSettingsService.Settings.CustomizationSettings.Theme)).Replace("wwwroot/", "");
     }
 } 

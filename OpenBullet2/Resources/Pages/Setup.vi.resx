@@ -121,10 +121,10 @@
     <value>Đồng ý</value>
   </data>
   <data name="AdminAccountInfo" xml:space="preserve">
-    <value>Tài khoản admin sẽ ngăn người khác truy cập phiên bản Bảo Bullet mà không có sự cho phép của bạn.</value>
+    <value>Tài khoản admin sẽ ngăn người khác truy cập phiên bản OpenBullet 2 mà không có sự cho phép của bạn.</value>
   </data>
   <data name="AskAccessType" xml:space="preserve">
-    <value>Bạn sẽ truy cập Bảo Bullet bằng cách nào?</value>
+    <value>Bạn sẽ truy cập OpenBullet 2 bằng cách nào?</value>
   </data>
   <data name="ChooseYourLanguage" xml:space="preserve">
     <value>Chọn ngôn ngữ của bạn</value>
@@ -169,7 +169,7 @@
     <value>Tên tài khoản</value>
   </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Chào mừng bạn đến với Bảo Bullet. Hãy thiết lập một số thứ !</value>
+    <value>Chào mừng bạn đến với OpenBullet 2. Hãy thiết lập một số thứ !</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Có</value>

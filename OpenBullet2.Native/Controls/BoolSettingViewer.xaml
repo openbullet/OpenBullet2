@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="OpenBullet2.Native.Controls.BoolSettingViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenBullet2.Native.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <Label 
+            Content="{Binding Name}"
+            VerticalAlignment="Center"
+            Grid.Column="0" />
+
+        <TabControl x:Name="tabControl" Grid.Column="1" Background="Transparent">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabItem>
+                <TextBox 
+                    Background="#112"
+                    Height="30"
+                    Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" />
+            </TabItem>
+            <TabItem>
+                <CheckBox
+                    Height="30"
+                    IsChecked="{Binding Value}" />
+            </TabItem>
+        </TabControl>
+
+        <TabControl x:Name="buttonTabControl" Grid.Column="2">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabItem>
+                <!-- Variable -> Constant -->
+                <Button Click="ConstantMode"
+                     Width="30"
+                     Height="30"
+                     ToolTip="Switch to constant mode"
+                     Style="{StaticResource StyledPrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="9">VAR</TextBlock>
+                    </StackPanel>
+                </Button>
+            </TabItem>
+            <TabItem>
+                <!-- Constant -> Variable -->
+                <Button Click="VariableMode"
+                     Width="30"
+                     Height="30"
+                     ToolTip="Switch to variable mode"
+                     Style="{StaticResource StyledPrimaryButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Kind="TextSerif" Width="15" Height="15" />
+                    </StackPanel>
+                </Button>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>

@@ -139,7 +139,7 @@
     <value>Xoá</value>
   </data>
   <data name="EditGuest" xml:space="preserve">
-    <value>Chỉnh sửa profiles</value>
+    <value>Chỉnh sửa người dùng khách</value>
   </data>
   <data name="EditInfo" xml:space="preserve">
     <value>Chỉnh sửa thông tin</value>
@@ -151,13 +151,13 @@
     <value>Nó hoạt động như thế nào</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>OpenBullet 2 allows you to create accounts for %guests% that can access your OpenBullet 2 server. First of all, remember to turn on the %require admin login% option in OB's %security settings%. This will guarantee that people with the link to this server will be welcomed with a login screen. In order for other people to reach this server, you will need to %open the ports% on your router and setup the %firewall rules% on your machine. This is usually already done for you on a VPS, which is the suggested way to host a publicly exposed OpenBullet 2 installation.</value>
+    <value>OpenBullet 2 cho phép bạn tạo tài khoản cho %người dùng khách%, nó có thể truy cập vào server OpenBullet 2 của bạn. Trước tiên, nhớ bật tùy chọn %Yêu cầu đăng nhập tài khoản admin% trong %cài đặt bảo mật% của OB. Việc này sẽ đảm bảo mọi người với đường link tới server này sẽ thấy được màn hình đăng nhập khi mới vào. Để cho mọi người có thể kết nối tới server này, bạn sẽ phải %mở các port% trên router của bạn và cài đặt %các luật của firewall% trên máy. Những thứ này thường được làm sẵn khi dùng VPS, đây là một cách được khuyến khích khi bạn muốn mở công khai server OpenBullet 2.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>In the %security settings% you will also be able to define the %guest session lifetime%, which is the amount of hours after which guests will be prompted to login once more. This is useful as you might not want guests to have indefinite access to the server. Note that once the server generated a valid %token% for the guest, it will be valid until it expired, so even if you delete a guest from the table above, it will be able to use your OpenBullet 2 installation for as long as the token is valid.</value>
+    <value>Ở phần %cài đặt bảo mật%, bạn cũng có thể khai báo %Thời gian chạy tối đa của tài khoản admin%, nó là số giờ mà người dùng khách được phép đăng nhập sau lần đăng nhập trước. Chức năng này hữu ích vì bạn sẽ không muốn người dùng khách có khả năng truy cập vô thời hạn tới server. Lưu ý rằng một khi server đã tạo một %token% có hiệu lực cho người dùng khách, nó sẽ có hiệu lực cho tới khi nó hết hạn, nên thậm chí nếu bạn xóa một người dùng khách khỏi băng ở trên, nó vẫn sẽ có thể dùng được OpenBullet 2 của bạn cho tới khi token hết hiệu lực.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>By clicking on the %Add% button above, you will be able to create %login credentials% for the new guest, set the %access expiration% (after which the server won't send a valid token to the guest anymore) and optionally set up a number of %IP addresses% which the guest is allowed to connect from. This is useful to prevent guests from sharing their account with other people.</value>
+    <value>Bằng cách click vào nút %Thêm% ở trên, bạn sẽ có thể tạo %thông tin đăng nhập% cho người dùng khách mới, chỉnh %thời hạn truy cập% (sau thời gian đó, server sẽ không gửi token có hiệu lực tới người dùng khách nữa) và có thể tùy ý thiết lập một vài %Địa chỉ IP% mà người dùng khách được cho phép để kết nối từ địa chỉ ấy. Chức năng này hữu ích để ngăn chặn các người dùng khách chia sẻ tài khoản của họ với người khác.</value>
   </data>
   <data name="Loading" xml:space="preserve">
     <value>Đang tải</value>
@@ -169,7 +169,7 @@
     <value>Bạn cần chọn profile trước</value>
   </data>
   <data name="NoRecordsToDisplay" xml:space="preserve">
-    <value>Ko có bản ghi nào để hiện thị</value>
+    <value>Không có bản ghi nào để hiện thị</value>
   </data>
   <data name="ReallyDelete" xml:space="preserve">
     <value>Bạn có muốn xoá?</value>
@@ -187,7 +187,7 @@
     <value>Số kết quả mỗi trang</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Oh no</value>
+    <value>Uh-Oh</value>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Tên tài khoản</value>

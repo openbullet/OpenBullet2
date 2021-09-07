@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
-using OpenBullet2.Entities;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Helpers;
-using OpenBullet2.Repositories;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Services;
 using OpenBullet2.Shared.Forms;
 using System;
@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Services;
 
 namespace OpenBullet2.Pages
 {
@@ -175,7 +176,10 @@ namespace OpenBullet2.Pages
                     await JobRepo.Delete(jobsToDelete);
 
                     // Delete jobs from the service
-                    JobManager.Jobs.RemoveAll(j => j.OwnerId == selectedGuest.Id);
+                    foreach (var job in JobManager.Jobs.Where(j => j.OwnerId == selectedGuest.Id))
+                    {
+                        JobManager.RemoveJob(job);
+                    }
 
                     // Delete proxy groups and their proxies
                     var proxyGroupsToDelete = await ProxyGroupRepo.GetAll().Include(g => g.Owner)

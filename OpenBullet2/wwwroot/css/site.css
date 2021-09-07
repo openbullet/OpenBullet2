@@ -396,7 +396,7 @@ a:hover {
     position: fixed;
     bottom: 0px;
     height: 62px;
-    width: 229px;
+    width: 220px;
     z-index: 1;
     background: var(--bg-secondary);
 }

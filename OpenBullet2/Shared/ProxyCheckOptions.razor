@@ -1,13 +1,13 @@
-﻿@using OpenBullet2.Models.Jobs
+﻿@using OpenBullet2.Core.Models.Jobs
 @using RuriLib.Services
-@using OpenBullet2.Entities
+@using OpenBullet2.Core.Entities
 @using OpenBullet2.Services
 @using OpenBullet2.Auth
-@using OpenBullet2.Models.Settings 
+@using OpenBullet2.Core.Models.Settings 
 @inject RuriLibSettingsService RuriLibSettings
 @inject IProxyGroupRepository ProxyGroupRepo
 @inject AuthenticationStateProvider Auth
-@inject PersistentSettingsService PersistentSettings
+@inject OpenBulletSettingsService OBSettingsService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyCheckOptions> Loc
 
 <label style="color: orange;">@Loc["StartCondition"]</label>
@@ -64,11 +64,16 @@
             ? await ProxyGroupRepo.GetAll().ToListAsync()
             : await ProxyGroupRepo.GetAll().Include(g => g.Owner).Where(g => g.Owner.Id == uid).ToListAsync();
 
-        targets = PersistentSettings.OpenBulletSettings.GeneralSettings.ProxyCheckTargets ?? new();
+        targets = OBSettingsService.Settings.GeneralSettings.ProxyCheckTargets ?? new();
 
         if (targets.Count == 0)
         {
-            targets.Add(new ProxyCheckTarget { Url = "https://google.com", SuccessKey = "title>Google" });
+            targets.Add(new());
+        }
+
+        if (Options.Target is null)
+        {
+            Options.Target = targets[0];
         }
     }
 }

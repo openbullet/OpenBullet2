@@ -118,51 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BaseDirectory" xml:space="preserve">
-    <value>Base directory</value>
+    <value>Базовый каталог</value>
   </data>
   <data name="DirectoryNotExistant" xml:space="preserve">
-    <value>That directory does not exist</value>
+    <value>Этот каталог не существует</value>
   </data>
   <data name="FileSystem" xml:space="preserve">
-    <value>File system</value>
+    <value>Файловая система</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Имя</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>Хорошо</value>
   </data>
   <data name="Purpose" xml:space="preserve">
-    <value>Purpose</value>
+    <value>Назначение</value>
   </data>
   <data name="Select" xml:space="preserve">
-    <value>Select</value>
+    <value>Выберите</value>
   </data>
   <data name="SelectedFile" xml:space="preserve">
-    <value>Selected file</value>
+    <value>Выбранный файл</value>
   </data>
   <data name="SelectFileFirst" xml:space="preserve">
-    <value>You must select a file first!</value>
+    <value>Сначала необходимо выбрать файл!</value>
   </data>
   <data name="SystemWideFileAccessDisabled" xml:space="preserve">
-    <value>System wide file access has been disabled in settings</value>
+    <value>В настройках отключен общесистемный доступ к файлам</value>
   </data>
   <data name="Uh-Oh" xml:space="preserve">
-    <value>Uh-Oh</value>
+    <value></value>
   </data>
   <data name="Unauthorized" xml:space="preserve">
-    <value>Unauthorized</value>
+    <value>Неавторизованный</value>
   </data>
   <data name="Upload" xml:space="preserve">
-    <value>Upload</value>
+    <value>Загрузить</value>
   </data>
   <data name="Uploaded" xml:space="preserve">
-    <value>Uploaded</value>
+    <value>Загружено</value>
   </data>
   <data name="UploadFileFirst" xml:space="preserve">
-    <value>You must upload a file first!</value>
+    <value>Сначала вы должны загрузить файл!</value>
   </data>
   <data name="WordlistType" xml:space="preserve">
-    <value>Wordlist type</value>
+    <value>Тип списка слов</value>
   </data>
 </root>

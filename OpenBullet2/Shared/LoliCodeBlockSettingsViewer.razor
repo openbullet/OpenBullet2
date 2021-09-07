@@ -1,5 +1,5 @@
 ﻿@using RuriLib.Models.Blocks 
-@inject PersistentSettingsService Settings 
+@inject OpenBulletSettingsService OBSettingsService 
 
 <div style="height: 700px;">
     <MonacoEditor @ref="_editor" Id="@id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="SaveScript" />
@@ -23,7 +23,7 @@
         {
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false },
-            Theme = Settings.OpenBulletSettings.CustomizationSettings.MonacoTheme,
+            Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
             Language = "csharp",
             Value = Block.Script,
             MatchBrackets = true

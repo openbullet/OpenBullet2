@@ -118,156 +118,162 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Actions" xml:space="preserve">
-    <value>Actions</value>
+    <value>Действия</value>
   </data>
   <data name="ActionsDescription" xml:space="preserve">
-    <value>Executed sequentially</value>
+    <value>Выполняется последовательно</value>
   </data>
   <data name="Active" xml:space="preserve">
-    <value>Active</value>
+    <value>Активный</value>
   </data>
   <data name="AliveProxies" xml:space="preserve">
-    <value>Alive Proxies</value>
+    <value>Живые прокси-серверы</value>
   </data>
   <data name="BannedProxies" xml:space="preserve">
-    <value>Banned Proxies</value>
+    <value>Запрещенные прокси-серверы</value>
   </data>
   <data name="Bans" xml:space="preserve">
-    <value>Bans</value>
+    <value>Запрещает</value>
   </data>
   <data name="CaptchaCredit" xml:space="preserve">
-    <value>Captcha credit</value>
+    <value>Зачетная капча</value>
   </data>
   <data name="CPM" xml:space="preserve">
     <value>CPM</value>
   </data>
   <data name="Customs" xml:space="preserve">
-    <value>Customs</value>
+    <value>Таможня</value>
   </data>
   <data name="days" xml:space="preserve">
-    <value>days</value>
+    <value>дней</value>
   </data>
   <data name="EditAction" xml:space="preserve">
-    <value>Edit Action</value>
+    <value>Редактировать действие</value>
   </data>
   <data name="EditTrigger" xml:space="preserve">
-    <value>Edit Trigger</value>
+    <value>Редактировать триггер</value>
   </data>
   <data name="Errors" xml:space="preserve">
-    <value>Errors</value>
+    <value>Ошибки</value>
   </data>
   <data name="Executing" xml:space="preserve">
-    <value>Executing</value>
+    <value>Выполнение</value>
   </data>
   <data name="Executions" xml:space="preserve">
-    <value>Executions</value>
+    <value>Казни</value>
   </data>
   <data name="Fails" xml:space="preserve">
-    <value>Fails</value>
+    <value>Провалы</value>
   </data>
   <data name="Help1x00" xml:space="preserve">
-    <value>How does this work?</value>
+    <value>Как это работает?</value>
   </data>
   <data name="Help1x01" xml:space="preserve">
-    <value>This is the %Job Monitor%, which contains a list of %triggered actions%. Triggered Actions are in charge of monitoring a job, checking for triggers and executing actions. First of all you should define the %id% of the job to monitor in the numeric textbox. Remember to uncheck the %active% checkbox when setting up the triggers and actions to avoid having them execute accidentally when you're not yet finished with them.</value>
+    <value>Это %Job Monitor%, который содержит список %triggered actions%. Триггерные действия отвечают за мониторинг задания, проверку наличия триггеров и выполнение действий. Прежде всего, необходимо задать %id% задания для мониторинга в числовом текстовом поле. Не забудьте снять флажок %active% при настройке триггеров и действий, чтобы избежать их случайного выполнения, когда вы еще не закончили работу над ними.</value>
   </data>
   <data name="Help1x02" xml:space="preserve">
-    <value>Then you should add some %triggers% and %actions%. Once all of the triggering conditions are true, the Job Monitor will execute all the %actions% you specified in a sequential order until they are exhausted. After executing the actions, the %executions% counter will increase. If the Triggered Action is marked as %repeatable%, triggers will be matches multiple times, otherwise the Triggered Action will set itself as inactive and not trigger ever again.</value>
+    <value>Затем следует добавить несколько %триггеров% и %действий%. Как только все условия срабатывания станут истинными, монитор заданий выполнит все указанные вами %действия% в последовательном порядке, пока они не будут исчерпаны. После выполнения действий счетчик %executions% будет увеличиваться. Если триггерное действие отмечено как %повторяемое%, триггеры будут совпадать несколько раз, в противном случае триггерное действие установит себя как неактивное и больше не сработает.</value>
   </data>
   <data name="Help1x03" xml:space="preserve">
-    <value>The %Reset% button will reset the number of executions to 0. Triggered Actions are saved in the %triggeredActions.json% file, so if you want to back them up or transfer them to another OB instance you should copy this file.</value>
+    <value>Кнопка %Reset% сбросит количество выполнений до 0. Триггерные действия сохраняются в файле %triggeredActions.json%, поэтому если вы хотите создать резервную копию или перенести их в другой экземпляр OB, вам следует скопировать этот файл.</value>
   </data>
   <data name="Hits" xml:space="preserve">
-    <value>Hits</value>
+    <value>Хиты</value>
   </data>
   <data name="hours" xml:space="preserve">
-    <value>hours</value>
+    <value>часы</value>
   </data>
   <data name="inJob" xml:space="preserve">
-    <value>in job</value>
+    <value>в работе</value>
   </data>
   <data name="Job" xml:space="preserve">
-    <value>Job</value>
+    <value>Работа</value>
   </data>
   <data name="JobFinished" xml:space="preserve">
-    <value>Job finished</value>
+    <value>Работа завершена</value>
   </data>
   <data name="JobStatus" xml:space="preserve">
-    <value>Job status</value>
+    <value>Статус работы</value>
   </data>
   <data name="minutes" xml:space="preserve">
-    <value>minutes</value>
+    <value>минут</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>New</value>
+    <value>Новый</value>
   </data>
   <data name="onWebhook" xml:space="preserve">
-    <value>on webhook</value>
+    <value>веб-крючок</value>
   </data>
   <data name="Progress" xml:space="preserve">
-    <value>Progress</value>
+    <value>Прогресс</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">
-    <value>Reload proxies</value>
+    <value>Перезагрузка прокси-серверов</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="RemoveAll" xml:space="preserve">
-    <value>Remove All</value>
+    <value>Удалить все</value>
   </data>
   <data name="Repeatable" xml:space="preserve">
-    <value>Repeatable</value>
+    <value>Повторяющийся</value>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
+    <value>Сброс</value>
   </data>
   <data name="Retries" xml:space="preserve">
-    <value>Retries</value>
+    <value>Повторные попытки</value>
   </data>
   <data name="seconds" xml:space="preserve">
-    <value>seconds</value>
+    <value>секунды</value>
   </data>
   <data name="SelectActionType" xml:space="preserve">
-    <value>Select action type</value>
+    <value>Выберите тип действия</value>
   </data>
   <data name="SelectTriggerType" xml:space="preserve">
-    <value>Select trigger type</value>
+    <value>Выберите тип триггера</value>
   </data>
   <data name="Send" xml:space="preserve">
-    <value>Send</value>
+    <value>Отправить</value>
   </data>
   <data name="SetBotsTo" xml:space="preserve">
-    <value>Set bots to</value>
+    <value>Установите ботов на</value>
   </data>
   <data name="SetRelativeTimeTo" xml:space="preserve">
-    <value>Set relative time to</value>
+    <value>Установите относительное время на</value>
   </data>
   <data name="StartJob" xml:space="preserve">
-    <value>Start Job</value>
+    <value>Начать работу</value>
   </data>
   <data name="StopJob" xml:space="preserve">
-    <value>Stop Job</value>
+    <value>Остановить работу</value>
   </data>
   <data name="Tested" xml:space="preserve">
-    <value>Tested</value>
+    <value>Проверено</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Прошедшее время</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Оставшееся время</value>
   </data>
   <data name="ToChecks" xml:space="preserve">
-    <value>To Checks</value>
+    <value>К чекам</value>
   </data>
   <data name="Triggers" xml:space="preserve">
-    <value>Triggers</value>
+    <value>Триггеры</value>
   </data>
   <data name="TriggersDescription" xml:space="preserve">
-    <value>All must be verified at the same time</value>
+    <value>Все они должны быть проверены одновременно</value>
   </data>
   <data name="Wait" xml:space="preserve">
-    <value>Wait</value>
+    <value>Подождите</value>
+  </data>
+  <data name="inChat" xml:space="preserve">
+    <value>в чате</value>
+  </data>
+  <data name="AbortJob" xml:space="preserve">
+    <value>Прервать работу</value>
   </data>
 </root>

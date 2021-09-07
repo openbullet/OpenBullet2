@@ -145,7 +145,7 @@
     <value>URLs đã bị chặn</value>
   </data>
   <data name="BlockedUrlsInfo" xml:space="preserve">
-    <value>If the URL of the resource contains any of the given texts it will not be loaded. Case insensitive.</value>
+    <value>Nếu liên kết của tài nguyên chứa bất kì từ ngữ đã ghi, nó sẽ không được tải. Case insensitive.</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Thoát</value>
@@ -202,7 +202,7 @@
     <value>Đầu vào</value>
   </data>
   <data name="InputsDescription" xml:space="preserve">
-    <value>Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start a job and their answer will be inserted as a variable of type string that you can use as you please.</value>
+    <value>Tùy chỉnh dữ liệu đầu vào là một cách để xác định các giá trị trực tiếp tại thời gian chạy (runtime). Config của người dùng sẽ nhận vài popup khi chúng thực hiện tác vụ và câu trả lời của chúng sẽ được đưa vào như một biến kiểu chuỗi (string) mà bạn có thể dùng thoải mái.</value>
   </data>
   <data name="Invert" xml:space="preserve">
     <value>Hoán đổi</value>
