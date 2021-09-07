@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Core.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Proxies;
 using System;
 using System.Threading;
@@ -44,10 +45,15 @@ namespace OpenBullet2.Core.Models.Proxies
                     semaphore.Release();
                 }
             }
-            catch (ObjectDisposedException)
+            catch
             {
-                // If we are here, it means we deleted the job but the parallelizer was still running
-                // so we don't need to put anything in the database and we can safely ignore the exception.
+                /* 
+                 * If we are here it means a few possible things
+                 * - we deleted the job but the parallelizer was still running
+                 * - the original proxy was deleted (e.g. from the proxy tab)
+                 * 
+                 * In any case we don't want to save anything to the database.
+                 */
             }
         }
 
