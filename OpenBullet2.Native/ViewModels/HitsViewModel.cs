@@ -109,10 +109,19 @@ namespace OpenBullet2.Native.ViewModels
 
         public async Task RefreshList()
         {
-            var items = await hitRepo.GetAll().ToListAsync();
-            HitsCollection = new ObservableCollection<HitEntity>(items);
-            OnPropertyChanged(nameof(Total));
-            HookFilters();
+            try
+            {
+                // TODO: Make this not fail when hits are being written and we try to read them!
+                // A.k.a. make this use another repo, not the singleton, and refresh it when new hits come in
+                var items = await hitRepo.GetAll().ToListAsync();
+                HitsCollection = new ObservableCollection<HitEntity>(items);
+                OnPropertyChanged(nameof(Total));
+                HookFilters();
+            }
+            catch
+            {
+
+            }
         }
 
         public async Task Update(HitEntity hit) => await hitRepo.Update(hit);
