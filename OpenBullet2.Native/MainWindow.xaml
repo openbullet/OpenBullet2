@@ -112,7 +112,7 @@
             <StackPanel.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="FontWeight" Value="Bold" />
-                    <Setter Property="Margin" Value="10 0 5 0" />
+                    <Setter Property="Margin" Value="10 8 5 0" />
                     <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
                     <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Century Gothic" />
                     <Setter Property="FontSize" Value="14" />
