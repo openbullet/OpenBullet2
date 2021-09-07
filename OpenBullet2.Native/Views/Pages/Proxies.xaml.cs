@@ -61,12 +61,41 @@ namespace OpenBullet2.Native.Views.Pages
                 return;
             }
 
-            await vm.DeleteSelectedGroup();
+            try
+            {
+                await vm.DeleteSelectedGroup();
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
         }
 
-        private async void DeleteNotWorking(object sender, RoutedEventArgs e) => await vm.DeleteNotWorking();
+        private async void DeleteNotWorking(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await vm.DeleteNotWorking();
+                Alert.Success("Done", "Successfully deleted the not working proxies from the group");
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
 
-        private async void DeleteUntested(object sender, RoutedEventArgs e) => await vm.DeleteUntested();
+        private async void DeleteUntested(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await vm.DeleteUntested();
+                Alert.Success("Done", "Successfully deleted the untested proxies from the group");
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
         
         private void Import(object sender, RoutedEventArgs e)
         {
@@ -79,8 +108,28 @@ namespace OpenBullet2.Native.Views.Pages
             new MainDialog(new ImportProxiesDialog(this), "Import proxies").ShowDialog();
         }
 
-        public async void AddGroup(ProxyGroupEntity entity) => await vm.AddGroup(entity);
-        public async void EditGroup(ProxyGroupEntity entity) => await vm.EditGroup(entity);
+        public async void AddGroup(ProxyGroupEntity entity)
+        {
+            try
+            {
+                await vm.AddGroup(entity);
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
+        public async void EditGroup(ProxyGroupEntity entity)
+        {
+            try
+            {
+                await vm.EditGroup(entity);
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
 
         public void UpdateViewModel() => vm.UpdateViewModel();
 
@@ -112,16 +161,29 @@ namespace OpenBullet2.Native.Views.Pages
         private void CopySelectedProxiesFull(object sender, RoutedEventArgs e)
             => SelectedProxies.CopyToClipboard(p => p.ToString());
 
-        public async void AddProxies(ProxiesForImportDto dto) => await vm.AddProxies(dto);
+        public async void AddProxies(ProxiesForImportDto dto)
+        {
+            try
+            {
+                await vm.AddProxies(dto);
+            }
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
+        }
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
-            foreach (var wordlist in SelectedProxies)
+            try
             {
-                await vm.Delete(wordlist);
+                await vm.Delete(SelectedProxies);
+                Alert.Success("Done", "Successfully deleted the selected proxies from the group");
             }
-
-            Alert.Success("Done", "Successfully deleted the selected proxies from the group");
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
         }
 
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)

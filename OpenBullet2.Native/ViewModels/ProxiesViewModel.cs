@@ -174,10 +174,10 @@ namespace OpenBullet2.Native.ViewModels
             await RefreshList();
         }
 
-        public async Task Delete(ProxyEntity proxy)
+        public async Task Delete(IEnumerable<ProxyEntity> proxies)
         {
-            ProxiesCollection.Remove(proxy);
-            await proxyRepo.Delete(proxy);
+            await proxyRepo.Delete(proxies);
+            await RefreshList();
         }
 
         public async Task DeleteNotWorking()
@@ -197,7 +197,6 @@ namespace OpenBullet2.Native.ViewModels
         public override void UpdateViewModel()
         {
             _ = RefreshList();
-
             base.UpdateViewModel();
         }
     }
