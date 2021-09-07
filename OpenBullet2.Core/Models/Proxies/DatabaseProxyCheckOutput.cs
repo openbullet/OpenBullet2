@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OpenBullet2.Core.Repositories;
+﻿using OpenBullet2.Core.Repositories;
 using RuriLib.Models.Proxies;
 using System;
 using System.Threading;
