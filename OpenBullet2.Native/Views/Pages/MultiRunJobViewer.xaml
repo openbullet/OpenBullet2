@@ -162,11 +162,11 @@
             <StackPanel
                 HorizontalAlignment="Center"
                 Orientation="Horizontal">
-                <Label
+                <TextBlock
                     Foreground="{DynamicResource BackgroundSecondary}"
-                    Content="{Binding Job.ProgressString}"
+                    Text="{Binding Job.ProgressString}"
                     FontWeight="Bold"
-                    Margin="5 0 0 0" />
+                    Margin="0 2 0 0" />
             </StackPanel>
         </Border>
 
