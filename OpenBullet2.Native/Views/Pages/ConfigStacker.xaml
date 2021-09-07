@@ -105,6 +105,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button 
+                            Style="{StaticResource MahApps.Styles.Button}"
                             BorderBrush="White"
                             BorderThickness="{Binding Selected, Converter={StaticResource ResourceKey=BoolToThick}}"
                             Background="{Binding BackgroundColor}"
