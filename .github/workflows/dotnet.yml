@@ -97,6 +97,11 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        name: Get release tag
+        shell: bash
+        id: dockertag
+        run: echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -115,4 +120,4 @@ jobs:
         with:
           push: true
           platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
-          tags: openbullet/openbullet2:latest
+          tags: openbullet/openbullet2:latest,openbullet/openbullet2:${{ steps.dockertag.outputs.SOURCE_TAG }}
