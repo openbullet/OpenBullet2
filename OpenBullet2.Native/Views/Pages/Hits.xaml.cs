@@ -82,20 +82,30 @@ namespace OpenBullet2.Native.Views.Pages
 
         private async void DeleteSelected(object sender, RoutedEventArgs e)
         {
-            foreach (var hit in SelectedHits)
+            try
             {
-                await vm.Delete(hit);
+                await vm.Delete(SelectedHits);
+                Alert.Success("Done", "Successfully deleted the selected hits from the DB");
             }
-
-            Alert.Success("Done", "Successfully deleted the selected hits from the DB");
+            catch (Exception ex)
+            {
+                Alert.Exception(ex);
+            }
         }
 
         private void Purge(object sender, RoutedEventArgs e)
         {
             if (Alert.Choice("Are you REALLY sure?", "This will delete ALL your hits, not just the ones you filtered. Are you sure you want to do this?"))
             {
-                vm.Purge();
-                Alert.Success("Done", "Successfully deleted all hits from the DB");
+                try
+                {
+                    vm.Purge();
+                    Alert.Success("Done", "Successfully deleted all hits from the DB");
+                }
+                catch (Exception ex)
+                {
+                    Alert.Exception(ex);
+                }
             }
         }
 
