@@ -6,7 +6,7 @@ namespace RuriLib.Models.Variables
 {
     public class ByteArrayVariable : Variable
     {
-        private byte[] value = new byte[] { };
+        private byte[] value = Array.Empty<byte>();
 
         public ByteArrayVariable(byte[] value)
         {
@@ -14,7 +14,7 @@ namespace RuriLib.Models.Variables
             Type = VariableType.ByteArray;
         }
 
-        public override string AsString() => Encoding.UTF8.GetString(value);
+        public override string AsString() => value == null ? "null" : Encoding.UTF8.GetString(value);
 
         public override int AsInt() => BitConverter.ToInt32(value, 0);
 
