@@ -55,7 +55,7 @@ namespace OpenBullet2.Native.Views.Pages
             var jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
             Action<JobOptions> onAccept = async options =>
             {
-                await vm.EditJob(entity, options);
+                jobVM = await vm.EditJob(entity, options);
                 mainWindow.DisplayJob(jobVM);
             };
 

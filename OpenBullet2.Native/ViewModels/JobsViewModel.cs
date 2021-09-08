@@ -77,7 +77,7 @@ namespace OpenBullet2.Native.ViewModels
             return jobVM;
         }
 
-        public async Task EditJob(JobEntity entity, JobOptions options)
+        public async Task<JobViewModel> EditJob(JobEntity entity, JobOptions options)
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
@@ -92,6 +92,8 @@ namespace OpenBullet2.Native.ViewModels
             jobManager.AddJob(newJob);
 
             CreateCollection();
+
+            return JobsCollection.First(j => j.Id == newJob.Id);
         }
 
         public async Task<JobViewModel> CloneJob(JobType type, JobOptions options)
