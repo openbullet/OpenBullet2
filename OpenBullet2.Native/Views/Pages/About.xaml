@@ -33,7 +33,7 @@
                 <LineBreak/>
                 <Bold>Beta testers</Bold>: B1rdY, Br4uN, Fairy, FFaez1267, Itamai, Laiteux, Pure, Why001
                 <LineBreak/>
-                <Bold>Supporters</Bold>: <Span Foreground="Coral">James | Lisse, FFaez1267, Ikamai</Span>, <Span Foreground="Orange">TheFiendQQ, Patch2201, Spic, B1rdY, mastercho, alexparkin, k4k4r0to</Span>, <Span Foreground="Gold">donx, Crackdealer, moon.Man, Laiteux, HarveyS, ＥｄｗａｒｄＮ, mimic, MadmanDev, Rael, boggy94, Pegasus, Phantøm, Joey, dew88, The anti SJW, ManoPlayBRL, Plog, Barmoley, Itamai, Kurosaki Ichigo, Pool, Finlay1010, n00biE, kaatil, Speeedyyyy, AccountMast3r, Ruzzlzz, Sparky (Rare), Fr00tl00ps | Lisse, dankmemes43</Span>
+                <Bold>Supporters</Bold>: <Span Foreground="Coral">James | Lisse, FFaez1267, Ikamai</Span>, <Span Foreground="Orange">TheFiendQQ, Patch2201, Spic, B1rdY, mastercho, alexparkin, k4k4r0to</Span>, <Span Foreground="Gold">donx, Crackdealer, moon.Man, Laiteux, HarveyS, ＥｄｗａｒｄＮ, mimic, Matthew, MadmanDev, Rael, boggy94, Pegasus, Phantøm, Joey, dew88, The anti SJW, ManoPlayBRL, Plog, Barmoley, Itamai, Kurosaki Ichigo, Pool, Finlay1010, n00biE, kaatil, Speeedyyyy, AccountMast3r, Ruzzlzz, Sparky (Rare), Fr00tl00ps | Lisse, dankmemes43</Span>
                 <LineBreak/><LineBreak/>
                 <Span Foreground="{DynamicResource ForegroundGood}">This software is <Italic>Open Source</Italic> and licensed under the MIT license. Please visit the <Bold>repository</Bold> using the button below.</Span>
             </TextBlock>
