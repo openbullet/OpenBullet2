@@ -117,6 +117,42 @@ namespace OpenBullet2.Native.ViewModels
             ? options.Variables.OrderBy(v => v.MarkedForCapture).ToList()
             : options.Variables;
 
+        private string searchString = string.Empty;
+        public string SearchString
+        {
+            get => searchString;
+            set
+            {
+                searchString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int[] indices = Array.Empty<int>();
+        public int[] Indices
+        {
+            get => indices;
+            set
+            {
+                indices = value;
+                CurrentMatchIndex = 0;
+            }
+        }
+
+        private int currentMatchIndex;
+        public int CurrentMatchIndex
+        {
+            get => currentMatchIndex;
+            set
+            {
+                currentMatchIndex = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MatchInfo));
+            }
+        }
+
+        public string MatchInfo => $"{CurrentMatchIndex + 1} of {Indices.Length}";
+
         public DebuggerViewModel()
         {
             rlSettingsService = SP.GetService<RuriLibSettingsService>();

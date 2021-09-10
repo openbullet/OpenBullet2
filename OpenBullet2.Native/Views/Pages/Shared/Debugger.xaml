@@ -81,6 +81,7 @@
         </Grid>
 
         <TabControl Grid.Row="2" 
+                    Background="Transparent"
                     Margin="5 5 0 0"
                     x:Name="tabControl">
             <TabItem>
@@ -95,8 +96,13 @@
                         </StackPanel>
                     </Button>
                 </TabItem.Header>
-                <WindowsFormsHost Grid.Row="0">
-                    <wf:RichTextBox 
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <WindowsFormsHost Grid.Row="0">
+                        <wf:RichTextBox 
                         x:Name="logRTB"
                         Dock="Fill"
                         ForeColor="Gainsboro"
@@ -104,7 +110,35 @@
                         ScrollBars="Vertical"
                         BorderStyle="None"
                         DetectUrls="False"/>
-                </WindowsFormsHost>
+                    </WindowsFormsHost>
+                    <Grid Grid.Row="1" Margin="0 2 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding SearchString}"/>
+                        <Button Style="{StaticResource StyledButton}" Click="Search" Grid.Column="1" Margin="5 0 0 0" >
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterialDesign Kind="Search" />
+                                <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource StyledButton}" Click="PreviousMatch" Grid.Column="2" Margin="5 0 0 0" >
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconUnicons Kind="AngleLeft" />
+                            </StackPanel>
+                        </Button>
+                        <Label Grid.Column="3" Content="{Binding MatchInfo}"/>
+                        <Button Style="{StaticResource StyledButton}" Click="NextMatch" Grid.Column="4" Margin="5 0 0 0" >
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconUnicons Kind="AngleRight" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
