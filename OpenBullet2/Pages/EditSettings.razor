@@ -20,6 +20,10 @@
         <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.SaveEmptyCaptures" />
         <br />
 
+        <label>@Loc["ReportLastCaptchaOnRetry"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.ReportLastCaptchaOnRetry" />
+        <br />
+
         <label>@Loc["ContinueStopStatuses"]</label>
         <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="continueStatuses" Selected="stopStatuses" />
     </EditForm>

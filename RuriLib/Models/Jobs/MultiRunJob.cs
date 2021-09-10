@@ -28,6 +28,7 @@ using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Helpers;
 using IronPython.Compiler;
 using IronPython.Runtime;
+using RuriLib.Models.Captchas;
 
 namespace RuriLib.Models.Jobs
 {
@@ -284,6 +285,26 @@ namespace RuriLib.Models.Jobs
                 }
                 else if (botData.STATUS == "RETRY")
                 {
+                    if (botData.ConfigSettings.GeneralSettings.ReportLastCaptchaOnRetry)
+                    {
+                        var lastCaptcha = botData.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
+
+                        if (lastCaptcha is not null)
+                        {
+                            try
+                            {
+                                botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
+                                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token);
+                                botData.ExecutingBlock("Bad captcha reported!");
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                    }
+
                     input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
                     Interlocked.Increment(ref input.Job.dataRetried);
                     goto START;

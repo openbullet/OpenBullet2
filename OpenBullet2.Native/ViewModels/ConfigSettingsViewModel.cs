@@ -54,6 +54,16 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public bool ReportLastCaptchaOnRetry
+        {
+            get => General.ReportLastCaptchaOnRetry;
+            set
+            {
+                General.ReportLastCaptchaOnRetry = value;
+                OnPropertyChanged();
+            }
+        }
+
         public IEnumerable<string> AllStatuses => rlSettingsService.GetStatuses();
         public IEnumerable<string> ProxyTypes => Enum.GetNames(typeof(ProxyType));
         public IEnumerable<string> WordlistTypes => rlSettingsService.Environment.WordlistTypes.Select(w => w.Name);

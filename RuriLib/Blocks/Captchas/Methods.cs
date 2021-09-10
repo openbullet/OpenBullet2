@@ -3,6 +3,7 @@ using CaptchaSharp.Models;
 using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Captchas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -181,7 +182,7 @@ namespace RuriLib.Blocks.Captchas
         [Block("Reports an incorrectly solved captcha to the service in order to get funds back")]
         public static async Task ReportLastSolution(BotData data)
         {
-            var lastCaptcha = data.TryGetObject<LastCaptchaInfo>("lastCaptchaInfo");
+            var lastCaptcha = data.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
 
             data.Logger.LogHeader();
 
@@ -217,7 +218,7 @@ namespace RuriLib.Blocks.Captchas
         }
 
         private static void AddCaptchaId(BotData data, long id, CaptchaType type)
-            => data.SetObject("lastCaptchaInfo", new LastCaptchaInfo { Id = id, Type = type });
+            => data.SetObject("lastCaptchaInfo", new CaptchaInfo { Id = id, Type = type });
 
         private static Proxy SetupProxy(BotData data, bool useProxy, string userAgent) 
             => data.UseProxy && useProxy
@@ -233,11 +234,5 @@ namespace RuriLib.Blocks.Captchas
                         .Select(c => (c.Key, c.Value)).ToArray()
                 }
                 : null;
-    }
-
-    public class LastCaptchaInfo
-    {
-        public long Id { get; set; }
-        public CaptchaType Type { get; set; }
     }
 }
