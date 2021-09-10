@@ -252,6 +252,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
   </data>
+  <data name="ReportLastCaptchaOnRetry" xml:space="preserve">
+    <value>Segnala l'ultimo captcha risolto se il bot termina con stato RETRY</value>
+  </data>
   <data name="Requests" xml:space="preserve">
     <value>Richieste</value>
   </data>
