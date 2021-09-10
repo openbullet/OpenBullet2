@@ -160,6 +160,28 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        private string testDataForRules = string.Empty;
+        public string TestDataForRules
+        {
+            get => testDataForRules;
+            set
+            {
+                testDataForRules = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string testWordlistTypeForRules;
+        public string TestWordlistTypeForRules
+        {
+            get => testWordlistTypeForRules;
+            set
+            {
+                testWordlistTypeForRules = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<ConfigResourceOptions> resourcesCollection;
         public ObservableCollection<ConfigResourceOptions> ResourcesCollection
         {
@@ -258,6 +280,7 @@ namespace OpenBullet2.Native.ViewModels
         {
             configService = SP.GetService<ConfigService>();
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
+            TestWordlistTypeForRules = WordlistTypes.First();
         }
 
         public override void UpdateViewModel()

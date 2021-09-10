@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
+using OpenBullet2.Native.Views.Dialogs;
 using RuriLib.Models;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
@@ -52,5 +53,8 @@ namespace OpenBullet2.Native.Views.Pages
             blockedUrlsRTB.Document.Blocks.Clear();
             blockedUrlsRTB.AppendText(string.Join(Environment.NewLine, vm.BlockedUrls), Colors.White);
         }
+
+        private void TestDataRules(object sender, RoutedEventArgs e)
+            => new MainDialog(new TestDataRulesDialog(vm.TestDataForRules, vm.TestWordlistTypeForRules, vm.DataRulesCollection), "Test Results").ShowDialog();
     }
 }

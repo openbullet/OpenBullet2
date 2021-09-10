@@ -182,6 +182,25 @@
                         </DataTemplate>
                     </ItemsControl.Resources>
                 </ItemsControl>
+                <Grid Margin="0 10 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Test your data here:" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="1" Text="{Binding TestDataForRules}" Margin="5 5 0 5" />
+                    <ComboBox Grid.Column="2" ItemsSource="{Binding WordlistTypes}" SelectedValue="{Binding TestWordlistTypeForRules}" Margin="5 5 0 5" />
+                    <Button Grid.Column="3" Click="TestDataRules" Margin="5 5 5 5" 
+                        Style="{StaticResource StyledPrimaryButton}"
+                        HorizontalAlignment="Left" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconBoxIcons Kind="RegularTestTube" />
+                            <TextBlock VerticalAlignment="Center" Margin="5 0">Test</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Resources</Label>
                 <StackPanel Orientation="Horizontal">
                     <Button Click="AddLinesFromFileResource" Margin="5 5 5 5" 
