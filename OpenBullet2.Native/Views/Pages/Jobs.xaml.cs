@@ -66,7 +66,7 @@ namespace OpenBullet2.Native.Views.Pages
                 _ => throw new NotImplementedException()
             };
 
-            new MainDialog(page, $"Edit job #{entity.Id}").ShowDialog();
+            new MainDialog(page, $"Edit job #{entity.Id}", true).ShowDialog();
         }
 
         private async void CloneJob(object sender, RoutedEventArgs e)
@@ -90,7 +90,7 @@ namespace OpenBullet2.Native.Views.Pages
                 _ => throw new NotImplementedException()
             };
 
-            new MainDialog(page, $"Clone job #{entity.Id}").ShowDialog();
+            new MainDialog(page, $"Clone job #{entity.Id}", true).ShowDialog();
         }
 
         private async void RemoveJob(object sender, RoutedEventArgs e)
