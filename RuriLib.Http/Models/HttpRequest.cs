@@ -111,6 +111,12 @@ namespace RuriLib.Http.Models
                         .Append($"{cookie.Key}={cookie.Value}; ");
                 }
 
+                // Remove the last ; and space if not empty
+                if (cookieBuilder.Length > 2)
+                {
+                    cookieBuilder.Remove(cookieBuilder.Length - 2, 2);
+                }
+
                 finalHeaders.Add("Cookie", cookieBuilder);
             }
 

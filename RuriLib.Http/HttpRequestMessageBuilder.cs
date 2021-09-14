@@ -66,6 +66,12 @@ namespace RuriLib.Http
                             .Append("; ");
                     }
 
+                    // Remove the last ; and space if not empty
+                    if (cookieBuilder.Length > 2)
+                    {
+                        cookieBuilder.Remove(cookieBuilder.Length - 2, 2);
+                    }
+
                     headers.Add("Cookie", cookieBuilder);
                 }
             }
