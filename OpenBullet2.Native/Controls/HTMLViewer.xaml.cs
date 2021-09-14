@@ -11,8 +11,6 @@ namespace OpenBullet2.Native.Controls
     /// </summary>
     public partial class HTMLViewer : UserControl
     {
-        private string queuedRender = string.Empty;
-
         public string HTML
         {
             get => (string)GetValue(HTMLProperty);
@@ -41,29 +39,11 @@ namespace OpenBullet2.Native.Controls
         public HTMLViewer()
         {
             InitializeComponent();
-
-            // Load the last string queued for render if any
-            if (!string.IsNullOrEmpty(queuedRender))
-            {
-                Render(queuedRender);
-            }
-
-            // This is needed to avoid going blind before the page is loaded
-            browser.Navigated += (s, e) => browser.Visibility = Visibility.Visible;
-
-            // TODO: Switch to the WinForms WebBrowser, the WPF one is underfeatured
-            // disabling the context menu is extremely difficult
+            Render(string.Empty);
         }
 
         public void Render(string html)
         {
-            // If the browser is not loaded yet, queue the render
-            if (!browser.IsLoaded)
-            {
-                queuedRender = html;
-                return;
-            }
-
             // Add the styling
             var final = new HtmlStyler(html)
                 .WithStyle("background-color", "#222")
@@ -72,7 +52,7 @@ namespace OpenBullet2.Native.Controls
                 .WithStyle("font-size", $"{(int)FontSize}px")
                 .ToString();
 
-            browser.NavigateToString(final);
+            browser.DocumentText = final;
         }
 
         private void Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
