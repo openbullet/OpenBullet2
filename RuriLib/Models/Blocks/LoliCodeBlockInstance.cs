@@ -291,7 +291,7 @@ namespace RuriLib.Models.Blocks
             // UNMARK @myVar => data.MarkedForCapture.Remove(nameof(myVar));
             if ((match = Regex.Match(input, $"^UNMARK @?({validTokenRegex})$")).Success)
             {
-                return $"data.MarkedForCapture.Remove(nameof({match.Groups[1].Value}));";
+                return $"data.UnmarkCapture(nameof({match.Groups[1].Value}));";
             }
 
             throw new NotSupportedException();

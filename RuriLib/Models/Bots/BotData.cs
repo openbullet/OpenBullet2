@@ -76,6 +76,18 @@ namespace RuriLib.Models.Bots
             }
         }
 
+        public void UnmarkCapture(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be null or empty");
+
+            if (MarkedForCapture.Contains(name))
+            {
+                MarkedForCapture.Remove(name);
+                Logger.Log($"Variable {name} removed from capture", LogColors.Yellow);
+            }
+        }
+
         public void ExecutingBlock(string label)
         {
             ExecutionInfo = $"Executing block {label}";
