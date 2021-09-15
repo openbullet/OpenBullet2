@@ -82,7 +82,8 @@ namespace RuriLib.Helpers.CSharp
                 ? GetUsings()
                 : GetUsings().Concat(settings.CustomUsings
                     .Where(u => !string.IsNullOrWhiteSpace(u))
-                    .Select(u => ParseUsing(u)));
+                    .Select(u => ParseUsing(u)))
+                    .Distinct();
 
         private static string ParseUsing(string u)
         {
