@@ -189,6 +189,10 @@
       <Word>FINALLY</Word>
       <Word>ACQUIRELOCK</Word>
       <Word>RELEASELOCK</Word>
+      <Word>USEPROXY</Word>
+      <Word>PROXY</Word>
+      <Word>MARK</Word>
+      <Word>UNMARK</Word>
     </Keywords>
 
     <Span color="Block">

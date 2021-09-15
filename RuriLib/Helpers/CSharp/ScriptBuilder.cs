@@ -60,6 +60,7 @@ namespace RuriLib.Helpers.CSharp
                 "RuriLib.Logging",
                 "RuriLib.Extensions",
                 "RuriLib.Models.Bots",
+                "RuriLib.Models.Proxies",
                 "RuriLib.Models.Conditions.Comparisons",
                 "System.Collections.Generic",
                 "System.Linq",

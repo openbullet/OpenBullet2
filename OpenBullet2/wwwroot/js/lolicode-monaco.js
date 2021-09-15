@@ -62,7 +62,7 @@
 	monaco.languages.setMonarchTokensProvider('lolicode', {
 
         keywords: ["extern", "alias", "using", "bool", "decimal", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "char", "float", "double", "object", "dynamic", "string", "assembly", "is", "as", "ref", "out", "this", "base", "new", "typeof", "void", "checked", "unchecked", "default", "delegate", "var", "const", "if", "else", "switch", "case", "while", "do", "for", "foreach", "in", "break", "continue", "goto", "return", "throw", "try", "catch", "finally", "lock", "yield", "from", "let", "where", "join", "on", "equals", "into", "orderby", "ascending", "descending", "select", "group", "by", "namespace", "partial", "class", "field", "event", "method", "param", "property", "public", "protected", "internal", "private", "abstract", "sealed", "static", "struct", "readonly", "volatile", "virtual", "override", "params", "get", "set", "add", "remove", "operator", "true", "false", "implicit", "explicit", "interface", "enum", "null", "async", "await", "fixed", "sizeof", "stackalloc", "unsafe", "nameof", "when",
-            "JUMP", "REPEAT", "END", "FOREACH", "IN", "LOG", "CLOG", "WHILE", "IF", "ELSE", "ELSE IF", "TRY", "CATCH", "LOCK", "SET", "TAKE", "TAKEONE", "FROM", "FINALLY", "ACQUIRELOCK", "RELEASELOCK"], // Lolicode-specific
+            "JUMP", "REPEAT", "END", "FOREACH", "IN", "LOG", "CLOG", "WHILE", "IF", "ELSE", "ELSE IF", "TRY", "CATCH", "LOCK", "SET", "TAKE", "TAKEONE", "FROM", "FINALLY", "ACQUIRELOCK", "RELEASELOCK", "MARK", "UNMARK", "USEPROXY", "PROXY"], // Lolicode-specific
         namespaceFollows: ["namespace", "using"],
         parenFollows: ["if", "for", "while", "switch", "foreach", "using", "catch", "when"],
         operators: ["=", "??", "||", "&&", "|", "^", "&", "==", "!=", "<=", ">=", "<<", "+", "-", "*", "/", "%", "!", "~", "++", "--", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", ">>", "=>"],
@@ -75,7 +75,7 @@
                 [/^[ \t]*BLOCK:.*/, "block", "@block"],
 
                 // Needed to not mess up syntax highlighting in some cases. There are still cases that are not handled.
-                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE IF|ELSE|TRY|CATCH|LOCK|SET|TAKE(ONE)?|FINALLY|ACQUIRELOCK|RELEASELOCK)/, "block", "@consumeline"],
+                [/^[ \t]*(JUMP|REPEAT|END|FOREACH|LOG|CLOG|WHILE|IF|ELSE IF|ELSE|TRY|CATCH|LOCK|SET|TAKE(ONE)?|FINALLY|ACQUIRELOCK|RELEASELOCK|(UN)?MARK|MARK|(USE)?PROXY)/, "block", "@consumeline"],
                 [/#/, "jumplabel", "jumplabel"],
 
                 [/\@?[a-zA-Z_]\w*/, {
@@ -498,6 +498,42 @@ function autoCompleteLoliCodeStatement(range) {
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
         },
         {
+            label: 'SET USEPROXY (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET USEPROXY ${1:value}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (Auth) (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type} "${4:username}" "${5:password}"',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'MARK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'MARK @${1:variable}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'UNMARK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'UNMARK @${1:variable}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (Auth) (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type} "${4:username}" "${5:password}"',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
             label: 'TAKEONE (LoliCode)',
             kind: monaco.languages.CompletionItemKind.Snippet,
             insertText: 'TAKEONE FROM ${1:"resourceName"} => ${2:@myString}',
@@ -508,6 +544,6 @@ function autoCompleteLoliCodeStatement(range) {
             kind: monaco.languages.CompletionItemKind.Snippet,
             insertText: 'TAKE ${1:5} FROM ${2:"resourceName"} => ${3:@myList}',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-        },
+        }
     ];
 }
