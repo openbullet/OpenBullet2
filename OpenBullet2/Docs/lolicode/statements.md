@@ -125,6 +125,36 @@ SET CAP @myCapture "capture"
 LOG myCapture
 ```
 ---
+##### SET USEPROXY
+Sets whether to use the currently set proxy or not.
+Example:
+```
+SET USEPROXY TRUE
+SET USEPROXY FALSE
+```
+---
+##### SET PROXY
+Sets a given proxy. The available types are: HTTP, SOCKS4, SOCKS4A, SOCKS5.
+Example:
+```
+SET PROXY "127.0.0.1" 9050 SOCKS5
+SET PROXY "127.0.0.1" 9050 SOCKS5 "username" "password"
+```
+---
+##### MARK
+Adds a variable to the capture.
+Example:
+```
+MARK @myVar
+```
+---
+##### UNMARK
+Removes a variable from the capture.
+Example:
+```
+UNMARK @myVar
+```
+---
 ##### TAKEONE
 Takes a single item from a resource. You can configure resources in Config Settings > Data > Resources.
 You need to provide the name of the resource and the name of the variable that will be created (of type `string`).

@@ -3,6 +3,7 @@ using RuriLib.Helpers;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -252,6 +253,45 @@ namespace RuriLib.Models.Blocks
                     definedVariables.Add(match.Groups[1].Value);
                     return $"string {match.Groups[1].Value} = {match.Groups[2].Value};{System.Environment.NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
                 }
+            }
+
+            // SET USEPROXY
+            // SET USEPROXY TRUE => data.UseProxy = "true";
+            if ((match = Regex.Match(input, "^SET USEPROXY (TRUE|FALSE)$")).Success)
+            {
+                return $"data.UseProxy = {match.Groups[1].Value.ToLower()};";
+            }
+
+            // SET PROXY
+            // SET PROXY "127.0.0.1" 9050 SOCKS5 => data.Proxy = new Proxy("127.0.0.1", 9050, ProxyType.Socks5);
+            // SET PROXY "127.0.0.1" 9050 SOCKS5 "username" "password" => data.Proxy = new Proxy("127.0.0.1", 9050, ProxyType.Socks5, "username", "password");
+            if (input.StartsWith("SET PROXY "))
+            {
+                var setProxyParams = input["SET PROXY ".Length..].Split(' ');
+                var proxyType = (ProxyType)Enum.Parse(typeof(ProxyType), setProxyParams[2], true);
+
+                if (setProxyParams.Length == 3)
+                {
+                    return $"data.Proxy = new Proxy({setProxyParams[0]}, {setProxyParams[1]}, ProxyType.{proxyType});";
+                }
+                else
+                {
+                    return $"data.Proxy = new Proxy({setProxyParams[0]}, {setProxyParams[1]}, ProxyType.{proxyType}, {setProxyParams[3]}, {setProxyParams[4]});";
+                }
+            }
+
+            // MARK
+            // MARK @myVar => data.MarkForCapture(nameof(myVar));
+            if ((match = Regex.Match(input, $"^MARK @?({validTokenRegex})$")).Success)
+            {
+                return $"data.MarkForCapture(nameof({match.Groups[1].Value}));";
+            }
+
+            // UNMARK
+            // UNMARK @myVar => data.MarkedForCapture.Remove(nameof(myVar));
+            if ((match = Regex.Match(input, $"^UNMARK @?({validTokenRegex})$")).Success)
+            {
+                return $"data.MarkedForCapture.Remove(nameof({match.Groups[1].Value}));";
             }
 
             throw new NotSupportedException();
