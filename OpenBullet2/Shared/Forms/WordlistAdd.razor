@@ -1,54 +1,62 @@
 ﻿@implements IDisposable
 @inject Microsoft.Extensions.Localization.IStringLocalizer<WordlistAdd> Loc
 
-<EditForm Model="wordlist">
-    <label class="mt-2">@Loc["WordlistType"]</label>
-    <InputSelect @bind-Value="wordlist.Type">
-        @foreach (var type in wordlistTypes)
-        {
-            <option value="@type">@type</option>
-        }
-    </InputSelect><br />
-    <label>@Loc["Name"]</label>
-    <InputText @bind-Value="wordlist.Name" />
-    <label style="margin-top: 10px;">@Loc["Purpose"]</label>
-    <InputText @bind-Value="wordlist.Purpose" />
-    <hr style="margin-top: 10px;" />
-    <RadzenTabs>
-        <Tabs>
-            <RadzenTabsItem Text="@Loc["Upload"]">
-                <input type="file" @ref=inputTypeFileElement @onchange="ProcessUploadedWordlist" />
-                <br />
-                <br />
-                <progress max="@max" value="@value" /><span class="ml-3">@(progress.ToString("F"))% @Loc["Uploaded"]</span>
-                <br />
-                <button type="button" class="btn btn-outline-success mt-2" @onclick="Upload">@Loc["Upload"]</button>
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="@Loc["FileSystem"]">
-                
-                <label>@Loc["BaseDirectory"]</label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-success" style="height: 30px; line-height: 10px;"
-                                @onclick="@(() => LoadTree(baseDirectory))">@Loc["Ok"]</button>
-                    </div>
-                    <div style="width: 80%">
-                        <InputText @bind-Value="baseDirectory" />
-                    </div>
-                </div>
-                
-                <div style="max-height: 300px; overflow-y: auto">
-                    <TreeView Nodes="nodes"
-                              ChildrenSelector="@(item => item.Children)"
-                              HasChildren="@(item => item.IsDirectory)"
-                              @bind-SelectedNode="selectedNode">
-                        <TitleTemplate Context="node">@node.Name</TitleTemplate>
-                    </TreeView>
-                </div>
-                
-                <p>@Loc["SelectedFile"]: @selectedNode?.Name</p>
-                <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="SelectFile">@Loc["Select"]</button>
-            </RadzenTabsItem>
-        </Tabs>
-    </RadzenTabs>
-</EditForm>
+@if (wordlist != null)
+{
+    <EditForm Model="wordlist">
+        <label class="mt-2">@Loc["WordlistType"]</label>
+        <InputSelect @bind-Value="wordlist.Type">
+            @foreach (var type in wordlistTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect><br />
+        <label>@Loc["Name"]</label>
+        <InputText @bind-Value="wordlist.Name" />
+        <label style="margin-top: 10px;">@Loc["Purpose"]</label>
+        <InputText @bind-Value="wordlist.Purpose" />
+        <hr style="margin-top: 10px;" />
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="@Loc["Upload"]">
+                    <input type="file" @ref=inputTypeFileElement @onchange="ProcessUploadedWordlist" />
+                    <br />
+                    <br />
+                    <progress max="@max" value="@value" /><span class="ml-3">@(progress.ToString("F"))% @Loc["Uploaded"]</span>
+                    <br />
+                    <button type="button" class="btn btn-outline-success mt-2" @onclick="Upload">@Loc["Upload"]</button>
+                </RadzenTabsItem>
+                @if (uid == 0)
+                {
+                    <RadzenTabsItem Text="@Loc["FileSystem"]">
+
+                        <label>@Loc["BaseDirectory"]</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-success" style="height: 30px; line-height: 10px;"
+                                        @onclick="@(() => LoadTree(baseDirectory))">
+                                    @Loc["Ok"]
+                                    </button>
+                                </div>
+                                <div style="width: 80%">
+                                    <InputText @bind-Value="baseDirectory" />
+                                </div>
+                            </div>
+
+                            <div style="max-height: 300px; overflow-y: auto">
+                                <TreeView Nodes="nodes"
+                                          ChildrenSelector="@(item => item.Children)"
+                                          HasChildren="@(item => item.IsDirectory)"
+                                          @bind-SelectedNode="selectedNode">
+                                    <TitleTemplate Context="node">@node.Name</TitleTemplate>
+                                </TreeView>
+                            </div>
+
+                            <p>@Loc["SelectedFile"]: @selectedNode?.Name</p>
+                            <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="SelectFile">@Loc["Select"]</button>
+                        </RadzenTabsItem>
+                    }
+            </Tabs>
+        </RadzenTabs>
+    </EditForm>
+}

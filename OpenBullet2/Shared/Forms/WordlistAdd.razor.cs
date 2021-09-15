@@ -2,6 +2,8 @@
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using OpenBullet2.Auth;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Helpers;
@@ -23,11 +25,13 @@ namespace OpenBullet2.Shared.Forms
         [Inject] private IFileReaderService FileReaderService { get; set; }
         [Inject] private RuriLibSettingsService RuriLibSettings { get; set; }
         [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
+        [Inject] private AuthenticationStateProvider Auth { get; set; }
 
         private ElementReference inputTypeFileElement;
         private List<string> wordlistTypes;
         private WordlistEntity wordlist;
         private MemoryStream memoryStream;
+        private int uid = -1;
         private long max;
         private long value;
         private decimal progress;
@@ -47,8 +51,13 @@ namespace OpenBullet2.Shared.Forms
                 Type = wordlistTypes.First()
             };
 
-            baseDirectory = Directory.Exists("UserData") ? "UserData" : Directory.GetCurrentDirectory();
-            await LoadTree(baseDirectory);
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
+            if (uid == 0)
+            {
+                baseDirectory = Directory.Exists("UserData") ? "UserData" : Directory.GetCurrentDirectory();
+                await LoadTree(baseDirectory);
+            }
         }
 
         private async Task ProcessUploadedWordlist()
