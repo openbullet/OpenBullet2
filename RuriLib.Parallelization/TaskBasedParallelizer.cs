@@ -151,24 +151,32 @@ namespace RuriLib.Parallelization
                     WAIT:
 
                     // Wait for the semaphore
+                    Debug($"Waiting for the semaphore. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
                     await semaphore.WaitAsync(softCTS.Token).ConfigureAwait(false);
 
                     if (softCTS.IsCancellationRequested)
+                    {
+                        Debug("SoftCTS cancellation requested, breaking");
                         break;
+                    }
 
                     if (dopDecreaseRequested || IsCPMLimited())
                     {
                         UpdateCPM();
                         semaphore?.Release();
+                        Debug($"DOP decrease requested, released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
                         goto WAIT;
                     }
 
                     // If the current batch is running out
                     if (queue.Count < MaxDegreeOfParallelism)
                     {
+                        Debug($"Current batch running out. Queue count {queue.Count} < {MaxDegreeOfParallelism}");
+
                         // Queue more items until the BatchSize is reached OR until the enumeration finished
                         while (queue.Count < BatchSize && items.MoveNext())
                         {
+                            Debug($"Enqueueing next item. Queue count = {queue.Count}. BatchSize = {BatchSize}");
                             queue.Enqueue(items.Current);
                         }
                     }
@@ -176,20 +184,26 @@ namespace RuriLib.Parallelization
                     // If we can dequeue an item, run it
                     if (queue.TryDequeue(out TInput item))
                     {
+                        Debug($"Dequeued an item, invoking taskFunction. Queue count = {queue.Count}");
                         // The task will release its slot no matter what
                         _ = taskFunction.Invoke(item)
-                            .ContinueWith(_ => semaphore?.Release())
-                            .ConfigureAwait(false);
+                            .ContinueWith(_ =>
+                            {
+                                semaphore?.Release();
+                                Debug($"Released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
+                            }).ConfigureAwait(false);
                     }
                     else
                     {
                         semaphore?.Release();
+                        Debug($"Released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
                     }
                 }
 
                 // Wait for every remaining task from the last batch to finish unless aborted
                 while (Progress < 1 && !hardCTS.IsCancellationRequested)
                 {
+                    Debug($"Waiting since progress is {Progress} < 1.");
                     await Task.Delay(100);
                 }
             }
@@ -217,5 +231,10 @@ namespace RuriLib.Parallelization
             }
         }
         #endregion
+
+        private void Debug(string message)
+        {
+            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] {message}");
+        }
     }
 }

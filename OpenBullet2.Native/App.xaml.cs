@@ -7,6 +7,7 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Logging;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
+using OpenBullet2.Native.Utils;
 using OpenBullet2.Native.Views.Pages.Shared;
 using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
@@ -32,6 +33,9 @@ namespace OpenBullet2.Native
 
         public App()
         {
+            // Debug only, open the console
+            ConsoleHelper.AllocConsole();
+
             Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += OnTaskException;
 
