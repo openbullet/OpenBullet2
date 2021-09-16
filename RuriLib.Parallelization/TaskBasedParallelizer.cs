@@ -18,8 +18,6 @@ namespace RuriLib.Parallelization
         private ConcurrentQueue<TInput> queue;
         private int savedDOP;
         private bool dopDecreaseRequested;
-        private int acquiredHandles = 0;
-        private int releasedHandles = 0;
         #endregion
 
         #region Constructors
@@ -110,7 +108,6 @@ namespace RuriLib.Parallelization
             else if (newValue > degreeOfParallelism)
             {
                 semaphore.Release(newValue - degreeOfParallelism);
-                Interlocked.Increment(ref releasedHandles);
             }
             else
             {
@@ -118,7 +115,6 @@ namespace RuriLib.Parallelization
                 for (var i = 0; i < degreeOfParallelism - newValue; ++i)
                 {
                     await semaphore.WaitAsync().ConfigureAwait(false);
-                    Interlocked.Increment(ref acquiredHandles);
                 }
                 dopDecreaseRequested = false;
             }
@@ -156,12 +152,9 @@ namespace RuriLib.Parallelization
 
                     // Wait for the semaphore
                     await semaphore.WaitAsync(softCTS.Token).ConfigureAwait(false);
-                    Debug($"Acquired a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
-                    Interlocked.Increment(ref acquiredHandles);
 
                     if (softCTS.IsCancellationRequested)
                     {
-                        Debug("SoftCTS cancellation requested, breaking");
                         break;
                     }
 
@@ -169,20 +162,15 @@ namespace RuriLib.Parallelization
                     {
                         UpdateCPM();
                         semaphore?.Release();
-                        Interlocked.Increment(ref releasedHandles);
-                        Debug($"DOP decrease requested, released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                         goto WAIT;
                     }
 
                     // If the current batch is running out
                     if (queue.Count < MaxDegreeOfParallelism)
                     {
-                        Debug($"Current batch running out. Queue count {queue.Count} < {MaxDegreeOfParallelism}");
-
                         // Queue more items until the BatchSize is reached OR until the enumeration finished
                         while (queue.Count < BatchSize && items.MoveNext())
                         {
-                            Debug($"Enqueueing next item. Queue count = {queue.Count}. BatchSize = {BatchSize}");
                             queue.Enqueue(items.Current);
                         }
                     }
@@ -190,28 +178,22 @@ namespace RuriLib.Parallelization
                     // If we can dequeue an item, run it
                     if (queue.TryDequeue(out TInput item))
                     {
-                        Debug($"Dequeued an item, invoking taskFunction. Queue count = {queue.Count}");
                         // The task will release its slot no matter what
-                        _ = taskFunction.Invoke(item)
+                        _ = CreateTask(item)
                             .ContinueWith(_ =>
                             {
                                 semaphore?.Release();
-                                Interlocked.Increment(ref releasedHandles);
-                                Debug($"Released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                             }).ConfigureAwait(false);
                     }
                     else
                     {
                         semaphore?.Release();
-                        Interlocked.Increment(ref releasedHandles);
-                        Debug($"Released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                     }
                 }
 
                 // Wait for every remaining task from the last batch to finish unless aborted
                 while (Progress < 1 && !hardCTS.IsCancellationRequested)
                 {
-                    Debug($"Waiting since progress is {Progress} < 1.");
                     await Task.Delay(100);
                 }
             }

@@ -67,7 +67,6 @@ namespace RuriLib.Parallelization
         protected int degreeOfParallelism;
         protected readonly IEnumerable<TInput> workItems;
         protected readonly Func<TInput, CancellationToken, Task<TOutput>> workFunction;
-        protected readonly Func<TInput, Task> taskFunction;
         protected readonly long totalAmount;
         protected readonly int skip;
         protected int current = 0;
@@ -133,35 +132,6 @@ namespace RuriLib.Parallelization
             this.degreeOfParallelism = degreeOfParallelism;
             this.skip = skip;
             MaxDegreeOfParallelism = maxDegreeOfParallelism;
-
-            // Assign the task function
-            taskFunction = new Func<TInput, Task>(async item =>
-            {
-                if (softCTS.IsCancellationRequested)
-                    return;
-
-                // Try to execute the work and report the result
-                try
-                {
-                    var workResult = await workFunction.Invoke(item, hardCTS.Token).ConfigureAwait(false);
-                    OnNewResult(new ResultDetails<TInput, TOutput>(item, workResult));
-                    hardCTS.Token.ThrowIfCancellationRequested();
-                }
-                // Catch and report any exceptions
-                catch (Exception ex)
-                {
-                    OnTaskError(new ErrorDetails<TInput>(item, ex));
-                }
-                // Report the progress, update the CPM and release the semaphore slot
-                finally
-                {
-                    Interlocked.Increment(ref current);
-                    OnProgressChanged(Progress);
-
-                    checkedTimestamps.Add(Environment.TickCount);
-                    UpdateCPM();
-                }
-            });
         }
         #endregion
 
@@ -276,6 +246,39 @@ namespace RuriLib.Parallelization
                     Monitor.Exit(cpmLock);
                 }
             }
+        }
+
+        protected Task CreateTask(TInput item)
+        {
+            if (softCTS.IsCancellationRequested)
+            {
+                return Task.CompletedTask;
+            }
+
+            return Task.Factory.StartNew(async () =>
+            {
+                // Try to execute the work and report the result
+                try
+                {
+                    var workResult = await workFunction.Invoke(item, hardCTS.Token).ConfigureAwait(false);
+                    OnNewResult(new ResultDetails<TInput, TOutput>(item, workResult));
+                    hardCTS.Token.ThrowIfCancellationRequested();
+                }
+                // Catch and report any exceptions
+                catch (Exception ex)
+                {
+                    OnTaskError(new ErrorDetails<TInput>(item, ex));
+                }
+                // Report the progress, update the CPM and release the semaphore slot
+                finally
+                {
+                    Interlocked.Increment(ref current);
+                    OnProgressChanged(Progress);
+
+                    checkedTimestamps.Add(Environment.TickCount);
+                    UpdateCPM();
+                }
+            }, TaskCreationOptions.LongRunning).Unwrap();
         }
         #endregion
     }

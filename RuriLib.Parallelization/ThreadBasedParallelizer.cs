@@ -176,7 +176,7 @@ namespace RuriLib.Parallelization
 
         // Sync method to be passed to a thread
         private void ThreadWork(object input)
-            => taskFunction((TInput)input).Wait();
+            => CreateTask((TInput)input).Wait();
 
         // Wait until the current round is over (if we didn't cancel, it's the last one)
         private async Task WaitCurrentWorkCompletion()
