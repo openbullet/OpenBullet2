@@ -18,6 +18,8 @@ namespace RuriLib.Parallelization
         private ConcurrentQueue<TInput> queue;
         private int savedDOP;
         private bool dopDecreaseRequested;
+        private int acquiredHandles = 0;
+        private int releasedHandles = 0;
         #endregion
 
         #region Constructors
@@ -108,6 +110,7 @@ namespace RuriLib.Parallelization
             else if (newValue > degreeOfParallelism)
             {
                 semaphore.Release(newValue - degreeOfParallelism);
+                Interlocked.Increment(ref releasedHandles);
             }
             else
             {
@@ -115,6 +118,7 @@ namespace RuriLib.Parallelization
                 for (var i = 0; i < degreeOfParallelism - newValue; ++i)
                 {
                     await semaphore.WaitAsync().ConfigureAwait(false);
+                    Interlocked.Increment(ref acquiredHandles);
                 }
                 dopDecreaseRequested = false;
             }
@@ -151,8 +155,9 @@ namespace RuriLib.Parallelization
                     WAIT:
 
                     // Wait for the semaphore
-                    Debug($"Waiting for the semaphore. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
                     await semaphore.WaitAsync(softCTS.Token).ConfigureAwait(false);
+                    Debug($"Acquired a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
+                    Interlocked.Increment(ref acquiredHandles);
 
                     if (softCTS.IsCancellationRequested)
                     {
@@ -164,7 +169,8 @@ namespace RuriLib.Parallelization
                     {
                         UpdateCPM();
                         semaphore?.Release();
-                        Debug($"DOP decrease requested, released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
+                        Interlocked.Increment(ref releasedHandles);
+                        Debug($"DOP decrease requested, released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                         goto WAIT;
                     }
 
@@ -190,13 +196,15 @@ namespace RuriLib.Parallelization
                             .ContinueWith(_ =>
                             {
                                 semaphore?.Release();
-                                Debug($"Released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
+                                Interlocked.Increment(ref releasedHandles);
+                                Debug($"Released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                             }).ConfigureAwait(false);
                     }
                     else
                     {
                         semaphore?.Release();
-                        Debug($"Released a semaphore slot. ConcurrentCount = {semaphore.CurrentCount}. AvailableWaitHandle = {semaphore.AvailableWaitHandle}.");
+                        Interlocked.Increment(ref releasedHandles);
+                        Debug($"Released a semaphore slot. Acquired = {acquiredHandles}. Released = {releasedHandles}.");
                     }
                 }
 
@@ -232,9 +240,6 @@ namespace RuriLib.Parallelization
         }
         #endregion
 
-        private void Debug(string message)
-        {
-            Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] {message}");
-        }
+        private static void Debug(string message) => Console.WriteLine($"[{DateTime.Now}] {message}");
     }
 }
