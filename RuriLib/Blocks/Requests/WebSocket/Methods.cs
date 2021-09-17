@@ -73,7 +73,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
             });
 
             // Connect
-            await ws.Start();
+            await ws.Start().ConfigureAwait(false);
 
             if (!ws.IsRunning)
             {

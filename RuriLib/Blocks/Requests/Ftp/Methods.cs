@@ -58,7 +58,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             }
 
             data.SetObject("ftpClient", client);
-            await client.AutoConnectAsync(data.CancellationToken);
+            await client.AutoConnectAsync(data.CancellationToken).ConfigureAwait(false);
             
             if (!client.IsConnected)
             {
@@ -76,7 +76,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             var options = recursive ? FtpListOption.Recursive : FtpListOption.Auto;
             var list = new List<string>();
 
-            foreach (var item in await client.GetListingAsync("/", options))
+            foreach (var item in await client.GetListingAsync("/", options).ConfigureAwait(false))
             {
                 if (item.Type == FtpFileSystemObjectType.Directory && 
                     (kind == FtpItemKind.FilesAndFolders || kind == FtpItemKind.Folder))
@@ -102,7 +102,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             data.Logger.LogHeader();
             var client = GetClient(data);
             await client.DownloadFileAsync(localFileName, remoteFileName, FtpLocalExists.Overwrite, 
-                FtpVerify.None, null, data.CancellationToken);
+                FtpVerify.None, null, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"{remoteFileName} downloaded to {localFileName}", LogColors.Maize);
         }
@@ -114,7 +114,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             data.Logger.LogHeader();
             var client = GetClient(data);
             await client.DownloadDirectoryAsync(localDir, remoteDir, FtpFolderSyncMode.Update, existsPolicy,
-                FtpVerify.None, null, null, data.CancellationToken);
+                FtpVerify.None, null, null, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"{remoteDir} downloaded to {localDir}", LogColors.Maize);
         }
@@ -126,7 +126,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             data.Logger.LogHeader();
             var client = GetClient(data);
             await client.UploadFileAsync(localFileName, remoteFileName, existsPolicy, true, 
-                FtpVerify.None, null, data.CancellationToken);
+                FtpVerify.None, null, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"{localFileName} uploaded to {remoteFileName}", LogColors.Maize);
         }
@@ -136,7 +136,7 @@ namespace RuriLib.Blocks.Requests.Ftp
         {
             data.Logger.LogHeader();
             var client = GetClient(data);
-            await client.DisconnectAsync(data.CancellationToken);
+            await client.DisconnectAsync(data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log("Disconnected from the FTP server", LogColors.Maize);
         }

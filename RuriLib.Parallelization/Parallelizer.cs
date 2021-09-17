@@ -251,7 +251,7 @@ namespace RuriLib.Parallelization
             while (Status != ParallelizerStatus.Idle)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await Task.Delay(100, cancellationToken);
+                await Task.Delay(100, cancellationToken).ConfigureAwait(false);
             }
         }
         #endregion

@@ -49,11 +49,11 @@ namespace RuriLib.Blocks.Requests.Imap
             var domain = email.Split('@')[1];
 
             // Try the entries from imapdomains.dat
-            var candidates = (await data.Providers.EmailDomains.GetImapServers(domain)).ToList();
+            var candidates = (await data.Providers.EmailDomains.GetImapServers(domain).ConfigureAwait(false)).ToList();
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -66,7 +66,7 @@ namespace RuriLib.Blocks.Requests.Imap
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
-                var xml = await GetString(data, thunderbirdUrl);
+                var xml = await GetString(data, thunderbirdUrl).ConfigureAwait(false);
                 candidates = ImapAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.DarkOrchid);
             }
@@ -77,7 +77,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -95,11 +95,11 @@ namespace RuriLib.Blocks.Requests.Imap
 
                 try
                 {
-                    xml = await GetString(data, autoconfigUrl);
+                    xml = await GetString(data, autoconfigUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, autoconfigUrlUnsecure);
+                    xml = await GetString(data, autoconfigUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = ImapAutoconfig.Parse(xml);
@@ -112,7 +112,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -130,11 +130,11 @@ namespace RuriLib.Blocks.Requests.Imap
 
                 try
                 {
-                    xml = await GetString(data, wellKnownUrl);
+                    xml = await GetString(data, wellKnownUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, wellKnownUrlUnsecure);
+                    xml = await GetString(data, wellKnownUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = ImapAutoconfig.Parse(xml);
@@ -147,7 +147,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -168,7 +168,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -180,7 +180,7 @@ namespace RuriLib.Blocks.Requests.Imap
             candidates.Clear();
             try
             {
-                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
+                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
                 mxRecords.ForEach(r =>
                 {
                     candidates.Add(new HostEntry(r, 993));
@@ -196,7 +196,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -213,9 +213,9 @@ namespace RuriLib.Blocks.Requests.Imap
 
             try
             {
-                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
-                await data.Providers.EmailDomains.TryAddImapServer(domain, entry);
+                await data.Providers.EmailDomains.TryAddImapServer(domain, entry).ConfigureAwait(false);
                 return true;
             }
             catch
@@ -239,8 +239,8 @@ namespace RuriLib.Blocks.Requests.Imap
                 Uri = new Uri(url),
             };
 
-            using var response = await httpClient.SendAsync(request, data.CancellationToken);
-            return await response.Content.ReadAsStringAsync(data.CancellationToken);
+            using var response = await httpClient.SendAsync(request, data.CancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
         }
 
         [Block("Connects to an IMAP server")]
@@ -263,7 +263,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             data.SetObject("imapClient", client);
 
-            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.DarkOrchid);
         }
 
@@ -276,7 +276,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             if (client.IsConnected)
             {
-                await client.DisconnectAsync(true, data.CancellationToken);
+                await client.DisconnectAsync(true, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Client disconnected", LogColors.DarkOrchid);
             }
             else
@@ -295,12 +295,12 @@ namespace RuriLib.Blocks.Requests.Imap
 
             using var cts = new CancellationTokenSource(timeoutMilliseconds);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
-            await client.AuthenticateAsync(email, password, linkedCts.Token);
+            await client.AuthenticateAsync(email, password, linkedCts.Token).ConfigureAwait(false);
             data.Logger.Log("Authenticated successfully", LogColors.DarkOrchid);
 
             if (openInbox)
             {
-                await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken);
+                await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
             }
         }
@@ -325,7 +325,7 @@ namespace RuriLib.Blocks.Requests.Imap
             data.Logger.LogHeader();
 
             var client = GetAuthenticatedClient(data);
-            await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken);
+            await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
         }
@@ -354,7 +354,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             try
             {
-                mails = await inbox.SearchAsync(query, data.CancellationToken);
+                mails = await inbox.SearchAsync(query, data.CancellationToken).ConfigureAwait(false);
             }
             catch
             {
@@ -377,7 +377,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             var inbox = GetOpenInbox(data);
             var uniqueId = new UniqueId(uint.Parse(id));
-            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken);
+            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
             var body = mail.TextBody;
 
             if (string.IsNullOrEmpty(body) || preferHtml)
@@ -407,8 +407,8 @@ Body:
 
             var inbox = GetOpenInbox(data);
             var uniqueId = new UniqueId(uint.Parse(id));
-            await inbox.AddFlagsAsync(uniqueId, MessageFlags.Deleted, true, data.CancellationToken);
-            await inbox.ExpungeAsync(data.CancellationToken);
+            await inbox.AddFlagsAsync(uniqueId, MessageFlags.Deleted, true, data.CancellationToken).ConfigureAwait(false);
+            await inbox.ExpungeAsync(data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Deleted mail with id {id}", LogColors.DarkOrchid);
         }

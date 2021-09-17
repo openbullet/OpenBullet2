@@ -43,7 +43,7 @@ namespace RuriLib.Blocks.Interop
         public static async Task<T> InvokeNode<T>(BotData data, string scriptFile, object[] parameters)
         {
             data.Logger.LogHeader();
-            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, null, parameters, data.CancellationToken);
+            var result = await StaticNodeJSService.InvokeFromFileAsync<T>(scriptFile, null, parameters, data.CancellationToken).ConfigureAwait(false);
             data.Logger.Log($"Executed NodeJS script with result: {result}", LogColors.PaleChestnut);
             return result;
         }

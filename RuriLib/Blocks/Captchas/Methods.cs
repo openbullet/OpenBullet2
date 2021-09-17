@@ -20,14 +20,14 @@ namespace RuriLib.Blocks.Captchas
             CaptchaLanguage language = CaptchaLanguage.NotSpecified)
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveTextCaptchaAsync(question, 
                 new TextCaptchaOptions
                 { 
                     CaptchaLanguage = language,
                     CaptchaLanguageGroup = languageGroup 
-                }, data.CancellationToken);
+                }, data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.TextCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -42,7 +42,7 @@ namespace RuriLib.Blocks.Captchas
             int minLength = 0, int maxLength = 0, string textInstructions = "")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveImageCaptchaAsync(base64,
                 new ImageCaptchaOptions
@@ -56,7 +56,7 @@ namespace RuriLib.Blocks.Captchas
                     MinLength = minLength,
                     MaxLength = maxLength,
                     TextInstructions = textInstructions
-                }, data.CancellationToken);
+                }, data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.ImageCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -69,10 +69,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveRecaptchaV2Async(siteKey, siteUrl, isInvisible,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.ReCaptchaV2);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -85,10 +85,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveRecaptchaV3Async(siteKey, siteUrl, action, minScore,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.ReCaptchaV3);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -101,10 +101,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveFuncaptchaAsync(publicKey, serviceUrl, siteUrl, noJS,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.FunCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -117,10 +117,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveHCaptchaAsync(siteKey, siteUrl,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.HCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -133,10 +133,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveCapyAsync(siteKey, siteUrl,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.Capy);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -149,10 +149,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveKeyCaptchaAsync(userId, sessionId, webServerSign1, webServerSign2, siteUrl,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.KeyCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
@@ -166,10 +166,10 @@ namespace RuriLib.Blocks.Captchas
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
             data.Logger.LogHeader();
-            await CheckBalance(data);
+            await CheckBalance(data).ConfigureAwait(false);
 
             var response = await data.Providers.Captcha.SolveGeeTestAsync(gt, apiChallenge, apiServer, siteUrl,
-                SetupProxy(data, useProxy, userAgent), data.CancellationToken);
+                SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.GeeTest);
             data.Logger.Log($"Got solution!", LogColors.ElectricBlue);
@@ -188,7 +188,7 @@ namespace RuriLib.Blocks.Captchas
 
             try
             {
-                await data.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, data.CancellationToken);
+                await data.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Solution of task {lastCaptcha.Id} reported correctly!", LogColors.ElectricBlue);
             }
             catch (Exception ex)
@@ -204,7 +204,7 @@ namespace RuriLib.Blocks.Captchas
 
             try
             {
-                data.CaptchaCredit = await data.Providers.Captcha.GetBalanceAsync(data.CancellationToken);
+                data.CaptchaCredit = await data.Providers.Captcha.GetBalanceAsync(data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"[{data.Providers.Captcha.ServiceType}] Balance: ${data.CaptchaCredit}", LogColors.ElectricBlue);
 
                 if (data.CaptchaCredit < (decimal)0.002)

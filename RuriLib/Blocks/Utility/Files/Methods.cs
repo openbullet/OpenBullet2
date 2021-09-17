@@ -36,8 +36,8 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             var text = await ExecuteFileOperation(data, path, true, async (p, c) =>
             {
-                return await File.ReadAllTextAsync(p, MapEncoding(encoding), data.CancellationToken);
-            });
+                return await File.ReadAllTextAsync(p, MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Read {path}: {text.TruncatePretty(200)}", LogColors.Flavescent);
@@ -50,8 +50,8 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             var lines = await ExecuteFileOperation(data, path, true, async (p, c) =>
             {
-                return await File.ReadAllLinesAsync(p, MapEncoding(encoding), data.CancellationToken);
-            });
+                return await File.ReadAllLinesAsync(p, MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Read {lines.Length} lines from {path}", LogColors.Flavescent);
@@ -64,8 +64,8 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             var bytes = await ExecuteFileOperation(data, path, true, async (p, c) =>
             {
-                return await File.ReadAllBytesAsync(p, data.CancellationToken);
-            });
+                return await File.ReadAllBytesAsync(p, data.CancellationToken).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Read {bytes.Length} bytes from {path}", LogColors.Flavescent);
@@ -82,9 +82,9 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             await ExecuteFileOperation(data, path, content, async (p, c) =>
             {
-                await File.WriteAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken);
+                await File.WriteAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
                 return true;
-            }, isWriteOperation: true);
+            }, isWriteOperation: true).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote content to {path}", LogColors.Flavescent);
@@ -98,9 +98,9 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             await ExecuteFileOperation(data, path, lines, async (p, c) =>
             {
-                await File.WriteAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken);
+                await File.WriteAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
                 return true;
-            }, isWriteOperation: true);
+            }, isWriteOperation: true).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote lines to {path}", LogColors.Flavescent);
@@ -113,9 +113,9 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             await ExecuteFileOperation(data, path, content, async (p, c) =>
             {
-                await File.WriteAllBytesAsync(p, c, data.CancellationToken);
+                await File.WriteAllBytesAsync(p, c, data.CancellationToken).ConfigureAwait(false);
                 return true;
-            }, isWriteOperation: true);
+            }, isWriteOperation: true).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Wrote bytes to {path}", LogColors.Flavescent);
@@ -130,9 +130,9 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             await ExecuteFileOperation(data, path, content, async (p, c) =>
             {
-                await File.AppendAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken);
+                await File.AppendAllTextAsync(p, c.Unescape(), MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
                 return true;
-            }, isWriteOperation: true);
+            }, isWriteOperation: true).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Appended content to {path}", LogColors.Flavescent);
@@ -145,9 +145,9 @@ namespace RuriLib.Blocks.Utility.Files
             path = SanitizePath(path);
             await ExecuteFileOperation(data, path, lines, async (p, c) =>
             {
-                await File.AppendAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken);
+                await File.AppendAllLinesAsync(p, c, MapEncoding(encoding), data.CancellationToken).ConfigureAwait(false);
                 return true;
-            }, isWriteOperation: true);
+            }, isWriteOperation: true).ConfigureAwait(false);
 
             data.Logger.LogHeader();
             data.Logger.Log($"Appended lines to {path}", LogColors.Flavescent);
@@ -291,10 +291,10 @@ namespace RuriLib.Blocks.Utility.Files
                 }
                 else
                 {
-                    await fileLock.EnterReadLock(data.CancellationToken);
+                    await fileLock.EnterReadLock(data.CancellationToken).ConfigureAwait(false);
                 }
 
-                result = await func.Invoke(path, parameter);
+                result = await func.Invoke(path, parameter).ConfigureAwait(false);
             }
             finally
             {

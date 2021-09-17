@@ -34,7 +34,7 @@ namespace RuriLib.Parallelization
         /// <inheritdoc/>
         public async override Task Start()
         {
-            await base.Start();
+            await base.Start().ConfigureAwait(false);
 
             stopwatch.Restart();
             Status = ParallelizerStatus.Running;
@@ -44,7 +44,7 @@ namespace RuriLib.Parallelization
         /// <inheritdoc/>
         public async override Task Pause()
         {
-            await base.Pause();
+            await base.Pause().ConfigureAwait(false);
 
             Status = ParallelizerStatus.Pausing;
             savedDOP = degreeOfParallelism;
@@ -56,7 +56,7 @@ namespace RuriLib.Parallelization
         /// <inheritdoc/>
         public async override Task Resume()
         {
-            await base.Resume();
+            await base.Resume().ConfigureAwait(false);
 
             Status = ParallelizerStatus.Resuming;
             await ChangeDegreeOfParallelism(savedDOP).ConfigureAwait(false);
@@ -67,7 +67,7 @@ namespace RuriLib.Parallelization
         /// <inheritdoc/>
         public async override Task Stop()
         {
-            await base.Stop();
+            await base.Stop().ConfigureAwait(false);
 
             Status = ParallelizerStatus.Stopping;
             softCTS.Cancel();
@@ -77,7 +77,7 @@ namespace RuriLib.Parallelization
         /// <inheritdoc/>
         public async override Task Abort()
         {
-            await base.Abort();
+            await base.Abort().ConfigureAwait(false);
 
             Status = ParallelizerStatus.Stopping;
             hardCTS.Cancel();
@@ -190,7 +190,7 @@ namespace RuriLib.Parallelization
                 // Wait for every remaining task from the last batch to finish unless aborted
                 while (Progress < 1 && !hardCTS.IsCancellationRequested)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)
@@ -198,7 +198,7 @@ namespace RuriLib.Parallelization
                 // Wait for current tasks to finish unless aborted
                 while (semaphore.CurrentCount < degreeOfParallelism && !hardCTS.IsCancellationRequested)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
