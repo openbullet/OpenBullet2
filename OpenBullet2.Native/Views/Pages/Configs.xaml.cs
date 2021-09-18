@@ -25,15 +25,29 @@ namespace OpenBullet2.Native.Views.Pages
         private readonly OpenBulletSettingsService obSettingsService;
         private readonly ConfigService configService;
         private readonly ConfigsViewModel vm;
+        private readonly VolatileSettingsService volatileSettings;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
 
         private ConfigViewModel HoveredItem => (ConfigViewModel)configsListView.SelectedItem;
+        
+        private string ListViewSortBy
+        {
+            get => volatileSettings.ListViewSorting["configs"].By;
+            set => volatileSettings.ListViewSorting["configs"].By = value;
+        }
+        
+        private ListSortDirection ListViewSortDir
+        {
+            get => volatileSettings.ListViewSorting["configs"].Direction;
+            set => volatileSettings.ListViewSorting["configs"].Direction = value;
+        }
 
         public Configs()
         {
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
             configService = SP.GetService<ConfigService>();
+            volatileSettings = SP.GetService<VolatileSettingsService>();
             vm = SP.GetService<ViewModelsService>().Configs;
             DataContext = vm;
             
@@ -42,7 +56,15 @@ namespace OpenBullet2.Native.Views.Pages
 
         // This is needed otherwise if properties of a config are updated by another page this page will not
         // get notified and will show the old values.
-        public void UpdateViewModel() => vm.SelectedConfig?.UpdateViewModel();
+        public void UpdateViewModel()
+        {
+            vm.SelectedConfig?.UpdateViewModel();
+
+            if (!string.IsNullOrEmpty(ListViewSortBy))
+            {
+                configsListView.Items.SortDescriptions.Add(new SortDescription(ListViewSortBy, ListViewSortDir));
+            }
+        }
 
         private void Create(object sender, RoutedEventArgs e)
             => new MainDialog(new CreateConfigDialog(this), "Create config").ShowDialog();
@@ -171,7 +193,7 @@ namespace OpenBullet2.Native.Views.Pages
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)
         {
             var column = sender as GridViewColumnHeader;
-            var sortBy = column.Tag.ToString();
+            ListViewSortBy = column.Tag.ToString();
 
             if (listViewSortCol != null)
             {
@@ -179,17 +201,17 @@ namespace OpenBullet2.Native.Views.Pages
                 configsListView.Items.SortDescriptions.Clear();
             }
 
-            var newDir = ListSortDirection.Ascending;
+            ListViewSortDir = ListSortDirection.Ascending;
 
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+            if (listViewSortCol == column && listViewSortAdorner.Direction == ListViewSortDir)
             {
-                newDir = ListSortDirection.Descending;
+                ListViewSortDir = ListSortDirection.Descending;
             }
 
             listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            listViewSortAdorner = new SortAdorner(listViewSortCol, ListViewSortDir);
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            configsListView.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+            configsListView.Items.SortDescriptions.Add(new SortDescription(ListViewSortBy, ListViewSortDir));
         }
     }
 }

@@ -22,17 +22,36 @@ namespace OpenBullet2.Native.Views.Dialogs
     {
         private readonly object caller;
         private readonly SelectConfigDialogViewModel vm;
+        private readonly VolatileSettingsService volatileSettings;
         private GridViewColumnHeader listViewSortCol;
         private SortAdorner listViewSortAdorner;
+
+        private string ListViewSortBy
+        {
+            get => volatileSettings.ListViewSorting["configs"].By;
+            set => volatileSettings.ListViewSorting["configs"].By = value;
+        }
+
+        private ListSortDirection ListViewSortDir
+        {
+            get => volatileSettings.ListViewSorting["configs"].Direction;
+            set => volatileSettings.ListViewSorting["configs"].Direction = value;
+        }
 
         public SelectConfigDialog(object caller)
         {
             this.caller = caller;
+            volatileSettings = SP.GetService<VolatileSettingsService>();
 
             vm = new SelectConfigDialogViewModel();
             DataContext = vm;
 
             InitializeComponent();
+
+            if (!string.IsNullOrEmpty(ListViewSortBy))
+            {
+                configsListView.Items.SortDescriptions.Add(new SortDescription(ListViewSortBy, ListViewSortDir));
+            }
         }
 
         private void UpdateSearch(object sender, KeyEventArgs e)
@@ -77,7 +96,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)
         {
             var column = sender as GridViewColumnHeader;
-            var sortBy = column.Tag.ToString();
+            ListViewSortBy = column.Tag.ToString();
 
             if (listViewSortCol != null)
             {
@@ -85,17 +104,17 @@ namespace OpenBullet2.Native.Views.Dialogs
                 configsListView.Items.SortDescriptions.Clear();
             }
 
-            var newDir = ListSortDirection.Ascending;
+            ListViewSortDir = ListSortDirection.Ascending;
 
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDir)
+            if (listViewSortCol == column && listViewSortAdorner.Direction == ListViewSortDir)
             {
-                newDir = ListSortDirection.Descending;
+                ListViewSortDir = ListSortDirection.Descending;
             }
 
             listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
+            listViewSortAdorner = new SortAdorner(listViewSortCol, ListViewSortDir);
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
-            configsListView.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+            configsListView.Items.SortDescriptions.Add(new SortDescription(ListViewSortBy, ListViewSortDir));
         }
 
         private void ShowNoConfigSelectedError() => Alert.Error("No config selected", "Please select a config first!");
