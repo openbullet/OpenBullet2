@@ -141,11 +141,20 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="DeletedWordlists" xml:space="preserve">
+    <value>Deleted wordlists</value>
+  </data>
   <data name="DeleteFileText1" xml:space="preserve">
     <value>Do you want to delete</value>
   </data>
   <data name="DeleteFileText2" xml:space="preserve">
     <value>from the disk as well?</value>
+  </data>
+  <data name="DeleteNotFound" xml:space="preserve">
+    <value>Delete not found</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>

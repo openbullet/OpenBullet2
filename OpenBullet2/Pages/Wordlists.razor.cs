@@ -27,6 +27,7 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Data;
 using RuriLib.Services;
 using OpenBullet2.Core.Services;
+using System.IO;
 
 namespace OpenBullet2.Pages
 {
@@ -210,6 +211,36 @@ namespace OpenBullet2.Pages
             }
 
             await RefreshList();
+        }
+
+        private async Task DeleteNotFound()
+        {
+            var toDelete = wordlists.Where(w => !File.Exists(w.FileName)).ToList();
+            
+            foreach (var wordlist in toDelete)
+            {
+                var jobsUsingSelectedWordlist = Manager.Jobs.OfType<MultiRunJob>().Where(j => j.DataPool is WordlistDataPool wl && wl.Wordlist.Id == selectedWordlist.Id);
+
+                if (jobsUsingSelectedWordlist.Any(j => j.Status != JobStatus.Idle))
+                {
+                    await js.AlertError(Loc["Uh-Oh"], Loc["WordlistInUse"]);
+                    return;
+                }
+
+                foreach (var job in jobsUsingSelectedWordlist.Where(j => j.Status == JobStatus.Idle))
+                {
+                    job.DataPool = new InfiniteDataPool();
+                }
+            }
+
+            foreach (var wordlist in toDelete)
+            {
+                await WordlistRepo.Delete(wordlist, false);
+            }
+
+            await RefreshList();
+
+            await js.AlertSuccess(Loc["Deleted"], $"{Loc["DeletedWordlists"]}: {toDelete.Count}");
         }
 
         private async Task ShowNoWordlistSelectedWarning()
