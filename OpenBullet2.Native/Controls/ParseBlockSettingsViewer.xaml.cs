@@ -38,6 +38,7 @@ namespace OpenBullet2.Native.Controls
             inputSetting.Setting = vm.ParseBlock.Settings["input"];
             prefixSetting.Setting = vm.ParseBlock.Settings["prefix"];
             suffixSetting.Setting = vm.ParseBlock.Settings["suffix"];
+            urlEncodeOutputSetting.Setting = vm.ParseBlock.Settings["urlEncodeOutput"];
 
             // LR
             leftDelimSetting.Setting = vm.ParseBlock.Settings["leftDelim"];

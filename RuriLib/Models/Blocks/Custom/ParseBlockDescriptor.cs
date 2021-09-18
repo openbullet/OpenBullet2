@@ -26,6 +26,7 @@ namespace RuriLib.Models.Blocks.Custom
                 { "input", new StringParameter("input", "data.SOURCE", SettingInputMode.Variable) },
                 { "prefix", new StringParameter("prefix") },
                 { "suffix", new StringParameter("suffix") },
+                { "urlEncodeOutput", new BoolParameter("urlEncodeOutput", false) },
 
                 // LR
                 { "leftDelim", new StringParameter("leftDelim") },

@@ -70,6 +70,7 @@
         <local:StringSettingViewer x:Name="inputSetting" />
         <local:StringSettingViewer x:Name="prefixSetting" />
         <local:StringSettingViewer x:Name="suffixSetting" />
+        <local:BoolSettingViewer x:Name="urlEncodeOutputSetting" />
 
         <Separator Opacity="0.5" Margin="5 20"></Separator>
 

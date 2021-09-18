@@ -202,7 +202,8 @@ namespace RuriLib.Models.Blocks.Custom
             }
 
             writer.Write(CSharpWriter.FromSetting(Settings["prefix"]) + ", ");
-            writer.Write(CSharpWriter.FromSetting(Settings["suffix"]));
+            writer.Write(CSharpWriter.FromSetting(Settings["suffix"]) + ", ");
+            writer.Write(CSharpWriter.FromSetting(Settings["urlEncodeOutput"]));
             writer.WriteLine(");");
 
             if (IsCapture)
