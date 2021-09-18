@@ -219,6 +219,9 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>No records to display</value>
   </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Not working</value>
+  </data>
   <data name="Owner" xml:space="preserve">
     <value>Owner</value>
   </data>
@@ -267,6 +270,9 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -275,5 +281,8 @@
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Working</value>
   </data>
 </root>

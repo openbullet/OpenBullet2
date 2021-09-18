@@ -49,6 +49,8 @@ namespace OpenBullet2.Pages
         private List<ProxyEntity> proxies = new();
         private int maxPing = 5000;
         private int uid = -1;
+        private int WorkingProxies => proxies.Count(p => p.Status == ProxyWorkingStatus.Working);
+        private int NotWorkingProxies => proxies.Count(p => p.Status == ProxyWorkingStatus.NotWorking);
 
         private GridComponent<ProxyEntity> gridComponent;
         private CGrid<ProxyEntity> grid;

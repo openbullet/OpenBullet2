@@ -57,6 +57,8 @@ namespace OpenBullet2.Native.ViewModels
         }
 
         public int Total => ProxiesCollection.Count;
+        public int Working => ProxiesCollection.Count(p => p.Status == ProxyWorkingStatus.Working);
+        public int NotWorking => ProxiesCollection.Count(p => p.Status == ProxyWorkingStatus.NotWorking);
         public bool GroupIsValid => selectedGroup != allGroup;
         public ProxyGroupEntity SelectedGroup => selectedGroup;
 
@@ -98,6 +100,9 @@ namespace OpenBullet2.Native.ViewModels
                 : await proxyRepo.GetAll().Include(p => p.Group).Where(p => p.Group.Id == selectedGroup.Id).ToListAsync();
 
             ProxiesCollection = new ObservableCollection<ProxyEntity>(items);
+            OnPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(Working));
+            OnPropertyChanged(nameof(NotWorking));
         }
 
         public async Task AddGroup(ProxyGroupEntity group)

@@ -216,6 +216,9 @@
   <data name="NoRecordsToDisplay" xml:space="preserve">
     <value>Nessun proxy trovato</value>
   </data>
+  <data name="NotWorking" xml:space="preserve">
+    <value>Non funzionanti</value>
+  </data>
   <data name="Owner" xml:space="preserve">
     <value>Proprietario</value>
   </data>
@@ -264,6 +267,9 @@
   <data name="Status" xml:space="preserve">
     <value>Stato</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Totale</value>
+  </data>
   <data name="Type" xml:space="preserve">
     <value>Tipo</value>
   </data>
@@ -272,5 +278,8 @@
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
+  </data>
+  <data name="Working" xml:space="preserve">
+    <value>Funzionanti</value>
   </data>
 </root>

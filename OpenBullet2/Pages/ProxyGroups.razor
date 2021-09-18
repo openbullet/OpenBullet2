@@ -54,6 +54,12 @@
     <InputNumber style="width: 100px" @bind-Value="maxPing" />
 </EditForm>
 
+<div>
+    <span><b>@Loc["Total"]: </b>@proxies.Count</span>
+    <span class="fg-hit ml-1"><b>@Loc["Working"]: </b>@WorkingProxies</span>
+    <span class="fg-fail ml-1"><b>@Loc["NotWorking"]: </b>@NotWorkingProxies</span>
+</div>
+
 @if (gridLoad != null && !gridLoad.IsCanceled && gridLoad.IsCompleted)
 {
     <GridComponent @ref="gridComponent" T="ProxyEntity" Grid="@grid"></GridComponent>

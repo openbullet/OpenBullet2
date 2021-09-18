@@ -82,6 +82,12 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Untested</TextBlock>
                 </StackPanel>
             </Button>
+            <TextBlock FontWeight="Bold" VerticalAlignment="Center" Margin="10 0 0 0">Total:</TextBlock>
+            <TextBlock Text="{Binding Total}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" Margin="10 0 0 0">Working:</TextBlock>
+            <TextBlock Text="{Binding Working}" Foreground="{DynamicResource ForegroundGood}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            <TextBlock FontWeight="Bold" Foreground="{DynamicResource ForegroundBad}" VerticalAlignment="Center" Margin="10 0 0 0">Not working:</TextBlock>
+            <TextBlock Text="{Binding NotWorking}" Foreground="{DynamicResource ForegroundBad}" VerticalAlignment="Center" Margin="5 0 0 0" />
         </StackPanel>
 
         <ListView x:Name="proxiesListView" Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=ProxiesCollection}" SelectionMode="Extended" BorderThickness="1" VirtualizingPanel.IsVirtualizing="True" AllowDrop="True" Drop="ProxyListViewDrop">
