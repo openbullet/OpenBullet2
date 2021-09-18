@@ -8,9 +8,7 @@
       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:uc="clr-namespace:OpenBullet2.Native.Controls"
       xmlns:ho="clr-namespace:OpenBullet2.Core.Models.Hits;assembly=OpenBullet2.Core"
-      mc:Ignorable="d" 
-      MaxHeight="800"
-      MaxWidth="800"
+      mc:Ignorable="d"
       d:DesignHeight="800" d:DesignWidth="800"
       Title="MultiRunJobOptionsDialog">
 

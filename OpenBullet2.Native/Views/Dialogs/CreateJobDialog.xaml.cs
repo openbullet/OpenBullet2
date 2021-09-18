@@ -36,7 +36,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             switch (type)
             {
                 case JobType.MultiRun:
-                    new MainDialog(new MultiRunJobOptionsDialog(null, onAccept), "Create Multi Run Job", true).ShowDialog();
+                    new MainDialog(new MultiRunJobOptionsDialog(null, onAccept), "Create Multi Run Job", 800, 600).ShowDialog();
                     break;
 
                 case JobType.ProxyCheck:

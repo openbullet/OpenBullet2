@@ -16,5 +16,16 @@ namespace OpenBullet2.Native
             Title = title;
             ResizeMode = canResize ? System.Windows.ResizeMode.CanResize : System.Windows.ResizeMode.NoResize;
         }
+
+        public MainDialog(Page content, string title, int initialWidth, int initialHeight)
+        {
+            InitializeComponent();
+
+            Content = content;
+            Title = title;
+            ResizeMode = System.Windows.ResizeMode.CanResize;
+            Width = initialWidth;
+            Height = initialHeight;
+        }
     }
 }

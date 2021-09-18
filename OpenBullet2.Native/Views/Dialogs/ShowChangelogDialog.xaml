@@ -22,8 +22,8 @@
         </TextBlock>
         -->
         <uc:MarkdownViewer 
-            MaxHeight="600" 
-            MaxWidth="800" 
+            MaxWidth="800"
+            MaxHeight="600"
             FontSize="14"
             MarkdownText="{Binding Text}"/>
     </Grid>

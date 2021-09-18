@@ -180,7 +180,7 @@ namespace OpenBullet2.Native.Views.Pages
 
             if (hitVM is not null)
             {
-                new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}", true).Show();
+                new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}").Show();
             }
         }
 
