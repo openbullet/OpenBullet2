@@ -64,7 +64,7 @@ namespace RuriLib.Tests.Functions.Http
             var response = JsonConvert.DeserializeObject<HttpBinResponse>(data.SOURCE);
             Assert.Equal("value", response.Headers["Custom"]);
             Assert.Equal("httpbin.org", response.Headers["Host"]);
-            Assert.Equal("name1=value1; name2=value2;", response.Headers["Cookie"]);
+            Assert.Equal("name1=value1; name2=value2", response.Headers["Cookie"]);
             Assert.Equal("GET", response.Method);
             Assert.Equal(httpBin, response.Url);
         }
