@@ -50,10 +50,10 @@ namespace RuriLib.Blocks.Requests.Smtp
             var domain = email.Split('@')[1];
 
             // Try the entries from smtpdomains.dat
-            var candidates = (await data.Providers.EmailDomains.GetSmtpServers(domain)).ToList();
+            var candidates = (await data.Providers.EmailDomains.GetSmtpServers(domain).ConfigureAwait(false)).ToList();
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -66,7 +66,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
-                var xml = await GetString(data, thunderbirdUrl);
+                var xml = await GetString(data, thunderbirdUrl).ConfigureAwait(false);
                 candidates = SmtpAutoconfig.Parse(xml);
                 data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.LightBrown);
             }
@@ -77,7 +77,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -95,11 +95,11 @@ namespace RuriLib.Blocks.Requests.Smtp
 
                 try
                 {
-                    xml = await GetString(data, autoconfigUrl);
+                    xml = await GetString(data, autoconfigUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, autoconfigUrlUnsecure);
+                    xml = await GetString(data, autoconfigUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = SmtpAutoconfig.Parse(xml);
@@ -112,7 +112,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -130,11 +130,11 @@ namespace RuriLib.Blocks.Requests.Smtp
 
                 try
                 {
-                    xml = await GetString(data, wellKnownUrl);
+                    xml = await GetString(data, wellKnownUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, wellKnownUrlUnsecure);
+                    xml = await GetString(data, wellKnownUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = SmtpAutoconfig.Parse(xml);
@@ -147,7 +147,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -170,7 +170,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -182,7 +182,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             candidates.Clear();
             try
             {
-                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
+                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
                 mxRecords.ForEach(r =>
                 {
                     candidates.Add(new HostEntry(r, 465));
@@ -199,7 +199,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -216,7 +216,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             try
             {
-                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
                 
                 if (!client.Capabilities.HasFlag(SmtpCapabilities.Authentication))
@@ -225,7 +225,7 @@ namespace RuriLib.Blocks.Requests.Smtp
                     return false;
                 }
 
-                await data.Providers.EmailDomains.TryAddSmtpServer(domain, entry);
+                await data.Providers.EmailDomains.TryAddSmtpServer(domain, entry).ConfigureAwait(false);
 
                 return true;
             }
@@ -250,8 +250,8 @@ namespace RuriLib.Blocks.Requests.Smtp
                 Uri = new Uri(url),
             };
 
-            using var response = await httpClient.SendAsync(request, data.CancellationToken);
-            return await response.Content.ReadAsStringAsync(data.CancellationToken);
+            using var response = await httpClient.SendAsync(request, data.CancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
         }
 
         [Block("Connects to a SMTP server")]
@@ -274,7 +274,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             data.SetObject("smtpClient", client);
 
-            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.LightBrown);
         }
 
@@ -287,7 +287,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             if (client.IsConnected)
             {
-                await client.DisconnectAsync(true, data.CancellationToken);
+                await client.DisconnectAsync(true, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Client disconnected", LogColors.LightBrown);
             }
             else
@@ -307,7 +307,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             using var cts = new CancellationTokenSource(timeoutMilliseconds);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
-            await client.AuthenticateAsync(email, password, linkedCts.Token);
+            await client.AuthenticateAsync(email, password, linkedCts.Token).ConfigureAwait(false);
             data.Logger.Log("Authenticated successfully", LogColors.LightBrown);
         }
 
@@ -346,7 +346,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             message.Body = bodyBuilder.ToMessageBody();
 
-            await client.SendAsync(message, data.CancellationToken);
+            await client.SendAsync(message, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Email sent to {recipientAddress} ({recipientName})", LogColors.LightBrown);
         }
@@ -379,12 +379,12 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             foreach (var file in fileAttachments)
             {
-                await bodyBuilder.Attachments.AddAsync(file, data.CancellationToken);
+                await bodyBuilder.Attachments.AddAsync(file, data.CancellationToken).ConfigureAwait(false);
             }
 
             message.Body = bodyBuilder.ToMessageBody();
 
-            await client.SendAsync(message, data.CancellationToken);
+            await client.SendAsync(message, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Email sent to {recipients.Count} recipients", LogColors.LightBrown);
         }

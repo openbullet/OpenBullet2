@@ -23,7 +23,8 @@ namespace RuriLib.Blocks.Requests.Tcp
             data.Logger.LogHeader();
 
             var tcpClient = await TcpClientFactory.GetClientAsync(host, port,
-                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.UseProxy ? data.Proxy : null, data.CancellationToken);
+                TimeSpan.FromMilliseconds(timeoutMilliseconds), data.UseProxy ? data.Proxy : null, data.CancellationToken)
+                .ConfigureAwait(false);
 
             var netStream = tcpClient.GetStream();
 
@@ -35,7 +36,7 @@ namespace RuriLib.Blocks.Requests.Tcp
                 await sslStream.AuthenticateAsClientAsync(new SslClientAuthenticationOptions 
                 {
                     TargetHost = host,
-                }, data.CancellationToken);
+                }, data.CancellationToken).ConfigureAwait(false);
 
                 data.SetObject("sslStream", sslStream);
             }
@@ -64,11 +65,11 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Send the message
             var txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token).ConfigureAwait(false);
 
             // Read the response
             var buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token);
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token).ConfigureAwait(false);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
@@ -92,7 +93,7 @@ namespace RuriLib.Blocks.Requests.Tcp
                 message += "\r\n";
 
             var bytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(bytes.AsMemory(0, bytes.Length), data.CancellationToken);
+            await netStream.WriteAsync(bytes.AsMemory(0, bytes.Length), data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Sent message\r\n{message}", LogColors.Mauve);
         }
@@ -109,7 +110,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Read the response
             var buffer = new byte[bytesToRead];
-            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token);
+            var rxBytes = await netStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token).ConfigureAwait(false);
             var response = Encoding.ASCII.GetString(buffer, 0, rxBytes);
 
             data.Logger.Log($"The server says\r\n{response}", LogColors.Mauve);
@@ -138,12 +139,12 @@ namespace RuriLib.Blocks.Requests.Tcp
 
             // Send the message
             var txBytes = Encoding.ASCII.GetBytes(message);
-            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token);
+            await netStream.WriteAsync(txBytes.AsMemory(0, txBytes.Length), linkedCts.Token).ConfigureAwait(false);
 
             // Receive data
             var payload = string.Empty;
             using var ms = new MemoryStream();
-            await netStream.CopyToAsync(ms, linkedCts.Token); // Read the whole response stream
+            await netStream.CopyToAsync(ms, linkedCts.Token).ConfigureAwait(false); // Read the whole response stream
             ms.Position = 0;
             var rxBytes = ms.ToArray();
 

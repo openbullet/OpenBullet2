@@ -75,10 +75,10 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                using var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request, options);
+                await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
             }
             catch
             {
@@ -122,10 +122,10 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                using var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request, options);
+                await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
             }
             catch
             {
@@ -170,10 +170,10 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                using var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
                
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request, options);
+                await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
             }
             catch
             {
@@ -253,10 +253,10 @@ namespace RuriLib.Blocks.Requests.Http
                 Activity.Current = null;
                 using var timeoutCts = new CancellationTokenSource(options.TimeoutMilliseconds);
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
-                using var response = await client.SendAsync(request, linkedCts.Token);
+                using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
               
                 LogHttpRequestData(data, client);
-                await LogHttpResponseData(data, response, request, options);
+                await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
             }
             catch
             {
@@ -385,7 +385,7 @@ namespace RuriLib.Blocks.Requests.Http
             // Try to read the raw source for Content-Length calculation
             try
             {
-                data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken);
+                data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken).ConfigureAwait(false);
             }
             catch (NullReferenceException)
             {

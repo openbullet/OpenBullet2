@@ -22,7 +22,7 @@ namespace RuriLib.Blocks.Utility
         public static async Task Delay(BotData data, int milliseconds)
         {
             data.Logger.LogHeader();
-            await Task.Delay(milliseconds, data.CancellationToken);
+            await Task.Delay(milliseconds, data.CancellationToken).ConfigureAwait(false);
             data.Logger.Log($"Waited {milliseconds} ms", LogColors.DeepChampagne);
         }
 

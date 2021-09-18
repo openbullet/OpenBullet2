@@ -48,11 +48,11 @@ namespace RuriLib.Blocks.Requests.Pop3
             var domain = email.Split('@')[1];
 
             // Try the entries from pop3domains.dat
-            var candidates = (await data.Providers.EmailDomains.GetPop3Servers(domain)).ToList();
+            var candidates = (await data.Providers.EmailDomains.GetPop3Servers(domain).ConfigureAwait(false)).ToList();
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -65,7 +65,7 @@ namespace RuriLib.Blocks.Requests.Pop3
             var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
-                var xml = await GetString(data, thunderbirdUrl);
+                var xml = await GetString(data, thunderbirdUrl).ConfigureAwait(false);
                 candidates = Pop3Autoconfig.Parse(xml);
                 data.Logger.Log($"Queried {thunderbirdUrl} and got {candidates.Count} server(s)", LogColors.Mantis);
             }
@@ -76,7 +76,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -94,11 +94,11 @@ namespace RuriLib.Blocks.Requests.Pop3
 
                 try
                 {
-                    xml = await GetString(data, autoconfigUrl);
+                    xml = await GetString(data, autoconfigUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, autoconfigUrlUnsecure);
+                    xml = await GetString(data, autoconfigUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = Pop3Autoconfig.Parse(xml);
@@ -111,7 +111,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -129,11 +129,11 @@ namespace RuriLib.Blocks.Requests.Pop3
 
                 try
                 {
-                    xml = await GetString(data, wellKnownUrl);
+                    xml = await GetString(data, wellKnownUrl).ConfigureAwait(false);
                 }
                 catch
                 {
-                    xml = await GetString(data, wellKnownUrlUnsecure);
+                    xml = await GetString(data, wellKnownUrlUnsecure).ConfigureAwait(false);
                 }
 
                 candidates = Pop3Autoconfig.Parse(xml);
@@ -146,7 +146,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -167,7 +167,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -179,7 +179,7 @@ namespace RuriLib.Blocks.Requests.Pop3
             candidates.Clear();
             try
             {
-                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken);
+                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
                 mxRecords.ForEach(r =>
                 {
                     candidates.Add(new HostEntry(r, 995));
@@ -195,7 +195,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             foreach (var c in candidates)
             {
-                var success = await TryConnect(data, client, domain, c);
+                var success = await TryConnect(data, client, domain, c).ConfigureAwait(false);
 
                 if (success)
                 {
@@ -212,9 +212,9 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             try
             {
-                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+                await client.ConnectAsync(entry.Host, entry.Port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Connected! SSL/TLS: {client.IsSecure}", LogColors.Mantis);
-                await data.Providers.EmailDomains.TryAddPop3Server(domain, entry);
+                await data.Providers.EmailDomains.TryAddPop3Server(domain, entry).ConfigureAwait(false);
                 return true;
             }
             catch
@@ -238,8 +238,8 @@ namespace RuriLib.Blocks.Requests.Pop3
                 Uri = new Uri(url),
             };
 
-            using var response = await httpClient.SendAsync(request, data.CancellationToken);
-            return await response.Content.ReadAsStringAsync(data.CancellationToken);
+            using var response = await httpClient.SendAsync(request, data.CancellationToken).ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync(data.CancellationToken).ConfigureAwait(false);
         }
 
         [Block("Connects to a POP3 server")]
@@ -262,7 +262,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             data.SetObject("pop3Client", client);
 
-            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken);
+            await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.Auto, data.CancellationToken).ConfigureAwait(false);
             data.Logger.Log($"Connected to {host} on port {port}. SSL/TLS: {client.IsSecure}", LogColors.Mantis);
         }
 
@@ -275,7 +275,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             if (client.IsConnected)
             {
-                await client.DisconnectAsync(true, data.CancellationToken);
+                await client.DisconnectAsync(true, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Client disconnected", LogColors.Mantis);
             }
             else
@@ -294,7 +294,7 @@ namespace RuriLib.Blocks.Requests.Pop3
 
             using var cts = new CancellationTokenSource(timeoutMilliseconds);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, data.CancellationToken);
-            await client.AuthenticateAsync(email, password, linkedCts.Token);
+            await client.AuthenticateAsync(email, password, linkedCts.Token).ConfigureAwait(false);
             data.Logger.Log($"Authenticated successfully, there are {client.Count} total messages", LogColors.Mantis);
         }
 
@@ -318,7 +318,7 @@ namespace RuriLib.Blocks.Requests.Pop3
             data.Logger.LogHeader();
 
             var client = GetAuthenticatedClient(data);
-            var mail = await client.GetMessageAsync(client.Count - index - 1, data.CancellationToken);
+            var mail = await client.GetMessageAsync(client.Count - index - 1, data.CancellationToken).ConfigureAwait(false);
             var body = mail.TextBody;
 
             if (string.IsNullOrEmpty(body) || preferHtml)
@@ -354,7 +354,7 @@ Body:
             // Return from newest to oldest
             for (var i = client.Count - 1; i >= (maxAmount <= 0 ? 0 : Math.Max(0, client.Count - maxAmount)); i--)
             {
-                var message = await client.GetMessageAsync(i, data.CancellationToken);
+                var message = await client.GetMessageAsync(i, data.CancellationToken).ConfigureAwait(false);
                 var from = message.From.FirstOrDefault()?.Name ?? "None";
                 var to = message.To.FirstOrDefault()?.Name ?? "None";
                 var subject = message.Subject ?? "None";
@@ -373,7 +373,7 @@ Body:
             data.Logger.LogHeader();
 
             var client = GetAuthenticatedClient(data);
-            await client.DeleteMessageAsync(index, data.CancellationToken);
+            await client.DeleteMessageAsync(index, data.CancellationToken).ConfigureAwait(false);
             
             data.Logger.Log($"Deleted mail with index {index}", LogColors.Mantis);
         }

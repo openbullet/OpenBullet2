@@ -187,7 +187,7 @@ namespace RuriLib.Models.Jobs
                         {
                             if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                             {
-                                await input.ProxyPool.ReloadAll();
+                                await input.ProxyPool.ReloadAll().ConfigureAwait(false);
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
                             {
@@ -295,7 +295,7 @@ namespace RuriLib.Models.Jobs
                             {
                                 botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
                                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token);
+                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
                                 botData.ExecutingBlock("Bad captcha reported!");
                             }
                             catch
@@ -373,7 +373,7 @@ namespace RuriLib.Models.Jobs
 
                 var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                 proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
-                await proxyPool.ReloadAll(ShuffleProxies);
+                await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
 
                 if (!proxyPool.Proxies.Any())
                 {
@@ -382,7 +382,7 @@ namespace RuriLib.Models.Jobs
             }
 
             // Wait for the start condition to be verified
-            await base.Start();
+            await base.Start().ConfigureAwait(false);
 
             Script script = null;
             MethodInfo method = null;
@@ -495,14 +495,17 @@ namespace RuriLib.Models.Jobs
             ResetStats();
             StartTimers();
             logger?.LogInfo(Id, "All set, starting the execution");
-            await parallelizer.Start();
+            await parallelizer.Start().ConfigureAwait(false);
         }
 
         public override async Task Stop()
         {
             try
             {
-                await parallelizer?.Stop();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Stop().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -516,7 +519,10 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await parallelizer?.Abort();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Abort().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -530,7 +536,10 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await parallelizer?.Pause();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Pause().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -541,7 +550,11 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            await parallelizer?.Resume();
+            if (parallelizer is not null)
+            {
+                await parallelizer.Resume().ConfigureAwait(false);
+            }
+
             StartTimers();
             logger?.LogInfo(Id, "Execution resumed");
         }
@@ -549,7 +562,7 @@ namespace RuriLib.Models.Jobs
 
         #region Public Methods
         public async Task FetchProxiesFromSources()
-            => await proxyPool.ReloadAll(ShuffleProxies);
+            => await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
         #endregion
 
         #region Wrappers for Parallelizer methods
@@ -557,7 +570,7 @@ namespace RuriLib.Models.Jobs
         {
             if (parallelizer != null)
             {
-                await parallelizer.ChangeDegreeOfParallelism(amount);
+                await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
                 OnBotsChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -604,7 +617,7 @@ namespace RuriLib.Models.Jobs
 
             if (PeriodicReloadInterval > TimeSpan.Zero)
             {
-                proxyReloadTimer = new Timer(new TimerCallback(async _ => await proxyPool.ReloadAll(ShuffleProxies)),
+                proxyReloadTimer = new Timer(new TimerCallback(async _ => await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false)),
                     null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
             }
         }
