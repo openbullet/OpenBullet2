@@ -42,7 +42,7 @@
 
     <!-- Interpolated string -->
     <Span color="String">
-      <Begin>$"</Begin>
+      <Begin>\$"</Begin>
       <End>"</End>
       <RuleSet>
         <Span begin="\\" end="." />
