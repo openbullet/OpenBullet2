@@ -56,8 +56,8 @@ namespace OpenBullet2.Shared.Forms
                 c.Add(x => x.IsRemote).Titled(Loc["Remote"]);
                 c.Add(x => x.Settings.ProxySettings.UseProxies).Titled(Loc["Proxies"]);
                 c.Add(x => x.Settings.DataSettings.AllowedWordlistTypesString).Titled(Loc["Wordlists"]);
-                c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]);
-                c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"])
+                c.Add(x => x.Metadata.CreationDate).Titled(Loc["CreationDate"]).SetFilterWidgetType("DateTimeLocal").Format("{0:dd/MM/yyyy HH:mm}");
+                c.Add(x => x.Metadata.LastModified).Titled(Loc["LastModified"]).SetFilterWidgetType("DateTimeLocal").Format("{0:dd/MM/yyyy HH:mm}")
                     .Sortable(true).SortInitialDirection(GridShared.Sorting.GridSortDirection.Descending);
             };
 

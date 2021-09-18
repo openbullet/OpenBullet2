@@ -104,7 +104,7 @@ namespace OpenBullet2.Shared.Forms
 
         private void PreviewSelected()
         {
-            var previewAmount = System.Math.Min(selectedWordlist.Total, 10);
+            var previewAmount = Math.Min(selectedWordlist.Total, 10);
 
             try
             {

@@ -81,7 +81,7 @@ namespace OpenBullet2.Pages
                 c.Add(p => p.Country).Titled(Loc["Country"]);
                 c.Add(p => p.Status).Titled(Loc["Status"]);
                 c.Add(p => p.Ping).Titled(Loc["Ping"]);
-                c.Add(p => p.LastChecked).Titled(Loc["LastChecked"]);
+                c.Add(p => p.LastChecked).Titled(Loc["LastChecked"]).SetFilterWidgetType("DateTimeLocal").Format("{0:dd/MM/yyyy HH:mm}");
             };
 
             var query = new QueryDictionary<StringValues>();

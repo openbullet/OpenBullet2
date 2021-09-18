@@ -48,7 +48,7 @@ namespace OpenBullet2.Pages
             Action<IGridColumnCollection<GuestEntity>> columns = c =>
             {
                 c.Add(g => g.Username).Titled(Loc["Username"]);
-                c.Add(g => g.AccessExpiration).Titled(Loc["AccessExpiration"]);
+                c.Add(g => g.AccessExpiration).Titled(Loc["AccessExpiration"]).SetFilterWidgetType("DateTimeLocal").Format("{0:dd/MM/yyyy HH:mm}");
                 c.Add(g => g.AllowedAddresses).Titled(Loc["AllowedAddresses"]);
             };
 

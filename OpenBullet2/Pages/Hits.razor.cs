@@ -75,7 +75,7 @@ namespace OpenBullet2.Pages
                 c.Add(h => h.Data).Titled(Loc["Data"]);
                 c.Add(h => h.Type).Titled(Loc["Type"]);
                 c.Add(h => h.ConfigName).Titled(Loc["Config"]);
-                c.Add(h => h.Date).Titled(Loc["Date"]);
+                c.Add(h => h.Date).Titled(Loc["Date"]).SetFilterWidgetType("DateTimeLocal").Format("{0:dd/MM/yyyy HH:mm}");
                 c.Add(h => h.WordlistName).Titled(Loc["Wordlist"]);
                 c.Add(h => h.Proxy).Titled(Loc["Proxy"]);
                 c.Add(h => h.CapturedData).Titled(Loc["CapturedData"]);
