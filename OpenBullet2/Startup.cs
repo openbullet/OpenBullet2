@@ -74,7 +74,9 @@ namespace OpenBullet2
             services.AddScoped<IGuestRepository, DbGuestRepository>();
             services.AddScoped<IRecordRepository, DbRecordRepository>();
             services.AddScoped<IThemeRepository>(_ => new DiskThemeRepository("wwwroot/css/themes"));
-            services.AddScoped<IConfigRepository>(_ => new DiskConfigRepository("UserData/Configs"));
+            services.AddScoped<IConfigRepository>(service =>
+                new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
+                "UserData/Configs"));
             services.AddScoped<IWordlistRepository>(service => 
                 new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
                 "UserData/Wordlists"));

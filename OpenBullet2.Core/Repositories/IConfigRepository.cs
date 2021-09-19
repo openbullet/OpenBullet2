@@ -11,14 +11,10 @@ namespace OpenBullet2.Core.Repositories
     public interface IConfigRepository
     {
         /// <summary>
-        /// Creates a new config and returns it.
+        /// Creates a new config with a given <paramref name="id"/>.
+        /// If <paramref name="id"/> is null, a random one will be generated.
         /// </summary>
-        Task<Config> Create();
-
-        /// <summary>
-        /// Creates a new config with a given id.
-        /// </summary>
-        Task<Config> Create(string id);
+        Task<Config> Create(string id = null);
 
         /// <summary>
         /// Deletes a config from the repository.

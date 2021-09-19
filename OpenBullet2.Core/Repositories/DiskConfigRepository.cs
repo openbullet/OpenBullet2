@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using RuriLib.Helpers.Transpilers;
+using RuriLib.Services;
 
 namespace OpenBullet2.Core.Repositories
 {
@@ -14,10 +15,13 @@ namespace OpenBullet2.Core.Repositories
     /// </summary>
     public class DiskConfigRepository : IConfigRepository
     {
+        private readonly RuriLibSettingsService rlSettings;
+
         private string BaseFolder { get; init; }
 
-        public DiskConfigRepository(string baseFolder)
+        public DiskConfigRepository(RuriLibSettingsService rlSettings, string baseFolder)
         {
+            this.rlSettings = rlSettings;
             BaseFolder = baseFolder;
             Directory.CreateDirectory(baseFolder);
         }
@@ -78,20 +82,20 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Config> Create()
+        public async Task<Config> Create(string id = null)
         {
             var config = new Config();
-            await Save(config);
-            return config;
-        }
 
-        /// <inheritdoc/>
-        public async Task<Config> Create(string id)
-        {
-            var config = new Config
+            if (id is not null)
             {
-                Id = id
+                config.Id = id;
+            }
+
+            config.Settings.DataSettings.AllowedWordlistTypes = new string[]
+            {
+                rlSettings.Environment.WordlistTypes.First().Name
             };
+
             await Save(config);
             return config;
         }
