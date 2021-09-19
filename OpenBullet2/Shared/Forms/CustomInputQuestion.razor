@@ -1,20 +1,29 @@
 ﻿@inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CustomInputQuestion> Loc
 
-<EditForm Model="Answer">
+<EditForm Model="answer">
     <label>@Question</label>
-    <InputText @bind-Value="Answer" />
+    <InputComboBox @bind-Value="answer" GetSuggestions="GetSuggestions" />
 </EditForm>
 
-<button class="btn btn-outline-success" type="submit" @onclick="Validate">@Loc["Ok"]</button>
+<button class="btn btn-outline-success mt-2" type="submit" @onclick="Validate">@Loc["Ok"]</button>
 
 @code {
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public string Question { get; set; }
-    [Parameter] public string Answer { get; set; }
+    [Parameter] public string DefaultAnswer { get; set; }
+    private string answer = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        answer = DefaultAnswer.Split(',').First();
+    }
+
+    private Task<IEnumerable<string>> GetSuggestions(string partial)
+        => Task.FromResult(DefaultAnswer.Split(',') as IEnumerable<string>);
 
     private void Validate()
     {
-        BlazoredModal.Close(ModalResult.Ok(Answer));
+        BlazoredModal.Close(ModalResult.Ok(answer));
     }
 }

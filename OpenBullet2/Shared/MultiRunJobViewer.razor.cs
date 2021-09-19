@@ -215,7 +215,7 @@ namespace OpenBullet2.Shared
             {
                 var parameters = new ModalParameters();
                 parameters.Add(nameof(CustomInputQuestion.Question), input.Description);
-                parameters.Add(nameof(CustomInputQuestion.Answer), input.DefaultAnswer);
+                parameters.Add(nameof(CustomInputQuestion.DefaultAnswer), input.DefaultAnswer);
 
                 var modal = Modal.Show<CustomInputQuestion>(Loc["CustomInput"], parameters);
                 var result = await modal.Result;

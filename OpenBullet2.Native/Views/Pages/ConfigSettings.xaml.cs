@@ -2,7 +2,7 @@
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
-using RuriLib.Models;
+using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
 using System;

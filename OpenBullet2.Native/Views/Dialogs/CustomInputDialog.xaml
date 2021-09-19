@@ -27,9 +27,10 @@
                 Foreground="Gainsboro"
                 />
 
-            <TextBox
+            <ComboBox
+                IsEditable="True"
                 Width="200"
-                x:Name="answerTextBox"
+                x:Name="answerComboBox"
                 />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

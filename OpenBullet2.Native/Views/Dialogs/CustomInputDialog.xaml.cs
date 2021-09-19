@@ -17,14 +17,19 @@ namespace OpenBullet2.Native.Views.Dialogs
             InitializeComponent();
 
             this.question.Text = question;
-            answerTextBox.Text = defaultAnswer;
 
-            answerTextBox.Focus();
+            foreach (var option in defaultAnswer.Split(','))
+            {
+                answerComboBox.Items.Add(option);
+            }
+            
+            answerComboBox.SelectedIndex = 0;
+            answerComboBox.Focus();
         }
 
         private void Ok(object sender, RoutedEventArgs e)
         {
-            onAnswer(answerTextBox.Text);
+            onAnswer(answerComboBox.Text);
             ((MainDialog)Parent).Close();
         }
     }
