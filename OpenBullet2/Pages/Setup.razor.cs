@@ -2,7 +2,6 @@
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
 using OpenBullet2.Auth;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Shared.Forms;
@@ -23,6 +22,7 @@ namespace OpenBullet2.Pages
         private int step = 0;
         private readonly AdminAccount admin = new();
 
+        /*
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -30,6 +30,7 @@ namespace OpenBullet2.Pages
                 await js.InvokeVoidAsync("startRandomSetupEffect");
             }
         }
+        */
 
         private void ChangeLanguage()
         {
