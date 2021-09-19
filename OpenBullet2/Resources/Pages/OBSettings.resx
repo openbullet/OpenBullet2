@@ -153,11 +153,20 @@
   <data name="Customization" xml:space="preserve">
     <value>Customization</value>
   </data>
+  <data name="CustomSnippets" xml:space="preserve">
+    <value>Custom snippets (requires restart)</value>
+  </data>
+  <data name="CustomSnippetsDescription" xml:space="preserve">
+    <value>These are custom snippets you can configure to get your own autocompletions in the LoliCode editor.</value>
+  </data>
   <data name="DefaultAuthor" xml:space="preserve">
     <value>The default author on newly created configs</value>
   </data>
   <data name="DefaultJobDisplayMode" xml:space="preserve">
     <value>Default job display mode</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
   </data>
   <data name="Done" xml:space="preserve">
     <value>Done</value>
@@ -191,6 +200,9 @@
   </data>
   <data name="MonacoTheme" xml:space="preserve">
     <value>Monaco Editor Theme</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="NavigateOnEdit" xml:space="preserve">
     <value>When editing a config, navigate to</value>

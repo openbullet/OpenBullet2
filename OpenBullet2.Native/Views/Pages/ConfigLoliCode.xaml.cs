@@ -104,9 +104,17 @@ namespace OpenBullet2.Native.Views.Pages
                 var documentLine = editor.Document.GetLineByOffset(offset);
                 var line = editor.Document.GetText(documentLine.Offset, documentLine.Length);
 
-                if (line.StartsWith("BLOCK:", StringComparison.OrdinalIgnoreCase))
+                // Do not complete if we are not typing at the start of the line without spaces
+                if (!string.IsNullOrWhiteSpace(line) && !line.Contains(' '))
                 {
-                    var partialId = line.Replace("BLOCK:", "");
+                    var snippets = AutocompletionProvider.GetSnippets()
+                            .Where(s => s.Id.StartsWith(line, StringComparison.OrdinalIgnoreCase));
+
+                    // If there are no snippets, do not even open the completion window
+                    if (!snippets.Any())
+                    {
+                        return;
+                    }
 
                     // Open code completion:
                     completionWindow = new CompletionWindow(editor.TextArea)
@@ -116,15 +124,10 @@ namespace OpenBullet2.Native.Views.Pages
                     };
 
                     var data = completionWindow.CompletionList.CompletionData;
-                    var snippets = partialId == ""
-                        ? AutocompletionProvider.GetBlockSnippets()
-                        : AutocompletionProvider.GetBlockSnippets()
-                            .Where(s => s.Id.StartsWith(partialId, StringComparison.OrdinalIgnoreCase));
 
                     foreach (var snippet in snippets)
                     {
-                        var completeSnippet = $"BLOCK:{snippet.Id}\r\n{snippet.Snippet}ENDBLOCK";
-                        data.Add(new LoliCodeCompletionData($"BLOCK:{snippet.Id}", completeSnippet, snippet.Description));
+                        data.Add(new LoliCodeCompletionData(snippet.Id, snippet.Body, snippet.Description));
                     }
 
                     completionWindow.Show();

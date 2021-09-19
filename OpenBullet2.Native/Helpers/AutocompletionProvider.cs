@@ -1,4 +1,5 @@
-﻿using RuriLib;
+﻿using OpenBullet2.Core.Services;
+using RuriLib;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
 using System.Collections.Generic;
@@ -7,32 +8,41 @@ namespace OpenBullet2.Native.Helpers
 {
     public static class AutocompletionProvider
     {
-        private static List<BlockSnippet> blockSnippets;
+        private static List<Snippet> snippets = new();
 
         public static void Init()
         {
-            blockSnippets = new();
+            // Block snippets
             foreach (var id in Globals.DescriptorsRepository.Descriptors.Keys)
             {
                 var block = BlockFactory.GetBlock<BlockInstance>(id);
-                blockSnippets.Add(new BlockSnippet(id, block.ToLC(true), block.Descriptor.Description));
+                snippets.Add(new Snippet($"BLOCK:{id}", $"BLOCK:{id}\r\n{block.ToLC(true)}ENDBLOCK", block.Descriptor.Description));
+            }
+
+            // Custom snippets
+            foreach (var snippet in SP.GetService<OpenBulletSettingsService>().Settings.GeneralSettings.CustomSnippets)
+            {
+                if (!string.IsNullOrEmpty(snippet.Name))
+                {
+                    snippets.Add(new Snippet(snippet.Name, snippet.Body, snippet.Description));
+                }
             }
         }
 
-        public static List<BlockSnippet> GetBlockSnippets()
-            => blockSnippets;
+        public static List<Snippet> GetSnippets()
+            => snippets;
     }
 
-    public struct BlockSnippet
+    public struct Snippet
     {
         public string Id { get; set; }
-        public string Snippet { get; set; }
+        public string Body { get; set; }
         public string Description { get; set; }
 
-        public BlockSnippet(string id, string snippet, string description)
+        public Snippet(string id, string body, string description)
         {
             Id = id;
-            Snippet = snippet;
+            Body = body;
             Description = description;
         }
     }

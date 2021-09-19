@@ -123,6 +123,17 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        private ObservableCollection<CustomSnippet> customSnippetsCollection;
+        public ObservableCollection<CustomSnippet> CustomSnippetsCollection
+        {
+            get => customSnippetsCollection;
+            set
+            {
+                customSnippetsCollection = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<RemoteConfigsEndpoint> remoteConfigsEndointsCollection;
         public ObservableCollection<RemoteConfigsEndpoint> RemoteConfigsEndpointsCollection
         {
@@ -389,6 +400,7 @@ namespace OpenBullet2.Native.ViewModels
         public async Task Save()
         {
             General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
+            General.CustomSnippets = CustomSnippetsCollection.ToList();
             Remote.ConfigsEndpoints = RemoteConfigsEndpointsCollection.ToList();
             await service.Save();
         }
@@ -413,12 +425,16 @@ namespace OpenBullet2.Native.ViewModels
         public void AddProxyCheckTarget() => ProxyCheckTargetsCollection.Add(new ProxyCheckTarget());
         public void RemoveProxyCheckTarget(ProxyCheckTarget target) => ProxyCheckTargetsCollection.Remove(target);
 
+        public void AddCustomSnippet() => CustomSnippetsCollection.Add(new CustomSnippet());
+        public void RemoveCustomSnippet(CustomSnippet snippet) => CustomSnippetsCollection.Remove(snippet);
+
         public void AddRemoteConfigsEndpoint() => RemoteConfigsEndpointsCollection.Add(new RemoteConfigsEndpoint());
         public void RemoveRemoteConfigsEndpoint(RemoteConfigsEndpoint endpoint) => RemoteConfigsEndpointsCollection.Remove(endpoint);
 
         private void CreateCollections()
         {
             ProxyCheckTargetsCollection = new ObservableCollection<ProxyCheckTarget>(General.ProxyCheckTargets);
+            CustomSnippetsCollection = new ObservableCollection<CustomSnippet>(General.CustomSnippets);
             RemoteConfigsEndpointsCollection = new ObservableCollection<RemoteConfigsEndpoint>(Remote.ConfigsEndpoints);
         }
     }

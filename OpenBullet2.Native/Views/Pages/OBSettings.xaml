@@ -109,6 +109,51 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <Label Foreground="{DynamicResource ForegroundCustom}">Custom editor snippets (requires restart)</Label>
+                <Button Click="AddCustomSnippet" Margin="5 5 5 5" 
+                        Style="{StaticResource StyledSuccessButton}"
+                        Width="70" HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Add</TextBlock>
+                    </StackPanel>
+                </Button>
+                <ItemsControl ItemsSource="{Binding CustomSnippetsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="0 5">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="100" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Name" />
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Height="30" Margin="5 5" />
+                                    <Button Tag="{Binding}" Grid.Row="0" Grid.Column="2" 
+                                            Click="RemoveCustomSnippet" Margin="0 5 5 5" Style="{StaticResource StyledDangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Description" />
+                                    <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Description}" Height="30" Margin="5 0" />
+                                    <TextBox Grid.Row="2" Grid.ColumnSpan="3" Grid.Column="0" FontFamily="Consolas" AcceptsReturn="True" Text="{Binding Body}" Margin="5" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
                 <Separator Opacity="0.5" Margin="5 20"></Separator>
                 <Label FontSize="24" FontWeight="Bold" Margin="0 0 0 10">Remote</Label>
                 <Label Foreground="{DynamicResource ForegroundCustom}">Remote configs endpoints</Label>

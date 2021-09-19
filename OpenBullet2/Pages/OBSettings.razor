@@ -93,7 +93,52 @@
                 </div>
                 <div class="col-auto px-1 px-md-2">
                     <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.GeneralSettings.ProxyCheckTargets.Remove(input))">
-                        <span class="oi oi-x"></span></button>
+                        <span class="oi oi-x"></span>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <label class="fg-custom font-weight-bold">@Loc["CustomSnippets"]</label>
+    <br />
+    <p>@Loc["CustomSnippetsDescription"]</p>
+    <div class="list-group list-group-horizontal">
+        <button type="button" class="btn btn-sm btn-outline-success" @onclick="@(() => settings.GeneralSettings.CustomSnippets.Add(new CustomSnippet()))">
+            <span class="oi oi-plus"></span> @Loc["Add"]
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                @onclick="@(() => settings.GeneralSettings.CustomSnippets.Clear())">
+            <span class="oi oi-x"></span> @Loc["Clear"]
+        </button>
+    </div>
+    <div class="container-fluid" style="margin-top: 15px;">
+        @foreach (var snippet in settings.GeneralSettings.CustomSnippets)
+        {
+            <div class="row">
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["Name"]</label>
+                </div>
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputText @bind-Value="snippet.Name" />
+                </div>
+                <div class="col-auto px-1 px-md-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="@(() => settings.GeneralSettings.CustomSnippets.Remove(snippet))">
+                        <span class="oi oi-x"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto px-1 px-md-2">
+                    <label style="line-height: 30px;">@Loc["Description"]</label>
+                </div>
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputText @bind-Value="snippet.Description" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col align-self-stretch px-1 px-md-2">
+                    <InputTextArea @bind-Value="snippet.Body" />
                 </div>
             </div>
         }

@@ -32,8 +32,6 @@ The developer will not be held responsible for improper use of this software.
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 Console.WriteLine("DO NOT CLOSE THIS WINDOW" + Environment.NewLine);
 
-            AutocompletionProvider.Init();
-
             CreateHostBuilder(args).Build().Run();
         }
 

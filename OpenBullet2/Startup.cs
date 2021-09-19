@@ -27,6 +27,7 @@ using OpenBullet2.Core;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Repositories;
 using OpenBullet2.Core.Helpers;
+using OpenBullet2.Helpers;
 
 namespace OpenBullet2
 {
@@ -200,6 +201,9 @@ namespace OpenBullet2
             // Load the configs
             var configService = app.ApplicationServices.GetService<ConfigService>();
             configService.ReloadConfigs().Wait();
+
+            // Initialize autocompletion
+            AutocompletionProvider.Init(obSettings.GeneralSettings.CustomSnippets);
         }
     }
 }

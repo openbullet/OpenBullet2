@@ -34,6 +34,10 @@ namespace OpenBullet2.Native.Views.Pages
         private void AddProxyCheckTarget(object sender, RoutedEventArgs e) => vm.AddProxyCheckTarget();
         private void RemoveProxyCheckTarget(object sender, RoutedEventArgs e) 
             => vm.RemoveProxyCheckTarget((ProxyCheckTarget)(sender as Button).Tag);
+
+        private void AddCustomSnippet(object sender, RoutedEventArgs e) => vm.AddCustomSnippet();
+        private void RemoveCustomSnippet(object sender, RoutedEventArgs e)
+            => vm.RemoveCustomSnippet((CustomSnippet)(sender as Button).Tag);
         
         private void AddRemoteConfigsEndpoint(object sender, RoutedEventArgs e) => vm.AddRemoteConfigsEndpoint();
         private void RemoveRemoteConfigsEndpoint(object sender, RoutedEventArgs e) 

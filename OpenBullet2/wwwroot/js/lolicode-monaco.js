@@ -1,4 +1,6 @@
-﻿function registerLoliCode() {
+﻿var completionRegistered = false;
+
+function registerLoliCode() {
 	// Register a new language
 	monaco.languages.register({ id: 'lolicode' });
 
@@ -284,56 +286,66 @@
         }
 	});
 
-    monaco.languages.registerCompletionItemProvider('lolicode', {
-        provideCompletionItems: function (model, position) {
+    if (!completionRegistered) {
+        monaco.languages.registerCompletionItemProvider('lolicode', {
+            provideCompletionItems: function (model, position) {
 
-             // Check if we are completing BLOCK:
-            var textUntilPosition = model.getValueInRange({
-                startLineNumber: position.lineNumber, startColumn: 1,
-                endLineNumber: position.lineNumber, endColumn: position.column
-            });
+                // Check if we are completing BLOCK:
+                var textUntilPosition = model.getValueInRange({
+                    startLineNumber: position.lineNumber, startColumn: 1,
+                    endLineNumber: position.lineNumber, endColumn: position.column
+                });
 
-            if ('BLOCK:'.startsWith(textUntilPosition.trim())) {
+                if ('BLOCK:'.startsWith(textUntilPosition.trim())) {
+                    return {
+                        suggestions: [
+                            {
+                                label: 'BLOCK:',
+                                kind: monaco.languages.CompletionItemKind.Snippet,
+                                insertText: 'BLOCK:',
+                                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+                            }
+                        ]
+                    };
+                }
+
+                var word = model.getWordUntilPosition(position);
+                var range = {
+                    startLineNumber: position.lineNumber,
+                    endLineNumber: position.lineNumber,
+                    startColumn: word.startColumn,
+                    endColumn: word.endColumn
+                };
+
+                if (textUntilPosition.trim().startsWith('BLOCK:')) {
+                    return {
+                        suggestions: autoCompleteBlock(range)
+                    };
+                }
+
                 return {
-                    suggestions: [
-                        {
-                            label: 'BLOCK:',
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: 'BLOCK:',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                        }
-                    ]
+                    suggestions: autoCompleteLoliCodeStatement(range)
                 };
             }
+        });
 
-            var word = model.getWordUntilPosition(position);
-            var range = {
-                startLineNumber: position.lineNumber,
-                endLineNumber: position.lineNumber,
-                startColumn: word.startColumn,
-                endColumn: word.endColumn
-            };
-
-            if (textUntilPosition.trim().startsWith('BLOCK:')) {
-                return {
-                    suggestions: autoCompleteBlock(range)
-                };
-            }
-
-            return {
-                suggestions: autoCompleteLoliCodeStatement(range)
-            };
+        // Get the snippets from C#
+        if (blockSnippets.length === 0) {
+            DotNet.invokeMethodAsync('OpenBullet2', 'GetBlockSnippets')
+                .then(data => blockSnippets = data);
         }
-    });
 
-    // Get the snippets from C#
-    if (blockSnippets.length === 0) {
-        DotNet.invokeMethodAsync('OpenBullet2', 'GetBlockSnippets')
-            .then(data => blockSnippets = data);
+        if (customSnippets.length === 0) {
+            DotNet.invokeMethodAsync('OpenBullet2', 'GetCustomSnippets')
+                .then(data => customSnippets = data);
+        }
+
+        completionRegistered = true;
     }
 }
 
 var blockSnippets = [];
+var customSnippets = [];
 
 function autoCompleteBlock(range) {
     let blockAutocompletions = [];
@@ -351,7 +363,7 @@ function autoCompleteBlock(range) {
 function autoCompleteLoliCodeStatement(range) {
     // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
     // here you could do a server side lookup
-    return [
+    let customAutocompletions = [
         {
             label: 'LOG (LoliCode)',
             kind: monaco.languages.CompletionItemKind.Snippet,
@@ -546,4 +558,15 @@ function autoCompleteLoliCodeStatement(range) {
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
         }
     ];
+
+    for (var id in customSnippets) {
+        customAutocompletions.push({
+            label: id,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: customSnippets[id],
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        });
+    }
+
+    return customAutocompletions;
 }

@@ -50,6 +50,27 @@ namespace OpenBullet2.Core.Models.Settings
     }
 
     /// <summary>
+    /// A custom LoliCode snippet for editor autocompletion.
+    /// </summary>
+    public class CustomSnippet
+    {
+        /// <summary>
+        /// The name of the snippet which will need to be typed (at least partially) to get the suggestion.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The body of the snippet which will be inserted by the editor.
+        /// </summary>
+        public string Body { get; set; } = "The body of your snippet";
+
+        /// <summary>
+        /// The description of what the snippet does.
+        /// </summary>
+        public string Description { get; set; }
+    }
+
+    /// <summary>
     /// General settings of OpenBullet 2.
     /// </summary>
     public class GeneralSettings
@@ -123,5 +144,10 @@ namespace OpenBullet2.Core.Models.Settings
         /// The localization culture for the UI.
         /// </summary>
         public string Culture { get; set; } = "en";
+
+        /// <summary>
+        /// Custom user-defined snippets for editor autocompletion.
+        /// </summary>
+        public List<CustomSnippet> CustomSnippets { get; set; } = new();
     }
 }
