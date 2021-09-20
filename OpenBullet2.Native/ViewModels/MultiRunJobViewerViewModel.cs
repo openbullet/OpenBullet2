@@ -311,7 +311,7 @@ namespace OpenBullet2.Native.ViewModels
             if ((HitsFilter == HitsFilter.Hits && hit.Type == "SUCCESS") || (HitsFilter == HitsFilter.ToCheck && hit.Type == "NONE")
                 || (HitsFilter == HitsFilter.Custom && hit.Type != "SUCCESS" && hit.Type != "NONE"))
             {
-                Application.Current.Dispatcher.Invoke(() => HitsCollection.Add(new HitViewModel(hit)));
+                Application.Current.Dispatcher.Invoke(() => HitsCollection?.Add(new HitViewModel(hit)));
             }
         }
 
