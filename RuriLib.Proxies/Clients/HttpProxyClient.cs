@@ -76,9 +76,7 @@ namespace RuriLib.Proxies.Clients
         {
             var commandBuilder = new StringBuilder();
 
-            commandBuilder.AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n", destinationHost, destinationPort, ProtocolVersion);
-            commandBuilder.AppendFormat(GenerateAuthorizationHeader());
-            commandBuilder.AppendLine();
+            commandBuilder.AppendFormat("CONNECT {0}:{1} HTTP/{2}\r\n{3}\r\n\r\n", destinationHost, destinationPort, ProtocolVersion, GenerateAuthorizationHeader());
 
             var buffer = Encoding.ASCII.GetBytes(commandBuilder.ToString());
 
@@ -95,7 +93,7 @@ namespace RuriLib.Proxies.Clients
             var data = Convert.ToBase64String(Encoding.UTF8.GetBytes(
                 $"{Settings.Credentials.UserName}:{Settings.Credentials.Password}"));
 
-            return $"Proxy-Authorization: Basic {data}\r\n";
+            return $"Proxy-Authorization: Basic {data}";
         }
 
         private static async Task<HttpStatusCode> ReceiveResponseAsync(NetworkStream nStream, CancellationToken cancellationToken = default)
