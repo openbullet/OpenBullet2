@@ -100,9 +100,11 @@ namespace RuriLib.Models.Debugger
             }
 
             // Build the BotData
-            var data = new BotData(providers, config.Settings, logger, dataLine, proxy, options.UseProxy);
-            data.CancellationToken = cts.Token;
-            var httpClient = new HttpClient();
+            var data = new BotData(providers, config.Settings, logger, dataLine, proxy, options.UseProxy)
+            {
+                CancellationToken = cts.Token
+            };
+            using var httpClient = new HttpClient();
             data.SetObject("httpClient", httpClient);
             var runtime = Python.CreateRuntime();
             var pyengine = runtime.GetEngine("py");
@@ -216,33 +218,10 @@ namespace RuriLib.Models.Debugger
                 foreach (var resource in resources.Where(r => r.Value is IDisposable)
                     .Select(r => r.Value).Cast<IDisposable>())
                 {
-                    try
-                    {
-                        resource.Dispose();
-                    }
-                    catch
-                    {
-
-                    }
+                    resource.Dispose();
                 }
 
-                try
-                {
-                    httpClient.Dispose();
-                }
-                catch
-                {
-
-                }
-
-                try
-                {
-                    data.AsyncLocker.Dispose();
-                }
-                catch
-                {
-
-                }
+                data.AsyncLocker.Dispose();
             }
 
             IsRunning = false;
