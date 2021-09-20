@@ -34,10 +34,12 @@ namespace RuriLib.Providers.Captchas
         public Task<StringResponse> SolveCapyAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveCapyAsync(siteKey, siteUrl, proxy, cancellationToken);
 
-        public Task<StringResponse> SolveFuncaptchaAsync(string publicKey, string serviceUrl, string siteUrl, bool noJS = false, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<StringResponse> SolveFuncaptchaAsync(string publicKey, string serviceUrl, string siteUrl,
+            bool noJS = false, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveFuncaptchaAsync(publicKey, serviceUrl, siteUrl, noJS, proxy, cancellationToken);
 
-        public Task<GeeTestResponse> SolveGeeTestAsync(string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<GeeTestResponse> SolveGeeTestAsync(string gt, string challenge, string apiServer, string siteUrl,
+            Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveGeeTestAsync(gt, challenge, apiServer, siteUrl, proxy, cancellationToken);
 
         public Task<StringResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
@@ -46,13 +48,16 @@ namespace RuriLib.Providers.Captchas
         public Task<StringResponse> SolveImageCaptchaAsync(string base64, ImageCaptchaOptions options = null, CancellationToken cancellationToken = default)
             => service.SolveImageCaptchaAsync(base64, options, cancellationToken);
 
-        public Task<StringResponse> SolveKeyCaptchaAsync(string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<StringResponse> SolveKeyCaptchaAsync(string userId, string sessionId, string webServerSign1,
+            string webServerSign2, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveKeyCaptchaAsync(userId, sessionId, webServerSign1, webServerSign2, siteUrl, proxy, cancellationToken);
 
-        public Task<StringResponse> SolveRecaptchaV2Async(string siteKey, string siteUrl, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<StringResponse> SolveRecaptchaV2Async(string siteKey, string siteUrl, string sData = "",
+            bool enterprise = false, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveRecaptchaV2Async(siteKey, siteUrl, invisible, proxy, cancellationToken);
 
-        public Task<StringResponse> SolveRecaptchaV3Async(string siteKey, string siteUrl, string action, float minScore, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<StringResponse> SolveRecaptchaV3Async(string siteKey, string siteUrl, string action, float minScore,
+            bool enterprise = false, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveRecaptchaV3Async(siteKey, siteUrl, action, minScore, proxy, cancellationToken);
 
         public Task<StringResponse> SolveTextCaptchaAsync(string text, TextCaptchaOptions options = null, CancellationToken cancellationToken = default)

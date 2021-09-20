@@ -374,6 +374,16 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public string NineKWApiKey
+        {
+            get => Captcha.NineKWApiKey;
+            set
+            {
+                Captcha.NineKWApiKey = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ChromeBinaryLocation
         {
             get => Puppeteer.ChromeBinaryLocation;

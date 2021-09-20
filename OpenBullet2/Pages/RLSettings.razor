@@ -169,6 +169,11 @@
             <label>@Loc["2CaptchaApiKey"]</label>
             <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.TwoCaptchaApiKey" />
             break;
+
+        case CaptchaServiceType.NineKW:
+            <label>@Loc["9KWApiKey"]</label>
+            <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.NineKWApiKey" />
+            break;
     }
 
     <button class="btn btn-outline-primary" style="margin: 10px 0;" @onclick="CheckBalance">@Loc["CheckBalance"]</button>

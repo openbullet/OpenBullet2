@@ -40,6 +40,9 @@
         SolveRecaptcha,
 
         /// <summary>The service provided by apitruecaptcha.org</summary>
-        TrueCaptcha
+        TrueCaptcha,
+
+        /// <summary>The service provided by 9kw.eu</summary>
+        NineKW
     }
 }

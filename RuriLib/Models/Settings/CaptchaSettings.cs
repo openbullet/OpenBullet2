@@ -29,5 +29,6 @@ namespace RuriLib.Models.Settings
         public string TrueCaptchaUsername { get; set; } = "";
         public string TrueCaptchaApiKey { get; set; } = "";
         public string TwoCaptchaApiKey { get; set; } = "";
+        public string NineKWApiKey { get; set; } = "";
     }
 }

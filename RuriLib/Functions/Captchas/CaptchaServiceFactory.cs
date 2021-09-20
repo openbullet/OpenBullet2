@@ -31,6 +31,7 @@ namespace RuriLib.Functions.Captchas
                 CaptchaServiceType.SolveRecaptcha => new SolveRecaptchaService(settings.SolveRecaptchaApiKey),
                 CaptchaServiceType.TrueCaptcha => new TrueCaptchaService(settings.TrueCaptchaUsername, settings.TrueCaptchaApiKey),
                 CaptchaServiceType.TwoCaptcha => new TwoCaptchaService(settings.TwoCaptchaApiKey),
+                CaptchaServiceType.NineKW => new NineKWService(settings.NineKWApiKey),
                 _ => throw new NotSupportedException(),
             };
 

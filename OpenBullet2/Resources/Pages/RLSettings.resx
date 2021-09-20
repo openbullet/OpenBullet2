@@ -120,6 +120,9 @@
   <data name="2CaptchaApiKey" xml:space="preserve">
     <value>2Captcha API Key</value>
   </data>
+  <data name="9KWApiKey" xml:space="preserve">
+    <value>9kw API Key</value>
+  </data>
   <data name="AntiCaptchaApiKey" xml:space="preserve">
     <value>Anti-Captcha API Key</value>
   </data>
