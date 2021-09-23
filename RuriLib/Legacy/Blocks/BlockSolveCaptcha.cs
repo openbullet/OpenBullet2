@@ -11,7 +11,7 @@ using System.Windows.Media;
 using CaptchaSharp.Models;
 using CaptchaSharp;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that solves a captcha challenge using a remote solving service.

@@ -14,7 +14,7 @@ using RuriLib.Functions.Requests;
 using RuriLib.Functions.Files;
 using MultipartContent = RuriLib.Functions.Requests.MultipartContent;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// The types of request that can be performed.

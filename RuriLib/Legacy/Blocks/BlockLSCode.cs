@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that contains LoliScript code for readonly visualization purposes.

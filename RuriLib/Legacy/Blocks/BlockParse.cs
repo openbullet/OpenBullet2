@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Linq;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// The allowed parsing algorithms.

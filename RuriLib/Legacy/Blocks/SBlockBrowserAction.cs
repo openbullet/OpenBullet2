@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// The actions that can be performed on a browser.

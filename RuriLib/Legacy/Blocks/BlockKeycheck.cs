@@ -4,7 +4,7 @@ using RuriLib.Models;
 using System;
 using System.Collections.Generic;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that changes the bot status according to some conditions.

@@ -3,7 +3,7 @@ using RuriLib.Functions.Captchas;
 using System;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that can solve captcha challenges.

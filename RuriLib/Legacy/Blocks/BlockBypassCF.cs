@@ -12,7 +12,7 @@ using CaptchaSharp;
 using CaptchaSharp.Services;
 using RuriLib.Functions.Captchas;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that can bypass Cloudflare protections.

@@ -11,7 +11,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// The available ways to address an element.

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that executes javascript code in the selenium-driven browser.

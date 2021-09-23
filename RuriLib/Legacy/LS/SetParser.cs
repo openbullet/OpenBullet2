@@ -1,23 +1,23 @@
-﻿using Extreme.Net;
-using RuriLib.Models;
+﻿using RuriLib.Legacy.Blocks;
+using RuriLib.Legacy.Models;
+using RuriLib.Logging;
+using RuriLib.Models.Proxies;
+using RuriLib.Models.Variables;
 using System;
-using System.Windows.Media;
 
 namespace RuriLib.LS
 {
     /// <summary>
     /// Parses a SET command.
     /// </summary>
-    class SetParser
+    internal class SetParser
     {
         /// <summary>
         /// Gets the Action that needs to be executed.
         /// </summary>
-        /// <param name="line">The data line to parse</param>
-        /// <param name="data">The BotData needed for variable replacement</param>
-        /// <returns>The Action to execute</returns>
-        public static Action Parse(string line, BotData data)
+        static internal Action Parse(string line, LSGlobals ls)
         {
+            var data = ls.BotData;
             var input = line.Trim();
             var field = LineParser.ParseToken(ref input, TokenType.Parameter, true).ToUpper();
 
@@ -26,36 +26,48 @@ namespace RuriLib.LS
                 switch (field)
                 {
                     case "SOURCE":
-                        data.ResponseSource = LineParser.ParseLiteral(ref input, "SOURCE", true, data);
+                        data.SOURCE = LineParser.ParseLiteral(ref input, "SOURCE", true, ls);
                         break;
 
                     case "STATUS":
-                        data.Status = (BotStatus)LineParser.ParseEnum(ref input, "STATUS", typeof(BotStatus));
-                        if (data.Status == BotStatus.CUSTOM) data.CustomStatus = LineParser.ParseLiteral(ref input, "CUSTOM STATUS");
+                        data.STATUS = LineParser.ParseToken(ref input, TokenType.Parameter, true);
+
+                        // E.g. user wrote SET STATUS CUSTOM "TEST"
+                        if (data.STATUS == "CUSTOM" && !string.IsNullOrEmpty(input))
+                        {
+                            data.STATUS = LineParser.ParseLiteral(ref input, "CUSTOM STATUS");
+                        }
                         break;
 
                     case "RESPONSECODE":
-                        data.ResponseCode = LineParser.ParseInt(ref input, "RESPONSECODE").ToString();
+                        data.RESPONSECODE = LineParser.ParseInt(ref input, "RESPONSECODE");
                         break;
 
                     case "COOKIE":
-                        var name = LineParser.ParseLiteral(ref input, "NAME", true, data);
-                        data.Cookies.Add(name, LineParser.ParseLiteral(ref input, "VALUE", true, data));
+                        var name = LineParser.ParseLiteral(ref input, "NAME", true, ls);
+                        data.COOKIES.Add(name, LineParser.ParseLiteral(ref input, "VALUE", true, ls));
                         break;
 
                     case "ADDRESS":
-                        data.Address = LineParser.ParseLiteral(ref input, "ADDRESS", true, data);
+                        data.ADDRESS = LineParser.ParseLiteral(ref input, "ADDRESS", true, ls);
                         break;
 
                     case "USEPROXY":
                         var use = LineParser.ParseToken(ref input, TokenType.Parameter, true).ToUpper();
-                        if (use == "TRUE") data.UseProxies = true;
-                        else if (use == "FALSE") data.UseProxies = false;
+                        
+                        if (use == "TRUE")
+                        {
+                            data.UseProxy = true;
+                        }
+                        else if (use == "FALSE")
+                        {
+                            data.UseProxy = false;
+                        }
                         break;
 
                     case "PROXY":
-                        var prox = LineParser.ParseLiteral(ref input, "PROXY", true, data);
-                        data.Proxy = new CProxy(BlockBase.ReplaceValues(prox, data), data.Proxy == null ? ProxyType.Http : data.Proxy.Type);
+                        var prox = LineParser.ParseLiteral(ref input, "PROXY", true, ls);
+                        data.Proxy = Proxy.Parse(prox);
                         break;
 
                     case "PROXYTYPE":
@@ -63,60 +75,73 @@ namespace RuriLib.LS
                         break;
 
                     case "DATA":
-                        data.Data = new CData(LineParser.ParseLiteral(ref input, "DATA", true, data), new WordlistType());
+                        data.Line.Data = LineParser.ParseLiteral(ref input, "DATA", true, ls);
                         break;
 
                     case "VAR":
-                        data.Variables.Set(new CVar(
-                            LineParser.ParseLiteral(ref input, "NAME", true, data),
-                            LineParser.ParseLiteral(ref input, "VALUE", true, data),
-                            false
-                            ));
+                        var varName = LineParser.ParseLiteral(ref input, "NAME", true, ls);
+                        var varValue = LineParser.ParseLiteral(ref input, "VALUE", true, ls);
+                        BlockBase.GetVariables(data).Set(new StringVariable(varValue)
+                        {
+                            Name = varName
+                        });
                         break;
 
                     case "CAP":
-                        data.Variables.Set(new CVar(
-                            LineParser.ParseLiteral(ref input, "NAME", true, data),
-                            LineParser.ParseLiteral(ref input, "VALUE", true, data),
-                            true
-                            ));
+                        var capName = LineParser.ParseLiteral(ref input, "NAME", true, ls);
+                        var capValue = LineParser.ParseLiteral(ref input, "VALUE", true, ls);
+                        BlockBase.GetVariables(data).Set(new StringVariable(capValue)
+                        {
+                            Name = capName
+                        });
+                        data.MarkForCapture(capName);
                         break;
 
                     case "GVAR":
                         try
                         {
-                            data.GlobalVariables.Set(new CVar(
-                                LineParser.ParseLiteral(ref input, "NAME", true, data),
-                                LineParser.ParseLiteral(ref input, "VALUE", true, data),
-                                false
-                                ));
+                            var globalVarName = LineParser.ParseLiteral(ref input, "NAME", true, ls);
+                            var globalVarValue = LineParser.ParseLiteral(ref input, "VALUE", true, ls);
+                            ls.Globals.Set(new StringVariable(globalVarValue)
+                            {
+                                Name = globalVarName
+                            });
                         }
-                        catch { }
+                        catch
+                        {
+
+                        }
                         break;
 
                     case "NEWGVAR":
                         try
                         {
-                            data.GlobalVariables.SetNew(new CVar(
-                                LineParser.ParseLiteral(ref input, "NAME", true, data),
-                                LineParser.ParseLiteral(ref input, "VALUE", true, data),
-                                false
-                                ));
+                            var globalVarName = LineParser.ParseLiteral(ref input, "NAME", true, ls);
+                            var globalVarValue = LineParser.ParseLiteral(ref input, "VALUE", true, ls);
+                            ls.Globals.SetIfNew(new StringVariable(globalVarValue)
+                            {
+                                Name = globalVarName
+                            });
                         }
-                        catch { }
+                        catch
+                        {
+
+                        }
                         break;
 
                     case "GCOOKIES":
-                        data.GlobalCookies.Clear();
-                        foreach (var cookie in data.Cookies)
-                            data.GlobalCookies.Add(cookie.Key, cookie.Value);
+                        ls.GlobalCookies.Clear();
+                        foreach (var cookie in data.COOKIES)
+                        {
+                            ls.GlobalCookies.Add(cookie.Key, cookie.Value);
+                        }
                         break;
 
                     default:
                         throw new ArgumentException($"Invalid identifier {field}");
                 }
 
-                data.Log(new LogEntry($"SET command executed on field {field}", Colors.White));
+                data.Logger.Log($"SET command executed on field {field}", LogColors.White);
             });
         }
     }

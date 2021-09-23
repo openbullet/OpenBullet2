@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that navigates to a given URL in a selenium-driven browser.

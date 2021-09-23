@@ -9,7 +9,7 @@ using RuriLib.Functions.Download;
 using System.Collections.Generic;
 using RuriLib.Functions.Captchas;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// A block that solves an image captcha challenge.

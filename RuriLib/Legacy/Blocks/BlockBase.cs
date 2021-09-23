@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RuriLib.Legacy.Models;
 using RuriLib.Logging;
 using RuriLib.LS;
 using RuriLib.Models.Bots;
@@ -27,169 +28,192 @@ namespace RuriLib.Legacy.Blocks
         /// <summary>
         /// Builds a block from a line of LoliScript code.
         /// </summary>
-        /// <param name="line">The line of LoliScript code</param>
-        /// <returns>The parsed block object</returns>
         public virtual BlockBase FromLS(string line) => throw new Exception("Cannot Convert to the abstract class BlockBase");
 
         /// <summary>
         /// Builds a block from multiple lines of LoliScript code.
         /// </summary>
-        /// <param name="lines">The lines of LoliScript code</param>
-        /// <returns>The parsed block object</returns>
         public virtual BlockBase FromLS(List<string> lines) => throw new Exception("Cannot Convert from the abstract class BlockBase");
 
         /// <summary>
         /// Converts the block to LoliScript code.
         /// </summary>
-        /// <param name="indent"></param>
-        /// <returns></returns>
         public virtual string ToLS(bool indent = true) => throw new Exception("Cannot Convert from the abstract class BlockBase");
 
         /// <summary>
         /// Executes the actual block logic.
         /// </summary>
-        /// <param name="data">The BotData needed for variable replacement</param>
-        public virtual void Process(BotData data) => data.Logger.Log($">> Executing Block {Label} <<", LogColors.ChromeYellow);
+        public virtual void Process(LSGlobals ls) => ls.BotData.Logger.Log($">> Executing Block {Label} <<", LogColors.ChromeYellow);
         #endregion
 
         #region Variable Replacement
         /// <summary>
         /// Replaces variables recursively, expanding lists or dictionaries with jolly indices.
         /// </summary>
-        /// <param name="input">The string to replace variables into</param>
-        /// <param name="data">The BotData needed for variable replacement</param>
-        /// <returns>An array of values obtained replacing the original input with each of the possible values of the first List or Dictionary variable found</returns>
-        public static List<string> ReplaceValuesRecursive(string input, BotData data)
+        public static List<string> ReplaceValuesRecursive(string original, LSGlobals ls)
         {
+            var data = ls.BotData;
+            var globals = ls.Globals;
             var toReplace = new List<string>();
 
             // Regex parse the syntax <LIST[*]>
-            var matches = Regex.Matches(input, @"<([^\[]*)\[\*\]>");
-            var variables = new List<CVar>();
+            var matches = Regex.Matches(original, @"<([^\[]*)\[\*\]>");
+            var variables = new List<ListOfStringsVariable>();
 
             foreach (Match m in matches)
             {
                 var name = m.Groups[1].Value;
 
-                // Retrieve the dict
-                var variable = data.Variables.Get(name);
+                // Retrieve the variable
+                var variable = GetVariables(data).Get(name);
+
+                // If it's null, try to get it from the global variables
                 if (variable == null)
                 {
-                    variable = data.GlobalVariables.Get(name);
-                    if (variable == null) continue;
+                    variable = globals.Get(name);
+                    
+                    // If still null, there's nothing to replace, skip it
+                    if (variable == null)
+                    {
+                        continue;
+                    }
                 }
 
-                if (variable.Type == CVar.VarType.List)
+                // Make sure it's a List of strings and add it to the list
+                if (variable is ListOfStringsVariable list)
                 {
-                    variables.Add(variable);
+                    variables.Add(list);
                 }
             }
 
             // If there's no corresponding variable, just readd the input string and proceed with normal replacement
             if (variables.Count > 0)
             {
-                var max = variables.OrderBy(v => v.Value.Count).Last().Value.Count;
+                // Example: we have 3 lists of sizes 3, 7 and 5. We need to take 7
+                var max = variables.Max(v => v.AsListOfStrings().Count);
+
                 for (var i = 0; i < max; i++)
                 {
-                    var replaced = input;
-                    foreach(var variable in variables)
+                    var replaced = original;
+
+                    foreach (var variable in variables)
                     {
-                        var list = (List<string>)variable.Value;
-                        if (list.Count > i)
-                        {
-                            replaced = replaced.Replace($"<{variable.Name}[*]>", list[i]);
-                        }
-                        else
-                        {
-                            replaced = replaced.Replace($"<{variable.Name}[*]>", "NULL");
-                        }
+                        var list = variable.AsListOfStrings();
+                        replaced = list.Count > i ? replaced.Replace($"<{variable.Name}[*]>", list[i]) : replaced.Replace($"<{variable.Name}[*]>", "NULL");
                     }
+
                     toReplace.Add(replaced);
                 }
                 goto END;
             }
 
             // Regex parse the syntax <DICT(*)> (wildcard key -> returns list of all values)
-            var match = Regex.Match(input, @"<([^\(]*)\(\*\)>");
-
-            if (match.Success)            
-            {
-                var full = match.Groups[0].Value;
-                var name = match.Groups[1].Value;
-
-                // Retrieve the list
-                var dict = data.Variables.GetDictionary(name);
-                if (dict == null) dict = data.GlobalVariables.GetDictionary(name);
-
-                // If there's no corresponding variable, just readd the input string and proceed with normal replacement
-                if (dict == null) toReplace.Add(input);
-                else
-                {
-                    foreach (var item in dict)
-                        toReplace.Add(input.Replace(full, item.Value));
-                }
-                goto END;
-            }
-
-            // Regex parse the syntax <DICT{*}> (wildcard value -> returns list of all keys)
-            match = Regex.Match(input, @"<([^\{]*)\{\*\}>");
+            var match = Regex.Match(original, @"<([^\(]*)\(\*\)>");
 
             if (match.Success)
             {
                 var full = match.Groups[0].Value;
                 var name = match.Groups[1].Value;
 
-                // Retrieve the dict
-                var dict = data.Variables.GetDictionary(name);
-                if (dict == null) dict = data.GlobalVariables.GetDictionary(name);
+                // Retrieve the dictionary
+                var dict = GetVariables(data).Get<DictionaryOfStringsVariable>(name);
+
+                if (dict == null)
+                {
+                    dict = globals.Get<DictionaryOfStringsVariable>(name);
+                }
 
                 // If there's no corresponding variable, just readd the input string and proceed with normal replacement
-                if (dict == null) toReplace.Add(input);
+                if (dict == null)
+                {
+                    toReplace.Add(original);
+                }
                 else
                 {
-                    foreach (var item in dict)
-                        toReplace.Add(input.Replace(full, item.Key));
+                    foreach (var item in dict.AsDictionaryOfStrings())
+                    {
+                        toReplace.Add(original.Replace(full, item.Value));
+                    }
+                }
+                goto END;
+            }
+
+            // Regex parse the syntax <DICT{*}> (wildcard value -> returns list of all keys)
+            match = Regex.Match(original, @"<([^\{]*)\{\*\}>");
+
+            if (match.Success)
+            {
+                var full = match.Groups[0].Value;
+                var name = match.Groups[1].Value;
+
+                // Retrieve the dictionary
+                var dict = GetVariables(data).Get<DictionaryOfStringsVariable>(name);
+
+                if (dict == null)
+                {
+                    dict = globals.Get<DictionaryOfStringsVariable>(name);
+                }
+
+                // If there's no corresponding variable, just readd the input string and proceed with normal replacement
+                if (dict == null)
+                {
+                    toReplace.Add(original);
+                }
+                else
+                {
+                    foreach (var item in dict.AsDictionaryOfStrings())
+                    {
+                        toReplace.Add(original.Replace(full, item.Key));
+                    }
                 }
                 goto END;
             }
 
             // If no other match was a success, it means there's no recursive value and we simply add the input to the list
-            toReplace.Add(input);
+            toReplace.Add(original);
 
             END:
             // Now for each item in the list, do the normal replacement and return the replaced list of strings
-            return toReplace.Select(i => ReplaceValues(i, data)).ToList();
+            return toReplace.Select(i => (string)ReplaceValues(i, ls)).ToList();
         }
 
         /// <summary>
         /// Replaces variables in a given input string.
         /// </summary>
-        /// <param name="input">The string to replace variables into</param>
-        /// <param name="data">The BotData needed for variable replacement</param>
-        /// <returns>The string where variables have been replaced</returns>
-        public static string ReplaceValues(string input, BotData data)
+        public static string ReplaceValues(string original, LSGlobals ls)
         {
-            if (!input.Contains("<") && !input.Contains(">")) return input;
+            var data = ls.BotData;
+            var globals = ls.Globals;
+
+            if (!original.Contains("<") && !original.Contains(">"))
+            {
+                return original;
+            }
 
             var previous = "";
-            var output = input;
+            var output = original;
 
             do
             {
                 previous = output;
 
-                // Replace all the fixed quantities (this needs to go away inside BotData.cs, initialized as hidden vars)
-                output = output.Replace("<INPUT>", data.Data.Data);
-                output = output.Replace("<STATUS>", data.Status.ToString());
-                output = output.Replace("<BOTNUM>", data.BotNumber.ToString());
-                output = output.Replace("<RETRIES>", data.Data.Retries.ToString());
+                // Replace all the fixed quantities
+                output = output.Replace("<INPUT>", data.Line.Data);
+                output = output.Replace("<STATUS>", data.STATUS);
+                output = output.Replace("<RETRIES>", data.Line.Retries.ToString());
+
+                // TODO: Readd this
+                // output = output.Replace("<BOTNUM>", data.BotNumber.ToString());
+
                 if (data.Proxy != null)
-                    output = output.Replace("<PROXY>", data.Proxy.Proxy);
+                {
+                    output = output.Replace("<PROXY>", data.Proxy.ToString());
+                }
 
                 // Get all the inner (max. 1 level of nesting) variables
                 var matches = Regex.Matches(output, @"<([^<>]*)>");
                 
-                foreach(Match match in matches)
+                foreach (Match match in matches)
                 {
                     var full = match.Groups[0].Value;
                     var m = match.Groups[1].Value;
@@ -199,20 +223,28 @@ namespace RuriLib.Legacy.Blocks
 
                     // Try to get the variable (first local, then global, then if none was found go to the next iteration)
                     // We don't throw an error here because it could be some HTML or XML code e.g. <br> that triggers this, and we dont' want to spam the user with unneeded errors
-                    var v = data.Variables.Get(name);
-                    if (v == null) v = data.GlobalVariables.Get(name);
-                    if (v == null) continue;
+                    var v = GetVariables(data).Get(name);
+
+                    if (v == null)
+                    {
+                        v = globals.Get(name);
+                    }
+
+                    if (v == null)
+                    {
+                        continue;
+                    }
 
                     // Parse the arguments
                     var args = m.Replace(name, "");
 
-                    switch (v.Type)
+                    switch (v)
                     {
-                        case CVar.VarType.Single:
-                            output = output.Replace(full, v.Value);
+                        case StringVariable:
+                            output = output.Replace(full, v.AsString());
                             break;
 
-                        case CVar.VarType.List:
+                        case ListOfStringsVariable:
 
                             // If it's just the list name, replace it with its string representation
                             if (string.IsNullOrEmpty(args))
@@ -223,21 +255,35 @@ namespace RuriLib.Legacy.Blocks
 
                             var index = 0;
                             int.TryParse(ParseArguments(args, '[', ']')[0], out index);
-                            var item = v.GetListItem(index); // Can return null
-                            if (item != null) output = output.Replace(full, item);
+                            var item = GetListItem(v.AsListOfStrings(), index); // Can return null
+
+                            if (item != null)
+                            {
+                                output = output.Replace(full, item);
+                            }
                             break;
 
-                        case CVar.VarType.Dictionary:
-                            
+                        case DictionaryOfStringsVariable:
+
+                            var dict = v.AsDictionaryOfStrings();
+
                             if (args.Contains("(") && args.Contains(")"))
                             {
-                                var dicKey = ParseArguments(args, '(', ')')[0];
-                                try { output = output.Replace(full, v.GetDictValue(dicKey)); } catch { }
+                                var key = ParseArguments(args, '(', ')')[0];
+                                
+                                if (dict.ContainsKey(key))
+                                {
+                                    output = output.Replace(full, dict[key]);
+                                }
                             }
                             else if (args.Contains("{") && args.Contains("}"))
                             {
-                                var dicVal = ParseArguments(args, '{', '}')[0];
-                                try { output = output.Replace(full, v.GetDictKey(dicVal)); } catch { }
+                                var value = ParseArguments(args, '{', '}')[0];
+                                
+                                if (dict.ContainsValue(value))
+                                {
+                                    output = output.Replace(full, dict.First(kvp => kvp.Value == value).Key);
+                                }
                             }
                             else // If it's just the dictionary name, replace it with its string representation
                             {
@@ -248,7 +294,7 @@ namespace RuriLib.Legacy.Blocks
                     }
                 }
             }
-            while (input.Contains("<") && input.Contains(">") && output != previous);
+            while (original.Contains("<") && original.Contains(">") && output != previous);
 
             return output;
         }
@@ -284,50 +330,30 @@ namespace RuriLib.Legacy.Blocks
         /// <summary>
         /// Adds a single variable with the given value.
         /// </summary>
-        /// <param name="data">The BotData used for variable replacement and insertion</param>
-        /// <param name="isCapture">Whether the variable should be marked for Capture</param>
-        /// <param name="value">The value of the variable</param>
-        /// <param name="variableName">The name of the variable to create</param>
-        /// <param name="prefix">The string to add at the start of the value</param>
-        /// <param name="suffix">The string to add at the end of the value</param>
-        /// <param name="urlEncode">Whether to URLencode the values before creating the variables</param>
-        /// <param name="createEmpty">Whether to create an empty (single) variable if the list of values is empty</param>
-        protected static void InsertVariable(BotData data, bool isCapture, string value, string variableName,
+        protected static void InsertVariable(LSGlobals ls, bool isCapture, string value, string variableName,
             string prefix = "", string suffix = "", bool urlEncode = false, bool createEmpty = true)
-            => InsertVariable(data, isCapture, false, new string[] { value }, variableName, prefix, suffix, urlEncode, createEmpty);
+            => InsertVariable(ls, isCapture, false, new string[] { value }, variableName, prefix, suffix, urlEncode, createEmpty);
 
         /// <summary>
         /// Adds a list variable with the given value.
         /// </summary>
-        /// <param name="data">The BotData used for variable replacement and insertion</param>
-        /// <param name="isCapture">Whether the variable should be marked for Capture</param>
-        /// <param name="values">The list of values</param>
-        /// <param name="variableName">The name of the variable to create</param>
-        /// <param name="prefix">The string to add at the start of the value</param>
-        /// <param name="suffix">The string to add at the end of the value</param>
-        /// <param name="urlEncode">Whether to URLencode the values before creating the variables</param>
-        /// <param name="createEmpty">Whether to create an empty (single) variable if the list of values is empty</param>
-        protected static void InsertVariable(BotData data, bool isCapture, IEnumerable<string> values, string variableName,
+        protected static void InsertVariable(LSGlobals ls, bool isCapture, IEnumerable<string> values, string variableName,
             string prefix = "", string suffix = "", bool urlEncode = false, bool createEmpty = true)
-            => InsertVariable(data, isCapture, true, values, variableName, prefix, suffix, urlEncode, createEmpty);
+            => InsertVariable(ls, isCapture, true, values, variableName, prefix, suffix, urlEncode, createEmpty);
 
         /// <summary>
         /// Adds a single or list variable with the given value.
         /// </summary>
-        /// <param name="data">The BotData used for variable replacement and insertion</param>
-        /// <param name="isCapture">Whether the variable should be marked for Capture</param>
-        /// <param name="recursive">Whether the variable to add should be a list or a single value</param>
-        /// <param name="values">The list of values. In case recursive is set to false, only the first value of the list will be taken.</param>
-        /// <param name="variableName">The name of the variable to create</param>
-        /// <param name="prefix">The string to add at the start of the value</param>
-        /// <param name="suffix">The string to add at the end of the value</param>
-        /// <param name="urlEncode">Whether to URLencode the values before creating the variables</param>
-        /// <param name="createEmpty">Whether to create an empty (single) variable if the list of values is empty</param>
-        protected static void InsertVariable(BotData data, bool isCapture, bool recursive, IEnumerable<string> values, string variableName,
+        protected static void InsertVariable(LSGlobals ls, bool isCapture, bool recursive, IEnumerable<string> values, string variableName,
             string prefix = "", string suffix = "", bool urlEncode = false, bool createEmpty = true)
         {
-            var list = values.Select(v => ReplaceValues(prefix, data) + v.Trim() + ReplaceValues(suffix, data)).ToList();
-            if (urlEncode) list = list.Select(v => Uri.EscapeDataString(v)).ToList();
+            var data = ls.BotData;
+            var list = values.Select(v => ReplaceValues(prefix, ls) + v.Trim() + ReplaceValues(suffix, ls)).ToList();
+            
+            if (urlEncode)
+            {
+                list = list.Select(v => Uri.EscapeDataString(v)).ToList();
+            }
 
             Variable variable = null;
             
@@ -369,7 +395,7 @@ namespace RuriLib.Legacy.Blocks
 
             if (variable != null)
             {
-                data.TryGetObject<VariablesList>("legacyVariables").Set(variable);
+                GetVariables(data).Set(variable);
                 data.Logger.Log($"Parsed variable | Name: {variable.Name} | Value: {variable}", isCapture ? LogColors.OrangeRed : LogColors.Gold);
             }
             else
@@ -377,6 +403,20 @@ namespace RuriLib.Legacy.Blocks
                 data.Logger.Log("Could not parse any data. The variable was not created.", LogColors.White);
             }
         }
+
+        public static VariablesList GetVariables(BotData data) => data.TryGetObject<VariablesList>("legacyVariables");
         #endregion
+
+        private static string GetListItem(List<string> list, int index)
+        {
+            // If the index is negative, start from the end
+            if (index < 0)
+            {
+                // For example in a [1,2,3] list, the element at -1 is at index 3-1 = 2 which is element '3'
+                index = list.Count + index;
+            }
+
+            return index > list.Count - 1 || index < 0 ? null : list[index];
+        }
     }
 }

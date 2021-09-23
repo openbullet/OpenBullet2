@@ -1,34 +1,11 @@
-﻿using System;
+﻿using RuriLib.Legacy.Blocks;
+using RuriLib.Legacy.Models;
+using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Windows.Media;
 
 namespace RuriLib.LS
 {
-    /// <summary>
-    /// The allowed types of tokens that can be parsed from a line.
-    /// </summary>
-    public enum TokenType
-    {
-        /// <summary>A block label.</summary>
-        Label,
-
-        /// <summary>A generic parameter, usually an enum value.</summary>
-        Parameter,
-
-        /// <summary>A string between double quotes.</summary>
-        Literal,
-
-        /// <summary>The character sequence -&gt;.</summary>
-        Arrow,
-
-        /// <summary>A boolean value in the format Name=Value where Name is the name of the property.</summary>
-        Boolean,
-
-        /// <summary>An integer value.</summary>
-        Integer
-    }
-
     /// <summary>
     /// Contains methods used to parse tokens from a LoliScript line of code.
     /// </summary>
@@ -47,17 +24,22 @@ namespace RuriLib.LS
             var pattern = GetPattern(type);
             var token = "";
 
-            Regex r = new Regex(pattern);
-            Match m = r.Match(input);
+            var r = new Regex(pattern);
+            var m = r.Match(input);
+            
             if (m.Success)
             {
                 token = m.Value;
 
                 if (proceed)
+                {
                     input = input.Substring(token.Length).Trim();
+                }
 
                 if (type == TokenType.Literal)
+                {
                     token = token.Substring(1, token.Length - 2).Replace("\\\\", "\\").Replace("\\\"", "\"");
+                }
             }
             else
             {
@@ -78,18 +60,24 @@ namespace RuriLib.LS
         public static void SetBool(ref string input, object instance)
         {
             var result = ParseToken(ref input, TokenType.Parameter, true, true).Split('=');
-            PropertyInfo prop = null;
+            PropertyInfo prop;
+
             try
             {
                 prop = instance.GetType().GetProperty(result[0]);
             }
-            catch 
+            catch
             {
                 return;
                 // throw new ArgumentException($"There is no property called {result[0]} in the type {instance.GetType().ToString()}");
             }
+
             var propVal = prop.GetValue(instance);
-            if (propVal.GetType() != typeof(bool)) throw new InvalidCastException($"The property {result[0]} is not a boolean");
+            
+            if (propVal.GetType() != typeof(bool))
+            {
+                throw new InvalidCastException($"The property {result[0]} is not a boolean");
+            }
 
             switch (result[1].ToUpper())
             {
@@ -116,11 +104,25 @@ namespace RuriLib.LS
         public static dynamic ParseEnum(ref string input, string label, Type enumType)
         {
             // Parse the token first
-            var token = "";
-            try { token = ParseToken(ref input, TokenType.Parameter, true); }
-            catch { throw new ArgumentException($"Missing '{label}'"); }
-            try { return Enum.Parse(enumType, token, true); }
-            catch { throw new ArgumentException($"Invalid '{label}'"); }
+            string token;
+            
+            try
+            {
+                token = ParseToken(ref input, TokenType.Parameter, true);
+            }
+            catch
+            {
+                throw new ArgumentException($"Missing '{label}'");
+            }
+            
+            try
+            {
+                return Enum.Parse(enumType, token, true);
+            }
+            catch
+            {
+                throw new ArgumentException($"Invalid '{label}'");
+            }
         }
 
         /// <summary>
@@ -129,15 +131,19 @@ namespace RuriLib.LS
         /// <param name="input">The reference to the line of code</param>
         /// <param name="label">Debug information about the expected literal</param>
         /// <param name="replace">Whether to perform variable replacement in the literal</param>
-        /// <param name="data">The BotData needed for variable replacement</param>
         /// <returns>The literal without the leading and trailing double quotes</returns>
-        public static string ParseLiteral(ref string input, string label, bool replace = false, BotData data = null)
+        public static string ParseLiteral(ref string input, string label, bool replace = false, LSGlobals ls = null)
         {
-            try {
-                if (replace) return BlockBase.ReplaceValues(ParseToken(ref input, TokenType.Literal, true), data);
-                else return ParseToken(ref input, TokenType.Literal, true);
+            try
+            {
+                return replace
+                    ? BlockBase.ReplaceValues(ParseToken(ref input, TokenType.Literal, true), ls)
+                    : ParseToken(ref input, TokenType.Literal, true);
             }
-            catch { throw new ArgumentException($"Expected Literal value for '{label}'"); }
+            catch
+            {
+                throw new ArgumentException($"Expected Literal value for '{label}'");
+            }
         }
 
         /// <summary>
@@ -148,8 +154,14 @@ namespace RuriLib.LS
         /// <returns>The integer value</returns>
         public static int ParseInt(ref string input, string label)
         {
-            try { return int.Parse(LineParser.ParseToken(ref input, TokenType.Parameter, true)); }
-            catch { throw new ArgumentException($"Expected Integer value for '{label}'"); }
+            try
+            {
+                return int.Parse(ParseToken(ref input, TokenType.Parameter, true));
+            }
+            catch
+            {
+                throw new ArgumentException($"Expected Integer value for '{label}'");
+            }
         }
 
         /// <summary>
@@ -157,10 +169,7 @@ namespace RuriLib.LS
         /// </summary>
         /// <param name="input">The reference to the line of code</param>
         /// <returns>The label of the block, if defined</returns>
-        public static string ParseLabel(ref string input)
-        {
-            return ParseToken(ref input, TokenType.Label, false).Substring(1);
-        }
+        public static string ParseLabel(ref string input) => ParseToken(ref input, TokenType.Label, false).Substring(1);
 
         /// <summary>
         /// Makes sure that a specified identifier is present and moves past it. An exception will be thrown if the identifier is not present.
@@ -170,8 +179,11 @@ namespace RuriLib.LS
         public static void EnsureIdentifier(ref string input, string id)
         {
             var token = ParseToken(ref input, TokenType.Parameter, true);
-            if (token.ToUpper() != id.ToUpper())
+
+            if (!token.Equals(id, StringComparison.OrdinalIgnoreCase))
+            {
                 throw new ArgumentException($"Expected identifier '{id}'");
+            }
         }
 
         /// <summary>
@@ -181,14 +193,32 @@ namespace RuriLib.LS
         /// <returns>The type of the token</returns>
         public static TokenType Lookahead(ref string input)
         {
-            var i = 0;
             var token = ParseToken(ref input, TokenType.Parameter, true, false);
-            if (token.Contains("\"")) return TokenType.Literal;
-            else if (token == "->") return TokenType.Arrow;
-            else if (token.StartsWith("#")) return TokenType.Label;
-            else if (token.ToUpper().Contains("=TRUE") || token.ToUpper().Contains("=FALSE")) return TokenType.Boolean;
-            else if (int.TryParse(token, out i)) return TokenType.Integer;
-            else return TokenType.Parameter;
+
+            if (token.Contains("\""))
+            {
+                return TokenType.Literal;
+            }
+            else if (token == "->")
+            {
+                return TokenType.Arrow;
+            }
+            else if (token.StartsWith("#"))
+            {
+                return TokenType.Label;
+            }
+            else if (token.ToUpper().Contains("=TRUE") || token.ToUpper().Contains("=FALSE"))
+            {
+                return TokenType.Boolean;
+            }
+            else if (int.TryParse(token, out _))
+            {
+                return TokenType.Integer;
+            }
+            else
+            {
+                return TokenType.Parameter;
+            }
         }
 
         /// <summary>
@@ -202,9 +232,12 @@ namespace RuriLib.LS
             try
             {
                 var token = ParseToken(ref input, TokenType.Parameter, true, false);
-                return token.ToUpper() == id.ToUpper();
+                return token.Equals(id, StringComparison.OrdinalIgnoreCase);
             }
-            catch { return false; }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -213,25 +246,37 @@ namespace RuriLib.LS
         /// <param name="type">The token type</param>
         /// <returns>The regex pattern to parse the token type</returns>
         private static string GetPattern(TokenType type)
-        {
-            switch (type)
+            => type switch
             {
-                case TokenType.Label:
-                    return "^#[^ ]*";
+                TokenType.Label => "^#[^ ]*",
+                TokenType.Parameter => "^[^ ]*",
+                TokenType.Literal => "\"(\\\\.|[^\\\"])*\"",
+                TokenType.Arrow => "^->",
+                _ => ""
+            };
+    }
 
-                case TokenType.Parameter:
-                    return "^[^ ]*";
+    /// <summary>
+    /// The allowed types of tokens that can be parsed from a line.
+    /// </summary>
+    public enum TokenType
+    {
+        /// <summary>A block label.</summary>
+        Label,
 
-                case TokenType.Literal:
-                    //return "\\\"(\\\\.|[^\\\"])*\\\"";
-                    return "\"(\\\\.|[^\\\"])*\"";
+        /// <summary>A generic parameter, usually an enum value.</summary>
+        Parameter,
 
-                case TokenType.Arrow:
-                    return "^->";
+        /// <summary>A string between double quotes.</summary>
+        Literal,
 
-                default:
-                    return "";
-            }
-        }
+        /// <summary>The character sequence -&gt;.</summary>
+        Arrow,
+
+        /// <summary>A boolean value in the format Name=Value where Name is the name of the property.</summary>
+        Boolean,
+
+        /// <summary>An integer value.</summary>
+        Integer
     }
 }

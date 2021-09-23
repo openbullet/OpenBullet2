@@ -1,4 +1,6 @@
-﻿using RuriLib.Models.Variables;
+﻿using RuriLib.Legacy.Functions.Conditions;
+using RuriLib.Legacy.Models;
+using RuriLib.Models.Variables;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -76,7 +78,12 @@ namespace RuriLib.LS
         /// <summary>
         /// Removes a variable given its name.
         /// </summary>
-        /// <param name="name">The name of the variable to remove</param>
         public void Remove(string name) => Variables.RemoveAll(v => v.Name == name);
+
+        /// <summary>
+        /// Removes all variables that meet a given a condition.
+        /// </summary>
+        public void RemoveAll(Comparer comparer, string name, LSGlobals ls)
+            => Variables.RemoveAll(v => Condition.ReplaceAndVerify(v.Name, comparer, name, ls));
     }
 }

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Numerics;
 using System.Windows.Media;
 
-namespace RuriLib
+namespace RuriLib.Legacy.Blocks
 {
     /// <summary>
     /// The available utility groups.
