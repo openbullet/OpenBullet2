@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Contains methods used to parse tokens from a LoliScript line of code.

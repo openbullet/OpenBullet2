@@ -4,7 +4,7 @@ using RuriLib.Models.Variables;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     public class VariablesList
     {

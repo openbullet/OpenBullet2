@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RuriLib.Legacy.Blocks
 {
@@ -11,9 +8,8 @@ namespace RuriLib.Legacy.Blocks
     /// </summary>
     public class BlockLSCode : BlockBase
     {
-        private string script = "";
         /// <summary>The LoliScript code to display.</summary>
-        public string Script { get { return script; } set { script = value; OnPropertyChanged(); } }
+        public string Script { get; set; } = "";
 
         /// <summary>
         /// Creates a LSCode block.
@@ -31,9 +27,6 @@ namespace RuriLib.Legacy.Blocks
         }
 
         /// <inheritdoc />
-        public override string ToLS(bool indent = true)
-        {
-            return script;
-        }
+        public override string ToLS(bool indent = true) => Script;
     }
 }

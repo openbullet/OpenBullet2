@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Parse a command from LoliScript code.

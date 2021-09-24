@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
+using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
-using RuriLib.LS;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RuriLib.Legacy.Blocks
 {
@@ -43,7 +44,11 @@ namespace RuriLib.Legacy.Blocks
         /// <summary>
         /// Executes the actual block logic.
         /// </summary>
-        public virtual void Process(LSGlobals ls) => ls.BotData.Logger.Log($">> Executing Block {Label} <<", LogColors.ChromeYellow);
+        public virtual Task Process(LSGlobals ls)
+        {
+            ls.BotData.Logger.Log($">> Executing Block {Label} <<", LogColors.ChromeYellow);
+            return Task.CompletedTask;
+        }
         #endregion
 
         #region Variable Replacement

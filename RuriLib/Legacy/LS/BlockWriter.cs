@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Provides useful functions for writing a block as a piece of LoliScript code.

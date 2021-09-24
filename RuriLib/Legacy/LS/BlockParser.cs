@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Parses a block from LoliScript code.
@@ -16,14 +16,11 @@ namespace RuriLib.LS
         /// </summary>
         public static Dictionary<string, Type> BlockMappings { get; set; } = new Dictionary<string, Type>()
         {
-            { "BYPASSCF", typeof(BlockBypassCF) },
             { "SOLVECAPTCHA", typeof(BlockSolveCaptcha) },
             { "REPORTCAPTCHA", typeof(BlockReportCaptcha) },
-            { "CAPTCHA", typeof(BlockImageCaptcha) },
             { "FUNCTION", typeof(BlockFunction) },
             { "KEYCHECK", typeof(BlockKeycheck) },
             { "PARSE", typeof(BlockParse) },
-            { "RECAPTCHA", typeof(BlockRecaptcha) },
             { "REQUEST", typeof(BlockRequest) },
             { "TCP", typeof(BlockTCP) },
             { "UTILITY", typeof(BlockUtility) },

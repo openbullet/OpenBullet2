@@ -5,7 +5,7 @@ using RuriLib.Logging;
 using System;
 using System.Linq;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Parses a DELETE command.

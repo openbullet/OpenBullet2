@@ -3,6 +3,7 @@ using RuriLib.Legacy.Models;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RuriLib.Legacy.Functions.Conditions
 {
@@ -112,13 +113,8 @@ namespace RuriLib.Legacy.Functions.Conditions
         /// <summary>
         /// Verifies if all the provided conditions are true (after replacing).
         /// </summary>
-        /// <param name="conditions">The keycheck conditions</param>
-        /// <param name="data">The BotData used for variable replacement</param>
-        /// <returns>True if all the conditions are verified.</returns>
-        public static bool ReplaceAndVerifyAll(KeycheckCondition[] conditions, BotData data)
-        {
-            return conditions.All(c => ReplaceAndVerify(c, data));
-        }
+        public static bool ReplaceAndVerifyAll(KeycheckCondition[] conditions, LSGlobals ls)
+            => conditions.All(c => ReplaceAndVerify(c, ls));
 
         /// <summary>
         /// Verifies if all the provided conditions are true (without replacing).
@@ -126,20 +122,13 @@ namespace RuriLib.Legacy.Functions.Conditions
         /// <param name="conditions">The keycheck conditions</param>
         /// <returns>True if all the conditions are verified.</returns>
         public static bool VerifyAll(KeycheckCondition[] conditions)
-        {
-            return conditions.All(c => Verify(c));
-        }
+            => conditions.All(c => Verify(c));
 
         /// <summary>
         /// Verifies if at least one of the provided conditions is true (after replacing).
         /// </summary>
-        /// <param name="conditions">The keycheck conditions</param>
-        /// <param name="data">The BotData used for variable replacement</param>
-        /// <returns>True if any condition is verified.</returns>
-        public static bool ReplaceAndVerifyAny(KeycheckCondition[] conditions, BotData data)
-        {
-            return conditions.Any(c => ReplaceAndVerify(c, data));
-        }
+        public static bool ReplaceAndVerifyAny(KeycheckCondition[] conditions, LSGlobals ls)
+            => conditions.Any(c => ReplaceAndVerify(c, ls));
 
         /// <summary>
         /// Verifies if at least one of the provided conditions is true (without replacing).
@@ -147,9 +136,7 @@ namespace RuriLib.Legacy.Functions.Conditions
         /// <param name="conditions">The keycheck conditions</param>
         /// <returns>True if any condition is verified.</returns>
         public static bool VerifyAny(KeycheckCondition[] conditions)
-        {
-            return conditions.Any(c => Verify(c));
-        }
+            => conditions.Any(c => Verify(c));
     }
 
     

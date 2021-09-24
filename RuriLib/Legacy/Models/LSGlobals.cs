@@ -1,4 +1,4 @@
-﻿using RuriLib.LS;
+﻿using RuriLib.Legacy.LS;
 using RuriLib.Models.Bots;
 using System.Collections.Generic;
 

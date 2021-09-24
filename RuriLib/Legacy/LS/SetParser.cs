@@ -5,7 +5,7 @@ using RuriLib.Models.Proxies;
 using RuriLib.Models.Variables;
 using System;
 
-namespace RuriLib.LS
+namespace RuriLib.Legacy.LS
 {
     /// <summary>
     /// Parses a SET command.
