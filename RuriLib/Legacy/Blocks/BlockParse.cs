@@ -1,132 +1,89 @@
-﻿using AngleSharp.Html.Parser;
-using Extreme.Net;
-using Newtonsoft.Json.Linq;
-using RuriLib.LS;
-using RuriLib.Utils.Parsing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Windows.Media;
 using System.Linq;
+using RuriLib.Legacy.LS;
+using RuriLib.Legacy.Models;
+using System.Threading.Tasks;
+using RuriLib.Functions.Parsing;
+using Newtonsoft.Json.Linq;
 
 namespace RuriLib.Legacy.Blocks
 {
-    /// <summary>
-    /// The allowed parsing algorithms.
-    /// </summary>
-    public enum ParseType
-    {
-        /// <summary>Algorithm that parses text between two strings.</summary>
-        LR,
-
-        /// <summary>Algorithm that parses a given attribute from an HTML element identified by a CSS Selector.</summary>
-        CSS,
-
-        /// <summary>Algorithm that parses values inside a json object.</summary>
-        JSON,
-
-        /// <summary>Algorithm that parses a given attribute from an HTML element identified by xpath.</summary>
-        XPATH,
-
-        /// <summary>Algorithm that extracts the text inside matched regex groups.</summary>
-        REGEX
-    }
-
     /// <summary>
     /// A block that parses data from a string.
     /// </summary>
     public class BlockParse : BlockBase
     {
-        private string parseTarget = "<SOURCE>";
         /// <summary>The string to parse data from.</summary>
-        public string ParseTarget { get { return parseTarget; } set { parseTarget = value; OnPropertyChanged(); } }
+        public string ParseTarget { get; set; } = "<SOURCE>";
 
-        private string variableName = "";
         /// <summary>The name of the output variable where the parsed text will be stored.</summary>
-        public string VariableName { get { return variableName; } set { variableName = value; OnPropertyChanged(); } }
+        public string VariableName { get; set; } = "";
 
-        private bool isCapture = false;
         /// <summary>Whether the output variable should be marked as Capture.</summary>
-        public bool IsCapture { get { return isCapture; } set { isCapture = value; OnPropertyChanged(); } }
+        public bool IsCapture { get; set; } = false;
 
-        private string prefix = "";
         /// <summary>The string to add to the beginning of the parsed data.</summary>
-        public string Prefix { get { return prefix; } set { prefix = value; OnPropertyChanged(); } }
+        public string Prefix { get; set; } = "";
 
-        private string suffix = "";
         /// <summary>The string to add to the end of the parsed data.</summary>
-        public string Suffix { get { return suffix; } set { suffix = value; OnPropertyChanged(); } }
+        public string Suffix { get; set; } = "";
 
-        private bool recursive = false;
         /// <summary>Whether to parse multiple values that match the criteria or just the first one.</summary>
-        public bool Recursive { get { return recursive; } set { recursive = value; OnPropertyChanged(); } }
+        public bool Recursive { get; set; } = false;
 
-        private bool dotMatches = false;
         /// <summary>Whether Regex . matches over multiple lines.</summary>
-        public bool DotMatches { get { return dotMatches; } set { dotMatches = value; OnPropertyChanged(); } }
+        public bool DotMatches { get; set; } = false;
 
-        private bool caseSensitive = true;
         /// <summary>Whether Regex matches are case sensitive.</summary>
-        public bool CaseSensitive { get { return caseSensitive; } set { caseSensitive = value; OnPropertyChanged(); } }
+        public bool CaseSensitive { get; set; } = true;
 
-        private bool encodeOutput = false;
         /// <summary>Whether to URL encode the parsed text.</summary>
-        public bool EncodeOutput { get { return encodeOutput; } set { encodeOutput = value; OnPropertyChanged(); } }
+        public bool EncodeOutput { get; set; } = false;
 
-        private bool createEmpty = true;
         /// <summary>Whether to create the variable with an empty value if the parsing was not successful.</summary>
-        public bool CreateEmpty { get { return createEmpty; } set { createEmpty = value; OnPropertyChanged(); } }
+        public bool CreateEmpty { get; set; } = true;
 
-        private ParseType type = ParseType.LR;
         /// <summary>The parsing algorithm being used.</summary>
-        public ParseType Type { get { return type; } set { type = value; OnPropertyChanged(); } }
+        public ParseType Type { get; set; } = ParseType.LR;
 
         #region LR
-        private string leftString = "";
         /// <summary>The string to the immediate left of the text to parse. An empty string means the start of the input.</summary>
-        public string LeftString { get { return leftString; } set { leftString = value; OnPropertyChanged(); } }
+        public string LeftString { get; set; } = "";
 
-        private string rightString = "";
         /// <summary>The string to the immediate right of the text to parse. An empty string means the end of the input.</summary>
-        public string RightString { get { return rightString; } set { rightString = value; OnPropertyChanged(); } }
+        public string RightString { get; set; } = "";
 
-        private bool useRegexLR = false;
         /// <summary>Whether to use a regex pattern to match a text between two strings instead of the standard algorithm.</summary>
-        public bool UseRegexLR { get { return useRegexLR; } set { useRegexLR = value; OnPropertyChanged(); } }
+        public bool UseRegexLR { get; set; } = false;
         #endregion
 
         #region CSS
-        private string cssSelector = "";
         /// <summary>The CSS selector that addresses the desired element in the HTML page.</summary>
-        public string CssSelector { get { return cssSelector; } set { cssSelector = value; OnPropertyChanged(); } }
+        public string CssSelector { get; set; } = "";
 
-        private string attributeName = "";
         /// <summary>The name of the attribute from which to parse the value.</summary>
-        public string AttributeName { get { return attributeName; } set { attributeName = value; OnPropertyChanged(); } }
+        public string AttributeName { get; set; } = "";
 
-        private int cssElementIndex = 0;
         /// <summary>The index of the desired element when the selector matches multiple elements.</summary>
-        public int CssElementIndex { get { return cssElementIndex; } set { cssElementIndex = value; OnPropertyChanged(); } }
+        public int CssElementIndex { get; set; } = 0;
         #endregion
 
         #region JSON
-        private string jsonField = "";
         /// <summary>The name of the json field for which we want to retrieve the value.</summary>
-        public string JsonField { get { return jsonField; } set { jsonField = value; OnPropertyChanged(); } }
+        public string JsonField { get; set; } = "";
 
-        private bool jTokenParsing = false;
         /// <summary>Whether to parse the json object using jtoken paths.</summary>
-        public bool JTokenParsing { get { return jTokenParsing; } set { jTokenParsing = value; OnPropertyChanged(); } }
+        public bool JTokenParsing { get; set; } = false;
         #endregion
 
         #region REGEX
-        private string regexString = "";
         /// <summary>The regex pattern that matches parts of the text inside groups.</summary>
-        public string RegexString { get { return regexString; } set { regexString = value; OnPropertyChanged(); } }
+        public string RegexString { get; set; } = "";
 
-        private string regexOutput = "";
         /// <summary>The way the content of the matched groups should be formatted. [0] will be replaced with the full match, [1] with the first group etc.</summary>
-        public string RegexOutput { get { return regexOutput; } set { regexOutput = value; OnPropertyChanged(); } }
+        public string RegexOutput { get; set; } = "";
         #endregion
 
         /// <summary>
@@ -283,42 +240,149 @@ namespace RuriLib.Legacy.Blocks
         }
 
         /// <inheritdoc />
-        public override void Process(BotData data)
+        public override async Task Process(LSGlobals ls)
         {
-            base.Process(data);
+            var data = ls.BotData;
+            await base.Process(ls);
 
-            var original = ReplaceValues(parseTarget, data);
-            var list = new List<string>();
-
-            // Parse the value
-            switch (Type)
+            var original = ReplaceValues(ParseTarget, ls);
+            var list = Type switch
             {
-                case ParseType.LR:
-                    list = Parse.LR(original, ReplaceValues(leftString, data), ReplaceValues(rightString, data), recursive, useRegexLR).ToList();
-                    break;
+                ParseType.LR => ParseLR(original, ReplaceValues(LeftString, ls), ReplaceValues(RightString, ls), UseRegexLR),
+                ParseType.CSS => ParseCSS(original, ReplaceValues(CssSelector, ls), ReplaceValues(AttributeName, ls)),
+                ParseType.JSON => ParseJSON(original, ReplaceValues(JsonField, ls), JTokenParsing),
+                ParseType.REGEX => ParseREGEX(original, ReplaceValues(RegexString, ls), ReplaceValues(RegexOutput, ls), DotMatches, CaseSensitive),
+                _ => throw new NotImplementedException()
+            };
 
-                case ParseType.CSS:
-                    list = Parse.CSS(original, ReplaceValues(cssSelector, data), ReplaceValues(attributeName, data), cssElementIndex, recursive).ToList();
-                    break;
-
-                case ParseType.JSON:
-                    list = Parse.JSON(original, ReplaceValues(jsonField, data), recursive, jTokenParsing).ToList();
-                    break;
-
-                case ParseType.XPATH:
-                    throw new NotImplementedException("XPATH parsing is not implemented yet");
-
-                case ParseType.REGEX:
-                    RegexOptions regexOptions = new RegexOptions();
-                    if (dotMatches)
-                        regexOptions |= RegexOptions.Singleline;
-                    if (caseSensitive == false)
-                        regexOptions |= RegexOptions.IgnoreCase;
-                    list = Parse.REGEX(original, ReplaceValues(regexString, data), ReplaceValues(regexOutput, data), recursive, regexOptions).ToList();
-                    break;
+            if (!Recursive && Type == ParseType.CSS)
+            {
+                list = new List<string> { list[CssElementIndex] };
             }
 
-            InsertVariable(data, isCapture, recursive, list, variableName, prefix, suffix, encodeOutput, createEmpty);
+            InsertVariable(ls, IsCapture, Recursive, list, VariableName, Prefix, Suffix, EncodeOutput, CreateEmpty);
         }
+
+        private static List<string> ParseLR(string original, string left, string right, bool useRegex)
+        {
+            List<string> list;
+
+            if (!useRegex)
+            {
+                list = LRParser.ParseBetween(original, left, right).ToList();
+            }
+            else
+            {
+                list = new();
+                var pattern = BuildLRPattern(left, right);
+                
+                foreach (Match match in Regex.Matches(original, pattern))
+                {
+                    list.Add(match.Value);
+                }
+            }
+
+            return list;
+        }
+
+        private static List<string> ParseCSS(string original, string selector, string attributeName)
+            => HtmlParser.QueryAttributeAll(original, selector, attributeName).ToList();
+
+        private static List<string> ParseJSON(string original, string fieldName, bool jTokenParsing)
+        {
+            if (jTokenParsing)
+            {
+                return JsonParser.GetValuesByKey(original, fieldName).ToList();
+            }
+
+            var list = new List<string>();
+            var jsonlist = new List<KeyValuePair<string, string>>();
+            ParseJSON("", original, jsonlist);
+
+            foreach (var j in jsonlist)
+            {
+                if (j.Key == fieldName)
+                {
+                    list.Add(j.Value);
+                }
+            }
+
+            return list;
+        }
+
+        private static List<string> ParseREGEX(string original, string pattern, string format, bool multiLine, bool caseSensitive)
+        {
+            var regexOptions = new RegexOptions();
+
+            if (multiLine)
+            {
+                regexOptions |= RegexOptions.Singleline;
+            }
+            if (!caseSensitive)
+            {
+                regexOptions |= RegexOptions.IgnoreCase;
+            }
+
+            return RegexParser.MatchGroupsToString(original, pattern, format, regexOptions).ToList();
+        }
+
+        private static string BuildLRPattern(string ls, string rs)
+        {
+            var left = string.IsNullOrEmpty(ls) ? "^" : Regex.Escape(ls); // Empty LEFT = start of the line
+            var right = string.IsNullOrEmpty(rs) ? "$" : Regex.Escape(rs); // Empty RIGHT = end of the line
+            return "(?<=" + left + ").+?(?=" + right + ")";
+        }
+
+        private static void ParseJSON(string A, string B, List<KeyValuePair<string, string>> jsonlist)
+        {
+            jsonlist.Add(new KeyValuePair<string, string>(A, B));
+
+            if (B.StartsWith("["))
+            {
+                JArray arr;
+
+                try
+                {
+                    arr = JArray.Parse(B);
+                }
+                catch
+                {
+                    return;
+                }
+
+                foreach (var i in arr.Children())
+                {
+                    ParseJSON("", i.ToString(), jsonlist);
+                }
+            }
+
+            if (B.Contains("{"))
+            {
+                JObject obj;
+
+                try
+                {
+                    obj = JObject.Parse(B);
+                }
+                catch
+                {
+                    return;
+                }
+
+                foreach (var o in obj)
+                {
+                    ParseJSON(o.Key, o.Value.ToString(), jsonlist);
+                }
+            }
+        }
+    }
+
+    public enum ParseType
+    {
+        LR,
+        CSS,
+        JSON,
+        XPATH,
+        REGEX
     }
 }
