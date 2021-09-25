@@ -219,17 +219,25 @@ namespace OpenBullet2.Pages
             
             foreach (var wordlist in toDelete)
             {
-                var jobsUsingSelectedWordlist = Manager.Jobs.OfType<MultiRunJob>().Where(j => j.DataPool is WordlistDataPool wl && wl.Wordlist.Id == selectedWordlist.Id);
-
-                if (jobsUsingSelectedWordlist.Any(j => j.Status != JobStatus.Idle))
+                // This can throw but it's not an essential operation so we can safely ignore exceptions
+                try
                 {
-                    await js.AlertError(Loc["Uh-Oh"], Loc["WordlistInUse"]);
-                    return;
+                    var jobsUsingSelectedWordlist = Manager.Jobs.OfType<MultiRunJob>().Where(j => j.DataPool is WordlistDataPool wl && wl.Wordlist.Id == selectedWordlist.Id);
+
+                    if (jobsUsingSelectedWordlist.Any(j => j.Status != JobStatus.Idle))
+                    {
+                        await js.AlertError(Loc["Uh-Oh"], Loc["WordlistInUse"]);
+                        return;
+                    }
+
+                    foreach (var job in jobsUsingSelectedWordlist.Where(j => j.Status == JobStatus.Idle))
+                    {
+                        job.DataPool = new InfiniteDataPool();
+                    }
                 }
-
-                foreach (var job in jobsUsingSelectedWordlist.Where(j => j.Status == JobStatus.Idle))
+                catch
                 {
-                    job.DataPool = new InfiniteDataPool();
+
                 }
             }
 
