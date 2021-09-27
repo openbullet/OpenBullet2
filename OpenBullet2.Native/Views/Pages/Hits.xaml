@@ -207,7 +207,7 @@
                     </GridViewColumn>
                     <GridViewColumn Width="5000" DisplayMemberBinding="{Binding CapturedData}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="CapturedString" Click="ColumnHeaderClicked">Captured Data</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="CapturedData" Click="ColumnHeaderClicked">Captured Data</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView>
