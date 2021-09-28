@@ -25,10 +25,11 @@ namespace OpenBullet2.Native.ViewModels
             {
                 hitsCollection = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
             }
         }
 
-        public int Total => HitsCollection.Count;
+        public int Total => ((CollectionView)CollectionViewSource.GetDefaultView(HitsCollection)).Count;
 
         private string searchString = string.Empty;
         public string SearchString
