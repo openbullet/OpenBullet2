@@ -400,6 +400,25 @@ Body:
             return output;
         }
 
+        [Block("Gets a mail in EML format")]
+        public static async Task<byte[]> ImapReadMailRaw(BotData data, string id)
+        {
+            data.Logger.LogHeader();
+
+            var inbox = GetOpenInbox(data);
+            var uniqueId = new UniqueId(uint.Parse(id));
+            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
+
+            using var ms = new MemoryStream();
+            await mail.WriteToAsync(ms, data.CancellationToken);
+            ms.Seek(0, SeekOrigin.Begin);
+            var bytes = ms.ToArray();
+
+            data.Logger.Log($"Received {bytes.Length} bytes", LogColors.DarkOrchid);
+
+            return bytes;
+        }
+
         [Block("Deletes a mail", name = "Delete Mail")]
         public static async Task ImapDeleteMail(BotData data, string id)
         {
