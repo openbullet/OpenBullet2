@@ -24,6 +24,7 @@ namespace OpenBullet2.Shared.Forms
         private ProxyType defaultType = ProxyType.Http;
         private string defaultUsername = "";
         private string defaultPassword = "";
+        private bool canImportFile = false;
 
         private void ImportFromPaste() => ReturnLines(pasteContent);
         private void ImportFromFile() => ReturnLines(fileContent);
@@ -44,6 +45,9 @@ namespace OpenBullet2.Shared.Forms
                     using var reader = new StreamReader(file.OpenReadStream(10 * 1000 * 1024));
                     fileContent += await reader.ReadToEndAsync() + Environment.NewLine;
                 }
+
+                canImportFile = true;
+                await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
             {

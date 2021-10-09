@@ -13,7 +13,11 @@
             <RadzenTabsItem Text="@Loc["File"]">
                 <EditForm Model="fileName">
                     <InputFile OnChange="@ProcessFile" multiple />
-                    <button type="submit" class="btn btn-outline-success" @onclick="ImportFromFile">@Loc["Import"]</button>
+                    <button type="submit" class="btn btn-outline-success"
+                            style="display: @(canImportFile ? "block" : "none")"
+                            @onclick="ImportFromFile">
+                        @Loc["Import"]
+                    </button>
                 </EditForm>
             </RadzenTabsItem>
             <RadzenTabsItem Text="@Loc["URL"]">
