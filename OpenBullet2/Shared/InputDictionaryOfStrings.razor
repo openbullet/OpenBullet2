@@ -3,7 +3,10 @@
 <InputTextArea class="@CssClass" @oninput="OnDictionaryChanged" @bind-Value="joinedDict" />
 
 @code {
+    private string joinedDict;
+    private bool initialized = false;
     private Dictionary<string, string> dictionary;
+
     [Parameter]
     public Dictionary<string, string> Dictionary
     {
@@ -11,18 +14,21 @@
         set
         {
             dictionary = value ?? new Dictionary<string, string>();
-            joinedDict = string.Join(Environment.NewLine, dictionary.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+
+            if (!initialized)
+            {
+                initialized = true;
+                joinedDict = string.Join(Environment.NewLine, dictionary.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+            }
         }
     }
 
     [Parameter] public EventCallback<Dictionary<string, string>> DictionaryChanged { get; set; }
     [Parameter] public string CssClass { get; set; }
 
-    private string joinedDict;
-
     private Task OnDictionaryChanged(ChangeEventArgs e)
     {
-        Dictionary = e.Value.ToString().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+        dictionary = e.Value.ToString().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
             .Where(v => v.Contains(':'))
             .Select(v => v.Split(':', 2))
             .DistinctBy(v => v[0])
