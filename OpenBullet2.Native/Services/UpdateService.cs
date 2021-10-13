@@ -13,8 +13,8 @@ namespace OpenBullet2.Native.Services
         private readonly string versionFile = "version.txt";
         private readonly Timer timer;
 
-        public Version CurrentVersion { get; private set; } = new(0, 1, 25);
-        public Version RemoteVersion { get; private set; } = new(0, 1, 25);
+        public Version CurrentVersion { get; private set; } = new(0, 1, 26);
+        public Version RemoteVersion { get; private set; } = new(0, 1, 26);
         public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
         public string CurrentVersionType => CurrentVersion.Major == 0
             ? (CurrentVersion.Minor == 0 ? "Alpha" : "Beta")
