@@ -1,8 +1,8 @@
-﻿using RuriLib.Functions.Conditions;
-using RuriLib.LS;
-using RuriLib.Models;
-using System;
+﻿using RuriLib.Legacy.Functions.Conditions;
+using RuriLib.Legacy.LS;
+using RuriLib.Legacy.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RuriLib.Legacy.Blocks
 {
@@ -11,16 +11,14 @@ namespace RuriLib.Legacy.Blocks
     /// </summary>
     public class BlockKeycheck : BlockBase
     {
-        private bool banOn4XX = false;
         /// <summary>Whether to set the bot status to BAN if the last HTTP code was of type 4.</summary>
-        public bool BanOn4XX { get { return banOn4XX; } set { banOn4XX = value; OnPropertyChanged(); } }
+        public bool BanOn4XX { get; set; } = false;
 
-        private bool banOnToCheck = true;
         /// <summary>Whether to set the bot status as BAN if no keychain was valid.</summary>
-        public bool BanOnToCheck { get { return banOnToCheck; } set { banOnToCheck = value; OnPropertyChanged(); } }
+        public bool BanOnToCheck { get; set; } = true;
 
         /// <summary>The list of all keychains.</summary>
-        public List<KeyChain> KeyChains = new List<KeyChain>();        
+        public List<KeyChain> KeyChains = new();
 
         /// <summary>
         /// Creates a KeyCheck block.
@@ -54,14 +52,14 @@ namespace RuriLib.Legacy.Blocks
 
                 KeyChain kc = new KeyChain();
 
-                kc.Type = (KeyChain.KeychainType)LineParser.ParseEnum(ref input, "Keychain Type", typeof(KeyChain.KeychainType));
-                if (kc.Type == KeyChain.KeychainType.Custom && LineParser.Lookahead(ref input) == TokenType.Literal)
+                kc.Type = (KeychainType)LineParser.ParseEnum(ref input, "Keychain Type", typeof(KeychainType));
+                if (kc.Type == KeychainType.Custom && LineParser.Lookahead(ref input) == TokenType.Literal)
                     kc.CustomType = LineParser.ParseLiteral(ref input, "Custom Type");
-                kc.Mode = (KeyChain.KeychainMode)LineParser.ParseEnum(ref input, "Keychain Mode", typeof(KeyChain.KeychainMode));
+                kc.Mode = (KeychainMode)LineParser.ParseEnum(ref input, "Keychain Mode", typeof(KeychainMode));
 
                 while (!input.StartsWith("KEYCHAIN") && input != string.Empty) // Scan for keys
                 {
-                    Key k = new Key();
+                    var k = new Key();
                     LineParser.EnsureIdentifier(ref input, "KEY");
 
                     var first = LineParser.ParseLiteral(ref input, "Left Term");
@@ -107,7 +105,7 @@ namespace RuriLib.Legacy.Blocks
                     .Token("KEYCHAIN")
                     .Token(kc.Type);
 
-                if (kc.Type == KeyChain.KeychainType.Custom)
+                if (kc.Type == KeychainType.Custom)
                     writer.Literal(kc.CustomType);
 
                 writer.Token(kc.Mode);
@@ -139,62 +137,68 @@ namespace RuriLib.Legacy.Blocks
         }
 
         /// <inheritdoc />
-        public override void Process(BotData data)
-        {   
-            base.Process(data);
+        public override async Task Process(LSGlobals ls)
+        {
+            var data = ls.BotData;
+            await base.Process(ls);
 
-            if (data.ResponseCode.StartsWith("4") && banOn4XX)
+            if (data.RESPONSECODE % 100 == 4 && BanOn4XX)
             {
-                data.Status = BotStatus.BAN;
+                data.STATUS = "BAN";
                 return;
             }
 
             // Check Global Keys
-            foreach (var key in data.GlobalSettings.Proxies.GlobalBanKeys)
+            if (data.Providers.ProxySettings.ContainsBanKey(data.SOURCE, out string _))
             {
-                if (key != string.Empty && data.ResponseSource.Contains(key))
-                {
-                    data.Status = BotStatus.BAN;
-                    return;
-                }
+                data.STATUS = "BAN";
+                return;
+            }
+
+            // Check Retry Keys
+            if (data.Providers.ProxySettings.ContainsRetryKey(data.SOURCE, out string _))
+            {
+                data.STATUS = "RETRY";
+                return;
             }
 
             // KEYS WILL BE CHECKED IN THE ORDER IN WHICH THEY APPEAR IN THE LIST, THE LAST KEY HAS ABSOLUTE PRIORITY
-            bool found = false;
+            var found = false;
             foreach (var keychain in KeyChains)
             {
-                if (keychain.CheckKeys(data))
+                if (keychain.CheckKeys(ls))
                 {
                     found = true;
                     switch (keychain.Type)
                     {
-                        case KeyChain.KeychainType.Success:
-                            data.Status = BotStatus.SUCCESS;
+                        case KeychainType.Success:
+                            data.STATUS = "SUCCESS";
                             break;
 
-                        case KeyChain.KeychainType.Failure:
-                            data.Status = BotStatus.FAIL;
+                        case KeychainType.Failure:
+                            data.STATUS = "FAIL";
                             break;
 
-                        case KeyChain.KeychainType.Ban:
-                            data.Status = BotStatus.BAN;
+                        case KeychainType.Ban:
+                            data.STATUS = "BAN";
                             break;
 
-                        case KeyChain.KeychainType.Retry:
-                            data.Status = BotStatus.RETRY;
+                        case KeychainType.Retry:
+                            data.STATUS = "RETRY";
                             break;
 
-                        case KeyChain.KeychainType.Custom:
-                            data.Status = BotStatus.CUSTOM;
-                            data.CustomStatus = keychain.CustomType;
+                        case KeychainType.Custom:
+                            data.STATUS = keychain.CustomType;
                             break;
                     }
                 }
             }
 
             // If at the end no key was found, set it to ban
-            if (!found && banOnToCheck)
-                data.Status = BotStatus.BAN;
+            if (!found && BanOnToCheck)
+            {
+                data.STATUS = "BAN";
+            }
         }
     }
 }
