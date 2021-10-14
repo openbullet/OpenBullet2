@@ -22,5 +22,7 @@ namespace RuriLib.Models.Variables
 
         public override Dictionary<string, string> AsDictionaryOfStrings()
             => value;
+
+        public override object AsObject() => value;
     }
 }

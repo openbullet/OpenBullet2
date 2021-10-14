@@ -23,7 +23,7 @@ namespace RuriLib.Legacy.Blocks
 
         /// <summary>Whether the block is a captcha-related block.</summary>
         [JsonIgnore]
-        public bool IsCaptcha => GetType() == typeof(BlockSolveCaptcha);
+        public bool IsCaptcha => GetType().Name.Contains("Captcha", StringComparison.OrdinalIgnoreCase);
 
         #region Virtual methods
         /// <summary>

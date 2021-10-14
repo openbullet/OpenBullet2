@@ -2,11 +2,20 @@
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Jint;
+using RuriLib.Extensions;
+using RuriLib.Legacy.Blocks;
+using RuriLib.Legacy.Exceptions;
+using RuriLib.Legacy.Functions.Conditions;
+using RuriLib.Legacy.Models;
+using RuriLib.Logging;
+using RuriLib.Models.Bots;
+using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RuriLib.Legacy.LS
 {
@@ -20,7 +29,7 @@ namespace RuriLib.Legacy.LS
 
         // Runtime counter
         private int i = 0;
-        private string[] lines = new string[] { };
+        private string[] lines = Array.Empty<string>();
 
         // Needed for BEGIN SCRIPT directives
         private string otherScript = "";
@@ -29,38 +38,11 @@ namespace RuriLib.Legacy.LS
         /// <summary>The current line being processed.</summary>
         public string CurrentLine { get; set; } = "";
 
-        /// <summary>The next block to be processed. Empty if the script has no more blocks to execute.</summary>
-        public string NextBlock
-        {
-            get
-            {
-                for (int j = i; j < lines.Count(); j++)
-                {
-                    var line = lines[j];
-                    if (IsEmptyOrCommentOrDisabled(line) || !BlockParser.IsBlock(line)) continue;
-
-                    var label = "";
-                    if (lines[j].StartsWith("#")) label = LineParser.ParseLabel(ref line);
-                    var blockName = LineParser.ParseToken(ref line, TokenType.Parameter, false, false);
-
-                    if (label != string.Empty) return $"{blockName} ({label})";
-                    else return blockName;
-                }
-                return "";
-            }
-        }
-
         /// <summary>The current block being processed.</summary>
         public string CurrentBlock { get; set; } = "";
 
         /// <summary>Whether the script can proceed the execution or not.</summary>
-        public bool CanProceed
-        {
-            get
-            {
-                return i < lines.Count() && lines.Skip(i).Any(l => !IsEmptyOrCommentOrDisabled(l));
-            }
-        }
+        public bool CanProceed => i < lines.Length && lines.Skip(i).Any(l => !IsEmptyOrCommentOrDisabled(l));
 
         /// <summary>
         /// Constructs a LoliScript object with an empty script.
@@ -86,14 +68,14 @@ namespace RuriLib.Legacy.LS
         /// <returns></returns>
         public List<BlockBase> ToBlocks()
         {
-            List<BlockBase> list = new List<BlockBase>();
-            var compressed = CompressedLines;
-            List<string> buffer = new List<string>();
+            var list = new List<BlockBase>();
+            var compressed = GetCompressedLines();
+            var buffer = new List<string>();
             var isScript = false;
 
-            foreach (var c in compressed.Where(c => !string.IsNullOrEmpty(c.Trim())))
+            foreach (var compressedLine in compressed.Where(c => !string.IsNullOrEmpty(c.Trim())))
             {
-                if (!isScript && BlockParser.IsBlock(c))
+                if (!isScript && BlockParser.IsBlock(compressedLine))
                 {
                     if (buffer.Count > 0)
                     {
@@ -104,21 +86,26 @@ namespace RuriLib.Legacy.LS
 
                     try
                     {
-                        list.Add(BlockParser.Parse(c));
+                        list.Add(BlockParser.Parse(compressedLine));
                     }
                     catch (Exception ex)
                     {
-                        var line = c;
-                        line = BlockBase.TruncatePretty(line, 50);
+                        var line = compressedLine.TruncatePretty(50);
                         throw new Exception($"Exception while parsing block {line}\nReason: {ex.Message}");
                     }
                 }
                 else
                 {
-                    buffer.Add(c);
+                    buffer.Add(compressedLine);
 
-                    if (c.StartsWith("BEGIN SCRIPT")) isScript = true;
-                    else if (c.StartsWith("END SCRIPT")) isScript = false;
+                    if (compressedLine.StartsWith("BEGIN SCRIPT"))
+                    {
+                        isScript = true;
+                    }
+                    else if (compressedLine.StartsWith("END SCRIPT"))
+                    {
+                        isScript = false;
+                    }
                 }
             }
 
@@ -164,17 +151,15 @@ namespace RuriLib.Legacy.LS
         /// Executes a line of the script.
         /// </summary>
         /// <param name="data">The BotData needed for variable replacement</param>
-        public void TakeStep(BotData data)
+        public async Task TakeStep(LSGlobals ls)
         {
-            // Clean the inner Log
-            data.LogBuffer.Clear();
+            var data = ls.BotData;
 
             // TODO: Refactor this with a properly written policy
             // If we have a custom status without forced continue OR we have a status that is not NONE or SUCCESS or CUSTOM
-            if ((data.Status == BotStatus.CUSTOM && !data.ConfigSettings.ContinueOnCustom) ||
-                (data.Status != BotStatus.NONE && data.Status != BotStatus.SUCCESS && data.Status != BotStatus.CUSTOM))
+            if (!CanContinue(data))
             {
-                i = lines.Count(); // Go to the end
+                i = lines.Length; // Go to the end
                 return;
             }
 
@@ -193,12 +178,18 @@ namespace RuriLib.Legacy.LS
             var lookahead = 0;
 
             // Join the line with the following ones if it's indented
-            while (i + 1 + lookahead < lines.Count())
+            while (i + 1 + lookahead < lines.Length)
             {
                 var nextLine = lines[i + 1 + lookahead];
+
                 if (nextLine.StartsWith(" ") || nextLine.StartsWith("\t"))
+                {
                     CurrentLine += $" {nextLine.Trim()}";
-                else break;
+                }
+                else
+                {
+                    break;
+                }
 
                 lookahead++;
             }
@@ -214,22 +205,21 @@ namespace RuriLib.Legacy.LS
                         block = BlockParser.Parse(CurrentLine);
                         CurrentBlock = block.Label;
                         if (!block.Disabled)
-                            block.Process(data);
+                        {
+                            await block.Process(ls);
+                        }
                     }
                     catch (Exception ex)
                     {
                         // We log the error message
-                        data.LogBuffer.Add(new LogEntry("ERROR: " + ex.Message, Colors.Tomato));
+                        var errorMessage = data.Providers.GeneralSettings.VerboseMode ? ex.ToString() : ex.Message;
+                        data.Logger.Log("ERROR: " + errorMessage, LogColors.Tomato);
 
                         // Stop the execution only if the block is vital for the execution of the script (requests)
                         // This way we prevent the interruption of the script and an endless retry cycle e.g. if we fail to parse a response given a specific input
-                        if (block != null && (
-                            block.GetType() == typeof(BlockRequest) ||
-                            block.GetType() == typeof(BlockBypassCF) ||
-                            block.GetType() == typeof(BlockImageCaptcha) ||
-                            block.GetType() == typeof(BlockRecaptcha)))
+                        if (block != null && block is BlockRequest)
                         {
-                            data.Status = BotStatus.ERROR;
+                            data.STATUS = "ERROR";
                             throw new BlockProcessingException(ex.Message);
                         }
                     }
@@ -240,13 +230,14 @@ namespace RuriLib.Legacy.LS
                 {
                     try
                     {
-                        var action = CommandParser.Parse(CurrentLine, data);
+                        var action = CommandParser.Parse(CurrentLine, ls);
                         action?.Invoke();
                     }
                     catch (Exception ex)
                     {
-                        data.LogBuffer.Add(new LogEntry("ERROR: " + ex.Message, Colors.Tomato));
-                        data.Status = BotStatus.ERROR;
+                        var errorMessage = data.Providers.GeneralSettings.VerboseMode ? ex.ToString() : ex.Message;
+                        data.Logger.Log("ERROR: " + errorMessage, LogColors.Tomato);
+                        data.STATUS = "ERROR";
                     }
                 }
 
@@ -255,21 +246,22 @@ namespace RuriLib.Legacy.LS
                 {
                     var cfLine = CurrentLine;
                     var token = LineParser.ParseToken(ref cfLine, TokenType.Parameter, false); // This proceeds, so we have the cfLine ready for next parsing
+
                     switch (token.ToUpper())
                     {
                         case "IF":
                             // Check condition, if not true jump to line after first ELSE or ENDIF (check both at the same time on lines, not separately)
-                            if (!ParseCheckCondition(ref cfLine, data))
+                            if (!ParseCheckCondition(ref cfLine, ls))
                             {
                                 i = ScanFor(lines, i, true, new string[] { "ENDIF", "ELSE" });
-                                data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 1}", Colors.White));
+                                data.Logger.Log($"Jumping to line {i + 1}", LogColors.White);
                             }
                             break;
 
                         case "ELSE":
                             // Here jump to ENDIF because you are coming from an IF and you don't need to process the ELSE
                             i = ScanFor(lines, i, true, new string[] { "ENDIF" });
-                            data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 1}", Colors.White));
+                            data.Logger.Log($"Jumping to line {i + 1}", LogColors.White);
                             break;
 
                         case "ENDIF":
@@ -277,17 +269,17 @@ namespace RuriLib.Legacy.LS
 
                         case "WHILE":
                             // Check condition, if false jump to first index after ENDWHILE
-                            if (!ParseCheckCondition(ref cfLine, data))
+                            if (!ParseCheckCondition(ref cfLine, ls))
                             {
                                 i = ScanFor(lines, i, true, new string[] { "ENDWHILE" });
-                                data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 1}", Colors.White));
+                                data.Logger.Log($"Jumping to line {i + 1}", LogColors.White);
                             }
                             break;
 
                         case "ENDWHILE":
                             // Jump back to the previous WHILE index
                             i = ScanFor(lines, i, false, new string[] { "WHILE" }) - 1;
-                            data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 1}", Colors.White));
+                            data.Logger.Log($"Jumping to line {i + 1}", LogColors.White);
                             break;
 
                         case "JUMP":
@@ -296,7 +288,7 @@ namespace RuriLib.Legacy.LS
                             {
                                 label = LineParser.ParseToken(ref cfLine, TokenType.Label, true);
                                 i = ScanFor(lines, -1, true, new string[] { $"{label}" }) - 1;
-                                data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 2}", Colors.White));
+                                data.Logger.Log($"Jumping to line {i + 2}", LogColors.White);
                             }
                             catch { throw new Exception($"No block with label {label} was found"); }
                             break;
@@ -307,16 +299,19 @@ namespace RuriLib.Legacy.LS
                             {
                                 case "SCRIPT":
                                     language = (ScriptingLanguage)LineParser.ParseEnum(ref cfLine, "LANGUAGE", typeof(ScriptingLanguage));
-                                    int end = 0;
+                                    var end = 0;
                                     try
                                     {
                                         end = ScanFor(lines, i, true, new string[] { "END" }) - 1;
                                     }
-                                    catch { throw new Exception("No 'END SCRIPT' specified"); }
+                                    catch
+                                    {
+                                        throw new Exception("No 'END SCRIPT' specified");
+                                    }
 
                                     otherScript = string.Join(Environment.NewLine, lines.Skip(i + 1).Take(end - i));
                                     i = end;
-                                    data.LogBuffer.Add(new LogEntry($"Jumping to line {i + 2}", Colors.White));
+                                    data.Logger.Log($"Jumping to line {i + 2}", LogColors.White);
                                     break;
                             }
                             break;
@@ -332,9 +327,16 @@ namespace RuriLib.Legacy.LS
 
                                     try
                                     {
-                                        if (otherScript != string.Empty) RunScript(otherScript, language, outputs, data);
+                                        if (otherScript != string.Empty)
+                                        {
+                                            RunScript(otherScript, language, outputs, data);
+                                        }
                                     }
-                                    catch (Exception ex) { data.LogBuffer.Add(new LogEntry($"The script failed to be executed: {ex.Message}", Colors.Tomato)); }
+                                    catch (Exception ex)
+                                    {
+                                        var errorMessage = data.Providers.GeneralSettings.VerboseMode ? ex.ToString() : ex.Message;
+                                        data.Logger.Log($"The script failed to be executed: {errorMessage}", LogColors.Tomato);
+                                    }
                                     break;
                             }
                             break;
@@ -344,8 +346,16 @@ namespace RuriLib.Legacy.LS
                     }
                 }
             }
-            catch (BlockProcessingException) { throw; } // Rethrow the Block Processing Exception so the error can be displayed in the view above
-            catch (Exception e) { throw new Exception($"Parsing Exception on line {i + 1}: {e.Message}"); } // Catch inner and throw line exception
+            catch (BlockProcessingException)
+            {
+                // Rethrow the Block Processing Exception so the error can be displayed in the view above
+                throw;
+            }
+            catch (Exception e)
+            {
+                // Catch inner and throw line exception
+                throw new Exception($"Parsing Exception on line {i + 1}: {e.Message}");
+            }
 
             i += 1 + lookahead;
         }
@@ -357,8 +367,14 @@ namespace RuriLib.Legacy.LS
         /// <returns>Whether the line needs to be skipped</returns>
         private static bool IsEmptyOrCommentOrDisabled(string line)
         {
-            try { return line.Trim() == string.Empty || line.StartsWith("##") || line.StartsWith("!"); }
-            catch { return true; }
+            try
+            {
+                return line.Trim() == string.Empty || line.StartsWith("##") || line.StartsWith("!");
+            }
+            catch
+            {
+                return true;
+            }
         }
 
         /// <summary>
@@ -373,11 +389,13 @@ namespace RuriLib.Legacy.LS
         {
             var i = downwards ? current + 1 : current - 1;
             var found = false;
-            while (i >= 0 && i < lines.Count())
+
+            while (i >= 0 && i < lines.Length)
             {
                 try
                 {
                     var token = LineParser.ParseToken(ref lines[i], TokenType.Parameter, false, false);
+
                     if (options.Any(o => token.ToUpper() == o.ToUpper()))
                     {
                         found = true;
@@ -386,12 +404,24 @@ namespace RuriLib.Legacy.LS
                 }
                 catch { }
 
-                if (downwards) i++;
-                else i--;
+                if (downwards)
+                {
+                    i++;
+                }
+                else
+                {
+                    i--;
+                }
             }
 
-            if (found) return i;
-            else throw new Exception("Not found");
+            if (found)
+            {
+                return i;
+            }
+            else
+            {
+                throw new Exception("Not found");
+            }
         }
 
         /// <summary>
@@ -400,14 +430,18 @@ namespace RuriLib.Legacy.LS
         /// <param name="cfLine">The reference to the line to parse</param>
         /// <param name="data">The BotData needed for variable replacement</param>
         /// <returns></returns>
-        public static bool ParseCheckCondition(ref string cfLine, BotData data)
+        public static bool ParseCheckCondition(ref string cfLine, LSGlobals ls)
         {
             var first = LineParser.ParseLiteral(ref cfLine, "STRING");
             var Comparer = (Comparer)LineParser.ParseEnum(ref cfLine, "Comparer", typeof(Comparer));
             var second = "";
+
             if (Comparer != Comparer.Exists && Comparer != Comparer.DoesNotExist)
+            {
                 second = LineParser.ParseLiteral(ref cfLine, "STRING");
-            return (Condition.ReplaceAndVerify(first, Comparer, second, data));
+            }
+
+            return (Condition.ReplaceAndVerify(first, Comparer, second, ls));
         }
 
         /// <summary>
@@ -425,14 +459,22 @@ namespace RuriLib.Legacy.LS
             Console.SetError(sw);
 
             // Parse variables to get out
-            List<string> outVarList = new List<string>();
+            var outVarList = new List<string>();
+
             if (outputs != string.Empty)
             {
-                try { outVarList = outputs.Split(',').Select(x => x.Trim()).ToList(); }
-                catch { }
+                try
+                {
+                    outVarList = outputs.Split(',').Select(x => x.Trim()).ToList();
+                }
+                catch
+                {
+
+                }
             }
 
             var start = DateTime.Now;
+            var variableList = BlockBase.GetVariables(data);
 
             try
             {
@@ -444,18 +486,18 @@ namespace RuriLib.Legacy.LS
                         var jsengine = new Engine().SetValue("log", new Action<object>(Console.WriteLine));
 
                         // Add in all the variables
-                        foreach (var variable in data.Variables.All)
+                        foreach (var variable in variableList.Variables)
                         {
                             try
                             {
                                 switch (variable.Type)
                                 {
-                                    case CVar.VarType.List:
-                                        jsengine.SetValue(variable.Name, (variable.Value as List<string>).ToArray());
+                                    case VariableType.ListOfStrings:
+                                        jsengine.SetValue(variable.Name, variable.AsListOfStrings().ToArray());
                                         break;
 
                                     default:
-                                        jsengine.SetValue(variable.Name, variable.Value.ToString());
+                                        jsengine.SetValue(variable.Name, variable.AsString());
                                         break;
                                 }
                             }
@@ -466,10 +508,11 @@ namespace RuriLib.Legacy.LS
                         jsengine.Execute(script);
 
                         // Print results to log
-                        data.Log(new LogEntry($"DEBUG LOG: {sw.ToString()}", Colors.White));
+                        data.Logger.Log($"DEBUG LOG: {sw}", LogColors.White);
 
                         // Get variables out
-                        data.Log(new LogEntry($"Parsing {outVarList.Count} variables", Colors.White));
+                        data.Logger.Log($"Parsing {outVarList.Count} variables", LogColors.White);
+
                         foreach (var name in outVarList)
                         {
                             try
@@ -477,16 +520,29 @@ namespace RuriLib.Legacy.LS
                                 // Add it to the variables and print info
                                 var value = jsengine.Global.GetProperty(name).Value;
                                 var isArray = value.IsArray();
-                                if (isArray) data.Variables.Set(new CVar(name, CVar.VarType.List, value.TryCast<List<string>>()));
-                                else data.Variables.Set(new CVar(name, CVar.VarType.Single, value.ToString()));
-                                data.Log(new LogEntry($"SET VARIABLE {name} WITH VALUE {value.ToString()}", Colors.Yellow));
+
+                                if (isArray)
+                                {
+                                    variableList.Set(new ListOfStringsVariable(value.TryCast<List<string>>()) { Name = name });
+                                }
+                                else
+                                {
+                                    variableList.Set(new StringVariable(value.ToString()) { Name = name });
+                                }
+
+                                data.Logger.Log($"SET VARIABLE {name} WITH VALUE {value}", LogColors.Yellow);
                             }
-                            catch { data.Log(new LogEntry($"COULD NOT FIND VARIABLE {name}", Colors.Tomato)); }
+                            catch
+                            {
+                                data.Logger.Log($"COULD NOT FIND VARIABLE {name}", LogColors.Tomato);
+                            }
                         }
 
                         // Print other info
                         if (jsengine.GetCompletionValue() != null)
-                            data.Log(new LogEntry($"Completion value: {jsengine.GetCompletionValue()}", Colors.White));
+                        {
+                            data.Logger.Log($"Completion value: {jsengine.GetCompletionValue()}", LogColors.White);
+                        }
 
                         break;
 
@@ -502,33 +558,57 @@ namespace RuriLib.Legacy.LS
                         var code = pyengine.CreateScriptSourceFromString(script);
 
                         // Add in all the variables
-                        foreach (var variable in data.Variables.All)
-                            try { scope.SetVariable(variable.Name, variable.Value); } catch { }
+                        foreach (var variable in variableList.Variables)
+                        {
+                            try
+                            {
+                                scope.SetVariable(variable.Name, variable.AsObject());
+                            }
+                            catch
+                            {
+
+                            }
+                        }
 
                         // Execute it
                         var result = code.Execute(scope);
                         //var result = pyengine.Execute(script, scope);
 
                         // Print the logs
-                        data.Log(new LogEntry($"DEBUG LOG: {sw.ToString()}", Colors.White));
+                        data.Logger.Log($"DEBUG LOG: {sw}", LogColors.White);
 
                         // Get variables out
-                        data.Log(new LogEntry($"Parsing {outVarList.Count} variables", Colors.White));
+                        data.Logger.Log($"Parsing {outVarList.Count} variables", LogColors.White);
+
                         foreach (var name in outVarList)
                         {
                             try
                             {
                                 // Add it to the variables and print info
                                 var value = scope.GetVariable(name);
-                                data.Variables.Set(new CVar(name, (value.GetType() == typeof(string[])) ? CVar.VarType.List : CVar.VarType.Single, value.ToString()));
-                                data.Log(new LogEntry($"SET VARIABLE {name} WITH VALUE {value}", Colors.Yellow));
+
+                                if (value.GetType() == typeof(string[]))
+                                {
+                                    variableList.Set(new ListOfStringsVariable(value.ToList()) { Name = name });
+                                }
+                                else
+                                {
+                                    variableList.Set(new StringVariable(value.ToString()) { Name = name });
+                                }
+
+                                data.Logger.Log($"SET VARIABLE {name} WITH VALUE {value}", LogColors.Yellow);
                             }
-                            catch { data.Log(new LogEntry($"COULD NOT FIND VARIABLE {name}", Colors.Tomato)); }
+                            catch
+                            {
+                                data.Logger.Log($"COULD NOT FIND VARIABLE {name}", LogColors.Tomato);
+                            }
                         }
 
                         // Print other info
                         if (result != null)
-                            data.Log(new LogEntry($"Completion value: {result}", Colors.White));
+                        {
+                            data.Logger.Log($"Completion value: {result}", LogColors.White);
+                        }
 
                         break;
 
@@ -536,11 +616,11 @@ namespace RuriLib.Legacy.LS
                         break;
                 }
 
-                data.Log(new LogEntry($"Execution completed in {(DateTime.Now - start).TotalSeconds} seconds", Colors.GreenYellow));
+                data.Logger.Log($"Execution completed in {(DateTime.Now - start).TotalSeconds} seconds", LogColors.GreenYellow);
             }
             catch (Exception e)
             {
-                data.Log(new LogEntry($"[ERROR] INFO: {e.Message}", Colors.White));
+                data.Logger.Log($"[ERROR] INFO: {e.Message}", LogColors.White);
             }
             finally
             {
@@ -581,6 +661,41 @@ namespace RuriLib.Legacy.LS
             }
             return compressed.ToArray();
         }
+
+        // <summary>Returns the next block to be processed. Empty if the script has no more blocks to execute.</summary>
+        private string GetNextBlock()
+        {
+            for (var j = i; j < lines.Length; j++)
+            {
+                var line = lines[j];
+
+                if (IsEmptyOrCommentOrDisabled(line) || !BlockParser.IsBlock(line))
+                {
+                    continue;
+                }
+
+                var label = "";
+
+                if (lines[j].StartsWith("#"))
+                {
+                    label = LineParser.ParseLabel(ref line);
+                }
+
+                var blockName = LineParser.ParseToken(ref line, TokenType.Parameter, false, false);
+
+                return string.IsNullOrEmpty(label) ? blockName : $"{blockName} ({label})";
+            }
+
+            return string.Empty;
+        }
+
+        private static bool IsCustomStatus(string status)
+            => !new string[] { "SUCCESS", "FAIL", "RETRY", "BAN", "ERROR", "INVALID", "NONE" }.Contains(status);
+
+        // Checks if the LoliScript can proceed with the next lines basing on the status
+        private static bool CanContinue(BotData data)
+            => data.STATUS == "SUCCESS" || data.STATUS == "NONE" || 
+            (IsCustomStatus(data.STATUS) && data.ConfigSettings.GeneralSettings.ContinueStatuses.Contains("CUSTOM"));
     }
 
     public enum ScriptingLanguage

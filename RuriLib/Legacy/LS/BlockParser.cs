@@ -16,18 +16,18 @@ namespace RuriLib.Legacy.LS
         /// </summary>
         public static Dictionary<string, Type> BlockMappings { get; set; } = new Dictionary<string, Type>()
         {
-            { "SOLVECAPTCHA", typeof(BlockSolveCaptcha) },
-            { "REPORTCAPTCHA", typeof(BlockReportCaptcha) },
-            { "FUNCTION", typeof(BlockFunction) },
+            //{ "SOLVECAPTCHA", typeof(BlockSolveCaptcha) },
+            //{ "REPORTCAPTCHA", typeof(BlockReportCaptcha) },
+            //{ "FUNCTION", typeof(BlockFunction) },
             { "KEYCHECK", typeof(BlockKeycheck) },
             { "PARSE", typeof(BlockParse) },
             { "REQUEST", typeof(BlockRequest) },
-            { "TCP", typeof(BlockTCP) },
-            { "UTILITY", typeof(BlockUtility) },
-            { "BROWSERACTION", typeof(SBlockBrowserAction) },
-            { "ELEMENTACTION", typeof(SBlockElementAction) },
-            { "EXECUTEJS", typeof(SBlockExecuteJS) },
-            { "NAVIGATE", typeof(SBlockNavigate) }
+            //{ "TCP", typeof(BlockTCP) },
+            //{ "UTILITY", typeof(BlockUtility) },
+            //{ "BROWSERACTION", typeof(SBlockBrowserAction) },
+            //{ "ELEMENTACTION", typeof(SBlockElementAction) },
+            //{ "EXECUTEJS", typeof(SBlockExecuteJS) },
+            //{ "NAVIGATE", typeof(SBlockNavigate) }
         };
 
         /// <summary>

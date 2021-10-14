@@ -16,5 +16,6 @@ namespace RuriLib.Models.Variables
         public virtual List<string> AsListOfStrings() => throw new InvalidCastException();
         public virtual Dictionary<string, string> AsDictionaryOfStrings() => throw new InvalidCastException();
         public virtual byte[] AsByteArray() => throw new InvalidCastException();
+        public virtual object AsObject() => throw new InvalidCastException();
     }
 }

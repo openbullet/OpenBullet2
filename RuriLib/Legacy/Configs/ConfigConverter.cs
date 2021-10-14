@@ -50,6 +50,11 @@ namespace RuriLib.Legacy.Configs
             newConfig.Settings.GeneralSettings.SaveEmptyCaptures = legacySettings.SaveEmptyCaptures;
             newConfig.Settings.GeneralSettings.SuggestedBots = legacySettings.SuggestedBots;
 
+            if (legacySettings.ContinueOnCustom)
+            {
+                newConfig.Settings.GeneralSettings.ContinueStatuses = new string[] { "SUCCESS", "NONE", "CUSTOM" };
+            }
+
             // Data
             newConfig.Settings.DataSettings.AllowedWordlistTypes = new string[] { legacySettings.AllowedWordlist1, legacySettings.AllowedWordlist2 };
             newConfig.Settings.DataSettings.UrlEncodeDataAfterSlicing = legacySettings.EncodeData;
