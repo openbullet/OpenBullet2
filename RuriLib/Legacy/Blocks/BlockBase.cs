@@ -183,6 +183,27 @@ namespace RuriLib.Legacy.Blocks
         }
 
         /// <summary>
+        /// Replaces variables in all keys and values of a dictionary.
+        /// </summary>
+        public static Dictionary<string, string> ReplaceValues(Dictionary<string, string> original, LSGlobals ls)
+        {
+            var newDict = new Dictionary<string, string>();
+
+            foreach (var kvp in original)
+            {
+                newDict[ReplaceValues(kvp.Key, ls)] = ReplaceValues(kvp.Value, ls);
+            }
+
+            return newDict;
+        }
+
+        /// <summary>
+        /// Replaces variables in all items of a list.
+        /// </summary>
+        public static List<string> ReplaceValues(List<string> original, LSGlobals ls)
+            => original.Select(i => ReplaceValues(i, ls)).ToList();
+
+        /// <summary>
         /// Replaces variables in a given input string.
         /// </summary>
         public static string ReplaceValues(string original, LSGlobals ls)

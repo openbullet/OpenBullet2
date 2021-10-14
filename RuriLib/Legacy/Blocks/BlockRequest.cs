@@ -1,106 +1,52 @@
-﻿using Extreme.Net;
-using RuriLib.Functions.Formats;
-using RuriLib.LS;
+﻿using RuriLib.Functions.Http;
+using RuriLib.Legacy.LS;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
-using RuriLib.Functions.Requests;
-using RuriLib.Functions.Files;
-using MultipartContent = RuriLib.Functions.Requests.MultipartContent;
+using RuriLib.Blocks.Requests.Http;
+using System.Threading.Tasks;
+using RuriLib.Legacy.Models;
+using RuriLib.Functions.Http.Options;
+using RuriLib.Functions.Conversion;
+using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
+using RuriLib.Logging;
+using System.IO;
 
 namespace RuriLib.Legacy.Blocks
 {
-    /// <summary>
-    /// The types of request that can be performed.
-    /// </summary>
-    public enum RequestType
-    {
-        /// <summary>A standard request with standard content.</summary>
-        Standard,
-
-        /// <summary>A request which uses the 'Authentication: Basic' header.</summary>
-        BasicAuth,
-
-        /// <summary>A request which contains multipart content (strings and/or files).</summary>
-        Multipart,
-
-        /// <summary>A request which sends a raw byte stream.</summary>
-        Raw
-    }
-
-    /// <summary>
-    /// The available types of multipart contents.
-    /// </summary>
-    public enum MultipartContentType
-    {
-        /// <summary>A string content.</summary>
-        String,
-
-        /// <summary>A file content.</summary>
-        File
-    }
-
-    /// <summary>
-    /// The type of data expected inside the HTTP response.
-    /// </summary>
-    public enum ResponseType
-    {
-        /// <summary>A string response, e.g. an HTML page.</summary>
-        String,
-
-        /// <summary>A file response, e.g. an image.</summary>
-        File,
-
-        /// <summary>A byte array response encoded as a base64 string.</summary>
-        Base64String
-    }
-
     /// <summary>
     /// A block that can perform HTTP requests.
     /// </summary>
     public class BlockRequest : BlockBase
     {
         #region Variables
-        private string url = "https://google.com";
         /// <summary>The URL to call, including additional GET query parameters.</summary>
-        public string Url { get { return url; } set { url = value; OnPropertyChanged(); } }
+        public string Url { get; set; } = "https://google.com";
 
-        private RequestType requestType = RequestType.Standard;
         /// <summary>The request type.</summary>
-        public RequestType RequestType { get { return requestType; } set { requestType = value; OnPropertyChanged(); } }
+        public RequestType RequestType { get; set; } = RequestType.Standard;
 
         // Basic Auth
-        private string authUser = "";
         /// <summary>The username for basic auth requests.</summary>
-        public string AuthUser { get { return authUser; } set { authUser = value; OnPropertyChanged(); } }
+        public string AuthUser { get; set; } = "";
 
-        private string authPass = "";
         /// <summary>The password for basic auth requests.</summary>
-        public string AuthPass { get { return authPass; } set { authPass = value; OnPropertyChanged(); } }
+        public string AuthPass { get; set; } = "";
 
         // Standard
-        private string postData = "";
         /// <summary>The content of the request, sent after the headers. Use '\n' to input a linebreak.</summary>
-        public string PostData { get { return postData; } set { postData = value; OnPropertyChanged(); } }
+        public string PostData { get; set; } = "";
 
         // Raw
-        private string rawData = "";
         /// <summary>The content of the request as a raw HEX string that will be sent as a bytestream.</summary>
-        public string RawData { get { return rawData; } set { rawData = value; OnPropertyChanged(); } }
+        public string RawData { get; set; } = "";
 
-        private HttpMethod method = HttpMethod.GET;
         /// <summary>The method of the HTTP request.</summary>
-        public HttpMethod Method { get { return method; } set { method = value; OnPropertyChanged(); } }
+        public HttpMethod Method { get; set; } = HttpMethod.GET;
 
-        private SecurityProtocol securityProtocol = SecurityProtocol.SystemDefault;
         /// <summary>The security protocol(s) to use for the HTTPS request.</summary>
-        public SecurityProtocol SecurityProtocol { get { return securityProtocol; } set { securityProtocol = value; OnPropertyChanged(); } }
+        public SecurityProtocol SecurityProtocol { get; set; } = SecurityProtocol.SystemDefault;
 
         /// <summary>The custom headers that are sent in the HTTP request.</summary>
         public Dictionary<string, string> CustomHeaders { get; set; } = new Dictionary<string, string>() {
@@ -110,51 +56,41 @@ namespace RuriLib.Legacy.Blocks
         };
 
         /// <summary>The custom cookies that are sent in the HTTP request.</summary>
-        public Dictionary<string, string> CustomCookies { get; set; } = new Dictionary<string, string>() { };
+        public Dictionary<string, string> CustomCookies { get; set; } = new();
 
-        private string contentType = "application/x-www-form-urlencoded";
         /// <summary>The type of content the server should expect.</summary>
-        public string ContentType { get { return contentType; } set { contentType = value; OnPropertyChanged(); } }
+        public string ContentType { get; set; } = "application/x-www-form-urlencoded";
 
-        private bool autoRedirect = true;
         /// <summary>Whether to perform automatic redirection in the case of 3xx headers.</summary>
-        public bool AutoRedirect { get { return autoRedirect; } set { autoRedirect = value; OnPropertyChanged(); } }
+        public bool AutoRedirect { get; set; } = true;
 
-        private bool readResponseSource = true;
         /// <summary>Whether to read the stream of data from the HTTP response. Set to false if only the headers are needed, in order to speed up the process.</summary>
-        public bool ReadResponseSource { get { return readResponseSource; } set { readResponseSource = value; OnPropertyChanged(); } }
+        public bool ReadResponseSource { get; set; } = true;
 
-        private bool encodeContent = false;
         /// <summary>Whether to URL encode the content before sending it.</summary>
-        public bool EncodeContent { get { return encodeContent; } set { encodeContent = value; OnPropertyChanged(); } }
+        public bool EncodeContent { get; set; } = false;
 
-        private bool acceptEncoding = true;
         /// <summary>Whether to automatically generate an Accept-Encoding header.</summary>
-        public bool AcceptEncoding { get { return acceptEncoding; } set { acceptEncoding = value; OnPropertyChanged(); } }
+        public bool AcceptEncoding { get; set; } = true;
 
         // Multipart
-        private string multipartBoundary = "";
         /// <summary>The boundary that separates multipart contents.</summary>
-        public string MultipartBoundary { get { return multipartBoundary; } set { multipartBoundary = value; OnPropertyChanged(); } }
+        public string MultipartBoundary { get; set; } = "";
 
         /// <summary>The list of contents to send in a multipart request.</summary>
-        public List<MultipartContent> MultipartContents { get; set; } = new List<MultipartContent>();
+        public List<MultipartContent> MultipartContents { get; set; } = new();
 
-        private ResponseType responseType = ResponseType.String;
         /// <summary>The type of response expected from the server.</summary>
-        public ResponseType ResponseType { get { return responseType; } set { responseType = value; OnPropertyChanged(); } }
+        public ResponseType ResponseType { get; set; } = ResponseType.String;
 
-        private string downloadPath = "";
         /// <summary>The path of the file where a FILE response needs to be stored.</summary>
-        public string DownloadPath { get { return downloadPath; } set { downloadPath = value; OnPropertyChanged(); } }
+        public string DownloadPath { get; set; } = "";
 
-        private string outputVariable = "";
         /// <summary>The variable name for Base64String response.</summary>
-        public string OutputVariable { get { return outputVariable; } set { outputVariable = value; OnPropertyChanged(); } }
-        
-        private bool saveAsScreenshot = false;
+        public string OutputVariable { get; set; } = "";
+
         /// <summary>Whether to add the downloaded image to the default screenshot path.</summary>
-        public bool SaveAsScreenshot { get { return saveAsScreenshot; } set { saveAsScreenshot = value; OnPropertyChanged(); } }
+        public bool SaveAsScreenshot { get; set; } = false;
         #endregion
 
         /// <summary>
@@ -289,9 +225,7 @@ namespace RuriLib.Legacy.Blocks
         /// <param name="count">The number of elements to return</param>
         /// <returns>The array of the parsed elements.</returns>
         public static string[] ParseString(string input, char separator, int count)
-        {
-            return input.Split(new[] { separator }, count).Select(s => s.Trim()).ToArray();
-        }
+            => input.Split(new[] { separator }, count).Select(s => s.Trim()).ToArray();
 
         /// <inheritdoc />
         public override string ToLS(bool indent = true)
@@ -321,15 +255,12 @@ namespace RuriLib.Legacy.Blocks
                     break;
 
                 case RequestType.Standard:
-                    if (HttpRequest.CanContainRequestBody(method))
-                    {
-                        writer
-                            .Token("CONTENT")
-                            .Literal(PostData)
-                            .Indent()
-                            .Token("CONTENTTYPE")
-                            .Literal(ContentType);
-                    }
+                    writer
+                        .Token("CONTENT")
+                        .Literal(PostData)
+                        .Indent()
+                        .Token("CONTENTTYPE")
+                        .Literal(ContentType);
                     break;
 
                 case RequestType.Multipart:
@@ -358,15 +289,12 @@ namespace RuriLib.Legacy.Blocks
                     break;
 
                 case RequestType.Raw:
-                    if (HttpRequest.CanContainRequestBody(method))
-                    {
-                        writer
-                            .Token("RAWDATA")
-                            .Literal(RawData)
-                            .Indent()
-                            .Token("CONTENTTYPE")
-                            .Literal(ContentType);
-                    }
+                    writer
+                        .Token("RAWDATA")
+                        .Literal(RawData)
+                        .Indent()
+                        .Token("CONTENTTYPE")
+                        .Literal(ContentType);
                     break;
             }
 
@@ -416,107 +344,109 @@ namespace RuriLib.Legacy.Blocks
         }
 
         /// <inheritdoc />
-        public override void Process(BotData data)
+        public override async Task Process(LSGlobals ls)
         {
-            base.Process(data);
+            var data = ls.BotData;
+            await base.Process(ls);
 
-            // Setup
-            var request = new Request();
-            request.Setup(data.GlobalSettings, securityProtocol, AutoRedirect, data.ConfigSettings.MaxRedirects, AcceptEncoding);
-
-            var localUrl = ReplaceValues(Url, data);
-            data.Log(new LogEntry($"Calling URL: {localUrl}", Colors.MediumTurquoise));
-            
-            // Set content
             switch (RequestType)
             {
                 case RequestType.Standard:
-                    request.SetStandardContent(ReplaceValues(PostData, data), ReplaceValues(ContentType, data), Method, EncodeContent, GetLogBuffer(data));
-                    break;
+                    var standardOptions = new StandardHttpRequestOptions
+                    {
+                        AutoRedirect = AutoRedirect,
+                        MaxNumberOfRedirects = 8,
+                        ReadResponseContent = ReadResponseSource,
+                        SecurityProtocol = SecurityProtocol,
+                        Content = ReplaceValues(PostData, ls),
+                        ContentType = ReplaceValues(ContentType, ls),
+                        CustomCookies = ReplaceValues(CustomCookies, ls),
+                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        Method = Method,
+                        Url = ReplaceValues(Url, ls),
+                        TimeoutMilliseconds = 10000,
+                        UrlEncodeContent = EncodeContent
+                    };
 
-                case RequestType.BasicAuth:
-                    request.SetBasicAuth(ReplaceValues(AuthUser, data), ReplaceValues(AuthPass, data));
-                    break;
-
-                case RequestType.Multipart:
-                    var contents = MultipartContents.Select(m =>
-                        new MultipartContent()
-                        {
-                            Name = ReplaceValues(m.Name, data),
-                            Value = ReplaceValues(m.Value, data),
-                            ContentType = ReplaceValues(m.Value, data),
-                            Type = m.Type
-                        });
-                    request.SetMultipartContent(contents, ReplaceValues(MultipartBoundary, data), GetLogBuffer(data));
+                    await Methods.HttpRequestStandard(data, standardOptions);
                     break;
 
                 case RequestType.Raw:
-                    request.SetRawContent(ReplaceValues(RawData, data), ReplaceValues(ContentType, data), Method, GetLogBuffer(data));
+                    var rawOptions = new RawHttpRequestOptions
+                    {
+                        AutoRedirect = AutoRedirect,
+                        MaxNumberOfRedirects = 8,
+                        ReadResponseContent = ReadResponseSource,
+                        SecurityProtocol = SecurityProtocol,
+                        Content = HexConverter.ToByteArray(ReplaceValues(RawData, ls)),
+                        ContentType = ReplaceValues(ContentType, ls),
+                        CustomCookies = ReplaceValues(CustomCookies, ls),
+                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        Method = Method,
+                        Url = ReplaceValues(Url, ls),
+                        TimeoutMilliseconds = 10000
+                    };
+
+                    await Methods.HttpRequestRaw(data, rawOptions);
                     break;
-            }
 
-            // Set proxy
-            if (data.UseProxies)
-            {
-                request.SetProxy(data.Proxy);
-            }
+                case RequestType.BasicAuth:
+                    var basicAuthOptions = new BasicAuthHttpRequestOptions
+                    {
+                        AutoRedirect = AutoRedirect,
+                        MaxNumberOfRedirects = 8,
+                        ReadResponseContent = ReadResponseSource,
+                        SecurityProtocol = SecurityProtocol,
+                        Username = ReplaceValues(AuthUser, ls),
+                        Password = ReplaceValues(AuthPass, ls),
+                        CustomCookies = ReplaceValues(CustomCookies, ls),
+                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        Method = Method,
+                        Url = ReplaceValues(Url, ls),
+                        TimeoutMilliseconds = 10000
+                    };
 
-            // Set headers
-            data.Log(new LogEntry("Sent Headers:", Colors.DarkTurquoise));
-            var headers = CustomHeaders.Select( h =>
-                    new KeyValuePair<string, string> (ReplaceValues(h.Key, data), ReplaceValues(h.Value, data))
-                ).ToDictionary(h => h.Key, h => h.Value);
-            request.SetHeaders(headers, AcceptEncoding, GetLogBuffer(data));
+                    await Methods.HttpRequestBasicAuth(data, basicAuthOptions);
+                    break;
 
-            // Set cookies
-            data.Log(new LogEntry("Sent Cookies:", Colors.MediumTurquoise));
+                case RequestType.Multipart:
+                    var multipartOptions = new MultipartHttpRequestOptions
+                    {
+                        AutoRedirect = AutoRedirect,
+                        MaxNumberOfRedirects = 8,
+                        ReadResponseContent = ReadResponseSource,
+                        SecurityProtocol = SecurityProtocol,
+                        Boundary = ReplaceValues(MultipartBoundary, ls),
+                        Contents = MultipartContents.Select(mpc => MapMultipartContent(mpc, ls)).ToList(),
+                        CustomCookies = ReplaceValues(CustomCookies, ls),
+                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        Method = Method,
+                        Url = ReplaceValues(Url, ls),
+                        TimeoutMilliseconds = 10000
+                    };
 
-            foreach (var cookie in CustomCookies) // Add new user-defined custom cookies to the bot's cookie jar
-                data.Cookies[ReplaceValues(cookie.Key, data)] = ReplaceValues(cookie.Value, data);
-
-            request.SetCookies(data.Cookies, GetLogBuffer(data));
-
-            // End the request part
-            data.LogNewLine();
-
-            // Perform the request
-            try
-            {
-                (data.Address, data.ResponseCode, data.ResponseHeaders, data.Cookies) = request.Perform(localUrl, Method, GetLogBuffer(data));
-            }
-            catch (Exception ex)
-            {
-                if (data.ConfigSettings.IgnoreResponseErrors)
-                {
-                    data.Log(new LogEntry(ex.Message, Colors.Tomato));
-                    data.ResponseSource = ex.Message;
-                    return;
-                }
-                throw;
+                    await Methods.HttpRequestMultipart(data, multipartOptions);
+                    break;
             }
 
             // Save the response content
             switch (ResponseType)
             {
-                case ResponseType.String:
-                    data.ResponseSource = request.SaveString(ReadResponseSource, data.ResponseHeaders, GetLogBuffer(data));
-                    break;
-
                 case ResponseType.File:
                     if (SaveAsScreenshot)
                     {
-                        Files.SaveScreenshot(request.GetResponseStream(), data); // Read the stream
-                        data.Log(new LogEntry("File saved as screenshot", Colors.Green));
+                        Utils.SaveScreenshot(data.RAWSOURCE, data);
+                        data.Logger.Log("File saved as screenshot", LogColors.Green);
                     }
                     else
                     {
-                        request.SaveFile(ReplaceValues(DownloadPath, data), GetLogBuffer(data));
+                        File.WriteAllBytes(ReplaceValues(DownloadPath, ls), data.RAWSOURCE);
                     }
                     break;
 
                 case ResponseType.Base64String:
-                    var base64 = Convert.ToBase64String(request.GetResponseStream().ToArray());
-                    InsertVariable(data, false, base64, OutputVariable);
+                    var base64 = Convert.ToBase64String(data.RAWSOURCE);
+                    InsertVariable(ls, false, base64, OutputVariable);
                     break;
 
                 default:
@@ -531,7 +461,7 @@ namespace RuriLib.Legacy.Blocks
         /// <returns>One cookie per line, with name and value separated by a colon</returns>
         public string GetCustomCookies()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var pair in CustomCookies)
             {
                 sb.Append($"{pair.Key}: {pair.Value}");
@@ -563,7 +493,7 @@ namespace RuriLib.Legacy.Blocks
         /// <returns>One header per line, with name and value separated by a colon</returns>
         public string GetCustomHeaders()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var pair in CustomHeaders)
             {
                 sb.Append($"{pair.Key}: {pair.Value}");
@@ -595,7 +525,7 @@ namespace RuriLib.Legacy.Blocks
         /// <returns>One content per line, with type, name and value separated by a colon</returns>
         public string GetMultipartContents()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var c in MultipartContents)
             {
                 sb.Append($"{c.Type.ToString().ToUpper()}: {c.Name}: {c.Value}");
@@ -628,6 +558,65 @@ namespace RuriLib.Legacy.Blocks
 
         #endregion
 
-        private List<LogEntry> GetLogBuffer(BotData data) => data.GlobalSettings.General.EnableBotLog || data.IsDebug ? data.LogBuffer : null;
+        private MyHttpContent MapMultipartContent(MultipartContent mpc, LSGlobals ls)
+        {
+            switch (mpc.Type)
+            {
+                case MultipartContentType.String:
+                    return new StringHttpContent(
+                        ReplaceValues(mpc.Name, ls),
+                        ReplaceValues(mpc.Value, ls),
+                        ReplaceValues(mpc.ContentType, ls));
+
+                case MultipartContentType.File:
+                    return new FileHttpContent(
+                        ReplaceValues(mpc.Name, ls),
+                        ReplaceValues(mpc.Value, ls),
+                        ReplaceValues(mpc.ContentType, ls));
+            }
+
+            throw new NotSupportedException();
+        }
+    }
+
+    /// <summary>
+    /// The types of request that can be performed.
+    /// </summary>
+    public enum RequestType
+    {
+        Standard,
+        BasicAuth,
+        Multipart,
+        Raw
+    }
+
+    /// <summary>
+    /// The available types of multipart contents.
+    /// </summary>
+    public enum MultipartContentType
+    {
+        String,
+        File
+    }
+
+    /// <summary>
+    /// The type of data expected inside the HTTP response.
+    /// </summary>
+    public enum ResponseType
+    {
+        String,
+        File,
+        Base64String
+    }
+
+    /// <summary>
+    /// Represents a Multipart Content
+    /// </summary>
+    public struct MultipartContent
+    {
+        public MultipartContentType Type { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string ContentType { get; set; }
     }
 }
