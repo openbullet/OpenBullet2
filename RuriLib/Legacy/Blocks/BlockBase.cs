@@ -157,7 +157,18 @@ namespace RuriLib.Legacy.Blocks
 
                 if (dict == null)
                 {
-                    dict = globals.Get<DictionaryOfStringsVariable>(name);
+                    if (name == "COOKIES")
+                    {
+                        dict = new DictionaryOfStringsVariable(data.COOKIES) { Name = name };
+                    }
+                    else if (name == "HEADERS")
+                    {
+                        dict = new DictionaryOfStringsVariable(data.HEADERS) { Name = name };
+                    }
+                    else
+                    {
+                        dict = globals.Get<DictionaryOfStringsVariable>(name);
+                    }
                 }
 
                 // If there's no corresponding variable, just readd the input string and proceed with normal replacement
@@ -264,7 +275,18 @@ namespace RuriLib.Legacy.Blocks
 
                     if (v == null)
                     {
-                        v = globals.Get(name);
+                        if (name == "COOKIES")
+                        {
+                            v = new DictionaryOfStringsVariable(data.COOKIES) { Name = name };
+                        }
+                        else if (name == "HEADERS")
+                        {
+                            v = new DictionaryOfStringsVariable(data.HEADERS) { Name = name };
+                        }
+                        else
+                        {
+                            v = globals.Get(name);
+                        }
                     }
 
                     if (v == null)
