@@ -59,6 +59,7 @@ namespace RuriLib.Legacy.LS
         public LoliScript(string script)
         {
             Script = script;
+            Reset();
         }
 
         #region Conversion
@@ -204,6 +205,8 @@ namespace RuriLib.Legacy.LS
                     {
                         block = BlockParser.Parse(CurrentLine);
                         CurrentBlock = block.Label;
+                        data.ExecutionInfo = $"Executing block: {block.Label}";
+
                         if (!block.Disabled)
                         {
                             await block.Process(ls);

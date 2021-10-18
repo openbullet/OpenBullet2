@@ -19,9 +19,9 @@ namespace RuriLib.Legacy.LS
         public IEnumerable<DictionaryOfStringsVariable> Dictionaries
             => Variables.Where(v => v is DictionaryOfStringsVariable).Cast<DictionaryOfStringsVariable>();
         
-        public VariablesList(List<Variable> list = null)
+        public VariablesList(List<Variable> initialVariables = null)
         {
-            Variables = list ?? new();
+            Variables = initialVariables ?? new();
         }
 
         /// <summary>

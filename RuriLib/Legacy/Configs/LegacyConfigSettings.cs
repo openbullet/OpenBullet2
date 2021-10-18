@@ -3,50 +3,50 @@ using System.Collections.Generic;
 
 namespace RuriLib.Legacy.Configs
 {
-    internal class LegacyConfigSettings
+    public class LegacyConfigSettings
     {
         // General
-        internal string Name { get; set; }
-        internal int SuggestedBots { get; set; }
-        internal int MaxCPM { get; set; }
-        internal DateTime LastModified { get; set; }
-        internal string AdditionalInfo { get; set; }
-        internal string[] RequiredPlugins { get; set; }
-        internal string Author { get; set; }
-        internal string Version { get; set; }
-        internal bool SaveEmptyCaptures { get; set; }
-        internal bool ContinueOnCustom { get; set; }
-        internal bool SaveHitsToTextFile { get; set; }
+        public string Name { get; set; }
+        public int SuggestedBots { get; set; }
+        public int MaxCPM { get; set; }
+        public DateTime LastModified { get; set; }
+        public string AdditionalInfo { get; set; }
+        public string[] RequiredPlugins { get; set; }
+        public string Author { get; set; }
+        public string Version { get; set; }
+        public bool SaveEmptyCaptures { get; set; }
+        public bool ContinueOnCustom { get; set; }
+        public bool SaveHitsToTextFile { get; set; }
 
         // Requests
-        internal bool IgnoreResponseErrors { get; set; }
-        internal int MaxRedirects { get; set; }
+        public bool IgnoreResponseErrors { get; set; }
+        public int MaxRedirects { get; set; }
 
         // Proxy
-        internal bool NeedsProxies { get; set; }
-        internal bool OnlySocks { get; set; }
-        internal bool OnlySsl { get; set; }
-        internal int MaxProxyUses { get; set; }
-        internal bool BanProxyAfterGoodStatus { get; set; }
-        internal int BanLoopEvasionOverride { get; set; } = -1;
+        public bool NeedsProxies { get; set; }
+        public bool OnlySocks { get; set; }
+        public bool OnlySsl { get; set; }
+        public int MaxProxyUses { get; set; }
+        public bool BanProxyAfterGoodStatus { get; set; }
+        public int BanLoopEvasionOverride { get; set; } = -1;
 
         // Data
-        internal bool EncodeData { get; set; }
-        internal string AllowedWordlist1 { get; set; }
-        internal string AllowedWordlist2 { get; set; }
-        internal List<LegacyDataRule> DataRules { get; set; } = new();
+        public bool EncodeData { get; set; }
+        public string AllowedWordlist1 { get; set; }
+        public string AllowedWordlist2 { get; set; }
+        public List<LegacyDataRule> DataRules { get; set; } = new();
 
         // Inputs
-        internal List<LegacyCustomInput> CustomInputs { get; set; } = new();
+        public List<LegacyCustomInput> CustomInputs { get; set; } = new();
 
         // Selenium
-        internal bool ForceHeadless { get; set; }
-        internal bool AlwaysOpen { get; set; }
-        internal bool AlwaysQuit { get; set; }
-        internal bool QuitOnBanRetry { get; set; }
-        internal bool DisableNotifications { get; set; }
-        internal string CustomUserAgent { get; set; }
-        internal bool RandomUA { get; set; }
-        internal string CustomCMDArgs { get; set; }
+        public bool ForceHeadless { get; set; }
+        public bool AlwaysOpen { get; set; }
+        public bool AlwaysQuit { get; set; }
+        public bool QuitOnBanRetry { get; set; }
+        public bool DisableNotifications { get; set; }
+        public string CustomUserAgent { get; set; }
+        public bool RandomUA { get; set; }
+        public string CustomCMDArgs { get; set; }
     }
 }

@@ -566,13 +566,13 @@ namespace RuriLib.Legacy.Blocks
                     return new StringHttpContent(
                         ReplaceValues(mpc.Name, ls),
                         ReplaceValues(mpc.Value, ls),
-                        ReplaceValues(mpc.ContentType, ls));
+                        string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
 
                 case MultipartContentType.File:
                     return new FileHttpContent(
                         ReplaceValues(mpc.Name, ls),
                         ReplaceValues(mpc.Value, ls),
-                        ReplaceValues(mpc.ContentType, ls));
+                        string.IsNullOrEmpty(mpc.ContentType) ? "text/plain" : ReplaceValues(mpc.ContentType, ls));
             }
 
             throw new NotSupportedException();

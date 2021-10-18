@@ -16,17 +16,17 @@ namespace RuriLib.Legacy.Configs
     /// </summary>
     public static class ConfigConverter
     {
-        public static Config Convert(string fileContent)
+        public static Config Convert(string fileContent, string id)
         {
             // Deserialize the legacy config
             var split = fileContent.Split(new string[] { "[SETTINGS]", "[SCRIPT]" }, StringSplitOptions.RemoveEmptyEntries);
-            var legacySettings = JsonConvert.DeserializeObject<LegacyConfigSettings>(split[0]);
+            var legacySettings = JsonConvert.DeserializeObject<LegacyConfigSettings>(split[0].TrimStart('\r', '\n'));
             var loliScript = split[1].TrimStart('\r', '\n');
 
             // Create a legacy config in the new format
             var newConfig = new Config
             {
-                Id = legacySettings.Name.ToValidFileName(),
+                Id = id,
                 Mode = ConfigMode.Legacy
             };
 
@@ -34,16 +34,19 @@ namespace RuriLib.Legacy.Configs
             ApplyLegacySettings(newConfig, legacySettings);
 
             // Set the LoliScript
+            newConfig.LoliScript = loliScript;
 
-
-            throw new NotImplementedException();
+            return newConfig;
         }
 
         private static void ApplyLegacySettings(Config newConfig, LegacyConfigSettings legacySettings)
         {
             // Metadata
-            newConfig.Metadata.Author = legacySettings.Author;
+            newConfig.Metadata.Author = legacySettings.Author ?? "Unknown";
             newConfig.Metadata.Name = legacySettings.Name;
+            
+            // Readme
+            newConfig.Readme = legacySettings.AdditionalInfo ?? "No information provided";
 
             // General
             newConfig.Settings.GeneralSettings.MaximumCPM = legacySettings.MaxCPM;

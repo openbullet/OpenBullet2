@@ -1,13 +1,13 @@
 ﻿namespace RuriLib.Legacy.Configs
 {
-    internal class LegacyDataRule
+    public class LegacyDataRule
     {
-        internal string SliceName { get; set; }
-        internal LegacyRuleType RuleType { get; set; }
-        internal string RuleString { get; set; } // Options: "Lowercase", "Uppercase", "Digit", "Symbol" or customized
+        public string SliceName { get; set; }
+        public LegacyRuleType RuleType { get; set; }
+        public string RuleString { get; set; } // Options: "Lowercase", "Uppercase", "Digit", "Symbol" or customized
     }
 
-    internal enum LegacyRuleType
+    public enum LegacyRuleType
     {
         /// <summary>The slice must contain the given characters.</summary>
         MustContain,

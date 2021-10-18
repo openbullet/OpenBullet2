@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Services;
+using RuriLib.Legacy.Configs;
 
 namespace OpenBullet2.Core.Repositories
 {
@@ -29,6 +30,23 @@ namespace OpenBullet2.Core.Repositories
         /// <inheritdoc/>
         public async Task<IEnumerable<Config>> GetAll()
         {
+            // Try to convert legacy configs automatically before loading
+            foreach (var file in Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".loli")))
+            {
+                try
+                {
+                    var id = Path.GetFileNameWithoutExtension(file);
+                    var converted = ConfigConverter.Convert(File.ReadAllText(file), id);
+                    await Save(converted);
+                    File.Delete(file);
+                    Console.WriteLine($"Converted legacy .loli config ({file}) to the new .opk format");
+                }
+                catch
+                {
+                    Console.WriteLine($"Could not convert legacy .loli config ({file}) to the new .opk format");
+                }
+            }
+
             var tasks = Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".opk"))
                 .Select(async file => 
                 {

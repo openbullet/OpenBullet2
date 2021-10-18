@@ -12,7 +12,8 @@ namespace OpenBullet2.Core.Models.Settings
         Stacker,
         LoliCode,
         Settings,
-        CSharpCode
+        CSharpCode,
+        LoliScript
     }
 
     /// <summary>

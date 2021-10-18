@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RuriLib.Extensions;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
@@ -208,6 +209,11 @@ namespace RuriLib.Legacy.Blocks
         /// </summary>
         public static string ReplaceValues(string original, LSGlobals ls)
         {
+            if (original == null)
+            {
+                return string.Empty;
+            }
+
             var data = ls.BotData;
             var globals = ls.Globals;
 
@@ -226,6 +232,11 @@ namespace RuriLib.Legacy.Blocks
                 // Replace all the fixed quantities
                 output = output.Replace("<INPUT>", data.Line.Data);
                 output = output.Replace("<STATUS>", data.STATUS);
+                output = output.Replace("<SOURCE>", data.SOURCE);
+                output = output.Replace("<COOKIES>", data.COOKIES.AsString());
+                output = output.Replace("<HEADERS>", data.HEADERS.AsString());
+                output = output.Replace("<RESPONSECODE>", data.RESPONSECODE.AsString());
+                output = output.Replace("<ADDRESS>", data.ADDRESS);
                 output = output.Replace("<RETRIES>", data.Line.Retries.ToString());
 
                 // TODO: Readd this
@@ -275,7 +286,7 @@ namespace RuriLib.Legacy.Blocks
                             // If it's just the list name, replace it with its string representation
                             if (string.IsNullOrEmpty(args))
                             {
-                                output = output.Replace(full, v.ToString());
+                                output = output.Replace(full, v.AsString());
                                 break;
                             }
 
@@ -313,7 +324,7 @@ namespace RuriLib.Legacy.Blocks
                             }
                             else // If it's just the dictionary name, replace it with its string representation
                             {
-                                output = output.Replace(full, v.ToString());
+                                output = output.Replace(full, v.AsString());
                                 break;
                             }
                             break;
@@ -414,15 +425,11 @@ namespace RuriLib.Legacy.Blocks
                 }
             }
 
-            if (isCapture)
-            {
-                data.MarkForCapture(variableName);
-            }
-
             if (variable != null)
             {
                 GetVariables(data).Set(variable);
-                data.Logger.Log($"Parsed variable | Name: {variable.Name} | Value: {variable}", isCapture ? LogColors.OrangeRed : LogColors.Gold);
+                data.Logger.Log($"Parsed variable | Name: {variable.Name} | Value: {variable.AsString()}", isCapture ? LogColors.OrangeRed : LogColors.Gold);
+                variable.MarkedForCapture = isCapture;
             }
             else
             {
