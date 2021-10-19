@@ -16,7 +16,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
     {
         [Block("Connects to a Web Socket", name = "WebSocket Connect",
             extraInfo = "Only works with HTTP proxies or without any proxy")]
-        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string> customHeaders = (null))
+        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string> customHeaders = null)
         {
             data.Logger.LogHeader();
 
@@ -48,10 +48,15 @@ namespace RuriLib.Blocks.Requests.WebSocket
                         Proxy = proxy
                     }
                 };
-                foreach (var header in customHeaders)
+
+                if (customHeaders is not null)
                 {
-                    client.Options.SetRequestHeader(header.Key, header.Value);
+                    foreach (var header in customHeaders)
+                    {
+                        client.Options.SetRequestHeader(header.Key, header.Value);
+                    }
                 }
+                
                 return client;
             });
 
