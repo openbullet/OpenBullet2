@@ -1,6 +1,6 @@
 ﻿using RuriLib.Functions.Conversion;
-using RuriLib.Functions.Crypto;
 using RuriLib.Functions.Time;
+using RuriLib.Legacy.Functions.Crypto;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
@@ -166,7 +166,7 @@ namespace RuriLib.Legacy.Blocks
         #region Function Specific Properties
         // -- Hash & Hmac
         /// <summary>The hashing function to use.</summary>
-        public HashFunction HashType { get; set; } = HashFunction.SHA512;
+        public Hash HashType { get; set; } = Hash.SHA512;
 
         /// <summary>Whether the input is a base64-encoded string instead of UTF8.</summary>
         public bool InputBase64 { get; set; } = false;
@@ -278,7 +278,7 @@ namespace RuriLib.Legacy.Blocks
         public int KdfKeySize { get; set; } = 16;
 
         /// <summary>The size of the generated salt (in bytes) in case none is specified.</summary>
-        public HashFunction KdfAlgorithm { get; set; } = HashFunction.SHA1;
+        public Hash KdfAlgorithm { get; set; } = Hash.SHA1;
         #endregion
 
         #region RandomString Properties
@@ -325,13 +325,13 @@ namespace RuriLib.Legacy.Blocks
             switch (FunctionType)
             {
                 case Function.Hash:
-                    HashType = LineParser.ParseEnum(ref input, "Hash Type", typeof(HashFunction));
+                    HashType = LineParser.ParseEnum(ref input, "Hash Type", typeof(Hash));
                     while (LineParser.Lookahead(ref input) == TokenType.Boolean)
                         LineParser.SetBool(ref input, this);
                     break;
 
                 case Function.HMAC:
-                    HashType = LineParser.ParseEnum(ref input, "Hash Type", typeof(HashFunction));
+                    HashType = LineParser.ParseEnum(ref input, "Hash Type", typeof(Hash));
                     HmacKey = LineParser.ParseLiteral(ref input, "HMAC Key");
                     while (LineParser.Lookahead(ref input) == TokenType.Boolean)
                         LineParser.SetBool(ref input, this);
@@ -449,7 +449,7 @@ namespace RuriLib.Legacy.Blocks
                     else KdfSaltSize = LineParser.ParseInt(ref input, "Salt size");
                     KdfIterations = LineParser.ParseInt(ref input, "Iterations");
                     KdfKeySize = LineParser.ParseInt(ref input, "Key size");
-                    KdfAlgorithm = LineParser.ParseEnum(ref input, "Algorithm", typeof(HashFunction));
+                    KdfAlgorithm = LineParser.ParseEnum(ref input, "Algorithm", typeof(Hash));
                     break;
 
                 default:
@@ -780,12 +780,12 @@ namespace RuriLib.Legacy.Blocks
                         break;
 
                     case Function.RSAEncrypt:
-                        outputString = Base64Converter.ToBase64String(Crypto.RSAEncrypt(
-                            Encoding.UTF8.GetBytes(localInputString),
-                            Base64Converter.ToByteArray(ReplaceValues(RsaN, ls)),
-                            Base64Converter.ToByteArray(ReplaceValues(RsaE, ls)),
+                        outputString = Crypto.RSAEncrypt(
+                            localInputString,
+                            ReplaceValues(RsaN, ls),
+                            ReplaceValues(RsaE, ls),
                             RsaOAEP
-                            ));
+                            );
                         break;
 
                     /*
@@ -800,11 +800,11 @@ namespace RuriLib.Legacy.Blocks
                     */
 
                     case Function.RSAPKCS1PAD2:
-                        outputString = Base64Converter.ToBase64String(Crypto.RSAPkcs1Pad2(
-                            HexConverter.ToByteArray(localInputString),
-                            HexConverter.ToByteArray(ReplaceValues(RsaN, ls)),
-                            HexConverter.ToByteArray(ReplaceValues(RsaE, ls))
-                            ));
+                        outputString = Crypto.RSAPkcs1Pad2(
+                            localInputString,
+                            ReplaceValues(RsaN, ls),
+                            ReplaceValues(RsaE, ls)
+                            );
                         break;
 
                     case Function.Delay:
@@ -834,27 +834,18 @@ namespace RuriLib.Legacy.Blocks
                         break;
 
                     case Function.AESEncrypt:
-                        outputString = Base64Converter.ToBase64String(Crypto.AESEncrypt(
-                            Encoding.UTF8.GetBytes(localInputString),
-                            Base64Converter.ToByteArray(ReplaceValues(AesKey, ls)),
-                            Base64Converter.ToByteArray(ReplaceValues(AesIV, ls)),
-                            AesMode, AesPadding));
+                        outputString = Crypto.AESEncrypt(localInputString, ReplaceValues(AesKey, ls),
+                            ReplaceValues(AesIV, ls), AesMode, AesPadding);
                         break;
 
                     case Function.AESDecrypt:
-                        outputString = Base64Converter.ToBase64String(Crypto.AESDecrypt(
-                            Encoding.UTF8.GetBytes(localInputString),
-                            Base64Converter.ToByteArray(ReplaceValues(AesKey, ls)),
-                            Base64Converter.ToByteArray(ReplaceValues(AesIV, ls)),
-                            AesMode, AesPadding));
+                        outputString = Crypto.AESDecrypt(localInputString, ReplaceValues(AesKey, ls),
+                            ReplaceValues(AesIV, ls), AesMode, AesPadding);
                         break;
 
                     case Function.PBKDF2PKCS5:
-                        outputString = Base64Converter.ToBase64String(Crypto.PBKDF2PKCS5(
-                            Encoding.UTF8.GetBytes(localInputString),
-                            Base64Converter.ToByteArray(ReplaceValues(KdfSalt, ls)),
-                            KdfSaltSize,
-                            KdfIterations, KdfKeySize, KdfAlgorithm));
+                        outputString = Crypto.PBKDF2PKCS5(localInputString, ReplaceValues(KdfSalt, ls),
+                            KdfSaltSize, KdfIterations, KdfKeySize, KdfAlgorithm);
                         break;
                 }
 
@@ -875,18 +866,18 @@ namespace RuriLib.Legacy.Blocks
         /// <param name="type">The hashing function</param>
         /// <param name="inputBase64">Whether the base string should be treated as base64 encoded (if false, it will be treated as UTF8 encoded)</param>
         /// <returns>The hash digest as a hex-encoded uppercase string.</returns>
-        public static string GetHash(string baseString, HashFunction type, bool inputBase64)
+        public static string GetHash(string baseString, Hash type, bool inputBase64)
         {
             var rawInput = inputBase64 ? Convert.FromBase64String(baseString) : Encoding.UTF8.GetBytes(baseString);
             
             var digest = type switch
             {
-                HashFunction.MD4 => Crypto.MD4(rawInput),
-                HashFunction.MD5 => Crypto.MD5(rawInput),
-                HashFunction.SHA1 => Crypto.SHA1(rawInput),
-                HashFunction.SHA256 => Crypto.SHA256(rawInput),
-                HashFunction.SHA384 => Crypto.SHA384(rawInput),
-                HashFunction.SHA512 => Crypto.SHA512(rawInput),
+                Hash.MD4 => Crypto.MD4(rawInput),
+                Hash.MD5 => Crypto.MD5(rawInput),
+                Hash.SHA1 => Crypto.SHA1(rawInput),
+                Hash.SHA256 => Crypto.SHA256(rawInput),
+                Hash.SHA384 => Crypto.SHA384(rawInput),
+                Hash.SHA512 => Crypto.SHA512(rawInput),
                 _ => throw new NotSupportedException("Unsupported algorithm"),
             };
             
@@ -903,18 +894,18 @@ namespace RuriLib.Legacy.Blocks
         /// <param name="keyBase64">Whether the key string should be treated as base64 encoded (if false, it will be treated as UTF8 encoded)</param>
         /// <param name="outputBase64">Whether the output should be encrypted as a base64 string</param>
         /// <returns>The HMAC signature</returns>
-        public static string Hmac(string baseString, HashFunction type, string key, bool inputBase64, bool keyBase64, bool outputBase64)
+        public static string Hmac(string baseString, Hash type, string key, bool inputBase64, bool keyBase64, bool outputBase64)
         {
             var rawInput = inputBase64 ? Convert.FromBase64String(baseString) : Encoding.UTF8.GetBytes(baseString);
             var rawKey = keyBase64 ? Convert.FromBase64String(key) : Encoding.UTF8.GetBytes(key);
             
             var signature = type switch
             {
-                HashFunction.MD5 => Crypto.HMACMD5(rawInput, rawKey),
-                HashFunction.SHA1 => Crypto.HMACSHA1(rawInput, rawKey),
-                HashFunction.SHA256 => Crypto.HMACSHA256(rawInput, rawKey),
-                HashFunction.SHA384 => Crypto.HMACSHA384(rawInput, rawKey),
-                HashFunction.SHA512 => Crypto.HMACSHA512(rawInput, rawKey),
+                Hash.MD5 => Crypto.HMACMD5(rawInput, rawKey),
+                Hash.SHA1 => Crypto.HMACSHA1(rawInput, rawKey),
+                Hash.SHA256 => Crypto.HMACSHA256(rawInput, rawKey),
+                Hash.SHA384 => Crypto.HMACSHA384(rawInput, rawKey),
+                Hash.SHA512 => Crypto.HMACSHA512(rawInput, rawKey),
                 _ => throw new NotSupportedException("Unsupported algorithm"),
             };
 
