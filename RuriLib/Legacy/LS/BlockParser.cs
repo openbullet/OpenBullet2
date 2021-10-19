@@ -18,7 +18,7 @@ namespace RuriLib.Legacy.LS
         {
             //{ "SOLVECAPTCHA", typeof(BlockSolveCaptcha) },
             //{ "REPORTCAPTCHA", typeof(BlockReportCaptcha) },
-            //{ "FUNCTION", typeof(BlockFunction) },
+            { "FUNCTION", typeof(BlockFunction) },
             { "KEYCHECK", typeof(BlockKeycheck) },
             { "PARSE", typeof(BlockParse) },
             { "REQUEST", typeof(BlockRequest) },
