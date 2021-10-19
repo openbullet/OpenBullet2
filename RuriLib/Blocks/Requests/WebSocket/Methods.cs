@@ -16,7 +16,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
     {
         [Block("Connects to a Web Socket", name = "WebSocket Connect",
             extraInfo = "Only works with HTTP proxies or without any proxy")]
-        public static async Task WsConnect(BotData data, string url, Dictionary<string, string> customHeaders, int keepAliveMilliseconds = 5000)
+        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string> customHeaders = (null))
         {
             data.Logger.LogHeader();
 
