@@ -23,7 +23,7 @@ namespace RuriLib.Legacy.LS
             { "PARSE", typeof(BlockParse) },
             { "REQUEST", typeof(BlockRequest) },
             //{ "TCP", typeof(BlockTCP) },
-            //{ "UTILITY", typeof(BlockUtility) },
+            { "UTILITY", typeof(BlockUtility) },
             //{ "BROWSERACTION", typeof(SBlockBrowserAction) },
             //{ "ELEMENTACTION", typeof(SBlockElementAction) },
             //{ "EXECUTEJS", typeof(SBlockExecuteJS) },
