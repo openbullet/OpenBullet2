@@ -801,9 +801,9 @@ namespace RuriLib.Legacy.Blocks
 
                     case Function.RSAPKCS1PAD2:
                         outputString = Base64Converter.ToBase64String(Crypto.RSAPkcs1Pad2(
-                            Encoding.UTF8.GetBytes(localInputString),
-                            Base64Converter.ToByteArray(ReplaceValues(RsaN, ls)),
-                            Base64Converter.ToByteArray(ReplaceValues(RsaE, ls))
+                            HexConverter.ToByteArray(localInputString),
+                            HexConverter.ToByteArray(ReplaceValues(RsaN, ls)),
+                            HexConverter.ToByteArray(ReplaceValues(RsaE, ls))
                             ));
                         break;
 
