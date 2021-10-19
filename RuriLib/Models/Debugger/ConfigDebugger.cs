@@ -166,7 +166,18 @@ namespace RuriLib.Models.Debugger
             // [LEGACY] Set up the VariablesList
             if (config.Mode == ConfigMode.Legacy)
             {
-                var legacyVariables = new VariablesList(data.Line.GetVariables().Cast<Variable>().ToList());
+                var slices = new List<Variable>();
+
+                foreach (var slice in dataLine.GetVariables())
+                {
+                    var sliceValue = data.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
+                        ? Uri.EscapeDataString(slice.AsString())
+                        : slice.AsString();
+
+                    slices.Add(new StringVariable(sliceValue) { Name = slice.Name });
+                }
+
+                var legacyVariables = new VariablesList(slices);
 
                 foreach (var input in config.Settings.InputSettings.CustomInputs)
                 {
