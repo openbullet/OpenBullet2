@@ -16,7 +16,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
     {
         [Block("Connects to a Web Socket", name = "WebSocket Connect",
             extraInfo = "Only works with HTTP proxies or without any proxy")]
-        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000)
+        public static async Task WsConnect(BotData data, string url, int keepAliveMilliseconds = 5000, Dictionary<string, string> customHeaders = (null))
         {
             data.Logger.LogHeader();
 
@@ -38,13 +38,21 @@ namespace RuriLib.Blocks.Requests.WebSocket
                 }
             }
 
-            var factory = new Func<ClientWebSocket>(() => new ClientWebSocket
+            var factory = new Func<ClientWebSocket>(() =>
             {
-                Options =
+                var client = new ClientWebSocket
                 {
-                    KeepAliveInterval = TimeSpan.FromMilliseconds(keepAliveMilliseconds),
-                    Proxy = proxy
+                    Options =
+                    {
+                        KeepAliveInterval = TimeSpan.FromMilliseconds(keepAliveMilliseconds),
+                        Proxy = proxy
+                    }
+                };
+                foreach (var header in customHeaders)
+                {
+                    client.Options.SetRequestHeader(header.Key, header.Value);
                 }
+                return client;
             });
 
             var wsMessages = new List<string>();
@@ -56,16 +64,16 @@ namespace RuriLib.Blocks.Requests.WebSocket
                 ErrorReconnectTimeout = null
             };
 
-            ws.MessageReceived.Subscribe(msg => 
+            ws.MessageReceived.Subscribe(msg =>
             {
                 lock (wsMessages)
                 {
                     wsMessages.Add(msg.Text);
                 }
             });
-            
+
             ws.DisconnectionHappened.Subscribe(msg =>
-            {   
+            {
                 if (msg.Exception != null)
                 {
                     throw msg.Exception;
@@ -97,13 +105,20 @@ namespace RuriLib.Blocks.Requests.WebSocket
         }
 
         [Block("Gets unread messages that the server sent since the last read", name = "WebSocket Read")]
-        public static List<string> WsRead(BotData data)
+        public static List<string> WsRead(BotData data, int pollIntervalInMilliseconds = 10)
         {
             data.Logger.LogHeader();
 
-            var messages = GetMessages(data);
-            var cloned = messages.Select(m => m).ToList();
+            // wait until a message actually arrives otherwise it will be empty when the block is executed. maybe add timeout.
+            // poll for message
+            List<string> messages = new List<string>();
+            while (messages.Count == 0)
+            {
+                messages = GetMessages(data);
+                System.Threading.Thread.Sleep(pollIntervalInMilliseconds);
+            }
 
+            var cloned = messages.Select(m => m).ToList();
             lock (messages)
                 messages.Clear();
 
