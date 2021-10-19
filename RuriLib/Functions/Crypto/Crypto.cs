@@ -8,6 +8,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Numerics;
 using System.Text;
+using RuriLib.Functions.Conversion;
+using System.Globalization;
 
 namespace RuriLib.Functions.Crypto
 {
@@ -319,15 +321,17 @@ namespace RuriLib.Functions.Crypto
         /// <summary>
         /// Encrypts a message using RSA with PKCS1PAD2 padding.
         /// </summary>
-        /// <param name="message">The message</param>
-        /// <param name="modulus">The public key's modulus</param>
-        /// <param name="exponent">The public key's exponent</param>
+        /// <param name="message">The message as a UTF-8 string</param>
+        /// <param name="hexModulus">The public key's modulus as a Hexadecimal string</param>
+        /// <param name="hexExponent">The public key's exponent as a Hexadecimal string</param>
         // Thanks to TheLittleTrain for this implementation.
-        public static byte[] RSAPkcs1Pad2(byte[] message, byte[] modulus, byte[] exponent)
+        public static byte[] RSAPkcs1Pad2(string message, string hexModulus, string hexExponent)
         {
             // Convert the public key components to numbers
-            var n = new BigInteger(modulus);
-            var e = new BigInteger(exponent);
+            // NOTE: A BigInteger is parsed in two's complement and little endian, so we add
+            // a 0x00 byte at the start to make the number positive
+            var n = BigInteger.Parse("00" + hexModulus, NumberStyles.AllowHexSpecifier);
+            var e = BigInteger.Parse("00" + hexExponent, NumberStyles.AllowHexSpecifier);
 
             // (modulus.ToByteArray().Length - 1) * 8
             // modulus has 256 bits multiplied by 8 bits equals 2048
@@ -335,12 +339,14 @@ namespace RuriLib.Functions.Crypto
 
             // And now, the RSA encryption
             encryptedNumber = BigInteger.ModPow(encryptedNumber, e, n);
+            var outputArray = encryptedNumber.ToByteArray();
 
-            //Reverse number
-            return encryptedNumber.ToByteArray().Reverse().ToArray();
+            // Reverse the array since it's stored as little endian in the BigInteger
+            Array.Reverse(outputArray);
+            return outputArray;
         }
 
-        private static BigInteger Pkcs1Pad2(byte[] data, int keySize)
+        private static BigInteger Pkcs1Pad2(string data, int keySize)
         {
             if (keySize < data.Length + 11)
                 return new BigInteger();
@@ -350,7 +356,7 @@ namespace RuriLib.Functions.Crypto
 
             while (i >= 0 && keySize > 0)
             {
-                buffer[--keySize] = data[i--];
+                buffer[--keySize] = (byte)data[i--];
             }
 
             // Padding, I think

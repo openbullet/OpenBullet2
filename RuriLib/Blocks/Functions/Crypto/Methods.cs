@@ -155,9 +155,9 @@ namespace RuriLib.Blocks.Functions.Crypto
         }
 
         [Block("Encrypts data using RSA with PKCS1PAD2", name = "RSA PKCS1PAD2")]
-        public static byte[] RSAPkcs1Pad2(BotData data, byte[] plainText, byte[] modulus, byte[] exponent)
+        public static byte[] RSAPkcs1Pad2(BotData data, string plainText, string hexModulus, string hexExponent)
         {
-            var encrypted = RuriLib.Functions.Crypto.Crypto.RSAPkcs1Pad2(plainText, modulus, exponent);
+            var encrypted = RuriLib.Functions.Crypto.Crypto.RSAPkcs1Pad2(plainText, hexModulus, hexExponent);
             data.Logger.LogHeader();
             data.Logger.Log($"Encrypted: {HexConverter.ToHexString(encrypted)}", LogColors.YellowGreen);
             return encrypted;
