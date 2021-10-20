@@ -16,6 +16,8 @@ namespace RuriLib.Legacy.LS
         /// </summary>
         public static Dictionary<string, Type> BlockMappings { get; set; } = new Dictionary<string, Type>()
         {
+            { "CAPTCHA", typeof(BlockImageCaptcha) }, // Obsolete
+            { "RECAPTCHA", typeof(BlockRecaptcha) }, // Obsolete
             { "SOLVECAPTCHA", typeof(BlockSolveCaptcha) },
             { "REPORTCAPTCHA", typeof(BlockReportCaptcha) },
             { "FUNCTION", typeof(BlockFunction) },
