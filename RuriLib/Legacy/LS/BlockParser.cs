@@ -22,7 +22,7 @@ namespace RuriLib.Legacy.LS
             { "KEYCHECK", typeof(BlockKeycheck) },
             { "PARSE", typeof(BlockParse) },
             { "REQUEST", typeof(BlockRequest) },
-            //{ "TCP", typeof(BlockTCP) },
+            { "TCP", typeof(BlockTCP) },
             { "UTILITY", typeof(BlockUtility) },
             //{ "BROWSERACTION", typeof(SBlockBrowserAction) },
             //{ "ELEMENTACTION", typeof(SBlockElementAction) },
