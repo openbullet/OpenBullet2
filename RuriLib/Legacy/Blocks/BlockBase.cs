@@ -4,6 +4,7 @@ using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
+using RuriLib.Models.Captchas;
 using RuriLib.Models.Variables;
 using System;
 using System.Collections.Generic;
@@ -249,6 +250,12 @@ namespace RuriLib.Legacy.Blocks
                 output = output.Replace("<RESPONSECODE>", data.RESPONSECODE.AsString());
                 output = output.Replace("<ADDRESS>", data.ADDRESS);
                 output = output.Replace("<RETRIES>", data.Line.Retries.ToString());
+
+                var lastCaptchaInfo = data.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
+                if (lastCaptchaInfo is not null)
+                {
+                    output = output.Replace("<CAPTCHAID>", lastCaptchaInfo.Id.ToString());
+                }
 
                 // TODO: Readd this
                 // output = output.Replace("<BOTNUM>", data.BotNumber.ToString());
