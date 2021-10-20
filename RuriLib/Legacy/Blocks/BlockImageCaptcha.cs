@@ -148,7 +148,9 @@ namespace RuriLib.Legacy.Blocks
                     var oldRawSource = data.RAWSOURCE;
 
                     // Request the captcha
+                    data.Logger.Enabled = false;
                     await RuriLib.Blocks.Requests.Http.Methods.HttpRequestStandard(data, standardOptions);
+                    data.Logger.Enabled = true;
 
                     // Save the image
                     File.WriteAllBytes(captchaFile, data.RAWSOURCE);
@@ -161,6 +163,7 @@ namespace RuriLib.Legacy.Blocks
                 }
                 catch (Exception ex)
                 {
+                    data.Logger.Enabled = true;
                     data.Logger.Log(ex.Message, LogColors.Tomato);
                     throw;
                 }
