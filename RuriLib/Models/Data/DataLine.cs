@@ -39,7 +39,7 @@ namespace RuriLib.Models.Data
             // Split the data
             var split = string.IsNullOrEmpty(Type.Separator)
                 ? new[] { Data }
-                : Data.Split(new string[] { Type.Separator }, Type.Slices.Length, StringSplitOptions.None);
+                : Data.Split(Type.Separator, Type.Slices.Length, StringSplitOptions.None);
 
             // If there are less than the required slices, set the missing ones to empty strings
             var toAdd = split.Concat(Enumerable.Repeat(string.Empty, Type.Slices.Length - split.Length));
