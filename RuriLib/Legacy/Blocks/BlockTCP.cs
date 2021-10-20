@@ -162,6 +162,7 @@ namespace RuriLib.Legacy.Blocks
         public override async Task Process(LSGlobals ls)
         {
             var data = ls.BotData;
+            await base.Process(ls);
 
             // Get easy handles
             var tcp = data.TryGetObject<TcpClient>("TCPClient");
