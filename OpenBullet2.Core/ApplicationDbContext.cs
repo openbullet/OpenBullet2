@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using System;
+using System.IO;
 
 namespace OpenBullet2.Core
 {
@@ -12,6 +14,17 @@ namespace OpenBullet2.Core
             : base(options)
         {
             
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder
+            .LogTo(DebugLog)
+            .EnableSensitiveDataLogging(true);
+
+        private void DebugLog(string message)
+        {
+            Console.WriteLine(message);
+            File.AppendAllText("efcore.log", $"[{DateTime.Now}]{message}{Environment.NewLine}");
         }
 
         public DbSet<ProxyEntity> Proxies { get; set; }
