@@ -240,7 +240,7 @@ namespace RuriLib.Models.Jobs
                     botData.Logger.Log(endMessage);
 
                     // Close the browser if needed
-                    if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS))
+                    if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                     {
                         botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
                     }

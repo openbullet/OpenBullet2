@@ -4,6 +4,7 @@ using RuriLib.Providers.Proxies;
 using RuriLib.Providers.Puppeteer;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.Security;
+using RuriLib.Providers.Selenium;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 
@@ -20,6 +21,7 @@ namespace RuriLib.Models.Bots
         public IEmailDomainRepository EmailDomains { get; set; }
         public IRNGProvider RNG { get; set; }
         public IPuppeteerBrowserProvider PuppeteerBrowser { get; set; }
+        public ISeleniumBrowserProvider SeleniumBrowser { get; set; }
         public IGeneralSettingsProvider GeneralSettings { get; set; }
         public IProxySettingsProvider ProxySettings { get; set; }
         public ISecurityProvider Security { get; set; }
@@ -35,6 +37,7 @@ namespace RuriLib.Models.Bots
                 EmailDomains = new FileEmailDomainRepository();
                 Captcha = new CaptchaSharpProvider(settings);
                 PuppeteerBrowser = new DefaultPuppeteerBrowserProvider(settings);
+                SeleniumBrowser = new DefaultSeleniumBrowserProvider(settings);
                 GeneralSettings = new DefaultGeneralSettingsProvider(settings);
                 ProxySettings = new DefaultProxySettingsProvider(settings);
                 Security = new DefaultSecurityProvider(settings);

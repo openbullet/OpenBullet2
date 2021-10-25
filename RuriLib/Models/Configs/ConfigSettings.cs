@@ -1,4 +1,5 @@
 ﻿using RuriLib.Models.Configs.Settings;
+using System.Text.Json.Serialization;
 
 namespace RuriLib.Models.Configs
 {
@@ -8,7 +9,10 @@ namespace RuriLib.Models.Configs
         public ProxySettings ProxySettings { get; set; } = new ProxySettings();
         public InputSettings InputSettings { get; set; } = new InputSettings();
         public DataSettings DataSettings { get; set; } = new DataSettings();
-        public PuppeteerSettings PuppeteerSettings { get; set; } = new PuppeteerSettings();
+
+        [JsonPropertyName("PuppeteerSettings")] // For backwards compatibility
+        public BrowserSettings BrowserSettings { get; set; } = new BrowserSettings();
+
         public ScriptSettings ScriptSettings { get; set; } = new ScriptSettings();
     }
 }

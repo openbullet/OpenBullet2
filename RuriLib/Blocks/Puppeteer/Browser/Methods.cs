@@ -30,7 +30,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                 return;
             }
 
-            var args = data.ConfigSettings.PuppeteerSettings.CommandLineArgs;
+            var args = data.ConfigSettings.BrowserSettings.CommandLineArgs;
             if (data.Proxy != null && data.UseProxy)
             {
                 if (data.Proxy.Type == ProxyType.Http || !data.Proxy.NeedsAuthentication)
@@ -54,7 +54,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             {
                 Args = new string[] { args },
                 ExecutablePath = data.Providers.PuppeteerBrowser.ChromeBinaryLocation,
-                Headless = data.ConfigSettings.PuppeteerSettings.Headless,
+                Headless = data.ConfigSettings.BrowserSettings.Headless,
                 DefaultViewport = null // This is important
             };
 
@@ -64,7 +64,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
             // Launch the browser
             var browser = await extra.LaunchAsync(launchOptions);
-            browser.IgnoreHTTPSErrors = data.ConfigSettings.PuppeteerSettings.IgnoreHttpsErrors;
+            browser.IgnoreHTTPSErrors = data.ConfigSettings.BrowserSettings.IgnoreHttpsErrors;
 
             // Save the browser for further use
             data.SetObject("puppeteer", browser);
@@ -197,14 +197,14 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             page.Request += (sender, e) =>
             {
                 // If we only want documents and scripts but the resource is not one of those, block
-                if (data.ConfigSettings.PuppeteerSettings.LoadOnlyDocumentAndScript && 
+                if (data.ConfigSettings.BrowserSettings.LoadOnlyDocumentAndScript && 
                     e.Request.ResourceType != ResourceType.Document && e.Request.ResourceType != ResourceType.Script)
                 {
                     e.Request.AbortAsync();
                 }
 
                 // If the url contains one of the blocked urls
-                else if (data.ConfigSettings.PuppeteerSettings.BlockedUrls
+                else if (data.ConfigSettings.BrowserSettings.BlockedUrls
                     .Where(u => !string.IsNullOrWhiteSpace(u))
                     .Any(u => e.Request.Url.Contains(u, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -218,7 +218,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
                 }
             };
 
-            if (data.ConfigSettings.PuppeteerSettings.DismissDialogs)
+            if (data.ConfigSettings.BrowserSettings.DismissDialogs)
             {
                 page.Dialog += (sender, e) =>
                 {

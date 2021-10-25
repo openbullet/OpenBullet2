@@ -21,7 +21,7 @@ namespace OpenBullet2.Native.ViewModels
         private ProxySettings Proxy => Config.Settings.ProxySettings;
         private DataSettings Data => Config.Settings.DataSettings;
         private InputSettings Input => Config.Settings.InputSettings;
-        private PuppeteerSettings Puppeteer => Config.Settings.PuppeteerSettings;
+        private BrowserSettings Puppeteer => Config.Settings.BrowserSettings;
 
         public int SuggestedBots
         {
