@@ -349,6 +349,22 @@ namespace RuriLib.Legacy.Blocks
             var data = ls.BotData;
             await base.Process(ls);
 
+            var headers = ReplaceValues(CustomHeaders, ls);
+
+            // If no Connection header was specified, add keep-alive by default
+            if (!headers.Keys.Any(k => k.Equals("connection", StringComparison.OrdinalIgnoreCase)))
+            {
+                headers.Add("Connection", "keep-alive");
+            }
+
+            // Override the default for Accept-Encoding (default behaviour in OB1)
+            foreach (var key in headers.Keys.Where(k => k.Equals("accept-encoding", StringComparison.OrdinalIgnoreCase)).ToArray())
+            {
+                headers.Remove(key);
+            }
+
+            headers["Accept-Encoding"] = "gzip,deflate";
+
             switch (RequestType)
             {
                 case RequestType.Standard:
@@ -361,7 +377,7 @@ namespace RuriLib.Legacy.Blocks
                         Content = ReplaceValues(PostData, ls),
                         ContentType = ReplaceValues(ContentType, ls),
                         CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        CustomHeaders = headers,
                         Method = Method,
                         Url = ReplaceValues(Url, ls),
                         TimeoutMilliseconds = 10000,
@@ -381,7 +397,7 @@ namespace RuriLib.Legacy.Blocks
                         Content = HexConverter.ToByteArray(ReplaceValues(RawData, ls)),
                         ContentType = ReplaceValues(ContentType, ls),
                         CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        CustomHeaders = headers,
                         Method = Method,
                         Url = ReplaceValues(Url, ls),
                         TimeoutMilliseconds = 10000
@@ -400,7 +416,7 @@ namespace RuriLib.Legacy.Blocks
                         Username = ReplaceValues(AuthUser, ls),
                         Password = ReplaceValues(AuthPass, ls),
                         CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        CustomHeaders = headers,
                         Method = Method,
                         Url = ReplaceValues(Url, ls),
                         TimeoutMilliseconds = 10000
@@ -419,7 +435,7 @@ namespace RuriLib.Legacy.Blocks
                         Boundary = ReplaceValues(MultipartBoundary, ls),
                         Contents = MultipartContents.Select(mpc => MapMultipartContent(mpc, ls)).ToList(),
                         CustomCookies = ReplaceValues(CustomCookies, ls),
-                        CustomHeaders = ReplaceValues(CustomHeaders, ls),
+                        CustomHeaders = headers,
                         Method = Method,
                         Url = ReplaceValues(Url, ls),
                         TimeoutMilliseconds = 10000
