@@ -78,18 +78,8 @@ namespace RuriLib.Http.Models
                 finalHeaders.Add("Host", Uri.Host);
             }
 
-            // TODO: Implement support for Keep-Alive connections!
-            // If there is already a Connection header
-            if (HeaderExists("Connection", out var connectionHeaderName))
-            {
-                // If its value is Keep-Alive, change it to Close
-                if (Headers[connectionHeaderName].Equals("Keep-Alive", StringComparison.OrdinalIgnoreCase))
-                {
-                    Headers[connectionHeaderName] = "Close";
-                }
-            }
-            // Otherwise, add it
-            else
+            // If there is no Connection header, add it
+            if (!HeaderExists("Connection", out var connectionHeaderName))
             {
                 finalHeaders.Add("Connection", "Close");
             }
