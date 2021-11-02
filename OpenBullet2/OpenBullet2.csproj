@@ -38,7 +38,7 @@
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
     <PackageReference Include="CaptchaSharp" Version="1.0.8" />
-    <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.2" />
+    <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.3" />
     <PackageReference Include="GridBlazor" Version="2.1.10" />
     <PackageReference Include="GridMvcCore" Version="4.1.3" />
     <PackageReference Include="HtmlSanitizer" Version="5.0.372" />
