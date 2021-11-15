@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Linq;
+using System.Drawing;
 
 namespace RuriLib.Blocks.Selenium.Browser
 {
@@ -135,7 +136,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             ((IJavaScriptExecutor)browser).ExecuteScript("window.open();");
             browser.SwitchTo().Window(browser.WindowHandles.Last());
 
-            data.Logger.Log($"Opened a new page", LogColors.JuneBud);
+            data.Logger.Log("Opened a new tab", LogColors.JuneBud);
         }
 
         [Block("Closes the currently active browser tab", name = "Close Tab")]
@@ -146,7 +147,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             var browser = GetBrowser(data);
             ((IJavaScriptExecutor)browser).ExecuteScript("window.close();");
 
-            data.Logger.Log($"Closed the active page", LogColors.JuneBud);
+            data.Logger.Log("Closed the active tab", LogColors.JuneBud);
         }
 
         [Block("Switches to the browser tab with a specified index", name = "Switch to Tab")]
@@ -166,8 +167,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Refresh();
-
-            data.Logger.Log($"Reloaded the page", LogColors.JuneBud);
+            data.Logger.Log("Reloaded the page", LogColors.JuneBud);
         }
 
         [Block("Goes back to the previously visited page", name = "Go Back")]
@@ -176,8 +176,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Back();
-
-            data.Logger.Log($"Went back to the previously visited page", LogColors.JuneBud);
+            data.Logger.Log("Went back to the previously visited page", LogColors.JuneBud);
         }
 
         [Block("Goes forward to the next visited page", name = "Go Forward")]
@@ -186,8 +185,43 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Forward();
+            data.Logger.Log("Went forward to the next visited page", LogColors.JuneBud);
+        }
 
-            data.Logger.Log($"Went forward to the next visited page", LogColors.JuneBud);
+        [Block("Minimizes the browser window", name = "Minimize")]
+        public static void SeleniumMinimize(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            GetBrowser(data).Manage().Window.Minimize();
+            data.Logger.Log("Minimized the browser window", LogColors.JuneBud);
+        }
+
+        [Block("Maximizes the browser window", name = "Maximize")]
+        public static void SeleniumMaximize(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            GetBrowser(data).Manage().Window.Maximize();
+            data.Logger.Log("Maximized the browser window", LogColors.JuneBud);
+        }
+
+        [Block("Makes the browser window full screen", name = "Full Screen")]
+        public static void SeleniumFullScreen(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            GetBrowser(data).Manage().Window.FullScreen();
+            data.Logger.Log("Made the browser window full screen", LogColors.JuneBud);
+        }
+
+        [Block("Sets the height and width of the browser window", name = "Set Browser Size")]
+        public static void SeleniumSetWindowSize(BotData data, int width, int height)
+        {
+            data.Logger.LogHeader();
+
+            GetBrowser(data).Manage().Window.Size = new Size(width, height);
+            data.Logger.Log($"Set the browser's size to {width} x {height}", LogColors.JuneBud);
         }
 
         private static RemoteWebDriver GetBrowser(BotData data)
