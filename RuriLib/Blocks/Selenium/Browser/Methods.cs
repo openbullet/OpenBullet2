@@ -49,6 +49,11 @@ namespace RuriLib.Blocks.Selenium.Browser
                         chromeop.AddArgument("--headless");
                     }
 
+                    if (data.ConfigSettings.BrowserSettings.DismissDialogs)
+                    {
+                        chromeop.AddArgument("--disable-notifications");
+                    }
+
                     if (!string.IsNullOrWhiteSpace(data.ConfigSettings.BrowserSettings.CommandLineArgs))
                     {
                         chromeop.AddArgument(data.ConfigSettings.BrowserSettings.CommandLineArgs);
@@ -76,6 +81,11 @@ namespace RuriLib.Blocks.Selenium.Browser
                     if (data.ConfigSettings.BrowserSettings.Headless)
                     {
                         fireop.AddArgument("--headless");
+                    }
+
+                    if (data.ConfigSettings.BrowserSettings.DismissDialogs)
+                    {
+                        fireprofile.SetPreference("dom.webnotifications.enabled", false);
                     }
 
                     if (!string.IsNullOrWhiteSpace(data.ConfigSettings.BrowserSettings.CommandLineArgs))
