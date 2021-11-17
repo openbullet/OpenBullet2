@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using RuriLib.Attributes;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
@@ -21,6 +20,7 @@ namespace RuriLib.Blocks.Selenium.Page
             var browser = GetBrowser(data);
             browser.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(timeout);
             browser.Navigate().GoToUrl(url);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Navigated to {url}", LogColors.JuneBud);
         }
@@ -43,6 +43,8 @@ namespace RuriLib.Blocks.Selenium.Page
                 .SendKeys(text)
                 .Perform();
 
+            UpdateSeleniumData(data);
+
             data.Logger.Log($"Typed {text}", LogColors.JuneBud);
         }
 
@@ -55,6 +57,8 @@ namespace RuriLib.Blocks.Selenium.Page
             new Actions(GetBrowser(data))
                 .SendKeys(GetKeyCode(key))
                 .Perform();
+
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Pressed and released {key}", LogColors.JuneBud);
 
@@ -71,6 +75,8 @@ namespace RuriLib.Blocks.Selenium.Page
                 .KeyDown(GetKeyCode(key))
                 .Perform();
 
+            UpdateSeleniumData(data);
+
             // Full list of keys: https://github.com/SeleniumHQ/selenium/blob/master/dotnet/src/webdriver/Keys.cs
         }
 
@@ -83,6 +89,8 @@ namespace RuriLib.Blocks.Selenium.Page
             new Actions(GetBrowser(data))
                 .KeyUp(GetKeyCode(key))
                 .Perform();
+
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Released {key}", LogColors.JuneBud);
 
@@ -197,6 +205,7 @@ namespace RuriLib.Blocks.Selenium.Page
 
             var scriptResult = GetBrowser(data).ExecuteScript(expression);
             var json = scriptResult?.ToString() ?? "undefined";
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Evaluated {expression}", LogColors.JuneBud);
             data.Logger.Log($"Got result: {json}", LogColors.JuneBud);
@@ -206,6 +215,17 @@ namespace RuriLib.Blocks.Selenium.Page
 
         private static WebDriver GetBrowser(BotData data)
                 => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
+
+        private static void UpdateSeleniumData(BotData data)
+        {
+            var browser = data.TryGetObject<WebDriver>("selenium");
+
+            if (browser != null)
+            {
+                data.ADDRESS = browser.Url;
+                data.SOURCE = browser.PageSource;
+            }
+        }
 
         private static string GetKeyCode(string key)
         {

@@ -8,7 +8,6 @@ using RuriLib.Models.Settings;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using System;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using System.Linq;
 using System.Drawing;
@@ -125,6 +124,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             }
 
             data.Logger.Log($"{(data.ConfigSettings.BrowserSettings.Headless ? "Headless " : "")}Browser opened successfully!", LogColors.JuneBud);
+            UpdateSeleniumData(data);
         }
 
         [Block("Closes an open selenium browser", name = "Close Browser")]
@@ -146,6 +146,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             var browser = GetBrowser(data);
             ((IJavaScriptExecutor)browser).ExecuteScript("window.open();");
             browser.SwitchTo().Window(browser.WindowHandles.Last());
+            UpdateSeleniumData(data);
 
             data.Logger.Log("Opened a new tab", LogColors.JuneBud);
         }
@@ -157,6 +158,7 @@ namespace RuriLib.Blocks.Selenium.Browser
 
             var browser = GetBrowser(data);
             ((IJavaScriptExecutor)browser).ExecuteScript("window.close();");
+            UpdateSeleniumData(data);
 
             data.Logger.Log("Closed the active tab", LogColors.JuneBud);
         }
@@ -168,6 +170,7 @@ namespace RuriLib.Blocks.Selenium.Browser
 
             var browser = GetBrowser(data);
             browser.SwitchTo().Window(browser.WindowHandles[index]);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Switched to tab with index {index}", LogColors.JuneBud);
         }
@@ -178,6 +181,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Refresh();
+            UpdateSeleniumData(data);
             data.Logger.Log("Reloaded the page", LogColors.JuneBud);
         }
 
@@ -187,6 +191,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Back();
+            UpdateSeleniumData(data);
             data.Logger.Log("Went back to the previously visited page", LogColors.JuneBud);
         }
 
@@ -196,6 +201,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             GetBrowser(data).Navigate().Forward();
+            UpdateSeleniumData(data);
             data.Logger.Log("Went forward to the next visited page", LogColors.JuneBud);
         }
 
@@ -237,5 +243,16 @@ namespace RuriLib.Blocks.Selenium.Browser
 
         private static WebDriver GetBrowser(BotData data)
                 => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
+
+        private static void UpdateSeleniumData(BotData data)
+        {
+            var browser = data.TryGetObject<WebDriver>("selenium");
+
+            if (browser != null)
+            {
+                data.ADDRESS = browser.Url;
+                data.SOURCE = browser.PageSource;
+            }
+        }
     }
 }

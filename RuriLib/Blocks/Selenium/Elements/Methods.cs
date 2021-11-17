@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using RuriLib.Attributes;
 using RuriLib.Functions.Files;
@@ -28,6 +27,7 @@ namespace RuriLib.Blocks.Selenium.Elements
             var elemScript = GetElementScript(findBy, identifier, index);
             var script = elemScript + $".setAttribute('{attributeName}', '{value}');";
             GetBrowser(data).ExecuteScript(script);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Set value {value} of attribute {attributeName} by executing {script}", LogColors.JuneBud);
         }
@@ -39,6 +39,7 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             element.Clear();
+
             data.Logger.Log("Cleared the field", LogColors.JuneBud);
         }
 
@@ -55,6 +56,8 @@ namespace RuriLib.Blocks.Selenium.Elements
                 element.SendKeys(c.ToString());
                 await Task.Delay(timeBetweenKeystrokes);
             }
+
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Typed {text}", LogColors.JuneBud);
         }
@@ -73,6 +76,8 @@ namespace RuriLib.Blocks.Selenium.Elements
                 await Task.Delay(data.Random.Next(100, 300)); // Wait between 100 and 300 ms (average human type speed is 60 WPM ~ 360 CPM)
             }
 
+            UpdateSeleniumData(data);
+
             data.Logger.Log($"Typed {text}", LogColors.JuneBud);
         }
 
@@ -83,6 +88,8 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             element.Click();
+            UpdateSeleniumData(data);
+
             data.Logger.Log("Clicked the element", LogColors.JuneBud);
         }
 
@@ -93,6 +100,8 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             element.Submit();
+            UpdateSeleniumData(data);
+
             data.Logger.Log($"Submitted the form", LogColors.JuneBud);
         }
 
@@ -103,6 +112,7 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             new SelectElement(element).SelectByValue(value);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Selected value {value}", LogColors.JuneBud);
         }
@@ -114,6 +124,7 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             new SelectElement(element).SelectByIndex(selectionIndex);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Selected value at index {selectionIndex}", LogColors.JuneBud);
         }
@@ -125,6 +136,7 @@ namespace RuriLib.Blocks.Selenium.Elements
 
             var element = GetElement(data, findBy, identifier, index);
             new SelectElement(element).SelectByText(text);
+            UpdateSeleniumData(data);
 
             data.Logger.Log($"Selected text {text}", LogColors.JuneBud);
         }
@@ -357,6 +369,17 @@ namespace RuriLib.Blocks.Selenium.Elements
 
         private static WebDriver GetBrowser(BotData data)
                 => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
+
+        private static void UpdateSeleniumData(BotData data)
+        {
+            var browser = data.TryGetObject<WebDriver>("selenium");
+
+            if (browser != null)
+            {
+                data.ADDRESS = browser.Url;
+                data.SOURCE = browser.PageSource;
+            }
+        }
 
         private static Bitmap TakeElementScreenshot(IWebDriver driver, IWebElement element)
         {
