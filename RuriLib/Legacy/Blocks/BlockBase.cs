@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenQA.Selenium;
 using RuriLib.Extensions;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
@@ -387,9 +388,13 @@ namespace RuriLib.Legacy.Blocks
         /// <param name="data">The BotData containing the driver and the variables</param>
         protected static void UpdateSeleniumData(BotData data)
         {
-            // TODO: Readd this
-            // data.Address = data.Driver.Url;
-            // data.ResponseSource = data.Driver.PageSource;
+            var browser = data.TryGetObject<WebDriver>("selenium");
+
+            if (browser != null)
+            {
+                data.ADDRESS = browser.Url;
+                data.SOURCE = browser.PageSource;
+            }
         }
 
         #region Variable Insertion
