@@ -496,6 +496,7 @@ namespace RuriLib.Http
                 "gzip" => new GZipStream(stream, CompressionMode.Decompress, false),
                 "deflate" => new DeflateStream(stream, CompressionMode.Decompress, false),
                 "br" => new BrotliStream(stream, CompressionMode.Decompress, false),
+                "utf-8" => stream,
                 _ => throw new InvalidOperationException($"'{contentEncoding}' not supported encoding format"),
             };
         }
