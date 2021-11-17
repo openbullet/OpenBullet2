@@ -124,6 +124,7 @@ namespace RuriLib.Blocks.Selenium.Browser
 
             var browser = GetBrowser(data);
             browser.Quit();
+            data.SetObject("selenium", null);
             data.Logger.Log("Browser closed successfully!", LogColors.JuneBud);
         }
 
