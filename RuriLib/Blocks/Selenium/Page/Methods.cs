@@ -204,8 +204,8 @@ namespace RuriLib.Blocks.Selenium.Page
             return json;
         }
 
-        private static RemoteWebDriver GetBrowser(BotData data)
-                => data.TryGetObject<RemoteWebDriver>("selenium") ?? throw new Exception("The browser is not open!");
+        private static WebDriver GetBrowser(BotData data)
+                => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
 
         private static string GetKeyCode(string key)
         {

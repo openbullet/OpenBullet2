@@ -224,7 +224,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.Log($"Set the browser's size to {width} x {height}", LogColors.JuneBud);
         }
 
-        private static RemoteWebDriver GetBrowser(BotData data)
-                => data.TryGetObject<RemoteWebDriver>("selenium") ?? throw new Exception("The browser is not open!");
+        private static WebDriver GetBrowser(BotData data)
+                => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
     }
 }

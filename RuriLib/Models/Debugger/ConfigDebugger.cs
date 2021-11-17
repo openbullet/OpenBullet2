@@ -3,7 +3,6 @@ using IronPython.Hosting;
 using IronPython.Runtime;
 using PuppeteerSharp;
 using RuriLib.Exceptions;
-using RuriLib.Extensions;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
@@ -48,7 +47,8 @@ namespace RuriLib.Models.Debugger
         private readonly DebuggerOptions options;
         private readonly BotLogger logger;
         private CancellationTokenSource cts;
-        private Browser lastBrowser;
+        private Browser lastPuppeteerBrowser;
+        private OpenQA.Selenium.WebDriver lastSeleniumBrowser;
 
         public ConfigDebugger(Config config, DebuggerOptions options = null, BotLogger logger = null)
         {
@@ -78,10 +78,15 @@ namespace RuriLib.Models.Debugger
                 logger.Clear();
             }
 
-            // Close any previously opened browser
-            if (lastBrowser != null)
+            // Close any previously opened browsers
+            if (lastPuppeteerBrowser != null)
             {
-                await lastBrowser.CloseAsync();
+                await lastPuppeteerBrowser.CloseAsync();
+            }
+
+            if (lastSeleniumBrowser != null)
+            {
+                lastSeleniumBrowser.Quit();
             }
 
             options.Variables.Clear();
@@ -262,8 +267,9 @@ namespace RuriLib.Models.Debugger
 
                 logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
 
-                // Save the browser for later use
-                lastBrowser = data.TryGetObject<Browser>("puppeteer");
+                // Save the browsers for later use
+                lastPuppeteerBrowser = data.TryGetObject<Browser>("puppeteer");
+                lastSeleniumBrowser = data.TryGetObject<OpenQA.Selenium.WebDriver>("selenium");
 
                 // Dispose stuff in data.Objects
                 data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame" });

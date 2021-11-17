@@ -341,19 +341,6 @@ namespace RuriLib.Blocks.Selenium.Elements
             };
         }
 
-        private static string GetElementsScript(FindElementBy findBy, string identifier)
-        {
-            if (findBy == FindElementBy.XPath)
-            {
-                var script = $"document.evaluate(\"{identifier.Replace("\"", "\\\"")}\", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)";
-                return $"Array.from({{ length: {script}.snapshotLength }}, (_, index) => {script}.snapshotItem(index))";
-            }
-            else
-            {
-                return $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')";
-            }
-        }
-
         private static string GetElementScript(FindElementBy findBy, string identifier, int index)
             => findBy == FindElementBy.XPath
             ? $"document.evaluate(\"{identifier.Replace("\"", "\\\"")}\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue"
@@ -368,21 +355,8 @@ namespace RuriLib.Blocks.Selenium.Elements
                 _ => throw new NotSupportedException()
             };
 
-        private static RemoteWebDriver GetBrowser(BotData data)
-                => data.TryGetObject<RemoteWebDriver>("selenium") ?? throw new Exception("The browser is not open!");
-
-        private static string GetKeyCode(string key)
-        {
-            var keyFields = typeof(Keys).GetFields();
-            var matchingField = keyFields.FirstOrDefault(f => f.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-
-            if (matchingField == null)
-            {
-                throw new Exception($"Invalid key name: {key}");
-            }
-
-            return matchingField.GetValue(null).ToString();
-        }
+        private static WebDriver GetBrowser(BotData data)
+                => data.TryGetObject<WebDriver>("selenium") ?? throw new Exception("The browser is not open!");
 
         private static Bitmap TakeElementScreenshot(IWebDriver driver, IWebElement element)
         {
