@@ -26,10 +26,10 @@ namespace RuriLib.Legacy.LS
             { "REQUEST", typeof(BlockRequest) },
             { "TCP", typeof(BlockTCP) },
             { "UTILITY", typeof(BlockUtility) },
-            //{ "BROWSERACTION", typeof(SBlockBrowserAction) },
-            //{ "ELEMENTACTION", typeof(SBlockElementAction) },
-            //{ "EXECUTEJS", typeof(SBlockExecuteJS) },
-            //{ "NAVIGATE", typeof(SBlockNavigate) }
+            { "BROWSERACTION", typeof(SBlockBrowserAction) },
+            { "ELEMENTACTION", typeof(SBlockElementAction) },
+            { "EXECUTEJS", typeof(SBlockExecuteJS) },
+            { "NAVIGATE", typeof(SBlockNavigate) }
         };
 
         /// <summary>
