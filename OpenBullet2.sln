@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2", "OpenBullet2\OpenBullet2.csproj", "{C8482002-F594-4C28-9C46-960B036540A8}"
 EndProject
@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Core", "OpenBul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Native", "OpenBullet2.Native\OpenBullet2.Native.csproj", "{AF4F29CC-3C09-45FE-9B25-2001694EDF34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater.Native", "Updater.Native\Updater.Native.csproj", "{9D1622CE-8945-40D3-9C09-DA3C07F91F7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater.Native", "Updater.Native\Updater.Native.csproj", "{9D1622CE-8945-40D3-9C09-DA3C07F91F7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

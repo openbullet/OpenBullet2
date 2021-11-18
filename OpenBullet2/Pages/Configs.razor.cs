@@ -275,6 +275,16 @@ namespace OpenBullet2.Pages
             {
                 uri = "config/edit/metadata";
             }
+            else if (selectedConfig.Mode == ConfigMode.Legacy)
+            {
+                uri = section switch
+                {
+                    ConfigSection.Metadata => "config/edit/metadata",
+                    ConfigSection.Readme => "config/edit/readme",
+                    ConfigSection.Settings => "config/edit/settings",
+                    _ => "config/edit/loliscript"
+                };
+            }
             else
             {
                 uri = section switch
@@ -285,7 +295,7 @@ namespace OpenBullet2.Pages
                     ConfigSection.LoliCode => selectedConfig.Mode == ConfigMode.CSharp ? "config/edit/code" : "config/edit/lolicode",
                     ConfigSection.Settings => "config/edit/settings",
                     ConfigSection.CSharpCode => "config/edit/code",
-                    _ => throw new NotImplementedException()
+                    _ => "config/edit/metadata"
                 };
             }
 
