@@ -103,7 +103,7 @@
             string: [
                 [/[^\\"<]+/, "string"],
                 [/@escapes/, "string.escape"],
-                [/<[^>]+>/, "variable"],
+                [/<[^"]+>/, "variable"],
                 [/\\./, "string.escape.invalid"],
                 [/"/, {
                     token: "string.quote",
