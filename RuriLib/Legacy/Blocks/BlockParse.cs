@@ -248,10 +248,10 @@ namespace RuriLib.Legacy.Blocks
             var original = ReplaceValues(ParseTarget, ls);
             var list = Type switch
             {
-                ParseType.LR => ParseLR(ReplaceValues(original, ls), ReplaceValues(LeftString, ls), ReplaceValues(RightString, ls), UseRegexLR),
-                ParseType.CSS => ParseCSS(ReplaceValues(original, ls), ReplaceValues(CssSelector, ls), ReplaceValues(AttributeName, ls)),
-                ParseType.JSON => ParseJSON(ReplaceValues(original, ls), ReplaceValues(JsonField, ls), JTokenParsing),
-                ParseType.REGEX => ParseREGEX(ReplaceValues(original, ls), ReplaceValues(RegexString, ls), ReplaceValues(RegexOutput, ls), DotMatches, CaseSensitive),
+                ParseType.LR => ParseLR(original, ReplaceValues(LeftString, ls), ReplaceValues(RightString, ls), UseRegexLR),
+                ParseType.CSS => ParseCSS(original, ReplaceValues(CssSelector, ls), ReplaceValues(AttributeName, ls)),
+                ParseType.JSON => ParseJSON(original, ReplaceValues(JsonField, ls), JTokenParsing),
+                ParseType.REGEX => ParseREGEX(original, ReplaceValues(RegexString, ls), ReplaceValues(RegexOutput, ls), DotMatches, CaseSensitive),
                 _ => throw new NotImplementedException()
             };
 

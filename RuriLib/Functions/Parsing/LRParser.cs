@@ -27,7 +27,10 @@ namespace RuriLib.Functions.Parsing
 
             // No delimiters = return the full input
             if (leftDelim == string.Empty && rightDelim == string.Empty)
+            {
                 yield return input;
+                yield break;
+            }
 
             var comp = caseSensitive ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
 
