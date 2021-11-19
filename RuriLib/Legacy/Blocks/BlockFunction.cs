@@ -684,7 +684,7 @@ namespace RuriLib.Legacy.Blocks
                         break;
 
                     case Function.DateToUnixTime:
-                        outputString = localInputString.ToDateTime(DateFormat).ToString();
+                        outputString = localInputString.ToDateTime(DateFormat).ToUnixTime().ToString();
                         break;
 
                     case Function.Length:
