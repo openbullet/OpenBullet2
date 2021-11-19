@@ -387,7 +387,7 @@ namespace RuriLib.Models.Jobs
                 {
                     var legacyVariables = botData.TryGetObject<VariablesList>("legacyVariables");
 
-                    foreach (var variable in legacyVariables.Variables.Concat(lsGlobals.Globals.Variables))
+                    foreach (var variable in legacyVariables.Variables.Where(v => v.MarkedForCapture))
                     {
                         switch (variable.Type)
                         {
