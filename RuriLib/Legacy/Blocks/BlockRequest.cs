@@ -365,6 +365,13 @@ namespace RuriLib.Legacy.Blocks
 
             headers["Accept-Encoding"] = "gzip,deflate";
 
+            // Remove Content-Length because it was disregarded in OB1
+            var contentLengthHeader = headers.Keys.FirstOrDefault(k => k.Equals("Content-Length", StringComparison.OrdinalIgnoreCase));
+            if (contentLengthHeader != null)
+            {
+                headers.Remove(contentLengthHeader);
+            }
+
             switch (RequestType)
             {
                 case RequestType.Standard:
