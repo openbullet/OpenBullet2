@@ -430,7 +430,7 @@ namespace RuriLib.Legacy.Blocks
             
             if (recursive)
             {
-                if (list.Count > 1 || createEmpty)
+                if (list.Count > 0 || createEmpty)
                 {
                     variable = new ListOfStringsVariable(list)
                     {
