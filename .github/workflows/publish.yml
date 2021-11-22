@@ -32,7 +32,7 @@ jobs:
     - name: get ncbeauty
       run: dotnet tool install --global nulastudio.ncbeauty
     - name: run ncbeauty
-      run: ncbeauty D:/a/OpenBullet2/OpenBullet2/.publish/OB2Native/
+      run: ncbeauty -nopatch -noflag D:/a/OpenBullet2/OpenBullet2/.publish/OB2Native/
     - name: remove unwanted Files
       shell: pwsh
       run: Get-ChildItem .publish -recurse -include *.pdb,*.xml | remove-item -force
