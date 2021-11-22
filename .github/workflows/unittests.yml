@@ -1,0 +1,21 @@
+name: .NET
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      
+jobs:
+  test:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET 5
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Unittests
+      run: dotnet test
