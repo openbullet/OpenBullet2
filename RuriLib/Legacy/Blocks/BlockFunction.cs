@@ -849,7 +849,7 @@ namespace RuriLib.Legacy.Blocks
                         break;
                 }
 
-                data.Logger.Log(string.Format($"Executed function {FunctionType} on input {localInputString} with outcome {outputString}"), LogColors.GreenYellow);
+                data.Logger.Log($"Executed function {FunctionType} on input {localInputString} with outcome {outputString}", LogColors.GreenYellow);
 
                 // Add to the outputs
                 outputs.Add(outputString);
