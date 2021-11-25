@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Images\ffaez.gif" />
+    <None Remove="Images\james.gif" />
     <None Remove="Images\logohq.png" />
     <None Remove="Images\logohq_square_padded.png" />
     <None Remove="Images\logohq_square_padded_bg.png" />
@@ -22,6 +24,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Images\ffaez.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\james.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sounds\hit.wav">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
