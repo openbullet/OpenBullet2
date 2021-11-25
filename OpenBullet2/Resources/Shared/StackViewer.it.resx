@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Aggiungi</value>
   </data>
+  <data name="AddBlock" xml:space="preserve">
+    <value>Aggiungi blocco</value>
+  </data>
   <data name="Clone" xml:space="preserve">
     <value>Clona</value>
   </data>

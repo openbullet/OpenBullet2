@@ -5,6 +5,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
+using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -126,14 +127,39 @@ namespace OpenBullet2.Native.Views.Pages
 
         private void NavigateToConfigSection()
         {
+            var mode = vm.SelectedConfig.Config.Mode;
             var page = obSettingsService.Settings.GeneralSettings.ConfigSectionOnLoad switch
             {
                 ConfigSection.Metadata => MainWindowPage.ConfigMetadata,
                 ConfigSection.Readme => MainWindowPage.ConfigReadme,
-                ConfigSection.Stacker => MainWindowPage.ConfigStacker,
-                ConfigSection.LoliCode => MainWindowPage.ConfigLoliCode,
+                ConfigSection.Stacker => mode switch
+                {
+                    ConfigMode.LoliCode or ConfigMode.Stack => MainWindowPage.ConfigStacker,
+                    ConfigMode.CSharp => MainWindowPage.ConfigCSharpCode,
+                    ConfigMode.Legacy => MainWindowPage.ConfigLoliScript,
+                    _ => MainWindowPage.ConfigMetadata
+                },
+                ConfigSection.LoliCode => mode switch
+                {
+                    ConfigMode.LoliCode or ConfigMode.Stack => MainWindowPage.ConfigLoliCode,
+                    ConfigMode.CSharp => MainWindowPage.ConfigCSharpCode,
+                    ConfigMode.Legacy => MainWindowPage.ConfigLoliScript,
+                    _ => MainWindowPage.ConfigMetadata
+                },
                 ConfigSection.Settings => MainWindowPage.ConfigSettings,
-                ConfigSection.CSharpCode => MainWindowPage.ConfigCSharpCode,
+                ConfigSection.CSharpCode => mode switch
+                {
+                    ConfigMode.LoliCode or ConfigMode.Stack or ConfigMode.CSharp  => MainWindowPage.ConfigLoliCode,
+                    ConfigMode.Legacy => MainWindowPage.ConfigLoliScript,
+                    _ => MainWindowPage.ConfigMetadata
+                },
+                ConfigSection.LoliScript => mode switch
+                {
+                    ConfigMode.LoliCode or ConfigMode.Stack => MainWindowPage.ConfigLoliCode,
+                    ConfigMode.CSharp => MainWindowPage.ConfigCSharpCode,
+                    ConfigMode.Legacy => MainWindowPage.ConfigLoliScript,
+                    _ => MainWindowPage.ConfigMetadata
+                },
                 _ => throw new NotImplementedException(),
             };
 

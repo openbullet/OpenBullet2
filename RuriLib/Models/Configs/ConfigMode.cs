@@ -5,6 +5,7 @@
         Stack,
         LoliCode,
         CSharp,
-        DLL
+        DLL,
+        Legacy
     }
 }

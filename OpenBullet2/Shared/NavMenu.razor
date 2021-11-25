@@ -103,7 +103,16 @@
                     </NavLink>
                 </li>
             }
-            
+
+            @if (displayLoliScriptSubmenu)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="config/edit/loliscript">
+                        <span class="oi oi-code ml-4" aria-hidden="true"></span> @Loc["LoliScript"]
+                    </NavLink>
+                </li>
+            }
+
             <li class="nav-item px-3" style="width: 100%;">
                 <button type="button" class="btn btn-outline-success" style="width: 100%" @onclick="SaveConfig">
                     <span class="oi oi-task" aria-hidden="true" style="margin-top: 5px;"></span> @Loc["SaveConfig"]
@@ -180,6 +189,7 @@
     private bool displayConfigSubmenu = false;
     private bool displayStackerSubmenu = true;
     private bool displayCSharpSubmenu = true;
+    private bool displayLoliScriptSubmenu = false;
     private bool sidebarExpanded = true;
     private bool isAdmin = false;
     private DotNetObjectReference<NavMenu> reference;
@@ -213,8 +223,9 @@
     private async void OnConfigSelected(object sender, Config config)
     {
         displayConfigSubmenu = config != null;
-        displayStackerSubmenu = config != null && config.Mode != ConfigMode.CSharp && config.Mode != ConfigMode.DLL;
-        displayCSharpSubmenu = config != null && config.Mode != ConfigMode.DLL;
+        displayStackerSubmenu = config != null && config.Mode is not (ConfigMode.CSharp or ConfigMode.DLL or ConfigMode.Legacy);
+        displayCSharpSubmenu = config != null && config.Mode is not (ConfigMode.DLL or ConfigMode.Legacy);
+        displayLoliScriptSubmenu = config != null && config.Mode is ConfigMode.Legacy;
         await InvokeAsync(StateHasChanged);
     }
 

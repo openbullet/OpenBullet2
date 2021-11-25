@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RuriLib.Models.Configs.Settings
 {
-    public class PuppeteerSettings
+    public class BrowserSettings
     {
         public string[] QuitBrowserStatuses { get; set; } = Array.Empty<string>();
         public bool Headless { get; set; } = true;

@@ -22,6 +22,7 @@ namespace OpenBullet2.Native.Views.Pages
         private readonly ConfigStacker stackerPage;
         private readonly ConfigLoliCode loliCodePage;
         private readonly ConfigCSharpCode cSharpPage;
+        private readonly ConfigLoliScript loliScriptPage;
 
         public ConfigEditor()
         {
@@ -38,6 +39,7 @@ namespace OpenBullet2.Native.Views.Pages
             stackerPage = new();
             loliCodePage = new();
             cSharpPage = new();
+            loliScriptPage = new();
 
             debuggerFrame.Content = debugger;
         }
@@ -61,6 +63,11 @@ namespace OpenBullet2.Native.Views.Pages
                     editorFrame.Content = cSharpPage;
                     break;
 
+                case ConfigEditorSection.LoliScript:
+                    loliScriptPage.UpdateViewModel();
+                    editorFrame.Content = loliScriptPage;
+                    break;
+
                 default:
                     break;
             }
@@ -78,7 +85,7 @@ namespace OpenBullet2.Native.Views.Pages
 
                 cSharpButton.Visibility = editorFrame.Content != cSharpPage ? Visibility.Visible : Visibility.Collapsed;
             }
-            else // C# only mode
+            else // C# only mode OR LoliScript mode
             {
                 stackerButton.Visibility = Visibility.Collapsed;
                 loliCodeButton.Visibility = Visibility.Collapsed;
@@ -120,7 +127,8 @@ namespace OpenBullet2.Native.Views.Pages
     {
         Stacker,
         LoliCode,
-        CSharp
+        CSharp,
+        LoliScript
     }
 
     public class ConfigEditorViewModel : ViewModelBase

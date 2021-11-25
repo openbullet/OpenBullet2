@@ -102,7 +102,7 @@
             Background="{DynamicResource BackgroundMain}"
             Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
             Margin="305 28 0 0" Panel.ZIndex="1"
-            Height="160"
+            Height="180"
             Width="80"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
@@ -125,6 +125,7 @@
             <TextBlock x:Name="menuOptionLoliCode" Text="LoliCode" MouseDown="OpenLoliCodePage" />
             <TextBlock x:Name="menuOptionConfigSettings" Text="Settings" MouseDown="OpenConfigSettingsPage" />
             <TextBlock x:Name="menuOptionCSharpCode" Text="C# Code" MouseDown="OpenCSharpCodePage" />
+            <TextBlock x:Name="menuOptionLoliScript" Text="LoliScript" MouseDown="OpenLoliScriptPage" />
         </StackPanel>
         
         <Frame Grid.Row="1" Grid.Column="1" x:Name="mainFrame" NavigationUIVisibility="Hidden" />

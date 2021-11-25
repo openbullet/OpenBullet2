@@ -153,6 +153,9 @@
   <data name="LoliCode" xml:space="preserve">
     <value>LoliCode</value>
   </data>
+  <data name="LoliScript" xml:space="preserve">
+    <value>LoliScript</value>
+  </data>
   <data name="Metadata" xml:space="preserve">
     <value>Metadata</value>
   </data>

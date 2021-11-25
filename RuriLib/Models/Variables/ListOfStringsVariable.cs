@@ -16,6 +16,8 @@ namespace RuriLib.Models.Variables
             ? "null" 
             : "[" + string.Join(", ", value) + "]";
 
-        public override List<string> AsListOfStrings() => new() { AsString() };
+        public override List<string> AsListOfStrings() => value;
+
+        public override object AsObject() => value;
     }
 }

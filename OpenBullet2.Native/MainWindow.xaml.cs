@@ -68,6 +68,7 @@ namespace OpenBullet2.Native
                 menuOptionHome,
                 menuOptionJobs,
                 menuOptionLoliCode,
+                menuOptionLoliScript,
                 menuOptionMetadata,
                 menuOptionMonitor,
                 menuOptionOBSettings,
@@ -222,6 +223,19 @@ namespace OpenBullet2.Native
                     configEditorPage.NavigateTo(ConfigEditorSection.CSharp);
                     ChangePage(configEditorPage, menuOptionCSharpCode);
                     break;
+
+                case MainWindowPage.ConfigLoliScript:
+
+                    if (vm.Config.Mode is not ConfigMode.Legacy)
+                    {
+                        return;
+                    }
+
+                    CloseSubmenu();
+                    if (configEditorPage is null) configEditorPage = new();
+                    configEditorPage.NavigateTo(ConfigEditorSection.LoliScript);
+                    ChangePage(configEditorPage, menuOptionLoliScript);
+                    break;
             }
         }
 
@@ -270,6 +284,7 @@ namespace OpenBullet2.Native
         private void OpenLoliCodePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigLoliCode);
         private void OpenConfigSettingsPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigSettings);
         private void OpenCSharpCodePage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigCSharpCode);
+        private void OpenLoliScriptPage(object sender, MouseEventArgs e) => NavigateTo(MainWindowPage.ConfigLoliScript);
 
         private void ChangePage(Page newPage, TextBlock newLabel)
         {
@@ -418,6 +433,7 @@ namespace OpenBullet2.Native
         ConfigLoliCode,
         ConfigSettings,
         ConfigCSharpCode,
+        ConfigLoliScript,
         Hits,
         Plugins,
         OBSettings,

@@ -44,5 +44,7 @@ namespace RuriLib.Models.Variables
         }
 
         public override List<string> AsListOfStrings() => new List<string> { value };
+
+        public override object AsObject() => value;
     }
 }

@@ -36,7 +36,7 @@ namespace RuriLib.Models.Hits
             {
                 try
                 {
-                    var variable = factory.FromObject(data.Value);
+                    var variable = VariableFactory.FromObject(data.Value);
                     variable.Name = data.Key;
                     variables.Add(variable);
                 }

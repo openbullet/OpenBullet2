@@ -24,5 +24,7 @@ namespace RuriLib.Models.Variables
         public override float AsFloat() => value ? 1 : 0;
 
         public override List<string> AsListOfStrings() => new List<string> { AsString() };
+
+        public override object AsObject() => value;
     }
 }

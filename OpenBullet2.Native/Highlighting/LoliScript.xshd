@@ -1,0 +1,157 @@
+﻿<SyntaxDefinition name="C#"
+      xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Gray" />
+  <Color name="Disabled" foreground="Tomato" />
+  <Color name="string" foreground="LightBlue" />
+  <Color name="Variable" foreground="Yellow" />
+  
+    <!-- This is the main ruleset. -->
+  <RuleSet>
+    <Span color="Comment" begin="##" />
+    <Span color="Disabled" begin="!" />
+    <!-- <Span color="Comment" multiline="true" begin="/\*" end="\*/" /> -->
+
+    <Span color="string">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="." />
+        <Rule color="Variable">
+          &lt;[^&gt;|&quot;]*&gt;
+        </Rule>
+      </RuleSet>
+    </Span>
+    
+    <Keywords fontWeight="bold" foreground="GreenYellow">
+      <Word>FUNCTION</Word>      
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="DodgerBlue">
+      <Word>KEYCHECK</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Plum">
+      <Word>KEYCHAIN</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="SkyBlue">
+      <Word>KEY</Word>
+      <Word>VALUE</Word>
+      <Word>NKEY</Word>
+      <Word>MKEY</Word>
+      <Word>NMKEY</Word>
+      <Word>RKEY</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Turquoise">
+      <Word>RECAPTCHA</Word>
+      <Word>SOLVECAPTCHA</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="LimeGreen">
+      <Word>REQUEST</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Plum">
+      <Word>HEADER</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="SkyBlue">
+      <Word>COOKIE</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Gold">
+      <Word>PARSE</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Orange">
+      <Word>LR</Word>
+      <Word>CSS</Word>
+      <Word>JSON</Word>
+      <Word>REGEX</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="DarkOrange">
+      <Word>CAPTCHA</Word>
+      <Word>REPORTCAPTCHA</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="DarkSalmon">
+      <Word>BYPASSCF</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="MediumPurple">
+      <Word>TCP</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Wheat">
+      <Word>UTILITY</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="RoyalBlue">
+      <Word>NAVIGATE</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Green">
+      <Word>BROWSERACTION</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Firebrick">
+      <Word>ELEMENTACTION</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Indigo">
+      <Word>EXECUTEJS</Word>
+    </Keywords>
+
+    <Keywords fontWeight="bold" foreground="Plum">
+      <Word>ELEMENT</Word>
+    </Keywords>
+    
+    <!-- Control flow -->
+    <Keywords fontWeight="bold" foreground="OrangeRed">
+      <Word>IF</Word>
+      <Word>ELSE</Word>
+      <Word>ENDIF</Word>
+      <Word>WHILE</Word>
+      <Word>ENDWHILE</Word>
+      <Word>JUMP</Word>
+      <Word>BEGIN</Word>
+      <Word>END</Word>
+      <Word>SCRIPT</Word>
+    </Keywords>
+
+    <!-- Other commands -->
+
+
+    <Keywords fontWeight="bold" foreground="Orange">
+      <Word>PRINT</Word>
+      <Word>SET</Word>
+      <Word>DELETE</Word>
+      <Word>MOUSEACTION</Word>
+    </Keywords>
+
+    <Keywords foreground="Yellow">
+      <Word>VAR</Word>
+      <Word>GVAR</Word>
+    </Keywords>
+
+    <Keywords foreground="Tomato">
+      <Word>CAP</Word>
+    </Keywords>
+
+    <Keywords foreground="Magenta">
+      <Word>-&gt;</Word>
+    </Keywords>
+
+    <!-- Digits -->
+      <Rule foreground="DarkSeaGreen">
+          \b0[xX][0-9a-fA-F]+  # hex number
+      |    \b
+          (    \d+(\.[0-9]+)?   #number with optional floating point
+          |    \.[0-9]+         #or just starting with floating point
+          )
+          ([eE][+-]?[0-9]+)? # optional exponent
+      </Rule>
+  </RuleSet>
+</SyntaxDefinition>

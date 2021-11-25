@@ -4,6 +4,7 @@ using RuriLib.Parallelization;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Native.ViewModels
@@ -15,6 +16,7 @@ namespace OpenBullet2.Native.ViewModels
         private ProxySettings Proxy => service.RuriLibSettings.ProxySettings;
         private CaptchaSettings Captcha => service.RuriLibSettings.CaptchaSettings;
         private PuppeteerSettings Puppeteer => service.RuriLibSettings.PuppeteerSettings;
+        private SeleniumSettings Selenium => service.RuriLibSettings.SeleniumSettings;
 
         public event Action<CaptchaServiceType> CaptchaServiceChanged;
 
@@ -22,6 +24,8 @@ namespace OpenBullet2.Native.ViewModels
         {
             service = SP.GetService<RuriLibSettingsService>();
         }
+
+        public IEnumerable<ParallelizerType> ParallelizerTypes => Enum.GetValues(typeof(ParallelizerType)).Cast<ParallelizerType>();
 
         public ParallelizerType ParallelizerType
         {
@@ -162,6 +166,8 @@ namespace OpenBullet2.Native.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public IEnumerable<CaptchaServiceType> CaptchaServiceTypes => Enum.GetValues(typeof(CaptchaServiceType)).Cast<CaptchaServiceType>();
 
         public CaptchaServiceType CurrentCaptchaService
         {
@@ -384,12 +390,44 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public string ChromeBinaryLocation
+        public string PuppeteerChromeBinaryLocation
         {
             get => Puppeteer.ChromeBinaryLocation;
             set
             {
                 Puppeteer.ChromeBinaryLocation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<SeleniumBrowserType> SeleniumBrowserTypes => Enum.GetValues(typeof(SeleniumBrowserType)).Cast<SeleniumBrowserType>();
+
+        public SeleniumBrowserType SeleniumBrowserType
+        {
+            get => Selenium.BrowserType;
+            set
+            {
+                Selenium.BrowserType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SeleniumChromeBinaryLocation
+        {
+            get => Selenium.ChromeBinaryLocation;
+            set
+            {
+                Selenium.ChromeBinaryLocation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SeleniumFirefoxBinaryLocation
+        {
+            get => Selenium.FirefoxBinaryLocation;
+            set
+            {
+                Selenium.FirefoxBinaryLocation = value;
                 OnPropertyChanged();
             }
         }

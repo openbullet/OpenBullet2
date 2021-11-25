@@ -3,6 +3,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Functions.Captchas;
+using RuriLib.Models.Settings;
 using RuriLib.Parallelization;
 using System;
 using System.Linq;
@@ -26,9 +27,6 @@ namespace OpenBullet2.Native.Views.Pages
             DataContext = vm;
 
             InitializeComponent();
-
-            parallelizerTypesCombobox.ItemsSource = Enum.GetValues(typeof(ParallelizerType)).Cast<ParallelizerType>();
-            captchaServiceCombobox.ItemsSource = Enum.GetValues(typeof(CaptchaServiceType)).Cast<CaptchaServiceType>();
 
             UpdateCaptchaTabControl(vm.CurrentCaptchaService);
             SetRTBContents();

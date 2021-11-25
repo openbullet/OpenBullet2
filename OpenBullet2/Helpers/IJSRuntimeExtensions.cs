@@ -64,5 +64,8 @@ namespace OpenBullet2.Helpers
 
         public async static Task RegisterLoliCode(this IJSRuntime js)
             => await js.InvokeVoidAsync("registerLoliCode");
+
+        public async static Task RegisterLoliScript(this IJSRuntime js)
+            => await js.InvokeVoidAsync("registerLoliScript");
     }
 }

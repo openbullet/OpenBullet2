@@ -6,6 +6,8 @@ using RuriLib.Exceptions;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.Transpilers;
+using RuriLib.Legacy.LS;
+using RuriLib.Legacy.Models;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Configs;
@@ -13,6 +15,7 @@ using RuriLib.Models.Data;
 using RuriLib.Models.Data.Resources;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Proxies;
+using RuriLib.Models.Variables;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
@@ -44,7 +47,8 @@ namespace RuriLib.Models.Debugger
         private readonly DebuggerOptions options;
         private readonly BotLogger logger;
         private CancellationTokenSource cts;
-        private Browser lastBrowser;
+        private Browser lastPuppeteerBrowser;
+        private OpenQA.Selenium.WebDriver lastSeleniumBrowser;
 
         public ConfigDebugger(Config config, DebuggerOptions options = null, BotLogger logger = null)
         {
@@ -56,8 +60,8 @@ namespace RuriLib.Models.Debugger
 
         public async Task Run()
         {
-            // Build the C# script if not in CSharp mode
-            if (config.Mode != ConfigMode.CSharp)
+            // Build the C# script if in Stack or LoliCode mode
+            if (config.Mode == ConfigMode.Stack || config.Mode == ConfigMode.LoliCode)
             {
                 config.CSharpScript = config.Mode == ConfigMode.Stack
                     ? Stack2CSharpTranspiler.Transpile(config.Stack, config.Settings)
@@ -74,10 +78,15 @@ namespace RuriLib.Models.Debugger
                 logger.Clear();
             }
 
-            // Close any previously opened browser
-            if (lastBrowser != null)
+            // Close any previously opened browsers
+            if (lastPuppeteerBrowser != null)
             {
-                await lastBrowser.CloseAsync();
+                await lastPuppeteerBrowser.CloseAsync();
+            }
+
+            if (lastSeleniumBrowser != null)
+            {
+                lastSeleniumBrowser.Quit();
             }
 
             options.Variables.Clear();
@@ -159,30 +168,80 @@ namespace RuriLib.Models.Debugger
                 (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
             }
 
+            // [LEGACY] Set up the VariablesList
+            if (config.Mode == ConfigMode.Legacy)
+            {
+                var slices = new List<Variable>();
+
+                foreach (var slice in dataLine.GetVariables())
+                {
+                    var sliceValue = data.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
+                        ? Uri.EscapeDataString(slice.AsString())
+                        : slice.AsString();
+
+                    slices.Add(new StringVariable(sliceValue) { Name = slice.Name });
+                }
+
+                var legacyVariables = new VariablesList(slices);
+
+                foreach (var input in config.Settings.InputSettings.CustomInputs)
+                {
+                    legacyVariables.Set(new StringVariable(input.DefaultAnswer) { Name = input.VariableName });
+                }
+
+                data.SetObject("legacyVariables", legacyVariables);
+            }
+
             try
             {
                 sw.Start();
                 Started?.Invoke(this, EventArgs.Empty);
-                var state = await script.RunAsync(scriptGlobals, null, cts.Token);
 
-                foreach (var scriptVar in state.Variables)
+                if (config.Mode != ConfigMode.Legacy)
                 {
-                    try
-                    {
-                        var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
+                    var state = await script.RunAsync(scriptGlobals, null, cts.Token);
 
-                        if (type.HasValue && !scriptVar.Name.StartsWith("tmp_"))
+                    foreach (var scriptVar in state.Variables)
+                    {
+                        try
                         {
-                            var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
-                            variable.MarkedForCapture = data.MarkedForCapture.Contains(scriptVar.Name);
-                            options.Variables.Add(variable);
+                            var type = DescriptorsRepository.ToVariableType(scriptVar.Type);
+
+                            if (type.HasValue && !scriptVar.Name.StartsWith("tmp_"))
+                            {
+                                var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
+                                variable.MarkedForCapture = data.MarkedForCapture.Contains(scriptVar.Name);
+                                options.Variables.Add(variable);
+                            }
+                        }
+                        catch
+                        {
+                            // The type is not supported, e.g. it was generated using custom C# code and not blocks
+                            // so we just disregard it
                         }
                     }
-                    catch
+                }
+                else
+                {
+                    // [LEGACY] Run the LoliScript in the old way
+                    var loliScript = new LoliScript(config.LoliScript);
+                    var lsGlobals = new LSGlobals(data);
+
+                    do
                     {
-                        // The type is not supported, e.g. it was generated using custom C# code and not blocks
-                        // so we just disregard it
+                        if (cts.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        await loliScript.TakeStep(lsGlobals);
+
+                        options.Variables.Clear();
+                        var legacyVariables = data.TryGetObject<VariablesList>("legacyVariables");
+                        options.Variables.AddRange(legacyVariables.Variables);
+                        options.Variables.AddRange(lsGlobals.Globals.Variables);
                     }
+                    while (loliScript.CanProceed);
                 }
             }
             catch (OperationCanceledException)
@@ -208,8 +267,9 @@ namespace RuriLib.Models.Debugger
 
                 logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
 
-                // Save the browser for later use
-                lastBrowser = data.TryGetObject<Browser>("puppeteer");
+                // Save the browsers for later use
+                lastPuppeteerBrowser = data.TryGetObject<Browser>("puppeteer");
+                lastSeleniumBrowser = data.TryGetObject<OpenQA.Selenium.WebDriver>("selenium");
 
                 // Dispose stuff in data.Objects
                 data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame" });

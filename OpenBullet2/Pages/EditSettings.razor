@@ -259,31 +259,31 @@
     </EditForm>
 
     <h1>@Loc["Puppeteer"]</h1>
-    <EditForm Model="settings.PuppeteerSettings">
+    <EditForm Model="settings.BrowserSettings">
         <label>@Loc["QuitBrowserStatuses"]</label>
         <MultipleSelector SelectionChanged="OnSelectionChanged" NotSelected="quitBrowserStatuses" Selected="dontQuitBrowserStatuses" />
 
         <label>@Loc["Headless"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.Headless" />
+        <InputCheckbox class="mb-3" @bind-Value="settings.BrowserSettings.Headless" />
         <br />
 
         <label>@Loc["LoadOnlyDocumentAndScript"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.LoadOnlyDocumentAndScript" />
+        <InputCheckbox class="mb-3" @bind-Value="settings.BrowserSettings.LoadOnlyDocumentAndScript" />
         <br />
 
         <label>@Loc["DismissDialogs"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.DismissDialogs" />
+        <InputCheckbox class="mb-3" @bind-Value="settings.BrowserSettings.DismissDialogs" />
         <br />
 
         <label>@Loc["PuppeteerCommandLineArguments"]</label>
-        <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.CommandLineArgs" />
+        <InputText class="mb-3" @bind-Value="settings.BrowserSettings.CommandLineArgs" />
 
         <label>@Loc["IgnoreHttpsErrors"]</label>
-        <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.IgnoreHttpsErrors" />
+        <InputCheckbox class="mb-3" @bind-Value="settings.BrowserSettings.IgnoreHttpsErrors" />
         <br />
 
         <label>@Loc["BlockedUrls"] (@Loc["BlockedUrlsInfo"])</label>
-        <InputListOfStrings @bind-List="settings.PuppeteerSettings.BlockedUrls" />
+        <InputListOfStrings @bind-List="settings.BrowserSettings.BlockedUrls" />
     </EditForm>
 
     <button class="btn btn-outline-warning" style="margin: 10px 0;" @onclick="RestoreDefaults">@Loc["RestoreDefaults"]</button>

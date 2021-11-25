@@ -16,7 +16,7 @@ namespace OpenBullet2.Pages
         [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
 
-        private MonacoEditor _editor { get; set; }
+        private MonacoEditor Editor { get; set; }
         private Config config;
 
         // These solve a race condition between OnInitializedAsync and OnAfterRender that make
@@ -53,7 +53,7 @@ namespace OpenBullet2.Pages
         {
             if (initialized && !rendered)
             {
-                _editor.SetValue(config.LoliCodeScript);
+                Editor.SetValue(config.LoliCodeScript);
                 rendered = true;
             }
         }
@@ -61,9 +61,9 @@ namespace OpenBullet2.Pages
         private async Task OnMonacoInit()
         {
             await js.RegisterLoliCode();
-            var model = await _editor.GetModel();
+            var model = await Editor.GetModel();
             await MonacoEditorBase.SetModelLanguage(model, "lolicode");
-            await MonacoThemeSetter.SetLolicodeTheme(OBSettingsService.Settings.CustomizationSettings);
+            await MonacoThemeSetter.SetLoliCodeTheme(OBSettingsService.Settings.CustomizationSettings);
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -81,7 +81,7 @@ namespace OpenBullet2.Pages
 
         private async Task SaveScript()
         {
-            config.LoliCodeScript = await _editor.GetValue();
+            config.LoliCodeScript = await Editor.GetValue();
         }
     }
 }

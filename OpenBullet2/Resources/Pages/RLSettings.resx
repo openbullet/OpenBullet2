@@ -135,6 +135,9 @@
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
   </data>
+  <data name="BrowserType" xml:space="preserve">
+    <value>Browser Type</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -248,6 +251,9 @@
   </data>
   <data name="SelectedBrowser" xml:space="preserve">
     <value>Selected browser</value>
+  </data>
+  <data name="Selenium" xml:space="preserve">
+    <value>Selenium</value>
   </data>
   <data name="SettingsSaved" xml:space="preserve">
     <value>The settings were successfully saved.</value>

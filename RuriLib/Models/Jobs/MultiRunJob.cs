@@ -29,6 +29,9 @@ using RuriLib.Helpers;
 using IronPython.Compiler;
 using IronPython.Runtime;
 using RuriLib.Models.Captchas;
+using RuriLib.Legacy.Models;
+using RuriLib.Legacy.LS;
+using RuriLib.Models.Variables;
 
 namespace RuriLib.Models.Jobs
 {
@@ -67,6 +70,8 @@ namespace RuriLib.Models.Jobs
         private ProxyPool proxyPool;
         private Timer tickTimer;
         private dynamic globalVariables;
+        private VariablesList legacyGlobalVariables;
+        private Dictionary<string, string> legacyGlobalCookies;
         private Dictionary<string, ConfigResource> resources;
         private HttpClient httpClient;
         private AsyncLocker asyncLocker;
@@ -156,6 +161,37 @@ namespace RuriLib.Models.Jobs
 
                 botData.CancellationToken = token;
                 ScriptState scriptState = null;
+                LSGlobals lsGlobals = null; // Legacy
+
+                if (input.IsLegacy)
+                {
+                    lsGlobals = new LSGlobals(botData)
+                    {
+                        Globals = input.LegacyGlobals,
+                        GlobalCookies = input.LegacyGlobalCookies
+                    };
+
+                    var slices = new List<Variable>();
+
+                    foreach (var slice in botData.Line.GetVariables())
+                    {
+                        var sliceValue = botData.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
+                            ? Uri.EscapeDataString(slice.AsString())
+                            : slice.AsString();
+
+                        slices.Add(new StringVariable(sliceValue) { Name = slice.Name });
+                    }
+
+                    var legacyVariables = new VariablesList(slices);
+
+                    foreach (var customInput in botData.ConfigSettings.InputSettings.CustomInputs)
+                    {
+                        legacyVariables.Set(new StringVariable(customInput.DefaultAnswer) { Name = customInput.VariableName });
+                    }
+
+                    botData.SetObject("legacyVariables", legacyVariables);
+                }
+
                 Dictionary<string, object> outputVariables = new();
 
                 // Add this BotData to the array for detailed MultiRunJob display mode
@@ -206,17 +242,11 @@ namespace RuriLib.Models.Jobs
 
                     botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
 
-                    // If it's not a DLL config, run the compiled script
-                    if (!input.IsDLL)
+                    // If it's a DLL config, invoke the method
+                    if (input.IsDLL)
                     {
-                        scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
-                        
-                    }
-                    // Otherwise invoke the method
-                    else
-                    {
-                        var task = (Task)input.DLLMethod.Invoke(null, new object[] 
-                        { 
+                        var task = (Task)input.DLLMethod.Invoke(null, new object[]
+                        {
                             botData,
                             scriptGlobals.input,
                             scriptGlobals.globals,
@@ -225,6 +255,28 @@ namespace RuriLib.Models.Jobs
                         });
 
                         await task.ConfigureAwait(false);
+                        
+                    }
+                    // If it's a legacy config, run the LoliScript engine
+                    else if (input.IsLegacy)
+                    {
+                        var loliScript = new LoliScript(input.LegacyLoliScript);
+
+                        do
+                        {
+                            if (botData.CancellationToken.IsCancellationRequested)
+                            {
+                                break;
+                            }
+
+                            await loliScript.TakeStep(lsGlobals);
+                        }
+                        while (loliScript.CanProceed);
+                    }
+                    // Otherwise run the compiled script
+                    else
+                    {
+                        scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
                     }
                 }
                 catch (Exception ex)
@@ -240,7 +292,7 @@ namespace RuriLib.Models.Jobs
                     botData.Logger.Log(endMessage);
 
                     // Close the browser if needed
-                    if (botData.ConfigSettings.PuppeteerSettings.QuitBrowserStatuses.Contains(botData.STATUS))
+                    if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
                     {
                         botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
                     }
@@ -327,9 +379,35 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
-                // If not a DLL config, retrieve the output variables from the script
-                if (!input.IsDLL && scriptState != null && !scriptState.Variables.IsDefault)
+                if (input.IsDLL)
                 {
+                    // No need to do anything here, DLL configs already fill the output variables
+                }
+                else if (input.IsLegacy)
+                {
+                    var legacyVariables = botData.TryGetObject<VariablesList>("legacyVariables");
+
+                    foreach (var variable in legacyVariables.Variables.Where(v => v.MarkedForCapture))
+                    {
+                        switch (variable.Type)
+                        {
+                            case VariableType.String:
+                                outputVariables[variable.Name] = variable.AsString();
+                                break;
+
+                            case VariableType.ListOfStrings:
+                                outputVariables[variable.Name] = variable.AsListOfStrings();
+                                break;
+
+                            case VariableType.DictionaryOfStrings:
+                                outputVariables[variable.Name] = variable.AsDictionaryOfStrings();
+                                break;
+                        }
+                    }
+                }
+                else if (scriptState != null && !scriptState.Variables.IsDefault)
+                {
+                    // Get the variables from the script
                     foreach (var variable in scriptState.Variables)
                     {
                         if (botData.MarkedForCapture.Contains(variable.Name))
@@ -388,7 +466,18 @@ namespace RuriLib.Models.Jobs
             MethodInfo method = null;
 
             // If not in DLL mode, build the C# script and compile it
-            if (Config.Mode != ConfigMode.DLL)
+            if (Config.Mode == ConfigMode.DLL)
+            {
+                using var ms = new MemoryStream(Config.DLLBytes);
+                var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
+                var type = assembly.GetType("RuriLib.CompiledConfig");
+                method = type.GetMember("Execute").First() as MethodInfo;
+            }
+            else if (Config.Mode == ConfigMode.Legacy)
+            {
+                // Nothing to do here
+            }
+            else
             {
                 switch (Config.Mode)
                 {
@@ -404,14 +493,6 @@ namespace RuriLib.Models.Jobs
                 script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
                 script.Compile();
             }
-            // Otherwise load the method from the assembly
-            else
-            {
-                using var ms = new MemoryStream(Config.DLLBytes);
-                var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
-                var type = assembly.GetType("RuriLib.CompiledConfig");
-                method = type.GetMember("Execute").First() as MethodInfo;
-            }
 
             Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
                 ? System.Security.Cryptography.X509Certificates.X509RevocationMode.Online
@@ -419,6 +500,8 @@ namespace RuriLib.Models.Jobs
 
             var wordlistType = settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
             globalVariables = new ExpandoObject();
+            legacyGlobalVariables = new();
+            legacyGlobalCookies = new();
 
             if (wordlistType == null)
                 throw new NullReferenceException($"The wordlist type with name {DataPool.WordlistType} was not found in the Environment");
@@ -461,8 +544,12 @@ namespace RuriLib.Models.Jobs
                     BotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(line, wordlistType),
                         null, ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings)),
                     Globals = globalVariables,
+                    LegacyLoliScript = Config.LoliScript,
+                    LegacyGlobals = legacyGlobalVariables,
+                    LegacyGlobalCookies = legacyGlobalCookies,
                     Script = script,
                     IsDLL = Config.Mode == ConfigMode.DLL,
+                    IsLegacy = Config.Mode == ConfigMode.Legacy,
                     DLLMethod = method,
                     CustomInputsAnswers = CustomInputsAnswers,
                     Index = index++
@@ -811,6 +898,10 @@ namespace RuriLib.Models.Jobs
         public ProxyPool ProxyPool { get; set; }
         public Script Script { get; set; }
         public bool IsDLL { get; set; }
+        public bool IsLegacy { get; set; }
+        public string LegacyLoliScript { get; set; }
+        public VariablesList LegacyGlobals { get; set; }
+        public Dictionary<string, string> LegacyGlobalCookies { get; set; }
         public MethodInfo DLLMethod { get; set; }
         public Dictionary<string, string> CustomInputsAnswers { get; set; }
         public long Index { get; set; }

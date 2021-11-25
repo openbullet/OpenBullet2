@@ -1,4 +1,5 @@
 ﻿@page "/settings/rurilib"
+@using RuriLib.Models.Settings
 @using RuriLib.Parallelization 
 @using RuriLib.Functions.Captchas
 @inject Microsoft.Extensions.Localization.IStringLocalizer<RLSettings> Loc
@@ -183,6 +184,30 @@
 <EditForm Model="settings.PuppeteerSettings">
     <label>@Loc["ChromeBinaryLocation"]</label>
     <InputText class="mb-3" @bind-Value="settings.PuppeteerSettings.ChromeBinaryLocation" />
+
+    <!--
+    <label>@Loc["DrawMouseMovement"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.PuppeteerSettings.DrawMouseMovement" />
+    <br />
+    -->
+</EditForm>
+
+<h1>@Loc["Selenium"]</h1>
+<EditForm Model="settings.SeleniumSettings">
+    <label>@Loc["BrowserType"]</label>
+    <InputSelect @bind-Value="settings.SeleniumSettings.BrowserType">
+        @foreach (var type in Enum.GetNames(typeof(SeleniumBrowserType)))
+        {
+            <option value="@type">@type</option>
+        }
+    </InputSelect>
+    <br />
+
+    <label>@Loc["ChromeBinaryLocation"]</label>
+    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.ChromeBinaryLocation" />
+
+    <label>@Loc["FirefoxBinaryLocation"]</label>
+    <InputText class="mb-3" @bind-Value="settings.SeleniumSettings.FirefoxBinaryLocation" />
 
     <!--
     <label>@Loc["DrawMouseMovement"]</label>

@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="780"
@@ -27,13 +28,13 @@
                 <LineBreak/><LineBreak/>
                 <Bold>Developer</Bold>: <Span Foreground="LightPink">Ruri</Span>
                 <LineBreak/>
-                <Bold>Collaborators</Bold>: demiurgo, meinname
+                <Bold>Collaborators</Bold>: demiurgo, <Image gif:ImageBehavior.AnimationSpeedRatio="0.2" gif:ImageBehavior.AnimatedSource="/Images/meinname.gif" Width="80" Height="18" Margin="0 0 0 -5" />
                 <LineBreak/>
-                <Bold>Alpha testers</Bold>: CιdᥱR™, Flix88, kurosaki ichigo
+                <Bold>Alpha testers</Bold>: <Image gif:ImageBehavior.AnimatedSource="/Images/cider.gif" Width="50" Height="18" Margin="0 0 0 -4" />, Flix88, <Span Foreground="#f00">kurosaki ichigo</Span>
                 <LineBreak/>
-                <Bold>Beta testers</Bold>: B1rdY, Br4uN, Fairy, FFaez1267, Itamai, Laiteux, Pure, Why001
+                <Bold>Beta testers</Bold>: <Span Foreground="#fb7efd">B</Span><Span Foreground="#3783ff">1</Span><Span Foreground="#0f0">r</Span><Span Foreground="#ff0">d</Span><Span Foreground="#fc2847">Y</Span>, Br4uN, Fairy, <Image gif:ImageBehavior.AnimatedSource="/Images/ffaez.gif" Width="63" Height="12" Margin="0 0 0 -1" />, Itamai, Laiteux, Pure, Why001
                 <LineBreak/>
-                <Bold>Supporters</Bold>: <Span Foreground="Coral">James | Lisse, FFaez1267, Ikamai</Span>, <Span Foreground="Orange">TheFiendQQ, Patch2201, Spic, B1rdY, mastercho, alexparkin, k4k4r0to</Span>, <Span Foreground="Gold">donx, Crackdealer, moon.Man, Laiteux, HarveyS, ＥｄｗａｒｄＮ, mimic, Matthew, MadmanDev, Rael, boggy94, Pegasus, Phantøm, Joey, dew88, The anti SJW, ManoPlayBRL, Plog, Barmoley, Itamai, Kurosaki Ichigo, Pool, Finlay1010, n00biE, kaatil, Speeedyyyy, AccountMast3r, Ruzzlzz, Sparky (Rare), Fr00tl00ps | Lisse, dankmemes43</Span>
+                <Bold>Supporters</Bold>: <Image gif:ImageBehavior.AnimatedSource="/Images/james.gif" Width="90" Height="15" Margin="0 0 0 -4" />, <Image gif:ImageBehavior.AnimatedSource="/Images/ffaez.gif" Width="63" Height="12" Margin="0 0 0 -1" />, <Image gif:ImageBehavior.AnimatedSource="/Images/sjw.gif" Width="80" Margin="0 0 0 -1" />, <Span Foreground="Orange">Ikamai, TheFiendQQ, Patch2201, Spic,</Span> <Span Foreground="#fb7efd">B</Span><Span Foreground="#3783ff">1</Span><Span Foreground="#0f0">r</Span><Span Foreground="#ff0">d</Span><Span Foreground="#fc2847">Y,</Span> <Span Foreground="Orange"> mastercho, alexparkin,</Span> <Span Foreground="Gold">k4k4r0to, donx, Crackdealer, moon.Man, Laiteux, HarveyS, ＥｄｗａｒｄＮ, mimic, Matthew, MadmanDev, Rael, boggy94, Pegasus, Phantøm, Joey, dew88, ManoPlayBRL, Plog, Barmoley, Itamai, Kurosaki Ichigo, Pool, Finlay1010, n00biE, kaatil, Speeedyyyy, AccountMast3r, Ruzzlzz, Cal, Sparky (Rare), Fr00tl00ps | Lisse, dankmemes43</Span>
                 <LineBreak/><LineBreak/>
                 <Span Foreground="{DynamicResource ForegroundGood}">This software is <Italic>Open Source</Italic> and licensed under the MIT license. Please visit the <Bold>repository</Bold> using the button below.</Span>
             </TextBlock>

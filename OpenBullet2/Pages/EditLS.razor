@@ -1,0 +1,30 @@
+﻿@page "/config/edit/loliscript"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EditLS> Loc
+@attribute [Authorize(Roles = "Admin")]
+
+@if (config != null)
+{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <span class="fg-custom">@Loc["LoliScriptEditor"]</span>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-12 pl-0">
+                <div class="w-100 mt-3" style="height: 800px;">
+                    <MonacoEditor @ref="Editor" Id="loli-editor" ConstructionOptions="EditorConstructionOptions"
+                                  OnDidInit="OnMonacoInit" OnDidChangeModelContent="SaveScript" />
+                </div>
+            </div>
+            <div class="col-xl-6 d-xl-block d-none pr-0">
+                <div style="height: 800px; overflow-y: auto;">
+                    <Debugger Config="config" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 px-0 mx-0 d-xl-none d-block">
+                <Debugger Config="config" />
+            </div>
+        </div>
+    </div>
+}
