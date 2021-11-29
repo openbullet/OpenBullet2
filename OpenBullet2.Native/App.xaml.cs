@@ -134,23 +134,21 @@ namespace OpenBullet2.Native
         {
             e.SetObserved(); // Comment this line to close the app on task exception
 
+            // I decided to disable the code below since usually task exceptions are not critical to the application
+
+            /*
             if (e.Exception.InnerException is not null)
             {
-                // Read this link to know why we're doing this
-                // https://github.com/hardkoded/puppeteer-sharp/issues/891
-                if (e.Exception.InnerException is PuppeteerSharp.PuppeteerException)
-                {
-                    return;
-                }
-
-                // Same here, seems like all networking-related things can cause unhandled task exceptions
-                else if (e.Exception.InnerException is System.Net.Sockets.SocketException)
+                if (e.Exception.InnerException is PuppeteerSharp.PuppeteerException // https://github.com/hardkoded/puppeteer-sharp/issues/891
+                    or System.Net.Sockets.SocketException // Seems like all networking-related things can cause unhandled task exceptions
+                    or TimeoutException) // This is again thrown by Puppeteer
                 {
                     return;
                 }
             }
 
             ReportCrash(e.Exception);
+            */
         }
 
         private static void ReportCrash(Exception ex)
