@@ -82,7 +82,7 @@ jobs:
         tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         overwrite: true
     - name: update release
-      uses: tubone24/update_release@v1.0
+      uses: tubone24/update_release@v1.3.1
       env:
         GITHUB_TOKEN: ${{ secrets.github_token }}
       with:
