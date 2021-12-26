@@ -121,7 +121,7 @@ namespace RuriLib.Blocks.Puppeteer.Elements
 
             var frame = GetFrame(data);
             var elemScript = GetElementScript(findBy, identifier, index);
-            var script = $"let el={elemScript};for(let i=0;i<el.options.length;i++){{if(el.options[i].text=='{text}'){{el.selectedIndex = i;break;}}}}";
+            var script = $"el={elemScript};for(let i=0;i<el.options.length;i++){{if(el.options[i].text=='{text}'){{el.selectedIndex = i;break;}}}}";
             await frame.EvaluateExpressionAsync(script);
 
             data.Logger.Log($"Selected text {text}", LogColors.DarkSalmon);
