@@ -23,6 +23,7 @@ namespace OpenBullet2.Native.Views.Pages.Shared
             DataContext = vm;
 
             vm.NewLogEntry += NewLogEntry;
+            vm.LogCleared += ClearLog;
 
             InitializeComponent();
             tabControl.SelectedIndex = 0;
@@ -88,6 +89,16 @@ namespace OpenBullet2.Native.Views.Pages.Shared
                 {
                     htmlViewer.HTML = entry.Message;
                 }
+            });
+        }
+
+        private void ClearLog(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                logRTB.Clear();
+                variablesRTB.Clear();
+                htmlViewer.HTML = string.Empty;
             });
         }
 

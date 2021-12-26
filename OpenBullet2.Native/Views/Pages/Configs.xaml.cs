@@ -213,6 +213,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
 
             vm.SelectedConfig = HoveredItem;
+            SP.GetService<ViewModelsService>().Debugger.ClearLog();
             NavigateToConfigSection();
         }
 

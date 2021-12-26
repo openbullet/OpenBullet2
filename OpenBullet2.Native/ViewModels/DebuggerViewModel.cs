@@ -27,6 +27,7 @@ namespace OpenBullet2.Native.ViewModels
         private ConfigDebugger debugger;
 
         public event EventHandler<BotLoggerEntry> NewLogEntry;
+        public event EventHandler LogCleared;
 
         private string testData = string.Empty;
         public string TestData
@@ -209,5 +210,11 @@ namespace OpenBullet2.Native.ViewModels
         }
 
         public void Stop() => debugger?.Stop();
+
+        public void ClearLog()
+        {
+            logger?.Clear();
+            LogCleared?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
