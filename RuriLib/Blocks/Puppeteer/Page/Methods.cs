@@ -216,13 +216,18 @@ namespace RuriLib.Blocks.Puppeteer.Page
             return dom;
         }
 
-        [Block("Gets the cookies for a given domain from the browser", name = "Get Cookies")]
+        [Block("Gets the cookies for a given domain from the browser. If the domain is empty, gets all cookies from the page.", name = "Get Cookies")]
         public static async Task<Dictionary<string, string>> PuppeteerGetCookies(BotData data, string domain)
         {
             data.Logger.LogHeader();
 
             var page = GetPage(data);
-            var cookies = await page.GetCookiesAsync(domain);
+            var cookies = await page.GetCookiesAsync();
+            
+            if (!string.IsNullOrWhiteSpace(domain))
+            {
+                cookies = cookies.Where(c => c.Domain.Contains(domain, StringComparison.OrdinalIgnoreCase)).ToArray();
+            }
 
             data.Logger.Log($"Got {cookies.Length} cookies for {domain}", LogColors.DarkSalmon);
             return cookies.ToDictionary(c => c.Name, c => c.Value);
