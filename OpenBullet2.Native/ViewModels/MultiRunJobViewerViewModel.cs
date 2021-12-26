@@ -106,6 +106,8 @@ namespace OpenBullet2.Native.ViewModels
             AbsoluteTimeStartCondition a => (a.StartAt - DateTime.Now).ToString(@"hh\:mm\:ss"),
             _ => throw new NotImplementedException()
         };
+
+        public bool IsWaiting => MultiRunJob.Status is JobStatus.Waiting;
         #endregion
 
         #region Properties that need to be updated when the status changes
@@ -118,7 +120,6 @@ namespace OpenBullet2.Native.ViewModels
         public bool CanAbort => MultiRunJob.Status is JobStatus.Running or JobStatus.Paused or JobStatus.Pausing or JobStatus.Stopping;
 
         public bool IsStopping => MultiRunJob.Status is JobStatus.Stopping;
-        public bool IsWaiting => MultiRunJob.Status is JobStatus.Waiting;
         public bool IsPausing => MultiRunJob.Status is JobStatus.Pausing;
         #endregion
 
@@ -261,6 +262,8 @@ namespace OpenBullet2.Native.ViewModels
         // Periodic update for stuff that needs to be updated every second
         private void PeriodicUpdate()
         {
+            OnPropertyChanged(nameof(IsWaiting));
+
             if (MultiRunJob.Status == JobStatus.Waiting)
             {
                 OnPropertyChanged(nameof(RemainingWaitString));
@@ -299,7 +302,6 @@ namespace OpenBullet2.Native.ViewModels
             OnPropertyChanged(nameof(CanAbort));
 
             OnPropertyChanged(nameof(IsStopping));
-            OnPropertyChanged(nameof(IsWaiting));
             OnPropertyChanged(nameof(IsPausing));
         }
 
