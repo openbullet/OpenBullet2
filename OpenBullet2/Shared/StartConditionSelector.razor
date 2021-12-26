@@ -24,9 +24,10 @@
     }
 </EditForm>
 
-@code {
+    @code {
     [Parameter] public StartCondition StartCondition { get; set; }
-    
+    [Parameter] public EventCallback<StartCondition> StartConditionChanged { get; set; }
+
     private StartConditionType type = StartConditionType.StartIn;
     private DateTime? dateTime = DateTime.Now;
 
@@ -51,6 +52,8 @@
                 StartConditionType.StartAt => new AbsoluteTimeStartCondition(),
                 _ => throw new NotImplementedException()
             };
+
+            StartConditionChanged.InvokeAsync(StartCondition);
         }
     }
 
