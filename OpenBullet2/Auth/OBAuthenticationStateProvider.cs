@@ -189,7 +189,8 @@ namespace OpenBullet2.Auth
             var key = new SymmetricSecurityKey(settingsService.Settings.SecuritySettings.JwtKey);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(settingsService.Settings.SecuritySettings.AdminSessionLifetimeHours);
+            var hours = Math.Clamp(settingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
+            var expiration = DateTime.UtcNow.AddHours(hours);
 
             var token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -200,7 +201,8 @@ namespace OpenBullet2.Auth
             var key = new SymmetricSecurityKey(settingsService.Settings.SecuritySettings.JwtKey);
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddHours(settingsService.Settings.SecuritySettings.GuestSessionLifetimeHours);
+            var hours = Math.Clamp(settingsService.Settings.SecuritySettings.GuestSessionLifetimeHours, 0, 9999);
+            var expiration = DateTime.UtcNow.AddHours(hours);
 
             var token = new JwtSecurityToken(null, null, claims, DateTime.UtcNow, expiration, creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
