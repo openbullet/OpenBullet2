@@ -6,6 +6,7 @@ using RuriLib.Models.Bots;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RuriLib.Blocks.Requests.Ftp
@@ -58,6 +59,7 @@ namespace RuriLib.Blocks.Requests.Ftp
             }
 
             data.SetObject("ftpClient", client);
+            client.OnLogEvent = InitLogger(data);
             await client.AutoConnectAsync(data.CancellationToken).ConfigureAwait(false);
             
             if (!client.IsConnected)
@@ -139,6 +141,28 @@ namespace RuriLib.Blocks.Requests.Ftp
             await client.DisconnectAsync(data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log("Disconnected from the FTP server", LogColors.Maize);
+        }
+
+        [Block("Gets the protocol log", name = "Get Imap Log")]
+        public static string FtpGetLog(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var protocolLogger = data.TryGetObject<StringBuilder>("ftpLogger");
+            var log = protocolLogger.ToString();
+
+            data.Logger.Log(log, LogColors.Maize);
+
+            return log;
+        }
+
+        private static Action<FtpTraceLevel, string> InitLogger(BotData data)
+        {
+            var protocolLogger = new StringBuilder();
+            data.SetObject("ftpLogger", protocolLogger);
+
+            return new Action<FtpTraceLevel, string>((traceLevel, message)
+                => protocolLogger.AppendLine($"[{traceLevel}] {message}"));
         }
 
         private static FtpClient GetClient(BotData data)
