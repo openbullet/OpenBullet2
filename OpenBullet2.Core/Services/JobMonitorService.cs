@@ -1,6 +1,11 @@
-﻿using RuriLib.Models.Jobs.Monitor;
+﻿using Newtonsoft.Json;
+using RuriLib.Functions.Crypto;
+using RuriLib.Models.Jobs.Monitor;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace OpenBullet2.Core.Services
@@ -15,18 +20,23 @@ namespace OpenBullet2.Core.Services
         /// </summary>
         public List<TriggeredAction> TriggeredActions { get; set; } = new List<TriggeredAction>();
 
-        /// <summary>
-        /// Whether the job monitor has been initialized.
-        /// </summary>
-        public bool Initialized { get; set; }
-
         private readonly Timer timer;
+        private readonly Timer saveTimer;
         private readonly JobManagerService jobManager;
+        private readonly string fileName = "UserData/triggeredActions.json";
+        private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.Indented
+        };
+        private byte[] lastSavedHash = Array.Empty<byte>();
 
         public JobMonitorService(JobManagerService jobManager)
         {
             this.jobManager = jobManager;
+            RestoreTriggeredActions();
             timer = new Timer(new TimerCallback(_ => CheckAndExecute()), null, 1000, 1000);
+            saveTimer = new Timer(new TimerCallback(_ => SaveStateIfChanged()), null, 5000, 5000);
         }
 
         private void CheckAndExecute()
@@ -42,9 +52,40 @@ namespace OpenBullet2.Core.Services
             }
         }
 
+        private void RestoreTriggeredActions()
+        {
+            if (!File.Exists(fileName))
+            {
+                return;
+            }
+
+            var json = File.ReadAllText(fileName);
+            TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings).ToList();
+        }
+
+        private void SaveStateIfChanged()
+        {
+            var json = JsonConvert.SerializeObject(TriggeredActions.ToArray(), jsonSettings);
+            var hash = Crypto.MD5(Encoding.UTF8.GetBytes(json));
+
+            if (hash != lastSavedHash)
+            {
+                try
+                {
+                    File.WriteAllText(fileName, json);
+                    lastSavedHash = hash;
+                }
+                catch
+                {
+                    // File probably in use
+                }
+            }
+        }
+
         public void Dispose()
         {
             timer?.Dispose();
+            saveTimer?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
