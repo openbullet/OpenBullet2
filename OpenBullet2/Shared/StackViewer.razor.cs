@@ -6,6 +6,7 @@ using OpenBullet2.Shared.Forms;
 using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Models.Blocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,6 +63,35 @@ namespace OpenBullet2.Shared
                     selectedBlocks.Add(item);
                     await SelectedBlock.InvokeAsync(item);
                 }
+            }
+            // If we clicked while holding SHIFT
+            else if (e != null && e.ShiftKey)
+            {
+                // If nothing was selected, simply select it
+                if (selectedBlocks.Count == 0)
+                {
+                    selectedBlocks.Add(item);
+                }
+                // Otherwise get the last item of the list (which was selected last)
+                // and select all the ones in between
+                else
+                {
+                    var lastSelectedBlock = selectedBlocks.Last();
+                    selectedBlocks.Clear();
+
+                    var lastSelectedBlockIndex = Stack.IndexOf(lastSelectedBlock);
+                    var itemIndex = Stack.IndexOf(item);
+
+                    var minIndex = Math.Min(lastSelectedBlockIndex, itemIndex);
+                    var maxIndex = Math.Max(lastSelectedBlockIndex, itemIndex);
+
+                    for (var i = minIndex; i <= maxIndex; i++)
+                    {
+                        selectedBlocks.Add(Stack[i]);
+                    }
+                }
+
+                await SelectedBlock.InvokeAsync(item);
             }
             // Otherwise if we simply clicked on a block
             else

@@ -16,6 +16,7 @@ namespace OpenBullet2.Native.ViewModels
         public event Action<IEnumerable<BlockViewModel>> SelectionChanged;
 
         private readonly List<(BlockInstance, int)> deletedBlocks = new();
+        private BlockViewModel lastSelectedBlock = null;
 
         private ObservableCollection<BlockViewModel> stack;
         public ObservableCollection<BlockViewModel> Stack
@@ -53,11 +54,49 @@ namespace OpenBullet2.Native.ViewModels
             SaveStack();
         }
 
-        public void SelectBlock(BlockViewModel block, bool multipleSelection)
+        public void SelectBlock(BlockViewModel block, bool ctrl = false, bool shift = false)
         {
-            if (multipleSelection)
+            // Clear the last selected block if it doesn't exist anymore
+            if (!Stack.Contains(lastSelectedBlock))
+            {
+                lastSelectedBlock = null;
+            }
+
+            if (ctrl)
             {
                 block.Selected = !block.Selected;
+                lastSelectedBlock = block.Selected ? block : null;
+            }
+            else if (shift)
+            {
+                // If nothing was selected or already selected, simply select it
+                if (lastSelectedBlock == null || lastSelectedBlock == block)
+                {
+                    block.Selected = true;
+                    lastSelectedBlock = block;
+                }
+                // Otherwise get the last item of the list (which was selected last)
+                // and select all the ones in between
+                else
+                {
+                    foreach (var b in Stack)
+                    {
+                        b.Selected = false;
+                    }
+
+                    var lastSelectedBlockIndex = Stack.IndexOf(lastSelectedBlock);
+                    var itemIndex = Stack.IndexOf(block);
+
+                    var minIndex = Math.Min(lastSelectedBlockIndex, itemIndex);
+                    var maxIndex = Math.Max(lastSelectedBlockIndex, itemIndex);
+
+                    for (var i = minIndex; i <= maxIndex; i++)
+                    {
+                        Stack[i].Selected = true;
+                    }
+
+                    lastSelectedBlock = block;
+                }
             }
             else
             {
@@ -71,6 +110,8 @@ namespace OpenBullet2.Native.ViewModels
                 {
                     block.Selected = true;
                 }
+
+                lastSelectedBlock = block != null && block.Selected ? block : null;
             }
 
             SelectionChanged?.Invoke(Stack.Where(s => s.Selected));

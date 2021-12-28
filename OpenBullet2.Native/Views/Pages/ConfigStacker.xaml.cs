@@ -72,8 +72,9 @@ namespace OpenBullet2.Native.Views.Pages
         private void SelectBlock(object sender)
         {
             var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            var shift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
             var block = (BlockViewModel)(sender as FrameworkElement).Tag;
-            vm.SelectBlock(block, ctrl);
+            vm.SelectBlock(block, ctrl, shift);
         }
 
         private void SelectionChanged(IEnumerable<BlockViewModel> selected)
