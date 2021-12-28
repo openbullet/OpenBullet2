@@ -184,7 +184,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
 
         private static void SetPageAndFrame(BotData data, PuppeteerSharp.Page page)
         {
-            data.SetObject("puppeteerPage", page);
+            data.SetObject("puppeteerPage", page, false);
             SwitchToMainFramePrivate(data);
         }
 

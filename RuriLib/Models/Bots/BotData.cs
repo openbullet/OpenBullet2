@@ -116,13 +116,13 @@ namespace RuriLib.Models.Bots
             DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
         }
 
-        public void SetObject(string name, object obj)
+        public void SetObject(string name, object obj, bool disposeExisting = true)
         {
             if (objects.ContainsKey(name))
             {
                 var existing = objects[name];
 
-                if (existing is IDisposable d && existing is not null)
+                if (existing is IDisposable d && existing is not null && disposeExisting)
                 {
                     d.Dispose();
                 }
