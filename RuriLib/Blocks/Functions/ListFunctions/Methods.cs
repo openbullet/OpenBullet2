@@ -201,5 +201,17 @@ namespace RuriLib.Blocks.Functions.List
                 return index;
             }
         }
+
+        [Block("Creates a list of N numbers starting from the specified number", name = "Create List of Numbers")]
+        public static List<string> CreateListOfNumbers(BotData data, int start, int count)
+        {
+            data.Logger.LogHeader();
+
+            var list = Enumerable.Range(start, count).Select(i => i.ToString()).ToList();
+
+            data.Logger.Log($"Created a list of {count} numbers starting from {start}", LogColors.YellowGreen);
+
+            return list;
+        }
     }
 }
