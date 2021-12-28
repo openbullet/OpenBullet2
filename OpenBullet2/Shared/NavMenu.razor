@@ -211,6 +211,19 @@
         await js.InvokeVoidAsync("registerNavMenu", reference);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+
+        // Only re-render if isAdmin has changed
+        if (isAdmin != (uid == 0))
+        {
+            isAdmin = uid == 0;
+            await InvokeAsync(StateHasChanged);   
+        }
+    }
+
+
     private async Task ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
