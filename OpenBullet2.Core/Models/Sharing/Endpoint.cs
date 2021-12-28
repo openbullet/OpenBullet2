@@ -11,17 +11,17 @@ namespace OpenBullet2.Core.Models.Sharing
         /// <summary>
         /// The route for the endpoint.
         /// </summary>
-        public string Route = "configs";
+        public string Route { get; set; } = "configs";
 
         /// <summary>
         /// The API keys that are allowed to access the endpoint. When requesting configs
         /// from this endpoint, users will send their API key inside the HTTP request.
         /// </summary>
-        public List<string> ApiKeys = new();
+        public List<string> ApiKeys { get; set; } = new();
 
         /// <summary>
         /// The IDs of the configs that will be delivered by the server to the clients.
         /// </summary>
-        public List<string> ConfigIds = new();
+        public List<string> ConfigIds { get; set; } = new();
     }
 }

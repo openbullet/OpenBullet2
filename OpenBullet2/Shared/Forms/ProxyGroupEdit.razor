@@ -3,18 +3,37 @@
 @inject IProxyGroupRepository repo
 @inject Microsoft.Extensions.Localization.IStringLocalizer<ProxyGroupEdit> Loc
 
-<EditForm Model="ProxyGroup">
-    <InputText @bind-Value="ProxyGroup.Name" />
-    <button type="button" class="btn btn-outline-success mt-2" @onclick="Edit">@Loc["Edit"]</button>
-</EditForm>
+@if (model != null)
+{
+    <EditForm Model="model">
+        <InputText @bind-Value="model.Name" />
+        <button type="button" class="btn btn-outline-success mt-2" @onclick="Edit">@Loc["Edit"]</button>
+    </EditForm>
+}
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public ProxyGroupEntity ProxyGroup { get; set; }
+    private EditModel model;
+
+    private class EditModel
+    {
+        public string Name { get; set; }
+    }
+
+    protected override void OnParametersSet()
+    {
+        model = new()
+        {
+            Name = ProxyGroup.Name  
+        };
+    }
 
     private async Task Edit()
     {
+        ProxyGroup.Name = model.Name;
+
         await repo.Update(ProxyGroup);
         BlazoredModal.Close();
     }

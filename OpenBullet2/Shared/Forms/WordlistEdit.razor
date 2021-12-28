@@ -5,34 +5,59 @@
 @inject RuriLibSettingsService RuriLibSettings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<WordlistEdit> Loc
 
-<EditForm Model="Wordlist">
-    <label class="mt-2">@Loc["WordlistType"]</label>
-    <InputSelect @bind-Value="Wordlist.Type">
-        @foreach (var type in wordlistTypes)
-        {
-            <option value="@type">@type</option>
-        }
-    </InputSelect><br />
-    <label>@Loc["Name"]</label>
-    <InputText @bind-Value="Wordlist.Name" />
-    <label>@Loc["Purpose"]</label>
-    <InputText @bind-Value="Wordlist.Purpose" />
-    <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Ok">@Loc["Edit"]</button>
-</EditForm>
+@if (model != null)
+{
+    <EditForm Model="model">
+        <label class="mt-2">@Loc["WordlistType"]</label>
+        <InputSelect @bind-Value="model.Type">
+            @foreach (var type in wordlistTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect><br />
+        <label>@Loc["Name"]</label>
+        <InputText @bind-Value="model.Name" />
+        <label>@Loc["Purpose"]</label>
+        <InputText @bind-Value="model.Purpose" />
+        <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Ok">@Loc["Edit"]</button>
+    </EditForm>
+}
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public WordlistEntity Wordlist { get; set; }
     private List<string> wordlistTypes;
+    private EditModel model;
+
+    private class EditModel
+    {
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Purpose { get; set; }
+    }
 
     protected override void OnInitialized()
     {
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(w => w.Name).ToList();
     }
 
-    private async Task Ok()
+    protected override void OnParametersSet()
     {
+        model = new()
+        {
+            Name = Wordlist.Name,
+            Type = Wordlist.Type,
+            Purpose = Wordlist.Purpose
+        };
+    }
+
+    private void Ok()
+    {
+        Wordlist.Name = model.Name;
+        Wordlist.Type = model.Type;
+        Wordlist.Purpose = model.Purpose;
+
         BlazoredModal.Close();
     }
 }

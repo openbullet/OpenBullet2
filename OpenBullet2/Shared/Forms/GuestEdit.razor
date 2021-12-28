@@ -4,30 +4,47 @@
 @inject IGuestRepository GuestRepo
 @inject Microsoft.Extensions.Localization.IStringLocalizer<GuestEdit> Loc
 
-<EditForm Model="Guest">
+@if (model != null)
+{
+    <EditForm Model="model">
+        <label>@Loc["Username"]</label>
+        <InputText @bind-Value="model.Username" />
 
-    <label>@Loc["Username"]</label>
-    <InputText @bind-Value="Guest.Username" />
+        <label>@Loc["AccessExpiration"]</label>
+        <InputDate @bind-Value="model.AccessExpiration" />
 
-    <label>@Loc["AccessExpiration"]</label>
-    <InputDate @bind-Value="Guest.AccessExpiration" />
+        <label>@Loc["AllowedAddresses"] (@Loc["allIfEmpty"])</label>
+        <p style="color: #ccc; font-size: small;">@Loc["Example"]: 192.168.1.1,10.0.0.0/24,example.dyndns.org,::1</p>
+        <InputText @bind-Value="model.AllowedAddresses" />
 
-    <label>@Loc["AllowedAddresses"] (@Loc["allIfEmpty"])</label>
-    <p style="color: #ccc; font-size: small;">@Loc["Example"]: 192.168.1.1,10.0.0.0/24,example.dyndns.org,::1</p>
-    <InputText @bind-Value="Guest.AllowedAddresses" />
-
-    <button type="submit" @onclick="Validate" class="btn btn-outline-success">@Loc["Ok"]</button>
-</EditForm>
+        <button type="submit" @onclick="Validate" class="btn btn-outline-success">@Loc["Ok"]</button>
+    </EditForm>
+}
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public GuestEntity Guest { get; set; }
     private string originalUsername;
+    private EditModel model;
+
+    private class EditModel
+    {
+        public string Username { get; set; }
+        public DateTime AccessExpiration { get; set; }
+        public string AllowedAddresses { get; set; }
+    }
 
     protected override void OnParametersSet()
     {
         originalUsername = Guest.Username;
+
+        model = new()
+        {
+            Username = Guest.Username,
+            AccessExpiration = Guest.AccessExpiration,
+            AllowedAddresses = Guest.AllowedAddresses
+        };
     }
 
     private async Task Validate()
@@ -51,6 +68,10 @@
             await js.AlertError(Loc["Uh-Oh"], Loc["GuestAlreadyExists"]);
             return;
         }
+
+        Guest.Username = model.Username;
+        Guest.AccessExpiration = model.AccessExpiration;
+        Guest.AllowedAddresses = model.AllowedAddresses;
 
         BlazoredModal.Close(ModalResult.Ok(Guest));
     }

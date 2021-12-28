@@ -2,23 +2,45 @@
 @inject IModalService ModalService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<EndpointEdit> Loc
 
-<EditForm Model="Endpoint">
-    <label>@Loc["Route"]</label>
-    <InputText @bind-Value="Endpoint.Route" />
+@if (model != null)
+{
+    <EditForm Model="model">
+        <label>@Loc["Route"]</label>
+        <InputText @bind-Value="model.Route" />
 
-    <label>@Loc["ApiKeys"] (@Loc["onePerLine"])</label>
-    <InputListOfStrings @bind-List="Endpoint.ApiKeys" />
+        <label>@Loc["ApiKeys"] (@Loc["onePerLine"])</label>
+        <InputListOfStrings @bind-List="model.ApiKeys" />
 
-    <button type="submit" class="btn btn-outline-success mt-2" @onclick="Edit">@Loc["Edit"]</button>
-</EditForm>
+        <button type="submit" class="btn btn-outline-success mt-2" @onclick="Edit">@Loc["Edit"]</button>
+    </EditForm>
+}
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public Endpoint Endpoint { get; set; }
+    private EditModel model;
+
+    private class EditModel
+    {
+        public string Route { get; set; }
+        public List<string> ApiKeys { get; set; }
+    }
+
+    protected override void OnParametersSet()
+    {
+        model = new()
+        {
+            Route = Endpoint.Route,
+            ApiKeys = Endpoint.ApiKeys.ToList() // Clone the list to get a different reference
+        };
+    }
 
     private void Edit()
     {
+        Endpoint.Route = model.Route;
+        Endpoint.ApiKeys = model.ApiKeys;
+
         BlazoredModal.Close();
     }
 }

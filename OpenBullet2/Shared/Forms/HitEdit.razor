@@ -5,34 +5,59 @@
 @inject RuriLibSettingsService RuriLibSettings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<HitEdit> Loc
 
-<EditForm Model="Hit">
-    <label>@Loc["Data"]</label>
-    <InputText @bind-Value="Hit.Data" />
-    <label class="mt-2">@Loc["HitType"]</label>
-    <InputSelect @bind-Value="Hit.Type">
-        @foreach (var type in hitTypes)
-        {
-            <option value="@type">@type</option>
-        }
-    </InputSelect><br />
-    <label>@Loc["CapturedData"]</label>
-    <InputText @bind-Value="Hit.CapturedData" />
-    <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Edit">@Loc["Edit"]</button>
-</EditForm>
+@if (model != null)
+{
+    <EditForm Model="model">
+        <label>@Loc["Data"]</label>
+        <InputText @bind-Value="model.Data" />
+        <label class="mt-2">@Loc["HitType"]</label>
+        <InputSelect @bind-Value="model.Type">
+            @foreach (var type in hitTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect><br />
+        <label>@Loc["CapturedData"]</label>
+        <InputText @bind-Value="model.CapturedData" />
+        <button type="button" class="btn btn-outline-success" style="margin-top: 10px;" @onclick="Edit">@Loc["Edit"]</button>
+    </EditForm>
+}
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
     [Parameter] public HitEntity Hit { get; set; }
     private List<string> hitTypes;
+    private EditModel model;
+
+    private class EditModel
+    {
+        public string Data { get; set; }
+        public string Type { get; set; }
+        public string CapturedData { get; set; }
+    }
 
     protected override void OnInitialized()
     {
         hitTypes = RuriLibSettings.GetStatuses().ToList();
     }
 
+    protected override void OnParametersSet()
+    {
+        model = new()
+        {
+            Data = Hit.Data,
+            Type = Hit.Type,
+            CapturedData = Hit.CapturedData
+        };
+    }
+
     private async Task Edit()
     {
+        Hit.Data = model.Data;
+        Hit.Type = model.Type;
+        Hit.CapturedData = model.CapturedData;
+
         await HitRepo.Update(Hit);
         BlazoredModal.Close();
     }
