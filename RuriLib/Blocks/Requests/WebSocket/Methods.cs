@@ -110,6 +110,17 @@ namespace RuriLib.Blocks.Requests.WebSocket
             data.Logger.Log($"Sent {message} to the server", LogColors.MossGreen);
         }
 
+        [Block("Sends a raw binary message on the Web Socket", name = "WebSocket Send Raw")]
+        public static void WsSendRaw(BotData data, byte[] message)
+        {
+            data.Logger.LogHeader();
+
+            var ws = GetSocket(data);
+            ws.Send(message);
+
+            data.Logger.Log($"Sent {message.Length} bytes to the server", LogColors.MossGreen);
+        }
+
         [Block("Gets unread messages that the server sent since the last read", name = "WebSocket Read")]
         public static async Task<List<string>> WsRead(BotData data, int pollIntervalInMilliseconds = 10, int timeoutMilliseconds = 10000)
         {
