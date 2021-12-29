@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using OpenBullet2.Core.Services;
+using System.IO.Compression;
 
 namespace OpenBullet2.Pages
 {
@@ -359,6 +360,28 @@ namespace OpenBullet2.Pages
             {
                 var fileName = selectedConfig.Metadata.Name.ToValidFileName() + ".opk";
                 await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.Pack(selectedConfig), "application/octet-stream");
+            }
+            catch (Exception ex)
+            {
+                await js.AlertError(ex.GetType().Name, ex.Message);
+                return;
+            }
+        }
+
+        private async Task DownloadAll()
+        {
+            // Only download configs that are not remote
+            var configsToPack = configs.Where(c => !c.IsRemote);
+
+            if (!configsToPack.Any())
+            {
+                return;
+            }
+
+            try
+            {
+                var bytes = await ConfigPacker.Pack(configsToPack);
+                await BlazorDownloadFileService.DownloadFile("configs.zip", bytes, "application/octet-stream");
             }
             catch (Exception ex)
             {
