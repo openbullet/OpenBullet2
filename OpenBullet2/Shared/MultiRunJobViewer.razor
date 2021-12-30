@@ -72,7 +72,7 @@
                     @switch (source)
                     {
                         case GroupProxySource x:
-                            <span class="fg-tocheck ml-1">@Loc["Group"] (@x.GroupId)</span>
+                            <span class="fg-tocheck ml-1">@Loc["Group"] (@GetProxyGroupName(x.GroupId))</span>
                             break;
 
                         case FileProxySource x:

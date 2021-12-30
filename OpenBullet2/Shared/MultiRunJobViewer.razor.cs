@@ -19,6 +19,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace OpenBullet2.Shared
 {
@@ -30,8 +32,7 @@ namespace OpenBullet2.Shared
         [Inject] private VolatileSettingsService VolatileSettings { get; set; }
         [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
         [Inject] private MemoryJobLogger Logger { get; set; }
-        [Inject] private IJobRepository JobRepo { get; set; }
-        [Inject] private JobManagerService JobManager { get; set; }
+        [Inject] private IProxyGroupRepository ProxyGroups { get; set; }
         [Inject] private NavigationManager Nav { get; set; }
 
         private bool changingBots = false;
@@ -39,8 +40,13 @@ namespace OpenBullet2.Shared
         private List<Hit> selectedHits = new();
         private Hit lastSelectedHit;
         private Timer uiRefreshTimer;
+        private List<ProxyGroupEntity> proxyGroups;
 
-        protected override void OnInitialized() => AddEventHandlers();
+        protected override async Task OnInitializedAsync()
+        {
+            AddEventHandlers();
+            proxyGroups = await ProxyGroups.GetAll().ToListAsync();
+        }
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -377,6 +383,9 @@ namespace OpenBullet2.Shared
 
         private async Task ShowNoHitSelectedWarning()
             => await js.AlertError(Loc["Uh-Oh"], Loc["NoHitSelectedWarning"]);
+
+        private string GetProxyGroupName(int id)
+            => id == -1 ? "All" : proxyGroups.FirstOrDefault(g => g.Id == id)?.Name;
 
         private void AddEventHandlers()
         {
