@@ -1,4 +1,5 @@
 ﻿using RuriLib.Attributes;
+using RuriLib.Functions.Conversion;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using System;
@@ -74,7 +75,18 @@ namespace RuriLib.Blocks.Requests.WebSocket
             {
                 lock (wsMessages)
                 {
-                    wsMessages.Add(msg.Text);
+                    switch (msg.MessageType)
+                    {
+                        case WebSocketMessageType.Text:
+                            wsMessages.Add(msg.Text);
+                            break;
+
+                        case WebSocketMessageType.Binary:
+                            // Binary responses will be encoded as base64 since there is no support for the
+                            // List<byte[]> type at the moment.
+                            wsMessages.Add(Base64Converter.ToBase64String(msg.Binary));
+                            break;
+                    }
                 }
             });
 
