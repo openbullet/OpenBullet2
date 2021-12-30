@@ -96,6 +96,9 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public string CustomInputsInfo => string.Join(", ", MultiRunJob.CustomInputsAnswers.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+        public bool HasCustomInputs => MultiRunJob.Config != null && MultiRunJob.Config.Settings.InputSettings.CustomInputs.Any();
+
         public bool EnableJobLog => obSettingsService.Settings.GeneralSettings.EnableJobLogging;
         #endregion
 
@@ -400,6 +403,7 @@ namespace OpenBullet2.Native.ViewModels
         {
             HitsCollection = new();
             AskCustomInputs();
+            OnPropertyChanged(nameof(CustomInputsInfo));
             await MultiRunJob.Start();
             UpdateBots();
         }
