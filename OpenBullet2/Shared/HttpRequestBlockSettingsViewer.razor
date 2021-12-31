@@ -28,6 +28,9 @@
     <div class="col">
         <BlockInputField BlockSetting="@Block.Settings["alwaysSendContent"]" />
     </div>
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["decodeHtml"]" />
+    </div>
 </div>
 
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">

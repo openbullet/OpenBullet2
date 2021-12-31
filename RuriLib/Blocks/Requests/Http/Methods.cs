@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
@@ -440,12 +441,11 @@ namespace RuriLib.Blocks.Requests.Http
             // Source
             if (!string.IsNullOrWhiteSpace(requestOptions.CodePagesEncoding))
             {
-                data.SOURCE = CodePagesEncodingProvider.Instance
-                    .GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE);
+                data.SOURCE = requestOptions.DecodeHtml ? WebUtility.HtmlDecode(CodePagesEncodingProvider.Instance.GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE)) : CodePagesEncodingProvider.Instance.GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE);
             }
             else
             {
-                data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
+                data.SOURCE = requestOptions.DecodeHtml ? WebUtility.HtmlDecode(Encoding.UTF8.GetString(data.RAWSOURCE)) : Encoding.UTF8.GetString(data.RAWSOURCE);
             }
 
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);
