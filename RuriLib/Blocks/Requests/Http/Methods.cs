@@ -411,7 +411,7 @@ namespace RuriLib.Blocks.Requests.Http
             {
                 foreach (var header in response.Content.Headers)
                 {
-                    data.HEADERS[header.Key] = header.Value.First();
+                    data.HEADERS[header.Key] = string.Join(' ', header.Value);
                 }
             }
 
