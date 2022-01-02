@@ -272,7 +272,7 @@ namespace RuriLib.Models.Debugger
                 lastSeleniumBrowser = data.TryGetObject<OpenQA.Selenium.WebDriver>("selenium");
 
                 // Dispose stuff in data.Objects
-                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame" });
+                data.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "selenium" });
 
                 // Dispose resources
                 foreach (var resource in resources.Where(r => r.Value is IDisposable)
