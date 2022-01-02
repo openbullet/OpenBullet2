@@ -390,6 +390,46 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public string CustomAntiCaptchaApiKey
+        {
+            get => Captcha.CustomAntiCaptchaApiKey;
+            set
+            {
+                Captcha.CustomAntiCaptchaApiKey = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CustomAntiCaptchaDomain
+        {
+            get => Captcha.CustomAntiCaptchaDomain;
+            set
+            {
+                Captcha.CustomAntiCaptchaDomain = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CustomAntiCaptchaPort
+        {
+            get => Captcha.CustomAntiCaptchaPort;
+            set
+            {
+                Captcha.CustomAntiCaptchaPort = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string AnyCaptchaApiKey
+        {
+            get => Captcha.AnyCaptchaApiKey;
+            set
+            {
+                Captcha.AnyCaptchaApiKey = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string PuppeteerChromeBinaryLocation
         {
             get => Puppeteer.ChromeBinaryLocation;

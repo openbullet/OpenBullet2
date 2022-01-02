@@ -31,7 +31,7 @@ namespace RuriLib.Providers.Captchas
         public Task ReportSolution(long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default)
             => service.ReportSolution(id, type, correct, cancellationToken);
 
-        public Task<StringResponse> SolveCapyAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
+        public Task<CapyResponse> SolveCapyAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default)
             => service.SolveCapyAsync(siteKey, siteUrl, proxy, cancellationToken);
 
         public Task<StringResponse> SolveFuncaptchaAsync(string publicKey, string serviceUrl, string siteUrl,

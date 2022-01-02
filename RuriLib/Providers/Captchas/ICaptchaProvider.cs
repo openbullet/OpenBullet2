@@ -26,7 +26,7 @@ namespace RuriLib.Providers.Captchas
         Task<StringResponse> SolveHCaptchaAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default);
         Task<StringResponse> SolveKeyCaptchaAsync(string userId, string sessionId, string webServerSign1, string webServerSign2, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default);
         Task<GeeTestResponse> SolveGeeTestAsync(string gt, string challenge, string apiServer, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default);
-        Task<StringResponse> SolveCapyAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default);
+        Task<CapyResponse> SolveCapyAsync(string siteKey, string siteUrl, Proxy proxy = null, CancellationToken cancellationToken = default);
         Task ReportSolution(long id, CaptchaType type, bool correct = false, CancellationToken cancellationToken = default);
     }
 }

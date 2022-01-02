@@ -329,6 +329,42 @@
                             </StackPanel>
                         </StackPanel>
                     </TabItem>
+
+                    <!-- CustomAntiCaptcha -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Api Key</Label>
+                                <TextBox Text="{Binding CustomAntiCaptchaApiKey}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Domain</Label>
+                                <TextBox Text="{Binding CustomAntiCaptchaDomain}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Port</Label>
+                                <mah:NumericUpDown 
+                                    Minimum="1"
+                                    Maximum="65535"
+                                    Interval="1"
+                                    Value="{Binding CustomAntiCaptchaPort}"
+                                    Width="150"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- AnyCaptcha -->
+                    <TabItem>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                <Label>Api Key</Label>
+                                <TextBox Text="{Binding AnyCaptchaApiKey}"
+                                Width="400"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
                 </TabControl>
                 <Button x:Name="checkBalanceButton" 
                         Click="CheckCaptchaBalance" 

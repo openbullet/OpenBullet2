@@ -175,6 +175,22 @@
             <label>@Loc["9KWApiKey"]</label>
             <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.NineKWApiKey" />
             break;
+
+        case CaptchaServiceType.CustomAntiCaptcha:
+            <label>@Loc["CustomAntiCaptchaApiKey"]</label>
+            <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.CustomAntiCaptchaApiKey" />
+
+            <label>@Loc["CustomAntiCaptchaHost"]</label>
+            <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.CustomAntiCaptchaDomain" />
+
+            <label>@Loc["CustomAntiCaptchaPort"]</label>
+            <InputNumber class="mb-3" @bind-Value="settings.CaptchaSettings.CustomAntiCaptchaPort" />
+            break;
+
+        case CaptchaServiceType.AnyCaptcha:
+            <label>@Loc["AnyCaptchaApiKey"]</label>
+            <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.AnyCaptchaApiKey" />
+            break;
     }
 
     <button class="btn btn-outline-primary" style="margin: 10px 0;" @onclick="CheckBalance">@Loc["CheckBalance"]</button>

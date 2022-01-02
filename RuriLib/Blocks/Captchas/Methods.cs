@@ -138,7 +138,7 @@ namespace RuriLib.Blocks.Captchas
         }
 
         [Block("Solves a Capy captcha")]
-        public static async Task<string> SolveCapyCaptcha(BotData data, string siteKey, string siteUrl,
+        public static async Task<List<string>> SolveCapyCaptcha(BotData data, string siteKey, string siteUrl,
             bool useProxy = false,
             string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         {
@@ -149,8 +149,11 @@ namespace RuriLib.Blocks.Captchas
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
             AddCaptchaId(data, response.Id, CaptchaType.Capy);
-            data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
-            return response.Response;
+            data.Logger.Log($"Got solution!", LogColors.ElectricBlue);
+            data.Logger.Log($"Challenge Key: {response.ChallengeKey}", LogColors.ElectricBlue);
+            data.Logger.Log($"Captcha Key: {response.CaptchaKey}", LogColors.ElectricBlue);
+            data.Logger.Log($"Answer: {response.Answer}", LogColors.ElectricBlue);
+            return new List<string> { response.ChallengeKey, response.CaptchaKey, response.Answer };
         }
 
         [Block("Solves a KeyCaptcha")]
