@@ -139,7 +139,8 @@ namespace RuriLib.Models.Blocks.Custom
                 if (!Disabled)
                     definedVariables.Add(OutputVariable);
 
-                writer.Write($"var {OutputVariable} = ");
+                var outputType = Recursive ? "List<string>" : "string";
+                writer.Write($"{outputType} {OutputVariable} = ");
             }
 
             switch (Mode)
