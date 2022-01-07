@@ -4,10 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
     <Authors>Ruri</Authors>
     <Description>This is a library that can perform multiple tasks (yes, a lot, even infinitely many) that act on some input and return a certain output.</Description>
-    <Copyright>Ruri 2021</Copyright>
+    <Copyright>Ruri 2022</Copyright>
     <PackageProjectUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Parallelization</PackageProjectUrl>
     <RepositoryUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Parallelization</RepositoryUrl>
-    <PackageTags>parallelization task tasks manager taskmanager multithreading parallel multithread async</PackageTags>
+    <PackageTags>parallelization; task; tasks; manager; taskmanager; multithreading; parallel; multithread; async;</PackageTags>
     <Version>1.0.3</Version>
   </PropertyGroup>
 
