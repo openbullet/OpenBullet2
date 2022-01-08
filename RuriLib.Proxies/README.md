@@ -1,6 +1,6 @@
 # RuriLib.Proxies
 This is a library that can proxy a `TcpClient` via a proxy server. Supported protocols:
-- HTTP(S)
+- HTTP
 - SOCKS4
 - SOCKS4a
 - SOCKS5
@@ -48,7 +48,7 @@ namespace ProxiesDemo
             };
 
             // Choose one of the following
-            var httpProxyClient = new HttpProxyClient(settings); // HTTP(S) proxies
+            var httpProxyClient = new HttpProxyClient(settings); // HTTP proxies
             var socks4ProxyClient = new Socks4ProxyClient(settings); // Socks4 proxies
             var socks4aProxyClient = new Socks4aProxyClient(settings); // Socks4a proxies
             var socks5ProxyClient = new Socks5ProxyClient(settings); // Socks5a proxies
