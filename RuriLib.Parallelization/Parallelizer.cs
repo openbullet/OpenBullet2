@@ -18,8 +18,15 @@ namespace RuriLib.Parallelization
     public abstract class Parallelizer<TInput, TOutput>
     {
         #region Public Fields
+        /// <summary>
+        /// The maximum value that the degree of parallelism can have when changed through the
+        /// <see cref="Parallelizer{TInput, TOutput}.ChangeDegreeOfParallelism(int)"/> method.
+        /// </summary>
         public int MaxDegreeOfParallelism { get; set; } = 200;
 
+        /// <summary>
+        /// The current status of the parallelizer.
+        /// </summary>
         public ParallelizerStatus Status
         {
             get => status;
@@ -34,7 +41,7 @@ namespace RuriLib.Parallelization
         /// Retrieves the current progress in the interval [0, 1].
         /// The progress is -1 if the manager hasn't been started yet.
         /// </summary>
-        public float Progress => (float)(current + skip) / totalAmount;
+        public float Progress => (float)(processed + skip) / totalAmount;
 
         /// <summary>
         /// Retrieves the completed work per minute.
@@ -46,8 +53,20 @@ namespace RuriLib.Parallelization
         /// </summary>
         public int CPMLimit { get; set; } = 0;
 
+        /// <summary>
+        /// The time when the parallelizer started its work for its last running session.
+        /// </summary>
         public DateTime StartTime { get; private set; }
+
+        /// <summary>
+        /// The time when the parallelizer finished its work or was stopped (<see langword="null"/> if it hasn't finished
+        /// a single session yet).
+        /// </summary>
         public DateTime? EndTime { get; private set; }
+        
+        /// <summary>
+        /// The Estimated Time of Arrival (when the parallelizer is expected to finish all the work).
+        /// </summary>
         public DateTime ETA
         {
             get
@@ -58,50 +77,132 @@ namespace RuriLib.Parallelization
                     : DateTime.MaxValue;
             }
         }
+
+        /// <summary>
+        /// The time elapsed since the start of the session.
+        /// </summary>
         public TimeSpan Elapsed => TimeSpan.FromMilliseconds(stopwatch.ElapsedMilliseconds);
+
+        /// <summary>
+        /// The expected remaining time to finish all the work.
+        /// </summary>
         public TimeSpan Remaining => EndTime.HasValue ? TimeSpan.Zero : ETA - DateTime.Now;
         #endregion
 
         #region Protected Fields
+        /// <summary>
+        /// The status of the parallelizer.
+        /// </summary>
         protected ParallelizerStatus status = ParallelizerStatus.Idle;
+
+        /// <summary>
+        /// The number of items that can be processed concurrently.
+        /// </summary>
         protected int degreeOfParallelism;
+
+        /// <summary>
+        /// The items to process.
+        /// </summary>
         protected readonly IEnumerable<TInput> workItems;
+
+        /// <summary>
+        /// The function to process items and get results.
+        /// </summary>
         protected readonly Func<TInput, CancellationToken, Task<TOutput>> workFunction;
+
+        /// <summary>
+        /// The function that turns each input item into an awaitable <see cref="Task"/>.
+        /// </summary>
         protected readonly Func<TInput, Task> taskFunction;
+
+        /// <summary>
+        /// The total amount of work items that are expected to be enumerated (for progress calculations).
+        /// </summary>
         protected readonly long totalAmount;
+
+        /// <summary>
+        /// The number of items to skip from the start of the collection (to restore previously aborted sessions).
+        /// </summary>
         protected readonly int skip;
-        protected int current = 0;
+
+        /// <summary>
+        /// The current amount of work items that were processed so far.
+        /// </summary>
+        protected int processed = 0;
+
+        /// <summary>
+        /// The list of timestamps for CPM calculation.
+        /// </summary>
         protected List<int> checkedTimestamps = new();
+
+        /// <summary>
+        /// A lock that can be used to update the CPM from a single thread at a time.
+        /// </summary>
         protected readonly object cpmLock = new();
+
+        /// <summary>
+        /// The stopwatch that calculates the elapsed time.
+        /// </summary>
         protected readonly Stopwatch stopwatch = new();
 
-        protected CancellationTokenSource softCTS; // Cancel this for soft AND hard abort
-        protected CancellationTokenSource hardCTS; // Cancel this for hard abort
+        /// <summary>
+        /// A soft cancellation token. Cancel this for soft AND hard abort.
+        /// </summary>
+        protected CancellationTokenSource softCTS;
+
+        /// <summary>
+        /// A hard cancellation token. Cancel this for hard abort only.
+        /// </summary>
+        protected CancellationTokenSource hardCTS;
         #endregion
 
         #region Events
         /// <summary>Called when an operation throws an exception.</summary>
         public event EventHandler<ErrorDetails<TInput>> TaskError;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.TaskError"/> event.
+        /// </summary>
         protected virtual void OnTaskError(ErrorDetails<TInput> input) => TaskError?.Invoke(this, input);
 
-        /// <summary>Called when the <see cref="IParallelizer{TInput, TOutput}"/> itself throws an exception.</summary>
+        /// <summary>Called when the <see cref="Parallelizer{TInput, TOutput}"/> itself throws an exception.</summary>
         public event EventHandler<Exception> Error;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.Error"/> event.
+        /// </summary>
         protected virtual void OnError(Exception ex) => Error?.Invoke(this, ex);
 
         /// <summary>Called when an operation is completed successfully.</summary>
         public event EventHandler<ResultDetails<TInput, TOutput>> NewResult;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.NewResult"/> event.
+        /// </summary>
         protected virtual void OnNewResult(ResultDetails<TInput, TOutput> result) => NewResult?.Invoke(this, result);
 
         /// <summary>Called when the progress changes.</summary>
         public event EventHandler<float> ProgressChanged;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.ProgressChanged"/> event.
+        /// </summary>
         protected virtual void OnProgressChanged(float progress) => ProgressChanged?.Invoke(this, progress);
 
         /// <summary>Called when all operations were completed successfully.</summary>
         public event EventHandler Completed;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.Completed"/> event.
+        /// </summary>
         protected virtual void OnCompleted() => Completed?.Invoke(this, EventArgs.Empty);
 
         /// <summary>Called when <see cref="Status"/> changes.</summary>
         public event EventHandler<ParallelizerStatus> StatusChanged;
+
+        /// <summary>
+        /// Invokes a <see cref="Parallelizer{TInput, TOutput}.StatusChanged"/> event.
+        /// </summary>
         protected virtual void OnStatusChanged(ParallelizerStatus newStatus) => StatusChanged?.Invoke(this, newStatus);
         #endregion
 
@@ -155,7 +256,7 @@ namespace RuriLib.Parallelization
                 // Report the progress, update the CPM and release the semaphore slot
                 finally
                 {
-                    Interlocked.Increment(ref current);
+                    Interlocked.Increment(ref processed);
                     OnProgressChanged(Progress);
 
                     checkedTimestamps.Add(Environment.TickCount);
@@ -257,12 +358,19 @@ namespace RuriLib.Parallelization
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Whether the CPM is limited to a certain amount (for throttling purposes).
+        /// </summary>
+        /// <returns></returns>
         protected bool IsCPMLimited() => CPMLimit > 0 && CPM > CPMLimit;
 
+        /// <summary>
+        /// Updates the CPM (safe to be called from multiple threads).
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected void UpdateCPM()
         {
-            // Update CPM (only 1 task can enter)
+            // Update CPM (only 1 thread can enter)
             if (Monitor.TryEnter(cpmLock))
             {
                 try

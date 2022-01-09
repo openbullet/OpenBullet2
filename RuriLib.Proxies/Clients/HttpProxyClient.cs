@@ -11,6 +11,9 @@ using RuriLib.Proxies.Exceptions;
 
 namespace RuriLib.Proxies.Clients
 {
+    /// <summary>
+    /// A client that provides proxies connections via HTTP proxies.
+    /// </summary>
     public class HttpProxyClient : ProxyClient
     {
         /// <summary>
@@ -19,12 +22,15 @@ namespace RuriLib.Proxies.Clients
         /// </summary>
         public string ProtocolVersion { get; set; } = "1.1";
 
+        /// <summary>
+        /// Creates an HTTP proxy client given the proxy <paramref name="settings"/>.
+        /// </summary>
         public HttpProxyClient(ProxySettings settings) : base(settings)
         {
 
         }
 
-        /// /// <inheritdoc/>
+        /// <inheritdoc/>
         protected async override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {

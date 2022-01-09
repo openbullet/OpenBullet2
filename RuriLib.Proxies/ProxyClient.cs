@@ -8,6 +8,9 @@ using System.Security;
 
 namespace RuriLib.Proxies
 {
+    /// <summary>
+    /// Can produce proxied <see cref="TcpClient"/> instances.
+    /// </summary>
     public abstract class ProxyClient
     {
         /// <summary>
@@ -15,6 +18,9 @@ namespace RuriLib.Proxies
         /// </summary>
         public ProxySettings Settings { get; }
 
+        /// <summary>
+        /// Instantiates a proxy client with the given <paramref name="settings"/>.
+        /// </summary>
         public ProxyClient(ProxySettings settings)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -74,6 +80,13 @@ namespace RuriLib.Proxies
             return client;
         }
 
+        /// <summary>
+        /// Proxy protocol specific connection.
+        /// </summary>
+        /// <param name="tcpClient">The <see cref="TcpClient"/> that can be used to connect to the proxy over TCP</param>
+        /// <param name="destinationHost">The target host that the proxy needs to connect to</param>
+        /// <param name="destinationPort">The target port that the proxy needs to connect to</param>
+        /// <param name="cancellationToken">A token to cancel operations</param>
         protected virtual Task CreateConnectionAsync(TcpClient tcpClient, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default) => throw new NotImplementedException();
     }

@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Proxies.Clients
 {
+    /// <summary>
+    /// A dummy client that does not proxy the connection.
+    /// </summary>
     public class NoProxyClient : ProxyClient
     {
+        /// <summary>
+        /// Does nothing.
+        /// </summary>
         public NoProxyClient(ProxySettings settings) : base(settings)
         {
 
         }
 
+        /// <inheritdoc/>
         protected override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {

@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace RuriLib.Proxies.Clients
 {
-    public static class Socks4Constants
+    static internal class Socks4Constants
     {
         public const byte VersionNumber = 4;
         public const byte CommandConnect = 0x01;
@@ -22,13 +22,20 @@ namespace RuriLib.Proxies.Clients
         public const byte CommandReplyRequestRejectedDifferentIdentd = 0x5d;
     }
 
+    /// <summary>
+    /// A client that provides proxies connections via SOCKS4 proxies.
+    /// </summary>
     public class Socks4ProxyClient : ProxyClient
     {
+        /// <summary>
+        /// Creates an SOCKS4 proxy client given the proxy <paramref name="settings"/>.
+        /// </summary>
         public Socks4ProxyClient(ProxySettings settings) : base(settings)
         {
 
         }
 
+        /// <inheritdoc/>
         protected async override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {
@@ -65,6 +72,9 @@ namespace RuriLib.Proxies.Clients
             }
         }
 
+        /// <summary>
+        /// Requests SOCKS4 connection.
+        /// </summary>
         protected async virtual Task RequestConnectionAsync(NetworkStream nStream, byte command, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {
@@ -112,6 +122,9 @@ namespace RuriLib.Proxies.Clients
             }
         }
 
+        /// <summary>
+        /// Handles a command error.
+        /// </summary>
         protected static void HandleCommandError(byte command)
         {
             var errorMessage = command switch

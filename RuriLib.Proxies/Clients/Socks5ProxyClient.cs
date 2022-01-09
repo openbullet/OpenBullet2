@@ -11,7 +11,7 @@ using static RuriLib.Proxies.Clients.Socks5Constants;
 
 namespace RuriLib.Proxies.Clients
 {
-    public static class Socks5Constants
+    static internal class Socks5Constants
     {
         public const byte VersionNumber = 5;
         public const byte Reserved = 0x00;
@@ -40,13 +40,20 @@ namespace RuriLib.Proxies.Clients
         public const byte AddressTypeIPV6 = 0x04;
     }
 
+    /// <summary>
+    /// A client that provides proxies connections via SOCKS5 proxies.
+    /// </summary>
     public class Socks5ProxyClient : ProxyClient
     {
+        /// <summary>
+        /// Creates an SOCKS5 proxy client given the proxy <paramref name="settings"/>.
+        /// </summary>
         public Socks5ProxyClient(ProxySettings settings) : base(settings)
         {
 
         }
 
+        /// <inheritdoc/>
         protected async override Task CreateConnectionAsync(TcpClient client, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {

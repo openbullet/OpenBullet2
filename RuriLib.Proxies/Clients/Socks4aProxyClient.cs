@@ -8,13 +8,20 @@ using static RuriLib.Proxies.Clients.Socks4Constants;
 
 namespace RuriLib.Proxies.Clients
 {
+    /// <summary>
+    /// A client that provides proxies connections via SOCKS4a proxies.
+    /// </summary>
     public class Socks4aProxyClient : Socks4ProxyClient
     {
+        /// <summary>
+        /// Creates an SOCKS4a proxy client given the proxy <paramref name="settings"/>.
+        /// </summary>
         public Socks4aProxyClient(ProxySettings settings) : base(settings)
         {
 
         }
 
+        /// <inheritdoc/>
         protected async override Task RequestConnectionAsync(NetworkStream nStream, byte command, string destinationHost, int destinationPort,
             CancellationToken cancellationToken = default)
         {

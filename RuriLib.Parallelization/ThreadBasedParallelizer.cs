@@ -12,7 +12,7 @@ namespace RuriLib.Parallelization
     public class ThreadBasedParallelizer<TInput, TOutput> : Parallelizer<TInput, TOutput>
     {
         #region Private Fields
-        public List<Thread> threadPool = new();
+        private readonly List<Thread> threadPool = new();
         #endregion
 
         #region Constructors
