@@ -11,8 +11,8 @@ namespace RuriLib.Http.Helpers
         private static byte[] CRLF_Bytes = { 13, 10 };
         // private long remaningchunklength;
         private bool Isnewchunk = true;
-
         // private AutoResetEvent manualResetEvent = new AutoResetEvent(true);
+
         public Stream DecodedStream { get; private set; }
 
         public bool Finished { get; private set; }

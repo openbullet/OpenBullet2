@@ -2,7 +2,7 @@
 
 namespace RuriLib.Http.Helpers
 {
-    public static class SpanHelpers
+    static internal class SpanHelpers
     {
         private static readonly byte[] CRLF_Bytes = { 13, 10 };
        

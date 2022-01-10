@@ -151,7 +151,7 @@ namespace RuriLib.Http
             }
         }
         /// <summary>
-        /// Reads all Header Lines using Span<T> For High Perfromace Parsing.
+        /// Reads all Header Lines using <see cref="Span{T}"/> For High Perfromace Parsing.
         /// </summary>
         /// <param name="buff">Buffered Data From Pipe</param>
         private bool ReadHeadersFastPath(ref ReadOnlySequence<byte> buff)

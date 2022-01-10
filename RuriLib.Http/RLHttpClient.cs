@@ -122,6 +122,7 @@ namespace RuriLib.Http
         /// <summary>
         /// Asynchronously sends a <paramref name="request"/> and returns an <see cref="HttpResponse"/>.
         /// </summary>
+        /// <param name="request">The request to send</param>
         /// <param name="cancellationToken">A cancellation token to cancel the operation</param>
         public Task<HttpResponse> SendAsync(HttpRequest request, CancellationToken cancellationToken = default)
             => SendAsync(request, 0, cancellationToken);
@@ -273,6 +274,7 @@ namespace RuriLib.Http
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             tcpClient?.Dispose();

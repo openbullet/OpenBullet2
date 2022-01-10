@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Http.Models
 {
+    /// <summary>
+    /// An HTTP request that can be sent using a <see cref="RLHttpClient"/>.
+    /// </summary>
     public class HttpRequest : IDisposable
     {
         /// <summary>
@@ -193,6 +196,7 @@ namespace RuriLib.Http.Models
             return key != null;
         }
 
+        /// <inheritdoc/>
         public void Dispose() => Content?.Dispose();
     }
 }
