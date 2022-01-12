@@ -229,7 +229,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
                 cookies = cookies.Where(c => c.Domain.Contains(domain, StringComparison.OrdinalIgnoreCase)).ToArray();
             }
 
-            data.Logger.Log($"Got {cookies.Length} cookies for {domain}", LogColors.DarkSalmon);
+            data.Logger.Log($"Got {cookies.Length} cookies for {(string.IsNullOrWhiteSpace(domain) ? "all domains" : domain)}", LogColors.DarkSalmon);
             return cookies.ToDictionary(c => c.Name, c => c.Value);
         }
 
