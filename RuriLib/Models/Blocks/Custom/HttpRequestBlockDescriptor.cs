@@ -1,4 +1,5 @@
 ﻿using RuriLib.Functions.Http;
+using RuriLib.Functions.Http.Options;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Blocks.Settings;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace RuriLib.Models.Blocks.Custom
                 { "readResponseContent", new BoolParameter("readResponseContent", true) },
                 { "urlEncodeContent", new BoolParameter("urlEncodeContent", false) },
                 { "absoluteUriInFirstLine", new BoolParameter("absoluteUriInFirstLine", false) },
+                { "httpLibrary", new EnumParameter("httpLibrary", typeof(HttpLibrary), HttpLibrary.RuriLibHttp.ToString()) },
                 { "securityProtocol", new EnumParameter("securityProtocol", typeof(SecurityProtocol), SecurityProtocol.SystemDefault.ToString()) },
                 { "useCustomCipherSuites", new BoolParameter("useCustomCipherSuites", false) },
                 { "alwaysSendContent", new BoolParameter("alwaysSendContent", false) },

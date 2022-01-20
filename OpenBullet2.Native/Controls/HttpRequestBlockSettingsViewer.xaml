@@ -165,6 +165,7 @@
             Margin="0 5"
             Foreground="{DynamicResource ForegroundCustom}" />
 
+        <local:EnumSettingViewer x:Name="httpLibrarySetting" />
         <local:EnumSettingViewer x:Name="securityProtocolSetting" />
         <local:BoolSettingViewer x:Name="useCustomCipherSuitesSetting" />
         <local:ListOfStringsSettingViewer x:Name="customCipherSuitesSetting" />
