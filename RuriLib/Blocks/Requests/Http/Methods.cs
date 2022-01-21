@@ -34,7 +34,7 @@ namespace RuriLib.Blocks.Requests.Http
         public static Task HttpRequestMultipart(BotData data, MultipartHttpRequestOptions options)
             => GetHandler(options).HttpRequestMultipart(data, options);
 
-        private static IHttpRequestHandler GetHandler(HttpRequestOptions options)
+        private static HttpRequestHandler GetHandler(HttpRequestOptions options)
             => options.HttpLibrary switch
             {
                 HttpLibrary.RuriLibHttp => new RLHttpClientRequestHandler(),

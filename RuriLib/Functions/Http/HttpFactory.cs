@@ -48,9 +48,9 @@ namespace RuriLib.Functions.Http
             };
         }
 
-        public static HttpClient GetHttpClient(Proxy proxy, HttpOptions options)
+        public static HttpClient GetHttpClient(Proxy proxy, HttpOptions options, CookieContainer cookieContainer)
         {
-            var handler = GetHttpMessageHandler(proxy, options);
+            var handler = GetHttpMessageHandler(proxy, options, cookieContainer);
             
             return new HttpClient(handler)
             {
@@ -94,7 +94,7 @@ namespace RuriLib.Functions.Http
             return client;
         }
 
-        private static HttpMessageHandler GetHttpMessageHandler(Proxy proxy, HttpOptions options)
+        private static HttpMessageHandler GetHttpMessageHandler(Proxy proxy, HttpOptions options, CookieContainer cookieContainer)
         {
             HttpMessageHandler handler;
 
@@ -127,7 +127,7 @@ namespace RuriLib.Functions.Http
                 }
             }
 
-            return ConfigureHttpMessageHandler(handler, options);
+            return ConfigureHttpMessageHandler(handler, options, cookieContainer);
         }
 
         private static WebProxy GetWebProxy(Proxy proxy)
@@ -148,7 +148,7 @@ namespace RuriLib.Functions.Http
             return new WebProxy(address, true, null, proxyCredentials);
         }
 
-        private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options)
+        private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer)
         {
             if (handler is HttpClientHandler httpHandler)
             {
@@ -156,6 +156,8 @@ namespace RuriLib.Functions.Http
                 httpHandler.AllowAutoRedirect = options.AutoRedirect;
                 httpHandler.SslProtocols = ToSslProtocols(options.SecurityProtocol);
                 httpHandler.CheckCertificateRevocationList = options.CertRevocationMode == X509RevocationMode.Online;
+                httpHandler.UseCookies = true;
+                httpHandler.CookieContainer = cookieContainer;
             }
             else if (handler is SocketsHttpHandler socksHandler)
             {
@@ -172,6 +174,8 @@ namespace RuriLib.Functions.Http
                 
                 socksHandler.ConnectTimeout = options.ConnectTimeout;
                 socksHandler.ResponseDrainTimeout = options.ReadWriteTimeout;
+                socksHandler.UseCookies = true;
+                socksHandler.CookieContainer = cookieContainer;
             }
 
             return handler;
