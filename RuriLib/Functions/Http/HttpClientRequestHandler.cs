@@ -2,6 +2,7 @@
 using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http.Options;
+using RuriLib.Helpers;
 using RuriLib.Logging;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Bots;
@@ -43,7 +44,7 @@ namespace RuriLib.Functions.Http
                 Version = Version.Parse(options.HttpVersion)
             };
 
-            foreach (var header in data.HEADERS)
+            foreach (var header in options.CustomHeaders)
             {
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
@@ -74,7 +75,7 @@ namespace RuriLib.Functions.Http
             using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
             LogHttpRequestData(data, request, content);
-            await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
+            await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
         }
 
         public async override Task HttpRequestRaw(BotData data, RawHttpRequestOptions options)
@@ -100,7 +101,7 @@ namespace RuriLib.Functions.Http
                 Content = new ByteArrayContent(options.Content)
             };
 
-            foreach (var header in data.HEADERS)
+            foreach (var header in options.CustomHeaders)
             {
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
@@ -115,7 +116,7 @@ namespace RuriLib.Functions.Http
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
             using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
-            await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
+            await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
         }
 
         public async override Task HttpRequestBasicAuth(BotData data, BasicAuthHttpRequestOptions options)
@@ -140,7 +141,7 @@ namespace RuriLib.Functions.Http
                 Version = Version.Parse(options.HttpVersion)
             };
 
-            foreach (var header in data.HEADERS)
+            foreach (var header in options.CustomHeaders)
             {
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
@@ -157,7 +158,7 @@ namespace RuriLib.Functions.Http
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
             using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
-            await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
+            await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
         }
         public async override Task HttpRequestMultipart(BotData data, MultipartHttpRequestOptions options)
         {
@@ -220,7 +221,7 @@ namespace RuriLib.Functions.Http
                 Content = multipartContent
             };
 
-            foreach (var header in data.HEADERS)
+            foreach (var header in options.CustomHeaders)
             {
                 request.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
@@ -235,7 +236,7 @@ namespace RuriLib.Functions.Http
                 using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
                 using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
-                await LogHttpResponseData(data, response, request, options).ConfigureAwait(false);
+                await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
             }
             finally
             {
@@ -294,6 +295,86 @@ namespace RuriLib.Functions.Http
             }
 
             data.Logger.Log(writer.ToString(), LogColors.NonPhotoBlue);
+        }
+
+        private static async Task LogHttpResponseData(BotData data, HttpResponseMessage response,
+            CookieContainer cookieContainer, Options.HttpRequestOptions requestOptions)
+        {
+            // Try to read the raw source for Content-Length calculation
+            try
+            {
+                data.RAWSOURCE = await response.Content.ReadAsByteArrayAsync(data.CancellationToken).ConfigureAwait(false);
+            }
+            catch (NullReferenceException)
+            {
+                // Thrown when there is no content (204) or we decided to not read it
+                data.RAWSOURCE = Array.Empty<byte>();
+            }
+
+            // Address
+            data.ADDRESS = response.RequestMessage.RequestUri.AbsoluteUri;
+            data.Logger.Log($"Address: {data.ADDRESS}", LogColors.DodgerBlue);
+
+            // Response code
+            data.RESPONSECODE = (int)response.StatusCode;
+            data.Logger.Log($"Response code: {data.RESPONSECODE}", LogColors.Citrine);
+
+            // Headers
+            static string GetHeaderValue(KeyValuePair<string, IEnumerable<string>> header)
+            {
+                var separator = commaHeaders.Contains(header.Key) ? ", " : " ";
+                return string.Join(separator, header.Value);
+            }
+
+            data.HEADERS = response.Headers.ToDictionary(h => h.Key, h => GetHeaderValue(h));
+
+            if (response.Content != null)
+            {
+                foreach (var header in response.Content.Headers)
+                {
+                    data.HEADERS[header.Key] = GetHeaderValue(header);
+                }
+            }
+
+            if (!data.HEADERS.ContainsKey("Content-Length"))
+                data.HEADERS["Content-Length"] = data.RAWSOURCE.Length.ToString();
+
+            data.Logger.Log("Received Headers:", LogColors.MediumPurple);
+            data.Logger.Log(data.HEADERS.Select(h => $"{h.Key}: {h.Value}"), LogColors.Violet);
+
+            // Cookies
+            var cookies = Http.GetAllCookies(cookieContainer);
+            data.COOKIES = cookies.ToDictionary(c => c.Name, c => c.Value);
+
+            data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
+            data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
+
+            // Unzip the GZipped content if still gzipped (after Content-Length calculation)
+            if (data.RAWSOURCE.Length > 1 && data.RAWSOURCE[0] == 0x1F && data.RAWSOURCE[1] == 0x8B)
+            {
+                try
+                {
+                    data.RAWSOURCE = GZip.Unzip(data.RAWSOURCE);
+                }
+                catch
+                {
+                    data.Logger.Log("Tried to unzip but failed", LogColors.DarkOrange);
+                }
+            }
+
+            // Source
+            if (!string.IsNullOrWhiteSpace(requestOptions.CodePagesEncoding))
+            {
+                data.SOURCE = CodePagesEncodingProvider.Instance
+                    .GetEncoding(requestOptions.CodePagesEncoding).GetString(data.RAWSOURCE);
+            }
+            else
+            {
+                data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
+            }
+
+            data.Logger.Log("Received Payload:", LogColors.ForestGreen);
+            data.Logger.Log(data.SOURCE, LogColors.GreenYellow, true);
         }
     }
 }
