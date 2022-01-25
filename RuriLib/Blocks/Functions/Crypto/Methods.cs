@@ -183,11 +183,31 @@ namespace RuriLib.Blocks.Functions.Crypto
             return cipherText;
         }
 
+        [Block("Encrypts a string with AES", name = "AES Encrypt String")]
+        public static byte[] AESEncryptString(BotData data, string plainText, byte[] key, byte[] iv,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            var cipherText = RuriLib.Functions.Crypto.Crypto.AESEncryptString(plainText, key, iv, mode, padding, keySize);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Encrypted: {HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
+            return cipherText;
+        }
+
         [Block("Decrypts data with AES", name = "AES Decrypt")]
         public static byte[] AESDecrypt(BotData data, byte[] cipherText, byte[] key, byte[] iv,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             var plainText = RuriLib.Functions.Crypto.Crypto.AESDecrypt(cipherText, key, iv, mode, padding, keySize);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Decrypted: {HexConverter.ToHexString(plainText)}", LogColors.YellowGreen);
+            return plainText;
+        }
+
+        [Block("Decrypts data with AES to string", name = "AES Decrypt String")]
+        public static string AESDecryptString(BotData data, byte[] cipherText, byte[] key, byte[] iv,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            var plainText = RuriLib.Functions.Crypto.Crypto.AESDecryptString(cipherText, key, iv, mode, padding, keySize);
             data.Logger.LogHeader();
             data.Logger.Log($"Decrypted: {plainText}", LogColors.YellowGreen);
             return plainText;

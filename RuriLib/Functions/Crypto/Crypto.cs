@@ -409,7 +409,7 @@ namespace RuriLib.Functions.Crypto
         /// <summary>
         /// Encrypts data with AES.
         /// </summary>
-        /// <param name="plainText">The AES-encrypted data</param>
+        /// <param name="plainText">The plaintext data</param>
         /// <param name="key">The encryption key</param>
         /// <param name="iv">The initial value</param>
         /// <param name="mode">The cipher mode</param>
@@ -424,18 +424,83 @@ namespace RuriLib.Functions.Crypto
                 Array.Copy(key, iv, 16);
             }
 
-            var aesAlg = new AesManaged
+            // Check arguments.
+            if (plainText == null || plainText.Length <= 0)
             {
-                KeySize = keySize,
-                Key = key,
-                IV = iv,
-                BlockSize = 128,
-                Mode = mode,
-                Padding = padding
-            };
+                throw new ArgumentNullException("plainText");
+            }
 
-            var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-            return encryptor.TransformFinalBlock(plainText, 0, plainText.Length);
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("Key");
+            }
+
+            using var aes = Aes.Create();
+            aes.KeySize = keySize;
+            aes.BlockSize = 128;
+            aes.FeedbackSize = 128;
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = mode;
+            aes.Padding = padding;
+
+            using var decryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            return PerformCryptography(plainText, decryptor);
+        }
+
+        /// <summary>
+        /// Encrypts a string with AES.
+        /// </summary>
+        /// <param name="plainText">The plaintext data</param>
+        /// <param name="key">The encryption key</param>
+        /// <param name="iv">The initial value</param>
+        /// <param name="mode">The cipher mode</param>
+        /// <param name="padding">The padding mode</param>
+        public static byte[] AESEncryptString(string plainText, byte[] key, byte[] iv = null,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            // If no IV was provided, use the first 16 bytes of the key
+            if (iv == null)
+            {
+                iv = new byte[16];
+                Array.Copy(key, iv, 16);
+            }
+
+            // Check arguments.
+            if (plainText == null || plainText.Length <= 0)
+            {
+                throw new ArgumentNullException("plainText");
+            }
+
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("Key");
+            }
+
+            // Create an Aes object
+            // with the specified key and IV.
+            using var aes = Aes.Create();
+            aes.KeySize = keySize;
+            aes.BlockSize = 128;
+            aes.FeedbackSize = 128;
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = mode;
+            aes.Padding = padding;
+
+            // Create an encryptor to perform the stream transform.
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+            // Create the streams used for encryption.
+            using var msEncrypt = new MemoryStream();
+            using var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write);
+            using (var swEncrypt = new StreamWriter(csEncrypt))
+            {
+                //Write all data to the stream.
+                swEncrypt.Write(plainText);
+            }
+
+            return msEncrypt.ToArray();
         }
 
         /// <summary>
@@ -456,18 +521,97 @@ namespace RuriLib.Functions.Crypto
                 Array.Copy(key, iv, 16);
             }
 
-            var aesAlg = new AesManaged
+            // Check arguments.
+            if (cipherText == null || cipherText.Length <= 0)
             {
-                KeySize = keySize,
-                Key = key,
-                IV = iv,
-                BlockSize = 128,
-                Mode = mode,
-                Padding = padding
-            };
+                throw new ArgumentNullException("cipherText");
+            }
+                
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("Key");
+            }
 
-            var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-            return decryptor.TransformFinalBlock(cipherText, 0, cipherText.Length);
+            using var aes = Aes.Create();
+            aes.BlockSize = 128;
+            aes.FeedbackSize = 128;
+            aes.KeySize = keySize;
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = mode;
+            aes.Padding = padding;
+
+            using var decryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            return PerformCryptography(cipherText, decryptor);
+        }
+
+        /// <summary>
+        /// Decrypts AES-encrypted data.
+        /// </summary>
+        /// <param name="cipherText">The AES-encrypted data</param>
+        /// <param name="key">The decryption key</param>
+        /// <param name="iv">The initial value</param>
+        /// <param name="mode">The cipher mode</param>
+        /// <param name="padding">The padding mode</param>
+        public static string AESDecryptString(byte[] cipherText, byte[] key, byte[] iv = null,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            // If no IV was provided, use the first 16 bytes of the key
+            if (iv == null)
+            {
+                iv = new byte[16];
+                Array.Copy(key, iv, 16);
+            }
+
+            // Check arguments.
+            if (cipherText == null || cipherText.Length <= 0)
+            {
+                throw new ArgumentNullException("cipherText");
+            }
+
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("Key");
+            }
+
+            // Declare the string used to hold
+            // the decrypted text.
+            string plaintext = null;
+
+            using var aes = Aes.Create();
+            aes.KeySize = keySize;
+            aes.BlockSize = 128;
+            aes.FeedbackSize = 128;
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = mode;
+            aes.Padding = padding;
+
+            // Create a decryptor to perform the stream transform.
+            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+            // Create the streams used for decryption.
+            using (var msDecrypt = new MemoryStream(cipherText))
+            {
+                using var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
+                using var srDecrypt = new StreamReader(csDecrypt);
+
+                // Read the decrypted bytes from the decrypting stream
+                // and place them in a string.
+                plaintext = srDecrypt.ReadToEnd();
+            }
+
+            return plaintext;
+        }
+
+        private static byte[] PerformCryptography(byte[] data, ICryptoTransform cryptoTransform)
+        {
+            using var ms = new MemoryStream();
+            using var cryptoStream = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
+            cryptoStream.Write(data, 0, data.Length);
+            cryptoStream.FlushFinalBlock();
+
+            return ms.ToArray();
         }
         #endregion
 
