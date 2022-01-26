@@ -1,4 +1,5 @@
-﻿using JWT.Algorithms;
+﻿using BCrypt.Net;
+using JWT.Algorithms;
 using Newtonsoft.Json;
 using RuriLib.Attributes;
 using RuriLib.Functions.Conversion;
@@ -226,6 +227,40 @@ namespace RuriLib.Blocks.Functions.Crypto
             data.Logger.Log($"Encoded: {encoded}", LogColors.YellowGreen);
 
             return encoded;
+        }
+
+        [Block("Generates a BCrypt hash from an input and a salt", name = "BCrypt Hash",
+            extraInfo = "If you don't have the salt, use the BCrypt Hash (Gen Salt) block")]
+        public static string BCryptHash(BotData data, string input, string salt)
+        {
+            data.Logger.LogHeader();
+
+            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptWithSalt(input, salt);
+            data.Logger.Log($"Hashed: {hashed}", LogColors.YellowGreen);
+
+            return hashed;
+        }
+
+        [Block("Generates a BCrypt hash from an input by generating a salt", name = "BCrypt Hash (Gen Salt)")]
+        public static string BCryptHashGenSalt(BotData data, string input, int rounds, SaltRevision saltRevision = SaltRevision.Revision2B)
+        {
+            data.Logger.LogHeader();
+
+            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptGenSalt(input, rounds, saltRevision);
+            data.Logger.Log($"Hashed: {hashed}", LogColors.YellowGreen);
+
+            return hashed;
+        }
+
+        [Block("Verifies that a BCrypt hash is valid", name = "BCrypt Verify")]
+        public static bool BCryptVerify(BotData data, string input, string hash)
+        {
+            data.Logger.LogHeader();
+
+            var isValid = RuriLib.Functions.Crypto.Crypto.BCryptVerify(input, hash);
+            data.Logger.Log($"BCrypt hash verification result: {isValid}", LogColors.YellowGreen);
+
+            return isValid;
         }
     }
 }

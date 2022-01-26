@@ -8,8 +8,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Numerics;
 using System.Text;
-using RuriLib.Functions.Conversion;
 using System.Globalization;
+using BCrypt.Net;
 
 namespace RuriLib.Functions.Crypto
 {
@@ -632,6 +632,27 @@ namespace RuriLib.Functions.Crypto
 
             return jwtEncoder.Encode(extraHeaders, payload, secret);
         }
+        #endregion
+
+        #region Bcrypt
+        /// <summary>
+        /// Hashes an <paramref name="input"/> with BCrypt using the provided <paramref name="salt"/>.
+        /// </summary>
+        public static string BCryptWithSalt(string input, string salt = "")
+            => BCrypt.Net.BCrypt.HashPassword(input, salt);
+
+        /// <summary>
+        /// Hashes an <paramref name="input"/> with BCrypt after generating the salt with the given number of
+        /// <paramref name="rounds"/> and <paramref name="saltRevision"/>.
+        /// </summary>
+        public static string BCryptGenSalt(string input, int rounds = 10, SaltRevision saltRevision = SaltRevision.Revision2B)
+            => BCrypt.Net.BCrypt.HashPassword(input, rounds, saltRevision);
+
+        /// <summary>
+        /// Verifies that a BCrypt <paramref name="hash"/> is valid with respect to a given <paramref name="input"/>.
+        /// </summary>
+        public static bool BCryptVerify(string input, string hash)
+            => BCrypt.Net.BCrypt.Verify(input, hash);
         #endregion
     }
 }
