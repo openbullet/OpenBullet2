@@ -645,7 +645,7 @@ namespace RuriLib.Functions.Crypto
         /// Hashes an <paramref name="input"/> with BCrypt after generating the salt with the given number of
         /// <paramref name="rounds"/> and <paramref name="saltRevision"/>.
         /// </summary>
-        public static string BCryptGenSalt(string input, int rounds = 10, SaltRevision saltRevision = SaltRevision.Revision2B)
+        public static string BCryptGenSalt(string input, int rounds = 10, SaltRevision saltRevision = SaltRevision.Revision2X)
             => BCrypt.Net.BCrypt.HashPassword(input, rounds, saltRevision);
 
         /// <summary>
