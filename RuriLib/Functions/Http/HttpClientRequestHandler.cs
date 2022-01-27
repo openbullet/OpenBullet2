@@ -74,7 +74,6 @@ namespace RuriLib.Functions.Http
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(data.CancellationToken, timeoutCts.Token);
             using var response = await client.SendAsync(request, linkedCts.Token).ConfigureAwait(false);
 
-            LogHttpRequestData(data, request, content);
             await LogHttpResponseData(data, response, cookieContainer, options).ConfigureAwait(false);
         }
 
