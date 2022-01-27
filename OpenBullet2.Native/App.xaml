@@ -110,6 +110,8 @@
                     </Style>
                     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                        <Setter Property="FontFamily" Value="Consolas"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Style.Resources>
                             <Style TargetType="{x:Type TextBlock}">
                                 <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
@@ -221,6 +223,8 @@
                     <Style TargetType="{x:Type mah:NumericUpDown}" BasedOn="{StaticResource {x:Type mah:NumericUpDown}}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                        <Setter Property="FontFamily" Value="Consolas"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                     </Style>
 
                     <Style TargetType="{x:Type mah:ColorPicker}" BasedOn="{StaticResource {x:Type mah:ColorPicker}}">
