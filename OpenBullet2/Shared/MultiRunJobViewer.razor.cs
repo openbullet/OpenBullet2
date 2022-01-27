@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using RuriLib.Models.Configs;
 
 namespace OpenBullet2.Shared
 {
@@ -92,8 +93,7 @@ namespace OpenBullet2.Shared
                 : string.Empty;
 
             var message = string.Format(Loc["LineCheckedMessage"], data, proxy, botData.STATUS);
-            var color = botData.STATUS switch
-            {
+            var color = botData.STATUS switch {
                 "SUCCESS" => "yellowgreen",
                 "FAIL" => "tomato",
                 "BAN" => "plum",
@@ -230,8 +230,7 @@ namespace OpenBullet2.Shared
             }
         }
 
-        private static string GetHitColor(Hit hit) => hit.Type switch
-        {
+        private static string GetHitColor(Hit hit) => hit.Type switch {
             "SUCCESS" => "var(--fg-hit)",
             "NONE" => "var(--fg-tocheck)",
             _ => "var(--fg-custom)"
@@ -357,7 +356,9 @@ namespace OpenBullet2.Shared
 
             if (lastSelectedHit.BotLogger == null)
             {
-                await js.AlertError(Loc["Disabled"], Loc["BotLogDisabledError"]);
+                var errorMessage = Job.Config.Mode == ConfigMode.DLL ? Loc["BotLogCompiledConfigError"] : Loc["BotLogDisabledError"];
+                
+                await js.AlertError(Loc["Disabled"], errorMessage);
                 return;
             }
 
@@ -373,8 +374,7 @@ namespace OpenBullet2.Shared
             StateHasChanged();
         }
 
-        private List<Hit> GetFilteredHits() => hitsFilter switch
-        {
+        private List<Hit> GetFilteredHits() => hitsFilter switch {
             "SUCCESS" => Job.Hits.Where(h => h.Type == "SUCCESS").ToList(),
             "NONE" => Job.Hits.Where(h => h.Type == "NONE").ToList(),
             "CUSTOM" => Job.Hits.Where(h => h.Type != "SUCCESS" && h.Type != "NONE").ToList(),
@@ -411,7 +411,6 @@ namespace OpenBullet2.Shared
             }
             catch
             {
-
             }
         }
 

@@ -132,6 +132,9 @@
   <data name="BotLogDisabledError" xml:space="preserve">
     <value>O registro do bot foi desativado nas configurações, habilite-o para poder ver o registro do bot para acessos futuros</value>
   </data>
+  <data name="BotLogCompiledConfigError" xml:space="preserve">
+    <value>O registro do bot não está disponível para configs pré-compiladas e dlls.</value>
+  </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
   </data>
