@@ -35,8 +35,10 @@ namespace RuriLib.Tests.Functions.Http
 
         private readonly string httpBin = "https://httpbin.org/anything";
 
-        [Fact]
-        public async Task HttpRequestStandard_Get_Verify()
+        [Theory]
+        [InlineData(HttpLibrary.RuriLibHttp)]
+        [InlineData(HttpLibrary.SystemNet)]
+        public async Task HttpRequestStandard_Get_Verify(HttpLibrary library)
         {
             var data = NewBotData();
 
@@ -55,6 +57,7 @@ namespace RuriLib.Tests.Functions.Http
             {
                 Url = httpBin,
                 Method = HttpMethod.GET,
+                HttpLibrary = library,
                 CustomHeaders = headers,
                 CustomCookies = cookies
             };
@@ -69,8 +72,10 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal(httpBin, response.Url);
         }
 
-        [Fact]
-        public async Task HttpRequestStandard_Post_Verify()
+        [Theory]
+        [InlineData(HttpLibrary.RuriLibHttp)]
+        [InlineData(HttpLibrary.SystemNet)]
+        public async Task HttpRequestStandard_Post_Verify(HttpLibrary library)
         {
             var data = NewBotData();
 
@@ -78,6 +83,7 @@ namespace RuriLib.Tests.Functions.Http
             {
                 Url = httpBin,
                 Method = HttpMethod.POST,
+                HttpLibrary = library,
                 Content = "name1=value1&name2=value2",
                 ContentType = "application/x-www-form-urlencoded"
             };
@@ -91,8 +97,10 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal("application/x-www-form-urlencoded", response.Headers["Content-Type"]);
         }
 
-        [Fact]
-        public async Task HttpRequestRaw_Post_Verify()
+        [Theory]
+        [InlineData(HttpLibrary.RuriLibHttp)]
+        [InlineData(HttpLibrary.SystemNet)]
+        public async Task HttpRequestRaw_Post_Verify(HttpLibrary library)
         {
             var data = NewBotData();
 
@@ -100,6 +108,7 @@ namespace RuriLib.Tests.Functions.Http
             {
                 Url = httpBin,
                 Method = HttpMethod.POST,
+                HttpLibrary = library,
                 Content = Encoding.UTF8.GetBytes("name1=value1&name2=value2"),
                 ContentType = "application/x-www-form-urlencoded"
             };
@@ -113,8 +122,10 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal("application/x-www-form-urlencoded", response.Headers["Content-Type"]);
         }
 
-        [Fact]
-        public async Task HttpRequestBasicAuth_Normal_Verify()
+        [Theory]
+        [InlineData(HttpLibrary.RuriLibHttp)]
+        [InlineData(HttpLibrary.SystemNet)]
+        public async Task HttpRequestBasicAuth_Normal_Verify(HttpLibrary library)
         {
             var data = NewBotData();
 
@@ -122,6 +133,7 @@ namespace RuriLib.Tests.Functions.Http
             {
                 Url = httpBin,
                 Method = HttpMethod.GET,
+                HttpLibrary = library,
                 Username = "myUsername",
                 Password = "myPassword"
             };
@@ -133,8 +145,10 @@ namespace RuriLib.Tests.Functions.Http
             Assert.Equal("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("myUsername:myPassword")), response.Headers["Authorization"]);
         }
 
-        [Fact]
-        public async Task HttpRequestMultipart_Post_Verify()
+        [Theory]
+        [InlineData(HttpLibrary.RuriLibHttp)]
+        [InlineData(HttpLibrary.SystemNet)]
+        public async Task HttpRequestMultipart_Post_Verify(HttpLibrary library)
         {
             var data = NewBotData();
 
@@ -152,6 +166,7 @@ namespace RuriLib.Tests.Functions.Http
             {
                 Url = httpBin,
                 Method = HttpMethod.POST,
+                HttpLibrary = library,
                 Boundary = "myBoundary",
                 Contents = contents
             };

@@ -13,6 +13,11 @@
         /// <summary>
         /// Uses threads to parallelize work.
         /// </summary>
-        ThreadBased
+        ThreadBased,
+
+        /// <summary>
+        /// Uses Parallel.ForEachAsync to parallelize work.
+        /// </summary>
+        ParallelBased
     }
 }

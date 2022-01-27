@@ -75,6 +75,7 @@ namespace OpenBullet2.Native.Controls
             absoluteUriInFirstLineSetting.Setting = vm.HttpRequestBlock.Settings["absoluteUriInFirstLine"];
             readResponseContentSetting.Setting = vm.HttpRequestBlock.Settings["readResponseContent"];
             codePagesEncodingSetting.Setting = vm.HttpRequestBlock.Settings["codePagesEncoding"];
+            httpLibrarySetting.Setting = vm.HttpRequestBlock.Settings["httpLibrary"];
             securityProtocolSetting.Setting = vm.HttpRequestBlock.Settings["securityProtocol"];
             useCustomCipherSuitesSetting.Setting = vm.HttpRequestBlock.Settings["useCustomCipherSuites"];
             customCipherSuitesSetting.Setting = vm.HttpRequestBlock.Settings["customCipherSuites"];

@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Ruri</Authors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.14.0" />
+	<PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
     <PackageReference Include="CaptchaSharp" Version="1.0.9" />
     <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.4" />
     <PackageReference Include="DeviceId" Version="5.2.0" />

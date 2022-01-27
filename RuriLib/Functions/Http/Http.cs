@@ -9,26 +9,28 @@ namespace RuriLib.Functions.Http
     {
         public static CookieCollection GetAllCookies(CookieContainer cookieJar)
         {
-            CookieCollection cookieCollection = new CookieCollection();
+            var cookieCollection = new CookieCollection();
 
-            Hashtable table = (Hashtable)cookieJar.GetType().InvokeMember("m_domainTable",
+            var table = (Hashtable)cookieJar.GetType().InvokeMember("m_domainTable",
                 BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance,
-                null, cookieJar, new object[] { });
+                null, cookieJar, Array.Empty<object>());
 
             foreach (var tableKey in table.Keys)
             {
-                string str_tableKey = (string)tableKey;
+                var str_tableKey = (string)tableKey;
 
                 if (str_tableKey[0] == '.')
-                    str_tableKey = str_tableKey.Substring(1);
+                {
+                    str_tableKey = str_tableKey[1..];
+                }
 
-                SortedList list = (SortedList)table[tableKey].GetType().InvokeMember("m_list",
+                var list = (SortedList)table[tableKey].GetType().InvokeMember("m_list",
                     BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance,
-                    null, table[tableKey], new object[] { });
+                    null, table[tableKey], Array.Empty<object>());
 
                 foreach (var listKey in list.Keys)
                 {
-                    string url = "https://" + str_tableKey + (string)listKey;
+                    var url = "https://" + str_tableKey + (string)listKey;
                     cookieCollection.Add(cookieJar.GetCookies(new Uri(url)));
                 }
             }

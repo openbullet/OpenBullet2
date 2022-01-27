@@ -10,11 +10,11 @@ namespace RuriLib.Parallelization.Tests
 {
     public class ParallelizerTests
     {
-        readonly Func<int, CancellationToken, Task<bool>> parityCheck = new Func<int, CancellationToken, Task<bool>>
-            ((number, token) => Task.FromResult(number % 2 == 0));
-
-        readonly Func<int, CancellationToken, Task<bool>> longTask = new Func<int, CancellationToken, Task<bool>>
-            (async (number, token) => { await Task.Delay(100); return true; });
+        private readonly Func<int, CancellationToken, Task<bool>> parityCheck
+            = new((number, token) => Task.FromResult(number % 2 == 0));
+        
+        private readonly Func<int, CancellationToken, Task<bool>> longTask
+            = new(async (number, token) => { await Task.Delay(100); return true; });
         
         private readonly ParallelizerType type = ParallelizerType.TaskBased;
         private int progressCount;
