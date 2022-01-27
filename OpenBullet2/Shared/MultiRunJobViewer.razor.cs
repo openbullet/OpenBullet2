@@ -356,7 +356,7 @@ namespace OpenBullet2.Shared
 
             if (lastSelectedHit.BotLogger == null)
             {
-                var errorMessage = Job.Config.Mode == ConfigMode.DLL ? Loc["BotLogCompiledConfigError"] : Loc["BotLogDisabledError"];
+                var errorMessage = lastSelectedHit.Config.Mode == ConfigMode.DLL ? Loc["BotLogCompiledConfigError"] : Loc["BotLogDisabledError"];
                 
                 await js.AlertError(Loc["Disabled"], errorMessage);
                 return;

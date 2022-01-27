@@ -129,6 +129,9 @@
   <data name="BotLog" xml:space="preserve">
     <value>Log del bot</value>
   </data>
+  <data name="BotLogCompiledConfigError" xml:space="preserve">
+    <value>Il log dei bot non è disponibile per config compilate</value>
+  </data>
   <data name="BotLogDisabledError" xml:space="preserve">
     <value>Il log dei bot era disabilitato nelle impostazioni, per favore abilitalo per poter vedere il log completo nelle hit successive</value>
   </data>
