@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Ruri</Authors>
     <Description>This is a library that can perform multiple tasks (yes, a lot, even infinitely many) that act on some input and return a certain output.</Description>
     <Copyright>Ruri 2022</Copyright>

@@ -1,4 +1,5 @@
-﻿using JWT.Algorithms;
+﻿using BCrypt.Net;
+using JWT.Algorithms;
 using Newtonsoft.Json;
 using RuriLib.Attributes;
 using RuriLib.Functions.Conversion;
@@ -183,11 +184,31 @@ namespace RuriLib.Blocks.Functions.Crypto
             return cipherText;
         }
 
+        [Block("Encrypts a string with AES", name = "AES Encrypt String")]
+        public static byte[] AESEncryptString(BotData data, string plainText, byte[] key, byte[] iv,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            var cipherText = RuriLib.Functions.Crypto.Crypto.AESEncryptString(plainText, key, iv, mode, padding, keySize);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Encrypted: {HexConverter.ToHexString(cipherText)}", LogColors.YellowGreen);
+            return cipherText;
+        }
+
         [Block("Decrypts data with AES", name = "AES Decrypt")]
         public static byte[] AESDecrypt(BotData data, byte[] cipherText, byte[] key, byte[] iv,
             CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
         {
             var plainText = RuriLib.Functions.Crypto.Crypto.AESDecrypt(cipherText, key, iv, mode, padding, keySize);
+            data.Logger.LogHeader();
+            data.Logger.Log($"Decrypted: {HexConverter.ToHexString(plainText)}", LogColors.YellowGreen);
+            return plainText;
+        }
+
+        [Block("Decrypts data with AES to string", name = "AES Decrypt String")]
+        public static string AESDecryptString(BotData data, byte[] cipherText, byte[] key, byte[] iv,
+            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.None, int keySize = 256)
+        {
+            var plainText = RuriLib.Functions.Crypto.Crypto.AESDecryptString(cipherText, key, iv, mode, padding, keySize);
             data.Logger.LogHeader();
             data.Logger.Log($"Decrypted: {plainText}", LogColors.YellowGreen);
             return plainText;
@@ -206,6 +227,41 @@ namespace RuriLib.Blocks.Functions.Crypto
             data.Logger.Log($"Encoded: {encoded}", LogColors.YellowGreen);
 
             return encoded;
+        }
+
+        [Block("Generates a BCrypt hash from an input and a salt", name = "BCrypt Hash",
+            extraInfo = "If you don't have the salt, use the BCrypt Hash (Gen Salt) block")]
+        public static string BCryptHash(BotData data, string input, string salt)
+        {
+            data.Logger.LogHeader();
+
+            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptWithSalt(input, salt);
+            data.Logger.Log($"Hashed: {hashed}", LogColors.YellowGreen);
+
+            return hashed;
+        }
+
+        [Block("Generates a BCrypt hash from an input by generating a salt", name = "BCrypt Hash (Gen Salt)",
+            extraInfo = "bcryptjs uses salt revision 2X by default currently")]
+        public static string BCryptHashGenSalt(BotData data, string input, int rounds = 10, SaltRevision saltRevision = SaltRevision.Revision2X)
+        {
+            data.Logger.LogHeader();
+
+            var hashed = RuriLib.Functions.Crypto.Crypto.BCryptGenSalt(input, rounds, saltRevision);
+            data.Logger.Log($"Hashed: {hashed}", LogColors.YellowGreen);
+
+            return hashed;
+        }
+
+        [Block("Verifies that a BCrypt hash is valid", name = "BCrypt Verify")]
+        public static bool BCryptVerify(BotData data, string input, string hash)
+        {
+            data.Logger.LogHeader();
+
+            var isValid = RuriLib.Functions.Crypto.Crypto.BCryptVerify(input, hash);
+            data.Logger.Log($"BCrypt hash verification result: {isValid}", LogColors.YellowGreen);
+
+            return isValid;
         }
     }
 }

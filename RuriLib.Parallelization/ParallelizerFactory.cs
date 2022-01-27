@@ -31,6 +31,7 @@ namespace RuriLib.Parallelization
             {
                 ParallelizerType.TaskBased => typeof(TaskBasedParallelizer<TInput, TOutput>),
                 ParallelizerType.ThreadBased => typeof(ThreadBasedParallelizer<TInput, TOutput>),
+                ParallelizerType.ParallelBased => typeof(ParallelBasedParallelizer<TInput, TOutput>),
                 _ => throw new NotImplementedException()
             };
 

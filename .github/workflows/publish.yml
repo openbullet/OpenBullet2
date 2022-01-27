@@ -13,10 +13,10 @@ jobs:
       shell: bash
       id: tag_name
       run: echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
-    - name: Setup .NET 5
+    - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Setup .NET 2.1
       uses: actions/setup-dotnet@v1
       with:

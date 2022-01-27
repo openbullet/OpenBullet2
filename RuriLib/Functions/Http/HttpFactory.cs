@@ -4,8 +4,11 @@ using RuriLib.Proxies;
 using RuriLib.Proxies.Clients;
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Net.Security;
 using System.Runtime.InteropServices;
 using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RuriLib.Functions.Http
 {
@@ -45,6 +48,16 @@ namespace RuriLib.Functions.Http
             };
         }
 
+        public static HttpClient GetHttpClient(Proxy proxy, HttpOptions options, CookieContainer cookieContainer)
+        {
+            var handler = GetHttpMessageHandler(proxy, options, cookieContainer);
+            
+            return new HttpClient(handler)
+            {
+                Timeout = options.ReadWriteTimeout
+            };
+        }
+
         private static ProxyClient GetProxyClient(Proxy proxy, HttpOptions options)
         {
             ProxyClient client;
@@ -79,6 +92,93 @@ namespace RuriLib.Functions.Http
             }
 
             return client;
+        }
+
+        private static HttpMessageHandler GetHttpMessageHandler(Proxy proxy, HttpOptions options, CookieContainer cookieContainer)
+        {
+            HttpMessageHandler handler;
+
+            if (proxy == null)
+            {
+                handler = new HttpClientHandler();
+            }
+            else
+            {
+                switch (proxy.Type)
+                {
+                    case ProxyType.Http:
+                        handler = new HttpClientHandler()
+                        {
+                            Proxy = GetWebProxy(proxy)
+                        };
+                        break;
+
+                    case ProxyType.Socks4:
+                    case ProxyType.Socks4a:
+                    case ProxyType.Socks5:
+                        handler = new SocketsHttpHandler()
+                        {
+                            Proxy = GetWebProxy(proxy)
+                        };
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            return ConfigureHttpMessageHandler(handler, options, cookieContainer);
+        }
+
+        private static WebProxy GetWebProxy(Proxy proxy)
+        {
+            var proxyCredentials = proxy.NeedsAuthentication
+                ? new NetworkCredential(proxy.Username, proxy.Password)
+                : null;
+
+            var address = proxy.Type switch
+            {
+                ProxyType.Http => $"http://{proxy.Host}:{proxy.Port}",
+                ProxyType.Socks4 => $"socks4://{proxy.Host}:{proxy.Port}",
+                ProxyType.Socks4a => $"socks4a://{proxy.Host}:{proxy.Port}",
+                ProxyType.Socks5 => $"socks5://{proxy.Host}:{proxy.Port}",
+                _ => throw new NotImplementedException(),
+            };
+
+            return new WebProxy(address, true, null, proxyCredentials);
+        }
+
+        private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer)
+        {
+            if (handler is HttpClientHandler httpHandler)
+            {
+                httpHandler.MaxAutomaticRedirections = options.MaxNumberOfRedirects;
+                httpHandler.AllowAutoRedirect = options.AutoRedirect;
+                httpHandler.SslProtocols = ToSslProtocols(options.SecurityProtocol);
+                httpHandler.CheckCertificateRevocationList = options.CertRevocationMode == X509RevocationMode.Online;
+                httpHandler.UseCookies = true;
+                httpHandler.CookieContainer = cookieContainer;
+            }
+            else if (handler is SocketsHttpHandler socksHandler)
+            {
+                socksHandler.MaxAutomaticRedirections = options.MaxNumberOfRedirects;
+                socksHandler.AllowAutoRedirect = options.AutoRedirect;
+                socksHandler.SslOptions = new SslClientAuthenticationOptions
+                {
+                    CertificateRevocationCheckMode = options.CertRevocationMode,
+                    EnabledSslProtocols = ToSslProtocols(options.SecurityProtocol),
+                    CipherSuitesPolicy = options.UseCustomCipherSuites
+                        ? new CipherSuitesPolicy(options.CustomCipherSuites)
+                        : null
+                };
+                
+                socksHandler.ConnectTimeout = options.ConnectTimeout;
+                socksHandler.ResponseDrainTimeout = options.ReadWriteTimeout;
+                socksHandler.UseCookies = true;
+                socksHandler.CookieContainer = cookieContainer;
+            }
+
+            return handler;
         }
 
         /// <summary>
