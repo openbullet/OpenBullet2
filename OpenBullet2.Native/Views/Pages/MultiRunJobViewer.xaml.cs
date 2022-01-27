@@ -4,6 +4,7 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Dialogs;
+using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,7 +49,6 @@ namespace OpenBullet2.Native.Views.Pages
                 }
                 catch
                 {
-
                 }
             }
 
@@ -146,7 +146,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void CopySelectedHits(object sender, RoutedEventArgs e) 
+        private void CopySelectedHits(object sender, RoutedEventArgs e)
             => SelectedHits.CopyToClipboard(h => h.Data);
 
         private void CopySelectedProxies(object sender, RoutedEventArgs e)
@@ -178,10 +178,15 @@ namespace OpenBullet2.Native.Views.Pages
         {
             var hitVM = SelectedHits.FirstOrDefault();
 
-            if (hitVM is not null)
+            if (hitVM is null) return;
+
+            if (hitVM.Hit.Config.Mode == ConfigMode.DLL)
             {
-                new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}").Show();
+                Alert.Error("Bot log unavailable", "The bot log is not available for pre-compiled configs");
+                return;
             }
+            
+            new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}").Show();
         }
 
         private void ColumnHeaderClicked(object sender, RoutedEventArgs e)
@@ -210,7 +215,6 @@ namespace OpenBullet2.Native.Views.Pages
 
         private void LVIRightClick(object sender, MouseButtonEventArgs e)
         {
-            
         }
 
         private void OnResultMessage(object sender, string message, Color color)
