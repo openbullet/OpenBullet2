@@ -343,7 +343,11 @@ namespace RuriLib.Functions.Http
 
             // Cookies
             var cookies = Http.GetAllCookies(cookieContainer);
-            data.COOKIES = cookies.ToDictionary(c => c.Name, c => c.Value);
+            data.COOKIES.Clear();
+            foreach (Cookie cookie in cookies)
+            {
+                data.COOKIES[cookie.Name] = cookie.Value;
+            }
 
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
