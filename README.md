@@ -11,6 +11,15 @@ Found a bug? [Create an issue!](https://help.github.com/en/articles/creating-an-
 # Download and setup
 Refer to [this guide](https://discourse.openbullet.dev/t/wip-how-to-download-and-start-openbullet-2/29) on the official forum.
 
+# Screenshots
+**Web Client**
+
+![immagine](https://user-images.githubusercontent.com/48930622/151500940-47036c84-ac96-40d9-8758-b32acd4a8921.png)
+
+**Native Client** (Windows only)
+
+![immagine](https://user-images.githubusercontent.com/48930622/151500974-5cb7a9fd-766b-44ab-b32e-f7d623c0e7dd.png)
+
 # License
 This software is licensed under the MIT License.
 
