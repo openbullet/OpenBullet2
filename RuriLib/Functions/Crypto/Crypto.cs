@@ -192,6 +192,14 @@ namespace RuriLib.Functions.Crypto
             using SHA256Managed sha256 = new SHA256Managed();
             return sha256.ComputeHash(input);
         }
+        
+        /// <summary>
+        /// Overload for method below that calculates a SHA-256 hash signature.
+        /// </summary>
+        /// <param name="input">The message for which a signature will be generated</param>
+        /// <param name="key">The secret key to use to sign the message</param>
+        /// <returns>The HMAC signature.</returns>
+        private static byte[] Hmac(string input, byte[] key) => HMACSHA256(Encoding.UTF8.GetBytes(input), key);
 
         /// <summary>
         /// Calculates a SHA-256 hash signature.
@@ -653,6 +661,28 @@ namespace RuriLib.Functions.Crypto
         /// </summary>
         public static bool BCryptVerify(string input, string hash)
             => BCrypt.Net.BCrypt.Verify(input, hash);
+        #endregion
+
+        #region AWS4
+        /// <summary>
+        /// Generates a SHA-256 hash that is the AWS4 Signature.
+        /// </summary>
+        /// <param name="key">The secret key</param>
+        /// <param name="date">The date stamp</param>
+        /// <param name="region">The name of the AWS instance region</param>
+        /// <param name="service">The name of the AWS instance service</param>
+        /// <returns>The AWS4 signature</returns>
+        public static byte[] AWS4Encrypt(string key, string date, string region, string service)
+        {
+            var keyChars = $"AWS4{key}".ToCharArray();
+            
+            var secret = Encoding.UTF8.GetBytes(keyChars);
+            var dateKey = Hmac(date, secret);
+            var regionKey = Hmac(region, dateKey);
+            var serviceKey = Hmac(service, regionKey);
+
+            return Hmac("aws4_request", serviceKey);
+        }
         #endregion
     }
 }

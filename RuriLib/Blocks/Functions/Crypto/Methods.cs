@@ -94,6 +94,8 @@ namespace RuriLib.Blocks.Functions.Crypto
             };
         }
 
+        private static byte[] Hmac(string input, byte[] key, HashFunction function) => Hmac(Encoding.UTF8.GetBytes(input), key, function);
+
         private static byte[] Hmac(byte[] input, byte[] key, HashFunction function)
         {
             return function switch
@@ -262,6 +264,18 @@ namespace RuriLib.Blocks.Functions.Crypto
             data.Logger.Log($"BCrypt hash verification result: {isValid}", LogColors.YellowGreen);
 
             return isValid;
+        }
+
+        [Block("Generates an AWS4 Signature from a key, date, region and service", name = "AWS4 Signature", 
+            extraInfo = "It returns a byte array and it expects the date to be in the following format: YYYYMMDD")]
+        public static byte[] AWS4Signature(BotData data, string key, string date, string region, string service)
+        {
+            var signature = RuriLib.Functions.Crypto.Crypto.AWS4Encrypt(key, date, region, service);
+            
+            data.Logger.LogHeader();
+            data.Logger.Log($"Hashed: {HexConverter.ToHexString(signature)}", LogColors.YellowGreen);
+            
+            return signature;
         }
     }
 }
