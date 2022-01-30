@@ -36,7 +36,7 @@
                           Name="LogJobActivityToFile"
                           VerticalContentAlignment="Center" 
                           Margin="5 0 0 0"/>
-                <CheckBox Content="Log all results to the job log file"
+                <CheckBox Content="Log all results to the job log file (WARN: Can result in high disk usage due to the amount of lines from each job!)"
                           IsChecked="{Binding LogAllResults}"
                           Visibility="{Binding ElementName=LogJobActivityToFile, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter} }"
                           VerticalContentAlignment="Center"

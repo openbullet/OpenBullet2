@@ -228,6 +228,9 @@
   <data name="LogJobActivityToFile" xml:space="preserve">
     <value>Log job activity to file</value>
   </data>
+  <data name="LogAllResults" xml:space="preserve">
+    <value>Log all results to the job log file (WARN: Can result in high disk usage due to the amount of lines from each job!)</value>
+  </data>
   <data name="ParallelizerType" xml:space="preserve">
     <value>Parallelizer Type</value>
   </data>
