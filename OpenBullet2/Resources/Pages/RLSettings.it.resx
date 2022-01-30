@@ -225,6 +225,9 @@
   <data name="ImageTyperzApiKey" xml:space="preserve">
     <value>Imagetyperz API Key</value>
   </data>
+  <data name="LogAllResults" xml:space="preserve">
+    <value>Logga tutti i risultati nel log file (ATTENZIONE: Può risultare in un utilizzo elevato del disco per via del grande numero di righe provenienti da ogni job!)</value>
+  </data>
   <data name="LogJobActivityToFile" xml:space="preserve">
     <value>Logga l'attività dei job su file</value>
   </data>
