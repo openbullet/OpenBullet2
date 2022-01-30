@@ -17,6 +17,8 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
@@ -24,9 +26,17 @@
             <Label Content="{Binding WordlistType}" />
         </StackPanel>
 
-        <Label FontWeight="Bold" Grid.Row="1" Content="Slices:" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center">
+            <Label FontWeight="Bold"  Content="Regex Validation:" />
+            <iconPacks:PackIconForkAwesome Kind="{Binding RegexValidation.Icon}" Foreground="{Binding RegexValidation.Color}" VerticalAlignment="Center" />
+            <Label Content="{Binding RegexValidation.Result}" />
+        </StackPanel>
 
-        <ItemsControl ItemsSource="{Binding SlicesCollection}" Grid.Row="2">
+        <Separator Grid.Row="2" Opacity="0.5" Margin="0 5 0 0" ></Separator>
+        
+        <Label FontWeight="Bold" Grid.Row="3" Content="Slices by separator:" />
+
+        <ItemsControl ItemsSource="{Binding SlicesCollection}" Grid.Row="4">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Vertical"/>
@@ -42,9 +52,9 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Separator Grid.Row="3" Opacity="0.5" Margin="0 5 0 0" ></Separator>
-        <Label FontWeight="Bold" Grid.Row="4" Content="Results:" />
-        <ScrollViewer MaxHeight="300" Grid.Row="5" Margin="5 0 0 0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Separator Grid.Row="5" Opacity="0.5" Margin="0 5 0 0" ></Separator>
+        <Label FontWeight="Bold" Grid.Row="6" Content="Results:" />
+        <ScrollViewer MaxHeight="300" Grid.Row="7" Margin="5 0 0 0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding ResultsCollection}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

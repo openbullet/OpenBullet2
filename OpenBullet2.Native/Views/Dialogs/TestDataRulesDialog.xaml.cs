@@ -31,7 +31,18 @@ namespace OpenBullet2.Native.Views.Dialogs
     public class TestDataRulesDialogViewModel : ViewModelBase
     {
         public string WordlistType { get; init; }
-
+        
+        private RegexValidationViewModel regexValidation;
+        public RegexValidationViewModel RegexValidation
+        {
+            get => regexValidation;
+            set
+            {
+                regexValidation = value;
+                OnPropertyChanged();
+            }
+        }
+        
         private ObservableCollection<SliceViewModel> slicesCollection;
         public ObservableCollection<SliceViewModel> SlicesCollection
         {
@@ -60,7 +71,10 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             var env = SP.GetService<RuriLibSettingsService>().Environment;
             var wt = env.WordlistTypes.First(w => w.Name == wordlistType);
-            var slices = new DataLine(testData, wt).GetVariables().Select(v => new SliceViewModel(v.Name, v.AsString()));
+            var dataLine = new DataLine(testData, wt);
+            var slices =dataLine.GetVariables().Select(v => new SliceViewModel(v.Name, v.AsString()));
+
+            RegexValidation = new(dataLine.IsValid);
             SlicesCollection = new ObservableCollection<SliceViewModel>(slices);
 
             var results = new List<ResultViewModel>();
@@ -69,14 +83,9 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 var slice = slices.FirstOrDefault(v => v.Name == rule.SliceName);
 
-                if (slice == null)
-                {
-                    results.Add(new ResultViewModel($"Invalid slice name: {rule.SliceName}", false));
-                }
-                else
-                {
-                    results.Add(new ResultViewModel(GetRuleText(rule), rule.IsSatisfied(slice.Value)));
-                }
+                results.Add(slice == null
+                    ? new ResultViewModel($"Invalid slice name: {rule.SliceName}", false)
+                    : new ResultViewModel(GetRuleText(rule), rule.IsSatisfied(slice.Value)));
             }
 
             ResultsCollection = new ObservableCollection<ResultViewModel>(results);
@@ -94,6 +103,19 @@ namespace OpenBullet2.Native.Views.Dialogs
             }
 
             throw new NotImplementedException();
+        }
+    }
+
+    public class RegexValidationViewModel : ViewModelBase
+    {
+        public bool Passed { get; set; }
+        public string Result => Passed ? "Passed" : "Invalid";
+        public SolidColorBrush Color => Passed ? Brushes.YellowGreen : Brushes.Tomato;
+        public PackIconForkAwesomeKind Icon => Passed ? PackIconForkAwesomeKind.Check : PackIconForkAwesomeKind.Times;
+
+        public RegexValidationViewModel(bool passed)
+        {
+            Passed = passed;
         }
     }
 
