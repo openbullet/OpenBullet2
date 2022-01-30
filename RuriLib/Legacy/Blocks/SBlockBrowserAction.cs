@@ -362,7 +362,12 @@ namespace RuriLib.Legacy.Blocks
                     chromeservice.EnableVerboseLogging = false;
                     chromeop.AddArgument("--log-level=3");
                     chromeop.BinaryLocation = provider.ChromeBinaryLocation;
-                    
+
+                    if (Helpers.Utils.IsDocker())
+                    {
+                        chromeop.AddArgument("--whitelisted-ips=''");
+                    }
+
                     if (data.ConfigSettings.BrowserSettings.Headless)
                     {
                         chromeop.AddArgument("--headless");
@@ -398,6 +403,11 @@ namespace RuriLib.Legacy.Blocks
                     fireservice.HideCommandPromptWindow = true;
                     fireop.AddArgument("--log-level=3");
                     fireop.BrowserExecutableLocation = provider.FirefoxBinaryLocation;
+
+                    if (Helpers.Utils.IsDocker())
+                    {
+                        fireop.AddArgument("--whitelisted-ips=''");
+                    }
 
                     if (data.ConfigSettings.BrowserSettings.Headless)
                     {

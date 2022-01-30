@@ -11,6 +11,7 @@ using System;
 using OpenQA.Selenium;
 using System.Linq;
 using System.Drawing;
+using RuriLib.Helpers;
 
 namespace RuriLib.Blocks.Selenium.Browser
 {
@@ -42,7 +43,12 @@ namespace RuriLib.Blocks.Selenium.Browser
                     chromeservice.EnableVerboseLogging = false;
                     chromeop.AddArgument("--log-level=3");
                     chromeop.BinaryLocation = provider.ChromeBinaryLocation;
-                    
+
+                    if (Utils.IsDocker())
+                    {
+                        chromeop.AddArgument("--whitelisted-ips=''");
+                    }
+
                     if (data.ConfigSettings.BrowserSettings.Headless)
                     {
                         chromeop.AddArgument("--headless");
@@ -76,6 +82,11 @@ namespace RuriLib.Blocks.Selenium.Browser
                     fireservice.HideCommandPromptWindow = true;
                     fireop.AddArgument("--log-level=3");
                     fireop.BrowserExecutableLocation = provider.FirefoxBinaryLocation;
+
+                    if (Utils.IsDocker())
+                    {
+                        fireop.AddArgument("--whitelisted-ips=''");
+                    }
 
                     if (data.ConfigSettings.BrowserSettings.Headless)
                     {
