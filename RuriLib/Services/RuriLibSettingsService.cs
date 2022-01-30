@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RuriLib.Helpers;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using System.IO;
@@ -37,7 +38,7 @@ namespace RuriLib.Services
 
             RuriLibSettings = File.Exists(RlSettFile)
                 ? JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(RlSettFile), jsonSettings)
-                : new GlobalSettings();
+                : CreateGlobalSettings();
         }
 
         /// <summary>
@@ -52,6 +53,20 @@ namespace RuriLib.Services
         public string[] GetStatuses()
             => (new string[] { "SUCCESS", "NONE", "FAIL", "RETRY", "BAN", "ERROR" })
             .Concat(Environment.CustomStatuses.Select(s => s.Name)).ToArray();
+
+        private GlobalSettings CreateGlobalSettings()
+        {
+            var settings = new GlobalSettings();
+
+            if (Utils.IsDocker())
+            {
+                settings.PuppeteerSettings.ChromeBinaryLocation = "/usr/bin/chromium";
+                settings.SeleniumSettings.ChromeBinaryLocation = "/usr/bin/chromium";
+                settings.SeleniumSettings.FirefoxBinaryLocation = "/usr/bin/firefox";
+            }
+
+            return settings;
+        }
 
         private string GetDefaultEnvironment() => 
 @"[WORDLIST TYPE]
