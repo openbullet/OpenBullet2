@@ -11,6 +11,7 @@ namespace RuriLib.Models.Settings
         public bool UseCustomUserAgentsList { get; set; } = false;
         public bool EnableBotLogging { get; set; } = false;
         public bool VerboseMode { get; set; } = false;
+        public bool LogAllResults { get; set; } = false;
         public List<string> UserAgents { get; set; } = new List<string>
         {
 

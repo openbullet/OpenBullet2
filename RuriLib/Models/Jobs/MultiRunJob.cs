@@ -696,8 +696,11 @@ namespace RuriLib.Models.Jobs
         private void PropagateResult(object _, ResultDetails<MultiRunInput, CheckResult> result)
         {
             OnResult?.Invoke(this, result);
-            // We're not logging results to the IJobLogger because they could arrive at a very high rate
-            // and not be very useful, we're mostly interested in errors here.
+
+            if (!settings.RuriLibSettings.GeneralSettings.LogAllResults) return;
+            
+            var data = result.Result.BotData;
+            logger?.LogInfo(Id, $"[{data.STATUS}] {data.Line.Data} ({data.Proxy})");
         }
 
         private void PropagateProgress(object _, float progress)
