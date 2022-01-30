@@ -23,6 +23,13 @@
     <label>@Loc["LogJobActivityToFile"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogJobActivityToFile" />
     <br />
+    
+    @if (settings.GeneralSettings.LogJobActivityToFile)
+    {
+        <label>@Loc["LogAllResults"]</label>
+        <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.LogAllResults" />
+        <br />
+    }
 
     <label>@Loc["EnableBotLogging"]</label>
     <InputCheckbox class="mb-3" @bind-Value="settings.GeneralSettings.EnableBotLogging" />

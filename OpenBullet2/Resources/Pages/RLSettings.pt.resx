@@ -210,6 +210,9 @@
   <data name="LogJobActivityToFile" xml:space="preserve">
     <value>Salvar logs dos trabalhos para um arquivo</value>
   </data>
+  <data name="LogAllResults" xml:space="preserve">
+    <value>Registrar todas linhas testadas nos logs do trabalhos. (AVISO: Pode resultar em um alto uso de disco quando testando muitas linhas!)</value>
+  </data>
   <data name="ParallelizerType" xml:space="preserve">
     <value>Tipo do Paralelizador</value>
   </data>

@@ -13,5 +13,6 @@ namespace RuriLib.Providers.Proxies
         }
 
         public bool VerboseMode => settings.VerboseMode;
+        public bool LogAllResults => settings.LogAllResults;
     }
 }

@@ -3,8 +3,6 @@ using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Services;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Functions.Captchas;
-using RuriLib.Models.Settings;
-using RuriLib.Parallelization;
 using System;
 using System.Linq;
 using System.Windows;

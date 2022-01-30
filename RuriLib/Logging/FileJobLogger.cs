@@ -27,14 +27,13 @@ namespace RuriLib.Logging
         /// <inheritdoc/>
         public void Log(int jobId, string message, LogKind kind = LogKind.Info)
         {
-            if (settings.RuriLibSettings.GeneralSettings.LogJobActivityToFile)
+            if (!settings.RuriLibSettings.GeneralSettings.LogJobActivityToFile) return;
+            
+            var fileName = Path.Combine(baseFolder, $"job{jobId}.log");
+            lock (FileLocker.GetHandle(fileName))
             {
-                var fileName = Path.Combine(baseFolder, $"job{jobId}.log");
-                lock (FileLocker.GetHandle(fileName))
-                {
-                    var str = $"[{DateTime.Now.ToLongTimeString()}][{kind}] {message.Replace("\r\n", " ").Replace("\n", " ")}{Environment.NewLine}";
-                    File.AppendAllText(fileName, str);
-                }
+                var str = $"[{DateTime.Now.ToLongTimeString()}][{kind}] {message.Replace("\r\n", " ").Replace("\n", " ")}{Environment.NewLine}";
+                File.AppendAllText(fileName, str);
             }
         }
 

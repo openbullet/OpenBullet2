@@ -33,8 +33,14 @@
                 </StackPanel>
                 <CheckBox Content="Log job activity to a file"
                           IsChecked="{Binding LogJobActivityToFile}" 
+                          Name="LogJobActivityToFile"
                           VerticalContentAlignment="Center" 
                           Margin="5 0 0 0"/>
+                <CheckBox Content="Log all results to the job log file (WARN: Can result in high disk usage due to the amount of lines from each job!)"
+                          IsChecked="{Binding LogAllResults}"
+                          Visibility="{Binding ElementName=LogJobActivityToFile, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter} }"
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
                 <CheckBox Content="Enable logging for bots in a MultiRunJob. Only enable for debugging configs as it increases the RAM usage by a lot!" 
                           IsChecked="{Binding EnableBotLogging}" 
                           VerticalContentAlignment="Center"

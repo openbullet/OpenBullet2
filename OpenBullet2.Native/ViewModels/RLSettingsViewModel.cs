@@ -46,6 +46,16 @@ namespace OpenBullet2.Native.ViewModels
                 OnPropertyChanged();
             }
         }
+        
+        public bool LogAllResults
+        {
+            get => General.LogAllResults;
+            set
+            {
+                General.LogAllResults = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool EnableBotLogging
         {
