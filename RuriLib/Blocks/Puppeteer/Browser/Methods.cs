@@ -31,6 +31,8 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             }
 
             var args = data.ConfigSettings.BrowserSettings.CommandLineArgs;
+            args += " --no-sandbox";
+
             if (data.Proxy != null && data.UseProxy)
             {
                 if (data.Proxy.Type == ProxyType.Http || !data.Proxy.NeedsAuthentication)
