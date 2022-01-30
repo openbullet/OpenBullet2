@@ -365,6 +365,7 @@ namespace RuriLib.Legacy.Blocks
 
                     if (Helpers.Utils.IsDocker())
                     {
+                        chromeop.AddArgument("--no-sandbox");
                         chromeop.AddArgument("--whitelisted-ips=''");
                         chromeop.AddArgument("--disable-dev-shm-usage");
                     }
@@ -408,7 +409,6 @@ namespace RuriLib.Legacy.Blocks
                     if (Helpers.Utils.IsDocker())
                     {
                         fireop.AddArgument("--whitelisted-ips=''");
-                        fireop.AddArgument("--disable-dev-shm-usage");
                     }
 
                     if (data.ConfigSettings.BrowserSettings.Headless)
