@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ProxyType = RuriLib.Models.Proxies.ProxyType;
+using RuriLib.Helpers;
 
 namespace RuriLib.Blocks.Puppeteer.Browser
 {
@@ -31,7 +32,12 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             }
 
             var args = data.ConfigSettings.BrowserSettings.CommandLineArgs;
-            args += " --no-sandbox";
+
+            // If it's running in docker, currently it runs under root, so add the --no-sandbox otherwise chrome won't work
+            if (Utils.IsDocker())
+            {
+                args += " --no-sandbox";
+            }
 
             if (data.Proxy != null && data.UseProxy)
             {
