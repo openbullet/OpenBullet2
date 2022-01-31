@@ -1,7 +1,10 @@
-﻿using OpenBullet2.Native.ViewModels;
+﻿using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Settings;
 using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace OpenBullet2.Native.Controls
@@ -29,7 +32,7 @@ namespace OpenBullet2.Native.Controls
 
         private void CreateControls()
         {
-            foreach (var setting in vm.BlockVM.Block.Settings)
+            foreach (var setting in vm.Block.Settings)
             {
                 UserControl viewer = setting.Value.FixedSetting switch
                 {
@@ -49,6 +52,23 @@ namespace OpenBullet2.Native.Controls
                     settingsPanel.Children.Add(viewer);
                 }
             }
+
+            foreach (var action in vm.Block.Descriptor.Actions)
+            {
+                var button = new Button
+                {
+                    Foreground = Brush.Get("ForegroundMain"),
+                    Background = Brush.Get("BackgroundPrimary"),
+                    Margin = new Thickness(0, 0, 0, 5),
+                    Content = action.Name
+                };
+
+                // TODO: Call global refresh on everything that is displayed after action invocation to make it update changes
+                button.Click += (sender, e) => action.Delegate.Invoke(vm.Block);
+                actionsPanel.Children.Add(button);
+            }
+
+            // TODO: Add images
         }
     }
 
@@ -68,6 +88,8 @@ namespace OpenBullet2.Native.Controls
 
         public bool HasReturnValue => Block.Descriptor.ReturnType is not null;
         public string ReturnValueType => $"Output variable ({Block.Descriptor.ReturnType})";
+        public bool HasActions => Block.Descriptor.Actions.Any();
+        public bool HasImages => Block.Descriptor.Images.Any();
 
         public string OutputVariable
         {
