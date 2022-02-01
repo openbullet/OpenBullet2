@@ -47,6 +47,6 @@ namespace OpenBullet2.Core.Repositories
         /// <summary>
         /// Saves a packed config (as a raw bytes stream) to the repository.
         /// </summary>
-        Task Upload(Stream stream);
+        Task Upload(Stream stream, string fileName);
     }
 }

@@ -8,6 +8,7 @@ using System;
 using RuriLib.Helpers.Transpilers;
 using RuriLib.Services;
 using RuriLib.Legacy.Configs;
+using System.Text;
 
 namespace OpenBullet2.Core.Repositories
 {
@@ -119,10 +120,29 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task Upload(Stream stream)
+        public async Task Upload(Stream stream, string fileName)
         {
-            var config = await ConfigPacker.Unpack(stream);
-            await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
+            var extension = Path.GetExtension(fileName);
+
+            // If it's a .opk config
+            if (extension == ".opk")
+            {
+                var config = await ConfigPacker.Unpack(stream);
+                await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
+            }
+            // Otherwise it's a .loli config
+            else if (extension == ".loli")
+            {
+                using var ms = new MemoryStream();
+                var content = Encoding.UTF8.GetString(ms.ToArray());
+                var id = Path.GetFileNameWithoutExtension(fileName);
+                var converted = ConfigConverter.Convert(content, id);
+                await Save(converted);
+            }
+            else
+            {
+                throw new Exception($"Unsupported file type: {extension}");
+            }
         }
 
         /// <inheritdoc/>

@@ -324,7 +324,7 @@ namespace OpenBullet2.Pages
                     ms.Seek(0, SeekOrigin.Begin);
 
                     // Upload it to the repo
-                    await ConfigRepo.Upload(ms);
+                    await ConfigRepo.Upload(ms, file.Name);
                 }
 
                 await js.AlertSuccess(Loc["AllDone"], $"{Loc["ConfigsSuccessfullyUploaded"]}: {e.FileCount}");
