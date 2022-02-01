@@ -166,7 +166,7 @@
     <value>Job not idle</value>
   </data>
   <data name="JobNotIdleWarning" xml:space="preserve">
-    <value>Please stop or abort the job before deleting it</value>
+    <value>Please stop or abort the job before deleting or editing it</value>
   </data>
   <data name="New" xml:space="preserve">
     <value>New</value>
