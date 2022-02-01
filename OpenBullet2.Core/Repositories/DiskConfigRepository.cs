@@ -134,6 +134,8 @@ namespace OpenBullet2.Core.Repositories
             else if (extension == ".loli")
             {
                 using var ms = new MemoryStream();
+                stream.CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
                 var content = Encoding.UTF8.GetString(ms.ToArray());
                 var id = Path.GetFileNameWithoutExtension(fileName);
                 var converted = ConfigConverter.Convert(content, id);
