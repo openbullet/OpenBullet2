@@ -53,6 +53,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -64,7 +65,7 @@
             <local:StringSettingViewer 
                 Grid.Row="0"
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 x:Name="urlSetting" />
 
             <local:EnumSettingViewer 
@@ -75,6 +76,7 @@
             <local:StringSettingViewer 
                 Grid.Row="1"
                 Grid.Column="1"
+                Grid.ColumnSpan="2"
                 x:Name="httpVersionSetting" />
 
             <local:BoolSettingViewer 
@@ -86,6 +88,11 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 x:Name="alwaysSendContentSetting" />
+            
+            <local:BoolSettingViewer 
+                Grid.Row="2"
+                Grid.Column="2"
+                x:Name="decodeHtmlSetting" />
         </Grid>
 
         <Separator Opacity="0.5" Margin="5 20"></Separator>
