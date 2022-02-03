@@ -48,6 +48,7 @@ namespace OpenBullet2.Native.Controls
                 {
                     action.Delegate.Invoke(vm.Block);
                     CreateSettings();
+                    CreateImages();
                 };
 
                 actionsPanel.Children.Add(button);
@@ -84,7 +85,14 @@ namespace OpenBullet2.Native.Controls
 
         private void CreateImages()
         {
-            // TODO: Add this
+            imagesPanel.Children.Clear();
+
+            foreach (var image in vm.Block.Descriptor.Images)
+            {
+                var control = new ImagePicker(image.Value.Value);
+                control.ImageChanged += (s, bytes) => image.Value.Value = bytes;
+                imagesPanel.Children.Add(control);
+            }
         }
     }
 
