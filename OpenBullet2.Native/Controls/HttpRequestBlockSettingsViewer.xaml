@@ -158,6 +158,7 @@
         <local:IntSettingViewer x:Name="maxNumberOfRedirectsSetting" />
         <local:BoolSettingViewer x:Name="absoluteUriInFirstLineSetting" />
         <local:BoolSettingViewer x:Name="readResponseContentSetting" />
+        <local:BoolSettingViewer x:Name="decodeHtmlSetting" />
         <local:StringSettingViewer x:Name="codePagesEncodingSetting" />
 
         <Label 

@@ -12,9 +12,9 @@ namespace RuriLib.Proxies.Clients
     public class NoProxyClient : ProxyClient
     {
         /// <summary>
-        /// Does nothing.
+        /// Provides unproxied connections.
         /// </summary>
-        public NoProxyClient(ProxySettings settings) : base(settings)
+        public NoProxyClient(ProxySettings settings = null) : base(settings ?? new ProxySettings())
         {
 
         }

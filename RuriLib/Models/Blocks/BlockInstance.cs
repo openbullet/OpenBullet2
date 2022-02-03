@@ -97,5 +97,8 @@ namespace RuriLib.Models.Blocks
         }
 
         public virtual string ToCSharp(List<string> definedVariables, ConfigSettings settings) => throw new NotImplementedException();
+
+        public T GetFixedSetting<T>(string name) where T : Setting
+            => Settings[name].FixedSetting as T;
     }
 }

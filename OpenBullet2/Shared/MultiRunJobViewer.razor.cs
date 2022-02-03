@@ -72,10 +72,19 @@ namespace OpenBullet2.Shared
                 var newAmount = (int)result.Data;
                 changingBots = true;
 
-                await Job.ChangeBots(newAmount);
-
-                Job.Bots = newAmount;
-                changingBots = false;
+                try
+                {
+                    await Job.ChangeBots(newAmount);
+                    Job.Bots = newAmount;
+                }
+                catch (Exception ex)
+                {
+                    await js.AlertException(ex);
+                }
+                finally
+                {
+                    changingBots = false;
+                }
             }
         }
 

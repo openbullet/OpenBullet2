@@ -1,0 +1,58 @@
+﻿@using OpenBullet2.Core.Helpers
+@using OpenBullet2.Helpers 
+@using System.IO
+@inject Microsoft.Extensions.Localization.IStringLocalizer<InputImage> Loc
+
+<div class="container-fluid px-0">
+    <div class="row no-gutters">
+        <div class="col no-gutters">
+            <InputFile OnChange="@HandleSelection" />
+        </div>
+    </div>
+</div>
+
+<div>
+    @if (Base64 != null)
+    {
+        <div>
+            <div style="margin-top: 10px; max-width: @(MaxWidth)px; max-height: @(MaxHeight)px;">
+                <img src="data:image/png;base64,@Base64" style="height: 100%; width: 100%;" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public byte[] Bytes { get; set; }
+    [Parameter] public int MaxWidth { get; set; } = 300;
+    [Parameter] public int MaxHeight { get; set; } = 300;
+    [Parameter] public EventCallback<byte[]> BytesChanged { get; set; }
+
+    private string imageUrl = string.Empty;
+
+    private string Base64 => Bytes == null ? null : Convert.ToBase64String(Bytes);
+
+    private async Task HandleSelection(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount == 0)
+            return;
+
+        try
+        {
+            byte[] buffer = new byte[4 * 1024];
+
+            using (var ms = new MemoryStream())
+            {
+                // Support maximum 5 MB for file upload
+                await e.File.OpenReadStream(5 * 1000 * 1000).CopyToAsync(ms);
+                Bytes = ImageEditor.ToCompatibleFormat(ms.ToArray());
+                await BytesChanged.InvokeAsync(Bytes);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            await js.AlertException(ex);
+        }
+    }
+}

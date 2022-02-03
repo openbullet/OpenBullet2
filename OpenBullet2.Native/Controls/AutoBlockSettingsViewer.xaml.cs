@@ -1,7 +1,10 @@
-﻿using OpenBullet2.Native.ViewModels;
+﻿using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Settings;
 using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace OpenBullet2.Native.Controls
@@ -29,7 +32,36 @@ namespace OpenBullet2.Native.Controls
 
         private void CreateControls()
         {
-            foreach (var setting in vm.BlockVM.Block.Settings)
+            CreateSettings();
+
+            foreach (var action in vm.Block.Descriptor.Actions)
+            {
+                var button = new Button
+                {
+                    Foreground = Brush.Get("ForegroundMain"),
+                    Background = Brush.Get("BackgroundPrimary"),
+                    Margin = new Thickness(0, 0, 5, 5),
+                    Content = action.Name
+                };
+
+                button.Click += (sender, e) =>
+                {
+                    action.Delegate.Invoke(vm.Block);
+                    CreateSettings();
+                    CreateImages();
+                };
+
+                actionsPanel.Children.Add(button);
+            }
+
+            CreateImages();
+        }
+
+        private void CreateSettings()
+        {
+            settingsPanel.Children.Clear();
+
+            foreach (var setting in vm.Block.Settings)
             {
                 UserControl viewer = setting.Value.FixedSetting switch
                 {
@@ -50,6 +82,18 @@ namespace OpenBullet2.Native.Controls
                 }
             }
         }
+
+        private void CreateImages()
+        {
+            imagesPanel.Children.Clear();
+
+            foreach (var image in vm.Block.Descriptor.Images)
+            {
+                var control = new ImagePicker(image.Value.Value);
+                control.ImageChanged += (s, bytes) => image.Value.Value = bytes;
+                imagesPanel.Children.Add(control);
+            }
+        }
     }
 
     public class AutoBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
@@ -68,6 +112,8 @@ namespace OpenBullet2.Native.Controls
 
         public bool HasReturnValue => Block.Descriptor.ReturnType is not null;
         public string ReturnValueType => $"Output variable ({Block.Descriptor.ReturnType})";
+        public bool HasActions => Block.Descriptor.Actions.Any();
+        public bool HasImages => Block.Descriptor.Images.Any();
 
         public string OutputVariable
         {
