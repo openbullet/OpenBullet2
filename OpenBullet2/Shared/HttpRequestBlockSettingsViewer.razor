@@ -1,4 +1,4 @@
-﻿@using RuriLib.Models.Blocks.Custom
+@using RuriLib.Models.Blocks.Custom
 @using RuriLib.Models.Blocks.Custom.HttpRequest
 @using RuriLib.Models.Blocks.Settings
 @inject Microsoft.Extensions.Localization.IStringLocalizer<HttpRequestBlockSettingsViewer> Loc
@@ -27,6 +27,12 @@
     </div>
     <div class="col">
         <BlockInputField BlockSetting="@Block.Settings["alwaysSendContent"]" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <BlockInputField BlockSetting="@Block.Settings["decodeHtml"]" />
     </div>
 </div>
 

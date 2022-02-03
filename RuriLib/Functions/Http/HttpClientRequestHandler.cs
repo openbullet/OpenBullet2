@@ -1,4 +1,4 @@
-﻿using RuriLib.Extensions;
+using RuriLib.Extensions;
 using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Files;
 using RuriLib.Functions.Http.Options;
@@ -374,6 +374,11 @@ namespace RuriLib.Functions.Http
             else
             {
                 data.SOURCE = Encoding.UTF8.GetString(data.RAWSOURCE);
+            }
+
+            if (requestOptions.DecodeHtml)
+            {
+                data.SOURCE = WebUtility.HtmlDecode(data.SOURCE);
             }
 
             data.Logger.Log("Received Payload:", LogColors.ForestGreen);

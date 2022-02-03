@@ -43,6 +43,7 @@ namespace OpenBullet2.Native.Controls
             httpVersionSetting.Setting = vm.HttpRequestBlock.Settings["httpVersion"];
             autoRedirectSetting.Setting = vm.HttpRequestBlock.Settings["autoRedirect"];
             alwaysSendContentSetting.Setting = vm.HttpRequestBlock.Settings["alwaysSendContent"];
+            decodeHtmlSetting.Setting = vm.HttpRequestBlock.Settings["decodeHtml"];
 
             switch (vm.Mode)
             {

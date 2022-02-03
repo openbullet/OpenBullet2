@@ -343,6 +343,7 @@ namespace RuriLib.Models.Blocks.Custom
             writer.Write("HttpVersion = " + GetSettingValue("httpVersion") + ", ");
             writer.Write("CodePagesEncoding = " + GetSettingValue("codePagesEncoding") + ", ");
             writer.Write("AlwaysSendContent = " + GetSettingValue("alwaysSendContent") + ", ");
+            writer.Write("DecodeHtml = " + GetSettingValue("decodeHtml") + ", ");
             writer.Write("UseCustomCipherSuites = " + GetSettingValue("useCustomCipherSuites") + ", ");
             writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
 
