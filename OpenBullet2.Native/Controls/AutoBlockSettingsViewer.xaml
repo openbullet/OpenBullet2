@@ -74,7 +74,7 @@
             Content="Actions:"
             Margin="0 5"
             Foreground="{DynamicResource ForegroundCustom}" />
-        <StackPanel
+        <WrapPanel
             x:Name="actionsPanel"
             HorizontalAlignment="Stretch" />
         <Label 

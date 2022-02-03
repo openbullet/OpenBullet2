@@ -32,6 +32,34 @@ namespace OpenBullet2.Native.Controls
 
         private void CreateControls()
         {
+            CreateSettings();
+
+            foreach (var action in vm.Block.Descriptor.Actions)
+            {
+                var button = new Button
+                {
+                    Foreground = Brush.Get("ForegroundMain"),
+                    Background = Brush.Get("BackgroundPrimary"),
+                    Margin = new Thickness(0, 0, 5, 5),
+                    Content = action.Name
+                };
+
+                button.Click += (sender, e) =>
+                {
+                    action.Delegate.Invoke(vm.Block);
+                    CreateSettings();
+                };
+
+                actionsPanel.Children.Add(button);
+            }
+
+            CreateImages();
+        }
+
+        private void CreateSettings()
+        {
+            settingsPanel.Children.Clear();
+
             foreach (var setting in vm.Block.Settings)
             {
                 UserControl viewer = setting.Value.FixedSetting switch
@@ -52,23 +80,11 @@ namespace OpenBullet2.Native.Controls
                     settingsPanel.Children.Add(viewer);
                 }
             }
+        }
 
-            foreach (var action in vm.Block.Descriptor.Actions)
-            {
-                var button = new Button
-                {
-                    Foreground = Brush.Get("ForegroundMain"),
-                    Background = Brush.Get("BackgroundPrimary"),
-                    Margin = new Thickness(0, 0, 0, 5),
-                    Content = action.Name
-                };
-
-                // TODO: Call global refresh on everything that is displayed after action invocation to make it update changes
-                button.Click += (sender, e) => action.Delegate.Invoke(vm.Block);
-                actionsPanel.Children.Add(button);
-            }
-
-            // TODO: Add images
+        private void CreateImages()
+        {
+            // TODO: Add this
         }
     }
 
