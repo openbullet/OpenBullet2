@@ -105,8 +105,49 @@ namespace RuriLib.Helpers.Blocks
                             Description = category.description,
                             ForegroundColor = category.foregroundColor,
                             BackgroundColor = category.backgroundColor
-                        }
+                        },
+                        Images = method.GetCustomAttributes<Attributes.BlockImage>()
+                        .ToDictionary(a => a.id, a => new BlockImageInfo
+                        {
+                            Name = a.id.ToReadableName(),
+                            MaxWidth = a.maxWidth,
+                            MaxHeight = a.maxHeight
+                        })
                     };
+                }
+            }
+
+            AddBlockActions(assembly);
+        }
+
+        private void AddBlockActions(Assembly assembly)
+        {
+            // Get all types of the assembly
+            var types = assembly.GetTypes();
+            foreach (var type in types)
+            {
+                // Get the methods in the type
+                var methods = type.GetMethods();
+                foreach (var method in methods)
+                {
+                    // Check if the methods has a BlockAction attribute
+                    var attribute = method.GetCustomAttribute<Attributes.BlockAction>();
+                    if (attribute == null) continue;
+
+                    var id = attribute.parentBlockId;
+
+                    // Check if a descriptor with the given id exists
+                    if (!Descriptors.ContainsKey(id))
+                        throw new Exception($"Invalid descriptor id: {id}");
+
+                    // Add the action to the block descriptor
+                    var descriptor = Descriptors[id];
+                    descriptor.Actions.Add(new BlockActionInfo
+                    {
+                        Name = attribute.name ?? method.Name.ToReadableName(),
+                        Description = attribute.description ?? string.Empty,
+                        Delegate = method.CreateDelegate<BlockActionDelegate>()
+                    });
                 }
             }
         }

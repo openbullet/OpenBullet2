@@ -32,7 +32,35 @@
     <BlockInputField BlockSetting="setting" />
 }
 
+@if (Block.Descriptor.Actions.Any())
+{
+    <h6 class="font-weight-bold fg-custom mt-3">@Loc["Actions"]:</h6>
+    @foreach (var action in Block.Descriptor.Actions)
+    {
+        <button class="btn btn-sm btn-primary mr-1" title="@action.Description" @onclick="(() => RunAction(action))">@action.Name</button>
+    }
+}
+
+@if (Block.Descriptor.Images.Any())
+{
+    <h6 class="font-weight-bold fg-custom mt-3">@Loc["Images"]:</h6>
+    @foreach (var image in Block.Descriptor.Images)
+    {
+        <label>@image.Value.Name</label>
+        <InputByteArrayImage
+            MaxWidth="@image.Value.MaxWidth"
+            MaxHeight="@image.Value.MaxHeight"
+            @bind-Bytes="image.Value.Value" />
+    }
+}
+
 @code {
     [Parameter] public AutoBlockInstance Block { get; set; }
     [Parameter] public EventCallback ChangedLabel { get; set; }
+
+    private void RunAction(BlockActionInfo action)
+    {
+        action.Delegate.Invoke(Block);
+        StateHasChanged();
+    }
 }
