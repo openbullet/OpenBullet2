@@ -30,12 +30,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
-        <BlockInputField BlockSetting="@Block.Settings["decodeHtml"]" />
-    </div>
-</div>
-
 <RadzenRadioButtonList @bind-Value="type" TValue="RequestParamsType" Change="@((args) => Change(args))">
     <Items>
         <RadzenRadioButtonListItem Text="Standard" Value="RequestParamsType.Standard" />
@@ -78,6 +72,7 @@
 <BlockInputField BlockSetting="@Block.Settings["maxNumberOfRedirects"]" />
 <BlockInputField BlockSetting="@Block.Settings["absoluteUriInFirstLine"]" />
 <BlockInputField BlockSetting="@Block.Settings["readResponseContent"]" />
+<BlockInputField BlockSetting="@Block.Settings["decodeHtml"]" />
 <BlockInputField BlockSetting="@Block.Settings["codePagesEncoding"]" />
 
 <h6 class="font-weight-bold fg-custom mt-3">@Loc["AdvancedSettings"]:</h6>
