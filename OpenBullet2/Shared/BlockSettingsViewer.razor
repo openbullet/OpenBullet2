@@ -38,7 +38,7 @@
     <h6 class="font-weight-bold fg-custom mt-3">@Loc["Actions"]:</h6>
     @foreach (var action in Block.Descriptor.Actions)
     {
-        <button class="btn btn-sm btn-primary mr-1" title="@action.Description" @onclick="(() => RunAction(action))">@action.Name</button>
+        <button class="btn btn-sm btn-primary mr-1" title="@action.Description" @onclick="(async () => await RunAction(action))">@action.Name</button>
     }
 }
 
