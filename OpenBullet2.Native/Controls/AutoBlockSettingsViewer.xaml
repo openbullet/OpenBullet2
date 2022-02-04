@@ -61,6 +61,7 @@
         <CheckBox
             Margin="5 5 0 0"
             Content="Is Capture"
+            Visibility="{Binding HasReturnValue, Converter={StaticResource ResourceKey=BoolToVis}}"
             IsChecked="{Binding IsCapture}"/>
         <Label 
             Content="Settings:"
