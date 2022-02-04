@@ -49,6 +49,7 @@ namespace OpenBullet2.Native.Controls
                     action.Delegate.Invoke(vm.Block);
                     CreateSettings();
                     CreateImages();
+                    vm.UpdateViewModel();
                 };
 
                 actionsPanel.Children.Add(button);
