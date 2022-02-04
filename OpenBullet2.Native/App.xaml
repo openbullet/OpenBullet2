@@ -124,10 +124,12 @@
                     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MahApps.Styles.ComboBox}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                        <Setter Property="FontFamily" Value="Consolas"/>
                     </Style>
                     <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MahApps.Styles.ComboBoxItem}">
                         <Setter Property="Foreground" Value="{DynamicResource ForegroundInput}"/>
                         <Setter Property="Background" Value="{DynamicResource BackgroundInput}"/>
+                        <Setter Property="FontFamily" Value="Consolas"/>
                     </Style>
 
                     <!-- ICONS -->

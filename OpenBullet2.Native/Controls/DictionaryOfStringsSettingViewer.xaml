@@ -27,9 +27,10 @@
                 </Style>
             </TabControl.ItemContainerStyle>
             <TabItem>
-                <TextBox 
+                <ComboBox 
                     Background="#112"
                     Height="30"
+                    ItemsSource="{Binding Suggestions}"
                     Text="{Binding VariableName, UpdateSourceTrigger=PropertyChanged}" />
             </TabItem>
             <TabItem>

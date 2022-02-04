@@ -1,9 +1,9 @@
-﻿using OpenBullet2.Native.Extensions;
-using OpenBullet2.Native.ViewModels;
+﻿using OpenBullet2.Native.ViewModels;
 using RuriLib.Extensions;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -85,6 +85,8 @@ namespace OpenBullet2.Native.Controls
         public BlockSetting Setting { get; init; }
 
         public string Name => Setting.Name.ToReadableName();
+
+        public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions();
 
         public SettingInputMode Mode
         {

@@ -87,6 +87,8 @@ namespace OpenBullet2.Native.Controls
 
         public string Name => Setting.Name.ToReadableName();
 
+        public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions();
+
         public SettingInputMode Mode
         {
             get => Setting.InputMode;
