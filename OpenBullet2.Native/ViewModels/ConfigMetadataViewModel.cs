@@ -30,7 +30,7 @@ namespace OpenBullet2.Native.ViewModels
             get => Config?.Metadata.Author;
             set
             {
-                Config.Metadata.Category = value;
+                Config.Metadata.Author = value;
                 OnPropertyChanged();
             }
         }
