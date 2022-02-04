@@ -28,6 +28,7 @@
             </TabControl.ItemContainerStyle>
             <TabItem>
                 <ComboBox 
+                    IsEditable="True"
                     Background="#112"
                     Height="30"
                     ItemsSource="{Binding Suggestions}"
