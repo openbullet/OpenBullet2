@@ -37,13 +37,22 @@ namespace OpenBullet2.Shared
                 suggestions.Insert(0, $"input.{slice}");
             }
 
-            // TODO: Ideally only show variables in blocks above this one
             var stack = ConfigService.SelectedConfig.Stack;
-            foreach (var variable in stack.Select(b => GetOutputVariables(b)).SelectMany(v => v).Reverse())
+
+            foreach (var block in stack)
             {
-                if (!string.IsNullOrWhiteSpace(variable) && !suggestions.Contains(variable))
+                // If it's the current block, stop here (we don't want to add variables from this or the next blocks)
+                if (block.Settings.Any(s => s.Value == BlockSetting))
                 {
-                    suggestions.Insert(0, variable);
+                    break;
+                }
+
+                foreach (var variable in GetOutputVariables(block).Reverse())
+                {
+                    if (!string.IsNullOrWhiteSpace(variable) && !suggestions.Contains(variable))
+                    {
+                        suggestions.Insert(0, variable);
+                    }
                 }
             }
 

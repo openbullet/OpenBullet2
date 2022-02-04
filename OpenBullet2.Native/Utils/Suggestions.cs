@@ -2,6 +2,7 @@
 using OpenBullet2.Native.Services;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace OpenBullet2.Native.Utils
 {
     public static class Suggestions
     {
-        public static IEnumerable<string> GetInputVariableSuggestions()
+        public static IEnumerable<string> GetInputVariableSuggestions(BlockSetting setting)
         {
             var debuggerVM = SP.GetService<ViewModelsService>().Debugger;
             var rlSettings = SP.GetService<RuriLibSettingsService>();
@@ -29,13 +30,22 @@ namespace OpenBullet2.Native.Utils
                 suggestions.Insert(0, $"input.{slice}");
             }
 
-            // TODO: Ideally only show variables in blocks above this one
             var stack = configService.SelectedConfig.Stack;
-            foreach (var variable in stack.Select(b => GetOutputVariables(b)).SelectMany(v => v).Reverse())
+
+            foreach (var block in stack)
             {
-                if (!string.IsNullOrWhiteSpace(variable) && !suggestions.Contains(variable))
+                // If it's the current block, stop here (we don't want to add variables from this or the next blocks)
+                if (block.Settings.Any(s => s.Value == setting))
                 {
-                    suggestions.Insert(0, variable);
+                    break;
+                }
+
+                foreach (var variable in GetOutputVariables(block).Reverse())
+                {
+                    if (!string.IsNullOrWhiteSpace(variable) && !suggestions.Contains(variable))
+                    {
+                        suggestions.Insert(0, variable);
+                    }
                 }
             }
 
