@@ -46,7 +46,15 @@ namespace OpenBullet2.Native.Controls
 
                 button.Click += (sender, e) =>
                 {
-                    action.Delegate.Invoke(vm.Block);
+                    try
+                    {
+                        action.Delegate.Invoke(vm.Block);
+                    }
+                    catch (Exception ex)
+                    {
+                        Alert.Exception(ex);
+                    }
+                    
                     CreateSettings();
                     CreateImages();
                     vm.UpdateViewModel();
