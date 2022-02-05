@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -14,7 +14,9 @@ namespace OpenBullet2.Native.Extensions
             {
                 Text = text
             };
-            tr.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
+            var brush = new SolidColorBrush(color);
+            brush.Freeze();
+            tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
         }
 
         public static string[] Lines(this RichTextBox box)
@@ -45,7 +47,9 @@ namespace OpenBullet2.Native.Extensions
             textRange.Select(startPos, endPos);
 
             // Apply property to the selection:
-            textRange.ApplyPropertyValue(TextElement.BackgroundProperty, new SolidColorBrush(color));
+            var brush = new SolidColorBrush(color);
+            brush.Freeze();
+            textRange.ApplyPropertyValue(TextElement.BackgroundProperty, brush);
 
             // Return selection text:
             return rtb.Selection.Text;
