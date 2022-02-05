@@ -431,6 +431,7 @@
                 Grid.Column="0"
                 IsReadOnly="True"
                 IsUndoEnabled="False"
+                UndoLimit="0"
                 BorderThickness="0"
                 Background="{DynamicResource BackgroundSecondary}"
                 Padding="5"
