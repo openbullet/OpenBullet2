@@ -41,6 +41,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             {
                 logRTB.SelectionStart = logRTB.TextLength;
                 logRTB.ScrollToCaret();
+                logRTB.ClearUndoHistory();
             }
             catch
             {
