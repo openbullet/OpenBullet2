@@ -61,6 +61,8 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
+                Application.Current.Dispatcher.Invoke(() => jobLog.Clear());
+                jobLog.BufferSize = obSettingsService.Settings.GeneralSettings.LogBufferSize;
                 await vm.Start();
             }
             catch (Exception ex)
@@ -222,13 +224,7 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 if (obSettingsService.Settings.GeneralSettings.EnableJobLogging)
                 {
-                    jobLogRTB.AppendText(message + Environment.NewLine, color);
-                    jobLogRTB.ScrollToEnd();
-
-                    if (jobLogRTB.Document.Blocks.Count > obSettingsService.Settings.GeneralSettings.LogBufferSize)
-                    {
-                        jobLogRTB.Document.Blocks.Remove(jobLogRTB.Document.Blocks.FirstBlock);
-                    }
+                    jobLog.Append(message, color);
                 }
             });
     }

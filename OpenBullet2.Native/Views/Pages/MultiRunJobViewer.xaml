@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:controls="clr-namespace:OpenBullet2.Native.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="800"
       Title="MultiRunJobViewer">
@@ -426,24 +427,10 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <RichTextBox
-                x:Name="jobLogRTB"
+            <controls:ColoredLog
                 Grid.Column="0"
-                IsReadOnly="True"
-                IsUndoEnabled="False"
-                UndoLimit="0"
-                BorderThickness="0"
-                Background="{DynamicResource BackgroundSecondary}"
-                Padding="5"
-                FontFamily="Consolas"
                 MaxHeight="165"
-                VerticalScrollBarVisibility="Visible">
-                <RichTextBox.Resources>
-                    <Style TargetType="{x:Type Paragraph}">
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </RichTextBox.Resources>
-            </RichTextBox>
+                x:Name="jobLog" />
 
             <StackPanel Grid.Column="1">
                 <Label FontWeight="Bold">DATA</Label>
