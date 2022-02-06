@@ -291,6 +291,10 @@ app {
 
 /* CUSTOM DEFINITIONS -- */
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 /*  INPUTS -- */
 input:not([type=checkbox]), textarea {
     background-color: var(--bg-secondary);
