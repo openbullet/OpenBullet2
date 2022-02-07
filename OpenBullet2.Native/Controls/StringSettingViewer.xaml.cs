@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace OpenBullet2.Native.Controls
 {
@@ -78,6 +79,14 @@ namespace OpenBullet2.Native.Controls
             tabControl.SelectedIndex = 2;
             buttonTabControl.SelectedIndex = 2;
         }
+
+        private void SwitchToInterpolatedMode(object sender, MouseButtonEventArgs e)
+        {
+            vm.Mode = SettingInputMode.Interpolated;
+            vm.InterpValue = vm.Value;
+            tabControl.SelectedIndex = 2;
+            buttonTabControl.SelectedIndex = 2;
+        }
     }
 
     public class StringSettingViewerViewModel : ViewModelBase
@@ -88,6 +97,8 @@ namespace OpenBullet2.Native.Controls
 
         public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
 
+        public bool CanSwitchToInterpolatedMode => Mode == SettingInputMode.Fixed && Value.Contains('<') && Value.Contains('>');
+
         public SettingInputMode Mode
         {
             get => Setting.InputMode;
@@ -95,6 +106,7 @@ namespace OpenBullet2.Native.Controls
             {
                 Setting.InputMode = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
             }
         }
 
@@ -127,6 +139,7 @@ namespace OpenBullet2.Native.Controls
                 var s = Setting.FixedSetting as StringSetting;
                 s.Value = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanSwitchToInterpolatedMode));
             }
         }
 

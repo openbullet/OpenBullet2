@@ -6,13 +6,23 @@
              xmlns:local="clr-namespace:OpenBullet2.Native.Controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="800">
+             d:DesignHeight="60" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
 
         <Label 
             Margin="0 5 0 0"
@@ -39,6 +49,7 @@
                     Background="#111"
                     Height="100"
                     FontFamily="Consolas"
+                    VerticalContentAlignment="Top"
                     TextWrapping="Wrap"
                     AcceptsReturn="True"
                     VerticalScrollBarVisibility="Auto"
@@ -48,6 +59,7 @@
                 <TextBox
                     Background="#121"
                     Height="100"
+                    VerticalContentAlignment="Top"
                     FontFamily="Consolas"
                     TextWrapping="Wrap"
                     AcceptsReturn="True"
@@ -99,6 +111,25 @@
                 </Button>
             </TabItem>
         </TabControl>
+
+        <StackPanel
+            Visibility="{Binding CanSwitchToInterpolatedMode, Converter={StaticResource ResourceKey=BoolToVis}}"
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="0 0 0 5"
+            Orientation="Horizontal">
+            <TextBlock>
+                This setting contains the '&lt;' and '&gt;' characters, do you want to&#160;
+            </TextBlock>
+            <TextBlock
+                Cursor="Hand"
+                TextDecorations="Underline"
+                MouseDown="SwitchToInterpolatedMode"
+                Foreground="{DynamicResource ForegroundCustom}">
+                switch to interpolated mode?
+            </TextBlock>
+        </StackPanel>
 
     </Grid>
 </UserControl>
