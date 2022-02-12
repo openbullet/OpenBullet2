@@ -41,6 +41,12 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <Button x:Name="licenseButton" Style="{StaticResource StyledButton}" Click="OpenLicense" Margin="0 5 5 5">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconBootstrapIcons Kind="TextParagraph" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">License</TextBlock>
+                </StackPanel>
+            </Button>
             <Button x:Name="donateButton" Style="{StaticResource StyledButton}" Click="OpenDonation" Margin="0 5 5 5">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Bitcoin" />

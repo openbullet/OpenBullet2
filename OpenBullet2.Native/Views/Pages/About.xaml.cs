@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Native.Helpers;
+using OpenBullet2.Native.Views.Dialogs;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +14,8 @@ namespace OpenBullet2.Native.Views.Pages
         {
             InitializeComponent();
         }
+
+        private void OpenLicense(object sender, RoutedEventArgs e) => new MainDialog(new LicenseDialog(), "License", true).ShowDialog();
 
         private void OpenDonation(object sender, RoutedEventArgs e) => Url.Open("https://discourse.openbullet.dev/t/donations/3760");
 
