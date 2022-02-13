@@ -5,8 +5,8 @@ RUN apt-get upgrade -yq && apt-get install -yq apt-utils curl git nano wget unzi
 RUN curl -sL https://deb.nodesource.com/setup_current.x | bash - && apt-get install -yq nodejs build-essential
 RUN echo "deb http://deb.debian.org/debian/ unstable main contrib non-free" >> /etc/apt/sources.list.d/debian.list
 RUN apt-get update -yq && apt-get install -y --no-install-recommends firefox chromium
-RUN pip3 install webdrivermanager
-RUN webdrivermanager firefox chrome --linkpath /usr/local/bin
+RUN pip3 install webdrivermanager || true
+RUN webdrivermanager firefox chrome --linkpath /usr/local/bin || true
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 RUN wget $(curl -s https://api.github.com/repos/openbullet/OpenBullet2/releases/latest | grep 'browser_' | cut -d\" -f4)
