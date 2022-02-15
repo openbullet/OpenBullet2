@@ -45,11 +45,13 @@ namespace OpenBullet2.Native.Controls
         private void SpawnKeychain(Keychain keychain)
         {
             var view = new KeychainViewer(keychain);
+
             view.OnDeleted += (s, e) =>
             {
                 vm.DeleteKeychain(view.Keychain);
                 keychainsPanel.Children.Remove(view);
             };
+            
             view.OnMoveUp += (s, e) =>
             {
                 var index = keychainsPanel.Children.IndexOf(view);
@@ -59,7 +61,10 @@ namespace OpenBullet2.Native.Controls
                     keychainsPanel.Children.RemoveAt(index);
                     keychainsPanel.Children.Insert(index - 1, view);
                 }
+
+                vm.MoveKeychainUp(keychain);
             };
+            
             view.OnMoveDown += (s, e) =>
             {
                 var index = keychainsPanel.Children.IndexOf(view);
@@ -69,7 +74,10 @@ namespace OpenBullet2.Native.Controls
                     keychainsPanel.Children.RemoveAt(index);
                     keychainsPanel.Children.Insert(index + 1, view);
                 }
+
+                vm.MoveKeychainDown(keychain);
             };
+
             keychainsPanel.Children.Add(view);
         }
     }
@@ -77,6 +85,11 @@ namespace OpenBullet2.Native.Controls
     public class KeycheckBlockSettingsViewerViewModel : BlockSettingsViewerViewModel
     {
         public KeycheckBlockInstance KeycheckBlock => Block as KeycheckBlockInstance;
+
+        public KeycheckBlockSettingsViewerViewModel(BlockViewModel block) : base(block)
+        {
+
+        }
 
         public Keychain CreateKeychain()
         {
@@ -87,9 +100,26 @@ namespace OpenBullet2.Native.Controls
 
         public void DeleteKeychain(Keychain keychain) => KeycheckBlock.Keychains.Remove(keychain);
 
-        public KeycheckBlockSettingsViewerViewModel(BlockViewModel block) : base(block)
+        public void MoveKeychainUp(Keychain keychain)
         {
+            var index = KeycheckBlock.Keychains.IndexOf(keychain);
 
+            if (index > 0)
+            {
+                KeycheckBlock.Keychains.RemoveAt(index);
+                KeycheckBlock.Keychains.Insert(index - 1, keychain);
+            }
+        }
+
+        public void MoveKeychainDown(Keychain keychain)
+        {
+            var index = KeycheckBlock.Keychains.IndexOf(keychain);
+
+            if (index < KeycheckBlock.Keychains.Count - 1)
+            {
+                KeycheckBlock.Keychains.RemoveAt(index);
+                KeycheckBlock.Keychains.Insert(index + 1, keychain);
+            }
         }
     }
 }
