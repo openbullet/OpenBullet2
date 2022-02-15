@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 6.0.100
     - name: Setup .NET 2.1
       uses: actions/setup-dotnet@v1
       with:
@@ -27,6 +27,8 @@ jobs:
       run: dotnet publish Updater/Updater.csproj -c Release -o .publish/OpenBullet2 
     - name: Build Native
       run: dotnet publish OpenBullet2.Native/OpenBullet2.Native.csproj  -c Release -o .publish/OB2Native
+    - name: Build Console
+      run: dotnet publish OpenBullet2.Console/OpenBullet2.Console.csproj  -c Release -o .publish/OB2Console
     - name: Build Native Updater
       run: dotnet publish Updater.Native/Updater.Native.csproj  -c Release -o .publish/OB2Native
     - name: get ncbeauty
@@ -42,6 +44,9 @@ jobs:
     - name: Zip OB2Native
       shell: pwsh
       run: Compress-Archive -Path .publish/OB2Native/* -DestinationPath .publish/OpenBullet2.Native.zip
+    - name: Zip OB2Console
+      shell: pwsh
+      run: Compress-Archive -Path .publish/OB2Console/* -DestinationPath .publish/OpenBullet2.Console.zip
     - name: Upload OpenBullet2
       uses: svenstaro/upload-release-action@v2
       with:
@@ -56,6 +61,13 @@ jobs:
         file: '.publish/OpenBullet2.Native.zip'
         tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
         overwrite: true
+    - name: Upload OB2Console
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: '.publish/OpenBullet2.Console.zip'
+        tag: ${{ steps.tag_name.outputs.SOURCE_TAG }}
+        overwrite: true
     - name: Checkout Diffcopy repo
       uses: actions/checkout@v2
       with:
@@ -65,7 +77,7 @@ jobs:
       run: dotnet publish DiffCopy/DiffCopy.sln -c Release -o .tools/DiffCopy
     - name: Download Baseline
       shell: pwsh
-      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.1.15/OpenBullet2.zip" -OutFile "baseline.zip"
+      run: Invoke-WebRequest -Uri "https://github.com/openbullet/OpenBullet2/releases/download/0.2.0/OpenBullet2.zip" -OutFile "baseline.zip"
     - name: Unzip Baseline
       shell: pwsh
       run: Expand-Archive  ./baseline.zip -DestinationPath ./baseline
