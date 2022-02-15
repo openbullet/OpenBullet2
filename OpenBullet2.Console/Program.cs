@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using RuriLib.Models.Bots;
 
 namespace OpenBullet2.Console
 {
@@ -115,13 +116,16 @@ Feel free to contribute to the versatility of this project by adding the missing
             // Setup the job
             job = new MultiRunJob(rlSettings, pluginRepo)
             {
-                Providers = new RuriLib.Models.Bots.Providers(rlSettings),
-                Bots = opts.BotsNumber,
                 Config = config,
+                CreationTime = DateTime.Now,
+                ProxyMode = opts.ProxyMode,
+                ProxySources = new List<ProxySource> { new FileProxySource(opts.ProxyFile) { DefaultType = opts.ProxyType } },
+                Providers = new Providers(rlSettings),
+                Bots = opts.BotsNumber,
                 DataPool = new FileDataPool(opts.WordlistFile, opts.WordlistType),
                 HitOutputs = new List<IHitOutput> { new FileSystemHitOutput("UserData/Hits") },
-                ProxyMode = opts.ProxyMode,
-                ProxySources = new List<ProxySource> { new FileProxySource(opts.ProxyFile) { DefaultType = opts.ProxyType } }
+                BotLimit = opts.BotsNumber,
+                CurrentBotDatas = new BotData[opts.BotsNumber]
             };
             
             // Ask custom inputs (if any)
