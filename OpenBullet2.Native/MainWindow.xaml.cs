@@ -7,9 +7,11 @@ using OpenBullet2.Native.Utils;
 using OpenBullet2.Native.ViewModels;
 using OpenBullet2.Native.Views.Pages;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Jobs;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -392,6 +394,7 @@ namespace OpenBullet2.Native
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly OpenBulletSettingsService obSettingsService;
+        private readonly JobManagerService jobManagerService;
         private readonly ConfigService configService;
         public event Action<Config> ConfigSelected;
         public Config Config => configService.SelectedConfig;
@@ -401,6 +404,7 @@ namespace OpenBullet2.Native
         public MainWindowViewModel()
         {
             obSettingsService = SP.GetService<OpenBulletSettingsService>();
+            jobManagerService = SP.GetService<JobManagerService>();
             configService = SP.GetService<ConfigService>();
             configService.OnConfigSelected += (sender, config) =>
             {
@@ -415,6 +419,12 @@ namespace OpenBullet2.Native
             if (obSettingsService.Settings.GeneralSettings.WarnConfigNotSaved && Config != null && Config.HasUnsavedChanges())
             {
                 e.Cancel = !Alert.Choice("Config not saved", $"The config you are editing ({Config.Metadata.Name}) has unsaved changes, are you sure you want to quit?");
+            }
+
+            // Check if there are running jobs
+            else if (jobManagerService.Jobs.Any(j => j.Status != JobStatus.Idle))
+            {
+                e.Cancel = !Alert.Choice("Job(s) running", "One or more jobs are still running, are you sure you want to quit?");
             }
         }
     }
