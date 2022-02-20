@@ -421,8 +421,14 @@ namespace OpenBullet2.Native
                 e.Cancel = !Alert.Choice("Config not saved", $"The config you are editing ({Config.Metadata.Name}) has unsaved changes, are you sure you want to quit?");
             }
 
+            // If already cancelled, we don't need to check any other condition
+            if (e.Cancel)
+            {
+                return;
+            }
+
             // Check if there are running jobs
-            else if (jobManagerService.Jobs.Any(j => j.Status != JobStatus.Idle))
+            if (jobManagerService.Jobs.Any(j => j.Status != JobStatus.Idle))
             {
                 e.Cancel = !Alert.Choice("Job(s) running", "One or more jobs are still running, are you sure you want to quit?");
             }
