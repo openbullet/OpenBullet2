@@ -240,7 +240,7 @@ namespace RuriLib.Models.Jobs
                     foreach (var answer in input.CustomInputsAnswers)
                         (scriptGlobals.input as IDictionary<string, object>).Add(answer.Key, answer.Value);
 
-                    botData.Logger.Log($"[{DateTime.Now.ToShortTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
+                    botData.Logger.Log($"[{DateTime.Now.ToLongTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
 
                     // If it's a DLL config, invoke the method
                     if (input.IsDLL)
