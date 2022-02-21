@@ -62,6 +62,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             {
                 Args = new string[] { args },
                 ExecutablePath = data.Providers.PuppeteerBrowser.ChromeBinaryLocation,
+                IgnoredDefaultArgs = new string[] { "--disable-extensions", "--enable-automation" },
                 Headless = data.ConfigSettings.BrowserSettings.Headless,
                 DefaultViewport = null // This is important
             };
