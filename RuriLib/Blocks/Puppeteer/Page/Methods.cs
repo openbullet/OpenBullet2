@@ -265,7 +265,7 @@ namespace RuriLib.Blocks.Puppeteer.Page
         }
 
         [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
-        public static async Task<string> PuppeteerExecuteJs(BotData data, string expression)
+        public static async Task<string> PuppeteerExecuteJs(BotData data, [MultiLine] string expression)
         {
             data.Logger.LogHeader();
 

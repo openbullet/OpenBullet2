@@ -93,11 +93,18 @@ namespace OpenBullet2.Native.Controls
     {
         public BlockSetting Setting { get; init; }
 
+        private StringSetting FixedSetting => Setting.FixedSetting as StringSetting;
+        private InterpolatedStringSetting InterpolatedSetting => Setting.InterpolatedSetting as InterpolatedStringSetting;
+
         public string Name => Setting.Name.ToReadableName();
 
         public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
 
         public bool CanSwitchToInterpolatedMode => Mode == SettingInputMode.Fixed && Value.Contains('<') && Value.Contains('>');
+
+        public bool MultiLine => FixedSetting.MultiLine;
+        public VerticalAlignment VerticalAlignment => MultiLine ? VerticalAlignment.Top : VerticalAlignment.Center;
+        public int Height => MultiLine ? 100 : 30;
 
         public SettingInputMode Mode
         {

@@ -6,6 +6,8 @@ namespace RuriLib.Models.Blocks.Parameters
     {
         public string DefaultValue { get; set; }
 
+        public bool MultiLine { get; set; } = false;
+
         public StringParameter()
         {
 
@@ -20,6 +22,6 @@ namespace RuriLib.Models.Blocks.Parameters
         }
 
         public override BlockSetting ToBlockSetting()
-            => BlockSettingFactory.CreateStringSetting(Name, DefaultValue, InputMode);
+            => BlockSettingFactory.CreateStringSetting(Name, DefaultValue, InputMode, MultiLine);
     }
 }

@@ -43,4 +43,13 @@ namespace OpenBullet2.Native.Converters
 
         }
     }
+
+    public sealed class BoolToTextWrappingConverter : BooleanConverter<TextWrapping>
+    {
+        public BoolToTextWrappingConverter() :
+            base(TextWrapping.Wrap, TextWrapping.NoWrap)
+        {
+
+        }
+    }
 }

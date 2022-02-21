@@ -45,7 +45,8 @@ namespace RuriLib.Models.Blocks.Settings
                 FixedSetting = new EnumSetting { Value = defaultValue, EnumType = typeof(T) }
             };
 
-        public static BlockSetting CreateStringSetting(string name, string defaultValue = "", SettingInputMode mode = SettingInputMode.Fixed)
+        public static BlockSetting CreateStringSetting(string name, string defaultValue = "",
+            SettingInputMode mode = SettingInputMode.Fixed, bool multiLine = false)
         {
             return new BlockSetting
             {
@@ -54,11 +55,13 @@ namespace RuriLib.Models.Blocks.Settings
                 InputVariableName = defaultValue,
                 InterpolatedSetting = new InterpolatedStringSetting
                 {
-                    Value = defaultValue
+                    Value = defaultValue,
+                    MultiLine = multiLine
                 },
                 FixedSetting = new StringSetting
                 {
-                    Value = defaultValue
+                    Value = defaultValue,
+                    MultiLine = multiLine
                 }
             };
         }

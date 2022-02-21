@@ -247,7 +247,11 @@ namespace RuriLib.Helpers.Blocks
             var dict = new Dictionary<Type, Func<BlockParameter>>
             {
                 { typeof(string), () => new StringParameter
-                    { DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : "" } },
+                    { 
+                        DefaultValue = parameter.HasDefaultValue ? (string)parameter.DefaultValue : "",
+                        MultiLine = parameter.GetCustomAttribute<Attributes.MultiLine>() != null
+                    }
+                },
 
                 { typeof(int), () => new IntParameter
                     { DefaultValue = parameter.HasDefaultValue ? (int)parameter.DefaultValue : 0 } },
