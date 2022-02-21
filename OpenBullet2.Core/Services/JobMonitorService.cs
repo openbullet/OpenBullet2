@@ -59,8 +59,15 @@ namespace OpenBullet2.Core.Services
                 return;
             }
 
-            var json = File.ReadAllText(fileName);
-            TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings).ToList();
+            try
+            {
+                var json = File.ReadAllText(fileName);
+                TriggeredActions = JsonConvert.DeserializeObject<TriggeredAction[]>(json, jsonSettings).ToList();
+            }
+            catch
+            {
+                Console.WriteLine("Failed to deserialize triggered actions from json, recreating them");
+            }
         }
 
         private void SaveStateIfChanged()
