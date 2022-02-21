@@ -115,14 +115,14 @@ namespace RuriLib.Models.Blocks
             // LOG myVar => data.Logger.Log(myVar);
             if ((match = Regex.Match(input, $"^LOG (.+)$")).Success)
             {
-                return $"data.Logger.Log({match.Groups[1].Value});";
+                return $"data.Logger.LogObject({match.Groups[1].Value});";
             }
 
             // CLOG
             // CLOG Tomato "hello" => data.Logger.Log("hello", LogColors.Tomato);
             if ((match = Regex.Match(input, $"^CLOG ([A-Za-z]+) (.+)$")).Success)
             {
-                return $"data.Logger.Log({match.Groups[2].Value}, LogColors.{match.Groups[1].Value});";
+                return $"data.Logger.LogObject({match.Groups[2].Value}, LogColors.{match.Groups[1].Value});";
             }
 
             // WHILE

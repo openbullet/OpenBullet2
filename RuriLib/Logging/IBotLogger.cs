@@ -52,5 +52,11 @@ namespace RuriLib.Logging
         /// Clears all entries of the log.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// Logs the string representation of an <paramref name="obj"/> with a given <paramref name="color"/>.
+        /// If the <paramref name="obj"/> contains HTML code, set <paramref name="canViewAsHtml"/> to true.
+        /// </summary>
+        void LogObject(object obj, string color = "#fff", bool canViewAsHtml = false);
     }
 }

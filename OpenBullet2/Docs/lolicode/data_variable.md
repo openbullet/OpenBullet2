@@ -31,5 +31,6 @@ Note: `data.Proxy` is null if proxies are off, so always make a null check first
 ##### Useful methods
 - `data.MarkForCapture(string varName)` adds the variable name to the `data.MarkedForCapture` list
 - `data.Logger.Log(string message, string htmlColor, bool canViewAsHtml)` htmlColor must be e.g. `#fff` or `white`
+- `data.Logger.LogObject(object obj, string htmlColor, bool canViewAsHtml)`
 - `data.Logger.Log(IEnumerable<string> enumerable, string htmlColor, bool canViewAsHtml)`
 - `data.Logger.Clear()` clears the log
