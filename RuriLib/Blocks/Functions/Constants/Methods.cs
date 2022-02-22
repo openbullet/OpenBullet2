@@ -12,7 +12,7 @@ namespace RuriLib.Blocks.Functions.Constants
     public static class Methods
     {
         [Block("Creates a constant string")]
-        public static string ConstantString(BotData data, string value)
+        public static string ConstantString(BotData data, [MultiLine] string value)
         {
             data.Logger.LogHeader();
             data.Logger.Log($"Set constant value {value}", LogColors.YellowGreen);
