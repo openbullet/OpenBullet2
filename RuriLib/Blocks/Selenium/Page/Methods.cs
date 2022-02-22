@@ -199,7 +199,7 @@ namespace RuriLib.Blocks.Selenium.Page
         }
 
         [Block("Evaluates a js expression in the current page and returns a json response", name = "Execute JS")]
-        public static string SeleniumExecuteJs(BotData data, string expression)
+        public static string SeleniumExecuteJs(BotData data, [MultiLine] string expression)
         {
             data.Logger.LogHeader();
 

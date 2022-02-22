@@ -15,7 +15,14 @@
                         </div>
                     }
                     <div class="col align-self-stretch">
-                        <InputText @bind-Value="@x.Value" />
+                        @if (x.MultiLine)
+                        {
+                            <InputTextArea @bind-Value="@x.Value" />
+                        }
+                        else
+                        {
+                            <InputText @bind-Value="@x.Value" />
+                        }
                     </div>
                     <div class="col-auto ml-0 pl-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />

@@ -15,7 +15,14 @@
                         </div>
                     }
                     <div class="col align-self-stretch">
-                        <input class="bg-interpolated" type="text" @bind="x.Value" />
+                        @if (x.MultiLine)
+                        {
+                            <InputTextArea class="bg-interpolated" @bind-Value="@x.Value" />
+                        }
+                        else
+                        {
+                            <InputText class="bg-interpolated" @bind-Value="@x.Value" />
+                        }
                     </div>
                     <div class="col-auto mr-0 pl-0">
                         <SettingInputModeSelector BlockSetting="BlockSetting" SwitchedMode="@((args) => SwitchedMode.InvokeAsync(args))" />
