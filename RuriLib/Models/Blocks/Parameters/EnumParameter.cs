@@ -21,7 +21,7 @@ namespace RuriLib.Models.Blocks.Parameters
         }
 
         public override BlockSetting ToBlockSetting()
-            => new BlockSetting { Name = Name, FixedSetting = new EnumSetting { EnumType = EnumType, Value = DefaultValue },
+            => new BlockSetting { Name = Name, FixedSetting = new EnumSetting(EnumType) { Value = DefaultValue },
                 InputMode = InputMode };
     }
 }

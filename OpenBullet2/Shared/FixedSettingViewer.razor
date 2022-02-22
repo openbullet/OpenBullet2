@@ -80,8 +80,10 @@
                         </div>
                     }
                     <div class="col align-self-stretch">
-                        <InputSelect @bind-Value="@x.Value">
-                            @foreach (var name in Enum.GetNames(x.EnumType))
+                        <InputSelect ValueExpression="(() => x.PrettyName)"
+                             Value="x.PrettyName"
+                             ValueChanged="(string value) => x.SetFromPrettyName(value)">
+                            @foreach (var name in x.PrettyNames)
                             {
                                 <option value="@name">@name</option>
                             }

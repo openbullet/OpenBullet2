@@ -42,7 +42,7 @@ namespace RuriLib.Models.Blocks.Settings
             {
                 Name = name,
                 InputMode = SettingInputMode.Fixed,
-                FixedSetting = new EnumSetting { Value = defaultValue, EnumType = typeof(T) }
+                FixedSetting = new EnumSetting(typeof(T)) { Value = defaultValue }
             };
 
         public static BlockSetting CreateStringSetting(string name, string defaultValue = "",

@@ -39,17 +39,18 @@ namespace OpenBullet2.Native.Controls
     {
         public BlockSetting Setting { get; init; }
 
+        private EnumSetting FixedSetting => Setting.FixedSetting as EnumSetting;
+
         public string Name => Setting.Name.ToReadableName();
 
-        public IEnumerable<string> Values => Enum.GetNames((Setting.FixedSetting as EnumSetting).EnumType);
+        public IEnumerable<string> Values => FixedSetting.PrettyNames;
 
         public string Value
         {
-            get => (Setting.FixedSetting as EnumSetting).Value;
+            get => FixedSetting.PrettyName;
             set
             {
-                var s = Setting.FixedSetting as EnumSetting;
-                s.Value = value;
+                FixedSetting.SetFromPrettyName(value);
                 OnPropertyChanged();
             }
         }
