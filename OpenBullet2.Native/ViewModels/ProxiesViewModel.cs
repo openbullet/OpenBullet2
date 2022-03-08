@@ -140,11 +140,11 @@ namespace OpenBullet2.Native.ViewModels
                 }
             }
 
-            var toRemove = selectedGroup;
+            await proxyRepo.Delete(ProxiesCollection);
+            await proxyGroupRepo.Delete(selectedGroup);
+
             SelectedGroupId = allGroup.Id;
 
-            await proxyRepo.Delete(ProxiesCollection);
-            await proxyGroupRepo.Delete(toRemove);
             await RefreshGroups();
         }
 
