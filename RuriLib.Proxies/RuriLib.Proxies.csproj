@@ -6,7 +6,7 @@
     <PackageProjectUrl>https://github.com/openbullet/OpenBullet2/tree/master/RuriLib.Proxies</PackageProjectUrl>
     <Description>This is a library that can proxy a `TcpClient` via a proxy server. Supported protocols: HTTP(S), SOCKS4, SOCKS4a, SOCKS5, No proxy</Description>
     <PackageTags>proxy; proxies; http; socks; socks4; socks4a; socks5; tcpclient;</PackageTags>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Ruri</Authors>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
