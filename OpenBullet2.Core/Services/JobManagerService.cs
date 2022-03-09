@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Services
 {
@@ -141,7 +142,6 @@ namespace OpenBullet2.Core.Services
             }
         }
 
-        // Saves the options for a MultiRunJob in the IRecordRepository. Thread safe.
         private async void SaveMultiRunJobOptions(object sender, EventArgs e)
         {
             if (sender is not MultiRunJob job)
@@ -149,6 +149,12 @@ namespace OpenBullet2.Core.Services
                 return;
             }
 
+            await SaveMultiRunJobOptions(job);
+        }
+
+        // Saves the options for a MultiRunJob in the IJobRepository. Thread safe.
+        public async Task SaveMultiRunJobOptions(MultiRunJob job)
+        {
             await jobSemaphore.WaitAsync();
 
             try

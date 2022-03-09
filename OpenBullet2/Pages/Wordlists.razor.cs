@@ -172,6 +172,8 @@ namespace OpenBullet2.Pages
                             Id = selectedWordlist.Id,
                             Total = selectedWordlist.Total
                         });
+
+                        await JobManager.SaveMultiRunJobOptions(job);
                     }
                 }
             }
