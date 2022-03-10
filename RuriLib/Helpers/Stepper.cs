@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Helpers
 {
+    // TODO: Rework this with a better pattern (StepTokenSource and StepToken)
+    // see PauseTokenSource and PauseToken for inspiration. This works but it's not very
+    // good pattern-wise, it would be better with a publisher/consumer model.
     public class Stepper
     {
         private CancellationTokenSource waitCts;
