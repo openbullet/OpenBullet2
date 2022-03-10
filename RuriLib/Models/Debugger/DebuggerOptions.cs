@@ -43,5 +43,11 @@ namespace RuriLib.Models.Debugger
         /// The list of variables that were found during the last debug.
         /// </summary>
         public List<Variable> Variables { get; set; } = new List<Variable>();
+
+        /// <summary>
+        /// Whether to debug the config in step by step mode, waiting for
+        /// user input before proceeding with the next block.
+        /// </summary>
+        public bool StepByStep { get; set; } = false;
     }
 }

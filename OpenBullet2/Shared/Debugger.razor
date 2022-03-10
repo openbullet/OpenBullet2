@@ -1,14 +1,19 @@
 ﻿@using RuriLib.Models.Variables
+@using RuriLib.Models.Debugger
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Debugger> Loc
 
 <div class="container-fluid my-3">
     <div class="row">
         <div class="list-group list-group-horizontal mb-3">
-            @if (debugger is null || !debugger.IsRunning)
+            @if (debugger is null || debugger.Status is ConfigDebuggerStatus.Idle)
             {
                 <button class="btn btn-sm btn-outline-success" @onclick="Run"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             }
-            else
+            @if (debugger is not null && debugger.Status is ConfigDebuggerStatus.WaitingForStep)
+            {
+                <button class="btn btn-sm btn-outline-primary" @onclick="TakeStep"><span class="oi oi-arrow-thick-right"></span> @Loc["TakeStep"]</button>
+            }
+            @if (debugger is not null && debugger.Status is ConfigDebuggerStatus.Running or ConfigDebuggerStatus.WaitingForStep)
             {
                 <button class="btn btn-sm btn-outline-danger" @onclick="Stop"><span class="oi oi-media-stop"></span> @Loc["Stop"]</button>
             }
@@ -24,6 +29,10 @@
     </div>
     <EditForm Model="options">
         <div class="row">
+            <div class="col-auto pl-0 ml-0">
+                <label>SBS</label>
+                <InputCheckbox @bind-Value="options.StepByStep" />
+            </div>
             <div class="col-auto pl-0 ml-0">
                 <label>@Loc["TestData"]</label>
             </div>

@@ -56,6 +56,8 @@ namespace OpenBullet2.Native.Views.Pages.Shared
             }
         }
 
+        private void TakeStep(object sender, RoutedEventArgs e) => vm.TakeStep();
+
         private void Stop(object sender, RoutedEventArgs e) => vm.Stop();
 
         private void NewLogEntry(object sender, BotLoggerEntry entry)

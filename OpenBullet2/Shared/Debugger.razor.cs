@@ -49,8 +49,7 @@ namespace OpenBullet2.Shared
                 };
 
                 debugger.NewLogEntry += OnNewEntry;
-                debugger.Started += (s, e) => InvokeAsync(StateHasChanged);
-                debugger.Stopped += (s, e) => InvokeAsync(StateHasChanged);
+                debugger.StatusChanged += UpdateState;
 
                 await debugger.Run();
             }
@@ -66,14 +65,15 @@ namespace OpenBullet2.Shared
             finally
             {
                 debugger.NewLogEntry -= OnNewEntry;
-                debugger.Started -= (s, e) => InvokeAsync(StateHasChanged);
-                debugger.Stopped -= (s, e) => InvokeAsync(StateHasChanged);
+                debugger.StatusChanged -= UpdateState;
             }
 
             await loggerViewer?.Refresh();
             variablesViewer?.Refresh();
             await InvokeAsync(StateHasChanged);
         }
+
+        private void TakeStep() => debugger?.TryTakeStep();
 
         private void Stop() => debugger?.Stop();
 
@@ -82,5 +82,7 @@ namespace OpenBullet2.Shared
 
         private void ToggleView()
             => showVariables = !showVariables;
+
+        private void UpdateState(object sender, ConfigDebuggerStatus status) => InvokeAsync(StateHasChanged);
     }
 }

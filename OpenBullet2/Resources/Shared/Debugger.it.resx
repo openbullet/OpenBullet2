@@ -141,6 +141,9 @@
   <data name="Stop" xml:space="preserve">
     <value>Ferma</value>
   </data>
+  <data name="TakeStep" xml:space="preserve">
+    <value>Prossimo Step</value>
+  </data>
   <data name="TestData" xml:space="preserve">
     <value>Dati di test</value>
   </data>

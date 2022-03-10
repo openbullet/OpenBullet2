@@ -57,6 +57,7 @@ namespace RuriLib.Helpers.CSharp
         {
             var usings = new List<string>
             {
+                "RuriLib.Helpers",
                 "RuriLib.Logging",
                 "RuriLib.Extensions",
                 "RuriLib.Models.Bots",

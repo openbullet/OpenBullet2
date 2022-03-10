@@ -23,8 +23,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-        <Grid Grid.Row="0" Margin="0 5 0 0">
+        <Grid Grid.Row="0" Margin="5 5 0 0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
@@ -32,13 +33,16 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="0" Content="Data" VerticalAlignment="Center" />
-            <TextBox Grid.Column="1" Text="{Binding TestData}" Height="30" Margin="5 0" />
-            <Label Grid.Column="2" Content="Wordlist Type" VerticalAlignment="Center" />
-            <ComboBox Grid.Column="3" 
+            <CheckBox FlowDirection="RightToLeft" Grid.Column="0" IsChecked="{Binding StepByStep}">
+                <TextBlock FlowDirection="LeftToRight" Text="SBS" ToolTip="Step by Step mode" />
+            </CheckBox>
+            <Label Grid.Column="1" Content="Data" VerticalAlignment="Center" />
+            <TextBox Grid.Column="2" Text="{Binding TestData}" Height="30" Margin="5 0" />
+            <Label Grid.Column="3" Content="Wordlist Type" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="4" 
                 ItemsSource="{Binding WordlistTypes}"
                 SelectedItem="{Binding WordlistType}" Height="30" Margin="5 0" />
-            <CheckBox Grid.Column="4" Content="Persist log" IsChecked="{Binding PersistLog}"/>
+            <CheckBox Grid.Column="5" Content="Persist log" IsChecked="{Binding PersistLog}"/>
         </Grid>
 
         <Grid Grid.Row="1" Margin="5 5 0 0">
@@ -55,29 +59,42 @@
             <TextBox Grid.Column="2" Text="{Binding TestProxy}" Height="30" Margin="5 0" />
             <ComboBox Grid.Column="3" 
                 ItemsSource="{Binding ProxyTypes}"
-                SelectedItem="{Binding ProxyType}" Height="30" Margin="5 0" />
-            <Button Click="Start"
+                SelectedItem="{Binding ProxyType}" Height="30" Margin="5 0 0 0" />
+            <StackPanel Grid.Column="4" Orientation="Horizontal">
+                <Button Click="Start"
                     Style="{StaticResource StyledSuccessButton}"
                     Width="60"
-                    Grid.Column="4"
+                    Margin="5 0 0 0"
                     HorizontalAlignment="Left"
                     Visibility="{Binding CanStart, Converter={StaticResource ResourceKey=BoolToVis}}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconEntypo Kind="ControllerPlay" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Click="Stop"
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Start</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="TakeStep"
+                    Style="{StaticResource StyledPrimaryButton}"
+                    Width="80"
+                    Margin="5 0 0 0"
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding CanTakeStep, Converter={StaticResource ResourceKey=BoolToVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerPlay" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Take Step</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="Stop"
                     Style="{StaticResource StyledDangerButton}"
                     Width="60"
-                    Grid.Column="4"
+                    Margin="5 0 0 0"
                     HorizontalAlignment="Left"
                     Visibility="{Binding CanStop, Converter={StaticResource ResourceKey=BoolToVis}}">
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconEntypo Kind="ControllerStop" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
-                </StackPanel>
-            </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconEntypo Kind="ControllerStop" />
+                        <TextBlock VerticalAlignment="Center" Margin="5 0">Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <TabControl Grid.Row="2" 

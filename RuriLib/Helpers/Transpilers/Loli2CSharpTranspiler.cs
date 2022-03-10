@@ -12,10 +12,10 @@ namespace RuriLib.Helpers.Transpilers
         /// Transpiles a LoliCode script to a C# script string.
         /// You can use the <see cref="ScriptBuilder"/> to compile it to an executable script.
         /// </summary>
-        public static string Transpile(string script, ConfigSettings settings)
+        public static string Transpile(string script, ConfigSettings settings, bool stepByStep = false)
         {
             var stack = Loli2StackTranspiler.Transpile(script);
-            return Stack2CSharpTranspiler.Transpile(stack, settings);
+            return Stack2CSharpTranspiler.Transpile(stack, settings, stepByStep);
         }
     }
 }
