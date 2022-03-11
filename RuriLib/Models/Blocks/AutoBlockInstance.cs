@@ -194,8 +194,16 @@ namespace RuriLib.Models.Blocks
                 writer.WriteLine(";");
             }
 
-            if (IsCapture)
-                writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");
+            // If the block has a return type, log which variable was written
+            if (Descriptor.ReturnType.HasValue)
+            {
+                writer.WriteLine($"data.LogVariableAssignment(nameof({OutputVariable}));");
+
+                if (IsCapture)
+                {
+                    writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");
+                }
+            }
         }
 
         // This is needed otherwise when we have blocks made in other plugins they might reference

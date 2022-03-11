@@ -65,6 +65,9 @@ namespace RuriLib.Models.Bots
             UseProxy = useProxy;
         }
 
+        public void LogVariableAssignment(string name)
+            => Logger.Log($"Assigned value to variable '{name}'", LogColors.Yellow);
+
         public void MarkForCapture(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -73,7 +76,7 @@ namespace RuriLib.Models.Bots
             if (!MarkedForCapture.Contains(name))
             {
                 MarkedForCapture.Add(name);
-                Logger.Log($"Variable {name} marked for capture", LogColors.Tomato);
+                Logger.Log($"Variable '{name}' marked for capture", LogColors.Tomato);
             }
         }
 
@@ -85,7 +88,7 @@ namespace RuriLib.Models.Bots
             if (MarkedForCapture.Contains(name))
             {
                 MarkedForCapture.Remove(name);
-                Logger.Log($"Variable {name} removed from capture", LogColors.Yellow);
+                Logger.Log($"Variable '{name}' removed from capture", LogColors.Yellow);
             }
         }
 

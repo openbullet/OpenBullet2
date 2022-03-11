@@ -18,6 +18,10 @@ namespace RuriLib.Helpers
 
         public event EventHandler WaitingForStep;
 
+        /// <summary>
+        /// Asynchronously waits until the <see cref="Stepper.TryTakeStep"/> method is called,
+        /// or the <paramref name="cancellationToken"/> is cancelled.
+        /// </summary>
         public async Task WaitForStepAsync(CancellationToken cancellationToken = default)
         {
             // If the user cancelled the work, throw

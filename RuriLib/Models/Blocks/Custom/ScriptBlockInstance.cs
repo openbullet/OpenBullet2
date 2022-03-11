@@ -237,6 +237,11 @@ return noderesult;
                     break;
             }
 
+            foreach (var output in OutputVariables)
+            {
+                writer.WriteLine($"data.LogVariableAssignment(nameof({output.Name}));");
+            }
+
             return writer.ToString();
         }
 

@@ -207,8 +207,12 @@ namespace RuriLib.Models.Blocks.Custom
             writer.Write(CSharpWriter.FromSetting(Settings["urlEncodeOutput"]));
             writer.WriteLine(");");
 
+            writer.WriteLine($"data.LogVariableAssignment(nameof({OutputVariable}));");
+
             if (IsCapture)
+            {
                 writer.WriteLine($"data.MarkForCapture(nameof({OutputVariable}));");
+            }
 
             return writer.ToString();
         }
