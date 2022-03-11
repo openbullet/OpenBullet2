@@ -77,7 +77,7 @@ namespace RuriLib.Tests.Models.Blocks
 
             var declaredVariables = new List<string> { };
 
-            var expected = "string myOutput = Substring(data, myInput.AsString(), 3, 5);\r\n";
+            var expected = "string myOutput = Substring(data, myInput.AsString(), 3, 5);\r\ndata.LogVariableAssignment(nameof(myOutput));\r\n";
             Assert.Equal(expected, block.ToCSharp(declaredVariables, new ConfigSettings()));
         }
 
@@ -102,7 +102,7 @@ namespace RuriLib.Tests.Models.Blocks
 
             var declaredVariables = new List<string> { };
 
-            var expected = "string myOutput = Substring(data, myInput.AsString(), 3, 5);\r\ndata.MarkForCapture(nameof(myOutput));\r\n";
+            var expected = "string myOutput = Substring(data, myInput.AsString(), 3, 5);\r\ndata.LogVariableAssignment(nameof(myOutput));\r\ndata.MarkForCapture(nameof(myOutput));\r\n";
             Assert.Equal(expected, block.ToCSharp(declaredVariables, new ConfigSettings()));
         }
 
@@ -146,7 +146,7 @@ namespace RuriLib.Tests.Models.Blocks
 
             var declaredVariables = new List<string> { "myOutput" };
 
-            var expected = "myOutput = Substring(data, $\"my {interp} string\", 3, myLength.AsInt());\r\n";
+            var expected = "myOutput = Substring(data, $\"my {interp} string\", 3, myLength.AsInt());\r\ndata.LogVariableAssignment(nameof(myOutput));\r\n";
             Assert.Equal(expected, block.ToCSharp(declaredVariables, new ConfigSettings()));
         }
     }
