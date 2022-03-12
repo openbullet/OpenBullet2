@@ -79,7 +79,7 @@ namespace RuriLib.Helpers.LoliCode
                     ListOfStringsParameter _ => new ListOfStringsSetting(),
                     DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting(),
                     ByteArrayParameter _ => new ByteArraySetting(),
-                    EnumParameter x => new EnumSetting(x.EnumType),
+                    EnumParameter x => new EnumSetting() { EnumType = x.EnumType },
                     _ => throw new NotSupportedException()
                 };
             }
@@ -111,7 +111,7 @@ namespace RuriLib.Helpers.LoliCode
                     BoolParameter _ => new BoolSetting { Value = LineParser.ParseBool(ref input) },
                     ByteArrayParameter _ => new ByteArraySetting { Value = LineParser.ParseByteArray(ref input) },
                     DictionaryOfStringsParameter _ => new DictionaryOfStringsSetting { Value = LineParser.ParseDictionary(ref input) },
-                    EnumParameter x => new EnumSetting(x.EnumType) { Value = LineParser.ParseToken(ref input) },
+                    EnumParameter x => new EnumSetting { EnumType = x.EnumType, Value = LineParser.ParseToken(ref input) },
                     FloatParameter _ => new FloatSetting { Value = LineParser.ParseFloat(ref input) },
                     IntParameter _ => new IntSetting { Value = LineParser.ParseInt(ref input) },
                     ListOfStringsParameter _ => new ListOfStringsSetting { Value = LineParser.ParseList(ref input) },
