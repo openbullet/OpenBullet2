@@ -31,7 +31,7 @@
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="Svg" Version="3.2.3" />
     <PackageReference Include="System.CodeDom" Version="5.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Websocket.Client" Version="4.3.30" />
     <PackageReference Include="Yove.Proxy" Version="1.1.1" />
   </ItemGroup>
