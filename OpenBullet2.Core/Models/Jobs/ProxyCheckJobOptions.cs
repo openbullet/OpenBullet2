@@ -27,7 +27,7 @@ namespace OpenBullet2.Core.Models.Jobs
         /// <summary>
         /// The target site against which proxies should be checked.
         /// </summary>
-        public ProxyCheckTarget? Target { get; set; } = null;
+        public ProxyCheckTarget Target { get; set; } = null;
 
         /// <summary>
         /// The maximum timeout that a valid proxy should have, in milliseconds.
