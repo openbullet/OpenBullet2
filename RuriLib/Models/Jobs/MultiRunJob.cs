@@ -146,19 +146,6 @@ namespace RuriLib.Models.Jobs
                 var botData = input.BotData;
                 botData.CancellationToken = token;
 
-                // Check if the data respects rules
-                if (!botData.Line.IsValid || !botData.Line.RespectsRules(botData.ConfigSettings.DataSettings.DataRules))
-                {
-                    botData.STATUS = "INVALID";
-
-                    // RETURN THE RESULT
-                    return new CheckResult
-                    {
-                        BotData = botData,
-                        OutputVariables = new()
-                    };
-                }
-
                 botData.CancellationToken = token;
                 ScriptState scriptState = null;
                 LSGlobals lsGlobals = null; // Legacy
@@ -197,187 +184,196 @@ namespace RuriLib.Models.Jobs
                 // Add this BotData to the array for detailed MultiRunJob display mode
                 input.Job.CurrentBotDatas[(int)(input.Index++ % input.Job.Bots)] = botData;
 
-                START:
-                token.ThrowIfCancellationRequested();
-                botData.ResetState();
-
-                try
+                while (true)
                 {
-                    // This is important! Otherwise we reuse the same proxy
-                    botData.Proxy = null;
-                    botData.UseProxy = ShouldUseProxies(input.Job.ProxyMode, botData.ConfigSettings.ProxySettings);
+                    token.ThrowIfCancellationRequested();
+                    botData.ResetState();
 
-                    // Get a hold of a proxy
-                    if (botData.UseProxy)
+                    try
                     {
-                        GETPROXY:
-                        token.ThrowIfCancellationRequested();
+                        // This is important! Otherwise we reuse the same proxy
+                        botData.Proxy = null;
+                        botData.UseProxy = ShouldUseProxies(input.Job.ProxyMode, botData.ConfigSettings.ProxySettings);
 
-                        lock (input.ProxyPool)
+                        // Get a hold of a proxy
+                        if (botData.UseProxy)
                         {
-                            botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
-                                input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                            while (true)
+                            {
+                                token.ThrowIfCancellationRequested();
+
+                                lock (input.ProxyPool)
+                                {
+                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
+                                        input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                }
+
+                                if (botData.Proxy == null)
+                                {
+                                    if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
+                                    {
+                                        await input.ProxyPool.ReloadAll().ConfigureAwait(false);
+                                    }
+                                    else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
+                                    {
+                                        input.ProxyPool.UnbanAll(input.Job.ProxyBanTime);
+                                    }
+
+                                    continue;
+                                }
+
+                                break;
+                            }
                         }
 
-                        if (botData.Proxy == null)
+                        var scriptGlobals = new ScriptGlobals(botData, input.Globals);
+
+                        // Set custom inputs answers
+                        foreach (var answer in input.CustomInputsAnswers)
+                            (scriptGlobals.input as IDictionary<string, object>).Add(answer.Key, answer.Value);
+
+                        botData.Logger.Log($"[{DateTime.Now.ToLongTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
+
+                        // If it's a DLL config, invoke the method
+                        if (input.IsDLL)
                         {
-                            if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
+                            var task = (Task)input.DLLMethod.Invoke(null, new object[]
                             {
-                                await input.ProxyPool.ReloadAll().ConfigureAwait(false);
-                            }
-                            else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
-                            {
-                                input.ProxyPool.UnbanAll(input.Job.ProxyBanTime);
-                            }
-                            
-                            goto GETPROXY;
-                        }
-                    }
-
-                    var scriptGlobals = new ScriptGlobals(botData, input.Globals);
-
-                    // Set custom inputs answers
-                    foreach (var answer in input.CustomInputsAnswers)
-                        (scriptGlobals.input as IDictionary<string, object>).Add(answer.Key, answer.Value);
-
-                    botData.Logger.Log($"[{DateTime.Now.ToLongTimeString()}] BOT STARTED WITH DATA {botData.Line.Data} AND PROXY {botData.Proxy}");
-
-                    // If it's a DLL config, invoke the method
-                    if (input.IsDLL)
-                    {
-                        var task = (Task)input.DLLMethod.Invoke(null, new object[]
-                        {
                             botData,
                             scriptGlobals.input,
                             scriptGlobals.globals,
                             outputVariables,
                             token
-                        });
+                            });
 
-                        await task.ConfigureAwait(false);
-                        
-                    }
-                    // If it's a legacy config, run the LoliScript engine
-                    else if (input.IsLegacy)
-                    {
-                        var loliScript = new LoliScript(input.LegacyLoliScript);
+                            await task.ConfigureAwait(false);
 
-                        do
-                        {
-                            if (botData.CancellationToken.IsCancellationRequested)
-                            {
-                                break;
-                            }
-
-                            await loliScript.TakeStep(lsGlobals);
                         }
-                        while (loliScript.CanProceed);
-                    }
-                    // Otherwise run the compiled script
-                    else
-                    {
-                        scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    botData.STATUS = "ERROR";
-                    botData.Logger.Log($"[{botData.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
-                    Interlocked.Increment(ref input.Job.dataErrors);
-                }
-                finally
-                {
-                    var endMessage = $"[{DateTime.Now.ToLongTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
-                    botData.ExecutingBlock(endMessage);
-                    botData.Logger.Log(endMessage);
-
-                    // Close the browser if needed
-                    if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
-                    {
-                        botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
-                    }
-                    else
-                    {
-                        botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
-                    }
-                }
-
-                // Update captcha credit
-                if (botData.CaptchaCredit > 0)
-                {
-                    input.Job.CaptchaCredit = botData.CaptchaCredit;
-                }
-
-                if (botData.Proxy != null)
-                {
-                    // If a ban status occurred, ban the proxy
-                    if (input.BotData.ConfigSettings.ProxySettings.BanProxyStatuses.Contains(botData.STATUS))
-                        input.ProxyPool.ReleaseProxy(input.BotData.Proxy, !input.Job.NeverBanProxies);
-
-                    // Otherwise set it to available
-                    else if (botData.Proxy.ProxyStatus == ProxyStatus.Busy)
-                        input.ProxyPool.ReleaseProxy(input.BotData.Proxy, false);
-                }
-
-                // If we aborted
-                if (token.IsCancellationRequested)
-                {
-                    // Optionally send to tocheck and return the result normally
-                    if (input.Job.MarkAsToCheckOnAbort)
-                    {
-                        input.Job.DebugLog($"TO CHECK ON ABORT ({botData.Line.Data})({botData.Proxy})");
-                        botData.STATUS = "NONE";
-                    }
-                    // Otherwise just throw
-                    else
-                    {
-                        input.Job.DebugLog("TASK HARD CANCELED");
-                        throw new TaskCanceledException();
-                    }
-                }
-                else if (botData.STATUS == "RETRY")
-                {
-                    if (botData.ConfigSettings.GeneralSettings.ReportLastCaptchaOnRetry)
-                    {
-                        var lastCaptcha = botData.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
-
-                        if (lastCaptcha is not null)
+                        // If it's a legacy config, run the LoliScript engine
+                        else if (input.IsLegacy)
                         {
-                            try
-                            {
-                                botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
-                                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
-                                botData.ExecutingBlock("Bad captcha reported!");
-                            }
-                            catch
-                            {
+                            var loliScript = new LoliScript(input.LegacyLoliScript);
 
+                            do
+                            {
+                                if (botData.CancellationToken.IsCancellationRequested)
+                                {
+                                    break;
+                                }
+
+                                await loliScript.TakeStep(lsGlobals);
                             }
+                            while (loliScript.CanProceed);
+                        }
+                        // Otherwise run the compiled script
+                        else
+                        {
+                            scriptState = await input.Script.RunAsync(scriptGlobals, null, token).ConfigureAwait(false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        botData.STATUS = "ERROR";
+                        botData.Logger.Log($"[{botData.ExecutionInfo}] {ex.GetType().Name}: {ex.Message}", LogColors.Tomato);
+                        Interlocked.Increment(ref input.Job.dataErrors);
+                    }
+                    finally
+                    {
+                        var endMessage = $"[{DateTime.Now.ToLongTimeString()}] BOT ENDED WITH STATUS: {botData.STATUS}";
+                        botData.ExecutingBlock(endMessage);
+                        botData.Logger.Log(endMessage);
+
+                        // Close the browser if needed
+                        if (botData.ConfigSettings.BrowserSettings.QuitBrowserStatuses.Contains(botData.STATUS))
+                        {
+                            botData.DisposeObjectsExcept(new[] { "httpClient", "ironPyEngine" });
+                        }
+                        else
+                        {
+                            botData.DisposeObjectsExcept(new[] { "puppeteer", "puppeteerPage", "puppeteerFrame", "httpClient", "ironPyEngine" });
                         }
                     }
 
-                    input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
-                    Interlocked.Increment(ref input.Job.dataRetried);
-                    goto START;
-                }
-                else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
-                {
-                    botData.Line.Retries++;
-                    var evasion = botData.ConfigSettings.ProxySettings.BanLoopEvasion;
-
-                    if (evasion > 0 && botData.Line.Retries > evasion)
+                    // Update captcha credit
+                    if (botData.CaptchaCredit > 0)
                     {
-                        botData.STATUS = "NONE";
-                        input.Job.DebugLog($"TO CHECK ON BAN LOOP EVASION ({botData.Line.Data})({botData.Proxy})");
+                        input.Job.CaptchaCredit = botData.CaptchaCredit;
+                    }
+
+                    if (botData.Proxy != null)
+                    {
+                        // If a ban status occurred, ban the proxy
+                        if (input.BotData.ConfigSettings.ProxySettings.BanProxyStatuses.Contains(botData.STATUS))
+                            input.ProxyPool.ReleaseProxy(input.BotData.Proxy, !input.Job.NeverBanProxies);
+
+                        // Otherwise set it to available
+                        else if (botData.Proxy.ProxyStatus == ProxyStatus.Busy)
+                            input.ProxyPool.ReleaseProxy(input.BotData.Proxy, false);
+                    }
+
+                    // If we aborted
+                    if (token.IsCancellationRequested)
+                    {
+                        // Optionally send to tocheck and return the result normally
+                        if (input.Job.MarkAsToCheckOnAbort)
+                        {
+                            input.Job.DebugLog($"TO CHECK ON ABORT ({botData.Line.Data})({botData.Proxy})");
+                            botData.STATUS = "NONE";
+                        }
+                        // Otherwise just throw
+                        else
+                        {
+                            input.Job.DebugLog("TASK HARD CANCELED");
+                            throw new TaskCanceledException();
+                        }
+                    }
+                    else if (botData.STATUS == "RETRY")
+                    {
+                        if (botData.ConfigSettings.GeneralSettings.ReportLastCaptchaOnRetry)
+                        {
+                            var lastCaptcha = botData.TryGetObject<CaptchaInfo>("lastCaptchaInfo");
+
+                            if (lastCaptcha is not null)
+                            {
+                                try
+                                {
+                                    botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
+                                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                                    await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
+                                    botData.ExecutingBlock("Bad captcha reported!");
+                                }
+                                catch
+                                {
+
+                                }
+                            }
+                        }
+
+                        input.Job.DebugLog($"RETRY ({botData.Line.Data})({botData.Proxy})");
+                        Interlocked.Increment(ref input.Job.dataRetried);
+                    }
+                    else if (botData.STATUS == "BAN" || botData.STATUS == "ERROR")
+                    {
+                        botData.Line.Retries++;
+                        var evasion = botData.ConfigSettings.ProxySettings.BanLoopEvasion;
+
+                        if (evasion > 0 && botData.Line.Retries > evasion)
+                        {
+                            botData.STATUS = "NONE";
+                            input.Job.DebugLog($"TO CHECK ON BAN LOOP EVASION ({botData.Line.Data})({botData.Proxy})");
+                            break;
+                        }
+                        else
+                        {
+                            input.Job.DebugLog($"BAN ({botData.Line.Data})({botData.Proxy})");
+                            Interlocked.Increment(ref input.Job.dataBanned);
+                        }
                     }
                     else
                     {
-                        input.Job.DebugLog($"BAN ({botData.Line.Data})({botData.Proxy})");
-                        Interlocked.Increment(ref input.Job.dataBanned);
-                        goto START;
+                        break;
                     }
-                }
+                }           
 
                 if (input.IsDLL)
                 {
@@ -569,6 +565,10 @@ namespace RuriLib.Models.Jobs
 
                     return input;
                 });
+
+                // Check before for avoid useless confition in running ?
+                // Check if the data respects rules
+                workItems = workItems.Where(i => i.BotData.Line.IsValid && i.BotData.Line.RespectsRules(i.BotData.ConfigSettings.DataSettings.DataRules));
 
                 parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                     .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems,
