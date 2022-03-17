@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+    openbullet2:
+        restart: unless-stopped
+        ports:
+            - '8069:5000'
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+        volumes:
+        # Change UserData to the location of where you want UserData folder to be placed
+        # This currently assumes your on linux and want the folder in the same location as the docker-compose file
+        # You can set a windows dir like 'C:/OB2/UserData/:/app/UserData/' but it will always be 'local dir:docker dir'
+            - './UserData:/app/UserData/'
+        image: 'openbullet/openbullet2:latest'
+
+    # Watchtower will auto update OB2 for you when it sees a new release
+    watchtower:
+        image: containrrr/watchtower
+        restart: always
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /etc/timezone:/etc/timezone:ro
+        environment:
+            - WATCHTOWER_CLEANUP=true
+            - WATCHTOWER_LABEL_ENABLE=true
+            - WATCHTOWER_INCLUDE_RESTARTING=true
+        labels:
+            - "com.centurylinklabs.watchtower.enable=true"
+
+volumes:
+    UserData:
