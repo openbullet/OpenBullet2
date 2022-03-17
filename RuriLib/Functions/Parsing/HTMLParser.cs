@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using AngleSharp.Dom;
+using HtmlAgilityPack;
 using Microsoft.Scripting.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,19 @@ namespace RuriLib.Functions.Parsing
 {
     public static class HtmlParser
     {
+        private static readonly Dictionary<string, Func<IHtmlCollection<IElement>, IEnumerable<string>>> _getCssAttributesFunctions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "innerText", GetCssTextContentAttributes },
+            { "innerHTML", GetCssInnerHtmlAttributes },
+            { "outerHTML", GetCssOuterHtmlAttributes }
+        };
+        private static readonly Dictionary<string, Func<HtmlNodeCollection, IEnumerable<string>>> _getXPathAttributesFunctions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "innerText", GetXPathTextContentAttributes },
+            { "innerHTML", GetXPathInnerHtmlAttributes },
+            { "outerHTML", GetXPathOuterHtmlAttributes }
+        };
+
         /// <summary>
         /// Parses the value of an attribute from all elements that match a given selector in an HTML page.
         /// </summary>
@@ -25,19 +39,10 @@ namespace RuriLib.Functions.Parsing
             if (attributeName == null)
                 throw new ArgumentNullException(nameof(attributeName));
 
-            var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(htmlPage);
+            using var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(htmlPage);
             var elements = document.QuerySelectorAll(cssSelector);
 
-            return attributeName switch
-            {
-                "innerText" => elements.Select(e => e.TextContent),
-                "innerHTML" => elements.Select(e => e.InnerHtml),
-                "outerHTML" => elements.Select(e => e.OuterHtml),
-                _ => elements
-                    .Select(e => e.Attributes.FirstOrDefault(a => a.Name == attributeName))
-                    .Where(a => a != null)
-                    .Select(a => a.Value),
-            };
+            return _getCssAttributesFunctions.ContainsKey(attributeName) ? _getCssAttributesFunctions[attributeName].Invoke(elements) : elements.Where(e => e.HasAttribute(attributeName)).Select(e => e.GetAttribute(attributeName));
         }
 
         /// <summary>
@@ -62,18 +67,21 @@ namespace RuriLib.Functions.Parsing
             var elements = htmlDoc.DocumentNode.SelectNodes(xPath);
 
             if (elements == null)
-                return new List<string>();
+                return Array.Empty<string>();
 
-            return attributeName switch
-            {
-                "innerText" => elements.Select(e => e.InnerText),
-                "innerHTML" => elements.Select(e => e.InnerHtml),
-                "outerHTML" => elements.Select(e => e.OuterHtml),
-                _ => elements
-                    .Select(e => e.Attributes.FirstOrDefault(a => a.Name == attributeName))
-                    .Where(a => a != null)
-                    .Select(a => a.Value),
-            };
+            return _getXPathAttributesFunctions.ContainsKey(attributeName) ? _getXPathAttributesFunctions[attributeName].Invoke(elements) : elements.Select(e => e.GetAttributeValue(attributeName, string.Empty));
         }
+
+        private static IEnumerable<string> GetCssTextContentAttributes(IHtmlCollection<IElement> elements) => elements.Select(e => e.TextContent);
+
+        private static IEnumerable<string> GetCssInnerHtmlAttributes(IHtmlCollection<IElement> elements) => elements.Select(e => e.InnerHtml);
+
+        private static IEnumerable<string> GetCssOuterHtmlAttributes(IHtmlCollection<IElement> elements) => elements.Select(e => e.OuterHtml);
+
+        private static IEnumerable<string> GetXPathTextContentAttributes(HtmlNodeCollection htmlNodes) => htmlNodes.Select(e => e.InnerText);
+
+        private static IEnumerable<string> GetXPathInnerHtmlAttributes(HtmlNodeCollection elements) => elements.Select(e => e.InnerHtml);
+
+        private static IEnumerable<string> GetXPathOuterHtmlAttributes(HtmlNodeCollection elements) => elements.Select(e => e.OuterHtml);
     }
 }
