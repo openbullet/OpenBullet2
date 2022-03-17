@@ -35,6 +35,7 @@ namespace RuriLib.Models.Proxies
         /// </summary>
         public void UnbanAll(TimeSpan minimumBanTime)
         {
+            // UGLY
             var now = DateTime.Now;
             proxies.Where(p => now > p.LastBanned + minimumBanTime).ToList().ForEach(p =>
             {
@@ -45,6 +46,20 @@ namespace RuriLib.Models.Proxies
                     p.TotalUses = 0;
                 }
             });
+
+            // my code
+            var dateTime = DateTime.Now;
+
+            foreach (var proxy in proxies.Where(p => dateTime > p.LastBanned + minimumBanTime))
+            {
+                if (proxy.ProxyStatus == ProxyStatus.Banned || proxy.ProxyStatus == ProxyStatus.Bad)
+                {
+                    proxy.ProxyStatus = ProxyStatus.Available;
+                    proxy.BeingUsedBy = 0;
+                    proxy.TotalUses = 0;
+                }
+            }
+
         }
 
         /// <summary>
@@ -58,54 +73,47 @@ namespace RuriLib.Models.Proxies
         [MethodImpl(MethodImplOptions.AggressiveOptimization)] //hot path
         public Proxy GetProxy(bool evenBusy = false, int maxUses = 0)
         {
-
-            for (int i = 0; i < proxies.Count; i++)
+            // use foreach more performance
+            foreach (var proxy in proxies)
             {
-                Proxy px = proxies[i];
                 if (evenBusy)
                 {
-                    if (px.ProxyStatus == ProxyStatus.Available || px.ProxyStatus == ProxyStatus.Busy)
+                    if (proxy.ProxyStatus == ProxyStatus.Available || proxy.ProxyStatus == ProxyStatus.Busy)
                     {
-                        if (maxUses > 0)
+                        if (maxUses > 0 && proxy.TotalUses < maxUses)
                         {
-                            if (px.TotalUses < maxUses)
-                            {
-                                px.BeingUsedBy++;
-                                px.ProxyStatus = ProxyStatus.Busy;
-                                return px;
-                            }
+                            proxy.BeingUsedBy++;
+                            proxy.ProxyStatus = ProxyStatus.Busy;
+                            return proxy;
                         }
                         else
                         {
-                            px.BeingUsedBy++;
-                            px.ProxyStatus = ProxyStatus.Busy;
-                            return px;
+                            proxy.BeingUsedBy++;
+                            proxy.ProxyStatus = ProxyStatus.Busy;
+                            return proxy;
                         }
                     }
                 }
                 else
                 {
-                    if (px.ProxyStatus == ProxyStatus.Available)
+                    if (proxy.ProxyStatus == ProxyStatus.Available)
                     {
-                        if (maxUses > 0)
+                        if (maxUses > 0 && proxy.TotalUses < maxUses)
                         {
-                            if (px.TotalUses < maxUses)
-                            {
-                                px.BeingUsedBy++;
-                                px.ProxyStatus = ProxyStatus.Busy;
-                                return px;
-                            }
+                            proxy.BeingUsedBy++;
+                            proxy.ProxyStatus = ProxyStatus.Busy;
+                            return proxy;
                         }
                         else
                         {
-                            px.BeingUsedBy++;
-                            px.ProxyStatus = ProxyStatus.Busy;
-                            return px;
+                            proxy.BeingUsedBy++;
+                            proxy.ProxyStatus = ProxyStatus.Busy;
+                            return proxy;
                         }
                     }
                 }
-
             }
+
             return default;
         }
 
@@ -182,9 +190,14 @@ namespace RuriLib.Models.Proxies
             try
             {
                 var results = await Task.WhenAll(tasks);
+
                 proxies = results.SelectMany(r => r)
                     .Where(p => options.AllowedTypes.Contains(p.Type)) // Filter by allowed types
                     .ToList();
+
+                // my code
+                proxies.Clear();
+                proxies.AddRange(results.SelectMany(r => r).Where(p => options.AllowedTypes.Contains(p.Type)));
 
                 if (shuffle)
                 {

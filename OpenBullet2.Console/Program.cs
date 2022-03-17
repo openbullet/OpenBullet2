@@ -11,10 +11,11 @@ using RuriLib.Services;
 using RuriLib.Parallelization.Models;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Threading;
 using RuriLib.Models.Bots;
+using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace OpenBullet2.Console
 {
@@ -83,9 +84,9 @@ namespace OpenBullet2.Console
 
         private static MultiRunJob job;
         private static Options options;
-        private static bool completed = false;
+        private static bool completed;
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             ThreadPool.SetMinThreads(1000, 1000);
 
@@ -97,12 +98,10 @@ Feel free to contribute to the versatility of this project by adding the missing
 ");
 
             // Parse the Options
-            Parser.Default.ParseArguments<Options>(args)
-              .WithParsed(opts => Run(opts))
-              .WithNotParsed((errs) => { });
+            await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(RunAsync);
         }
 
-        private static void Run(Options opts)
+        private static async Task RunAsync(Options opts)
         {
             options = opts;
 
@@ -127,12 +126,11 @@ Feel free to contribute to the versatility of this project by adding the missing
                 BotLimit = opts.BotsNumber,
                 CurrentBotDatas = new BotData[opts.BotsNumber]
             };
-            
+
             // Ask custom inputs (if any)
             foreach (var input in config.Settings.InputSettings.CustomInputs)
             {
-                System.Console.WriteLine($"{input.Description} ({input.DefaultAnswer}): ");
-                var answer = System.Console.ReadLine();
+                var answer = AnsiConsole.Ask<string>($"{input.Description} ({input.DefaultAnswer})"); ;
                 job.CustomInputsAnswers[input.VariableName] = string.IsNullOrWhiteSpace(answer)
                     ? input.DefaultAnswer
                     : answer;
@@ -142,23 +140,27 @@ Feel free to contribute to the versatility of this project by adding the missing
             job.OnCompleted += (sender, args) => completed = true;
             job.OnResult += PrintResult;
             job.OnTaskError += PrintTaskError;
-            job.OnError += (sender, ex) => System.Console.WriteLine($"Error: {ex.Message}", Color.Tomato);
+            job.OnError += (sender, ex) => AnsiConsole.WriteException(ex);
+
+            var consoleManager = new ConsoleManager(job);
 
             // Start the job
-            job.Start().Wait();
+            await job.Start();
+
+            _ = consoleManager.StartUpdatingTitleAsync();
+
+            _ = consoleManager.StartListeningKeysAsync();
 
             // Wait until it finished
             while (!completed)
             {
-                Thread.Sleep(100);
-                UpdateTitle();
+                await Task.Delay(1000);
             }
 
+            AnsiConsole.MarkupLine($"[red3]aborted at {DateTime.Now}[/]");
+
             // Print colored finish message
-            System.Console.Write($"Finished. Found: ");
-            System.Console.Write($"{job.DataHits} hits, ", Color.GreenYellow);
-            System.Console.Write($"{job.DataCustom} custom, ", Color.DarkOrange);
-            System.Console.WriteLine($"{job.DataToCheck} to check.", Color.Aquamarine);
+            //AnsiConsole.MarkupLine($"Finished. Found: [green4]{job.DataHits} hits[/], [orange3]{job.DataCustom} custom[/], [cyan3]{job.DataToCheck} to check[/].");
 
             // Prevent console from closing until the user presses return, then close
             System.Console.ReadLine();
@@ -170,21 +172,27 @@ Feel free to contribute to the versatility of this project by adding the missing
             var botData = details.Result.BotData;
             var data = botData.Line.Data;
 
-            if (botData.STATUS == "FAIL" && !options.Verbose)
+            if (botData.STATUS == "FAIL")
                 return;
 
-            var color = botData.STATUS switch
+            switch (botData.STATUS)
             {
-                "SUCCESS" => Color.YellowGreen,
-                "FAIL" => Color.Tomato,
-                "BAN" => Color.Plum,
-                "RETRY" => Color.Yellow,
-                "ERROR" => Color.Red,
-                "NONE" => Color.SkyBlue,
-                _ => Color.Orange
-            };
-
-            System.Console.WriteLine($"{botData.STATUS}: {data}", color);
+                case "SUCCESS":
+                    AnsiConsole.MarkupLine($"[green4]{botData.STATUS}:[/] {data}");
+                    break;
+                case "BAN":
+                    AnsiConsole.MarkupLine($"[plum3]{botData.STATUS}:[/] {data}");
+                    break;
+                case "RETRY":
+                    AnsiConsole.MarkupLine($"[yellow3_1]{botData.STATUS}:[/] {data}");
+                    break;
+                case "ERROR":
+                    AnsiConsole.MarkupLine($"[red]{botData.STATUS}:[/] {data}");
+                    break;
+                default:
+                    AnsiConsole.MarkupLine($"[orange3]{botData.STATUS}:[/] {data}");
+                    break;
+            }
         }
 
         private static void PrintTaskError(object sender, ErrorDetails<MultiRunInput> details)
@@ -193,19 +201,7 @@ Feel free to contribute to the versatility of this project by adding the missing
 
             var proxy = details.Item.BotData.Proxy;
             var data = details.Item.BotData.Line.Data;
-            System.Console.WriteLine($"Task Error: ({proxy})({data})! {details.Exception.Message}", Color.Tomato);
-        }
-
-        private static void UpdateTitle()
-        {
-            System.Console.Title = $"OpenBullet 2 (Console POC) - {job.Status} | " +
-                $"Config: {job.Config.Metadata.Name} | " +
-                $"Wordlist: {Path.GetFileName(options.WordlistFile)} | " +
-                $"Bots: {job.Bots} | " +
-                $"CPM: {job.CPM} | " +
-                $"Progress: {job.DataTested} / {job.DataPool.Size} ({job.Progress * 100:0.00}%) | " +
-                $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataFails} Retries: {job.DataRetried + job.DataBanned} | " +
-                $"Proxies: {job.ProxiesAlive} / {job.ProxiesTotal}";
+            System.Console.WriteLine($"Task Error: ({proxy})({data})! {details.Exception.Message}");
         }
     }
 }
