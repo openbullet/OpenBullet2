@@ -208,6 +208,21 @@ namespace RuriLib.Http.Tests
         }
 
         [Fact]
+        public async Task SendAsync_GZip_Decompress()
+        {
+            var message = new HttpRequest
+            {
+                Method = HttpMethod.Get,
+                Uri = new Uri("https://nghttp2.org/httpbin/gzip")
+            };
+
+            var response = await RequestAsync(message);
+            var actual = await GetJsonValueAsync<bool>(response, "gzipped");
+
+            Assert.True(actual);
+        }
+
+        [Fact]
         public async Task SendAsync_Brotli_Decompress()
         {
             var message = new HttpRequest
