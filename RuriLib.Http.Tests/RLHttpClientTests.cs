@@ -27,7 +27,7 @@ namespace RuriLib.Http.Tests
             message.Headers.Add("User-Agent", userAgent);
 
             var response = await RequestAsync(message);
-            var userAgentActual = await GetJsonStringValueAsync(response, "user-agent");
+            var userAgentActual = await GetJsonValueAsync<string>(response, "user-agent");
 
             Assert.NotEmpty(userAgentActual);
             Assert.Equal(userAgent, userAgentActual);
@@ -207,6 +207,21 @@ namespace RuriLib.Http.Tests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Fact]
+        public async Task SendAsync_Brotli_Decompress()
+        {
+            var message = new HttpRequest
+            {
+                Method = HttpMethod.Get,
+                Uri = new Uri("https://nghttp2.org/httpbin/brotli")
+            };
+
+            var response = await RequestAsync(message);
+            var actual = await GetJsonValueAsync<bool>(response, "brotli");
+
+            Assert.True(actual);
+        }
+
         private static async Task<HttpResponse> RequestAsync(HttpRequest request)
         {
             var settings = new ProxySettings();
@@ -216,7 +231,7 @@ namespace RuriLib.Http.Tests
             return await client.SendAsync(request);
         }
 
-        private static async Task<string> GetJsonStringValueAsync(HttpResponse response, string valueName)
+        private static async Task<T> GetJsonValueAsync<T>(HttpResponse response, string valueName)
         {
             var source = await response.Content.ReadAsStringAsync();
             var obj = JObject.Parse(source);
@@ -224,8 +239,8 @@ namespace RuriLib.Http.Tests
             var result = obj.TryGetValue(valueName, out var token);
 
             return result
-                ? token.Value<string>()
-                : string.Empty;
+                ? token.Value<T>()
+                : default;
         }
 
         private static async Task<Dictionary<string, string>> GetJsonDictionaryValueAsync(HttpResponse response, string valueName)
