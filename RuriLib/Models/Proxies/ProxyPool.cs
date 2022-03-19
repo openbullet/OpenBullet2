@@ -21,6 +21,9 @@ namespace RuriLib.Models.Proxies
         private readonly List<ProxySource> sources;
         private readonly ProxyPoolOptions options;
 
+        private readonly int minBackoff = 5000;
+        private readonly int maxReloadTries = 10;
+
         /// <summary>
         /// Initializes the proxy pool given the proxy sources.
         /// </summary>
@@ -150,8 +153,31 @@ namespace RuriLib.Models.Proxies
                 return;
             }
 
+            var currentTry = 0;
+            var currentBackoff = minBackoff;
             isReloadingProxies = true;
 
+            // For a maximum of 'maxReloadTries' times
+            while (currentTry < maxReloadTries)
+            {
+                // Try to reload proxies from sources
+                if (await TryReloadAll(shuffle))
+                {
+                    isReloadingProxies = false;
+                    return;
+                }
+
+                // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
+                Console.WriteLine($"Failed to reload, no proxies found. Waiting {currentBackoff} ms and trying again...");
+                await Task.Delay(currentBackoff);
+
+                currentTry++;
+                currentBackoff *= 2;
+            }
+        }
+
+        private async Task<bool> TryReloadAll(bool shuffle = true)
+        {
             var tasks = sources.Select(async source =>
             {
                 try
@@ -179,22 +205,24 @@ namespace RuriLib.Models.Proxies
                 }
             });
 
-            try
-            {
-                var results = await Task.WhenAll(tasks);
-                proxies = results.SelectMany(r => r)
-                    .Where(p => options.AllowedTypes.Contains(p.Type)) // Filter by allowed types
-                    .ToList();
+            var results = await Task.WhenAll(tasks);
 
-                if (shuffle)
-                {
-                    Shuffle();
-                }
-            }
-            finally
+            // If no results, return false to trigger the backoff mechanism (do not remove existing proxies)
+            if (!results.Any())
             {
-                isReloadingProxies = false;
+                return false;
             }
+
+            proxies = results.SelectMany(r => r)
+                .Where(p => options.AllowedTypes.Contains(p.Type)) // Filter by allowed types
+                .ToList();
+
+            if (shuffle)
+            {
+                Shuffle();
+            }
+
+            return true;
         }
     }
 }
