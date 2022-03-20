@@ -205,7 +205,7 @@ namespace RuriLib.Models.Proxies
                 }
             });
 
-            var results = await Task.WhenAll(tasks);
+            var results = (await Task.WhenAll(tasks)).SelectMany(r => r);
 
             // If no results, return false to trigger the backoff mechanism (do not remove existing proxies)
             if (!results.Any())
@@ -213,7 +213,7 @@ namespace RuriLib.Models.Proxies
                 return false;
             }
 
-            proxies = results.SelectMany(r => r)
+            proxies = results
                 .Where(p => options.AllowedTypes.Contains(p.Type)) // Filter by allowed types
                 .ToList();
 
