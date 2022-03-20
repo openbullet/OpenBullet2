@@ -195,7 +195,11 @@ namespace RuriLib.Models.Jobs
                 Dictionary<string, object> outputVariables = new();
 
                 // Add this BotData to the array for detailed MultiRunJob display mode
-                input.Job.CurrentBotDatas[(int)(input.Index++ % input.Job.Bots)] = botData;
+                var botIndex = (int)(input.Index++ % input.Job.Bots);
+                input.Job.CurrentBotDatas[botIndex] = botData;
+
+                // Set the BOTNUM
+                botData.BOTNUM = botIndex + 1;
 
                 START:
                 token.ThrowIfCancellationRequested();
