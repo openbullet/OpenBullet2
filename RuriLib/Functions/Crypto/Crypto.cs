@@ -143,7 +143,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The MD5 digest.</returns>
         public static byte[] MD5(byte[] input)
         {
-            using MD5 md5 = System.Security.Cryptography.MD5.Create();
+            using var md5 = System.Security.Cryptography.MD5.Create();
             return md5.ComputeHash(input);
         }
 
@@ -155,7 +155,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The HMAC signature.</returns>
         public static byte[] HMACMD5(byte[] input, byte[] key)
         {
-            using HMACMD5 hmac = new HMACMD5(key);
+            using var hmac = new HMACMD5(key);
             return hmac.ComputeHash(input);
         }
 
@@ -166,7 +166,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The SHA-1 digest.</returns>
         public static byte[] SHA1(byte[] input)
         {
-            using SHA1Managed sha1 = new SHA1Managed();
+            using var sha1 = System.Security.Cryptography.SHA1.Create();
             return sha1.ComputeHash(input);
         }
 
@@ -178,7 +178,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The HMAC signature.</returns>
         public static byte[] HMACSHA1(byte[] input, byte[] key)
         {
-            using HMACSHA1 hmac = new HMACSHA1(key);
+            using var hmac = new HMACSHA1(key);
             return hmac.ComputeHash(input);
         }
 
@@ -189,7 +189,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The SHA-256 digest.</returns>
         public static byte[] SHA256(byte[] input)
         {
-            using SHA256Managed sha256 = new SHA256Managed();
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
             return sha256.ComputeHash(input);
         }
         
@@ -209,7 +209,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The HMAC signature.</returns>
         public static byte[] HMACSHA256(byte[] input, byte[] key)
         {
-            using HMACSHA256 hmac = new HMACSHA256(key);
+            using var hmac = new HMACSHA256(key);
             return hmac.ComputeHash(input);
         }
 
@@ -220,7 +220,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The SHA-384 digest.</returns>
         public static byte[] SHA384(byte[] input)
         {
-            using SHA384Managed sha384 = new SHA384Managed();
+            using var sha384 = System.Security.Cryptography.SHA384.Create();
             return sha384.ComputeHash(input);
         }
 
@@ -232,7 +232,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The HMAC signature.</returns>
         public static byte[] HMACSHA384(byte[] input, byte[] key)
         {
-            using HMACSHA384 hmac = new HMACSHA384(key);
+            using var hmac = new HMACSHA384(key);
             return hmac.ComputeHash(input);
         }
 
@@ -243,7 +243,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The SHA-512 digest.</returns>
         public static byte[] SHA512(byte[] input)
         {
-            using SHA512Managed sha512 = new SHA512Managed();
+            using var sha512 = System.Security.Cryptography.SHA512.Create();
             return sha512.ComputeHash(input);
         }
 
@@ -255,7 +255,7 @@ namespace RuriLib.Functions.Crypto
         /// <returns>The HMAC signature.</returns>
         public static byte[] HMACSHA512(byte[] input, byte[] key)
         {
-            using HMACSHA512 hmac = new HMACSHA512(key);
+            using var hmac = new HMACSHA512(key);
             return hmac.ComputeHash(input);
         }
 
