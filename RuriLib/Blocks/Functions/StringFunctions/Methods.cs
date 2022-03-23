@@ -25,6 +25,18 @@ namespace RuriLib.Blocks.Functions.String
         private static readonly string _upperlwr = _lowercase + _uppercase;
         private static readonly string _ludChars = _lowercase + _uppercase + _digits;
         private static readonly string _allChars = _lowercase + _uppercase + _digits + _symbols;
+        private static readonly Regex _lowercaseRegex = new(@"\?l", RegexOptions.Compiled);
+        private static readonly Regex _uppercaseRegex = new(@"\?u", RegexOptions.Compiled);
+        private static readonly Regex _digitsRegex = new(@"\?d", RegexOptions.Compiled);
+        private static readonly Regex _symbolsRegex = new(@"\?s", RegexOptions.Compiled);
+        private static readonly Regex _hexRegex = new(@"\?h", RegexOptions.Compiled);
+        private static readonly Regex _upperHexRegex = new(@"\?H", RegexOptions.Compiled);
+        private static readonly Regex _allCharsRegex = new(@"\?a", RegexOptions.Compiled);
+        private static readonly Regex _udCharsRegex = new(@"\?m", RegexOptions.Compiled);
+        private static readonly Regex _ldCharsRegex = new(@"\?n", RegexOptions.Compiled);
+        private static readonly Regex _ludCharsRegex = new(@"\?i", RegexOptions.Compiled);
+        private static readonly Regex _upperlwrRegex = new(@"\?f", RegexOptions.Compiled);
+        private static readonly Regex customCharsetRegex = new(@"\?c", RegexOptions.Compiled);
         #endregion
 
         [Block("Rounds the value down to the nearest integer")]
@@ -48,7 +60,7 @@ namespace RuriLib.Blocks.Functions.String
         [Block("Reverses the characters in the input string")]
         public static string Reverse(BotData data, [Variable] string input)
         {
-            char[] charArray = input.ToCharArray();
+            var charArray = input.ToCharArray();
             Array.Reverse(charArray);
             var reversed = new string(charArray);
             data.Logger.LogHeader();
@@ -139,7 +151,7 @@ namespace RuriLib.Blocks.Functions.String
         public static string UrlEncode(BotData data, [Variable] string input)
         {
             // The maximum allowed Uri size is 2083 characters, we use 2080 as a precaution
-            var encoded = string.Join("", input.SplitInChunks(2080).Select(s => Uri.EscapeDataString(s)));
+            var encoded = string.Join(string.Empty, input.SplitInChunks(2080).Select(s => Uri.EscapeDataString(s)));
             data.Logger.LogHeader();
             data.Logger.Log($"URL Encoded string: {encoded}", LogColors.YellowGreen);
             return encoded;
@@ -176,18 +188,18 @@ namespace RuriLib.Blocks.Functions.String
             extraInfo = "?l = Lowercase, ?u = Uppercase, ?d = Digit, ?f = Uppercase + Lowercase, ?s = Symbol, ?h = Hex (Lowercase), ?H = Hex (Uppercase), ?m = Upper + Digits,?n = Lower + Digits ?i = Lower + Upper + Digits, ?a = Any, ?c = Custom")]
         public static string RandomString(BotData data, string input, string customCharset = "0123456789")
         {
-            input = Regex.Replace(input, @"\?l", m => _lowercase[data.Random.Next(_lowercase.Length)].ToString());
-            input = Regex.Replace(input, @"\?u", m => _uppercase[data.Random.Next(_uppercase.Length)].ToString());
-            input = Regex.Replace(input, @"\?d", m => _digits[data.Random.Next(_digits.Length)].ToString());
-            input = Regex.Replace(input, @"\?s", m => _symbols[data.Random.Next(_symbols.Length)].ToString());
-            input = Regex.Replace(input, @"\?h", m => _hex[data.Random.Next(_hex.Length)].ToString());
-            input = Regex.Replace(input, @"\?H", m => _hex[data.Random.Next(_hex.Length)].ToString().ToUpper());
-            input = Regex.Replace(input, @"\?a", m => _allChars[data.Random.Next(_allChars.Length)].ToString());
-            input = Regex.Replace(input, @"\?m", m => _udChars[data.Random.Next(_udChars.Length)].ToString());
-            input = Regex.Replace(input, @"\?n", m => _ldChars[data.Random.Next(_ldChars.Length)].ToString());
-            input = Regex.Replace(input, @"\?i", m => _ludChars[data.Random.Next(_ludChars.Length)].ToString());
-            input = Regex.Replace(input, @"\?f", m => _upperlwr[data.Random.Next(_upperlwr.Length)].ToString());
-            input = Regex.Replace(input, @"\?c", m => customCharset[data.Random.Next(customCharset.Length)].ToString());
+            input = _lowercaseRegex.Replace(input, m => _lowercase[data.Random.Next(_lowercase.Length)].ToString());
+            input = _uppercaseRegex.Replace(input, m => _uppercase[data.Random.Next(_uppercase.Length)].ToString());
+            input = _digitsRegex.Replace(input, m => _digits[data.Random.Next(_digits.Length)].ToString());
+            input = _symbolsRegex.Replace(input, m => _symbols[data.Random.Next(_symbols.Length)].ToString());
+            input = _hexRegex.Replace(input, m => _hex[data.Random.Next(_hex.Length)].ToString());
+            input = _upperHexRegex.Replace(input, m => _hex[data.Random.Next(_hex.Length)].ToString().ToUpper());
+            input = _allCharsRegex.Replace(input, m => _allChars[data.Random.Next(_allChars.Length)].ToString());
+            input = _udCharsRegex.Replace(input, m => _udChars[data.Random.Next(_udChars.Length)].ToString());
+            input = _ldCharsRegex.Replace(input, m => _ldChars[data.Random.Next(_ldChars.Length)].ToString());
+            input = _ludCharsRegex.Replace(input, m => _ludChars[data.Random.Next(_ludChars.Length)].ToString());
+            input = _upperlwrRegex.Replace(input, m => _upperlwr[data.Random.Next(_upperlwr.Length)].ToString());
+            input = customCharsetRegex.Replace(input, m => customCharset[data.Random.Next(customCharset.Length)].ToString());
             data.Logger.LogHeader();
             data.Logger.Log($"Generated string: {input}", LogColors.YellowGreen);
             return input;
