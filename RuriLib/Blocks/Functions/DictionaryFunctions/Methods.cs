@@ -12,7 +12,7 @@ namespace RuriLib.Blocks.Functions.Dictionary
         [Block("Adds an item to the dictionary")]
         public static void AddKeyValuePair(BotData data, [Variable] Dictionary<string, string> dictionary, string key, string value)
         {
-            dictionary.Add(key, value);
+            dictionary[key] = value;
             data.Logger.LogHeader();
             data.Logger.Log($"Added ({key}, {value})", LogColors.YellowGreen);
         }
@@ -21,11 +21,7 @@ namespace RuriLib.Blocks.Functions.Dictionary
         public static void RemoveByKey(BotData data, [Variable] Dictionary<string, string> dictionary, string key)
         {
             data.Logger.LogHeader();
-
-            if (dictionary.Remove(key))
-                data.Logger.Log($"Removed the item with key {key}", LogColors.YellowGreen);
-            else
-                data.Logger.Log($"Could not find an item with key {key}", LogColors.YellowGreen);
+            data.Logger.Log(dictionary.Remove(key) ? $"Removed the item with key {key}" : $"Could not find an item with key {key}", LogColors.YellowGreen);
         }
 
         [Block("Gets a dictionary key by value (old <DICT{value}>)")]
