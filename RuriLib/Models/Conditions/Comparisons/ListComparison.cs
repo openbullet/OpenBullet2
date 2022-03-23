@@ -4,6 +4,8 @@
     {
         Contains,
         DoesNotContain,
+        AllContains,
+        AllDoesNotContain,
         Exists,
         DoesNotExist
     }

@@ -1,6 +1,7 @@
 ﻿using RuriLib.Models.Conditions.Comparisons;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace RuriLib.Functions.Conditions
@@ -42,6 +43,8 @@ namespace RuriLib.Functions.Conditions
             {
                 ListComparison.Contains => leftTerm.Contains(rightTerm),
                 ListComparison.DoesNotContain => !leftTerm.Contains(rightTerm),
+                ListComparison.AllContains => leftTerm.All(i => i.Contains(rightTerm)),
+                ListComparison.AllDoesNotContain => !leftTerm.All(i => i.Contains(rightTerm)),
                 ListComparison.Exists => leftTerm != null,
                 ListComparison.DoesNotExist => leftTerm == null,
                 _ => throw new ArgumentException("Comparison not supported", nameof(comparison))
