@@ -204,7 +204,12 @@
                           IsChecked="{Binding PlaySoundOnHit}" 
                           VerticalContentAlignment="Center"
                           Margin="5 0 0 0"/>
-                
+
+                <CheckBox Content="Enable Word Wrap in text editor" 
+                          IsChecked="{Binding WordWrap}" 
+                          VerticalContentAlignment="Center"
+                          Margin="5 10 0 0"/>
+
                 <Label Foreground="{DynamicResource ForegroundCustom}" Margin="0 10 0 0">Background colors</Label>
                 <Grid>
                     <Grid.ColumnDefinitions>

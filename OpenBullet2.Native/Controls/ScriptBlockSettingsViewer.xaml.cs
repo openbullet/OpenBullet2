@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.Script;
@@ -22,6 +23,7 @@ namespace OpenBullet2.Native.Controls
     public partial class ScriptBlockSettingsViewer : UserControl
     {
         private readonly ScriptBlockSettingsViewerViewModel vm;
+        private readonly OpenBulletSettingsService obSettingsService;
 
         public ScriptBlockSettingsViewer(BlockViewModel blockVM)
         {
@@ -30,11 +32,13 @@ namespace OpenBullet2.Native.Controls
                 throw new Exception("Wrong block type for this UC");
             }
 
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             vm = new ScriptBlockSettingsViewerViewModel(blockVM);
             DataContext = vm;
 
             InitializeComponent();
 
+            editor.WordWrap = obSettingsService.Settings.CustomizationSettings.WordWrap;
             editor.Text = vm.Script;
             HighlightSyntax();
         }

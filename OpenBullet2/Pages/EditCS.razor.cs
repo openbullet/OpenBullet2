@@ -57,6 +57,7 @@ namespace OpenBullet2.Pages
                 Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
                 Language = "csharp",
                 MatchBrackets = true,
+                WordWrap = OBSettingsService.Settings.CustomizationSettings.WordWrap ? "on" : "off",
                 Value = Config.CSharpScript
             };
         }

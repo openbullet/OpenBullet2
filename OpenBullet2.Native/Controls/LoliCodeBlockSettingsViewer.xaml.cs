@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks;
 using System;
@@ -16,6 +17,7 @@ namespace OpenBullet2.Native.Controls
     public partial class LoliCodeBlockSettingsViewer : UserControl
     {
         private readonly LoliCodeBlockSettingsViewerViewModel vm;
+        private readonly OpenBulletSettingsService obSettingsService;
 
         public LoliCodeBlockSettingsViewer(BlockViewModel blockVM)
         {
@@ -24,11 +26,13 @@ namespace OpenBullet2.Native.Controls
                 throw new Exception("Wrong block type for this UC");
             }
 
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             vm = new LoliCodeBlockSettingsViewerViewModel(blockVM);
             DataContext = vm;
 
             InitializeComponent();
 
+            editor.WordWrap = obSettingsService.Settings.CustomizationSettings.WordWrap;
             editor.Text = vm.Script;
             HighlightSyntax();
         }

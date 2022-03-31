@@ -158,12 +158,16 @@ namespace OpenBullet2.Native.Views.Pages
     public class ConfigLoliCodeViewModel : ViewModelBase
     {
         private readonly ConfigService configService;
+        private readonly OpenBulletSettingsService obSettingsService;
         private Config Config => configService.SelectedConfig;
 
         public ConfigLoliCodeViewModel()
         {
             configService = SP.GetService<ConfigService>();
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
         }
+
+        public bool WordWrap => obSettingsService.Settings.CustomizationSettings.WordWrap;
 
         public string UsingsString
         {

@@ -49,6 +49,7 @@
             LostFocus="EditorLostFocus"
             HorizontalAlignment="Stretch"
             ShowLineNumbers="True"
+            WordWrap="{Binding WordWrap}"
             MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
             MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
     </Grid>

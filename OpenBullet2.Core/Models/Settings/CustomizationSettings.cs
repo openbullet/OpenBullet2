@@ -17,6 +17,11 @@
         public string MonacoTheme { get; set; } = "vs-dark";
 
         /// <summary>
+        /// Whether to wrap words at viewport width.
+        /// </summary>
+        public bool WordWrap { get; set; } = false;
+
+        /// <summary>
         /// The main background color. Native UI only.
         /// </summary>
         public string BackgroundMain { get; set; } = "#222";

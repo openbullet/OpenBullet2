@@ -95,7 +95,8 @@
             Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
             Language = GetLanguage(Block.Interpreter),
             Value = Block.Script,
-            MatchBrackets = true
+            MatchBrackets = true,
+            WordWrap = OBSettingsService.Settings.CustomizationSettings.WordWrap ? "on" : "off"
         };
     }
 

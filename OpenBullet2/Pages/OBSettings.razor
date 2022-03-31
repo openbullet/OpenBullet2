@@ -232,6 +232,10 @@
     </InputSelect>
     <br />
 
+    <label>@Loc["EnableWordWrap"]</label>
+    <InputCheckbox class="mb-3" @bind-Value="settings.CustomizationSettings.WordWrap" />
+    <br />
+
     <label>@Loc["UploadTheme"]</label>
     <InputFile OnChange="@ProcessUploadedTheme"/>
     <br />

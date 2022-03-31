@@ -17,14 +17,17 @@ namespace OpenBullet2.Native.Views.Pages
     public partial class ConfigCSharpCode : Page
     {
         private readonly ConfigService configService;
+        private readonly OpenBulletSettingsService obSettingsService;
         private Config Config => configService.SelectedConfig;
 
         public ConfigCSharpCode()
         {
             InitializeComponent();
             configService = SP.GetService<ConfigService>();
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
 
             HighlightSyntax();
+            editor.WordWrap = obSettingsService.Settings.CustomizationSettings.WordWrap;
         }
 
         public void UpdateViewModel()

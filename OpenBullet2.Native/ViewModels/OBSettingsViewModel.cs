@@ -155,6 +155,16 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public bool WordWrap
+        {
+            get => Customization.WordWrap;
+            set
+            {
+                Customization.WordWrap = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string BackgroundMain
         {
             get => Customization.BackgroundMain;
