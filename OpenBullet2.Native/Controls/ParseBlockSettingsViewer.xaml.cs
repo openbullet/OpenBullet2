@@ -66,6 +66,17 @@ namespace OpenBullet2.Native.Controls
     {
         public ParseBlockInstance ParseBlock => Block as ParseBlockInstance;
 
+        public bool SafeMode
+        {
+            get => ParseBlock.Safe;
+            set
+            {
+                ParseBlock.Safe = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public event Action<ParseMode> ModeChanged;
 
         public string OutputVariable

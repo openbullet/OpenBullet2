@@ -9,6 +9,9 @@
 </EditForm>
 
 <EditForm Model="Block">
+    <label>@Loc["Safe"]</label>
+    <InputCheckbox @bind-Value="Block.Safe" />
+    <br />
     <h6 class="font-weight-bold fg-custom" style="margin-top: 20px;">@Loc["OutputVariable"] (@(Block.Recursive ? "ListOfStrings" : "String")):</h6>
     <InputText @bind-Value="Block.OutputVariable" />
     <label>@Loc["IsCapture"]</label>

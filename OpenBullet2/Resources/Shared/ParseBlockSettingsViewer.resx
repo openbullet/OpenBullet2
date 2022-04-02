@@ -141,6 +141,9 @@
   <data name="OutputVariable" xml:space="preserve">
     <value>Output variable</value>
   </data>
+  <data name="Safe" xml:space="preserve">
+    <value>Safe</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
