@@ -19,6 +19,8 @@ namespace RuriLib.Models.Blocks.Custom
     {
         public RequestParams RequestParams { get; set; } = new StandardRequestParams();
 
+        public bool Safe { get; set; } = false;
+
         public HttpRequestBlockInstance(HttpRequestBlockDescriptor descriptor)
             : base(descriptor)
         {
@@ -299,6 +301,12 @@ namespace RuriLib.Models.Blocks.Custom
         public override string ToCSharp(List<string> definedVariables, ConfigSettings settings)
         {
             using var writer = new StringWriter();
+
+            if (Safe)
+            {
+                writer.WriteLine("try {");
+            }
+
             writer.Write("await ");
 
             switch (RequestParams)
@@ -348,6 +356,13 @@ namespace RuriLib.Models.Blocks.Custom
             writer.Write("CustomCipherSuites = " + GetSettingValue("customCipherSuites") + " ");
 
             writer.WriteLine("}).ConfigureAwait(false);");
+
+            if (Safe)
+            {
+                writer.WriteLine("} catch (Exception safeException) {");
+                writer.WriteLine("data.ERROR = safeException.PrettyPrint();");
+                writer.WriteLine("data.Logger.Log($\"[SAFE MODE] Exception caught and saved to data.ERROR: {data.ERROR}\", LogColors.Tomato); }");
+            }
 
             return writer.ToString();
         }

@@ -44,6 +44,10 @@
                 Text="{Binding Label}"
                 DockPanel.Dock="Left" />
         </DockPanel>
+        <CheckBox
+            Margin="5"
+            Content="Safe mode (catch exceptions to data.ERROR)"
+            IsChecked="{Binding SafeMode}" />
         <Label 
             Content="Settings:"
             Margin="0 5"

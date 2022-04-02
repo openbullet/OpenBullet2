@@ -7,6 +7,9 @@
     <h6 class="font-weight-bold fg-custom">@Loc["Label"]:</h6>
     <InputText Value="@Block.Label" ValueExpression="@(() => Block.Label)"
                ValueChanged="@((value) => { Block.Label = value; ChangedLabel.InvokeAsync(EventArgs.Empty); })" />
+    <label>@Loc["SafeMode"]</label>
+    <InputCheckbox @bind-Value="Block.Safe" />
+    <br />
 </EditForm>
 
 <h6 class="font-weight-bold fg-custom mt-3">@Loc["Settings"]:</h6>

@@ -87,6 +87,16 @@ namespace OpenBullet2.Native.Controls
     {
         public HttpRequestBlockInstance HttpRequestBlock => Block as HttpRequestBlockInstance;
 
+        public bool SafeMode
+        {
+            get => HttpRequestBlock.Safe;
+            set
+            {
+                HttpRequestBlock.Safe = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event Action<HttpRequestMode> ModeChanged;
 
         private StandardRequestParams cachedStandardParams = new();
