@@ -19,7 +19,7 @@ namespace RuriLib.Blocks.Puppeteer.Browser
     public static class Methods
     {
         [Block("Opens a new puppeteer browser", name = "Open Browser")]
-        public static async Task PuppeteerOpenBrowser(BotData data)
+        public static async Task PuppeteerOpenBrowser(BotData data, string extraCmdLineArgs = "")
         {
             data.Logger.LogHeader();
 
@@ -32,6 +32,12 @@ namespace RuriLib.Blocks.Puppeteer.Browser
             }
 
             var args = data.ConfigSettings.BrowserSettings.CommandLineArgs;
+
+            // Extra command line args (to have dynamic args via variables)
+            if (!string.IsNullOrWhiteSpace(extraCmdLineArgs))
+            {
+                args += ' ' + extraCmdLineArgs;
+            }
 
             // If it's running in docker, currently it runs under root, so add the --no-sandbox otherwise chrome won't work
             if (Utils.IsDocker())
