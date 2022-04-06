@@ -210,5 +210,14 @@ namespace RuriLib.Blocks.Functions.String
             data.Logger.Log($"Split the string into {split.Count}", LogColors.YellowGreen);
             return split;
         }
+
+        [Block("Gets the character at a specific index")]
+        public static string CharAt(BotData data, [Variable] string input, int index)
+        {
+            var character = input[index].ToString();
+            data.Logger.LogHeader();
+            data.Logger.Log($"The character at index {index} is {character}", LogColors.YellowGreen);
+            return character;
+        }
     }
 }
