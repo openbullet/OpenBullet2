@@ -25,9 +25,9 @@ namespace RuriLib.Blocks.Requests.Imap
     public static class Methods
     {
         private static readonly List<string> subdomains = new() { "mail", "imap-mail", "inbound", "in", "mx", "imap", "imaps", "m" };
-        
+
         [Block("Connects to an IMAP server by automatically detecting the host and port")]
-        public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
+        public static async Task ImapAutoConnect(BotData data, string email, int timeoutMilliseconds = 60000, bool useProxy = true)
         {
             data.Logger.LogHeader();
 
@@ -39,7 +39,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (data.UseProxy && data.Proxy != null)
+            if (useProxy && data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
@@ -244,7 +244,7 @@ namespace RuriLib.Blocks.Requests.Imap
         }
 
         [Block("Connects to an IMAP server")]
-        public static async Task ImapConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
+        public static async Task ImapConnect(BotData data, string host, int port, int timeoutMilliseconds = 60000, bool useProxy = true)
         {
             data.Logger.LogHeader();
 
@@ -256,7 +256,7 @@ namespace RuriLib.Blocks.Requests.Imap
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (data.UseProxy && data.Proxy != null)
+            if (useProxy && data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
@@ -286,7 +286,7 @@ namespace RuriLib.Blocks.Requests.Imap
         }
 
         [Block("Logs into an account")]
-        public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true, int timeoutMilliseconds = 10000)
+        public static async Task ImapLogin(BotData data, string email, string password, bool openInbox = true, bool loadAllFolders = false, int timeoutMilliseconds = 10000)
         {
             data.Logger.LogHeader();
 
@@ -302,6 +302,12 @@ namespace RuriLib.Blocks.Requests.Imap
             {
                 await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
+                SetCurrentFolder(data, client.Inbox);
+            }
+
+            if (loadAllFolders)
+            {
+                await GetFolderList(data, false).ConfigureAwait(false);
             }
         }
 
@@ -328,6 +334,8 @@ namespace RuriLib.Blocks.Requests.Imap
             await client.Inbox.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Opened the inbox, there are {client.Inbox.Count} total messages", LogColors.DarkOrchid);
+
+            SetCurrentFolder(data, client.Inbox);
         }
 
         [Block("Searches for mails", extraInfo = "The 'delivered after' expects a Unix timestamp (UTC) in seconds.")]
@@ -336,7 +344,12 @@ namespace RuriLib.Blocks.Requests.Imap
         {
             data.Logger.LogHeader();
 
-            var inbox = GetOpenInbox(data);
+            var folder = GetCurrentFolder(data);
+
+            if (!folder.IsOpen)
+            {
+                await folder.OpenAsync(FolderAccess.ReadWrite, data.CancellationToken).ConfigureAwait(false);
+            }
 
             SearchQuery query = new DateSearchQuery(SearchTerm.DeliveredAfter, ((long)deliveredAfter).ToDateTimeUtc());
 
@@ -354,7 +367,7 @@ namespace RuriLib.Blocks.Requests.Imap
 
             try
             {
-                mails = await inbox.SearchAsync(query, data.CancellationToken).ConfigureAwait(false);
+                mails = await folder.SearchAsync(query, data.CancellationToken).ConfigureAwait(false);
             }
             catch
             {
@@ -371,13 +384,23 @@ namespace RuriLib.Blocks.Requests.Imap
         }
 
         [Block("Gets a text (or HTML) representation of a mail")]
-        public static async Task<string> ImapReadMail(BotData data, string id, bool preferHtml = false)
+        public static async Task<string> ImapReadMail(BotData data, string id, bool isUid = true, bool preferHtml = false)
         {
             data.Logger.LogHeader();
 
-            var inbox = GetOpenInbox(data);
-            var uniqueId = new UniqueId(uint.Parse(id));
-            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
+            var folder = GetCurrentFolder(data);
+            MimeKit.MimeMessage mail;
+            if (isUid)
+            {
+                var uniqueId = new UniqueId(uint.Parse(id));
+                mail = await folder.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                var messageId = int.Parse(id);
+                mail = await folder.GetMessageAsync(messageId, data.CancellationToken).ConfigureAwait(false);
+            }
+
             var body = mail.TextBody;
 
             if (string.IsNullOrEmpty(body) || preferHtml)
@@ -401,13 +424,22 @@ Body:
         }
 
         [Block("Gets a mail in EML format")]
-        public static async Task<byte[]> ImapReadMailRaw(BotData data, string id)
+        public static async Task<byte[]> ImapReadMailRaw(BotData data, string id, bool isUid = true)
         {
             data.Logger.LogHeader();
 
-            var inbox = GetOpenInbox(data);
-            var uniqueId = new UniqueId(uint.Parse(id));
-            var mail = await inbox.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
+            var folder = GetCurrentFolder(data);
+            MimeKit.MimeMessage mail;
+            if (isUid)
+            {
+                var uniqueId = new UniqueId(uint.Parse(id));
+                mail = await folder.GetMessageAsync(uniqueId, data.CancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                var messageId = int.Parse(id);
+                mail = await folder.GetMessageAsync(messageId, data.CancellationToken).ConfigureAwait(false);
+            }
 
             using var ms = new MemoryStream();
             await mail.WriteToAsync(ms, data.CancellationToken);
@@ -420,14 +452,24 @@ Body:
         }
 
         [Block("Deletes a mail", name = "Delete Mail")]
-        public static async Task ImapDeleteMail(BotData data, string id)
+        public static async Task ImapDeleteMail(BotData data, string id, bool isUid = true)
         {
             data.Logger.LogHeader();
 
-            var inbox = GetOpenInbox(data);
-            var uniqueId = new UniqueId(uint.Parse(id));
-            await inbox.AddFlagsAsync(uniqueId, MessageFlags.Deleted, true, data.CancellationToken).ConfigureAwait(false);
-            await inbox.ExpungeAsync(data.CancellationToken).ConfigureAwait(false);
+            var folder = GetCurrentFolder(data);
+
+            if (isUid)
+            {
+                var uniqueId = new UniqueId(uint.Parse(id));
+                await folder.AddFlagsAsync(uniqueId, MessageFlags.Deleted, true, data.CancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                var messageId = int.Parse(id);
+                await folder.AddFlagsAsync(messageId, MessageFlags.Deleted, true, data.CancellationToken).ConfigureAwait(false);
+            }
+
+            await folder.ExpungeAsync(data.CancellationToken).ConfigureAwait(false);
 
             data.Logger.Log($"Deleted mail with id {id}", LogColors.DarkOrchid);
         }
@@ -447,16 +489,123 @@ Body:
             return client;
         }
 
-        private static IMailFolder GetOpenInbox(BotData data)
-        {
-            var inbox = GetClient(data).Inbox;
+        private static List<IMailFolder> GetFolders(BotData data)
+            => data.TryGetObject<List<IMailFolder>>("imapListFolders") ?? throw new Exception("Get folder list first!");
+        private static IMailFolder GetCurrentFolder(BotData data)
+            => data.TryGetObject<IMailFolder>("imapCurrentFolder") ?? throw new Exception("Open folder first!");
+        private static void SetCurrentFolder(BotData data, IMailFolder folder)
+            => data.SetObject("imapCurrentFolder", folder);
 
-            if (!inbox.IsOpen)
+        [Block("Get list of folders")]
+        public static async Task<List<string>> GetFolderList(BotData data, bool getListFromCache = true, bool includeInbox = true, bool ignoreBadNamespaces = true)
+        {
+            data.Logger.LogHeader();
+
+            if (getListFromCache)
             {
-                throw new Exception("Open the inbox first!");
+                var cachedList = data.TryGetObject<List<IMailFolder>>("imapListFolders");
+                if (cachedList != null)
+                {
+                    data.Logger.Log($"Folder count (cached): {cachedList.Count}", LogColors.DarkOrchid);
+                    data.Logger.Log($"Folders (cached): {string.Join(", ", cachedList.Select(folder => folder.FullName))}", LogColors.DarkOrchid);
+                    return cachedList.Select(x => x.FullName).ToList();
+                }
             }
 
-            return inbox;
+            var client = GetAuthenticatedClient(data);
+            var folders = new List<IMailFolder>();
+
+            foreach (var personalNamespace in client.PersonalNamespaces)
+            {
+                try
+                {
+                    var foldersInNamespace = await client.GetFoldersAsync(personalNamespace, cancellationToken: data.CancellationToken).ConfigureAwait(false);
+                    folders.AddRange(foldersInNamespace.ToList());
+                }
+                catch (Exception ex)
+                {
+                    if (!ignoreBadNamespaces)
+                        throw;
+                }
+            }
+
+            folders.Remove(client.Inbox);
+            if (includeInbox)
+                folders.Insert(0, client.Inbox);
+
+            data.SetObject("imapListFolders", folders);
+
+            data.Logger.Log($"Folder count: {folders.Count}", LogColors.DarkOrchid);
+            data.Logger.Log($"Folders: {string.Join(", ", folders.Select(folder => folder.FullName))}", LogColors.DarkOrchid);
+            return folders.Select(x => x.FullName).ToList();
+        }
+
+        [Block("Open folder by full name")]
+        public static async Task<bool> ImapOpenFolder(BotData data, string folderName, FolderAccess folderAccess = FolderAccess.ReadOnly)
+        {
+            data.Logger.LogHeader();
+
+            var folders = GetFolders(data);
+            var folder = folders.Find(f => f.FullName.Equals(folderName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new Exception($"Folder '{folderName}' not found");
+
+            await folder.OpenAsync(folderAccess, data.CancellationToken).ConfigureAwait(false);
+            data.Logger.Log(folder.IsOpen ? $"Folder '{folder.Name}' is opened (messages: {folder.Count})" : $"Folder '{folder.Name}' isn't opening", LogColors.DarkOrchid);
+
+            SetCurrentFolder(data, folder);
+
+            return folder.IsOpen;
+        }
+
+        [Block("Close folder by full name")]
+        public static async Task ImapCloseFolder(BotData data, string folderName)
+        {
+            data.Logger.LogHeader();
+
+            var folders = GetFolders(data);
+            var folder = folders.Find(f => f.FullName.Equals(folderName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new Exception($"Folder '{folderName}' not found");
+
+            if (folder.IsOpen)
+            {
+                await folder.CloseAsync();
+            }
+
+            SetCurrentFolder(data, null);
+            data.Logger.Log($"Folder '{folder.Name}' is closed", LogColors.DarkOrchid);
+        }
+
+        [Block("Get mail coint in folder")]
+        public static async Task<int> GetMailCount(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var folder = GetCurrentFolder(data);
+
+            if (!folder.IsOpen)
+            {
+                await folder.OpenAsync(FolderAccess.ReadOnly, data.CancellationToken).ConfigureAwait(false);
+            }
+            data.Logger.Log($"Mail count: {folder.Count}", LogColors.DarkOrchid);
+
+            return folder.Count;
+        }
+
+        [Block("Get last message Id in folder")]
+        public static async Task<int> GetLastMessageId(BotData data)
+        {
+            data.Logger.LogHeader();
+
+            var folder = GetCurrentFolder(data);
+
+            if (!folder.IsOpen)
+            {
+                await folder.OpenAsync(FolderAccess.ReadOnly, data.CancellationToken).ConfigureAwait(false);
+            }
+
+            data.Logger.Log($"Last message Id: {folder.Count-1}", LogColors.DarkOrchid);
+
+            return folder.Count-1;
         }
 
         private static IProxyClient MapProxyClient(BotData data)

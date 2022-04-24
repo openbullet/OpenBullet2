@@ -24,9 +24,9 @@ namespace RuriLib.Blocks.Requests.Pop3
     public static class Methods
     {
         private static readonly List<string> subdomains = new() { "mail", "pop", "pop3", "m", "pop3-mail", "pop-mail", "inbound", "in", "mx" };
-        
+
         [Block("Connects to a POP3 server by automatically detecting the host and port")]
-        public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000)
+        public static async Task Pop3AutoConnect(BotData data, string email, int timeoutMilliseconds = 60000, bool useProxy = true)
         {
             data.Logger.LogHeader();
 
@@ -38,7 +38,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (data.UseProxy && data.Proxy != null)
+            if (useProxy && data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
@@ -243,7 +243,7 @@ namespace RuriLib.Blocks.Requests.Pop3
         }
 
         [Block("Connects to a POP3 server")]
-        public static async Task Pop3Connect(BotData data, string host, int port, int timeoutMilliseconds = 60000)
+        public static async Task Pop3Connect(BotData data, string host, int port, int timeoutMilliseconds = 60000, bool useProxy = true)
         {
             data.Logger.LogHeader();
 
@@ -255,7 +255,7 @@ namespace RuriLib.Blocks.Requests.Pop3
                 ServerCertificateValidationCallback = (s, c, h, e) => true
             };
 
-            if (data.UseProxy && data.Proxy != null)
+            if (useProxy && data.UseProxy && data.Proxy != null)
             {
                 client.ProxyClient = MapProxyClient(data);
             }
@@ -341,7 +341,7 @@ Body:
             return output;
         }
 
-        [Block("Gets a list of all mails in the form From|To|Subject (all if Max Amount is 0) from newest to oldest", 
+        [Block("Gets a list of all mails in the form From|To|Subject (all if Max Amount is 0) from newest to oldest",
             extraInfo = "Use the Index Of block (in list functions) to get the index of the mail " +
             "you want to read, and pass it to the Pop3 Read Mail block")]
         public static async Task<List<string>> Pop3GetMails(BotData data, int maxAmount = 0)
@@ -374,7 +374,7 @@ Body:
 
             var client = GetAuthenticatedClient(data);
             await client.DeleteMessageAsync(index, data.CancellationToken).ConfigureAwait(false);
-            
+
             data.Logger.Log($"Deleted mail with index {index}", LogColors.Mantis);
         }
 
