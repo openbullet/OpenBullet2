@@ -557,14 +557,12 @@ Body:
             return folder.IsOpen;
         }
 
-        [Block("Close folder by full name")]
-        public static async Task ImapCloseFolder(BotData data, string folderName)
+        [Block("Close folder")]
+        public static async Task ImapCloseFolder(BotData data)
         {
             data.Logger.LogHeader();
 
-            var folders = GetFolders(data);
-            var folder = folders.Find(f => f.FullName.Equals(folderName, StringComparison.OrdinalIgnoreCase))
-                ?? throw new Exception($"Folder '{folderName}' not found");
+            var folder = GetCurrentFolder(data);
 
             if (folder.IsOpen)
             {
