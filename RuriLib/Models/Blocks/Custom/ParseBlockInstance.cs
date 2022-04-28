@@ -45,7 +45,12 @@ namespace RuriLib.Models.Blocks.Custom
              */
 
             using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
-            
+
+            if (Safe)
+            {
+                writer.AppendLine("SAFE", 2);
+            }
+
             if (Recursive)
                 writer.AppendLine("RECURSIVE", 2);
 
@@ -83,6 +88,12 @@ namespace RuriLib.Models.Blocks.Custom
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
+
+                if (line.StartsWith("SAFE"))
+                {
+                    Safe = true;
+                    continue;
+                }
 
                 if (line.StartsWith("RECURSIVE"))
                     Recursive = true;
@@ -148,10 +159,7 @@ namespace RuriLib.Models.Blocks.Custom
                 writer.WriteLine("try {");
 
                 // Here we already know the variable exists so we just do the assignment
-                if (Descriptor.ReturnType.HasValue)
-                {
-                    writer.Write($"{OutputVariable} = ");
-                }
+                writer.Write($"{OutputVariable} = ");
 
                 WriteParseMethod(writer);
 

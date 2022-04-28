@@ -52,6 +52,11 @@ namespace RuriLib.Models.Blocks.Custom
 
             using var writer = new LoliCodeWriter(base.ToLC(printDefaultParams));
 
+            if (Safe)
+            {
+                writer.AppendLine("SAFE", 2);
+            }
+
             switch (RequestParams)
             {
                 case StandardRequestParams x:
@@ -153,6 +158,12 @@ namespace RuriLib.Models.Blocks.Custom
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
+
+                if (line.StartsWith("SAFE"))
+                {
+                    Safe = true;
+                    continue;
+                }
 
                 if (line.StartsWith("TYPE:"))
                 {
