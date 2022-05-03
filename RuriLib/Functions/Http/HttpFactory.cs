@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Security;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
@@ -150,6 +151,15 @@ namespace RuriLib.Functions.Http
 
         private static HttpMessageHandler ConfigureHttpMessageHandler(HttpMessageHandler handler, HttpOptions options, CookieContainer cookieContainer)
         {
+            var sslOptions = new SslClientAuthenticationOptions
+            {
+                CertificateRevocationCheckMode = options.CertRevocationMode,
+                EnabledSslProtocols = ToSslProtocols(options.SecurityProtocol),
+                CipherSuitesPolicy = options.UseCustomCipherSuites
+                        ? new CipherSuitesPolicy(options.CustomCipherSuites)
+                        : null
+            };
+
             if (handler is HttpClientHandler httpHandler)
             {
                 httpHandler.MaxAutomaticRedirections = options.MaxNumberOfRedirects;
@@ -158,20 +168,18 @@ namespace RuriLib.Functions.Http
                 httpHandler.CheckCertificateRevocationList = options.CertRevocationMode == X509RevocationMode.Online;
                 httpHandler.UseCookies = true;
                 httpHandler.CookieContainer = cookieContainer;
+
+                // Hack to modify the SSL options
+                var underlyingHandler = (dynamic)httpHandler.GetType().InvokeMember("_underlyingHandler",
+                    BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance, null, httpHandler, null);
+
+                underlyingHandler.SslOptions = sslOptions;
             }
             else if (handler is SocketsHttpHandler socksHandler)
             {
                 socksHandler.MaxAutomaticRedirections = options.MaxNumberOfRedirects;
                 socksHandler.AllowAutoRedirect = options.AutoRedirect;
-                socksHandler.SslOptions = new SslClientAuthenticationOptions
-                {
-                    CertificateRevocationCheckMode = options.CertRevocationMode,
-                    EnabledSslProtocols = ToSslProtocols(options.SecurityProtocol),
-                    CipherSuitesPolicy = options.UseCustomCipherSuites
-                        ? new CipherSuitesPolicy(options.CustomCipherSuites)
-                        : null
-                };
-                
+                socksHandler.SslOptions = sslOptions;
                 socksHandler.ConnectTimeout = options.ConnectTimeout;
                 socksHandler.ResponseDrainTimeout = options.ReadWriteTimeout;
                 socksHandler.UseCookies = true;
