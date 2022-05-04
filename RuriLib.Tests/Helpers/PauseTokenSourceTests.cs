@@ -15,13 +15,13 @@ namespace RuriLib.Tests.Helpers
             var sw = new Stopwatch();
             sw.Start();
 
-            // Start a task that takes 1000 ms to complete
+            // Start a task that takes 2000 ms to complete
             var task = Task.Run(async () =>
             {
-                // Loop 10 times (100 ms each) and pause on each iteration if needed
+                // Loop 10 times (200 ms each) and pause on each iteration if needed
                 for (var i = 0; i < 10; i++)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(200);
                     await pts.Token.PauseIfRequestedAsync();
                 }
             });
@@ -38,8 +38,8 @@ namespace RuriLib.Tests.Helpers
             sw.Stop();
             var elapsed = sw.Elapsed;
 
-            // Make sure the elapsed time is over 1500 ms
-            Assert.True(elapsed > TimeSpan.FromMilliseconds(1500));
+            // Make sure the elapsed time is over 2500 ms
+            Assert.True(elapsed > TimeSpan.FromMilliseconds(2500));
         }
     }
 }
