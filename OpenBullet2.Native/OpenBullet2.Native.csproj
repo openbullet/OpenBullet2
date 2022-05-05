@@ -10,13 +10,17 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="Images\cider.gif" />
+    <None Remove="Images\fairy.gif" />
     <None Remove="Images\ffaez.gif" />
     <None Remove="Images\james.gif" />
+    <None Remove="Images\laiteux.gif" />
     <None Remove="Images\logohq.png" />
     <None Remove="Images\logohq_square_padded.png" />
     <None Remove="Images\logohq_square_padded_bg.png" />
+    <None Remove="Images\mastercho.gif" />
     <None Remove="Images\meinname.gif" />
     <None Remove="Images\sjw.gif" />
+    <None Remove="Images\thefiendqq.gif" />
     <None Remove="Sounds\hit.wav" />
     <None Remove="user-agents.json" />
   </ItemGroup>
@@ -30,13 +34,25 @@
     <Content Include="Images\cider.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\fairy.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\ffaez.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\james.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\laiteux.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\mastercho.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\meinname.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\thefiendqq.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Sounds\hit.wav">
@@ -49,21 +65,21 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Resource Include="Images\logohq.png">
+    <Content Include="Images\logohq.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\logohq_square_padded.png">
+    </Content>
+    <Content Include="Images\logohq_square_padded.png">
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Images\logohq_square_padded_bg.png">
+    </Content>
+    <Content Include="Images\logohq_square_padded_bg.png">
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="Images\sjw.gif">
 		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
