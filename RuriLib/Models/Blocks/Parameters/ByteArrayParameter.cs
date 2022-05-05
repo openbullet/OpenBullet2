@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Blocks.Settings;
+﻿using RuriLib.Extensions;
+using RuriLib.Models.Blocks.Settings;
 using System;
 
 namespace RuriLib.Models.Blocks.Parameters
@@ -28,7 +29,13 @@ namespace RuriLib.Models.Blocks.Parameters
         }
 
         public override BlockSetting ToBlockSetting()
-            => new BlockSetting { Name = Name, FixedSetting = new ByteArraySetting { Value = DefaultValue },
-                InputMode = InputMode };
+            => new()
+            {
+                Name = Name,
+                Description = Description,
+                ReadableName = PrettyName ?? Name.ToReadableName(),
+                FixedSetting = new ByteArraySetting { Value = DefaultValue },
+                InputMode = InputMode
+            };
     }
 }

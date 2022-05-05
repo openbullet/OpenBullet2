@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Services;
-using RuriLib.Extensions;
+using Radzen;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Settings;
@@ -21,7 +21,8 @@ namespace OpenBullet2.Shared
 
         [Parameter] public BlockSetting BlockSetting { get; set; }
         [Parameter] public bool DisplayName { get; set; } = true;
-        public string Name => BlockSetting.Name.ToReadableName();
+
+        private ElementReference settingNameLabel;
 
         private Task<IEnumerable<string>> GetSuggestions(string partial)
         {

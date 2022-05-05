@@ -268,10 +268,19 @@ namespace RuriLib.Helpers.Blocks
                 { typeof(byte[]), () => new ByteArrayParameter() }
             };
 
+            var blockParamAttribute = parameter.GetCustomAttribute<Attributes.BlockParam>();
+
             // If it's one of the standard types
             if (dict.ContainsKey(parameter.ParameterType))
             {
                 var blockParam = dict[parameter.ParameterType].Invoke();
+                
+                if (blockParamAttribute != null)
+                {
+                    blockParam.AssignedName = blockParamAttribute.name;
+                    blockParam.Description = blockParamAttribute.description;
+                }
+
                 blockParam.Name = parameter.Name;
                 return blockParam;
             }
@@ -279,7 +288,7 @@ namespace RuriLib.Helpers.Blocks
             // If it's an enum type
             if (parameter.ParameterType.IsEnum)
             {
-                return new EnumParameter
+                var blockParam = new EnumParameter
                 {
                     Name = parameter.Name,
                     EnumType = parameter.ParameterType,
@@ -287,6 +296,13 @@ namespace RuriLib.Helpers.Blocks
                         ? parameter.DefaultValue.ToString()
                         : Enum.GetNames(parameter.ParameterType).First()
                 };
+
+                if (blockParamAttribute != null)
+                {
+                    blockParam.AssignedName = blockParamAttribute.name;
+                }
+
+                return blockParam;
             }
 
             throw new ArgumentException($"Parameter {parameter.Name} has an invalid type ({parameter.ParameterType})");

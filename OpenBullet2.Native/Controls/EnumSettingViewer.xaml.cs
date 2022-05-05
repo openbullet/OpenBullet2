@@ -41,7 +41,9 @@ namespace OpenBullet2.Native.Controls
 
         private EnumSetting FixedSetting => Setting.FixedSetting as EnumSetting;
 
-        public string Name => Setting.Name.ToReadableName();
+        public string Name => Setting.ReadableName;
+
+        public string Description => Setting.Description;
 
         public IEnumerable<string> Values => FixedSetting.PrettyNames;
 

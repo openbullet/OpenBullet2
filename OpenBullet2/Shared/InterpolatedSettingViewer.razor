@@ -72,5 +72,5 @@
     [Parameter] public BlockSetting BlockSetting { get; set; }
     [Parameter] public bool DisplayName { get; set; }
     [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
-    public string Name => BlockSetting.Name.ToReadableName();
+    public string Name => BlockSetting.ReadableName;
 }

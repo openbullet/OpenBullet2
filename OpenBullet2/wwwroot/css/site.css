@@ -893,3 +893,42 @@ a:hover {
     background-repeat: no-repeat;
 }
 /* -- LOGO */
+
+/* TOOLTIP -- */
+/* https://www.w3schools.com/css/css_tooltip.asp */
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+    .tooltip-wrapper > span {
+        visibility: hidden;
+        position: absolute;
+        background-color: #363636;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        z-index: 2;
+        font-size: 12px;
+        width: 200px;
+        top: -5px;
+        left: 105%;
+    }
+
+        .tooltip-wrapper > span::after {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent black transparent transparent;
+        }
+
+    .tooltip-wrapper:hover span {
+        visibility: visible;
+    }
+/* -- TOOLTIP */

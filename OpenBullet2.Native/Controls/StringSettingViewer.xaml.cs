@@ -96,7 +96,9 @@ namespace OpenBullet2.Native.Controls
         private StringSetting FixedSetting => Setting.FixedSetting as StringSetting;
         private InterpolatedStringSetting InterpolatedSetting => Setting.InterpolatedSetting as InterpolatedStringSetting;
 
-        public string Name => Setting.Name.ToReadableName();
+        public string Name => Setting.ReadableName;
+
+        public string Description => Setting.Description;
 
         public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
 

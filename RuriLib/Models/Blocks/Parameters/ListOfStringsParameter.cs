@@ -28,6 +28,6 @@ namespace RuriLib.Models.Blocks.Parameters
         }
 
         public override BlockSetting ToBlockSetting()
-            => BlockSettingFactory.CreateListOfStringsSetting(Name, DefaultValue, InputMode);
+            => BlockSettingFactory.CreateListOfStringsSetting(Name, DefaultValue, InputMode, PrettyName, Description);
     }
 }

@@ -46,7 +46,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         [Block("Sends a message (ASCII) on the previously opened socket and read the response (ASCII) right after")]
         public static async Task<string> TcpSendRead(BotData data, string message, bool unescape = true, bool terminateWithCRLF = true,
-            int bytesToRead = 4096, int timeoutMilliseconds = 60000, bool useUTF8 = false)
+            int bytesToRead = 4096, int timeoutMilliseconds = 60000, [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
         {
             data.Logger.LogHeader();
 
@@ -106,7 +106,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         [Block("Sends a message(ASCII) on the previously opened socket")]
         public static async Task TcpSend(BotData data, string message, bool unescape = true, bool terminateWithCRLF = true,
-            bool useUTF8 = false)
+            [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
         {
             data.Logger.LogHeader();
 
@@ -140,7 +140,7 @@ namespace RuriLib.Blocks.Requests.Tcp
 
         [Block("Reads a message (ASCII) from the previously opened socket")]
         public static async Task<string> TcpRead(BotData data, int bytesToRead = 4096, 
-            int timeoutMilliseconds = 60000, bool useUTF8 = false)
+            int timeoutMilliseconds = 60000, [BlockParam("Use UTF8", "Enable to use UTF-8 encoding")] bool useUTF8 = false)
         {
             data.Logger.LogHeader();
 

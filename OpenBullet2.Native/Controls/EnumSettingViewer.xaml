@@ -15,6 +15,7 @@
 
         <Label 
             Content="{Binding Name}"
+            ToolTip="{Binding Description}"
             VerticalAlignment="Center"
             Grid.Column="0" />
 

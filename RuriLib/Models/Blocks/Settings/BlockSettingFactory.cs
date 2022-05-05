@@ -1,56 +1,74 @@
-﻿using RuriLib.Models.Blocks.Settings.Interpolated;
+﻿using RuriLib.Extensions;
+using RuriLib.Models.Blocks.Settings.Interpolated;
 using System.Collections.Generic;
 
 namespace RuriLib.Models.Blocks.Settings
 {
     public static class BlockSettingFactory
     {
-        public static BlockSetting CreateBoolSetting(string name, bool defaultValue = false)
-            => new BlockSetting
+        public static BlockSetting CreateBoolSetting(string name, bool defaultValue = false, string readableName = null,
+            string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
                 FixedSetting = new BoolSetting { Value = defaultValue }
             };
 
-        public static BlockSetting CreateIntSetting(string name, int defaultValue = 0)
-            => new BlockSetting
+        public static BlockSetting CreateIntSetting(string name, int defaultValue = 0, string readableName = null,
+            string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
                 FixedSetting = new IntSetting { Value = defaultValue }
             };
 
-        public static BlockSetting CreateFloatSetting(string name, float defaultValue = 0)
-            => new BlockSetting
+        public static BlockSetting CreateFloatSetting(string name, float defaultValue = 0, string readableName = null,
+            string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
                 FixedSetting = new FloatSetting { Value = defaultValue }
             };
 
-        public static BlockSetting CreateByteArraySetting(string name, byte[] defaultValue = null)
-            => new BlockSetting
+        public static BlockSetting CreateByteArraySetting(string name, byte[] defaultValue = null, string readableName = null,
+            string description = null)
+            => new()
             {
                 Name = name,
+                Description= description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
                 FixedSetting = new ByteArraySetting { Value = defaultValue ?? new byte[] { } }
             };
 
-        public static BlockSetting CreateEnumSetting<T>(string name, string defaultValue = "")
-            => new BlockSetting
+        public static BlockSetting CreateEnumSetting<T>(string name, string defaultValue = "", string readableName = null,
+            string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = SettingInputMode.Fixed,
                 FixedSetting = new EnumSetting { EnumType = typeof(T), Value = defaultValue }
             };
 
         public static BlockSetting CreateStringSetting(string name, string defaultValue = "",
-            SettingInputMode mode = SettingInputMode.Fixed, bool multiLine = false)
-        {
-            return new BlockSetting
+            SettingInputMode mode = SettingInputMode.Fixed, bool multiLine = false, string readableName = null,
+            string description = null) 
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = mode,
                 InputVariableName = defaultValue,
                 InterpolatedSetting = new InterpolatedStringSetting
@@ -64,14 +82,14 @@ namespace RuriLib.Models.Blocks.Settings
                     MultiLine = multiLine
                 }
             };
-        }
 
         public static BlockSetting CreateListOfStringsSetting(string name, List<string> defaultValue = null,
-            SettingInputMode mode = SettingInputMode.Fixed)
-        {
-            return new BlockSetting
+            SettingInputMode mode = SettingInputMode.Fixed, string readableName = null, string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = mode,
                 InterpolatedSetting = new InterpolatedListOfStringsSetting
                 {
@@ -82,21 +100,22 @@ namespace RuriLib.Models.Blocks.Settings
                     Value = defaultValue ?? new List<string>()
                 }
             };
-        }
 
-        public static BlockSetting CreateListOfStringsSetting(string name, string variableName)
+        public static BlockSetting CreateListOfStringsSetting(string name, string variableName, string readableName = null,
+            string description = null)
         {
-            var setting = CreateListOfStringsSetting(name, null, SettingInputMode.Variable);
+            var setting = CreateListOfStringsSetting(name, null, SettingInputMode.Variable, readableName, description);
             setting.InputVariableName = variableName;
             return setting;
         }
 
         public static BlockSetting CreateDictionaryOfStringsSetting(string name, Dictionary<string, string> defaultValue = null,
-            SettingInputMode mode = SettingInputMode.Fixed)
-        {
-            return new BlockSetting
+            SettingInputMode mode = SettingInputMode.Fixed, string readableName = null, string description = null)
+            => new()
             {
                 Name = name,
+                Description = description,
+                ReadableName = readableName ?? name.ToReadableName(),
                 InputMode = mode,
                 InterpolatedSetting = new InterpolatedDictionaryOfStringsSetting
                 {
@@ -107,11 +126,11 @@ namespace RuriLib.Models.Blocks.Settings
                     Value = defaultValue ?? new Dictionary<string, string>()
                 }
             };
-        }
 
-        public static BlockSetting CreateDictionaryOfStringsSetting(string name, string variableName)
+        public static BlockSetting CreateDictionaryOfStringsSetting(string name, string variableName, string readableName = null,
+            string description = null)
         {
-            var setting = CreateDictionaryOfStringsSetting(name, null, SettingInputMode.Variable);
+            var setting = CreateDictionaryOfStringsSetting(name, null, SettingInputMode.Variable, readableName, description);
             setting.InputVariableName = variableName;
             return setting;
         }

@@ -12,7 +12,6 @@ namespace OpenBullet2.Shared
         [Parameter] public BlockSetting BlockSetting { get; set; }
         [Parameter] public bool DisplayName { get; set; } = true;
         [Parameter] public EventCallback<SettingInputMode> SwitchedMode { get; set; }
-        public string Name => BlockSetting.Name.ToReadableName();
 
         private static bool CouldBeInterpolated(StringSetting x)
             => x.Value.Contains('<') && x.Value.Contains('>');

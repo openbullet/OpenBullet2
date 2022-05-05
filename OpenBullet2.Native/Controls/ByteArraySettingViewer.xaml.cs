@@ -78,7 +78,9 @@ namespace OpenBullet2.Native.Controls
     {
         public BlockSetting Setting { get; init; }
 
-        public string Name => Setting.Name.ToReadableName();
+        public string Name => Setting.ReadableName;
+
+        public string Description => Setting.Description;
 
         public IEnumerable<string> Suggestions => Utils.Suggestions.GetInputVariableSuggestions(Setting);
 
