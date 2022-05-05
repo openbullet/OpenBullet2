@@ -181,12 +181,6 @@ namespace OpenBullet2.Native.Views.Pages
             var hitVM = SelectedHits.FirstOrDefault();
 
             if (hitVM is null) return;
-
-            if (hitVM.Hit.Config.Mode == ConfigMode.DLL)
-            {
-                Alert.Error("Bot log unavailable", "The bot log is not available for pre-compiled configs");
-                return;
-            }
             
             new MainDialog(new BotLogDialog(hitVM.Hit.BotLogger), $"Bot log for {hitVM.Data}").Show();
         }

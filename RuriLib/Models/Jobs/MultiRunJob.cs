@@ -566,7 +566,7 @@ namespace RuriLib.Models.Jobs
                         Index = index++
                     };
 
-                    input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
+                    input.BotData.Logger.Enabled = true;
                     input.BotData.SetObject("httpClient", httpClient); // Add the default HTTP client
                     input.BotData.SetObject("ironPyEngine", pyengine); // Add the IronPython engine
                     input.BotData.AsyncLocker = asyncLocker;
@@ -803,9 +803,7 @@ namespace RuriLib.Models.Jobs
             var hit = new Hit()
             {
                 Data = botData.Line,
-                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL 
-                    ? botData.Logger 
-                    : null,
+                BotLogger = botData.Logger,
                 Type = botData.STATUS,
                 DataPool = DataPool,
                 Config = Config,
