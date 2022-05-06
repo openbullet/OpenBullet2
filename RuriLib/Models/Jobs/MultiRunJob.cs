@@ -727,8 +727,13 @@ namespace RuriLib.Models.Jobs
 
             if (PeriodicReloadInterval > TimeSpan.Zero)
             {
-                proxyReloadTimer = new Timer(new TimerCallback(async _ => await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false)),
-                    null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
+                proxyReloadTimer = new Timer(new TimerCallback(async _ =>
+                {
+                    if (proxyPool is not null)
+                    {
+                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                    }
+                }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
             }
         }
 
