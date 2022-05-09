@@ -1,5 +1,6 @@
 ﻿@using RuriLib.Models.Blocks.Settings
-@using RuriLib.Extensions 
+@using RuriLib.Extensions
+@using OpenBullet2.Shared
 @inject Microsoft.Extensions.Localization.IStringLocalizer<FixedSettingViewer> Loc
  
 <EditForm Model="BlockSetting">
@@ -85,7 +86,7 @@
                              ValueChanged="(string value) => x.SetFromPrettyName(value)">
                             @foreach (var name in x.PrettyNames)
                             {
-                                <option value="@BlockSetting.Name">@BlockSetting.Name</option>
+                                <option value="@name">@name</option>
                             }
                         </InputSelect>
                     </div>
