@@ -117,7 +117,7 @@
 
         if (allowedCharacters.Contains("Symbols"))
         {
-            sb.Append(Regex.Escape(supportedSymbols));
+            sb.Append(EscapeSymbols(supportedSymbols));
         }
 
         sb.Append("]");
@@ -156,5 +156,12 @@
         {
             await js.AlertError("Failed", "Your regex didn't match the test data");
         }
+    }
+
+    private string EscapeSymbols(string str)
+    {
+        var escaped = Regex.Escape(str);
+        escaped = escaped.Replace("-", "\\-");
+        return escaped;
     }
 }
