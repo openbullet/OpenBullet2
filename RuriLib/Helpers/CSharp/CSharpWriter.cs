@@ -28,7 +28,20 @@ namespace RuriLib.Helpers.CSharp
         public static string FromSetting(BlockSetting setting)
         {
             if (setting.InputMode == SettingInputMode.Variable)
-                return $"{setting.InputVariableName}{GetCasting(setting)}";
+            {
+                // TODO: Find a better way to cast things from an ExpandoObject
+
+                // If it's a variable from an ExpandoObject we need to hard cast it, otherwise we get
+                // a runtime exception when trying to use extension methods on it.
+                if (setting.InputVariableName.StartsWith("globals.") || setting.InputVariableName.StartsWith("input."))
+                {
+                    return $"({GetTypeName(setting)})((object){setting.InputVariableName}){GetCasting(setting, true)}";
+                }
+                else
+                {
+                    return $"{setting.InputVariableName}{GetCasting(setting)}";
+                }
+            }
 
             if (setting.InputMode == SettingInputMode.Interpolated)
             {
@@ -144,25 +157,41 @@ namespace RuriLib.Helpers.CSharp
             return writer.ToString();
         }
 
-        private static string GetCasting(BlockSetting setting)
+        private static string GetCasting(BlockSetting setting, bool dynamic = false)
         {
             if (setting.FixedSetting == null)
                 throw new ArgumentNullException(nameof(setting));
 
-            // Do not cast variables from the expando object (they will give a RuntimeBinderException)
-            if (setting.InputVariableName.StartsWith("input."))
-                return string.Empty;
+            var method = setting.FixedSetting switch
+            {
+                BoolSetting _ => "AsBool()",
+                ByteArraySetting _ => "AsBytes()",
+                DictionaryOfStringsSetting _ => "AsDict()",
+                FloatSetting _ => "AsFloat()",
+                IntSetting _ => "AsInt()",
+                ListOfStringsSetting _ => "AsList()",
+                StringSetting _ => "AsString()",
+                _ => throw new NotImplementedException()
+            };
+
+            // E.g. .DynamicAsString() for dynamics, .AsString() for normal types
+            return dynamic ? $".Dynamic{method}" : $".{method}";
+        }
+
+        private static string GetTypeName(BlockSetting setting)
+        {
+            if (setting.FixedSetting == null)
+                throw new ArgumentNullException(nameof(setting));
 
             return setting.FixedSetting switch
             {
-                BoolSetting _ => ".AsBool()",
-                ByteArraySetting _ => ".AsBytes()",
-                DictionaryOfStringsSetting _ => ".AsDict()",
-                FloatSetting _ => ".AsFloat()",
-                IntSetting _ => ".AsInt()",
-                ListOfStringsSetting _ => ".AsList()",
-                StringSetting _ => ".AsString()",
-                EnumSetting _ => string.Empty,
+                BoolSetting _ => "bool",
+                ByteArraySetting _ => "byte[]",
+                DictionaryOfStringsSetting _ => "Dictionary<string, string>",
+                FloatSetting _ => "float",
+                IntSetting _ => "int",
+                ListOfStringsSetting _ => "List<string>",
+                StringSetting _ => "string",
                 _ => throw new NotImplementedException()
             };
         }
