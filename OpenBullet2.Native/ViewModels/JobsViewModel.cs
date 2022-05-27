@@ -52,7 +52,13 @@ namespace OpenBullet2.Native.ViewModels
         }
 
         private void CreateCollection()
-            => JobsCollection = new ObservableCollection<JobViewModel>(jobManager.Jobs.Select(j => MakeViewModel(j)));
+        {
+            JobsCollection = new ObservableCollection<JobViewModel>(jobManager.Jobs.Select(j => MakeViewModel(j)));
+            SortCollection();
+        }
+
+        private void SortCollection()
+            => JobsCollection = new ObservableCollection<JobViewModel>(JobsCollection.OrderBy(j => j.Id));
 
         public async Task<JobViewModel> CreateJob(JobOptions options)
         {
@@ -73,6 +79,7 @@ namespace OpenBullet2.Native.ViewModels
 
             jobManager.AddJob(job);
             JobsCollection.Add(jobVM);
+            SortCollection();
 
             return jobVM;
         }
@@ -120,6 +127,8 @@ namespace OpenBullet2.Native.ViewModels
             };
 
             JobsCollection.Add(jobVM);
+            SortCollection();
+
             return jobVM;
         }
 
@@ -149,6 +158,7 @@ namespace OpenBullet2.Native.ViewModels
             await jobRepo.Delete(entity);
             jobManager.RemoveJob(jobVM.Job);
             JobsCollection.Remove(jobVM);
+            SortCollection();
         }
 
         private static JobViewModel MakeViewModel(Job job) => job switch
