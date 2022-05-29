@@ -10,6 +10,7 @@ namespace RuriLib.Models.Blocks.Custom.Keycheck
         public IntKey()
         {
             Left = new BlockSetting() { InputMode = SettingInputMode.Variable, FixedSetting = new IntSetting() };
+            Left.InputVariableName = "data.RESPONSECODE";
             Right = new BlockSetting() { FixedSetting = new IntSetting() };
         }
     }

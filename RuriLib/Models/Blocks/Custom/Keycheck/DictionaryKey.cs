@@ -11,6 +11,7 @@ namespace RuriLib.Models.Blocks.Custom.Keycheck
         public DictionaryKey()
         {
             Left = BlockSettingFactory.CreateDictionaryOfStringsSetting("", "data.COOKIES");
+            Left.InputVariableName = "data.HEADERS";
             Right = BlockSettingFactory.CreateStringSetting("");
         }
     }
