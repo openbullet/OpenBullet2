@@ -4,6 +4,8 @@ namespace RuriLib.Models.Data.DataPools
 {
     public class InfiniteDataPool : DataPool
     {
+        public readonly int POOL_CODE = -5;
+
         /// <summary>
         /// Creates a DataPool of empty strings that never ends.
         /// </summary>

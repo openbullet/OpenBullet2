@@ -8,6 +8,8 @@ namespace RuriLib.Models.Data.DataPools
         public string CharSet { get; private set; }
         public int Length { get; private set; }
 
+        public readonly int POOL_CODE = -4;
+
         /// <summary>
         /// Creates a DataPool by generating all the possible combinations of a string.
         /// </summary>

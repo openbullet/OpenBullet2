@@ -10,6 +10,8 @@ namespace RuriLib.Models.Data.DataPools
         public int Step { get; private set; }
         public bool Pad { get; private set; }
 
+        public readonly int POOL_CODE = -3;
+
         /// <summary>
         /// Creates a DataPool by counting numbers from <paramref name="start"/>, increasing
         /// by <paramref name="step"/> for <paramref name="amount"/> times.

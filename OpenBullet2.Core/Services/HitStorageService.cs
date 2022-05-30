@@ -40,11 +40,32 @@ namespace OpenBullet2.Core.Services
                 OwnerId = hit.OwnerId
             };
 
-            if (hit.DataPool is WordlistDataPool)
+            switch (hit.DataPool)
             {
-                var wordlist = (hit.DataPool as WordlistDataPool).Wordlist;
-                entity.WordlistId = wordlist.Id;
-                entity.WordlistName = wordlist.Name;
+                case WordlistDataPool wordlistDataPool:
+                    entity.WordlistId = wordlistDataPool.Wordlist.Id;
+                    entity.WordlistName = wordlistDataPool.Wordlist.Name;
+                    break;
+
+                // The following are not actual wordlists but it can help identify which pool was used
+                case FileDataPool fileDataPool:
+                    entity.WordlistId = fileDataPool.POOL_CODE;
+                    entity.WordlistName = fileDataPool.FileName;
+                    break;
+
+                case RangeDataPool rangeDataPool:
+                    entity.WordlistId = rangeDataPool.POOL_CODE;
+                    entity.WordlistName = $"{rangeDataPool.Start}|{rangeDataPool.Amount}|{rangeDataPool.Pad}";
+                    break;
+
+                case CombinationsDataPool combationsDataPool:
+                    entity.WordlistId = combationsDataPool.POOL_CODE;
+                    entity.WordlistName = $"{combationsDataPool.Length}|{combationsDataPool.CharSet}";
+                    break;
+
+                case InfiniteDataPool infiniteDataPool:
+                    entity.WordlistId = infiniteDataPool.POOL_CODE;
+                    break;
             }
 
             // Only allow saving one hit at a time (multiple threads should

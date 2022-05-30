@@ -55,13 +55,14 @@ namespace OpenBullet2.Core.Entities
         public string ConfigCategory { get; set; } = string.Empty;
 
         /// <summary>
-        /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used.
+        /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used, < -1 for other data pools.
         /// </summary>
         public int WordlistId { get; set; } = -1;
 
         /// <summary>
         /// The name of the wordlist that was used to get the hit, blank if no wordlist was used.
-        /// Needed to identify the name even if the wordlist was deleted.
+        /// Needed to identify the name even if the wordlist was deleted. If <see cref="WordlistId"/> is less than -1,
+        /// this field contains information about the data pool that was used.
         /// </summary>
         public string WordlistName { get; set; } = string.Empty;
 
