@@ -54,7 +54,11 @@ namespace RuriLib.Http
             {
                 await ReceiveFirstLineAsync(cancellationToken).ConfigureAwait(false);
                 await ReceiveHeadersAsync(cancellationToken).ConfigureAwait(false);
-                await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+
+                if (request.Method != HttpMethod.Head)
+                {
+                    await ReceiveContentAsync(readResponseContent, cancellationToken).ConfigureAwait(false);
+                }
             }
             catch
             {
