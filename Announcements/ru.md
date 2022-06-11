@@ -1,3 +1,3 @@
-<p style="font-size: 16px; color: yellowgreen;">INFORMATION</p>
+<p style="font-size: 16px; color: yellowgreen;">ИНФОРМАЦИЯ</p>
 
-Please remember to keep your OB2 instance updated. Updates usually fix bugs and improve the performance, so they are a very nice thing to have! After updating, you can see the list of changes by clicking on the label that displays the current version of the program in the bottom left corner of the page, so you can know exactly what was fixed or added in this version.
+Пожалуйста, не забывайте обновлять OpenBullet2. Обновления обычно исправляют ошибки и улучшают производительность, поэтому их очень приятно иметь! После обновления вы можете просмотреть список изменений, нажав на ярлык, отображающий текущую версию программы в левом нижнем углу страницы, так что вы сможете точно знать, что было исправлено или добавлено в этой версии.
