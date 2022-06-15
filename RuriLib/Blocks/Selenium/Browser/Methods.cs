@@ -47,7 +47,7 @@ namespace RuriLib.Blocks.Selenium.Browser
 
                     if (Utils.IsDocker())
                     {
-                        chromeop.AddArgument("--no-sandbox");
+                        //chromeop.AddArgument("--no-sandbox");
                         chromeop.AddArgument("--whitelisted-ips=''");
                         chromeop.AddArgument("--disable-dev-shm-usage");
                     }
@@ -163,6 +163,7 @@ namespace RuriLib.Blocks.Selenium.Browser
             data.Logger.LogHeader();
 
             var browser = GetBrowser(data);
+            browser.Close();
             browser.Quit();
             data.SetObject("selenium", null);
             data.Logger.Log("Browser closed successfully!", LogColors.JuneBud);
