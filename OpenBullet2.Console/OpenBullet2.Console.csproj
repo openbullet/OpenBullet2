@@ -10,8 +10,8 @@
     <PackageReference Include="Colorful.Console" Version="1.2.15" />
     <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
     <PackageReference Include="AngleSharp" Version="0.14.0" />
-    <PackageReference Include="CaptchaSharp" Version="1.0.9" />
-    <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.4" />
+    <PackageReference Include="CaptchaSharp" Version="1.0.10" />
+    <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.5" />
     <PackageReference Include="IronPython" Version="2.7.11" />
     <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
     <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.4" />
