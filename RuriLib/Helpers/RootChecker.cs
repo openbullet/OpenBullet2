@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace OpenBullet2.Core.Helpers
+namespace RuriLib.Helpers
 {
     public static class RootChecker
     {
@@ -29,16 +29,5 @@ namespace OpenBullet2.Core.Helpers
 
         public static bool IsUnixRoot()
             => !RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && geteuid() == 0;
-
-        public static string RootWarning =>
-@"
-====================================================
-THIS PROGRAM SHOULD NOT RUN AS ROOT / ADMINISTRATOR.
-====================================================
-
-This is due to the fact that configs can contain C# code that is not picked up by your antivirus.
-This can lead to information leaks, malware, system takeover and more.
-Please consider creating a user with limited privileges and running it from there.
-";
     }
 }

@@ -47,7 +47,11 @@ namespace RuriLib.Blocks.Selenium.Browser
 
                     if (Utils.IsDocker())
                     {
-                        //chromeop.AddArgument("--no-sandbox");
+                        if (RootChecker.IsRoot())
+                        {
+                            chromeop.AddArgument("--no-sandbox");
+                        }
+                        
                         chromeop.AddArgument("--whitelisted-ips=''");
                         chromeop.AddArgument("--disable-dev-shm-usage");
                     }
