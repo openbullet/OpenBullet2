@@ -28,6 +28,7 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Repositories;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Helpers;
+using RuriLib.Helpers;
 
 namespace OpenBullet2
 {
@@ -158,7 +159,7 @@ namespace OpenBullet2
 
             if (RootChecker.IsRoot())
             {
-                Console.WriteLine(RootChecker.RootWarning);
+                Console.WriteLine(RootUtils.RootWarning);
             }
 
             if (env.IsDevelopment())
