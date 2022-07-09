@@ -1,5 +1,9 @@
 ﻿using RuriLib.Models.Proxies;
 using RuriLib.Models.Proxies.ProxySources;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -77,6 +81,115 @@ namespace RuriLib.Tests.Models.Proxies
 
             await pool.ReloadAll();
             Assert.Null(pool.GetProxy(true, 3));
+        }
+
+        [Fact(Timeout = 10000)]
+        public async Task GetProxy_BatchFile_ReturnValidProxy()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Well, Only Windows contains Powershell.
+                return;
+            }
+            var tmpBatchFilePath = Path.GetTempFileName() + ".bat";
+            await File.WriteAllTextAsync(tmpBatchFilePath, @"@echo off
+
+echo 127.0.0.1:1111
+echo 127.0.0.1:2222
+echo (Socks5)127.0.0.1:3333
+", Encoding.UTF8);
+            FileProxySource source = new(tmpBatchFilePath);
+
+            var pool = new ProxyPool(new ProxySource[] { source });
+
+            await pool.ReloadAll(false);
+            File.Delete(tmpBatchFilePath);
+            Assert.Equal(3, pool.Proxies.Count());
+            var proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(1111, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(2222, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(3333, proxy.Port);
+            Assert.Equal(ProxyType.Socks5, proxy.Type);
+        }
+
+        [Fact(Timeout = 10000)]
+        public async Task GetProxy_PowershellFile_ReturnValidProxy()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Well, Only Windows contains Powershell.
+                return;
+            }
+            var tmpBatchFilePath = Path.GetTempFileName() + ".ps1";
+            await File.WriteAllTextAsync(tmpBatchFilePath, @"
+Write-Output 127.0.0.1:1111
+Write-Output 127.0.0.1:2222
+Write-Output ""(Socks5)127.0.0.1:3333""
+", Encoding.UTF8);
+            FileProxySource source = new(tmpBatchFilePath);
+
+            var pool = new ProxyPool(new ProxySource[] { source });
+
+            await pool.ReloadAll(false);
+            File.Delete(tmpBatchFilePath);
+            Assert.Equal(3, pool.Proxies.Count());
+            var proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(1111, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(2222, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(3333, proxy.Port);
+            Assert.Equal(ProxyType.Socks5, proxy.Type);
+        }
+
+        [Fact(Timeout = 10000)]
+        public async Task GetProxy_BashFile_ReturnValidProxy()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Well, Windows doesn't have shell.
+                return;
+            }
+            var tmpBatchFilePath = Path.GetTempFileName() + ".sh";
+            await File.WriteAllTextAsync(tmpBatchFilePath, @"#!/bin/bash
+echo 127.0.0.1:1111
+echo 127.0.0.1:2222
+echo ""(Socks5)127.0.0.1:3333""
+", Encoding.UTF8);
+            FileProxySource source = new(tmpBatchFilePath);
+
+            var pool = new ProxyPool(new ProxySource[] { source });
+
+            await pool.ReloadAll(false);
+            File.Delete(tmpBatchFilePath);
+            Assert.Equal(3, pool.Proxies.Count());
+            var proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(1111, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(2222, proxy.Port);
+            proxy = pool.GetProxy();
+            Assert.NotNull(proxy);
+            Assert.Equal("127.0.0.1", proxy.Host);
+            Assert.Equal(3333, proxy.Port);
+            Assert.Equal(ProxyType.Socks5, proxy.Type);
         }
     }
 }
