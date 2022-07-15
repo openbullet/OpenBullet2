@@ -111,7 +111,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         {
             var ofd = new OpenFileDialog
             {
-                Filter = "Proxy files | *.txt",
+                Filter = "Proxy files or Shell scripts echoing proxies one by one | *.txt;*.bat;*.ps1;*.sh",
                 FilterIndex = 1
             };
 
