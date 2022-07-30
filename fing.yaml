@@ -1,0 +1,3 @@
+app: "OpenBullet2"
+platform: "docker"
+port: 5000
