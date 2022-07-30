@@ -1,3 +1,0 @@
-app: "openbullet2"
-platform: "docker"
-port: 5000
