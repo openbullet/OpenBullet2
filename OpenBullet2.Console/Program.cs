@@ -198,14 +198,32 @@ Feel free to contribute to the versatility of this project by adding the missing
 
         private static void UpdateTitle()
         {
-            System.Console.Title = $"OpenBullet 2 (Console POC) - {job.Status} | " +
-                $"Config: {job.Config.Metadata.Name} | " +
-                $"Wordlist: {Path.GetFileName(options.WordlistFile)} | " +
-                $"Bots: {job.Bots} | " +
-                $"CPM: {job.CPM} | " +
-                $"Progress: {job.DataTested} / {job.DataPool.Size} ({job.Progress * 100:0.00}%) | " +
-                $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataFails} Retries: {job.DataRetried + job.DataBanned} | " +
-                $"Proxies: {job.ProxiesAlive} / {job.ProxiesTotal}";
+            try
+            {
+                System.Console.Title = $"OpenBullet 2 (Console POC) - {job.Status} | " +
+                                       $"Config: {job.Config.Metadata.Name} | " +
+                                       $"Wordlist: {Path.GetFileName(options.WordlistFile)} | " +
+                                       $"Bots: {job.Bots} | " +
+                                       $"CPM: {job.CPM} | " +
+                                       $"Progress: {job.DataTested} / {job.DataPool.Size} ({job.Progress * 100:0.00}%) | " +
+                                       $"Hits: {job.DataHits} Custom: {job.DataCustom} ToCheck: {job.DataToCheck} Fails: {job.DataFails} Retries: {job.DataRetried + job.DataBanned} | " +
+                                       $"Proxies: {job.ProxiesAlive} / {job.ProxiesTotal}";
+            }
+            catch (System.InvalidOperationException)
+            {
+                /*
+                    Unhandled exception. System.InvalidOperationException: Collection was modified; enumeration operation may not execute.
+                    at System.Collections.Generic.List`1.Enumerator.MoveNextRare()
+                    at System.Linq.Enumerable.Count[TSource](IEnumerable`1 source, Func`2 predicate)
+                    at OpenBullet2.Console.Program.UpdateTitle()
+                    at OpenBullet2.Console.Program.Run(Options opts)
+                    at OpenBullet2.Console.Program.<>c.<Main>b__4_0(Options opts)
+                    at CommandLine.ParserResultExtensions.WithParsed[T](ParserResult`1 result, Action`1 action)
+                    at OpenBullet2.Console.Program.Main(String[] args)
+                 */
+                // The exception above is not easily solvable.
+                // For now we just simply ignore it.
+            }
         }
     }
 }
