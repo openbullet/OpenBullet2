@@ -31,9 +31,6 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
 
     public class ReloadProxiesAction : MultiRunJobAction
     {
-        public override async Task Execute(MultiRunJob job)
-        {
-            await job.FetchProxiesFromSources();
-        }
+        public override Task Execute(MultiRunJob job) => job.FetchProxiesFromSources();
     }
 }

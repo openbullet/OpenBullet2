@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies.ProxySources
@@ -16,7 +17,7 @@ namespace RuriLib.Models.Proxies.ProxySources
             FileName = fileName;
         }
 
-        public override async Task<IEnumerable<Proxy>> GetAll()
+        public async override Task<IEnumerable<Proxy>> GetAll()
         {
             string[] lines;
             var supportedScripts = new[] { ".bat", ".ps1", ".sh" };
@@ -26,12 +27,15 @@ namespace RuriLib.Models.Proxies.ProxySources
                 // The file is a script.
                 // We will run the execute and read it's stdout for proxies.
                 // just like raw proxy files, one proxy per line
-                var stdout = await RunScript.RunScriptAndGetStdOut(FileName);
+                using var asyncLocker = new AsyncLocker();
+                await asyncLocker.Acquire("ProxySourceReloadScriptFile", CancellationToken.None).ConfigureAwait(false);
+                var stdout = await RunScript.RunScriptAndGetStdOut(FileName).ConfigureAwait(false);
                 if (stdout is null)
                 {
                     throw new Exception($"Failed to get stdout of {FileName}");
                 }
                 lines = stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                asyncLocker.Release("ProxySourceReloadScriptFile");
             }
             else
             {
