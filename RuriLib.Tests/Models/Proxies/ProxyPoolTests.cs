@@ -128,7 +128,13 @@ echo (Socks5)127.0.0.1:3333
                 // Well, Only Windows contains Powershell.
                 return;
             }
+
             var tmpBatchFilePath = Path.GetTempFileName() + ".ps1";
+            // Setting Execution Policy is needed both in the test and real-world use cases of the functionality.
+            // users can use "Set-ExecutionPolicy unrestricted -Scope CurrentUser" apply for all scripts.
+            string command = $"/c powershell -executionpolicy unrestricted \"${tmpBatchFilePath}\"";
+            System.Diagnostics.Process.Start("cmd.exe", command);
+
             await File.WriteAllTextAsync(tmpBatchFilePath, @"
 Write-Output 127.0.0.1:1111
 Write-Output 127.0.0.1:2222
