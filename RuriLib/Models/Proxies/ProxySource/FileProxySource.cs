@@ -50,8 +50,15 @@ namespace RuriLib.Models.Proxies.ProxySources
 
         public override void Dispose()
         {
-            asyncLocker?.Dispose();
-            asyncLocker = null;
+            try
+            {
+                asyncLocker.Dispose();
+                asyncLocker = null;
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

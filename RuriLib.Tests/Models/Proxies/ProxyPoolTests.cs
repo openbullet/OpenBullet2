@@ -20,7 +20,7 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000)
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll();
             pool.RemoveDuplicates();
@@ -35,7 +35,7 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000)
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll();
             Assert.NotNull(pool.GetProxy());
@@ -49,7 +49,7 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll();
             Assert.Null(pool.GetProxy());
@@ -63,7 +63,7 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll();
             Assert.NotNull(pool.GetProxy(true));
@@ -77,7 +77,7 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { TotalUses = 3 }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll();
             Assert.Null(pool.GetProxy(true, 3));
@@ -100,7 +100,7 @@ echo (Socks5)127.0.0.1:3333
 ", Encoding.UTF8);
             using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll(false);
             File.Delete(tmpBatchFilePath);
@@ -142,7 +142,7 @@ Write-Output ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
             using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll(false);
             File.Delete(tmpBatchFilePath);
@@ -178,7 +178,7 @@ echo ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
             using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
             await pool.ReloadAll(false);
             File.Delete(tmpBatchFilePath);

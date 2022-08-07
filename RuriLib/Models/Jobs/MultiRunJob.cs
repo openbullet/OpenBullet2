@@ -947,6 +947,8 @@ namespace RuriLib.Models.Jobs
                 }
             }
 
+            proxyPool?.Dispose();
+
             if (ProxySources is not null)
             {
                 for (int i = 0; i < ProxySources.Count; i++)
