@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies
 {
-    public abstract class ProxySource
+    public abstract class ProxySource : IDisposable
     {
         public ProxyType DefaultType { get; set; } = ProxyType.Http;
         public string DefaultUsername { get; set; } = string.Empty;
@@ -15,5 +15,9 @@ namespace RuriLib.Models.Proxies
 
         public virtual Task<IEnumerable<Proxy>> GetAll()
             => throw new NotImplementedException();
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

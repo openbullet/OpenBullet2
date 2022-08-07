@@ -98,7 +98,7 @@ echo 127.0.0.1:1111
 echo 127.0.0.1:2222
 echo (Socks5)127.0.0.1:3333
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
@@ -134,7 +134,7 @@ Write-Output 127.0.0.1:1111
 Write-Output 127.0.0.1:2222
 Write-Output ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
@@ -170,7 +170,7 @@ echo 127.0.0.1:1111
 echo 127.0.0.1:2222
 echo ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
             var pool = new ProxyPool(new ProxySource[] { source });
 

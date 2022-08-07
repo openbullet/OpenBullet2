@@ -947,6 +947,14 @@ namespace RuriLib.Models.Jobs
                 }
             }
 
+            if (ProxySources is not null)
+            {
+                for (int i = 0; i < ProxySources.Count; i++)
+                {
+                    ProxySources[i]?.Dispose();
+                }
+            }
+
             if (resources is not null)
             {
                 foreach (var resource in resources.Where(r => r.Value is IDisposable)

@@ -10,11 +10,13 @@ namespace RuriLib.Models.Proxies.ProxySources
 {
     public class FileProxySource : ProxySource
     {
-        public string FileName { get; set; } = string.Empty;
+        public string FileName { get; set; }
+        private AsyncLocker asyncLocker;
 
         public FileProxySource(string fileName)
         {
             FileName = fileName;
+            asyncLocker = new();
         }
 
         public async override Task<IEnumerable<Proxy>> GetAll()
@@ -27,7 +29,6 @@ namespace RuriLib.Models.Proxies.ProxySources
                 // The file is a script.
                 // We will run the execute and read it's stdout for proxies.
                 // just like raw proxy files, one proxy per line
-                using var asyncLocker = new AsyncLocker();
                 await asyncLocker.Acquire("ProxySourceReloadScriptFile", CancellationToken.None).ConfigureAwait(false);
                 var stdout = await RunScript.RunScriptAndGetStdOut(FileName).ConfigureAwait(false);
                 if (stdout is null)
@@ -45,6 +46,12 @@ namespace RuriLib.Models.Proxies.ProxySources
             return lines
                 .Select(l => Proxy.TryParse(l.Trim(), out var proxy, DefaultType, DefaultUsername, DefaultPassword) ? proxy : null)
                 .Where(p => p != null);
+        }
+
+        public override void Dispose()
+        {
+            asyncLocker?.Dispose();
+            asyncLocker = null;
         }
     }
 }
