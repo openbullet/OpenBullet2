@@ -102,7 +102,7 @@ namespace RuriLib.Helpers
 
         private async Task WaitForResumeRequestAsync(CancellationToken token)
         {
-            using (token.Register(() => resumeRequestTcs.TrySetCanceled(), useSynchronizationContext: false))
+            await using (token.Register(() => resumeRequestTcs.TrySetCanceled(), useSynchronizationContext: false))
             {
                 await resumeRequestTcs.Task;
             }
@@ -110,7 +110,7 @@ namespace RuriLib.Helpers
 
         private async Task WaitForPauseConfirmationAsync(CancellationToken token)
         {
-            using (token.Register(() => pauseConfirmationTcs.TrySetCanceled(), useSynchronizationContext: false))
+            await using (token.Register(() => pauseConfirmationTcs.TrySetCanceled(), useSynchronizationContext: false))
             {
                 await pauseConfirmationTcs.Task;
             }

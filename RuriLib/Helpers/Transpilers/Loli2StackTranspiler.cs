@@ -27,12 +27,11 @@ namespace RuriLib.Helpers.Transpilers
 
             var localLineNumber = 0;
             var lineNumber = 0;
-            string line, trimmedLine;
 
             while (localLineNumber < lines.Length)
             {
-                line = lines[localLineNumber];
-                trimmedLine = line.Trim();
+                var line = lines[localLineNumber];
+                var trimmedLine = line.Trim();
                 localLineNumber++;
                 lineNumber++;
 

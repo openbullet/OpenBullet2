@@ -48,7 +48,7 @@ namespace RuriLib.Functions.Http
                 if (options.UrlEncodeContent)
                 {
                     content = string.Join("", content.SplitInChunks(2080)
-                        .Select(s => Uri.EscapeDataString(s)))
+                        .Select(Uri.EscapeDataString))
                         .Replace($"%26", "&").Replace($"%3D", "=");
                 }
 
@@ -233,7 +233,7 @@ namespace RuriLib.Functions.Http
                 finally
                 {
                     if (fileStream != null)
-                        fileStream.Dispose();
+                        await fileStream.DisposeAsync().ConfigureAwait(false);
                 }
         }
 

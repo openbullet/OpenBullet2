@@ -15,7 +15,7 @@ namespace RuriLib.Helpers
         public static bool IsValid(string name)
         {
             if (name.Contains("."))
-                return name.Split('.').All(n => IsValid(n));
+                return name.Split('.').All(IsValid);
 
             var provider = CodeDomProvider.CreateProvider("C#");
             return provider.IsValidIdentifier(name);

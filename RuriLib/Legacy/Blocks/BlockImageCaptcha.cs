@@ -112,9 +112,9 @@ namespace RuriLib.Legacy.Blocks
             if (Base64)
             {
                 var bytes = Convert.FromBase64String(localUrl);
-                using var imageFile = new FileStream(captchaFile, FileMode.Create);
-                imageFile.Write(bytes, 0, bytes.Length);
-                imageFile.Flush();
+                await using var imageFile = new FileStream(captchaFile, FileMode.Create);
+                await imageFile.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+                await imageFile.FlushAsync().ConfigureAwait(false);
             }
             else if (SendScreenshot && File.Exists(screenshotFile))
             {
@@ -153,7 +153,7 @@ namespace RuriLib.Legacy.Blocks
                     data.Logger.Enabled = true;
 
                     // Save the image
-                    File.WriteAllBytes(captchaFile, data.RAWSOURCE);
+                    await File.WriteAllBytesAsync(captchaFile, data.RAWSOURCE).ConfigureAwait(false);
 
                     // Put the old values back
                     data.ADDRESS = oldAddress;

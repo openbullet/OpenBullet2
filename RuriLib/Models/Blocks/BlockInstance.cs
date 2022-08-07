@@ -67,9 +67,8 @@ namespace RuriLib.Models.Blocks
 
             using var reader = new StringReader(script);
             using var writer = new StringWriter();
-            string line;
 
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 var trimmedLine = line.Trim();
 

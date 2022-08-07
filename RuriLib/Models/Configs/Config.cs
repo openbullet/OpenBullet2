@@ -76,8 +76,8 @@ namespace RuriLib.Models.Configs
                 {
                     ConfigMode.CSharp => true,
                     ConfigMode.DLL => true,
-                    ConfigMode.Stack => Stack.Any(b => IsDangerousBlock(b)),
-                    ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript).Any(b => IsDangerousBlock(b)),
+                    ConfigMode.Stack => Stack.Any(IsDangerousBlock),
+                    ConfigMode.LoliCode => Loli2StackTranspiler.Transpile(LoliCodeScript).Any(IsDangerousBlock),
                     ConfigMode.Legacy => false,
                     _ => throw new NotImplementedException(),
                 };

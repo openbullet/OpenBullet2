@@ -145,7 +145,7 @@ namespace RuriLib.Blocks.Requests.WebSocket
             while (messages.Count == 0)
             {
                 messages = GetMessages(data);
-                await Task.Delay(pollIntervalInMilliseconds);
+                await Task.Delay(pollIntervalInMilliseconds, cts.Token);
 
                 if (cts.IsCancellationRequested)
                 {

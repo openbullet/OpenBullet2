@@ -122,7 +122,7 @@ namespace RuriLib.Legacy.Functions.Conditions
         /// <param name="conditions">The keycheck conditions</param>
         /// <returns>True if all the conditions are verified.</returns>
         public static bool VerifyAll(KeycheckCondition[] conditions)
-            => conditions.All(c => Verify(c));
+            => conditions.All(Verify);
 
         /// <summary>
         /// Verifies if at least one of the provided conditions is true (after replacing).
@@ -136,7 +136,7 @@ namespace RuriLib.Legacy.Functions.Conditions
         /// <param name="conditions">The keycheck conditions</param>
         /// <returns>True if any condition is verified.</returns>
         public static bool VerifyAny(KeycheckCondition[] conditions)
-            => conditions.Any(c => Verify(c));
+            => conditions.Any(Verify);
     }
 
     

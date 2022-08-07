@@ -124,12 +124,7 @@ namespace RuriLib.Legacy.Blocks
                 var name = match.Groups[1].Value;
 
                 // Retrieve the dictionary
-                var dict = GetVariables(data).Get<DictionaryOfStringsVariable>(name);
-
-                if (dict == null)
-                {
-                    dict = globals.Get<DictionaryOfStringsVariable>(name);
-                }
+                var dict = GetVariables(data).Get<DictionaryOfStringsVariable>(name) ?? globals.Get<DictionaryOfStringsVariable>(name);
 
                 // If there's no corresponding variable, just readd the input string and proceed with normal replacement
                 if (dict == null)
@@ -320,8 +315,7 @@ namespace RuriLib.Legacy.Blocks
                                 break;
                             }
 
-                            var index = 0;
-                            int.TryParse(ParseArguments(args, '[', ']')[0], out index);
+                            int.TryParse(ParseArguments(args, '[', ']')[0], out var index);
                             var item = GetListItem(v.AsListOfStrings(), index); // Can return null
 
                             if (item != null)
@@ -423,7 +417,7 @@ namespace RuriLib.Legacy.Blocks
             
             if (urlEncode)
             {
-                list = list.Select(v => Uri.EscapeDataString(v)).ToList();
+                list = list.Select(Uri.EscapeDataString).ToList();
             }
 
             Variable variable = null;

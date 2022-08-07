@@ -1,4 +1,5 @@
 ﻿using RuriLib.Models.Blocks.Settings;
+using System;
 
 namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
 {
@@ -10,7 +11,7 @@ namespace RuriLib.Models.Blocks.Custom.HttpRequest.Multipart
         {
             Data = new BlockSetting() {
                 Name = "data", 
-                FixedSetting = new ByteArraySetting { Value = new byte[0] }
+                FixedSetting = new ByteArraySetting { Value = Array.Empty<byte>() }
             };
 
             ((StringSetting)ContentType.FixedSetting).Value = "application/octet-stream";

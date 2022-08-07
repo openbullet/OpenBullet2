@@ -78,13 +78,12 @@ namespace RuriLib.Models.Blocks.Custom
             base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line, lineCopy;
 
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 line = line.Trim();
                 lineNumber++;
-                lineCopy = line;
+                var lineCopy = line;
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;

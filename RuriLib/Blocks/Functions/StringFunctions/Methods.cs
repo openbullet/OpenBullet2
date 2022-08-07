@@ -139,7 +139,7 @@ namespace RuriLib.Blocks.Functions.String
         public static string UrlEncode(BotData data, [Variable] string input)
         {
             // The maximum allowed Uri size is 2083 characters, we use 2080 as a precaution
-            var encoded = string.Join("", input.SplitInChunks(2080).Select(s => Uri.EscapeDataString(s)));
+            var encoded = string.Join("", input.SplitInChunks(2080).Select(Uri.EscapeDataString));
             data.Logger.LogHeader();
             data.Logger.Log($"URL Encoded string: {encoded}", LogColors.YellowGreen);
             return encoded;

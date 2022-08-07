@@ -34,7 +34,7 @@ namespace RuriLib.Functions.Parsing
                 throw new ArgumentException("The provided json is not a valid object or array");
             
             return container.SelectTokens(path, false)
-                    .Select(token => ConvertToken(token));
+                    .Select(ConvertToken);
         }
 
         private static string ConvertToken(JToken token)
