@@ -27,7 +27,7 @@ namespace RuriLib.Models.Proxies.ProxySources
                 // The file is a script.
                 // We will run the execute and read it's stdout for proxies.
                 // just like raw proxy files, one proxy per line
-                var stdout = await RunScript.RunScriptAndGetStdOut(FileName, cancellationToken);
+                var stdout = await RunScript.RunScriptAndGetStdOut(FileName);
                 if (stdout is null)
                 {
                     throw new Exception($"Failed to get stdout of {FileName}");
