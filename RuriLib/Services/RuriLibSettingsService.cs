@@ -44,8 +44,8 @@ namespace RuriLib.Services
         /// <summary>
         /// Saves the settings to the designated file.
         /// </summary>
-        public async Task Save()
-            => await File.WriteAllTextAsync(RlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
+        public Task Save()
+            => File.WriteAllTextAsync(RlSettFile, JsonConvert.SerializeObject(RuriLibSettings, jsonSettings));
 
         /// <summary>
         /// Gets the currently supported statuses (including the custom ones defined in the Environment settings).

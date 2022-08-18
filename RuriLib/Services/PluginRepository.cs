@@ -54,7 +54,7 @@ namespace RuriLib.Services
         public IEnumerable<Assembly> GetPlugins()
             => Directory.GetFiles(BaseFolder, "*.dll")
                 .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
-                .Select(p => Assembly.LoadFrom(p));
+                .Select(Assembly.LoadFrom);
 
         /// <summary>
         /// Retrieves the names of .dll files in the base folder (without extension).
@@ -62,7 +62,7 @@ namespace RuriLib.Services
         public IEnumerable<string> GetPluginNames()
             => Directory.GetFiles(BaseFolder, "*.dll")
                 .Where(p => !toDelete.Contains(Path.GetFileNameWithoutExtension(p)))
-                .Select(p => Path.GetFileNameWithoutExtension(p));
+                .Select(Path.GetFileNameWithoutExtension);
 
         /// <summary>
         /// Retrieves the assemblies of all plugins and their references.
@@ -96,7 +96,7 @@ namespace RuriLib.Services
                 }
                 catch
                 {
-
+                    // ignored
                 }
             }
 

@@ -180,7 +180,7 @@ namespace OpenBullet2.Native.Views.Pages
 
             // Write the temporary file
             var tempFile = Path.GetTempFileName();
-            File.WriteAllLines(tempFile, SelectedHits.Select(h => h.Data));
+            await File.WriteAllLinesAsync(tempFile, SelectedHits.Select(h => h.Data)).ConfigureAwait(false);
             var dataPoolOptions = new FileDataPoolOptions
             {
                 FileName = tempFile,

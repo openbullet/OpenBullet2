@@ -106,7 +106,7 @@ namespace RuriLib.Helpers
         /// <summary>
         /// Unpacks a <paramref name="stream"/> to a Config.
         /// </summary>
-        public static async Task<Config> Unpack(Stream stream)
+        public static Task<Config> Unpack(Stream stream)
         {
             var config = new Config();
 
@@ -197,7 +197,7 @@ namespace RuriLib.Helpers
             }
 
             config.UpdateHashes();
-            return await Task.FromResult(config);
+            return Task.FromResult(config);
         }
 
         private static async Task CreateZipEntryFromString(ZipArchive archive, string path, string content)
@@ -205,7 +205,7 @@ namespace RuriLib.Helpers
             var zipFile = archive.CreateEntry(path);
 
             using var sourceFileStream = new MemoryStream(Encoding.UTF8.GetBytes(content));
-            using var zipEntryStream = zipFile.Open();
+            await using var zipEntryStream = zipFile.Open();
             await sourceFileStream.CopyToAsync(zipEntryStream);
         }
 
@@ -214,7 +214,7 @@ namespace RuriLib.Helpers
             var zipFile = archive.CreateEntry(path);
 
             using var sourceFileStream = new MemoryStream(content);
-            using var zipEntryStream = zipFile.Open();
+            await using var zipEntryStream = zipFile.Open();
             await sourceFileStream.CopyToAsync(zipEntryStream);
         }
 

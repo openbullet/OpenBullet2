@@ -9,7 +9,7 @@ namespace RuriLib.Models.Proxies.ProxySources
 {
     public class FileProxySource : ProxySource
     {
-        public string FileName { get; set; } = string.Empty;
+        public string FileName { get; set; }
 
         public FileProxySource(string fileName)
         {

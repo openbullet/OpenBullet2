@@ -64,13 +64,12 @@ namespace RuriLib.Models.Blocks
             base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line, lineCopy;
 
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 line = line.Trim();
                 lineNumber++;
-                lineCopy = line;
+                var lineCopy = line;
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
@@ -181,7 +180,7 @@ namespace RuriLib.Models.Blocks
 
             // Append MethodName(data, param1, "param2", param3);
             var parameters = new List<string> { "data" }
-                .Concat(Settings.Values.Select(s => CSharpWriter.FromSetting(s)));
+                .Concat(Settings.Values.Select(CSharpWriter.FromSetting));
 
             writer.Write($"{Descriptor.Id}({string.Join(", ", parameters)})");
 

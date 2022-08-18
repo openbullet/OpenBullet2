@@ -103,7 +103,7 @@ namespace RuriLib.Logging
             var callingMethod = new StackFrame(1).GetMethod();
             var attribute = callingMethod.GetCustomAttribute<Block>();
 
-            if (attribute != null && attribute.name != null)
+            if (attribute is { name: { } })
                 caller = attribute.name;
 
             var entry = new BotLoggerEntry

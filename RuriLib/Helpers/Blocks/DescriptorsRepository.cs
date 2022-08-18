@@ -95,7 +95,7 @@ namespace RuriLib.Helpers.Blocks
                         ExtraInfo = attribute.extraInfo ?? string.Empty,
                         AssemblyFullName = assembly.FullName,
                         Parameters = method.GetParameters().Where(p => p.ParameterType != typeof(BotData))
-                            .Select(p => BuildBlockParameter(p)).ToDictionary(p => p.Name, p => p),
+                            .Select(BuildBlockParameter).ToDictionary(p => p.Name, p => p),
                         ReturnType = ToVariableType(method.ReturnType),
                         Category = new BlockCategory
                         {
@@ -314,11 +314,12 @@ namespace RuriLib.Helpers.Blocks
         public CategoryTreeNode AsTree()
         {
             // This is the root node, all assemblies are direct children of this node
-            var root = new CategoryTreeNode { Name = "Root" };
-
-            // Add all descriptors as children of the root node (we need the ToList() in order to have
-            // a new pointer to list and not operate on the same one Descriptors uses, since we will be removing items)
-            root.Descriptors = Descriptors.Values.ToList();
+            var root = new CategoryTreeNode {
+                Name = "Root",
+                // Add all descriptors as children of the root node (we need the ToList() in order to have
+                // a new pointer to list and not operate on the same one Descriptors uses, since we will be removing items)
+                Descriptors = Descriptors.Values.ToList()
+            };
 
             // Push leaves down
             PushLeaves(root, 0);

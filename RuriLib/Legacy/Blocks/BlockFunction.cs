@@ -715,7 +715,7 @@ namespace RuriLib.Legacy.Blocks
 
                     case Function.URLEncode:
                         // The maximum allowed Uri size is 2083 characters, we use 2080 as a precaution
-                        outputString = string.Join("", SplitInChunks(localInputString, 2080).Select(s => Uri.EscapeDataString(s)));
+                        outputString = string.Join("", SplitInChunks(localInputString, 2080).Select(Uri.EscapeDataString));
                         break;
 
                     case Function.URLDecode:

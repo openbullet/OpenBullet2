@@ -85,12 +85,11 @@ namespace RuriLib.Models.Blocks.Custom
             base.FromLC(ref script, ref lineNumber);
 
             using var reader = new StringReader(script);
-            string line, lineCopy;
 
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 line = line.Trim();
-                lineCopy = line;
+                var lineCopy = line;
                 lineNumber++;
 
                 if (string.IsNullOrWhiteSpace(line))
@@ -198,7 +197,7 @@ namespace RuriLib.Models.Blocks.Custom
                     writer.Write("else if (");
                 }
 
-                var conditions = keychain.Keys.Select(k => CSharpWriter.ConvertKey(k));
+                var conditions = keychain.Keys.Select(CSharpWriter.ConvertKey);
 
                 var chainedCondition = keychain.Mode switch
                 {

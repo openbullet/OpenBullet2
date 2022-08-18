@@ -126,14 +126,14 @@ namespace OpenBullet2.Native.ViewModels
             ConfigsCollection.Remove(vm);
         }
 
-        public async Task Save(ConfigViewModel vm)
+        public Task Save(ConfigViewModel vm)
         {
             if (vm.IsRemote)
             {
                 throw new Exception("You cannot save remote configs");
             }
 
-            await configRepo.Save(vm.Config);
+            return configRepo.Save(vm.Config);
         }
 
         public async Task Rescan()

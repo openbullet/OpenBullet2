@@ -481,8 +481,6 @@ namespace RuriLib.Legacy.Functions.Crypto
             if (IV == null || IV.Length <= 0)
                 throw new ArgumentNullException("IV");
 
-            byte[] encrypted;
-
             using var aesAlg = Aes.Create();
 
             aesAlg.KeySize = 256;
@@ -500,7 +498,7 @@ namespace RuriLib.Legacy.Functions.Crypto
             {
                 swEncrypt.Write(plainText);
             }
-            encrypted = msEncrypt.ToArray();
+            var encrypted = msEncrypt.ToArray();
 
             return Convert.ToBase64String(encrypted);
         }

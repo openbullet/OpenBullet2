@@ -182,7 +182,7 @@ namespace RuriLib.Legacy.Blocks
 
                     // Initialize the TCP client, connect to the host and get the SSL stream
                     tcp = new TcpClient();
-                    tcp.Connect(h, p);
+                    await tcp.ConnectAsync(h, p).ConfigureAwait(false);
 
                     if (tcp.Connected)
                     {
@@ -191,14 +191,14 @@ namespace RuriLib.Legacy.Blocks
                         if (UseSSL)
                         {
                             ssl = new SslStream(net);
-                            ssl.AuthenticateAsClient(h);
+                            await ssl.AuthenticateAsClientAsync(h).ConfigureAwait(false);
                         }
 
                         if (WaitForHello)
                         {
                             // Read the stream to make sure we are connected
-                            if (UseSSL) bytes = ssl.Read(buffer, 0, buffer.Length);
-                            else bytes = net.Read(buffer, 0, buffer.Length);
+                            if (UseSSL) bytes = await ssl.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                            else bytes = await net.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
 
                             // Save the response as ASCII in the SOURCE variable
                             response = Encoding.ASCII.GetString(buffer, 0, bytes);
@@ -229,14 +229,8 @@ namespace RuriLib.Legacy.Blocks
 
                     tcp.Close();
                     tcp = null;
-                    if (net != null)
-                    {
-                        net.Close();
-                    }
-                    if (ssl != null)
-                    {
-                        ssl.Close();
-                    }
+                    net?.Close();
+                    ssl?.Close();
                     data.Logger.Log($"Succesfully closed the stream", LogColors.GreenYellow);
                     break;
 
@@ -247,7 +241,7 @@ namespace RuriLib.Legacy.Blocks
                     }
 
                     var msg = ReplaceValues(Message, ls);
-                    byte[] b = Array.Empty<byte>();
+                    byte[] b;
                     var payload = Encoding.ASCII.GetBytes(msg.Unescape());
 
                     // Manual implementation of the WebSocket frame
@@ -308,12 +302,12 @@ namespace RuriLib.Legacy.Blocks
                     if (TCPSSL.HasValue && TCPSSL.Value)
                     {
                         ssl.Write(b);
-                        bytes = ssl.Read(buffer, 0, buffer.Length);
+                        bytes = await ssl.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                     }
                     else
                     {
-                        net.Write(b, 0, b.Length);
-                        bytes = net.Read(buffer, 0, buffer.Length);
+                        await net.WriteAsync(b, 0, b.Length).ConfigureAwait(false);
+                        bytes = await net.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
                     }
 
                     // Save the response as ASCII in the SOURCE variable and log it

@@ -38,18 +38,16 @@ namespace RuriLib.Functions.Parsing
             if (((leftDelim != string.Empty && !input.Contains(leftDelim, comp)) || (rightDelim != string.Empty && !input.Contains(rightDelim, comp))))
                 yield break;
 
-            int pFrom, pTo;
-
             while ((leftDelim == string.Empty || (input.Contains(leftDelim, comp))) && (rightDelim == string.Empty || input.Contains(rightDelim, comp)))
             {
                 // Search for left delimiter and Calculate offset
-                pFrom = leftDelim == string.Empty ? 0 : input.IndexOf(leftDelim, comp) + leftDelim.Length;
+                var pFrom = leftDelim == string.Empty ? 0 : input.IndexOf(leftDelim, comp) + leftDelim.Length;
 
                 // Move right of offset
                 input = input.Substring(pFrom);
                 
                 // Search for right delimiter and Calculate length to parse
-                pTo = rightDelim == string.Empty ? input.Length : input.IndexOf(rightDelim, comp);
+                var pTo = rightDelim == string.Empty ? input.Length : input.IndexOf(rightDelim, comp);
                 
                 // Parse it
                 yield return (input.Substring(0, pTo));

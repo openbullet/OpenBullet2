@@ -5,7 +5,7 @@ namespace RuriLib.Models.Variables
 {
     public class DictionaryOfStringsVariable : Variable
     {
-        private readonly Dictionary<string, string> value = new();
+        private readonly Dictionary<string, string> value;
 
         public DictionaryOfStringsVariable(Dictionary<string, string> value)
         {

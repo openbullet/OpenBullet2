@@ -8,7 +8,7 @@ namespace RuriLib.Models.Proxies.ProxySources
 {
     public class RemoteProxySource : ProxySource
     {
-        public string Url { get; set; } = string.Empty;
+        public string Url { get; set; }
 
         public RemoteProxySource(string url)
         {
