@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies.ProxySources
@@ -16,7 +17,7 @@ namespace RuriLib.Models.Proxies.ProxySources
             FileName = fileName;
         }
 
-        public override async Task<IEnumerable<Proxy>> GetAll()
+        public override async Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             string[] lines;
             var supportedScripts = new[] { ".bat", ".ps1", ".sh" };
@@ -26,7 +27,7 @@ namespace RuriLib.Models.Proxies.ProxySources
                 // The file is a script.
                 // We will run the execute and read it's stdout for proxies.
                 // just like raw proxy files, one proxy per line
-                var stdout = await RunScript.RunScriptAndGetStdOut(FileName);
+                var stdout = await RunScript.RunScriptAndGetStdOut(FileName, cancellationToken);
                 if (stdout is null)
                 {
                     throw new Exception($"Failed to get stdout of {FileName}");
@@ -35,7 +36,7 @@ namespace RuriLib.Models.Proxies.ProxySources
             }
             else
             {
-                lines = await File.ReadAllLinesAsync(FileName);
+                lines = await File.ReadAllLinesAsync(FileName, cancellationToken);
             }
 
             return lines

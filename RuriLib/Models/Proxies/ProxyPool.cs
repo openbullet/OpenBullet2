@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies
@@ -62,9 +63,9 @@ namespace RuriLib.Models.Proxies
         public Proxy GetProxy(bool evenBusy = false, int maxUses = 0)
         {
 
-            for (int i = 0; i < proxies.Count; i++)
+            for (var i = 0; i < proxies.Count; i++)
             {
-                Proxy px = proxies[i];
+                var px = proxies[i];
                 if (evenBusy)
                 {
                     if (px.ProxyStatus == ProxyStatus.Available || px.ProxyStatus == ProxyStatus.Busy)
@@ -146,7 +147,7 @@ namespace RuriLib.Models.Proxies
         /// <summary>
         /// Reloads all proxies in the pool from the provided sources.
         /// </summary>
-        public async Task ReloadAll(bool shuffle = true)
+        public async Task ReloadAllAsync(bool shuffle = true, CancellationToken cancellationToken = default)
         {
             if (isReloadingProxies)
             {
@@ -161,7 +162,7 @@ namespace RuriLib.Models.Proxies
             while (currentTry < maxReloadTries)
             {
                 // Try to reload proxies from sources
-                if (await TryReloadAll(shuffle))
+                if (await TryReloadAllAsync(shuffle, cancellationToken).ConfigureAwait(false))
                 {
                     isReloadingProxies = false;
                     return;
@@ -169,20 +170,20 @@ namespace RuriLib.Models.Proxies
 
                 // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
                 Console.WriteLine($"Failed to reload, no proxies found. Waiting {currentBackoff} ms and trying again...");
-                await Task.Delay(currentBackoff);
+                await Task.Delay(currentBackoff, cancellationToken);
 
                 currentTry++;
                 currentBackoff *= 2;
             }
         }
 
-        private async Task<bool> TryReloadAll(bool shuffle = true)
+        private async Task<bool> TryReloadAllAsync(bool shuffle = true, CancellationToken cancellationToken = default)
         {
             var tasks = sources.Select(async source =>
             {
                 try
                 {
-                    return await source.GetAll();
+                    return await source.GetAllAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -205,7 +206,7 @@ namespace RuriLib.Models.Proxies
                 }
             });
 
-            var results = (await Task.WhenAll(tasks)).SelectMany(r => r);
+            var results = (await Task.WhenAll(tasks).ConfigureAwait(false)).SelectMany(r => r);
 
             // If no results, return false to trigger the backoff mechanism (do not remove existing proxies)
             if (!results.Any())

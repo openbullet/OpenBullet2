@@ -227,7 +227,7 @@ namespace RuriLib.Models.Jobs
                         {
                             if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                             {
-                                await input.ProxyPool.ReloadAll().ConfigureAwait(false);
+                                await input.ProxyPool.ReloadAllAsync().ConfigureAwait(false);
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
                             {
@@ -431,7 +431,7 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Controls
-        public override async Task Start()
+        public override async Task Start(CancellationToken cancellationToken = default)
         {
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
@@ -462,7 +462,7 @@ namespace RuriLib.Models.Jobs
 
                     var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
-                    await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                    await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
 
                     if (!proxyPool.Proxies.Any())
                     {
@@ -471,7 +471,13 @@ namespace RuriLib.Models.Jobs
                 }
 
                 // Wait for the start condition to be verified
-                await base.Start().ConfigureAwait(false);
+                await base.Start(cancellationToken).ConfigureAwait(false);
+
+                // Execute the startup script
+                if (Config.Mode == ConfigMode.LoliCode || Config.Mode == ConfigMode.Stack)
+                {
+                    Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(Config.StartupLoliCodeScript, Config.Settings);
+                }
 
                 Script script = null;
                 MethodInfo method = null;
@@ -502,7 +508,7 @@ namespace RuriLib.Models.Jobs
                     }
 
                     script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    script.Compile();
+                    script.Compile(cancellationToken);
                 }
 
                 Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
@@ -544,6 +550,13 @@ namespace RuriLib.Models.Jobs
                 var pyengine = runtime.GetEngine("py");
                 var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
                 pco.Module &= ~ModuleOptions.Optimized;
+
+                if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
+                {
+                    var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, pluginRepo);
+                    var startupGlobals = new ScriptGlobals(null, globalVariables);
+                    await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
+                }
 
                 long index = 0;
                 var workItems = DataPool.DataList.Select(line =>
@@ -669,7 +682,7 @@ namespace RuriLib.Models.Jobs
 
         #region Public Methods
         public async Task FetchProxiesFromSources()
-            => await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+            => await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
         #endregion
 
         #region Wrappers for Parallelizer methods
@@ -731,7 +744,7 @@ namespace RuriLib.Models.Jobs
                 {
                     if (proxyPool is not null)
                     {
-                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                        await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
             }

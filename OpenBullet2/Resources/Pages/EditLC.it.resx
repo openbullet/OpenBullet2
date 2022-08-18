@@ -138,6 +138,12 @@
   <data name="SaveScript" xml:space="preserve">
     <value>Salva Script</value>
   </data>
+  <data name="StartupEditorInfo" xml:space="preserve">
+    <value>Puoi scrivere uno script LoliCode che verrà eseguito quando il job viene lanciato</value>
+  </data>
+  <data name="ToggleStartupEditor" xml:space="preserve">
+    <value>Mostra/Nascondi Editor Startup</value>
+  </data>
   <data name="ToggleUsings" xml:space="preserve">
     <value>Mostra/Nascondi Usings</value>
   </data>

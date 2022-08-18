@@ -15,7 +15,8 @@ namespace RuriLib.Blocks.Captchas
     public static class Methods
     {
         [Block("Solves a text captcha")]
-        public static async Task<string> SolveTextCaptcha(BotData data, string question,
+        public static async Task<string> SolveTextCaptcha(BotData data,
+            [BlockParam("Question", "The description of the captcha to solve, e.g. What is 2+2?")] string question,
             CaptchaLanguageGroup languageGroup = CaptchaLanguageGroup.NotSpecified,
             CaptchaLanguage language = CaptchaLanguage.NotSpecified)
         {

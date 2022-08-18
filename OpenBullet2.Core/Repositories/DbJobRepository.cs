@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Extensions;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories
@@ -17,21 +18,21 @@ namespace OpenBullet2.Core.Repositories
 
         }
 
-        public override async Task<JobEntity> Get(int id)
+        public override async Task<JobEntity> Get(int id, CancellationToken cancellationToken = default)
         {
-            var entity = await base.Get(id);
+            var entity = await base.Get(id, cancellationToken).ConfigureAwait(false);
             context.Entry(entity).Reload();
             return entity;
         }
 
-        public async override Task Update(JobEntity entity)
+        public async override Task Update(JobEntity entity, CancellationToken cancellationToken = default)
         {
             context.DetachLocal<JobEntity>(entity.Id);
             context.Entry(entity).State = EntityState.Modified;
-            await base.Update(entity);
+            await base.Update(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task Update(IEnumerable<JobEntity> entities)
+        public async override Task Update(IEnumerable<JobEntity> entities, CancellationToken cancellationToken = default)
         {
             foreach (var entity in entities)
             {
@@ -39,7 +40,7 @@ namespace OpenBullet2.Core.Repositories
                 context.Entry(entity).State = EntityState.Modified;
             }
 
-            await base.Update(entities);
+            await base.Update(entities, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

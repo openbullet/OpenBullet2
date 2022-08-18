@@ -26,8 +26,8 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Label 
-            Content="{Binding Name}"
+        <Label
+            Content="Test 123"
             ToolTip="{Binding Description}"
             VerticalAlignment="Center"
             Grid.Column="0" />

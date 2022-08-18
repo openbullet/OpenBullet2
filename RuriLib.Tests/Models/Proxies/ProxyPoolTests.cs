@@ -22,7 +22,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             pool.RemoveDuplicates();
             Assert.Single(pool.Proxies);
         }
@@ -37,7 +37,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.NotNull(pool.GetProxy());
         }
 
@@ -51,7 +51,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.Null(pool.GetProxy());
         }
 
@@ -65,7 +65,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.NotNull(pool.GetProxy(true));
         }
 
@@ -79,7 +79,7 @@ namespace RuriLib.Tests.Models.Proxies
 
             var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.Null(pool.GetProxy(true, 3));
         }
 

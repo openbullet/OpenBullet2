@@ -15,10 +15,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel 
+            Grid.Row="0"
+            Orientation="Horizontal">
             <Button Click="ToggleUsings" 
                     Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}">
                 <StackPanel Orientation="Horizontal">
@@ -26,21 +29,63 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>
                 </StackPanel>
             </Button>
+            <Button Click="ToggleStartup" 
+                    Margin="5" Style="{StaticResource StyledPrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconRadixIcons Kind="Code" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle Startup LoliCode</TextBlock>
+                </StackPanel>
+            </Button>
         </StackPanel>
 
-        <TextBox x:Name="usingsTextBox"
-            Visibility="Collapsed"
-            Background="{DynamicResource BackgroundSecondary}" 
-            Foreground="{DynamicResource ForegroundMain}" 
-            FontFamily="Consolas"
+        <Grid 
             Grid.Row="1"
-            Margin="0 0 0 5"
             Height="100"
-            AcceptsReturn="True"
-            Text="{Binding UsingsString}" />
+            x:Name="usingsContainer"
+            Margin="0 0 0 10"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Foreground="{DynamicResource ForegroundMain}">Using statements</Label>
+            <TextBox x:Name="usingsTextBox"
+                Background="{DynamicResource BackgroundSecondary}" 
+                Foreground="{DynamicResource ForegroundMain}" 
+                FontFamily="Consolas"
+                Grid.Row="1"
+                AcceptsReturn="True"
+                Text="{Binding UsingsString}" />
+        </Grid>
+
+        <Grid
+            Grid.Row="2"
+            Height="200"
+            x:Name="startupEditorContainer"
+            Margin="0 0 0 10"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Foreground="{DynamicResource ForegroundMain}">Startup LoliCode</Label>
+            <avalonEdit:TextEditor
+                Grid.Row="1"
+                x:Name="startupEditor"
+                FontFamily="Consolas"
+                FontSize="10pt"
+                Foreground="Gainsboro"
+                Background="#111"
+                LostFocus="EditorLostFocus"
+                HorizontalAlignment="Stretch"
+                ShowLineNumbers="True"
+                WordWrap="{Binding WordWrap}"
+                MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
+                MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
+        </Grid>
 
         <avalonEdit:TextEditor
-            Grid.Row="2"
+            Grid.Row="3"
             x:Name="editor"
             FontFamily="Consolas"
             FontSize="10pt"
