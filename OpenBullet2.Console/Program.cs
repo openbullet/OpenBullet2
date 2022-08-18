@@ -125,6 +125,7 @@ Feel free to contribute to the versatility of this project by adding the missing
                 DataPool = new FileDataPool(opts.WordlistFile, opts.WordlistType),
                 HitOutputs = new List<IHitOutput> { new FileSystemHitOutput("UserData/Hits") },
                 BotLimit = opts.BotsNumber,
+                Skip = opts.Skip,
                 CurrentBotDatas = new BotData[opts.BotsNumber]
             };
             
