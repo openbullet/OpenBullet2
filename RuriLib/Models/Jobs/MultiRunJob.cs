@@ -59,10 +59,10 @@ namespace RuriLib.Models.Jobs
         public BotData[] CurrentBotDatas { get; set; }
 
         // Getters
-        public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
-        public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
-        public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : Timeout.InfiniteTimeSpan;
-        public int CPM => parallelizer != null ? parallelizer.CPM : 0;
+        public override float Progress => parallelizer?.Progress ?? -1;
+        public TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
+        public TimeSpan Remaining => parallelizer?.Remaining ?? Timeout.InfiniteTimeSpan;
+        public int CPM => parallelizer?.CPM ?? 0;
 
         // Private fields
         private readonly string[] badStatuses = new string[] { "FAIL", "RETRY", "BAN", "ERROR", "INVALID" };
@@ -227,7 +227,19 @@ namespace RuriLib.Models.Jobs
                         {
                             if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                             {
-                                await input.ProxyPool.ReloadAllAsync().ConfigureAwait(false);
+                                try
+                                {
+                                    await input.BotData.AsyncLocker.Acquire("ProxyPool.ReloadAll", input.BotData.CancellationToken)
+                                        .ConfigureAwait(false);
+                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
+                                        input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    if (botData.Proxy == null)
+                                        await input.ProxyPool.ReloadAllAsync().ConfigureAwait(false);
+                                }
+                                finally
+                                {
+                                    input.BotData.AsyncLocker.Release("ProxyPool.ReloadAll");
+                                }
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
                             {
@@ -439,6 +451,7 @@ namespace RuriLib.Models.Jobs
             try
             {
                 Status = JobStatus.Starting;
+                asyncLocker = new();
 
                 if (Config == null)
                     throw new NullReferenceException("The Config cannot be null");
@@ -462,7 +475,16 @@ namespace RuriLib.Models.Jobs
 
                     var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
-                    await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
+                            .ConfigureAwait(false);
+                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        asyncLocker.Release("ProxyPool.ReloadAll");
+                    }
 
                     if (!proxyPool.Proxies.Any())
                     {
@@ -545,7 +567,6 @@ namespace RuriLib.Models.Jobs
 
                 globalVariables.Resources = resources;
                 httpClient = new();
-                asyncLocker = new();
                 var runtime = Python.CreateRuntime();
                 var pyengine = runtime.GetEngine("py");
                 var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
@@ -682,7 +703,19 @@ namespace RuriLib.Models.Jobs
 
         #region Public Methods
         public async Task FetchProxiesFromSources()
-            => await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
+        {
+            try
+            {
+                await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None).ConfigureAwait(false);
+                await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+            }
+            finally
+            {
+                asyncLocker.Release("ProxyPool.ReloadAll");
+            }
+
+        }
+
         #endregion
 
         #region Wrappers for Parallelizer methods
@@ -742,9 +775,24 @@ namespace RuriLib.Models.Jobs
             {
                 proxyReloadTimer = new Timer(new TimerCallback(async _ =>
                 {
+                    // BEWARE: Fire-and-forget async-void delegate
+                    // Unhandled exceptions will crash the process
                     if (proxyPool is not null)
                     {
-                        await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
+                        try
+                        {
+                            await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
+                                .ConfigureAwait(false);
+                            await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                        finally
+                        {
+                            asyncLocker.Release("ProxyPool.ReloadAll");
+                        }
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
             }
@@ -909,6 +957,16 @@ namespace RuriLib.Models.Jobs
                 catch
                 {
 
+                }
+            }
+
+            proxyPool?.Dispose();
+
+            if (ProxySources is not null)
+            {
+                for (int i = 0; i < ProxySources.Count; i++)
+                {
+                    ProxySources[i]?.Dispose();
                 }
             }
 

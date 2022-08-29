@@ -32,10 +32,9 @@ namespace RuriLib.Functions.Http
         {
             var builder = new StringBuilder();
             var random = new Random();
-            char ch;
             for (var i = 0; i < 16; i++)
             {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                var ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                 builder.Append(ch);
             }
             return $"------WebKitFormBoundary{builder.ToString().ToLower()}";

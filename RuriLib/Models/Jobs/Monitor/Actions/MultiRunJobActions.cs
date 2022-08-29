@@ -9,8 +9,8 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
     {
         public int TargetJobId { get; set; }
 
-        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
-            => await Execute(jobs.First(j => j.Id == TargetJobId) as MultiRunJob);
+        public override Task Execute(int currentJobId, IEnumerable<Job> jobs)
+            => Execute(jobs.First(j => j.Id == TargetJobId) as MultiRunJob);
 
         public virtual Task Execute(MultiRunJob job)
             => throw new NotImplementedException();
@@ -22,7 +22,7 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
 
         public override Task Execute(MultiRunJob job)
         {
-            if (Amount > 0 && Amount <= 200)
+            if (Amount is > 0 and <= 200)
                 job.Bots = Amount;
 
             return Task.CompletedTask;
@@ -31,9 +31,6 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
 
     public class ReloadProxiesAction : MultiRunJobAction
     {
-        public override async Task Execute(MultiRunJob job)
-        {
-            await job.FetchProxiesFromSources();
-        }
+        public override Task Execute(MultiRunJob job) => job.FetchProxiesFromSources();
     }
 }

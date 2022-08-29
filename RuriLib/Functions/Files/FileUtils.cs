@@ -19,12 +19,11 @@ namespace RuriLib.Functions.Files
                 throw new ArgumentNullException(nameof(fileName));
 
             string path;
-            string newName;
             var i = 0;
             do
             {
                 i++;
-                newName = Path.GetFileNameWithoutExtension(fileName) + i + Path.GetExtension(fileName);
+                var newName = Path.GetFileNameWithoutExtension(fileName) + i + Path.GetExtension(fileName);
                 path = Path.Combine(Path.GetDirectoryName(fileName), newName);
             }
             while (File.Exists(path));

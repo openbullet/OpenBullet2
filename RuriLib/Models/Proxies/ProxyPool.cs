@@ -1,4 +1,5 @@
 ﻿using RuriLib.Extensions;
+using RuriLib.Helpers;
 using RuriLib.Models.Proxies.ProxySources;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace RuriLib.Models.Proxies
 {
-    public class ProxyPool
+    public class ProxyPool : IDisposable
     {
         /// <summary>All the proxies currently in the pool.</summary>
         public IEnumerable<Proxy> Proxies => proxies;
 
         /// <summary>Checks if all proxies are banned.</summary>
-        public bool AllBanned => proxies.All(p => p.ProxyStatus == ProxyStatus.Bad || p.ProxyStatus == ProxyStatus.Banned);
+        public bool AllBanned => proxies.All(p => p.ProxyStatus is ProxyStatus.Bad or ProxyStatus.Banned);
 
         private List<Proxy> proxies = new();
         private bool isReloadingProxies = false;
@@ -24,6 +25,7 @@ namespace RuriLib.Models.Proxies
 
         private readonly int minBackoff = 5000;
         private readonly int maxReloadTries = 10;
+        private AsyncLocker asyncLocker;
 
         /// <summary>
         /// Initializes the proxy pool given the proxy sources.
@@ -32,6 +34,7 @@ namespace RuriLib.Models.Proxies
         {
             this.sources = sources.ToList();
             this.options = options ?? new ProxyPoolOptions();
+            this.asyncLocker = new();
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace RuriLib.Models.Proxies
             var now = DateTime.Now;
             proxies.Where(p => now > p.LastBanned + minimumBanTime).ToList().ForEach(p =>
             {
-                if (p.ProxyStatus == ProxyStatus.Banned || p.ProxyStatus == ProxyStatus.Bad)
+                if (p.ProxyStatus is ProxyStatus.Banned or ProxyStatus.Bad)
                 {
                     p.ProxyStatus = ProxyStatus.Available;
                     p.BeingUsedBy = 0;
@@ -68,7 +71,7 @@ namespace RuriLib.Models.Proxies
                 var px = proxies[i];
                 if (evenBusy)
                 {
-                    if (px.ProxyStatus == ProxyStatus.Available || px.ProxyStatus == ProxyStatus.Busy)
+                    if (px.ProxyStatus is ProxyStatus.Available or ProxyStatus.Busy)
                     {
                         if (maxUses > 0)
                         {
@@ -154,26 +157,34 @@ namespace RuriLib.Models.Proxies
                 return;
             }
 
-            var currentTry = 0;
-            var currentBackoff = minBackoff;
-            isReloadingProxies = true;
-
-            // For a maximum of 'maxReloadTries' times
-            while (currentTry < maxReloadTries)
+            try
             {
-                // Try to reload proxies from sources
-                if (await TryReloadAllAsync(shuffle, cancellationToken).ConfigureAwait(false))
+                isReloadingProxies = true;
+                await asyncLocker.Acquire("ProxyPool.ReloadAllAsync", cancellationToken).ConfigureAwait(false);
+                var currentTry = 0;
+                var currentBackoff = minBackoff;
+                
+                // For a maximum of 'maxReloadTries' times
+                while (currentTry < maxReloadTries)
                 {
-                    isReloadingProxies = false;
-                    return;
+                    // Try to reload proxies from sources
+                    if (await TryReloadAll(shuffle))
+                    {
+                        return;
+                    }
+
+                    // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
+                    Console.WriteLine($"Failed to reload, no proxies found. Waiting {currentBackoff} ms and trying again...");
+                    await Task.Delay(currentBackoff, cancellationToken);
+
+                    currentTry++;
+                    currentBackoff *= 2;
                 }
-
-                // If it fails to fetch at least 1 proxy, backoff by an increasing amount (e.g. to prevent rate limiting)
-                Console.WriteLine($"Failed to reload, no proxies found. Waiting {currentBackoff} ms and trying again...");
-                await Task.Delay(currentBackoff, cancellationToken);
-
-                currentTry++;
-                currentBackoff *= 2;
+            }
+            finally
+            {
+                isReloadingProxies = false;
+                asyncLocker.Release("ProxyPool.ReloadAll");
             }
         }
 
@@ -224,6 +235,22 @@ namespace RuriLib.Models.Proxies
             }
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            if (this.asyncLocker is not null)
+            {
+                try
+                {
+                    this.asyncLocker.Dispose();
+                    this.asyncLocker = null;
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
         }
     }
 }

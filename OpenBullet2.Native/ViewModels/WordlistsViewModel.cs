@@ -66,7 +66,7 @@ namespace OpenBullet2.Native.ViewModels
 
         public WordlistEntity GetWordlistByName(string name) => WordlistsCollection.First(w => w.Name == name);
 
-        public async Task Add(WordlistEntity wordlist)
+        public Task Add(WordlistEntity wordlist)
         {
             if (WordlistsCollection.Any(w => w.FileName == wordlist.FileName))
             {
@@ -74,7 +74,7 @@ namespace OpenBullet2.Native.ViewModels
             }
 
             WordlistsCollection.Add(wordlist);
-            await wordlistRepo.Add(wordlist);
+            return wordlistRepo.Add(wordlist);
         }
 
         public async Task RefreshList()

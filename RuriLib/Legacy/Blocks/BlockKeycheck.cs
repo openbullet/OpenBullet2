@@ -50,9 +50,8 @@ namespace RuriLib.Legacy.Blocks
             {
                 LineParser.EnsureIdentifier(ref input, "KEYCHAIN");
 
-                KeyChain kc = new KeyChain();
+                KeyChain kc = new KeyChain { Type = (KeychainType)LineParser.ParseEnum(ref input, "Keychain Type", typeof(KeychainType)) };
 
-                kc.Type = (KeychainType)LineParser.ParseEnum(ref input, "Keychain Type", typeof(KeychainType));
                 if (kc.Type == KeychainType.Custom && LineParser.Lookahead(ref input) == TokenType.Literal)
                     kc.CustomType = LineParser.ParseLiteral(ref input, "Custom Type");
                 kc.Mode = (KeychainMode)LineParser.ParseEnum(ref input, "Keychain Mode", typeof(KeychainMode));

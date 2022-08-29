@@ -24,10 +24,10 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
         public int Hours { get; set; } = 0;
         public int Days { get; set; } = 0;
 
-        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
+        public override Task Execute(int currentJobId, IEnumerable<Job> jobs)
         {
             int toWait = Seconds + Minutes * 60 + Hours * 60 * 60 + Days * 24 * 60 * 60;
-            await Task.Delay(toWait * 1000);
+            return Task.Delay(toWait * 1000);
         }
     }
 
@@ -54,8 +54,8 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
     {
         public int JobId { get; set; }
 
-        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
-            => await jobs.First(j => j.Id == JobId).Stop();
+        public override Task Execute(int currentJobId, IEnumerable<Job> jobs)
+            => jobs.First(j => j.Id == JobId).Stop();
     }
 
     // Aborts the job with the given id
@@ -63,8 +63,8 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
     {
         public int JobId { get; set; }
 
-        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
-            => await jobs.First(j => j.Id == JobId).Abort();
+        public override Task Execute(int currentJobId, IEnumerable<Job> jobs)
+            => jobs.First(j => j.Id == JobId).Abort();
     }
 
     // Starts the job with the given id
@@ -72,8 +72,8 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
     {
         public int JobId { get; set; }
 
-        public override async Task Execute(int currentJobId, IEnumerable<Job> jobs)
-            => await jobs.First(j => j.Id == JobId).Start();
+        public override Task Execute(int currentJobId, IEnumerable<Job> jobs)
+            => jobs.First(j => j.Id == JobId).Start();
     }
 
     // Sends a message through a discord webhook

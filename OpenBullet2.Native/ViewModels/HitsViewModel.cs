@@ -125,7 +125,7 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public async Task Update(HitEntity hit) => await hitRepo.Update(hit);
+        public Task Update(HitEntity hit) => hitRepo.Update(hit);
 
         public async Task Delete(IEnumerable<HitEntity> hits)
         {

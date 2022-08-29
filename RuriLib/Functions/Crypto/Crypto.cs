@@ -631,7 +631,7 @@ namespace RuriLib.Functions.Crypto
                 JwtAlgorithmName.HS256 => new HMACSHA256Algorithm(),
                 JwtAlgorithmName.HS384 => new HMACSHA384Algorithm(),
                 JwtAlgorithmName.HS512 => new HMACSHA512Algorithm(),
-                _ => throw new NotSupportedException("This algorith is not supported at the moment")
+                _ => throw new NotSupportedException("This algorithm is not supported at the moment")
             };
 
             var jsonSerializer = new JsonNetSerializer();

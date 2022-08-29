@@ -127,7 +127,7 @@ namespace RuriLib.Models.Bots
             {
                 var existing = objects[name];
 
-                if (existing is IDisposable d && existing is not null && disposeExisting)
+                if (existing is IDisposable d && disposeExisting)
                 {
                     d.Dispose();
                 }

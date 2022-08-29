@@ -463,7 +463,7 @@ namespace RuriLib.Legacy.Blocks
                     }
                     else
                     {
-                        File.WriteAllBytes(ReplaceValues(DownloadPath, ls), data.RAWSOURCE);
+                        await File.WriteAllBytesAsync(ReplaceValues(DownloadPath, ls), data.RAWSOURCE).ConfigureAwait(false);
                     }
                     break;
 

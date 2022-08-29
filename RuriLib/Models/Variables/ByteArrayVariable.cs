@@ -6,7 +6,7 @@ namespace RuriLib.Models.Variables
 {
     public class ByteArrayVariable : Variable
     {
-        private byte[] value = Array.Empty<byte>();
+        private byte[] value;
 
         public ByteArrayVariable(byte[] value)
         {

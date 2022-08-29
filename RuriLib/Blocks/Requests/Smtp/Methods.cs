@@ -63,7 +63,7 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             // Thunderbird autoconfig
             candidates.Clear();
-            var thunderbirdUrl = $"{"https"}://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
+            var thunderbirdUrl = $"https://live.mozillamessaging.com/autoconfig/v1.1/{domain}";
             try
             {
                 var xml = await GetString(data, thunderbirdUrl).ConfigureAwait(false);
@@ -87,8 +87,8 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             // Site autoconfig
             candidates.Clear();
-            var autoconfigUrl = $"{"https"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
-            var autoconfigUrlUnsecure = $"{"http"}://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
+            var autoconfigUrl = $"https://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
+            var autoconfigUrlUnsecure = $"http://autoconfig.{domain}/mail/config-v1.1.xml?emailaddress={email}";
             try
             {
                 string xml;
@@ -122,8 +122,8 @@ namespace RuriLib.Blocks.Requests.Smtp
 
             // Site well-known
             candidates.Clear();
-            var wellKnownUrl = $"{"https"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
-            var wellKnownUrlUnsecure = $"{"http"}://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
+            var wellKnownUrl = $"https://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
+            var wellKnownUrlUnsecure = $"http://{domain}/.well-known/autoconfig/mail/config-v1.1.xml";
             try
             {
                 string xml;

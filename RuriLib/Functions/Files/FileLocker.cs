@@ -32,7 +32,7 @@ namespace RuriLib.Functions.Files
         private readonly SemaphoreSlim readLock = new SemaphoreSlim(1, 1);
         private readonly SemaphoreSlim writeLock = new SemaphoreSlim(1, 1);
 
-        public async Task EnterReadLock(CancellationToken cancellationToken = default) => await readLock.WaitAsync(cancellationToken);
+        public Task EnterReadLock(CancellationToken cancellationToken = default) => readLock.WaitAsync(cancellationToken);
 
         public async Task EnterWriteLock(CancellationToken cancellationToken = default)
         {

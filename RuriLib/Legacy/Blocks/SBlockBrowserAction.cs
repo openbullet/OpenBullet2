@@ -232,7 +232,7 @@ namespace RuriLib.Legacy.Blocks
                         }
                     }
                     keyActions.Perform();
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     if (replacedInput.Contains("<ENTER>") || replacedInput.Contains("<BACKSPACE>")) // These might lead to a page change
                         UpdateSeleniumData(data);
                     break;

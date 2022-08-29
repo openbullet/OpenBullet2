@@ -248,11 +248,11 @@ namespace RuriLib.Http
             RawRequests.Add(ms.ToArray());
         }
 
-        private async Task<HttpResponseMessage> ReceiveDataAsync(HttpRequestMessage request,
+        private Task<HttpResponseMessage> ReceiveDataAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
             var responseBuilder = new HttpResponseMessageBuilder(1024, CookieContainer, request.RequestUri);
-            return await responseBuilder.GetResponseAsync(request, connectionCommonStream, ReadResponseContent, cancellationToken);
+            return responseBuilder.GetResponseAsync(request, connectionCommonStream, ReadResponseContent, cancellationToken);
         }
 
         private async Task CreateConnection(HttpRequestMessage request, CancellationToken cancellationToken)
