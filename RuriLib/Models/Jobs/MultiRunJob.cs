@@ -229,16 +229,19 @@ namespace RuriLib.Models.Jobs
                             {
                                 try
                                 {
-                                    await input.BotData.AsyncLocker.Acquire("ProxyPool.ReloadAll", input.BotData.CancellationToken)
-                                        .ConfigureAwait(false);
-                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
-                                        input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    await input.BotData.AsyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
+                                        input.BotData.CancellationToken).ConfigureAwait(false);
+                                    
+                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode, input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    
                                     if (botData.Proxy == null)
-                                        await input.ProxyPool.ReloadAllAsync().ConfigureAwait(false);
+                                    {
+                                        await input.ProxyPool.ReloadAllAsync(true, token).ConfigureAwait(false);
+                                    }
                                 }
                                 finally
                                 {
-                                    input.BotData.AsyncLocker.Release("ProxyPool.ReloadAll");
+                                    input.BotData.AsyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                                 }
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
@@ -477,13 +480,12 @@ namespace RuriLib.Models.Jobs
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
                     try
                     {
-                        await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
-                            .ConfigureAwait(false);
-                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                        await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                        await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
                     }
                     finally
                     {
-                        asyncLocker.Release("ProxyPool.ReloadAll");
+                        asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                     }
 
                     if (!proxyPool.Proxies.Any())
@@ -702,16 +704,16 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Public Methods
-        public async Task FetchProxiesFromSources()
+        public async Task FetchProxiesFromSources(CancellationToken cancellationToken = default)
         {
             try
             {
-                await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None).ConfigureAwait(false);
-                await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
             }
             finally
             {
-                asyncLocker.Release("ProxyPool.ReloadAll");
+                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
             }
 
         }
@@ -781,9 +783,9 @@ namespace RuriLib.Models.Jobs
                     {
                         try
                         {
-                            await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
+                            await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
                                 .ConfigureAwait(false);
-                            await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                            await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
                         }
                         catch
                         {
@@ -791,7 +793,7 @@ namespace RuriLib.Models.Jobs
                         }
                         finally
                         {
-                            asyncLocker.Release("ProxyPool.ReloadAll");
+                            asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                         }
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);

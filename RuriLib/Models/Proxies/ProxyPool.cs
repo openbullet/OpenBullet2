@@ -160,7 +160,7 @@ namespace RuriLib.Models.Proxies
             try
             {
                 isReloadingProxies = true;
-                await asyncLocker.Acquire("ProxyPool.ReloadAllAsync", cancellationToken).ConfigureAwait(false);
+                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
                 var currentTry = 0;
                 var currentBackoff = minBackoff;
                 
@@ -168,7 +168,7 @@ namespace RuriLib.Models.Proxies
                 while (currentTry < maxReloadTries)
                 {
                     // Try to reload proxies from sources
-                    if (await TryReloadAll(shuffle))
+                    if (await TryReloadAllAsync(shuffle))
                     {
                         return;
                     }
@@ -184,7 +184,7 @@ namespace RuriLib.Models.Proxies
             finally
             {
                 isReloadingProxies = false;
-                asyncLocker.Release("ProxyPool.ReloadAll");
+                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
             }
         }
 

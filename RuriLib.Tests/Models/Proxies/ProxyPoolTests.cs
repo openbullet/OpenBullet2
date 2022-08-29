@@ -102,7 +102,7 @@ echo (Socks5)127.0.0.1:3333
 
             using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();
@@ -144,7 +144,7 @@ Write-Output ""(Socks5)127.0.0.1:3333""
 
             using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();
@@ -180,7 +180,7 @@ echo ""(Socks5)127.0.0.1:3333""
 
             using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();

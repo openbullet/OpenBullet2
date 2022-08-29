@@ -30,8 +30,9 @@ namespace OpenBullet2.Core.Models.Proxies.Sources
         public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
             => await reloadService.ReloadAsync(GroupId, UserId, cancellationToken).ConfigureAwait(false);
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             reloadService?.Dispose();
             GC.SuppressFinalize(this);
         }
