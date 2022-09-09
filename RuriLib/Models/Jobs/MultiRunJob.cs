@@ -577,7 +577,8 @@ namespace RuriLib.Models.Jobs
                 if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
                 {
                     var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    var startupGlobals = new ScriptGlobals(null, globalVariables);
+                    var startupBotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(string.Empty, wordlistType), null, false);
+                    var startupGlobals = new ScriptGlobals(startupBotData, globalVariables);
                     await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
                 }
 
