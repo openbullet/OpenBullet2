@@ -26,6 +26,9 @@ namespace RuriLib.Blocks.Requests.Tcp
                 TimeSpan.FromMilliseconds(timeoutMilliseconds), data.UseProxy ? data.Proxy : null, data.CancellationToken)
                 .ConfigureAwait(false);
 
+            tcpClient.ReceiveTimeout = timeoutMilliseconds;
+            tcpClient.SendTimeout = timeoutMilliseconds;
+
             var netStream = tcpClient.GetStream();
 
             data.SetObject("netStream", netStream);
