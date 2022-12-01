@@ -46,7 +46,7 @@
                 <br />
                 <span class="fg-custom font-italic"><span class="fa fa-lightbulb"></span> @Loc["CSharpTip"]</span>
                 <br />
-                <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03 }" /><br />
+                <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02, help1x03, help1x04 }" /><br />
                 <a href="#" @onclick="@(() => js.InvokeVoidAsync("open", "docs/lolicode/statements", "_blank"))">LoliCode Statements</a>
                 <hr />
             </div>
@@ -72,4 +72,5 @@
     private string help1x01 => Loc["Help1x01"];
     private string help1x02 => Loc["Help1x02"];
     private string help1x03 => Loc["Help1x03"];
+    private string help1x04 => Loc["Help1x04"];
 }
