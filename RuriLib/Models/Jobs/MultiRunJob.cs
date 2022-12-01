@@ -366,7 +366,7 @@ namespace RuriLib.Models.Jobs
                             {
                                 botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
                                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
+                                await botData.Providers.Captcha.ReportSolution(long.Parse(lastCaptcha.Id), lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
                                 botData.ExecutingBlock("Bad captcha reported!");
                             }
                             catch

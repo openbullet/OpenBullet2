@@ -440,6 +440,16 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public string CapSolverApiKey
+        {
+            get => Captcha.CapSolverApiKey;
+            set
+            {
+                Captcha.CapSolverApiKey = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string PuppeteerChromeBinaryLocation
         {
             get => Puppeteer.ChromeBinaryLocation;
