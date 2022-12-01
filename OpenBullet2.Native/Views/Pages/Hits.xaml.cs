@@ -199,10 +199,12 @@ namespace OpenBullet2.Native.Views.Pages
                 JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
             };
 
-            var jobs = SP.GetService<ViewModelsService>().Jobs;
-            var jobVM = await jobs.CreateJob(jobOptions);
-
-            window.DisplayJob(jobVM);
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                var jobs = SP.GetService<ViewModelsService>().Jobs;
+                var jobVM = await jobs.CreateJob(jobOptions);
+                window.DisplayJob(jobVM);
+            });
         }
 
         private void CopySelected(object sender, RoutedEventArgs e)
