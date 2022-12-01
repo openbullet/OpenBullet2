@@ -40,7 +40,8 @@ namespace OpenBullet2.Pages
             {
                 config.ChangeMode(ConfigMode.LoliCode);
 
-                if (config.StartupLoliCodeScript is not null && config.StartupLoliCodeScript.Length > 0)
+                if (config.StartupLoliCodeScript is not null &&
+                    config.StartupLoliCodeScript.Length > 0)
                 {
                     showStartupEditor = true;
                 }

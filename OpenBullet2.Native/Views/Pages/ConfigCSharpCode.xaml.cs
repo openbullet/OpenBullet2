@@ -49,11 +49,14 @@ namespace OpenBullet2.Native.Views.Pages
                             ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings)
                             : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
 
+                    Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(
+                        Config.StartupLoliCodeScript, Config.Settings);
+
                     editor.Text = Config.CSharpScript;
                     startupEditor.Text = Config.StartupCSharpScript;
 
                     if (configService.SelectedConfig.StartupCSharpScript is not null &&
-                    configService.SelectedConfig.StartupCSharpScript.Length > 0)
+                        configService.SelectedConfig.StartupCSharpScript.Length > 0)
                     {
                         startupEditorContainer.Visibility = Visibility.Visible;
                     }
