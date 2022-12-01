@@ -54,6 +54,12 @@ namespace OpenBullet2.Native.Views.Pages
                 editor.Text = configService.SelectedConfig.LoliCodeScript;
                 startupEditor.Text = configService.SelectedConfig.StartupLoliCodeScript;
                 vm.UpdateViewModel();
+
+                if (configService.SelectedConfig.StartupLoliCodeScript is not null &&
+                    configService.SelectedConfig.StartupLoliCodeScript.Length > 0)
+                {
+                    startupEditorContainer.Visibility = Visibility.Visible;
+                }
             }
             catch (Exception ex)
             {

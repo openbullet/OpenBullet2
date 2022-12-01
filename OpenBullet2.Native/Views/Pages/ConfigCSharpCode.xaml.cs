@@ -51,6 +51,12 @@ namespace OpenBullet2.Native.Views.Pages
 
                     editor.Text = Config.CSharpScript;
                     startupEditor.Text = Config.StartupCSharpScript;
+
+                    if (configService.SelectedConfig.StartupCSharpScript is not null &&
+                    configService.SelectedConfig.StartupCSharpScript.Length > 0)
+                    {
+                        startupEditorContainer.Visibility = Visibility.Visible;
+                    }
                 }
             }
             catch (Exception ex)

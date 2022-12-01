@@ -49,6 +49,11 @@ namespace OpenBullet2.Pages
 
                     Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(
                         Config.StartupLoliCodeScript, Config.Settings);
+
+                    if (Config.StartupCSharpScript is not null && Config.StartupLoliCodeScript.Length > 0)
+                    {
+                        showStartupEditor = true;
+                    }
                 }
                 catch (Exception ex)
                 {
