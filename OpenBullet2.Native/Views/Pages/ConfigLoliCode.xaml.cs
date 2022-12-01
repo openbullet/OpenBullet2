@@ -4,6 +4,7 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
@@ -40,9 +41,11 @@ namespace OpenBullet2.Native.Views.Pages
 
             HighlightSyntax(editor);
             AddAutoCompletion(editor);
+            SearchPanel.Install(editor);
 
             HighlightSyntax(startupEditor);
             AddAutoCompletion(startupEditor);
+            SearchPanel.Install(startupEditor);
         }
 
         public void UpdateViewModel()

@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.ViewModels;
@@ -36,6 +37,8 @@ namespace OpenBullet2.Native.Views.Pages
 
             HighlightSyntax(editor);
             HighlightSyntax(startupEditor);
+            SearchPanel.Install(editor);
+            SearchPanel.Install(startupEditor);
         }
 
         public void UpdateViewModel()
