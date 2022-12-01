@@ -40,6 +40,7 @@ namespace RuriLib.Helpers
                     case ConfigMode.Stack:
                         config.LoliCodeScript = Stack2LoliTranspiler.Transpile(config.Stack);
                         await CreateZipEntryFromString(archive, "script.loli", config.LoliCodeScript);
+                        await CreateZipEntryFromString(archive, "startup.loli", config.StartupLoliCodeScript);
                         break;
 
                     case ConfigMode.LoliCode:
