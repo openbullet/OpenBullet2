@@ -138,8 +138,20 @@
   <data name="Help1x02" xml:space="preserve">
     <value>Se invece hai deciso di scrivere la tua config usando %solo C#%, puoi cliccare sul pulsante %Converti in config C#% e potrai editare il codice C# direttamente. Potrai usare la stessa API che viene usata per i blocchi, quindi ti suggerisco di studiarla un pochino dalla codebase o vedendo come i blocchi vengono tradotti. Nota che le config C# sono pensate solo per utenti %molto avanzati%, e tutto quello che puoi fare qui può anche essere fatto in LoliCode semplicemente integrando blocchi e codice C#, procedimento che può produrre script molto più leggibili per persone che non hanno molta confidenza con il codice.</value>
   </data>
+  <data name="StartupEditorInfo" xml:space="preserve">
+    <value>Puoi scrivere uno script C# che verrà eseguito quando il job viene lanciato</value>
+  </data>
+  <data name="ToggleStartupEditor" xml:space="preserve">
+    <value>Mostra/Nascondi Editor Startup</value>
+  </data>
+  <data name="ToggleUsings" xml:space="preserve">
+    <value>Mostra/Nascondi Usings</value>
+  </data>
   <data name="TranspileFromBlocks" xml:space="preserve">
     <value>Transpila dai blocchi</value>
+  </data>
+  <data name="UsingsInfo" xml:space="preserve">
+    <value>Puoi scrivere i namespace che vuoi importare nello script C# generato, uno per riga</value>
   </data>
   <data name="WarningPleaseRead" xml:space="preserve">
     <value>ATTENZIONE! LEGGERE!</value>

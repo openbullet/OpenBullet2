@@ -23,7 +23,6 @@ namespace OpenBullet2.Pages
         // These solve a race condition between OnInitializedAsync and OnAfterRender that make
         // and old LoliCode get printed
         private bool initialized = false;
-        private bool startupEditorInitialized = false;
         private bool rendered = false;
         private bool startupEditorRendered = false;
 
@@ -60,7 +59,7 @@ namespace OpenBullet2.Pages
                 rendered = true;
             }
 
-            if (startupEditorInitialized && !startupEditorRendered)
+            if (initialized && !startupEditorRendered)
             {
                 StartupEditor.SetValue(config.StartupLoliCodeScript);
                 startupEditorRendered = true;
@@ -111,8 +110,10 @@ namespace OpenBullet2.Pages
             };
         }
 
-        private async Task SaveScript() => config.LoliCodeScript = await Editor.GetValue();
+        private async Task SaveScript() =>
+            config.LoliCodeScript = await Editor.GetValue();
 
-        private async Task SaveStartupScript() => config.StartupLoliCodeScript = await StartupEditor.GetValue();
+        private async Task SaveStartupScript() =>
+            config.StartupLoliCodeScript = await StartupEditor.GetValue();
     }
 }
