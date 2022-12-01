@@ -131,7 +131,7 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Controls
-        public override async Task Start()
+        public override async Task Start(CancellationToken cancellationToken = default)
         {
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");

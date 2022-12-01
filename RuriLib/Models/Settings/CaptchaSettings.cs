@@ -34,5 +34,6 @@ namespace RuriLib.Models.Settings
         public string CustomAntiCaptchaDomain { get; set; } = "";
         public int CustomAntiCaptchaPort { get; set; } = 80;
         public string AnyCaptchaApiKey { get; set; } = "";
+        public string CapSolverApiKey { get; set; } = "";
     }
 }

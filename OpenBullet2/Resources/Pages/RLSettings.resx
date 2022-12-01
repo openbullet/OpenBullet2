@@ -300,4 +300,7 @@
   <data name="VerboseMode" xml:space="preserve">
     <value>Verbose mode</value>
   </data>
+  <data name="CapSolverApiKey" xml:space="preserve">
+    <value>CapSolver API Key</value>
+  </data>
 </root>

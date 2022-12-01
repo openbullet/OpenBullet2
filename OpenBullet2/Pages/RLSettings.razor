@@ -198,6 +198,11 @@
             <label>@Loc["AnyCaptchaApiKey"]</label>
             <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.AnyCaptchaApiKey" />
             break;
+
+        case CaptchaServiceType.CapSolver:
+            <label>@Loc["CapSolverApiKey"]</label>
+            <InputText class="mb-3" @bind-Value="settings.CaptchaSettings.CapSolverApiKey" />
+            break;
     }
 
     <button class="btn btn-outline-primary" style="margin: 10px 0;" @onclick="CheckBalance">@Loc["CheckBalance"]</button>

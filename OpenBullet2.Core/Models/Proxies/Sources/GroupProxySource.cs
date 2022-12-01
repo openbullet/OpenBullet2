@@ -3,6 +3,7 @@ using OpenBullet2.Core.Services;
 using RuriLib.Models.Proxies;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Models.Proxies.Sources
@@ -26,11 +27,12 @@ namespace OpenBullet2.Core.Models.Proxies.Sources
         }
 
         /// <inheritdoc/>
-        public async override Task<IEnumerable<Proxy>> GetAll()
-            => await reloadService.Reload(GroupId, UserId);
+        public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
+            => await reloadService.ReloadAsync(GroupId, UserId, cancellationToken).ConfigureAwait(false);
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             reloadService?.Dispose();
             GC.SuppressFinalize(this);
         }

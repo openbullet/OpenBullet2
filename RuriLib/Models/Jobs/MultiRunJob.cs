@@ -229,16 +229,19 @@ namespace RuriLib.Models.Jobs
                             {
                                 try
                                 {
-                                    await input.BotData.AsyncLocker.Acquire("ProxyPool.ReloadAll", input.BotData.CancellationToken)
-                                        .ConfigureAwait(false);
-                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode,
-                                        input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    await input.BotData.AsyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
+                                        input.BotData.CancellationToken).ConfigureAwait(false);
+                                    
+                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode, input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    
                                     if (botData.Proxy == null)
-                                        await input.ProxyPool.ReloadAll().ConfigureAwait(false);
+                                    {
+                                        await input.ProxyPool.ReloadAllAsync(true, token).ConfigureAwait(false);
+                                    }
                                 }
                                 finally
                                 {
-                                    input.BotData.AsyncLocker.Release("ProxyPool.ReloadAll");
+                                    input.BotData.AsyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                                 }
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
@@ -363,7 +366,7 @@ namespace RuriLib.Models.Jobs
                             {
                                 botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
                                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
+                                await botData.Providers.Captcha.ReportSolution(long.Parse(lastCaptcha.Id), lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
                                 botData.ExecutingBlock("Bad captcha reported!");
                             }
                             catch
@@ -443,7 +446,7 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Controls
-        public override async Task Start()
+        public override async Task Start(CancellationToken cancellationToken = default)
         {
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
@@ -477,13 +480,12 @@ namespace RuriLib.Models.Jobs
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
                     try
                     {
-                        await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
-                            .ConfigureAwait(false);
-                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                        await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                        await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
                     }
                     finally
                     {
-                        asyncLocker.Release("ProxyPool.ReloadAll");
+                        asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                     }
 
                     if (!proxyPool.Proxies.Any())
@@ -493,7 +495,13 @@ namespace RuriLib.Models.Jobs
                 }
 
                 // Wait for the start condition to be verified
-                await base.Start().ConfigureAwait(false);
+                await base.Start(cancellationToken).ConfigureAwait(false);
+
+                // Execute the startup script
+                if (Config.Mode == ConfigMode.LoliCode || Config.Mode == ConfigMode.Stack)
+                {
+                    Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(Config.StartupLoliCodeScript, Config.Settings);
+                }
 
                 Script script = null;
                 MethodInfo method = null;
@@ -524,7 +532,7 @@ namespace RuriLib.Models.Jobs
                     }
 
                     script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    script.Compile();
+                    script.Compile(cancellationToken);
                 }
 
                 Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
@@ -565,6 +573,14 @@ namespace RuriLib.Models.Jobs
                 var pyengine = runtime.GetEngine("py");
                 var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
                 pco.Module &= ~ModuleOptions.Optimized;
+
+                if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
+                {
+                    var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, pluginRepo);
+                    var startupBotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(string.Empty, wordlistType), null, false);
+                    var startupGlobals = new ScriptGlobals(startupBotData, globalVariables);
+                    await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
+                }
 
                 long index = 0;
                 var workItems = DataPool.DataList.Select(line =>
@@ -689,16 +705,16 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Public Methods
-        public async Task FetchProxiesFromSources()
+        public async Task FetchProxiesFromSources(CancellationToken cancellationToken = default)
         {
             try
             {
-                await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None).ConfigureAwait(false);
-                await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
             }
             finally
             {
-                asyncLocker.Release("ProxyPool.ReloadAll");
+                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
             }
 
         }
@@ -768,9 +784,9 @@ namespace RuriLib.Models.Jobs
                     {
                         try
                         {
-                            await asyncLocker.Acquire("ProxyPool.ReloadAll", CancellationToken.None)
+                            await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
                                 .ConfigureAwait(false);
-                            await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                            await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
                         }
                         catch
                         {
@@ -778,7 +794,7 @@ namespace RuriLib.Models.Jobs
                         }
                         finally
                         {
-                            asyncLocker.Release("ProxyPool.ReloadAll");
+                            asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                         }
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);

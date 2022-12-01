@@ -19,7 +19,14 @@ namespace OpenBullet2.Pages
         [Inject] private ConfigService ConfigService { get; set; }
         [Inject] private OpenBulletSettingsService OBSettingsService { get; set; }
 
-        private MonacoEditor _editor { get; set; }
+        private MonacoEditor Editor { get; set; }
+        private MonacoEditor StartupEditor { get; set; }
+
+        // These solve a race condition between OnInitializedAsync and OnAfterRender that make
+        // and old C# code get printed
+        private bool initialized = false;
+        private bool rendered = false;
+        private bool startupEditorRendered = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -39,10 +46,23 @@ namespace OpenBullet2.Pages
                     Config.CSharpScript = Config.Mode == ConfigMode.Stack
                         ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings)
                         : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
+
+                    Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(
+                        Config.StartupLoliCodeScript, Config.Settings);
+
+                    if (Config.StartupCSharpScript is not null &&
+                        Config.StartupLoliCodeScript.Length > 0)
+                    {
+                        showStartupEditor = true;
+                    }
                 }
                 catch (Exception ex)
                 {
                     await OBLogger.LogException(ex);
+                }
+                finally
+                {
+                    initialized = true;
                 }
             }
         }
@@ -62,19 +82,34 @@ namespace OpenBullet2.Pages
             };
         }
 
-        /*
-        private async Task Transpile()
+        private StandaloneEditorConstructionOptions StartupEditorConstructionOptions(MonacoEditor editor)
         {
-            var stack = new Loli2StackTranspiler().Transpile(Config.LoliCodeScript);
-            Config.CSharpScript = new Stack2CSharpTranspiler().Transpile(stack, Config.Settings);
-            await _editor.SetValue(Config.CSharpScript);
+            return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Minimap = new EditorMinimapOptions { Enabled = false },
+                ReadOnly = Config.Mode != ConfigMode.CSharp,
+                Theme = OBSettingsService.Settings.CustomizationSettings.MonacoTheme,
+                Language = "csharp",
+                MatchBrackets = true,
+                WordWrap = OBSettingsService.Settings.CustomizationSettings.WordWrap ? "on" : "off",
+                Value = Config.StartupCSharpScript
+            };
         }
-        */
 
         protected override void OnAfterRender(bool firstRender)
         {
-            if (firstRender)
-                _editor.SetValue(Config.CSharpScript);
+            if (initialized && !rendered)
+            {
+                Editor.SetValue(Config.CSharpScript);
+                rendered = true;
+            }
+
+            if (initialized && !startupEditorRendered)
+            {
+                StartupEditor.SetValue(Config.StartupCSharpScript);
+                startupEditorRendered = true;
+            }
         }
 
         private async Task ConvertConfig()
@@ -89,9 +124,10 @@ namespace OpenBullet2.Pages
             Nav.NavigateTo("config/edit/code", true);
         }
 
-        private async Task SaveScript()
-        {
-            Config.CSharpScript = await _editor.GetValue();
-        }
+        private async Task SaveScript() =>
+            Config.CSharpScript = await Editor.GetValue();
+
+        private async Task SaveStartupScript() =>
+            Config.StartupCSharpScript = await StartupEditor.GetValue();
     }
 }

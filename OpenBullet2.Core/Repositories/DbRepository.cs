@@ -22,14 +22,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task Add(T entity)
+        public async virtual Task Add(T entity, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
             
             try
             {
                 context.Add(entity);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -38,14 +38,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task Add(IEnumerable<T> entities)
+        public async virtual Task Add(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 context.AddRange(entities);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -54,14 +54,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task Delete(T entity)
+        public async virtual Task Delete(T entity, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 context.Remove(entity);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -70,14 +70,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task Delete(IEnumerable<T> entities)
+        public async virtual Task Delete(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 context.RemoveRange(entities);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -86,13 +86,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task<T> Get(int id)
+        public async virtual Task<T> Get(int id, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
-                return await GetAll().FirstOrDefaultAsync(e => e.Id == id);
+                return await GetAll()
+                    .FirstOrDefaultAsync(e => e.Id == id, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -105,14 +106,14 @@ namespace OpenBullet2.Core.Repositories
             => context.Set<T>();
 
         /// <inheritdoc/>
-        public async virtual Task Update(T entity)
+        public async virtual Task Update(T entity, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 context.Update(entity);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {
@@ -121,14 +122,14 @@ namespace OpenBullet2.Core.Repositories
         }
 
         /// <inheritdoc/>
-        public async virtual Task Update(IEnumerable<T> entities)
+        public async virtual Task Update(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 context.UpdateRange(entities);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
             finally
             {

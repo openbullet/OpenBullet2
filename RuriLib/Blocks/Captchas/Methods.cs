@@ -15,7 +15,8 @@ namespace RuriLib.Blocks.Captchas
     public static class Methods
     {
         [Block("Solves a text captcha")]
-        public static async Task<string> SolveTextCaptcha(BotData data, string question,
+        public static async Task<string> SolveTextCaptcha(BotData data,
+            [BlockParam("Question", "The description of the captcha to solve, e.g. What is 2+2?")] string question,
             CaptchaLanguageGroup languageGroup = CaptchaLanguageGroup.NotSpecified,
             CaptchaLanguage language = CaptchaLanguage.NotSpecified)
         {
@@ -29,7 +30,7 @@ namespace RuriLib.Blocks.Captchas
                     CaptchaLanguageGroup = languageGroup 
                 }, data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.TextCaptcha);
+            AddCaptchaId(data, response.IdString, CaptchaType.TextCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -58,7 +59,7 @@ namespace RuriLib.Blocks.Captchas
                     TextInstructions = textInstructions
                 }, data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.ImageCaptcha);
+            AddCaptchaId(data, response.IdString, CaptchaType.ImageCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -74,7 +75,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveRecaptchaV2Async(siteKey, siteUrl, sData, enterprise, isInvisible,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.ReCaptchaV2);
+            AddCaptchaId(data, response.IdString, CaptchaType.ReCaptchaV2);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -95,7 +96,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveRecaptchaV3Async(siteKey, siteUrl, action, minScore, enterprise,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.ReCaptchaV3);
+            AddCaptchaId(data, response.IdString, CaptchaType.ReCaptchaV3);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -116,7 +117,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveFuncaptchaAsync(publicKey, serviceUrl, siteUrl, noJS,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.FunCaptcha);
+            AddCaptchaId(data, response.IdString, CaptchaType.FunCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -132,7 +133,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveHCaptchaAsync(siteKey, siteUrl,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.HCaptcha);
+            AddCaptchaId(data, response.IdString, CaptchaType.HCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -148,7 +149,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveCapyAsync(siteKey, siteUrl,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.Capy);
+            AddCaptchaId(data, response.IdString, CaptchaType.Capy);
             data.Logger.Log($"Got solution!", LogColors.ElectricBlue);
             data.Logger.Log($"Challenge Key: {response.ChallengeKey}", LogColors.ElectricBlue);
             data.Logger.Log($"Captcha Key: {response.CaptchaKey}", LogColors.ElectricBlue);
@@ -167,7 +168,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveKeyCaptchaAsync(userId, sessionId, webServerSign1, webServerSign2, siteUrl,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.KeyCaptcha);
+            AddCaptchaId(data, response.IdString, CaptchaType.KeyCaptcha);
             data.Logger.Log($"Got solution: {response.Response}", LogColors.ElectricBlue);
             return response.Response;
         }
@@ -184,7 +185,7 @@ namespace RuriLib.Blocks.Captchas
             var response = await data.Providers.Captcha.SolveGeeTestAsync(gt, apiChallenge, apiServer, siteUrl,
                 SetupProxy(data, useProxy, userAgent), data.CancellationToken).ConfigureAwait(false);
 
-            AddCaptchaId(data, response.Id, CaptchaType.GeeTest);
+            AddCaptchaId(data, response.IdString, CaptchaType.GeeTest);
             data.Logger.Log($"Got solution!", LogColors.ElectricBlue);
             data.Logger.Log($"Challenge: {response.Challenge}", LogColors.ElectricBlue);
             data.Logger.Log($"Validate: {response.Validate}", LogColors.ElectricBlue);
@@ -201,7 +202,9 @@ namespace RuriLib.Blocks.Captchas
 
             try
             {
-                await data.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, data.CancellationToken).ConfigureAwait(false);
+                // TODO: Create a ReportSolution method that accepts strings in CaptchaSharp! For now we will do it like this
+                // since the only service which has string-based captcha IDs does not support reporting bad solutions.
+                await data.Providers.Captcha.ReportSolution(long.Parse(lastCaptcha.Id), lastCaptcha.Type, false, data.CancellationToken).ConfigureAwait(false);
                 data.Logger.Log($"Solution of task {lastCaptcha.Id} reported correctly!", LogColors.ElectricBlue);
             }
             catch (Exception ex)
@@ -230,7 +233,7 @@ namespace RuriLib.Blocks.Captchas
             }
         }
 
-        private static void AddCaptchaId(BotData data, long id, CaptchaType type)
+        private static void AddCaptchaId(BotData data, string id, CaptchaType type)
             => data.SetObject("lastCaptchaInfo", new CaptchaInfo { Id = id, Type = type });
 
         private static Proxy SetupProxy(BotData data, bool useProxy, string userAgent) 

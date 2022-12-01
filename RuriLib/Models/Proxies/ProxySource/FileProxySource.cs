@@ -19,7 +19,7 @@ namespace RuriLib.Models.Proxies.ProxySources
             asyncLocker = new();
         }
 
-        public async override Task<IEnumerable<Proxy>> GetAll()
+        public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             string[] lines;
             var supportedScripts = new[] { ".bat", ".ps1", ".sh" };
@@ -40,7 +40,7 @@ namespace RuriLib.Models.Proxies.ProxySources
             }
             else
             {
-                lines = await File.ReadAllLinesAsync(FileName);
+                lines = await File.ReadAllLinesAsync(FileName, cancellationToken);
             }
 
             return lines
