@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <Label
-            Content="Test 123"
+            Content="{Binding Name}"
             ToolTip="{Binding Description}"
             VerticalAlignment="Center"
             Grid.Column="0" />
