@@ -350,6 +350,56 @@ namespace RuriLib.Functions.Http
                 data.COOKIES[cookie.Name] = cookie.Value;
             }
 
+            static bool TryParseCookie(string cookieHeader, out string cookieName, out string cookieValue)
+            {
+                cookieName = null;
+                cookieValue = null;
+
+                if (cookieHeader.Length == 0)
+                {
+                    return false;
+                }
+
+                var endCookiePos = cookieHeader.IndexOf(';');
+                var separatorPos = cookieHeader.IndexOf('=');
+
+                if (separatorPos == -1)
+                {
+                    // Invalid cookie, simply don't add it
+                    return false;
+                }
+
+                cookieName = cookieHeader[..separatorPos];
+
+                if (endCookiePos == -1)
+                {
+                    cookieValue = cookieHeader[(separatorPos + 1)..];
+                }
+                else
+                {
+                    cookieValue = cookieHeader.Substring(separatorPos + 1, (endCookiePos - separatorPos) - 1);
+                }
+
+                return true;
+            }
+
+            // HttpClient has trouble with the Set-Cookie header https://github.com/dotnet/runtime/issues/20942
+            // so we will help it out...
+            foreach (var header in response.Headers)
+            {
+                if (header.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase) ||
+                    header.Key.Equals("Set-Cookie2", StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (var cookieHeader in header.Value)
+                    {
+                        if (TryParseCookie(cookieHeader, out var cookieName, out var cookieValue))
+                        {
+                            data.COOKIES[cookieName] = cookieValue;
+                        }
+                    }
+                }
+            }
+
             data.Logger.Log("Received Cookies:", LogColors.MikadoYellow);
             data.Logger.Log(data.COOKIES.Select(h => $"{h.Key}: {h.Value}"), LogColors.Khaki);
 
