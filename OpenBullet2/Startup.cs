@@ -207,6 +207,10 @@ namespace OpenBullet2
 
             // Initialize autocompletion
             AutocompletionProvider.Init(obSettings.GeneralSettings.CustomSnippets);
+
+            // Start the job monitor at the start of the application,
+            // otherwise it will only be started when navigating to the page
+            _ = app.ApplicationServices.GetService<JobMonitorService>();
         }
     }
 }
