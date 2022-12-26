@@ -342,6 +342,9 @@
   <data name="StartedWaiting" xml:space="preserve">
     <value>Attesa iniziata</value>
   </data>
+  <data name="StartingMessage" xml:space="preserve">
+    <value>In fase di avvio...</value>
+  </data>
   <data name="Stop" xml:space="preserve">
     <value>Arresta</value>
   </data>

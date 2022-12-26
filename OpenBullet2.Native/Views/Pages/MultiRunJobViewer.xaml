@@ -92,6 +92,8 @@
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">
                 <Label Content="{Binding RemainingWaitString}"
                        Visibility="{Binding IsWaiting, Converter={StaticResource ResourceKey=BoolToVis}}" />
+                <Label Content="Starting..."
+                       Visibility="{Binding IsStarting, Converter={StaticResource ResourceKey=BoolToVis}}" />
                 <Label Content="Stopping..."
                        Visibility="{Binding IsStopping, Converter={StaticResource ResourceKey=BoolToVis}}" />
                 <Label Content="Pausing..."

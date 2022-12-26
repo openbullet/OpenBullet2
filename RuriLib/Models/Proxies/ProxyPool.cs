@@ -239,12 +239,12 @@ namespace RuriLib.Models.Proxies
 
         public void Dispose()
         {
-            if (this.asyncLocker is not null)
+            if (asyncLocker is not null)
             {
                 try
                 {
-                    this.asyncLocker.Dispose();
-                    this.asyncLocker = null;
+                    asyncLocker.Dispose();
+                    asyncLocker = null;
                 }
                 catch
                 {

@@ -195,6 +195,11 @@
             <button class="btn btn-sm btn-outline-success" @onclick="Start"><span class="oi oi-media-play"></span> @Loc["Start"]</button>
             break;
 
+        case JobStatus.Starting:
+            <span style="line-height: 30px; margin-top: 5px;"><i>@Loc["StartingMessage"] </i></span>
+            <button class="btn btn-sm btn-outline-danger" @onclick="Abort"><span class="oi oi-x"></span> @Loc["Abort"]</button>
+            break;
+
         case JobStatus.Waiting:
             <span class="mr-3">@Loc["Waiting"]... @Loc["TimeLeft"]:</span>
             @if (Job.StartCondition.Verify(Job)) // If already verified and about to start

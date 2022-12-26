@@ -33,7 +33,6 @@ namespace OpenBullet2.Core.Models.Proxies.Sources
         public override void Dispose()
         {
             base.Dispose();
-            reloadService?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

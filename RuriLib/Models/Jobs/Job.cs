@@ -47,7 +47,6 @@ namespace RuriLib.Models.Jobs
             cts = new CancellationTokenSource();
 
             StartTime = DateTime.Now;
-            Status = JobStatus.Waiting;
 
             try
             {

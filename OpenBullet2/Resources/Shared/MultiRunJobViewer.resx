@@ -133,7 +133,7 @@
     <value>The bot log was disabled in settings, please enable it to be able to see the bot log for future hits</value>
   </data>
   <data name="BotLogCompiledConfigError" xml:space="preserve">
-    <value>The bot log is not available for compiled configs.</value>>
+    <value>&gt;</value>
   </data>
   <data name="Bots" xml:space="preserve">
     <value>Bots</value>
@@ -395,5 +395,8 @@
   </data>
   <data name="CustomWebhook" xml:space="preserve">
     <value>Custom webhook</value>
+  </data>
+  <data name="StartingMessage" xml:space="preserve">
+    <value>Starting...</value>
   </data>
 </root>

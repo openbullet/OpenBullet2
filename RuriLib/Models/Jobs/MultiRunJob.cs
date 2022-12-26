@@ -448,12 +448,16 @@ namespace RuriLib.Models.Jobs
         #region Controls
         public override async Task Start(CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
 
             try
             {
                 Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
+
                 asyncLocker = new();
 
                 if (Config == null)
@@ -494,8 +498,14 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
+                Status = JobStatus.Waiting;
+                OnStatusChanged?.Invoke(this, Status);
+
                 // Wait for the start condition to be verified
                 await base.Start(cancellationToken).ConfigureAwait(false);
+
+                Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
 
                 // Execute the startup script
                 if (Config.Mode == ConfigMode.LoliCode || Config.Mode == ConfigMode.Stack)
@@ -577,10 +587,15 @@ namespace RuriLib.Models.Jobs
                 if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
                 {
                     var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    var startupBotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(string.Empty, wordlistType), null, false);
+                    var startupBotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(string.Empty, wordlistType), null, false)
+                    {
+                        CancellationToken = cancellationToken
+                    };
                     var startupGlobals = new ScriptGlobals(startupBotData, globalVariables);
                     await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
                 }
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 long index = 0;
                 var workItems = DataPool.DataList.Select(line =>
@@ -611,6 +626,8 @@ namespace RuriLib.Models.Jobs
                     return input;
                 });
 
+                cancellationToken.ThrowIfCancellationRequested();
+
                 parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                     .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems,
                         workFunction, Bots, DataPool.Size, Skip, BotLimit);
@@ -635,9 +652,10 @@ namespace RuriLib.Models.Jobs
             finally
             {
                 // Reset the status
-                if (Status == JobStatus.Starting)
+                if (Status is JobStatus.Starting)
                 {
                     Status = JobStatus.Idle;
+                    OnStatusChanged?.Invoke(this, Status);
                 }
             }
         }
@@ -724,7 +742,7 @@ namespace RuriLib.Models.Jobs
         #region Wrappers for Parallelizer methods
         public async Task ChangeBots(int amount)
         {
-            if (parallelizer != null)
+            if (parallelizer is not null)
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
