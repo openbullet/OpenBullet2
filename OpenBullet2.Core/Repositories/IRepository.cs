@@ -31,7 +31,7 @@ namespace OpenBullet2.Core.Repositories
         // ----
 
         /// <summary>
-        /// Gets an entity by <paramref name="id"/>.
+        /// Gets an entity by <paramref name="id"/>. Returns null if not found.
         /// </summary>
         Task<T> Get(int id, CancellationToken cancellationToken = default);
 
