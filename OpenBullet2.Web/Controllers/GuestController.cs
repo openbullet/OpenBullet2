@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
+using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Exceptions;
 
 namespace OpenBullet2.Web.Controllers;
 
+[Admin]
 public class GuestController : ApiController
 {
     private readonly IGuestRepository _guestRepo;
@@ -48,7 +50,9 @@ public class GuestController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(dto.Id, nameof(IGuestRepository));
+            throw new EntryNotFoundException(
+                ErrorCode.GUEST_NOT_FOUND,
+                dto.Id, nameof(IGuestRepository));
         }
 
         _mapper.Map(dto, entity);
@@ -66,7 +70,9 @@ public class GuestController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(dto.Id, nameof(IGuestRepository));
+            throw new EntryNotFoundException(
+                ErrorCode.GUEST_NOT_FOUND,
+                dto.Id, nameof(IGuestRepository));
         }
 
         _mapper.Map(dto, entity);
@@ -91,7 +97,9 @@ public class GuestController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(id, nameof(IGuestRepository));
+            throw new EntryNotFoundException(
+                ErrorCode.GUEST_NOT_FOUND,
+                id, nameof(IGuestRepository));
         }
 
         return _mapper.Map<GuestDto>(entity);
@@ -104,7 +112,8 @@ public class GuestController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(id, nameof(IGuestRepository));
+            throw new EntryNotFoundException(ErrorCode.GUEST_NOT_FOUND, 
+                id, nameof(IGuestRepository));
         }
 
         await _guestRepo.Delete(entity);

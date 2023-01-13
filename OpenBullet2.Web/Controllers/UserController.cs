@@ -67,7 +67,9 @@ public class UserController : ApiController
 
         if (entity == null)
         {
-            throw new EntryNotFoundException("Could not find a guest with the given username");
+            throw new EntryNotFoundException(
+                ErrorCode.GUEST_NOT_FOUND,
+                "Could not find a guest with the given username");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, entity.PasswordHash))

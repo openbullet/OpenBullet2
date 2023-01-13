@@ -3,6 +3,10 @@ using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Middleware;
+using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
 using RuriLib.Helpers;
 using RuriLib.Logging;
@@ -42,11 +46,8 @@ builder.Services.AddScoped<IWordlistRepository>(service =>
 builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
 
-// Singleton (they CANNOT consume scoped classes!)
-// Workaround: https://stackoverflow.com/questions/51572637/access-dbcontext-service-from-background-task
-// https://stackoverflow.com/questions/72113872/cannot-consume-scoped-service-applicationdbcontext-from-singleton-microsoft-e
-// (we should use IHostedService btw, change OpenBullet2.Core code!)
-// (basically use the scope and get the service from within the singleton's ctor)
+// Singleton
+builder.Services.AddSingleton<IAuthTokenService, AuthTokenService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
     "UserData/Configs"));
@@ -72,6 +73,9 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<AuthTokenVerificationMiddleware>();
 
 app.MapControllers();
 
