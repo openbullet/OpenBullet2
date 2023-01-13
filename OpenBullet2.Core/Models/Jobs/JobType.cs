@@ -1,22 +1,21 @@
-﻿namespace OpenBullet2.Core.Models.Jobs
+﻿namespace OpenBullet2.Core.Models.Jobs;
+
+/// <summary>
+/// The available job types.
+/// </summary>
+public enum JobType
 {
     /// <summary>
-    /// The available job types.
+    /// Used to run a config using multiple bots.
     /// </summary>
-    public enum JobType
-    {
-        /// <summary>
-        /// Used to run a config using multiple bots.
-        /// </summary>
-        MultiRun,
+    MultiRun,
 
-        /// <summary>
-        /// Used to check proxies.
-        /// </summary>
-        ProxyCheck,
+    /// <summary>
+    /// Used to check proxies.
+    /// </summary>
+    ProxyCheck,
 
-        Spider,
-        Ripper,
-        PuppeteerUnitTest
-    }
+    Spider,
+    Ripper,
+    PuppeteerUnitTest
 }

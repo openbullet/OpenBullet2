@@ -18,4 +18,10 @@
     <ProjectReference Include="..\OpenBullet2.Core\OpenBullet2.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="dbip-country-lite.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

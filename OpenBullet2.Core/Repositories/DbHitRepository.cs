@@ -5,38 +5,37 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Core.Repositories
+namespace OpenBullet2.Core.Repositories;
+
+/// <summary>
+/// Stores hits to a database.
+/// </summary>
+public class DbHitRepository : DbRepository<HitEntity>, IHitRepository
 {
-    /// <summary>
-    /// Stores hits to a database.
-    /// </summary>
-    public class DbHitRepository : DbRepository<HitEntity>, IHitRepository
+    public DbHitRepository(ApplicationDbContext context)
+        : base(context)
     {
-        public DbHitRepository(ApplicationDbContext context)
-            : base(context)
-        {
 
-        }
+    }
 
-        /// <inheritdoc/>
-        public void Purge() => _ = context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
+    /// <inheritdoc/>
+    public void Purge() => _ = context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
 
-        public async override Task Update(HitEntity entity, CancellationToken cancellationToken = default)
+    public async override Task Update(HitEntity entity, CancellationToken cancellationToken = default)
+    {
+        context.DetachLocal<HitEntity>(entity.Id);
+        context.Entry(entity).State = EntityState.Modified;
+        await base.Update(entity, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async override Task Update(IEnumerable<HitEntity> entities, CancellationToken cancellationToken = default)
+    {
+        foreach (var entity in entities)
         {
             context.DetachLocal<HitEntity>(entity.Id);
             context.Entry(entity).State = EntityState.Modified;
-            await base.Update(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task Update(IEnumerable<HitEntity> entities, CancellationToken cancellationToken = default)
-        {
-            foreach (var entity in entities)
-            {
-                context.DetachLocal<HitEntity>(entity.Id);
-                context.Entry(entity).State = EntityState.Modified;
-            }
-
-            await base.Update(entities, cancellationToken).ConfigureAwait(false);
-        }
+        await base.Update(entities, cancellationToken).ConfigureAwait(false);
     }
 }

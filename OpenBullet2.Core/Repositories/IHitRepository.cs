@@ -1,16 +1,15 @@
 ﻿using OpenBullet2.Core.Entities;
 using System.Threading.Tasks;
 
-namespace OpenBullet2.Core.Repositories
+namespace OpenBullet2.Core.Repositories;
+
+/// <summary>
+/// Stores hits.
+/// </summary>
+public interface IHitRepository : IRepository<HitEntity>
 {
     /// <summary>
-    /// Stores hits.
+    /// Deletes all hits from the repository.
     /// </summary>
-    public interface IHitRepository : IRepository<HitEntity>
-    {
-        /// <summary>
-        /// Deletes all hits from the repository.
-        /// </summary>
-        void Purge();
-    }
+    void Purge();
 }

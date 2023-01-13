@@ -2,21 +2,13 @@
 
 public class EntryNotFoundException : Exception
 {
+    public int Id { get; set; }
+    public string Collection { get; set; }
+
     public EntryNotFoundException(int id, string collection)
         : base($"The requested entry with id {id} was not found in the collection {collection}")
     {
-
-    }
-
-    public EntryNotFoundException(string message)
-        : base(message)
-    {
-
-    }
-
-    public EntryNotFoundException(string message, Exception inner)
-        : base(message, inner)
-    {
-
+        Id = id;
+        Collection = collection;
     }
 }
