@@ -5,7 +5,7 @@ using System.Security.Claims;
 namespace OpenBullet2.Web.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class GuestAttribute : Attribute, IAuthorizationFilter
+internal class GuestAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {

@@ -10,6 +10,9 @@ using System.Security.Claims;
 
 namespace OpenBullet2.Web.Controllers;
 
+/// <summary>
+/// Manage user sessions.
+/// </summary>
 [ApiVersion("1.0")]
 public class UserController : ApiController
 {
@@ -17,6 +20,7 @@ public class UserController : ApiController
     private readonly IAuthTokenService _authService;
     private readonly IGuestRepository _guestRepo;
 
+    /// <summary></summary>
     public UserController(OpenBulletSettingsService obSettingsService,
         IAuthTokenService authService, IGuestRepository guestRepo)
     {
@@ -25,7 +29,12 @@ public class UserController : ApiController
         _guestRepo = guestRepo;
     }
 
+    /// <summary>
+    /// Allows to log in as an admin or guest user and returns an
+    /// access token that can be used for authenticated requests.
+    /// </summary>
     [HttpPost("login")]
+    [MapToApiVersion("1.0")]
     public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto)
     {
         // Admin user

@@ -18,6 +18,7 @@ public class PluginController : ApiController
     }
 
     [HttpGet("all")]
+    [MapToApiVersion("1.0")]
     public ActionResult<IEnumerable<PluginDto>> GetAll()
     {
         var pluginNames = _pluginRepository.GetPluginNames();
@@ -26,6 +27,7 @@ public class PluginController : ApiController
     }
 
     [HttpDelete]
+    [MapToApiVersion("1.0")]
     public ActionResult Delete(string name)
     {
         var pluginNames = _pluginRepository.GetPluginNames();
@@ -41,6 +43,7 @@ public class PluginController : ApiController
     }
 
     [HttpPost]
+    [MapToApiVersion("1.0")]
     public ActionResult Add(IFormFile file)
     {
         _pluginRepository.AddPlugin(file.OpenReadStream());

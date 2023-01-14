@@ -6,7 +6,7 @@ using System.Security.Claims;
 namespace OpenBullet2.Web.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class AdminAttribute : Attribute, IAuthorizationFilter
+internal class AdminAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {

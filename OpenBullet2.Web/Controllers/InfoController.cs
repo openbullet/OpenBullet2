@@ -26,6 +26,7 @@ public class InfoController : ApiController
     }
 
     [HttpGet("server")]
+    [MapToApiVersion("1.0")]
     public ActionResult<ServerInfoDto> GetServerInfo()
     {
         var version = System.Reflection.Assembly
@@ -57,6 +58,7 @@ public class InfoController : ApiController
     }
 
     [HttpGet("announcement")]
+    [MapToApiVersion("1.0")]
     public async Task<ActionResult<AnnouncementDto>> GetAnnouncement()
     {
         var markdown = await _announcementService.FetchAnnouncement();
@@ -69,6 +71,7 @@ public class InfoController : ApiController
     }
 
     [HttpGet("changelog")]
+    [MapToApiVersion("1.0")]
     public async Task<ActionResult<ChangelogDto>> GetChangelog(string? version)
     {
         var markdown = string.Empty;
@@ -112,6 +115,7 @@ public class InfoController : ApiController
     }
 
     [HttpGet("update")]
+    [MapToApiVersion("1.0")]
     public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto
     {
         CurrentVersion = _updateService.CurrentVersion.ToString(),
@@ -120,7 +124,6 @@ public class InfoController : ApiController
         CurrentVersionType = _updateService.CurrentVersionType
     };
     
-
     private static string GetOperatingSystem()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

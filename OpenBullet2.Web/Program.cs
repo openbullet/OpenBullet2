@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core;
@@ -36,10 +37,17 @@ builder.Services.AddControllers()
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-// Swagger
-// TODO: configure versioning https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/
-builder.Services.AddEndpointsApiExplorer();
+// Swagger with versioning implemented according to this guide
+// https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/
+
+// builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+    setup.GroupNameFormat = "'v'VVV";
+    setup.SubstituteApiVersionInUrl = true;
+});
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty,
@@ -90,8 +98,18 @@ builder.Services.AddHostedService<IUpdateService>(b =>
 
 var app = builder.Build();
 
+var versionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(options =>
+{
+    foreach (var description in versionDescriptionProvider.ApiVersionDescriptions)
+    {
+        options.SwaggerEndpoint(
+            $"/swagger/{description.GroupName}/swagger.json",
+            description.GroupName.ToUpperInvariant());
+    }
+});
 
 app.UseAuthorization();
 
@@ -102,7 +120,7 @@ app.MapControllers();
 
 app.UseRouting();
 
-var obSettings = app.Services.GetService<OpenBulletSettingsService>()?.Settings
+var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
     ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");
 
 if (RootChecker.IsRoot())
@@ -116,7 +134,7 @@ if (obSettings.SecuritySettings.HttpsRedirect)
 }
 
 // Apply DB migrations or create a DB if it doesn't exist
-using (var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.CreateScope()
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>()?.CreateScope()
     ?? throw new Exception($"Missing service: {nameof(ConfigService)}"))
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -124,14 +142,14 @@ using (var serviceScope = app.Services.GetService<IServiceScopeFactory>()?.Creat
 }
 
 // Load the configs
-var configService = app.Services.GetService<ConfigService>()
+var configService = app.Services.GetRequiredService<ConfigService>()
     ?? throw new Exception($"Missing service: {nameof(ConfigService)}");
 
 await configService.ReloadConfigs();
 
 // Start the job monitor at the start of the application,
 // otherwise it will only be started when navigating to the page
-_ = app.Services.GetService<JobMonitorService>();
+_ = app.Services.GetRequiredService<JobMonitorService>();
 
 Globals.StartTime = DateTime.UtcNow;
 
