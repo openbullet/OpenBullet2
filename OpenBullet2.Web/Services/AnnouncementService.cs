@@ -2,13 +2,19 @@
 
 namespace OpenBullet2.Web.Services;
 
+/// <summary>
+/// Service that reads the announcement from the OpenBullet2 repository
+/// on github.com.
+/// </summary>
 public class AnnouncementService : IAnnouncementService
 {
     private record CachedAnnouncement(string Content, DateTime LastFetch);
     private CachedAnnouncement? cached;
 
+    /// <inheritdoc/>
     public DateTime? LastFetched => cached?.LastFetch;
 
+    /// <inheritdoc/>
     public async Task<string> FetchAnnouncement()
     {
         var isDebug = false;

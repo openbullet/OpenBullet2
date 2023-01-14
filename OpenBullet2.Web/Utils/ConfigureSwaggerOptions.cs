@@ -6,7 +6,7 @@ using System.Xml.XPath;
 
 namespace OpenBullet2.Web.Utils;
 
-public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
+internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
     private readonly IHostEnvironment _hostEnvironment;

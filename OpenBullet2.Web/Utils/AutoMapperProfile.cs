@@ -4,7 +4,7 @@ using OpenBullet2.Web.Dtos.Guest;
 
 namespace OpenBullet2.Web.Utils;
 
-public class AutoMapperProfile : Profile
+internal class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {

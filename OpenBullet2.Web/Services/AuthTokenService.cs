@@ -6,15 +6,20 @@ using System.Security.Claims;
 
 namespace OpenBullet2.Web.Services;
 
+/// <summary>
+/// A JWT-based auth token service.
+/// </summary>
 public class AuthTokenService : IAuthTokenService
 {
     private readonly OpenBulletSettingsService _obSettingsService;
 
+    /// <inheritdoc/>
     public AuthTokenService(OpenBulletSettingsService obSettingsService)
     {
         _obSettingsService = obSettingsService;
     }
 
+    /// <inheritdoc/>
     public string GenerateToken(IEnumerable<Claim> claims, TimeSpan lifetime)
     {
         var key = new SymmetricSecurityKey(_obSettingsService.Settings.SecuritySettings.JwtKey);
@@ -26,6 +31,7 @@ public class AuthTokenService : IAuthTokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    /// <inheritdoc/>
     public JwtSecurityToken ValidateToken(string token)
     {
         var key = new SymmetricSecurityKey(_obSettingsService.Settings.SecuritySettings.JwtKey);

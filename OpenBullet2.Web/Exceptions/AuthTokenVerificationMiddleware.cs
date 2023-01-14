@@ -2,7 +2,7 @@
 
 namespace OpenBullet2.Web.Exceptions;
 
-public class AuthTokenVerificationMiddleware
+internal class AuthTokenVerificationMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<AuthTokenVerificationMiddleware> _logger;

@@ -104,14 +104,14 @@ public class InfoController : ApiController
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                throw new RemoteResourceNotFound(
+                throw new RemoteResourceNotFoundException(
                     ErrorCode.REMOTE_RESOURCE_NOT_FOUND,
                     $"Changelog for version {version}", url);
             }
 
             markdown = await response.Content.ReadAsStringAsync();
         }
-        catch (RemoteResourceNotFound)
+        catch (RemoteResourceNotFoundException)
         {
             // Rethrow this since it is handled by the middleware
             throw;
