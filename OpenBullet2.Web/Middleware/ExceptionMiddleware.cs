@@ -37,7 +37,7 @@ public class ExceptionMiddleware
         {
             _logger.LogWarning($"Request failed with managed exception: {ex}");
             await Respond(context,
-                new ApiError((int)ErrorCode.UNAUTHORIZED, ex.ToString()),
+                new ApiError((int)ex.ErrorCode, ex.ToString()),
                 HttpStatusCode.NotFound);
         }
         catch (Exception ex)

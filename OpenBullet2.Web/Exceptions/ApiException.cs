@@ -18,5 +18,6 @@ public enum ErrorCode
 {
     INTERNAL_SERVER_ERROR = 1,
     UNAUTHORIZED = 2,
+    REMOTE_RESOURCE_NOT_FOUND = 50,
     GUEST_NOT_FOUND = 1001
 }

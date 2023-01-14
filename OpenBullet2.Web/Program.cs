@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Middleware;
@@ -13,12 +15,17 @@ using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts => {
+        var enumConverter = new JsonStringEnumConverter();
+        opts.JsonSerializerOptions.Converters.Add(enumConverter);
+    });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -48,6 +55,8 @@ builder.Services.AddScoped<ProxySourceFactoryService>();
 
 // Singleton
 builder.Services.AddSingleton<IAuthTokenService, AuthTokenService>();
+builder.Services.AddSingleton<IAnnouncementService, AnnouncementService>();
+builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
     "UserData/Configs"));
@@ -66,6 +75,10 @@ builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
     "UserData/Logs/Jobs"));
+
+// Hosted Services
+builder.Services.AddHostedService<IUpdateService>(b =>
+    b.GetRequiredService<IUpdateService>());
 
 var app = builder.Build();
 
@@ -111,5 +124,7 @@ await configService.ReloadConfigs();
 // Start the job monitor at the start of the application,
 // otherwise it will only be started when navigating to the page
 _ = app.Services.GetService<JobMonitorService>();
+
+Globals.StartTime = DateTime.UtcNow;
 
 app.Run();
