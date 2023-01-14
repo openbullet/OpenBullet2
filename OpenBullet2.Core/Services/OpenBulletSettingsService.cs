@@ -42,6 +42,7 @@ public class OpenBulletSettingsService
         else
         {
             Recreate();
+            Save().Wait();
         }
     }
 

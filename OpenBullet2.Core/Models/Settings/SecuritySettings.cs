@@ -56,9 +56,7 @@ public class SecuritySettings
     /// </summary>
     public SecuritySettings GenerateJwtKey()
     {
-        JwtKey = new byte[64];
-        var rng = new RNGCryptoServiceProvider();
-        rng.GetBytes(JwtKey);
+        JwtKey = RandomNumberGenerator.GetBytes(64);
         return this;
     }
 
