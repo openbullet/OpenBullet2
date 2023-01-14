@@ -28,32 +28,32 @@ public class ExceptionMiddleware
         }
         catch (UnauthorizedAccessException ex)
         {
-            await LogAndRespond(context, ex,
-                HttpStatusCode.Unauthorized, ErrorCode.UNAUTHORIZED);
+            _logger.LogWarning($"Unauthorized request: {ex.Message}");
+            await Respond(context,
+                new ApiError((int)ErrorCode.UNAUTHORIZED, ex.Message),
+                HttpStatusCode.Unauthorized);
         }
         catch (ApiException ex)
         {
-            await LogAndRespond(context, ex,
-                HttpStatusCode.NotFound, ex.ErrorCode);
+            _logger.LogWarning($"Request failed with managed exception: {ex}");
+            await Respond(context,
+                new ApiError((int)ErrorCode.UNAUTHORIZED, ex.ToString()),
+                HttpStatusCode.NotFound);
         }
         catch (Exception ex)
         {
-            await LogAndRespond(context, ex,
-                HttpStatusCode.InternalServerError,
-                ErrorCode.INTERNAL_SERVER_ERROR);
+            _logger.LogError(ex, ex.Message);
+            await Respond(context,
+                new ApiError((int)ErrorCode.INTERNAL_SERVER_ERROR, ex.Message, ex.StackTrace?.Trim()),
+                HttpStatusCode.InternalServerError);
         }
     }
 
-    private async Task LogAndRespond(HttpContext context, Exception ex,
-        HttpStatusCode statusCode, ErrorCode errorCode)
+    private async Task Respond(HttpContext context, ApiError error,
+        HttpStatusCode statusCode)
     {
-        _logger.LogError(ex, ex.Message);
-
         context.Response.ContentType= "application/json";
         context.Response.StatusCode = (int)statusCode;
-
-        var error = new ApiError((int)errorCode, ex.Message, 
-            ex.StackTrace?.ToString().Trim());
 
         await context.Response.WriteAsync(
             JsonSerializer.Serialize(error, _jsonSerializerOptions)

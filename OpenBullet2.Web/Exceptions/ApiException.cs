@@ -9,6 +9,9 @@ public class ApiException : Exception
     {
         ErrorCode = errorCode;
     }
+
+    public override string ToString()
+        => $"[{(int)ErrorCode} {ErrorCode}] {Message}";
 }
 
 public enum ErrorCode
