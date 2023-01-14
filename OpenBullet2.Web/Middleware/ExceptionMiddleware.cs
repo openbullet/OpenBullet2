@@ -30,22 +30,22 @@ public class ExceptionMiddleware
         {
             _logger.LogWarning($"Unauthorized request: {ex.Message}");
             await Respond(context,
-                new ApiError((int)ErrorCode.UNAUTHORIZED, ex.Message),
+                new ApiError(ErrorCode.UNAUTHORIZED, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
         catch (ApiException ex)
         {
             _logger.LogWarning($"Request failed with managed exception: {ex}");
             await Respond(context,
-                new ApiError((int)ex.ErrorCode, ex.ToString()),
+                new ApiError(ex.ErrorCode, ex.ToString()),
                 HttpStatusCode.NotFound);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);
             await Respond(context,
-                new ApiError((int)ErrorCode.INTERNAL_SERVER_ERROR, ex.Message, ex.StackTrace?.Trim()),
-                HttpStatusCode.InternalServerError);
+                new ApiError(ErrorCode.INTERNAL_SERVER_ERROR, ex.Message,
+                ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
         }
     }
 

@@ -2,7 +2,7 @@
 
 public class EntryNotFoundException : ApiException
 {
-    public EntryNotFoundException(ErrorCode errorCode, int id, string collection)
+    public EntryNotFoundException(ErrorCode errorCode, object id, string collection)
         : base(errorCode, $"The requested entry with id {id} was not found in the collection {collection}")
     {
 
