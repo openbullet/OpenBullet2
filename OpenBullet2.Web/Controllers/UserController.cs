@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace OpenBullet2.Web.Controllers;
 
+[ApiVersion("1.0")]
 public class UserController : ApiController
 {
     private readonly OpenBulletSettingsService _obSettingsService;

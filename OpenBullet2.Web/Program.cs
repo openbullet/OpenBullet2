@@ -21,6 +21,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
+
 builder.Services.AddControllers()
     .AddJsonOptions(opts => {
         var enumConverter = new JsonStringEnumConverter();
@@ -29,7 +36,8 @@ builder.Services.AddControllers()
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Swagger
+// TODO: configure versioning https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

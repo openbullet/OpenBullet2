@@ -7,6 +7,7 @@ using RuriLib.Services;
 namespace OpenBullet2.Web.Controllers;
 
 [Admin]
+[ApiVersion("1.0")]
 public class PluginController : ApiController
 {
     private readonly PluginRepository _pluginRepository;

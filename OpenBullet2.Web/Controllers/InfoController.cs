@@ -4,14 +4,13 @@ using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
-using PuppeteerExtraSharp;
 using System.Net;
 using System.Runtime.InteropServices;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenBullet2.Web.Controllers;
 
 [Guest]
+[ApiVersion("1.0")]
 public class InfoController : ApiController
 {
     private readonly IAnnouncementService _announcementService;

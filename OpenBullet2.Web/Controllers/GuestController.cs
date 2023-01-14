@@ -11,6 +11,7 @@ using OpenBullet2.Web.Exceptions;
 namespace OpenBullet2.Web.Controllers;
 
 [Admin]
+[ApiVersion("1.0")]
 public class GuestController : ApiController
 {
     private readonly IGuestRepository _guestRepo;
