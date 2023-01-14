@@ -11,13 +11,13 @@ public class CreateGuestDto
     /// The username the guest user will use to log in.
     /// </summary>
     [Required, MinLength(3), MaxLength(32)]
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = default!;
 
     /// <summary>
     /// The password the guest user will use to log in.
     /// </summary>
     [Required, MinLength(8), MaxLength(32)]
-    public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = default!;
 
     /// <summary>
     /// The expiration date of the guest user's account, after which

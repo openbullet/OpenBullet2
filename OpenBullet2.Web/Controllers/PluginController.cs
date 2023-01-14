@@ -6,17 +6,24 @@ using RuriLib.Services;
 
 namespace OpenBullet2.Web.Controllers;
 
+/// <summary>
+/// Manage plugins.
+/// </summary>
 [Admin]
 [ApiVersion("1.0")]
 public class PluginController : ApiController
 {
     private readonly PluginRepository _pluginRepository;
 
+    /// <summary></summary>
     public PluginController(PluginRepository pluginRepository)
     {
         _pluginRepository = pluginRepository;
     }
 
+    /// <summary>
+    /// List all active plugins.
+    /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public ActionResult<IEnumerable<PluginDto>> GetAll()
@@ -26,6 +33,9 @@ public class PluginController : ApiController
         return Ok(plugins);
     }
 
+    /// <summary>
+    /// Mark a plugin to be deleted when the server is restarted.
+    /// </summary>
     [HttpDelete]
     [MapToApiVersion("1.0")]
     public ActionResult Delete(string name)
@@ -42,6 +52,9 @@ public class PluginController : ApiController
         return Ok();
     }
 
+    /// <summary>
+    /// Add a new plugin from a zip archive.
+    /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
     public ActionResult Add(IFormFile file)

@@ -13,7 +13,7 @@ public class GuestDto
     /// <summary>
     /// The username of the guest user.
     /// </summary>
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = default!;
 
     /// <summary>
     /// The expiration date of the guest user's account, after which

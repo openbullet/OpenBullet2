@@ -30,7 +30,7 @@ public class UserController : ApiController
     }
 
     /// <summary>
-    /// Allows to log in as an admin or guest user and returns an
+    /// Log in as an admin or guest user and get an
     /// access token that can be used for authenticated requests.
     /// </summary>
     [HttpPost("login")]

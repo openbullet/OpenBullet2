@@ -30,7 +30,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Creates a new guest user.
+    /// Create a new guest user.
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
@@ -52,7 +52,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Updates the info of a guest user.
+    /// Update the info of a guest user.
     /// </summary>
     [HttpPatch("info")]
     [MapToApiVersion("1.0")]
@@ -76,7 +76,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Updates the password of a guest user.
+    /// Update the password of a guest user.
     /// </summary>
     [HttpPatch("password")]
     [MapToApiVersion("1.0")]
@@ -100,7 +100,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Lists all the guest users.
+    /// List all the guest users.
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
@@ -111,7 +111,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Gets the information of a guest user given its id.
+    /// Get the information of a guest user given its id.
     /// </summary>
     [HttpGet]
     [MapToApiVersion("1.0")]
@@ -130,7 +130,7 @@ public class GuestController : ApiController
     }
 
     /// <summary>
-    /// Deletes a guest user given its id.
+    /// Delete a guest user given its id.
     /// </summary>
     [HttpDelete]
     [MapToApiVersion("1.0")]

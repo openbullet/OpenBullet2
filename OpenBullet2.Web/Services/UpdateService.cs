@@ -3,21 +3,30 @@ using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.Services;
 
+/// <summary>
+/// The update service as a background service.
+/// </summary>
 public class UpdateService : BackgroundService, IUpdateService
 {
     private readonly string _versionFile = "version.txt";
     private readonly ILogger<UpdateService> _logger;
 
+    /// <inheritdoc/>
     public Version CurrentVersion { get; private set; } = new(0, 2, 5);
-    public Version RemoteVersion { get; private set; } = new(0, 2, 5);
-    public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
-    public VersionType CurrentVersionType => CurrentVersion switch
-    {
-        { Major: 0, Minor: 0 } => VersionType.Alpha,
-        { Major: 0 } => VersionType.Beta,
-        _ => VersionType.Release
-    };
 
+    /// <inheritdoc/>
+    public Version RemoteVersion { get; private set; } = new(0, 2, 5);
+
+    /// <inheritdoc/>
+    public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
+
+    /// <inheritdoc/>
+    public VersionType CurrentVersionType => GetVersionType(CurrentVersion);
+
+    /// <inheritdoc/>
+    public VersionType RemoteVersionType => GetVersionType(RemoteVersion);
+
+    /// <summary></summary>
     public UpdateService(ILogger<UpdateService> logger)
     {
         // Try to read the current version from disk
@@ -41,9 +50,10 @@ public class UpdateService : BackgroundService, IUpdateService
         _logger = logger;
     }
 
-    // Check for updates every 3 hours
+    /// <inheritdoc/>
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        // Check for updates every 3 hours
         using var timer = new PeriodicTimer(TimeSpan.FromHours(3));
 
         do
@@ -52,6 +62,13 @@ public class UpdateService : BackgroundService, IUpdateService
         }
         while (await timer.WaitForNextTickAsync(stoppingToken));
     }
+
+    private static VersionType GetVersionType(Version version) => version switch
+    {
+        { Major: 0, Minor: 0 } => VersionType.Alpha,
+        { Major: 0 } => VersionType.Beta,
+        _ => VersionType.Release
+    };
 
     private async Task FetchRemoteVersion()
     {

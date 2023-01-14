@@ -9,6 +9,9 @@ using System.Runtime.InteropServices;
 
 namespace OpenBullet2.Web.Controllers;
 
+/// <summary>
+/// Get info about the server.
+/// </summary>
 [Guest]
 [ApiVersion("1.0")]
 public class InfoController : ApiController
@@ -17,6 +20,7 @@ public class InfoController : ApiController
     private readonly IUpdateService _updateService;
     private readonly IMapper _mapper;
 
+    /// <summary></summary>
     public InfoController(IAnnouncementService announcementService,
         IUpdateService updateService, IMapper mapper)
     {
@@ -25,6 +29,9 @@ public class InfoController : ApiController
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Get information about the server and the environment.
+    /// </summary>
     [HttpGet("server")]
     [MapToApiVersion("1.0")]
     public ActionResult<ServerInfoDto> GetServerInfo()
@@ -57,6 +64,9 @@ public class InfoController : ApiController
         };
     }
 
+    /// <summary>
+    /// Get the current announcement.
+    /// </summary>
     [HttpGet("announcement")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AnnouncementDto>> GetAnnouncement()
@@ -70,6 +80,10 @@ public class InfoController : ApiController
         };
     }
 
+    /// <summary>
+    /// Get the changelog for a given version of the software.
+    /// If no version is specified, the current version will be used.
+    /// </summary>
     [HttpGet("changelog")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ChangelogDto>> GetChangelog(string? version)
@@ -114,6 +128,9 @@ public class InfoController : ApiController
         };
     }
 
+    /// <summary>
+    /// Get information about the availability of a new update.
+    /// </summary>
     [HttpGet("update")]
     [MapToApiVersion("1.0")]
     public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto
