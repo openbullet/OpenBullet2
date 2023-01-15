@@ -58,9 +58,10 @@ public class UserController : ApiController
 
         var claims = new[]
         {
-                new Claim(ClaimTypes.Name, dto.Username),
-                new Claim(ClaimTypes.Role, "Admin")
-            };
+            new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
+            new Claim(ClaimTypes.Name, dto.Username),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
 
         var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
         var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
@@ -116,6 +117,7 @@ public class UserController : ApiController
 
         var claims = new[]
         {
+            new Claim(ClaimTypes.NameIdentifier, entity.Id.ToString(), ClaimValueTypes.Integer),
             new Claim(ClaimTypes.Name, dto.Username),
             new Claim(ClaimTypes.Role, "Guest"),
             new Claim("IPAtLogin", ip.ToString())

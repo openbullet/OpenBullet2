@@ -1,4 +1,7 @@
-﻿using OpenBullet2.Web.Interfaces;
+﻿using OpenBullet2.Web.Extensions;
+using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Models.Identity;
+using System.Security.Claims;
 
 namespace OpenBullet2.Web.Exceptions;
 
@@ -25,7 +28,20 @@ internal class AuthTokenVerificationMiddleware
 
         if (token is not null)
         {
-            context.Items["authToken"] = _authTokenService.ValidateToken(token);
+            var validToken = _authTokenService.ValidateToken(token);
+            var apiUser = new ApiUser
+            {
+                Id = int.Parse(validToken.Claims.FirstOrDefault(
+                    c => c.Type == ClaimTypes.NameIdentifier || c.Type == "nameidentifier")?.Value ?? "-1"),
+
+                Username = validToken.Claims.FirstOrDefault(
+                    c => c.Type == ClaimTypes.Name || c.Type == "name")?.Value,
+
+                Role = Enum.Parse<UserRole>(validToken.Claims.FirstOrDefault(
+                    c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value ?? "Anonymous")
+            };
+
+            context.SetApiUser(apiUser);
         }
 
         await _next(context);

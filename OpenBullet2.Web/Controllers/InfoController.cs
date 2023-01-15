@@ -140,7 +140,7 @@ public class InfoController : ApiController
         IsUpdateAvailable = _updateService.IsUpdateAvailable,
         CurrentVersionType = _updateService.CurrentVersionType
     };
-    
+
     private static string GetOperatingSystem()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

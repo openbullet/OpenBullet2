@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Guest;
+using OpenBullet2.Web.Dtos.Settings;
+using OpenBullet2.Web.Dtos.Wordlist;
+using RuriLib.Models.Environment;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -25,5 +28,13 @@ internal class AutoMapperProfile : Profile
         CreateMap<GuestEntity, GuestDto>()
             .ForMember(dto => dto.AllowedAddresses, e => e.MapFrom(entity =>
                 entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()));
+
+        CreateMap<EnvironmentSettings, EnvironmentSettingsDto>();
+
+        CreateMap<WordlistEntity, WordlistDto>()
+            .ForMember(dto => dto.FilePath, e => e.MapFrom(entity => entity.FileName))
+            .ForMember(dto => dto.LineCount, e => e.MapFrom(entity => entity.Total))
+            .ForMember(dto => dto.WordlistType, e => e.MapFrom(entity => entity.Type))
+            .ForMember(dto => dto.OwnerUsername, e => e.MapFrom(entity => entity.Owner.Username));
     }
 }

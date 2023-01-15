@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using OpenBullet2.Web.Extensions;
+using OpenBullet2.Web.Models.Identity;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace OpenBullet2.Web.Attributes;
 
@@ -9,17 +10,8 @@ internal class GuestAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var authToken = (JwtSecurityToken?)context.HttpContext.Items["authToken"];
-
-        if (authToken is null)
-        {
-            throw new UnauthorizedAccessException("Auth token not provided");
-        }
-
-        var role = authToken.Claims.FirstOrDefault(
-            c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
-
-        if (role != "Guest" && role != "Admin")
+        if (context.HttpContext.GetApiUser().Role is not UserRole.Admin
+            and not UserRole.Guest)
         {
             throw new UnauthorizedAccessException(
                 "You must be a guest or admin user to perform this operation");

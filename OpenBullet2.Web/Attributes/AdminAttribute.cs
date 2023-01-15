@@ -1,7 +1,7 @@
-﻿using Esprima;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using OpenBullet2.Web.Extensions;
+using OpenBullet2.Web.Models.Identity;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace OpenBullet2.Web.Attributes;
 
@@ -10,17 +10,7 @@ internal class AdminAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var authToken = (JwtSecurityToken?)context.HttpContext.Items["authToken"];
-
-        if (authToken is null)
-        {
-            throw new UnauthorizedAccessException("Auth token not provided");
-        }
-
-        var role = authToken.Claims.FirstOrDefault(
-            c => c.Type == ClaimTypes.Role || c.Type == "role")?.Value;
-
-        if (role != "Admin")
+        if (context.HttpContext.GetApiUser().Role is not UserRole.Admin)
         {
             throw new UnauthorizedAccessException(
                 "You must be an admin user to perform this operation");
