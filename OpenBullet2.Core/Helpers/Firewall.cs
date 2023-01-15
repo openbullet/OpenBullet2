@@ -25,7 +25,11 @@ public static class Firewall
                     Regex.Match(addr, @"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$").Success)
                 {
                     if (ip.Equals(IPAddress.Parse(addr)))
+                    {
                         return true;
+                    }
+
+                    continue;
                 }
 
                 // Check if masked IPv4
@@ -37,13 +41,19 @@ public static class Firewall
                     var mask = SubnetMask.CreateByNetBitLength(maskLength);
 
                     if (ip.IsInSameSubnet(toCompare, mask))
+                    {
                         return true;
+                    }
+
+                    continue;
                 }
 
                 // Otherwise it must be a dynamic DNS
                 var resolved = await Dns.GetHostEntryAsync(addr);
                 if (resolved.AddressList.Any(a => a.Equals(ip)))
+                {
                     return true;
+                }
             }
             catch
             {
