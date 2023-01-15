@@ -171,6 +171,10 @@
                                         <span>@Loc["Send"] @a.Message @Loc["inChat"] @a.ChatId</span>
                                         break;
 
+                                    case MongoDBAction a:
+                                        <span>@Loc["Send"] @a.Message @Loc["clusterURL"] @a.ClusterURL @Loc["databaseName"] @a.DatabaseName @Loc["collectionName"] @a.CollectionName</span>
+                                        break;
+
                                     case ReloadProxiesAction a:
                                         <span>@Loc["ReloadProxies"]</span>
                                         break;

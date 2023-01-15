@@ -3,10 +3,14 @@ using Newtonsoft.Json.Linq;
 using RuriLib.Models.Jobs.StartConditions;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using RuriLib.Models.Hits;
 
 namespace RuriLib.Models.Jobs.Monitor.Actions
 {
@@ -116,8 +120,34 @@ namespace RuriLib.Models.Jobs.Monitor.Actions
                 { "text", Message }
             };
 
-            await client.PostAsync(webhook, 
-                new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
+            await client.PostAsync(webhook,new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json"));
+        }
+    }
+
+    /// Uploads Hit to MongoDB Cluster
+    public class MongoDBAction : Action
+    {
+        public string ClusterURL { get; set; } = "";
+        public string DatabaseName { get; set; } = "";
+        public string CollectionName { get; set; } = "";
+        public string Message { get; set; } = string.Empty;
+
+        public async override Task Execute(int currentJob, IEnumerable<Job> jobs)
+        {
+            try
+            {
+                var settings = MongoClientSettings.FromConnectionString(ClusterURL);
+                settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+                var client = new MongoClient(settings);
+                var database = client.GetDatabase(DatabaseName);
+                var collection = database.GetCollection<BsonDocument>(CollectionName);
+                var hitData = new BsonDocument { { "Hit", Message } };
+                await collection.InsertOneAsync(hitData);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

@@ -20,6 +20,9 @@
             <button class="btn btn-sm btn-outline-primary" @onclick="AddCustomWebhook">
                 <span class="oi oi-plus"></span> @Loc["CustomWebhook"]
             </button>
+            <button class="btn btn-sm btn-outline-primary" @onclick="AddMongoDB">
+                <span class="oi oi-plus"></span> @Loc["MongoDB"]
+            </button>
         </div>
     </div>
 
@@ -133,6 +136,36 @@
                             <InputCheckbox @bind-Value="x.OnlyHits" />
                         </div>
                         break;
+
+                    case MongoDBHitOutputOptions x:
+                        <div class="col-auto">
+                            <span class="fg-retry">@Loc["MongoDB"]</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["ClusterURL"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.ClusterURL" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["DatabaseName"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.DatabaseName" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["CollectionName"]:</span>
+                        </div>
+                        <div class="col align-self-stretch px-1">
+                            <InputText @bind-Value="x.CollectionName" />
+                        </div>
+                        <div class="col-auto px-1">
+                            <span>@Loc["OnlyHits"]:</span>
+                        </div>
+                        <div class="col-auto px-1">
+                            <InputCheckbox @bind-Value="x.OnlyHits" />
+                        </div>
+                        break;
                 }
                 <div class="col-auto">
                     <button class="btn btn-sm btn-outline-danger" @onclick="(() => HitOutputs.Remove(output))">
@@ -163,7 +196,7 @@
     {
         HitOutputs.Add(new DiscordWebhookHitOutputOptions());
     }
-    
+
     private void AddTelegram()
     {
         HitOutputs.Add(new TelegramBotHitOutputOptions());
@@ -172,5 +205,10 @@
     private void AddCustomWebhook()
     {
         HitOutputs.Add(new CustomWebhookHitOutputOptions());
+    }
+
+    private void AddMongoDB()
+    {
+        HitOutputs.Add(new MongoDBHitOutputOptions());
     }
 }
