@@ -51,7 +51,11 @@ public class UserController : ApiController
 
     private Task<LoggedInUserDto> LoginAdminUser(UserLoginDto dto)
     {
-        if (!BCrypt.Net.BCrypt.Verify(dto.Password, _obSettingsService.Settings.SecuritySettings.AdminPasswordHash))
+        var passwordRequired = _obSettingsService.Settings.SecuritySettings.RequireAdminLogin;
+        var passwordHash = _obSettingsService.Settings.SecuritySettings.AdminPasswordHash;
+        var validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, passwordHash);
+
+        if (passwordRequired && !validPassword)
         {
             throw new UnauthorizedAccessException("Invalid username or password");
         }
