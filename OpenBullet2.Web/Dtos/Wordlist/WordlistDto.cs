@@ -1,10 +1,17 @@
-﻿namespace OpenBullet2.Web.Dtos.Wordlist;
+﻿using OpenBullet2.Web.Dtos.User;
+
+namespace OpenBullet2.Web.Dtos.Wordlist;
 
 /// <summary>
 /// DTO that represents a wordlist.
 /// </summary>
 public class WordlistDto
 {
+    /// <summary>
+    /// The id of the wordlist.
+    /// </summary>
+    public int Id { get; set; }
+
     /// <summary>
     /// The name of the wordlist.
     /// </summary>
@@ -18,7 +25,6 @@ public class WordlistDto
     /// <summary>
     /// The purpose of the wordlist.
     /// </summary>
-
     public string Purpose { get; set; } = default!;
 
     /// <summary>
@@ -32,7 +38,7 @@ public class WordlistDto
     public string WordlistType { get; set; } = default!;
 
     /// <summary>
-    /// The username of the owner of this wordlist.
+    /// The owner of this wordlist. Null if owned by the admin user.
     /// </summary>
-    public string OwnerUsername { get; set; } = default!;
+    public OwnerDto? Owner { get; set; }
 }

@@ -56,7 +56,8 @@ public class HybridWordlistRepository : IWordlistRepository
 
     /// <inheritdoc/>
     public async Task<WordlistEntity> Get(int id)
-        => await GetAll().FirstOrDefaultAsync(e => e.Id == id);
+        => await GetAll().Include(w => w.Owner)
+        .FirstOrDefaultAsync(e => e.Id == id);
 
     /// <inheritdoc/>
     public async Task Update(WordlistEntity entity)

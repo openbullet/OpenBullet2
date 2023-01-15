@@ -41,9 +41,19 @@ public enum ErrorCode
     UNAUTHORIZED = 2,
 
     /// <summary>
+    /// Local file not found.
+    /// </summary>
+    FILE_NOT_FOUND = 50,
+
+    /// <summary>
     /// Remote resource not found.
     /// </summary>
-    REMOTE_RESOURCE_NOT_FOUND = 50,
+    REMOTE_RESOURCE_NOT_FOUND = 51,
+
+    /// <summary>
+    /// Local file already exists.
+    /// </summary>
+    FILE_ALREADY_EXISTS = 60,
 
     /// <summary>
     /// Guest user not found.
@@ -53,5 +63,10 @@ public enum ErrorCode
     /// <summary>
     /// Plugin not found.
     /// </summary>
-    PLUGIN_NOT_FOUND = 1002
+    PLUGIN_NOT_FOUND = 1002,
+
+    /// <summary>
+    /// Wordlist not found.
+    /// </summary>
+    WORDLIST_NOT_FOUND = 1003
 }

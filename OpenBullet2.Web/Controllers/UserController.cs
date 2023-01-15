@@ -53,7 +53,7 @@ public class UserController : ApiController
     {
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, _obSettingsService.Settings.SecuritySettings.AdminPasswordHash))
         {
-            throw new UnauthorizedAccessException("Invalid password");
+            throw new UnauthorizedAccessException("Invalid username or password");
         }
 
         var claims = new[]
@@ -78,14 +78,13 @@ public class UserController : ApiController
 
         if (entity == null)
         {
-            throw new EntryNotFoundException(
-                ErrorCode.GUEST_NOT_FOUND,
-                "Could not find a guest with the given username");
+            // Invalid username
+            throw new UnauthorizedAccessException("Invalid username or password");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, entity.PasswordHash))
         {
-            throw new UnauthorizedAccessException("Invalid password");
+            throw new UnauthorizedAccessException("Invalid username or password");
         }
 
         if (DateTime.UtcNow > entity.AccessExpiration)

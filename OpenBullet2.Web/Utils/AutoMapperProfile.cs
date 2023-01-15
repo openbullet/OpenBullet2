@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Settings;
+using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Dtos.Wordlist;
 using RuriLib.Models.Environment;
 
@@ -29,12 +30,25 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.AllowedAddresses, e => e.MapFrom(entity =>
                 entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()));
 
+        CreateMap<GuestEntity, OwnerDto>();
+
         CreateMap<EnvironmentSettings, EnvironmentSettingsDto>();
 
         CreateMap<WordlistEntity, WordlistDto>()
             .ForMember(dto => dto.FilePath, e => e.MapFrom(entity => entity.FileName))
             .ForMember(dto => dto.LineCount, e => e.MapFrom(entity => entity.Total))
             .ForMember(dto => dto.WordlistType, e => e.MapFrom(entity => entity.Type))
-            .ForMember(dto => dto.OwnerUsername, e => e.MapFrom(entity => entity.Owner.Username));
+            .ForMember(dto => dto.Owner, e => e.MapFrom(entity => entity.Owner));
+
+        CreateMap<CreateWordlistDto, WordlistEntity>()
+            .ForMember(entity => entity.Type, e => e.MapFrom(dto => dto.WordlistType))
+            .ForMember(entity => entity.FileName, e => e.MapFrom(
+                dto => dto.FilePath.Replace('\\', '/')))
+            .ForMember(entity => entity.Total, e => e.MapFrom(
+                dto => File.ReadLines(dto.FilePath).Count()));
+
+        CreateMap<UpdateWordlistInfoDto, WordlistEntity>()
+            .ForMember(entity => entity.Type, e => e.MapFrom(dto => dto.WordlistType));
+
     }
 }
