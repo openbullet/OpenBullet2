@@ -63,6 +63,18 @@
             <InputText @bind-Value="a.ApiServer" />
             break;
 
+        case MongoDBAction a:
+            <span>@Loc["Send"]</span>
+            <InputText @bind-Value="a.Message" />
+            <span>@Loc["clusterURL"]</span>
+            <InputText @bind-Value="a.ClusterURL" />
+            <span>@Loc["databaseName"]</span>
+            <InputText @bind-Value="a.DatabaseName" />
+            <span>@Loc["collectionName"]</span>
+            <InputText @bind-Value="a.CollectionName"/>
+            
+            break;
+
         case ReloadProxiesAction a:
             <span>@Loc["ReloadProxies"]</span>
             break;

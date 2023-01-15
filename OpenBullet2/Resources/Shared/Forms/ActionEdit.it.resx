@@ -132,7 +132,8 @@
   <data name="minutes" xml:space="preserve">
     <value>minuti</value>
   </data>
-  <data name="onWebhook" xml:space="preserve">
+  <data name="on
+        " xml:space="preserve">
     <value>sul webhook</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">

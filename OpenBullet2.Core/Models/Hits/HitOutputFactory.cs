@@ -29,6 +29,7 @@ namespace OpenBullet2.Core.Models.Hits
                 DiscordWebhookHitOutputOptions x => new DiscordWebhookHitOutput(x.Webhook, x.Username, x.AvatarUrl),
                 TelegramBotHitOutputOptions x => new TelegramBotHitOutput(x.ApiServer, x.Token, x.ChatId),
                 CustomWebhookHitOutputOptions x => new CustomWebhookHitOutput(x.Url, x.User),
+                MongoDBHitOutputOptions x => new MongoDBHitOutput(x.ClusterURL,x.DatabaseName,x.CollectionName),
                 _ => throw new NotImplementedException()
             };
 

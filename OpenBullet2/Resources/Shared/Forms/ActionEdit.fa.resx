@@ -129,7 +129,8 @@
   <data name="minutes" xml:space="preserve">
     <value>دقایق</value>
   </data>
-  <data name="onWebhook" xml:space="preserve">
+  <data name="on
+        " xml:space="preserve">
     <value>در قلاب وب</value>
   </data>
   <data name="ReloadProxies" xml:space="preserve">

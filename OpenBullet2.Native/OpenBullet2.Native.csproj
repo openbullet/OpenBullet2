@@ -71,19 +71,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\logohq_square_padded.png">
-		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\logohq_square_padded_bg.png">
-		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\sjw.gif">
-		<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

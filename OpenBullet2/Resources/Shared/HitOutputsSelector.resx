@@ -132,6 +132,9 @@
   <data name="TelegramBot" xml:space="preserve">
     <value>Telegram bot</value>
   </data>
+  <data name ="MongoDB" xml:space="preserve">
+    <value>MongoDB</value>
+  </data>
   <data name="Token" xml:space="preserve">
     <value>Bot token</value>
   </data>
