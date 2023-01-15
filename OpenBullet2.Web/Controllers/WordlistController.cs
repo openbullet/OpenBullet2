@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AngleSharp.Dom;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -53,6 +54,41 @@ public class WordlistController : ApiController
                 .Where(w => w.Owner.Id == apiUser.Id).ToListAsync();
 
         return Ok(_mapper.Map<IEnumerable<WordlistDto>>(entities));
+    }
+
+    /// <summary>
+    /// Get a preview of the content of the wordlist.
+    /// </summary>
+    /// <param name="id">The id of the wordlist</param>
+    /// <param name="lineCount">How many lines to preview</param>
+    [HttpGet("preview")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<WordlistPreviewDto>> GetPreview(int id,
+        int lineCount = 10)
+    {
+        var entity = await GetEntityAsync(id);
+
+        EnsureOwnership(entity);
+
+        if (!System.IO.File.Exists(entity.FileName))
+        {
+            _logger.LogWarning($"The wordlist with id {id} references a file that was moved or deleted from {entity.FileName}");
+
+            throw new ResourceNotFoundException(
+                ErrorCode.FILE_NOT_FOUND,
+                Path.GetFileName(entity.FileName), entity.FileName);
+        }
+
+        var firstLines = System.IO.File.ReadLines(entity.FileName)
+            .Take(lineCount).ToArray();
+
+        var size = new FileInfo(entity.FileName).Length;
+
+        return new WordlistPreviewDto
+        {
+            FirstLines = firstLines,
+            Size = size
+        };
     }
 
     /// <summary>
@@ -135,25 +171,9 @@ public class WordlistController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> Delete(int id, bool alsoDeleteFile)
     {
-        var apiUser = HttpContext.GetApiUser();
+        var entity = await GetEntityAsync(id);
 
-        var entity = await _wordlistRepo.Get(id);
-
-        if (entity is null)
-        {
-            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
-                id, nameof(IWordlistRepository));
-        }
-
-        // If the user is trying to access a wordlist that is not owned
-        // by them, throw a not found exception.
-        if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner.Id)
-        {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a wordlist not owned by them");
-
-            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
-                id, nameof(IWordlistRepository));
-        }
+        EnsureOwnership(entity);
 
         await _wordlistRepo.Delete(entity, alsoDeleteFile);
 
@@ -201,15 +221,34 @@ public class WordlistController : ApiController
     public async Task<ActionResult<WordlistDto>> UpdateInfo(
         UpdateWordlistInfoDto dto)
     {
-        var apiUser = HttpContext.GetApiUser();
+        var entity = await GetEntityAsync(dto.Id);
 
-        var entity = await _wordlistRepo.Get(dto.Id);
+        EnsureOwnership(entity);
+
+        _mapper.Map(dto, entity);
+        await _wordlistRepo.Update(entity);
+
+        _logger.LogInformation($"Updated the information of the wordlist with id {entity.Id}");
+
+        return _mapper.Map<WordlistDto>(entity);
+    }
+
+    private async Task<WordlistEntity> GetEntityAsync(int id)
+    {
+        var entity = await _wordlistRepo.Get(id);
 
         if (entity is null)
         {
             throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
-                dto.Id, nameof(IWordlistRepository));
+                id, nameof(IWordlistRepository));
         }
+
+        return entity;
+    }
+
+    private void EnsureOwnership(WordlistEntity entity)
+    {
+        var apiUser = HttpContext.GetApiUser();
 
         // If the user is trying to access a wordlist that is not owned
         // by them, throw a not found exception.
@@ -218,14 +257,7 @@ public class WordlistController : ApiController
             _logger.LogWarning($"Guest user {apiUser.Username} tried to access a wordlist not owned by them");
 
             throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
-                dto.Id, nameof(IWordlistRepository));
+                entity.Id, nameof(IWordlistRepository));
         }
-
-        _mapper.Map(dto, entity);
-        await _wordlistRepo.Update(entity);
-
-        _logger.LogInformation($"Updated the information of the wordlist with id {entity.Id}");
-
-        return _mapper.Map<WordlistDto>(entity);
     }
 }

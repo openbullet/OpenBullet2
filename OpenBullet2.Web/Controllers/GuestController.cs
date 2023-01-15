@@ -58,14 +58,7 @@ public class GuestController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto)
     {
-        var entity = await _guestRepo.Get(dto.Id);
-
-        if (entity is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.GUEST_NOT_FOUND,
-                dto.Id, nameof(IGuestRepository));
-        }
+        var entity = await GetEntityAsync(dto.Id);
 
         _mapper.Map(dto, entity);
         await _guestRepo.Update(entity);
@@ -82,14 +75,7 @@ public class GuestController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> UpdatePassword(UpdateGuestPasswordDto dto)
     {
-        var entity = await _guestRepo.Get(dto.Id);
-
-        if (entity is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.GUEST_NOT_FOUND,
-                dto.Id, nameof(IGuestRepository));
-        }
+        var entity = await GetEntityAsync(dto.Id);
 
         _mapper.Map(dto, entity);
         await _guestRepo.Update(entity);
@@ -117,14 +103,7 @@ public class GuestController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> Get(int id)
     {
-        var entity = await _guestRepo.Get(id);
-
-        if (entity is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.GUEST_NOT_FOUND,
-                id, nameof(IGuestRepository));
-        }
+        var entity = await GetEntityAsync(id);
 
         return _mapper.Map<GuestDto>(entity);
     }
@@ -136,18 +115,26 @@ public class GuestController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> Delete(int id)
     {
-        var entity = await _guestRepo.Get(id);
-
-        if (entity is null)
-        {
-            throw new EntryNotFoundException(ErrorCode.GUEST_NOT_FOUND, 
-                id, nameof(IGuestRepository));
-        }
+        var entity = await GetEntityAsync(id);
 
         await _guestRepo.Delete(entity);
 
         _logger.LogInformation($"Deleted the guest user with username {entity.Username}");
 
         return Ok();
+    }
+
+    private async Task<GuestEntity> GetEntityAsync(int id)
+    {
+        var entity = await _guestRepo.Get(id);
+
+        if (entity is null)
+        {
+            throw new EntryNotFoundException(
+                ErrorCode.GUEST_NOT_FOUND,
+                id, nameof(IGuestRepository));
+        }
+
+        return entity;
     }
 }
