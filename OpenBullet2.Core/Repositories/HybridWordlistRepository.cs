@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories;
@@ -25,15 +26,16 @@ public class HybridWordlistRepository : IWordlistRepository
     }
 
     /// <inheritdoc/>
-    public async Task Add(WordlistEntity entity)
+    public async Task Add(WordlistEntity entity, CancellationToken cancellationToken = default)
     {
         // Save it to the DB
         context.Add(entity);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task Add(WordlistEntity entity, MemoryStream stream)
+    public async Task Add(WordlistEntity entity, MemoryStream stream,
+        CancellationToken cancellationToken = default)
     {
         // Generate a unique filename
         var path = Path.Combine(baseFolder, $"{Guid.NewGuid()}.txt");
@@ -42,7 +44,8 @@ public class HybridWordlistRepository : IWordlistRepository
             : path.Replace('\\', '/');
 
         // Create the file on disk
-        await File.WriteAllBytesAsync(entity.FileName, stream.ToArray());
+        await File.WriteAllBytesAsync(entity.FileName, stream.ToArray(),
+            cancellationToken);
 
         // Count the amount of lines
         entity.Total = File.ReadLines(entity.FileName).Count();
@@ -55,26 +58,28 @@ public class HybridWordlistRepository : IWordlistRepository
         => context.Wordlists;
 
     /// <inheritdoc/>
-    public async Task<WordlistEntity> Get(int id)
+    public async Task<WordlistEntity> Get(int id, CancellationToken cancellationToken = default)
         => await GetAll().Include(w => w.Owner)
-        .FirstOrDefaultAsync(e => e.Id == id);
+        .FirstOrDefaultAsync(e => e.Id == id)
+        .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public async Task Update(WordlistEntity entity)
+    public async Task Update(WordlistEntity entity, CancellationToken cancellationToken = default)
     {
         context.Entry(entity).State = EntityState.Modified;
         context.Update(entity);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task Delete(WordlistEntity entity, bool deleteFile = false)
+    public async Task Delete(WordlistEntity entity, bool deleteFile = false,
+        CancellationToken cancellationToken = default)
     {
         if (deleteFile && File.Exists(entity.FileName))
             File.Delete(entity.FileName);
 
         context.Remove(entity);
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc/>

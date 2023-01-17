@@ -252,7 +252,7 @@ public class WordlistController : ApiController
 
         // If the user is trying to access a wordlist that is not owned
         // by them, throw a not found exception.
-        if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner.Id)
+        if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
             _logger.LogWarning($"Guest user {apiUser.Username} tried to access a wordlist not owned by them");
 

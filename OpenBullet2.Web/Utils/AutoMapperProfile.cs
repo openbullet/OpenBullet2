@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Guest;
+using OpenBullet2.Web.Dtos.Proxy;
+using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Dtos.Wordlist;
+using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Environment;
 
 namespace OpenBullet2.Web.Utils;
@@ -50,5 +53,17 @@ internal class AutoMapperProfile : Profile
         CreateMap<UpdateWordlistInfoDto, WordlistEntity>()
             .ForMember(entity => entity.Type, e => e.MapFrom(dto => dto.WordlistType));
 
+        CreateMap<ProxyEntity, ProxyDto>()
+            .ForMember(dto => dto.GroupId, e => e.MapFrom(entity => entity.Group.Id))
+            .ForMember(dto => dto.LastChecked, e => e.MapFrom(entity =>
+                entity.LastChecked == default ? null : (DateTime?)entity.LastChecked));
+
+        CreateMap<ProxyGroupEntity, ProxyGroupDto>();
+        CreateMap<CreateProxyGroupDto, ProxyGroupEntity>();
+        CreateMap<UpdateProxyGroupDto, ProxyGroupEntity>();
+
+        // Allow conversion between PagedLists with different generic type
+        // (the types must be mapped separately)
+        CreateMap(typeof(PagedList<>), typeof(PagedList<>));
     }
 }

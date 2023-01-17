@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories;
@@ -14,24 +15,24 @@ public interface IWordlistRepository : IDisposable
     /// <summary>
     /// Adds an <paramref name="entity"/> to the repository.
     /// </summary>
-    Task Add(WordlistEntity entity);
+    Task Add(WordlistEntity entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds an <paramref name="entity"/> to the repository and creates the file as well
     /// by reading it from a raw <paramref name="stream"/>.
     /// </summary>
-    Task Add(WordlistEntity entity, MemoryStream stream);
+    Task Add(WordlistEntity entity, MemoryStream stream, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes an <paramref name="entity"/> from the repository.
     /// </summary>
     /// <param name="deleteFile">Whether to delete the file as well</param>
-    Task Delete(WordlistEntity entity, bool deleteFile = false);
+    Task Delete(WordlistEntity entity, bool deleteFile = false, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets an entity from the repository by <paramref name="id"/>.
     /// </summary>
-    Task<WordlistEntity> Get(int id);
+    Task<WordlistEntity> Get(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets an <see cref="IQueryable"/> of all entities for further filtering.
@@ -44,7 +45,7 @@ public interface IWordlistRepository : IDisposable
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    Task Update(WordlistEntity entity);
+    Task Update(WordlistEntity entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes all wordlists from the repository.

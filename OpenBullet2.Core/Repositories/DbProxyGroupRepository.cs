@@ -1,4 +1,7 @@
-﻿using OpenBullet2.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Core.Entities;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories;
 
@@ -12,4 +15,10 @@ public class DbProxyGroupRepository : DbRepository<ProxyGroupEntity>, IProxyGrou
     {
 
     }
+
+    /// <inheritdoc/>
+    public async override Task<ProxyGroupEntity> Get(int id, CancellationToken cancellationToken = default)
+        => await GetAll().Include(w => w.Owner)
+        .FirstOrDefaultAsync(e => e.Id == id, cancellationToken)
+        .ConfigureAwait(false);
 }
