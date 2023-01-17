@@ -186,7 +186,7 @@ public class WordlistController : ApiController
     [Guest]
     [HttpDelete("not-found")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<DeletedEntriesDto>> DeleteNotFound()
+    public async Task<ActionResult<AffectedEntriesDto>> DeleteNotFound()
     {
         var apiUser = HttpContext.GetApiUser();
 
@@ -206,7 +206,7 @@ public class WordlistController : ApiController
             }
         }
 
-        return new DeletedEntriesDto
+        return new AffectedEntriesDto
         {
             Count = deletedCount
         };

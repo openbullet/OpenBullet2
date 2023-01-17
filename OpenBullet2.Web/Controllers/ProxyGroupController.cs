@@ -112,7 +112,7 @@ public class ProxyGroupController : ApiController
     [Guest]
     [HttpDelete]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<DeletedEntriesDto>> Delete(int id)
+    public async Task<ActionResult<AffectedEntriesDto>> Delete(int id)
     {
         var entity = await GetEntityAsync(id);
 
@@ -157,7 +157,7 @@ public class ProxyGroupController : ApiController
         // Delete the proxies related to that group from the DB
         await _proxyRepo.Delete(proxies);
 
-        return new DeletedEntriesDto
+        return new AffectedEntriesDto
         {
             Count = proxies.Count
         };

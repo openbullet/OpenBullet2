@@ -51,6 +51,11 @@ public enum ErrorCode
     REMOTE_RESOURCE_NOT_FOUND = 51,
 
     /// <summary>
+    /// Remote resource fetch failed.
+    /// </summary>
+    REMOTE_RESOURCE_FETCH_FAILED = 52,
+
+    /// <summary>
     /// Local file already exists.
     /// </summary>
     FILE_ALREADY_EXISTS = 60,

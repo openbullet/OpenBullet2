@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Core.Entities;
 
 namespace OpenBullet2.Web.Models.Pagination;
 
@@ -30,16 +31,16 @@ public class PagedList<T>
     /// <summary>
     /// The total number of items.
     /// </summary>
-    public int Count { get; set; }
+    public int TotalCount { get; set; }
 
     /// <summary></summary>
-    public PagedList(IEnumerable<T> items, int count, int pageNumber,
+    public PagedList(IEnumerable<T> items, int totalCount, int pageNumber,
         int pageSize)
     {
         PageNumber = pageNumber;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
         PageSize = pageSize;
-        Count = count;
+        TotalCount = totalCount;
         Items = items.ToList();
     }
 
@@ -47,13 +48,16 @@ public class PagedList<T>
     /// Creates a paged list from an <see cref="IQueryable{T}"/>, useful
     /// for DB calls to optimize the query.
     /// </summary>
-    public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source,
-        int pageNumber, int pageSize)
+    public static async Task<PagedList<TEntity>> CreateAsync<TEntity>(
+        IQueryable<TEntity> source,
+        int pageNumber, int pageSize) where TEntity : Entity
     {
         var count = await source.CountAsync();
-        var items = await source.Skip((pageNumber - 1) * pageSize)
+        var items = await source
+            .OrderBy(x => x.Id)
+            .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize).ToListAsync();
 
-        return new PagedList<T>(items, count, pageNumber, pageSize);
+        return new PagedList<TEntity>(items, count, pageNumber, pageSize);
     }
 }

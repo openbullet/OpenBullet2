@@ -11,6 +11,7 @@ public interface IProxyRepository : IRepository<ProxyEntity>
     /// <summary>
     /// Removes duplicate proxies that belong to the group with a given <paramref name="groupId"/> from the Proxies table.
     /// Duplication is checked on type, host, port, username and password.
+    /// Returns the number of removed entries.
     /// </summary>
-    Task RemoveDuplicates(int groupId);
+    Task<int> RemoveDuplicates(int groupId);
 }

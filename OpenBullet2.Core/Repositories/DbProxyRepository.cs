@@ -35,7 +35,7 @@ public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
     }
 
     /// <inheritdoc/>
-    public async Task RemoveDuplicates(int groupId)
+    public async Task<int> RemoveDuplicates(int groupId)
     {
         var proxies = await GetAll()
             .Where(p => p.Group.Id == groupId)
@@ -43,8 +43,11 @@ public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
 
         var duplicates = proxies
             .GroupBy(p => new { p.Type, p.Host, p.Port, p.Username, p.Password })
-            .SelectMany(g => g.Skip(1));
+            .SelectMany(g => g.Skip(1))
+            .ToList();
         
         await Delete(duplicates);
+
+        return duplicates.Count;
     }
 }
