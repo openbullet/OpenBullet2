@@ -67,11 +67,38 @@ public class ConfigController : ApiController
     [Admin]
     [HttpGet]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConfigDto>> GetConfig(string id)
+    public ActionResult<ConfigDto> GetConfig(string id)
     {
         var config = GetConfigFromService(id);
+        return _mapper.Map<ConfigDto>(config);
+    }
 
-        throw new NotImplementedException();
+    /// <summary>
+    /// Update a config's data.
+    /// </summary>
+    [Admin]
+    [HttpPut]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<ConfigDto>> UpdateConfig(ConfigDto dto)
+    {
+        // Make sure a config with this id exists
+        var config = GetConfigFromService(dto.Id);
+
+        // Make sure it's not a remote config
+        if (config.IsRemote)
+        {
+            throw new ActionNotAllowedException(
+                ErrorCode.CANNOT_EDIT_REMOTE_CONFIG,
+                $"Attempted to edit remote config with id {dto.Id}");
+        }
+
+        // Apply the new fields to the EXISTING config
+        _mapper.Map(dto, config);
+
+        // Save it
+        await _configRepo.Save(config);
+
+        return _mapper.Map<ConfigDto>(config);
     }
 
     private Config GetConfigFromService(string id)

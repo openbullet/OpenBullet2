@@ -89,4 +89,9 @@ public enum ErrorCode
     /// The proxy group is being used in a job.
     /// </summary>
     PROXY_GROUP_IN_USE = 2001,
+
+    /// <summary>
+    /// Cannot edit a remote config.
+    /// </summary>
+    CANNOT_EDIT_REMOTE_CONFIG = 5000,
 }
