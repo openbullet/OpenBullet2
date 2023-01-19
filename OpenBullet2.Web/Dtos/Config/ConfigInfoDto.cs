@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Dtos.Config;
+﻿using RuriLib.Models.Configs;
+
+namespace OpenBullet2.Web.Dtos.Config;
 
 /// <summary>
 /// DTO that contains overview information about a config.
@@ -14,6 +16,11 @@ public class ConfigInfoDto
     /// The name of the config.
     /// </summary>
     public string Name { get; set; } = default!;
+
+    /// <summary>
+    /// The base64 encoded image of the config.
+    /// </summary>
+    public string Base64Image { get; set; } = default!;
 
     /// <summary>
     /// The author of the config.
@@ -50,5 +57,8 @@ public class ConfigInfoDto
     /// </summary>
     public DateTime LastModified { get; set; } = default!;
 
-
+    /// <summary>
+    /// The current config mode.
+    /// </summary>
+    public ConfigMode Mode { get; set; } = ConfigMode.LoliCode;
 }

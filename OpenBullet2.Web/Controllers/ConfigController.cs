@@ -53,7 +53,7 @@ public class ConfigController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<ConfigReadmeDto> GetReadme(string id)
     {
-        var config = GetConfig(id);
+        var config = GetConfigFromService(id);
 
         return new ConfigReadmeDto
         {
@@ -62,57 +62,19 @@ public class ConfigController : ApiController
     }
 
     /// <summary>
-    /// Update the readme of a config.
+    /// Get a config's data.
     /// </summary>
     [Admin]
-    [HttpPut("readme")]
+    [HttpGet]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConfigReadmeDto>> UpdateReadme(
-        UpdateConfigReadmeDto dto)
+    public async Task<ActionResult<ConfigDto>> GetConfig(string id)
     {
-        var config = GetConfig(dto.Id);
-        config.Readme = dto.MarkdownText;
-        await _configRepo.Save(config);
+        var config = GetConfigFromService(id);
 
-        _logger.LogInformation($"Updated the readme of the config {config.Metadata.Name}");
-
-        return new ConfigReadmeDto
-        {
-            MarkdownText = config.Readme
-        };
+        throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// Get the metadata of a config.
-    /// </summary>
-    [Admin]
-    [HttpGet("metadata")]
-    [MapToApiVersion("1.0")]
-    public ActionResult<ConfigMetadataDto> GetMetadata(string id)
-    {
-        var config = GetConfig(id);
-        return _mapper.Map<ConfigMetadataDto>(config.Metadata);
-    }
-
-    /// <summary>
-    /// Update the metadata of a config.
-    /// </summary>
-    [Admin]
-    [HttpPut("metadata")]
-    [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConfigMetadataDto>> UpdateMetadata(
-        UpdateConfigMetadataDto dto)
-    {
-        var config = GetConfig(dto.Id);
-        config.Metadata = _mapper.Map<ConfigMetadata>(dto);
-        await _configRepo.Save(config);
-
-        _logger.LogInformation($"Updated the metadata of the config {config.Metadata.Name}");
-
-        return _mapper.Map<ConfigMetadataDto>(config.Metadata);
-    }
-
-    private Config GetConfig(string id)
+    private Config GetConfigFromService(string id)
     {
         var config = _configService.Configs.FirstOrDefault(c => c.Id == id);
 

@@ -30,5 +30,6 @@ public class AddProxiesDto
     /// <summary>
     /// The id of the proxy group to which proxies should be assigned.
     /// </summary>
+    [Required]
     public int ProxyGroupId { get; set; }
 }

@@ -67,6 +67,7 @@ internal class AutoMapperProfile : Profile
         CreateMap<Config, ConfigInfoDto>()
             .ForMember(dto => dto.AllowedWordlistTypes, e => e.MapFrom(c =>
                 c.Settings.DataSettings.AllowedWordlistTypes.ToList()))
+            .ForMember(dto => dto.Base64Image, e => e.MapFrom(c => c.Metadata.Base64Image))
             .ForMember(dto => dto.Author, e => e.MapFrom(c => c.Metadata.Author))
             .ForMember(dto => dto.Category, e => e.MapFrom(c => c.Metadata.Category))
             .ForMember(dto => dto.CreationDate, e => e.MapFrom(c => c.Metadata.CreationDate))
@@ -76,8 +77,6 @@ internal class AutoMapperProfile : Profile
                 c.Settings.ProxySettings.UseProxies));
 
         CreateMap<ConfigMetadata, ConfigMetadataDto>();
-        CreateMap<UpdateConfigMetadataDto, ConfigMetadata>();
-
 
         // Allow conversion between PagedLists with different generic type
         // (the types must be mapped separately)

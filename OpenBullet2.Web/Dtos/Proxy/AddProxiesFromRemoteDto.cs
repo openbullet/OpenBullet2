@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Dtos.Proxy;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OpenBullet2.Web.Dtos.Proxy;
 
 /// <summary>
 /// DTO that contains information about a remote source of proxies
@@ -9,5 +11,6 @@ public class AddProxiesFromRemoteDto : AddProxiesDto
     /// <summary>
     /// The URL where the proxies can be downloaded from.
     /// </summary>
+    [Required]
     public string Url { get; set; } = default!;
 }
