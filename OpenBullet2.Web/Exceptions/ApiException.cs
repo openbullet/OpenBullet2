@@ -81,6 +81,11 @@ public enum ErrorCode
     PROXY_GROUP_NOT_FOUND = 1004,
 
     /// <summary>
+    /// Config not found.
+    /// </summary>
+    CONFIG_NOT_FOUND = 1005,
+
+    /// <summary>
     /// The proxy group is being used in a job.
     /// </summary>
     PROXY_GROUP_IN_USE = 2001,
