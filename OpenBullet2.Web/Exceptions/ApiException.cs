@@ -86,6 +86,16 @@ public enum ErrorCode
     CONFIG_NOT_FOUND = 1005,
 
     /// <summary>
+    /// Endpoint not found.
+    /// </summary>
+    ENDPOINT_NOT_FOUND = 1006,
+
+    /// <summary>
+    /// Endpoint already exists.
+    /// </summary>
+    ENDPOINT_ALREADY_EXISTS = 1106,
+
+    /// <summary>
     /// The proxy group is being used in a job.
     /// </summary>
     PROXY_GROUP_IN_USE = 2001,

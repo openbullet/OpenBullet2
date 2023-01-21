@@ -1,0 +1,27 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OpenBullet2.Web.Dtos.Shared;
+
+/// <summary>
+/// DTO that represents a shared endpoint.
+/// </summary>
+public class EndpointDto
+{
+    /// <summary>
+    /// The route of this endpoint in the URI.
+    /// </summary>
+    [Required]
+    public string Route { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The valid API keys that can be used to access this endpoint.
+    /// </summary>
+    [Required]
+    public List<string> ApiKeys { get; set; } = new();
+
+    /// <summary>
+    /// The IDs of the configs that this endpoint should expose.
+    /// </summary>
+    [Required]
+    public List<string> ConfigIds { get; set; } = new();
+}

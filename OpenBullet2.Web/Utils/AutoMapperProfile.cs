@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Dtos.Settings;
+using OpenBullet2.Web.Dtos.Shared;
 using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Models.Pagination;
@@ -118,6 +120,8 @@ internal class AutoMapperProfile : Profile
         CreateMap<RegexDataRule, RegexDataRuleDto>().ReverseMap();
         CreateMap<LinesFromFileResourceOptions, LinesFromFileResourceDto>().ReverseMap();
         CreateMap<RandomLinesFromFileResourceOptions, RandomLinesFromFileResourceDto>().ReverseMap();
+
+        CreateMap<Core.Models.Sharing.Endpoint, EndpointDto>().ReverseMap();
 
         // Allow conversion between PagedLists with different generic type
         // (the types must be mapped separately)

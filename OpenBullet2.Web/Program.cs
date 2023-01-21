@@ -77,6 +77,9 @@ builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
     "UserData/Configs"));
 builder.Services.AddSingleton<ConfigService>();
+builder.Services.AddSingleton(service =>
+    new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
+    "UserData"));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<JobManagerService>();
