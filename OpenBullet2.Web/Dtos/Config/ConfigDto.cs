@@ -28,12 +28,12 @@ public class ConfigDto
     /// <summary>
     /// The metadata of the config.
     /// </summary>
-    public ConfigMetadataDto Metadata { get; set; } = string.Empty;
+    public ConfigMetadataDto Metadata { get; set; } = default!;
 
     /// <summary>
     /// The config's settings.
     /// </summary>
-    public ConfigSettingsDto Settings { get; set; } = string.Empty;
+    public ConfigSettingsDto Settings { get; set; } = default!;
 
     /// <summary>
     /// The markdown body of the readme.

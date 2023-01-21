@@ -55,7 +55,7 @@ public class ConfigInfoDto
     /// <summary>
     /// The date when the config was last modified.
     /// </summary>
-    public DateTime LastModified { get; set; } = string.Empty;
+    public DateTime LastModified { get; set; }
 
     /// <summary>
     /// The current config mode.
