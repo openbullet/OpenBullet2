@@ -91,7 +91,7 @@ public enum ErrorCode
     PROXY_GROUP_IN_USE = 2001,
 
     /// <summary>
-    /// Cannot edit a remote config.
+    /// Action not allowed for a remote config.
     /// </summary>
-    CANNOT_EDIT_REMOTE_CONFIG = 5000,
+    REMOTE_CONFIG = 5000
 }
