@@ -12,7 +12,7 @@ public class SimpleDataRuleDto
     /// The name of the slice that should be checked.
     /// </summary>
     [Required, MinLength(1)]
-    public string SliceName { get; set; } = default!;
+    public string SliceName { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether the rule should be inverted, as in the rule is valid when
@@ -30,7 +30,7 @@ public class SimpleDataRuleDto
     /// The string to compare to.
     /// </summary>
     [Required]
-    public string StringToCompare { get; set; } = default!;
+    public string StringToCompare { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether the comparison should consider the letter casing.

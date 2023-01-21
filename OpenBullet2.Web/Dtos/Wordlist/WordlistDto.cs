@@ -15,17 +15,17 @@ public class WordlistDto
     /// <summary>
     /// The name of the wordlist.
     /// </summary>
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The path to the actual file on disk.
     /// </summary>
-    public string FilePath { get; set; } = default!;
+    public string FilePath { get; set; } = string.Empty;
 
     /// <summary>
     /// The purpose of the wordlist.
     /// </summary>
-    public string Purpose { get; set; } = default!;
+    public string Purpose { get; set; } = string.Empty;
 
     /// <summary>
     /// The total number of lines in the wordlist.
@@ -35,7 +35,7 @@ public class WordlistDto
     /// <summary>
     /// The wordlist type.
     /// </summary>
-    public string WordlistType { get; set; } = default!;
+    public string WordlistType { get; set; } = string.Empty;
 
     /// <summary>
     /// The owner of this wordlist. Null if owned by the admin user.

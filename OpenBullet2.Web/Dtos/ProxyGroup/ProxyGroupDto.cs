@@ -15,7 +15,7 @@ public class ProxyGroupDto
     /// <summary>
     /// The name of the proxy group.
     /// </summary>
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The owner of this proxy group. Null if owned by the admin user.

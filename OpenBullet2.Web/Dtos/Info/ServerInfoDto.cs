@@ -18,18 +18,18 @@ public class ServerInfoDto
     /// <summary>
     /// The operating system where the server is hosted.
     /// </summary>
-    public string OperatingSystem { get; set; } = default!;
+    public string OperatingSystem { get; set; } = string.Empty;
 
     /// <summary>
     /// The current working directory. All relative paths used
     /// in the software will be relative to this directory.
     /// </summary>
-    public string CurrentWorkingDirectory { get; set; } = default!;
+    public string CurrentWorkingDirectory { get; set; } = string.Empty;
 
     /// <summary>
     /// The build number of the current release.
     /// </summary>
-    public string BuildNumber { get; set; } = default!;
+    public string BuildNumber { get; set; } = string.Empty;
 
     /// <summary>
     /// The build date of the current release.
@@ -39,5 +39,5 @@ public class ServerInfoDto
     /// <summary>
     /// The IP address of the calling client, for debugging purposes.
     /// </summary>
-    public string ClientIpAddress { get; set; } = default!;
+    public string ClientIpAddress { get; set; } = string.Empty;
 }

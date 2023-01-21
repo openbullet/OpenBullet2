@@ -17,5 +17,5 @@ public class UpdateGuestPasswordDto
     /// The new password the guest user will use to log in.
     /// </summary>
     [Required, MinLength(8), MaxLength(32)]
-    public string Password { get; set; } = default!;
+    public string Password { get; set; } = string.Empty;
 }

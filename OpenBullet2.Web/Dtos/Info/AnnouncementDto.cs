@@ -14,5 +14,5 @@ public class AnnouncementDto
     /// <summary>
     /// The markdown text of the announcement.
     /// </summary>
-    public string MarkdownText { get; set; } = default!;
+    public string MarkdownText { get; set; } = string.Empty;
 }

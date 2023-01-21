@@ -13,5 +13,5 @@ public class OwnerDto
     /// <summary>
     /// The username of the user.
     /// </summary>
-    public string Username { get; set; } = default!;
+    public string Username { get; set; } = string.Empty;
 }

@@ -12,5 +12,5 @@ public class AddProxiesFromRemoteDto : AddProxiesDto
     /// The URL where the proxies can be downloaded from.
     /// </summary>
     [Required]
-    public string Url { get; set; } = default!;
+    public string Url { get; set; } = string.Empty;
 }

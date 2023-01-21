@@ -8,5 +8,5 @@ public class WordlistFileDto
     /// <summary>
     /// The path of the file on disk.
     /// </summary>
-    public string FilePath { get; set; } = default!;
+    public string FilePath { get; set; } = string.Empty;
 }

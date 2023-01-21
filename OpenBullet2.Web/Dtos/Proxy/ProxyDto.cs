@@ -16,7 +16,7 @@ public class ProxyDto
     /// <summary>
     /// The host on which the proxy server is running.
     /// </summary>
-    public string Host { get; set; } = default!;
+    public string Host { get; set; } = string.Empty;
 
     /// <summary>
     /// The port on which the proxy server is listening.

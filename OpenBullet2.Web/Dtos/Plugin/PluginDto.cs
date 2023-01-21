@@ -8,5 +8,5 @@ public class PluginDto
     /// <summary>
     /// The name of the plugin.
     /// </summary>
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 }

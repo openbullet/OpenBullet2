@@ -12,7 +12,7 @@ public class ConfigDto
     /// The unique id of the config.
     /// </summary>
     [Required]
-    public string Id { get; set; } = default!;
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether the config was downloaded from a remote source and should not
@@ -28,40 +28,40 @@ public class ConfigDto
     /// <summary>
     /// The metadata of the config.
     /// </summary>
-    public ConfigMetadataDto Metadata { get; set; } = default!;
+    public ConfigMetadataDto Metadata { get; set; } = string.Empty;
 
     /// <summary>
     /// The config's settings.
     /// </summary>
-    public ConfigSettingsDto Settings { get; set; } = default!;
+    public ConfigSettingsDto Settings { get; set; } = string.Empty;
 
     /// <summary>
     /// The markdown body of the readme.
     /// </summary>
-    public string Readme { get; set; } = default!;
+    public string Readme { get; set; } = string.Empty;
 
     /// <summary>
     /// The LoliCode script.
     /// </summary>
-    public string LoliCodeScript { get; set; } = default!;
+    public string LoliCodeScript { get; set; } = string.Empty;
 
     /// <summary>
     /// The LoliCode script that gets executed once, before anything else.
     /// </summary>
-    public string StartupLoliCodeScript { get; set; } = default!;
+    public string StartupLoliCodeScript { get; set; } = string.Empty;
 
     /// <summary>
     /// The LoliScript code of legacy configs.
     /// </summary>
-    public string LoliScript { get; set; } = default!;
+    public string LoliScript { get; set; } = string.Empty;
 
     /// <summary>
     /// The C# script that gets executed once, before anything else.
     /// </summary>
-    public string StartupCSharpScript { get; set; } = default!;
+    public string StartupCSharpScript { get; set; } = string.Empty;
 
     /// <summary>
     /// The C# script for configs that were converted to C#.
     /// </summary>
-    public string CSharpScript { get; set; } = default!;
+    public string CSharpScript { get; set; } = string.Empty;
 }

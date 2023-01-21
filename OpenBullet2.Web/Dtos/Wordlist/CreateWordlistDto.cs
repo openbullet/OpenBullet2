@@ -12,12 +12,12 @@ public class CreateWordlistDto
     /// The name of the wordlist.
     /// </summary>
     [Required]
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The purpose of the wordlist.
     /// </summary>
-    public string Purpose { get; set; } = default!;
+    public string Purpose { get; set; } = string.Empty;
 
     /// <summary>
     /// The wordlist type.
@@ -28,5 +28,5 @@ public class CreateWordlistDto
     /// The path to the actual file on disk.
     /// </summary>
     [Required]
-    public string FilePath { get; set; } = default!;
+    public string FilePath { get; set; } = string.Empty;
 }

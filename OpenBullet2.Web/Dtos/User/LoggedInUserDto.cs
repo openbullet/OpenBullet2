@@ -8,5 +8,5 @@ public class LoggedInUserDto
     /// <summary>
     /// The authentication token to be used for authenticated requests.
     /// </summary>
-    public string Token { get; set; } = default!;
+    public string Token { get; set; } = string.Empty;
 }

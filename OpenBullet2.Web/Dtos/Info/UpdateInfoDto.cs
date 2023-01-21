@@ -10,12 +10,12 @@ public class UpdateInfoDto
     /// <summary>
     /// The current version of the software.
     /// </summary>
-    public string CurrentVersion { get; set; } = default!;
+    public string CurrentVersion { get; set; } = string.Empty;
 
     /// <summary>
     /// The latest remotely available version of the software.
     /// </summary>
-    public string RemoteVersion { get; set; } = default!;
+    public string RemoteVersion { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether an update is available.

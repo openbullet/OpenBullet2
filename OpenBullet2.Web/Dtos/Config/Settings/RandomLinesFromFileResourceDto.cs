@@ -12,13 +12,13 @@ public class RandomLinesFromFileResourceDto
     /// The unique name of the resource.
     /// </summary>
     [Required]
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The location of the file on disk.
     /// </summary>
     [Required]
-    public string Location { get; set; } = default!;
+    public string Location { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether to skip empty lines when taking lines from the file.

@@ -8,5 +8,5 @@ public class ConfigReadmeDto
     /// <summary>
     /// The markdown text of the readme.
     /// </summary>
-    public string MarkdownText { get; set; } = default!;
+    public string MarkdownText { get; set; } = string.Empty;
 }

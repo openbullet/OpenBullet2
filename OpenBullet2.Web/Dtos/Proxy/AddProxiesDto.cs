@@ -19,13 +19,13 @@ public class AddProxiesDto
     /// The default username to use when not specified. Empty
     /// if the proxies do not require authentication.
     /// </summary>
-    public string DefaultUsername { get; set; } = default!;
+    public string DefaultUsername { get; set; } = string.Empty;
 
     /// <summary>
     /// The default password to use when not specified. Empty
     /// if the proxies do not require authentication.
     /// </summary>
-    public string DefaultPassword { get; set; } = default!;
+    public string DefaultPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// The id of the proxy group to which proxies should be assigned.

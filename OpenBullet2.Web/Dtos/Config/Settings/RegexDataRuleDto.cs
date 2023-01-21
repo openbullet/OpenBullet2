@@ -11,13 +11,13 @@ public class RegexDataRuleDto
     /// The name of the slice that should be checked.
     /// </summary>
     [Required, MinLength(1)]
-    public string SliceName { get; set; } = default!;
+    public string SliceName { get; set; } = string.Empty;
 
     /// <summary>
     /// The regular expression that should be matched by the slice.
     /// </summary>
     [Required]
-    public string RegexToMatch { get; set; } = default!;
+    public string RegexToMatch { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether the rule should be inverted, as in the rule is valid when
