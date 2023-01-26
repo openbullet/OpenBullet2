@@ -13,5 +13,5 @@ public class WordlistPreviewDto
     /// <summary>
     /// The size of the file, in bytes.
     /// </summary>
-    public long Size { get; set; }
+    public long SizeInBytes { get; set; }
 }

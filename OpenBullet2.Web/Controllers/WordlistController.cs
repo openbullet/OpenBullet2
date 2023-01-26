@@ -87,7 +87,7 @@ public class WordlistController : ApiController
         return new WordlistPreviewDto
         {
             FirstLines = firstLines,
-            Size = size
+            SizeInBytes = size
         };
     }
 
@@ -107,7 +107,7 @@ public class WordlistController : ApiController
         {
             if (!dto.FilePath.IsSubPathOf(_baseDir))
             {
-                _logger.LogWarning($"Guest user {apiUser.Username} tried to access a file outside of the allowed directory");
+                _logger.LogWarning($"Guest user {apiUser.Username} tried to access a file outside of the allowed directory while creating a wordlist at {dto.FilePath}");
 
                 throw new UnauthorizedAccessException(
                     $"Guest users cannot access files outside of the {_baseDir} folder");
