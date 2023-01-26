@@ -86,8 +86,10 @@ public class InfoController : ApiController
     /// </summary>
     [HttpGet("changelog")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ChangelogDto>> GetChangelog(string? version)
+    public async Task<ActionResult<ChangelogDto>> GetChangelog(string? v)
     {
+        // NOTE: We cannot call the query param "version" otherwise ASP.NET core
+        // will set its value to the API version instead of what was passed :|
         var markdown = string.Empty;
 
         using var client = new HttpClient();
@@ -95,18 +97,18 @@ public class InfoController : ApiController
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
 
         // If a version was not provided, use the current version
-        version ??= _updateService.CurrentVersion.ToString();
+        v ??= _updateService.CurrentVersion.ToString();
 
         try
         {
-            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{version}.md";
+            var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
             using var response = await client.GetAsync(url);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 throw new ResourceNotFoundException(
                     ErrorCode.REMOTE_RESOURCE_NOT_FOUND,
-                    $"Changelog for version {version}", url);
+                    $"Changelog for version {v}", url);
             }
 
             markdown = await response.Content.ReadAsStringAsync();
@@ -124,7 +126,7 @@ public class InfoController : ApiController
         return new ChangelogDto 
         {
             MarkdownText = markdown,
-            Version = version
+            Version = v
         };
     }
 
@@ -138,7 +140,8 @@ public class InfoController : ApiController
         CurrentVersion = _updateService.CurrentVersion.ToString(),
         RemoteVersion = _updateService.RemoteVersion.ToString(),
         IsUpdateAvailable = _updateService.IsUpdateAvailable,
-        CurrentVersionType = _updateService.CurrentVersionType
+        CurrentVersionType = _updateService.CurrentVersionType,
+        RemoteVersionType = _updateService.RemoteVersionType
     };
 
     private static string GetOperatingSystem()
