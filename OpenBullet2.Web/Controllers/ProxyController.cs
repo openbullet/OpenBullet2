@@ -11,6 +11,7 @@ using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Proxies;
+using static IronPython.Modules._ast;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -44,7 +45,7 @@ public class ProxyController : ApiController
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<PagedList<ProxyDto>>> GetAll(
-        [FromQuery] PaginationDto pagination, int proxyGroupId = -1)
+        [FromQuery] GetProxiesDto dto, int proxyGroupId = -1)
     {
         var apiUser = HttpContext.GetApiUser();
 
@@ -54,13 +55,32 @@ public class ProxyController : ApiController
                 .ThenInclude(g => g.Owner)
                 .Where(p => p.Group.Owner.Id == apiUser.Id);
 
+        if (dto.SearchTerm is not null)
+        {
+            query = query.Where(p =>
+                EF.Functions.Like(p.Host, $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Port.ToString(), $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Username, $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Country, $"%{dto.SearchTerm}%"));
+        }
+
+        if (dto.Type is not null)
+        {
+            query = query.Where(p => p.Type == dto.Type);
+        }
+
+        if (dto.Status is not null)
+        {
+            query = query.Where(p => p.Status == dto.Status);
+        }
+
         if (proxyGroupId != -1)
         {
             query = query.Where(p => p.Group.Id == proxyGroupId);
         }
 
         var pagedEntities = await PagedList<ProxyEntity>.CreateAsync(query,
-            pagination.PageNumber, pagination.PageSize);
+            dto.PageNumber, dto.PageSize);
 
         return _mapper.Map<PagedList<ProxyDto>>(pagedEntities);
     }
