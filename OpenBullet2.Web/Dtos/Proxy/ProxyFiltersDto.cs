@@ -4,10 +4,15 @@ using RuriLib.Models.Proxies;
 namespace OpenBullet2.Web.Dtos.Proxy;
 
 /// <summary>
-/// Filters to get all proxies.
+/// Filters to describe a subset of proxies.
 /// </summary>
-public class GetProxiesDto : PaginationDto
+public class ProxyFiltersDto : PaginationDto
 {
+    /// <summary>
+    /// The id of the proxy group. Set to -1 for all, where supported.
+    /// </summary>
+    public int ProxyGroupId { get; set; } = -1;
+
     /// <summary>
     /// The search term to filter results by the proxy host,
     /// port, username or country. Optional.

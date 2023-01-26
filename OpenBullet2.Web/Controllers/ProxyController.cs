@@ -45,39 +45,9 @@ public class ProxyController : ApiController
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<PagedList<ProxyDto>>> GetAll(
-        [FromQuery] GetProxiesDto dto, int proxyGroupId = -1)
+        [FromQuery] ProxyFiltersDto dto)
     {
-        var apiUser = HttpContext.GetApiUser();
-
-        var query = apiUser.Role is UserRole.Admin
-            ? _proxyRepo.GetAll()
-            : _proxyRepo.GetAll().Include(p => p.Group)
-                .ThenInclude(g => g.Owner)
-                .Where(p => p.Group.Owner.Id == apiUser.Id);
-
-        if (dto.SearchTerm is not null)
-        {
-            query = query.Where(p =>
-                EF.Functions.Like(p.Host, $"%{dto.SearchTerm}%") ||
-                EF.Functions.Like(p.Port.ToString(), $"%{dto.SearchTerm}%") ||
-                EF.Functions.Like(p.Username, $"%{dto.SearchTerm}%") ||
-                EF.Functions.Like(p.Country, $"%{dto.SearchTerm}%"));
-        }
-
-        if (dto.Type is not null)
-        {
-            query = query.Where(p => p.Type == dto.Type);
-        }
-
-        if (dto.Status is not null)
-        {
-            query = query.Where(p => p.Status == dto.Status);
-        }
-
-        if (proxyGroupId != -1)
-        {
-            query = query.Where(p => p.Group.Id == proxyGroupId);
-        }
+        var query = FilteredQuery(dto);
 
         var pagedEntities = await PagedList<ProxyEntity>.CreateAsync(query,
             dto.PageNumber, dto.PageSize);
@@ -167,52 +137,21 @@ public class ProxyController : ApiController
     }
 
     /// <summary>
-    /// Delete all the proxies of a group. Returns the number of deleted proxies.
-    /// </summary>
-    [HttpDelete("all")]
-    [MapToApiVersion("1.0")]
-    public async Task<ActionResult<AffectedEntriesDto>> DeleteAllProxies(
-        int proxyGroupId)
-    {
-        var groupEntity = await GetProxyGroupEntityAsync(proxyGroupId);
-        EnsureOwnership(groupEntity);
-
-        var toDelete = await _proxyRepo.GetAll()
-            .Include(p => p.Group)
-            .Where(p => p.Group.Id == proxyGroupId)
-            .ToListAsync();
-
-        await _proxyRepo.Delete(toDelete);
-
-        _logger.LogInformation($"Deleted {toDelete.Count} proxies from proxy group {groupEntity.Name}");
-
-        return new AffectedEntriesDto
-        {
-            Count = toDelete.Count
-        };
-    }
-
-    /// <summary>
-    /// Delete all proxies with a given status in a group.
+    /// Delete all proxies that match the filters in a group.
     /// Returns the number of deleted proxies.
     /// </summary>
-    [HttpDelete("by-status")]
+    [HttpDelete("many")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<AffectedEntriesDto>> DeleteByStatus(
-        int proxyGroupId, ProxyWorkingStatus status)
+    public async Task<ActionResult<AffectedEntriesDto>> DeleteMany(
+        [FromQuery] ProxyFiltersDto dto)
     {
-        var groupEntity = await GetProxyGroupEntityAsync(proxyGroupId);
-        EnsureOwnership(groupEntity);
+        var query = FilteredQuery(dto);
 
-        var toDelete = await _proxyRepo.GetAll()
-            .Include(p => p.Group)
-            .Where(p => p.Status == status)
-            .Where(p => p.Group.Id == proxyGroupId)
-            .ToListAsync();
+        var toDelete = await query.ToListAsync();
 
         await _proxyRepo.Delete(toDelete);
 
-        _logger.LogInformation($"Deleted {toDelete.Count} proxies from proxy group {groupEntity.Name}");
+        _logger.LogInformation($"Deleted {toDelete.Count} proxies");
 
         return new AffectedEntriesDto
         {
@@ -269,6 +208,44 @@ public class ProxyController : ApiController
 
         return proxies.Select(p =>
             Core.Helpers.Mapper.MapProxyToProxyEntity(p));
+    }
+
+    private IQueryable<ProxyEntity> FilteredQuery(ProxyFiltersDto dto)
+    {
+        var apiUser = HttpContext.GetApiUser();
+
+        var query = apiUser.Role is UserRole.Admin
+            ? _proxyRepo.GetAll()
+            : _proxyRepo.GetAll()
+                .Include(p => p.Group)
+                .ThenInclude(g => g.Owner)
+                .Where(p => p.Group.Owner.Id == apiUser.Id);
+
+        if (dto.SearchTerm is not null)
+        {
+            query = query.Where(p =>
+                EF.Functions.Like(p.Host, $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Port.ToString(), $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Username, $"%{dto.SearchTerm}%") ||
+                EF.Functions.Like(p.Country, $"%{dto.SearchTerm}%"));
+        }
+
+        if (dto.Type is not null)
+        {
+            query = query.Where(p => p.Type == dto.Type);
+        }
+
+        if (dto.Status is not null)
+        {
+            query = query.Where(p => p.Status == dto.Status);
+        }
+
+        if (dto.ProxyGroupId != -1)
+        {
+            query = query.Where(p => p.Group.Id == dto.ProxyGroupId);
+        }
+
+        return query;
     }
 
     private async Task<ProxyGroupEntity> GetProxyGroupEntityAsync(int id)
