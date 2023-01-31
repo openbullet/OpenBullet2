@@ -3,7 +3,7 @@
 /// <summary>
 /// Settings related to the appearance of the OpenBullet2 GUI.
 /// </summary>
-public class CustomizationSettingsDto
+public class OBCustomizationSettingsDto
 {
     /// <summary>
     /// The theme to use. Themes are included in separate files and identified

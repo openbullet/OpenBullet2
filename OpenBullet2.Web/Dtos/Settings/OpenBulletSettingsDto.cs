@@ -11,7 +11,7 @@ public class OpenBulletSettingsDto
     /// <summary>
     /// General settings.
     /// </summary>
-    public GeneralSettings GeneralSettings { get; set; } = new();
+    public OBGeneralSettingsDto GeneralSettings { get; set; } = new();
 
     /// <summary>
     /// Settings related to remote repositories.
@@ -21,10 +21,10 @@ public class OpenBulletSettingsDto
     /// <summary>
     /// Settings related to security.
     /// </summary>
-    public SecuritySettingsDto SecuritySettings { get; set; } = new();
+    public OBSecuritySettingsDto SecuritySettings { get; set; } = new();
 
     /// <summary>
     /// Settings related to the appearance of the UI.
     /// </summary>
-    public CustomizationSettingsDto CustomizationSettings { get; set; } = new();
+    public OBCustomizationSettingsDto CustomizationSettings { get; set; } = new();
 }

@@ -46,8 +46,9 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<EnvironmentSettings, EnvironmentSettingsDto>();
         CreateMap<OpenBulletSettings, OpenBulletSettingsDto>().ReverseMap();
-        CreateMap<SecuritySettings, SecuritySettingsDto>().ReverseMap();
-        CreateMap<CustomizationSettings, CustomizationSettingsDto>().ReverseMap();
+        CreateMap<SecuritySettings, OBSecuritySettingsDto>().ReverseMap();
+        CreateMap<Core.Models.Settings.GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
+        CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
 
         CreateMap<WordlistEntity, WordlistDto>()
             .ForMember(dto => dto.FilePath, e => e.MapFrom(entity => entity.FileName))

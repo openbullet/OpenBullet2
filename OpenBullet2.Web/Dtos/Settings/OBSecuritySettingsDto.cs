@@ -3,7 +3,7 @@
 /// <summary>
 /// Settings related to security.
 /// </summary>
-public class SecuritySettingsDto
+public class OBSecuritySettingsDto
 {
     /// <summary>
     /// Whether to allow OpenBullet2 (mainly blocks and file system viewer) to access
