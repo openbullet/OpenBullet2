@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
@@ -44,6 +45,9 @@ internal class AutoMapperProfile : Profile
         CreateMap<GuestEntity, OwnerDto>();
 
         CreateMap<EnvironmentSettings, EnvironmentSettingsDto>();
+        CreateMap<OpenBulletSettings, OpenBulletSettingsDto>().ReverseMap();
+        CreateMap<SecuritySettings, SecuritySettingsDto>().ReverseMap();
+        CreateMap<CustomizationSettings, CustomizationSettingsDto>().ReverseMap();
 
         CreateMap<WordlistEntity, WordlistDto>()
             .ForMember(dto => dto.FilePath, e => e.MapFrom(entity => entity.FileName))
@@ -85,7 +89,7 @@ internal class AutoMapperProfile : Profile
         CreateMap<Config, ConfigDto>();
         CreateMap<ConfigMetadata, ConfigMetadataDto>().ReverseMap();
         CreateMap<ConfigSettings, ConfigSettingsDto>().ReverseMap();
-        CreateMap<GeneralSettings, ConfigGeneralSettingsDto>().ReverseMap();
+        CreateMap<Core.Models.Settings.GeneralSettings, ConfigGeneralSettingsDto>().ReverseMap();
         CreateMap<ProxySettings, ConfigProxySettingsDto>().ReverseMap();
         CreateMap<InputSettings, ConfigInputSettingsDto>().ReverseMap();
         CreateMap<DataSettings, ConfigDataSettingsDto>()

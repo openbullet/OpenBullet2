@@ -1,9 +1,12 @@
-﻿namespace OpenBullet2.Core.Models.Settings;
+﻿using OpenBullet2.Core.Models.Settings;
+
+namespace OpenBullet2.Web.Dtos.Settings;
+
 
 /// <summary>
 /// Settings for the OpenBullet 2 application.
 /// </summary>
-public class OpenBulletSettings
+public class OpenBulletSettingsDto
 {
     /// <summary>
     /// General settings.
@@ -18,10 +21,10 @@ public class OpenBulletSettings
     /// <summary>
     /// Settings related to security.
     /// </summary>
-    public SecuritySettings SecuritySettings { get; set; } = new();
+    public SecuritySettingsDto SecuritySettings { get; set; } = new();
 
     /// <summary>
     /// Settings related to the appearance of the UI.
     /// </summary>
-    public CustomizationSettings CustomizationSettings { get; set; } = new();
+    public CustomizationSettingsDto CustomizationSettings { get; set; } = new();
 }
