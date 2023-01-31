@@ -11,7 +11,7 @@ using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Proxies;
-using static IronPython.Modules._ast;
+using System.Text;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -134,6 +134,51 @@ public class ProxyController : ApiController
         {
             Count = entities.Count - duplicatesCount
         };
+    }
+
+    /// <summary>
+    /// Move all proxies that match the filters from one group to another.
+    /// Returns the number of moved proxies.
+    /// </summary>
+    [HttpPost("move/many")] 
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<AffectedEntriesDto>> MoveMany(
+        MoveProxiesDto dto)
+    {
+        var destinationGroupEntity = await GetProxyGroupEntityAsync(
+            dto.DestinationGroupId);
+        EnsureOwnership(destinationGroupEntity);
+
+        var query = FilteredQuery(dto);
+
+        var toMove = await query.ToListAsync();
+        toMove.ForEach(p => p.Group = destinationGroupEntity);
+
+        await _proxyRepo.Update(toMove);
+        await _proxyRepo.RemoveDuplicates(dto.DestinationGroupId);
+
+        _logger.LogInformation($"Moved {toMove.Count} proxies");
+
+        return new AffectedEntriesDto
+        {
+            Count = toMove.Count
+        };
+    }
+
+    /// <summary>
+    /// Download a txt file with one proxy per line, containing all proxies
+    /// that match the filters. Proxies will be formatted like
+    /// (type)host:port:username:password
+    /// </summary>
+    [HttpGet("download/many")]
+    [MapToApiVersion("1.0")]
+    public async Task<IActionResult> DownloadMany([FromQuery] ProxyFiltersDto dto)
+    {
+        var query = FilteredQuery(dto);
+        var proxies = await query.ToListAsync();
+        var outputProxies = string.Join(Environment.NewLine, proxies);
+        var bytes = Encoding.UTF8.GetBytes(outputProxies);
+        return File(bytes, "text/plain", "proxies.txt");
     }
 
     /// <summary>
