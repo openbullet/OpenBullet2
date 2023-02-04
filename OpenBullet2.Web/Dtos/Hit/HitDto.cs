@@ -1,12 +1,17 @@
-﻿using System;
+﻿using OpenBullet2.Web.Dtos.User;
 
-namespace OpenBullet2.Core.Entities;
+namespace OpenBullet2.Web.Dtos.Hit;
 
 /// <summary>
-/// This entity stores a hit from a job in the database.
+/// DTO that contains information about a hit.
 /// </summary>
-public class HitEntity : Entity
+public class HitDto
 {
+    /// <summary>
+    /// The id of the hit.
+    /// </summary>
+    public int Id { get; set; }
+
     /// <summary>
     /// The data that was provided to the bot to get the hit.
     /// </summary>
@@ -30,17 +35,17 @@ public class HitEntity : Entity
     /// <summary>
     /// The type of hit, for example SUCCESS, NONE, CUSTOM etc.
     /// </summary>
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
 
     /// <summary>
-    /// The ID of the owner of this hit (0 if admin).
+    /// The owner of this hit. Null if owned by the admin user.
     /// </summary>
-    public int OwnerId { get; set; } = 0;
+    public OwnerDto? Owner { get; set; }
 
     /// <summary>
     /// The ID of the config that was used to get the hit.
     /// </summary>
-    public string ConfigId { get; set; } = null;
+    public string? ConfigId { get; set; } = null;
 
     /// <summary>
     /// The name of the config that was used to get the hit.
@@ -55,7 +60,7 @@ public class HitEntity : Entity
     public string ConfigCategory { get; set; } = string.Empty;
 
     /// <summary>
-    /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used, < -1 for other data pools.
+    /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used, &lt; -1 for other data pools.
     /// </summary>
     public int WordlistId { get; set; } = -1;
 
@@ -65,17 +70,4 @@ public class HitEntity : Entity
     /// this field contains information about the data pool that was used.
     /// </summary>
     public string WordlistName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets a unique hash of the hit.
-    /// </summary>
-    /// <param name="ignoreWordlistName">Whether the wordlist name should affect the generated hash</param>
-    public int GetHashCode(bool ignoreWordlistName = true)
-    {
-        var id = ignoreWordlistName
-            ? Data + ConfigName
-            : Data + ConfigName + WordlistName;
-        
-        return id.GetHashCode();
-    }
 }

@@ -91,6 +91,11 @@ public enum ErrorCode
     ENDPOINT_NOT_FOUND = 1006,
 
     /// <summary>
+    /// Hit not found.
+    /// </summary>
+    HIT_NOT_FOUND = 1007,
+
+    /// <summary>
     /// Endpoint already exists.
     /// </summary>
     ENDPOINT_ALREADY_EXISTS = 1106,

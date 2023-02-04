@@ -134,10 +134,10 @@ namespace OpenBullet2.Native.ViewModels
             OnPropertyChanged(nameof(Total));
         }
 
-        public void Purge()
+        public async Task Purge()
         {
             HitsCollection.Clear();
-            hitRepo.Purge();
+            await hitRepo.Purge();
             OnPropertyChanged(nameof(Total));
         }
 

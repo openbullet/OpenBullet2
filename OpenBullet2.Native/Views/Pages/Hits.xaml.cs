@@ -93,13 +93,13 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void Purge(object sender, RoutedEventArgs e)
+        private async void Purge(object sender, RoutedEventArgs e)
         {
             if (Alert.Choice("Are you REALLY sure?", "This will delete ALL your hits, not just the ones you filtered. Are you sure you want to do this?"))
             {
                 try
                 {
-                    vm.Purge();
+                    await vm.Purge();
                     Alert.Success("Done", "Successfully deleted all hits from the DB");
                 }
                 catch (Exception ex)

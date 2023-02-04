@@ -40,7 +40,7 @@ public class ProxyController : ApiController
 
     /// <summary>
     /// List all of the available proxies for the proxy group with
-    /// the given id (all by default), supports pagination.
+    /// the given id (all by default), supports filtering and pagination.
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]

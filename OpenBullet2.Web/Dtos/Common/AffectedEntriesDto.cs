@@ -9,5 +9,5 @@ public class AffectedEntriesDto
     /// <summary>
     /// How many entries were affected.
     /// </summary>
-    public int Count { get; set; }
+    public long Count { get; set; }
 }

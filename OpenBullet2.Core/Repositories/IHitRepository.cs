@@ -11,5 +11,10 @@ public interface IHitRepository : IRepository<HitEntity>
     /// <summary>
     /// Deletes all hits from the repository.
     /// </summary>
-    void Purge();
+    Task Purge();
+
+    /// <summary>
+    /// Count the number of hits.
+    /// </summary>
+    Task<long> Count();
 }

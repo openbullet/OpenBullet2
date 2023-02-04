@@ -1,15 +1,16 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace OpenBullet2.Core.Entities;
+namespace OpenBullet2.Web.Dtos.Hit;
 
 /// <summary>
-/// This entity stores a hit from a job in the database.
+/// DTO that contains information about a new hit.
 /// </summary>
-public class HitEntity : Entity
+public class CreateHitDto
 {
     /// <summary>
     /// The data that was provided to the bot to get the hit.
     /// </summary>
+    [Required]
     public string Data { get; set; } = string.Empty;
 
     /// <summary>
@@ -18,44 +19,41 @@ public class HitEntity : Entity
     public string CapturedData { get; set; } = string.Empty;
 
     /// <summary>
-    /// The string representation of the proxy that was used to get the hit (blank if none).
+    /// The string representation of the proxy that was used to get the hit, if any.
     /// </summary>
-    public string Proxy { get; set; } = string.Empty;
+    public string? Proxy { get; set; } = null;
 
     /// <summary>
-    /// The exact date when the hit was found.
+    /// The exact date and time when the hit was found. If null, the
+    /// current time will be used.
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; } = null;
 
     /// <summary>
     /// The type of hit, for example SUCCESS, NONE, CUSTOM etc.
     /// </summary>
-    public string Type { get; set; }
-
-    /// <summary>
-    /// The ID of the owner of this hit (0 if admin).
-    /// </summary>
-    public int OwnerId { get; set; } = 0;
+    [Required]
+    public string Type { get; set; } = string.Empty;
 
     /// <summary>
     /// The ID of the config that was used to get the hit.
     /// </summary>
-    public string ConfigId { get; set; } = null;
+    public string? ConfigId { get; set; } = null;
 
     /// <summary>
     /// The name of the config that was used to get the hit.
     /// Needed to identify the name even if the config was deleted.
     /// </summary>
-    public string ConfigName { get; set; } = string.Empty;
+    public string? ConfigName { get; set; } = null;
 
     /// <summary>
     /// The category of the config that was used to get the hit.
     /// Needed to identify the category even if the config was deleted.
     /// </summary>
-    public string ConfigCategory { get; set; } = string.Empty;
+    public string? ConfigCategory { get; set; } = null;
 
     /// <summary>
-    /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used, < -1 for other data pools.
+    /// The ID of the wordlist that was used to get the hit, -1 if no wordlist was used, &lt; -1 for other data pools.
     /// </summary>
     public int WordlistId { get; set; } = -1;
 
@@ -64,18 +62,5 @@ public class HitEntity : Entity
     /// Needed to identify the name even if the wordlist was deleted. If <see cref="WordlistId"/> is less than -1,
     /// this field contains information about the data pool that was used.
     /// </summary>
-    public string WordlistName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets a unique hash of the hit.
-    /// </summary>
-    /// <param name="ignoreWordlistName">Whether the wordlist name should affect the generated hash</param>
-    public int GetHashCode(bool ignoreWordlistName = true)
-    {
-        var id = ignoreWordlistName
-            ? Data + ConfigName
-            : Data + ConfigName + WordlistName;
-        
-        return id.GetHashCode();
-    }
+    public string? WordlistName { get; set; } = null;
 }

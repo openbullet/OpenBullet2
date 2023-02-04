@@ -5,6 +5,7 @@ using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
+using OpenBullet2.Web.Dtos.Hit;
 using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Dtos.Settings;
@@ -49,6 +50,16 @@ internal class AutoMapperProfile : Profile
         CreateMap<SecuritySettings, OBSecuritySettingsDto>().ReverseMap();
         CreateMap<Core.Models.Settings.GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
         CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
+
+        CreateMap<HitEntity, HitDto>();
+        CreateMap<UpdateHitDto, HitEntity>();
+
+        CreateMap<CreateHitDto, HitEntity>()
+            .ForMember(entity => entity.Proxy, e => e.MapFrom(dto => dto.Proxy ?? string.Empty))
+            .ForMember(entity => entity.Date, e => e.MapFrom(dto => dto.Date ?? DateTime.Now))
+            .ForMember(entity => entity.ConfigName, e => e.MapFrom(dto => dto.ConfigName ?? string.Empty))
+            .ForMember(entity => entity.ConfigCategory, e => e.MapFrom(dto => dto.ConfigCategory ?? string.Empty))
+            .ForMember(entity => entity.WordlistName, e => e.MapFrom(dto => dto.WordlistName ?? string.Empty));
 
         CreateMap<WordlistEntity, WordlistDto>()
             .ForMember(dto => dto.FilePath, e => e.MapFrom(entity => entity.FileName))

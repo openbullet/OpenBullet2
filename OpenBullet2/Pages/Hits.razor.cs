@@ -201,7 +201,7 @@ namespace OpenBullet2.Pages
             {
                 if (uid == 0)
                 {
-                    HitRepo.Purge();
+                    await HitRepo.Purge();
                 }
                 else
                 {

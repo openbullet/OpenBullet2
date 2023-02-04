@@ -19,7 +19,11 @@ public class DbHitRepository : DbRepository<HitEntity>, IHitRepository
     }
 
     /// <inheritdoc/>
-    public void Purge() => _ = context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
+    public async Task Purge() => await context.Database
+        .ExecuteSqlRawAsync($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
+
+    /// <inheritdoc/>
+    public async Task<long> Count() => await context.Hits.CountAsync();
 
     public async override Task Update(HitEntity entity, CancellationToken cancellationToken = default)
     {
