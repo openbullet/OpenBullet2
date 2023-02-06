@@ -2,10 +2,12 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Models.Sharing;
+using OpenBullet2.Web.Dtos;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
+using OpenBullet2.Web.Dtos.JobMonitor;
 using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Dtos.Settings;
@@ -18,6 +20,11 @@ using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Environment;
+using RuriLib.Models.Jobs.Monitor;
+using RuriLib.Models.Jobs.Monitor.Actions;
+using RuriLib.Models.Jobs.Monitor.Triggers;
+using System.Reflection;
+using System.Text.Json;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -142,6 +149,12 @@ internal class AutoMapperProfile : Profile
         // Allow conversion between PagedLists with different generic type
         // (the types must be mapped separately)
         CreateMap(typeof(PagedList<>), typeof(PagedList<>));
+
+        CreateMap<TriggeredAction, TriggeredActionDto>()
+            .ForMember(dto => dto.Triggers, e => e.MapFrom(
+                (s, d, i, ctx) => MapTriggers(s.Triggers, ctx.Mapper)));
+
+        RegisterTriggerMaps();
     }
 
     private static List<DataRule> MapDataRules(
@@ -162,5 +175,152 @@ internal class AutoMapperProfile : Profile
         resources.AddRange(mapper.Map<List<RandomLinesFromFileResourceOptions>>(
             dto.RandomLinesFromFile));
         return resources;
+    }
+
+    // TODO: Find a better way to get automapper to do this automatically...
+    private static List<object> MapTriggers(IEnumerable<Trigger> triggers,
+        IRuntimeMapper mapper)
+    {
+        var mappedList = new List<object>();
+
+        foreach (var trigger in triggers)
+        {
+            TriggerDto mapped = trigger switch
+            {
+                JobStatusTrigger x => mapper.Map<JobStatusTriggerDto>(x),
+                JobFinishedTrigger x => mapper.Map<JobFinishedTriggerDto>(x),
+                TestedCountTrigger x => mapper.Map<TestedCountTriggerDto>(x),
+                HitCountTrigger x => mapper.Map<HitCountTriggerDto>(x),
+                CustomCountTrigger x => mapper.Map<CustomCountTriggerDto>(x),
+                ToCheckCountTrigger x => mapper.Map<ToCheckCountTriggerDto>(x),
+                FailCountTrigger x => mapper.Map<FailCountTriggerDto>(x),
+                RetryCountTrigger x => mapper.Map<RetryCountTriggerDto>(x),
+                BanCountTrigger x => mapper.Map<BanCountTriggerDto>(x),
+                ErrorCountTrigger x => mapper.Map<ErrorCountTriggerDto>(x),
+                AliveProxiesCountTrigger x => mapper.Map<AliveProxiesCountTriggerDto>(x),
+                BannedProxiesCountTrigger x => mapper.Map<BannedProxiesCountTriggerDto>(x),
+                CPMTrigger x => mapper.Map<CPMTriggerDto>(x),
+                CaptchaCreditTrigger x => mapper.Map<CaptchaCreditTriggerDto>(x),
+                ProgressTrigger x => mapper.Map<ProgressTriggerDto>(x),
+                TimeElapsedTrigger x => mapper.Map<TimeElapsedTriggerDto>(x),
+                TimeRemainingTrigger x => mapper.Map<TimeRemainingTriggerDto>(x),
+                _ => throw new NotImplementedException()
+            };
+
+            mapped.PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType(
+                mapped.GetType()) ?? string.Empty;
+
+            mappedList.Add(mapped);
+        }
+
+        return mappedList;
+    }
+
+    private void RegisterTriggerMaps()
+    {
+        CreateMap<JobStatusTriggerDto, JobStatusTrigger>().ReverseMap();
+        CreateMap<JobFinishedTriggerDto, JobFinishedTrigger>().ReverseMap();
+
+        CreateMap<TestedCountTriggerDto, TestedCountTrigger>().ReverseMap();
+        CreateMap<HitCountTriggerDto, HitCountTrigger>().ReverseMap();
+        CreateMap<CustomCountTriggerDto, CustomCountTrigger>().ReverseMap();
+        CreateMap<ToCheckCountTriggerDto, ToCheckCountTrigger>().ReverseMap();
+        CreateMap<FailCountTriggerDto, FailCountTrigger>().ReverseMap();
+        CreateMap<RetryCountTriggerDto, RetryCountTrigger>().ReverseMap();
+        CreateMap<BanCountTriggerDto, BanCountTrigger>().ReverseMap();
+        CreateMap<ErrorCountTriggerDto, ErrorCountTrigger>().ReverseMap();
+        CreateMap<AliveProxiesCountTriggerDto, AliveProxiesCountTrigger>().ReverseMap();
+        CreateMap<BannedProxiesCountTriggerDto, BannedProxiesCountTrigger>().ReverseMap();
+        CreateMap<CPMTriggerDto, CPMTrigger>().ReverseMap();
+        CreateMap<CaptchaCreditTriggerDto, CaptchaCreditTrigger>().ReverseMap();
+        CreateMap<ProgressTriggerDto, ProgressTrigger>().ReverseMap();
+        
+        CreateMap<TimeElapsedTriggerDto, TimeElapsedTrigger>()
+            .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
+            .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
+            .ForMember(t => t.Minutes, e => e.MapFrom(dto => dto.TimeSpan.Minutes))
+            .ForMember(t => t.Seconds, e => e.MapFrom(dto => dto.TimeSpan.Seconds));
+
+        CreateMap<TimeRemainingTriggerDto, TimeRemainingTrigger>()
+            .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
+            .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
+            .ForMember(t => t.Minutes, e => e.MapFrom(dto => dto.TimeSpan.Minutes))
+            .ForMember(t => t.Seconds, e => e.MapFrom(dto => dto.TimeSpan.Seconds));
+
+        CreateMap<TimeElapsedTrigger, TimeElapsedTriggerDto>()
+            .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
+                new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
+
+        CreateMap<TimeRemainingTrigger, TimeRemainingTriggerDto>()
+            .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
+                new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
+    }
+
+    private static List<T> ConvertPolyDtoList<T>(
+        IEnumerable<JsonDocument>? list) where T : PolyDto
+    {
+        if (list is null)
+        {
+            return new List<T>();
+        }
+
+        var subTypes = PolyDtoCache.GetSubTypes<T>();
+
+        if (subTypes.Length == 0)
+        {
+            throw new Exception($"No subtypes found for type {typeof(T).FullName}");
+        }
+
+        var items = new List<T>();
+
+        foreach (var jsonDocument in list)
+        {
+            var item = ConvertPolyDto<T>(jsonDocument);
+
+            if (item is not null)
+            {
+                items.Add(item);
+            }
+        }
+
+        return items;
+    }
+
+    private static T? ConvertPolyDto<T>(
+        JsonDocument? jsonDocument) where T : PolyDto
+    {
+        if (jsonDocument is null)
+        {
+            return null;
+        }
+
+        var polyTypeName = jsonDocument.RootElement
+            .GetProperty("_polyTypeName").GetString();
+
+        if (polyTypeName is null)
+        {
+            throw new Exception($"The json document has no _polyTypeName field");
+        }
+
+        var subType = PolyDtoCache.GetPolyTypeFromName(polyTypeName);
+
+        if (subType is null)
+        {
+            var validTypeNames = PolyDtoCache.GetValidPolyTypeNames<T>();
+            throw new Exception($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
+        }
+
+        return (T?)jsonDocument.Deserialize(subType);
+    }
+
+    private static IEnumerable<Type> GetTypesWithAttribute<T>(Assembly assembly)
+    {
+        foreach (var type in assembly.GetTypes())
+        {
+            if (type.GetCustomAttributes(typeof(T), false).Length > 0)
+            {
+                yield return type;
+            }
+        }
     }
 }

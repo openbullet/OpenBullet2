@@ -9,6 +9,8 @@ namespace RuriLib.Models.Jobs.Monitor
     // TODO: Add some log output to see errors or just activities that have been performed, like the cron jobs log
     public class TriggeredAction
     {
+        public string Id { get; set; } = System.Guid.NewGuid().ToString();
+        public string Name { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
         public bool IsExecuting { get; set; } = false;
         public bool IsRepeatable { get; set; } = false;

@@ -136,6 +136,9 @@ if (obSettings.SecuritySettings.HttpsRedirect)
     app.UseHttpsRedirection();
 }
 
+// Cache the polymorphic types
+PolyDtoCache.Scan();
+
 // Apply DB migrations or create a DB if it doesn't exist
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>()?.CreateScope()
     ?? throw new Exception($"Missing service: {nameof(ConfigService)}"))
