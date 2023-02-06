@@ -7,9 +7,7 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
-using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.ProxyGroup;
-using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
@@ -20,6 +18,9 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage proxy groups.
 /// </summary>
+[Guest]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/proxy-group")]
 public class ProxyGroupController : ApiController
 {
     private readonly IProxyGroupRepository _proxyGroupRepo;
@@ -109,7 +110,6 @@ public class ProxyGroupController : ApiController
     /// of this proxy group. Returns the number of proxies that were deleted.
     /// </summary>
     /// <param name="id">The id of the proxy group to delete</param>
-    [Guest]
     [HttpDelete]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Delete(int id)

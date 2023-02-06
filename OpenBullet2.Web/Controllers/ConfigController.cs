@@ -19,6 +19,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage configs.
 /// </summary>
+[Guest]
 [ApiVersion("1.0")]
 public class ConfigController : ApiController
 {
@@ -47,7 +48,6 @@ public class ConfigController : ApiController
     /// <summary>
     /// List all of the available configs. Optionally, reload them from disk.
     /// </summary>
-    [Guest]
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<IEnumerable<ConfigInfoDto>>> GetAll(
@@ -67,7 +67,6 @@ public class ConfigController : ApiController
     /// <summary>
     /// Get the readme of a config.
     /// </summary>
-    [Guest]
     [HttpGet("readme")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConfigReadmeDto> GetReadme(string id)
