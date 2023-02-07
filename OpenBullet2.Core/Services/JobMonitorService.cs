@@ -31,12 +31,17 @@ public class JobMonitorService : IDisposable
     };
     private byte[] lastSavedHash = Array.Empty<byte>();
 
-    public JobMonitorService(JobManagerService jobManager)
+    public JobMonitorService(JobManagerService jobManager, bool autoSave = true)
     {
         this.jobManager = jobManager;
         RestoreTriggeredActions();
+
         timer = new Timer(new TimerCallback(_ => CheckAndExecute()), null, 1000, 1000);
-        saveTimer = new Timer(new TimerCallback(_ => SaveStateIfChanged()), null, 5000, 5000);
+
+        if (autoSave)
+        {
+            saveTimer = new Timer(new TimerCallback(_ => SaveStateIfChanged()), null, 5000, 5000);
+        }
     }
 
     private void CheckAndExecute()
@@ -70,7 +75,7 @@ public class JobMonitorService : IDisposable
         }
     }
 
-    private void SaveStateIfChanged()
+    public void SaveStateIfChanged()
     {
         var json = JsonConvert.SerializeObject(TriggeredActions.ToArray(), jsonSettings);
         var hash = Crypto.MD5(Encoding.UTF8.GetBytes(json));

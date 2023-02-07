@@ -1,14 +1,18 @@
-﻿namespace OpenBullet2.Web.Dtos.JobMonitor;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+
+namespace OpenBullet2.Web.Dtos.JobMonitor;
 
 /// <summary>
-/// DTO for a triggered action in the job monitor.
+/// DTO to update a triggered action in the job monitor.
 /// </summary>
-public class TriggeredActionDto
+public class UpdateTriggeredActionDto
 {
     /// <summary>
     /// The id of the triggered action.
     /// </summary>
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    [Required]
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the triggered action.
@@ -40,11 +44,11 @@ public class TriggeredActionDto
     /// All triggers that must be verified at the same time in order
     /// to start the execution of the action.
     /// </summary>
-    public List<object> Triggers { get; set; } = new();
+    public List<JsonDocument> Triggers { get; set; } = new();
 
     /// <summary>
     /// All actions that will be executed sequentially when the
     /// triggering conditions are verified.
     /// </summary>
-    public List<object> Actions { get; set; } = new();
+    public List<JsonDocument> Actions { get; set; } = new();
 }

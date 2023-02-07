@@ -83,7 +83,8 @@ builder.Services.AddSingleton(service =>
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<JobManagerService>();
-builder.Services.AddSingleton<JobMonitorService>();
+builder.Services.AddSingleton(service =>
+    new JobMonitorService(service.GetService<JobManagerService>(), autoSave: false));
 builder.Services.AddSingleton<HitStorageService>();
 builder.Services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
 builder.Services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));

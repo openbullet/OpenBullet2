@@ -96,6 +96,11 @@ public enum ErrorCode
     HIT_NOT_FOUND = 1007,
 
     /// <summary>
+    /// Triggered action not found.
+    /// </summary>
+    TRIGGERED_ACTION_NOT_FOUND = 1008,
+
+    /// <summary>
     /// Endpoint already exists.
     /// </summary>
     ENDPOINT_ALREADY_EXISTS = 1106,

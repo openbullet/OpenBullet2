@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Settings;
-using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Web.Dtos;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Settings;
@@ -23,7 +22,6 @@ using RuriLib.Models.Environment;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
-using System.Reflection;
 using System.Text.Json;
 
 namespace OpenBullet2.Web.Utils;
@@ -152,9 +150,24 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<TriggeredAction, TriggeredActionDto>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
-                (s, d, i, ctx) => MapTriggers(s.Triggers, ctx.Mapper)));
+                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+            .ForMember(dto => dto.Actions, e => e.MapFrom(
+                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
+
+        CreateMap<CreateTriggeredActionDto, TriggeredAction>()
+            .ForMember(dto => dto.Triggers, e => e.MapFrom(
+                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+            .ForMember(dto => dto.Actions, e => e.MapFrom(
+                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
+
+        CreateMap<UpdateTriggeredActionDto, TriggeredAction>()
+            .ForMember(dto => dto.Triggers, e => e.MapFrom(
+                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+            .ForMember(dto => dto.Actions, e => e.MapFrom(
+                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
 
         RegisterTriggerMaps();
+        RegisterActionMaps();
     }
 
     private static List<DataRule> MapDataRules(
@@ -175,45 +188,6 @@ internal class AutoMapperProfile : Profile
         resources.AddRange(mapper.Map<List<RandomLinesFromFileResourceOptions>>(
             dto.RandomLinesFromFile));
         return resources;
-    }
-
-    // TODO: Find a better way to get automapper to do this automatically...
-    private static List<object> MapTriggers(IEnumerable<Trigger> triggers,
-        IRuntimeMapper mapper)
-    {
-        var mappedList = new List<object>();
-
-        foreach (var trigger in triggers)
-        {
-            TriggerDto mapped = trigger switch
-            {
-                JobStatusTrigger x => mapper.Map<JobStatusTriggerDto>(x),
-                JobFinishedTrigger x => mapper.Map<JobFinishedTriggerDto>(x),
-                TestedCountTrigger x => mapper.Map<TestedCountTriggerDto>(x),
-                HitCountTrigger x => mapper.Map<HitCountTriggerDto>(x),
-                CustomCountTrigger x => mapper.Map<CustomCountTriggerDto>(x),
-                ToCheckCountTrigger x => mapper.Map<ToCheckCountTriggerDto>(x),
-                FailCountTrigger x => mapper.Map<FailCountTriggerDto>(x),
-                RetryCountTrigger x => mapper.Map<RetryCountTriggerDto>(x),
-                BanCountTrigger x => mapper.Map<BanCountTriggerDto>(x),
-                ErrorCountTrigger x => mapper.Map<ErrorCountTriggerDto>(x),
-                AliveProxiesCountTrigger x => mapper.Map<AliveProxiesCountTriggerDto>(x),
-                BannedProxiesCountTrigger x => mapper.Map<BannedProxiesCountTriggerDto>(x),
-                CPMTrigger x => mapper.Map<CPMTriggerDto>(x),
-                CaptchaCreditTrigger x => mapper.Map<CaptchaCreditTriggerDto>(x),
-                ProgressTrigger x => mapper.Map<ProgressTriggerDto>(x),
-                TimeElapsedTrigger x => mapper.Map<TimeElapsedTriggerDto>(x),
-                TimeRemainingTrigger x => mapper.Map<TimeRemainingTriggerDto>(x),
-                _ => throw new NotImplementedException()
-            };
-
-            mapped.PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType(
-                mapped.GetType()) ?? string.Empty;
-
-            mappedList.Add(mapped);
-        }
-
-        return mappedList;
     }
 
     private void RegisterTriggerMaps()
@@ -256,71 +230,34 @@ internal class AutoMapperProfile : Profile
                 new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
     }
 
-    private static List<T> ConvertPolyDtoList<T>(
-        IEnumerable<JsonDocument>? list) where T : PolyDto
+    private void RegisterActionMaps()
     {
-        if (list is null)
-        {
-            return new List<T>();
-        }
+        CreateMap<WaitActionDto, WaitAction>()
+            .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
+            .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
+            .ForMember(t => t.Minutes, e => e.MapFrom(dto => dto.TimeSpan.Minutes))
+            .ForMember(t => t.Seconds, e => e.MapFrom(dto => dto.TimeSpan.Seconds));
 
-        var subTypes = PolyDtoCache.GetSubTypes<T>();
+        CreateMap<WaitAction, WaitActionDto>()
+            .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
+                new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
 
-        if (subTypes.Length == 0)
-        {
-            throw new Exception($"No subtypes found for type {typeof(T).FullName}");
-        }
+        CreateMap<SetRelativeStartConditionActionDto, SetRelativeStartConditionAction>()
+            .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
+            .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
+            .ForMember(t => t.Minutes, e => e.MapFrom(dto => dto.TimeSpan.Minutes))
+            .ForMember(t => t.Seconds, e => e.MapFrom(dto => dto.TimeSpan.Seconds));
 
-        var items = new List<T>();
+        CreateMap<SetRelativeStartConditionAction, SetRelativeStartConditionActionDto>()
+            .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
+                new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
 
-        foreach (var jsonDocument in list)
-        {
-            var item = ConvertPolyDto<T>(jsonDocument);
-
-            if (item is not null)
-            {
-                items.Add(item);
-            }
-        }
-
-        return items;
-    }
-
-    private static T? ConvertPolyDto<T>(
-        JsonDocument? jsonDocument) where T : PolyDto
-    {
-        if (jsonDocument is null)
-        {
-            return null;
-        }
-
-        var polyTypeName = jsonDocument.RootElement
-            .GetProperty("_polyTypeName").GetString();
-
-        if (polyTypeName is null)
-        {
-            throw new Exception($"The json document has no _polyTypeName field");
-        }
-
-        var subType = PolyDtoCache.GetPolyTypeFromName(polyTypeName);
-
-        if (subType is null)
-        {
-            var validTypeNames = PolyDtoCache.GetValidPolyTypeNames<T>();
-            throw new Exception($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
-        }
-
-        return (T?)jsonDocument.Deserialize(subType);
-    }
-
-    private static IEnumerable<Type> GetTypesWithAttribute<T>(Assembly assembly)
-    {
-        foreach (var type in assembly.GetTypes())
-        {
-            if (type.GetCustomAttributes(typeof(T), false).Length > 0)
-            {
-                yield return type;
-            }
-        }
+        CreateMap<StopJobAction, StopJobActionDto>().ReverseMap();
+        CreateMap<AbortJobAction, AbortJobActionDto>().ReverseMap();
+        CreateMap<StartJobAction, StartJobActionDto>().ReverseMap();
+        CreateMap<DiscordWebhookAction, DiscordWebhookActionDto>().ReverseMap();
+        CreateMap<TelegramBotAction, TelegramBotActionDto>().ReverseMap();
+        CreateMap<SetBotsAction, SetBotsActionDto>().ReverseMap();
+        CreateMap<ReloadProxiesAction, ReloadProxiesActionDto>().ReverseMap();
     }
 }
