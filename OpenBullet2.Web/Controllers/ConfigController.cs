@@ -5,11 +5,14 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Convert;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
 using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 using RuriLib.Helpers;
+using RuriLib.Helpers.Transpilers;
+using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Services;
 using static Community.CsharpSqlite.Sqlite3;
@@ -254,7 +257,8 @@ public class ConfigController : ApiController
     }
 
     /// <summary>
-    /// Upload configs as .opk files.
+    /// Upload configs as .opk archives. OB1 configs (.loli) are also
+    /// accepted and they will be automatically packed into a .opk archive.
     /// </summary>
     [Admin]
     [HttpPost("upload")]
@@ -276,6 +280,74 @@ public class ConfigController : ApiController
         return new AffectedEntriesDto
         {
             Count = files.Count
+        };
+    }
+
+    /// <summary>
+    /// Convert a LoliCode script to C# script.
+    /// </summary>
+    [Admin]
+    [HttpPost("convert/lolicode-csharp")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<ConvertedCSharpDto>> ConvertLoliCodeToCSharp(
+        ConvertLoliCodeToCSharpDto dto)
+    {
+        var config = await _configRepo.Get(dto.ConfigId);
+        var converted = Loli2CSharpTranspiler
+            .Transpile(dto.LoliCode, config.Settings);
+        return new ConvertedCSharpDto
+        {
+            CSharpScript = converted
+        };
+    }
+
+    /// <summary>
+    /// Convert a LoliCode script to a Stack of blocks.
+    /// </summary>
+    [Admin]
+    [HttpPost("convert/lolicode-stack")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<ConvertedStackDto> ConvertLoliCodeToStack(
+        ConvertLoliCodeToStackDto dto)
+    {
+        var converted = Loli2StackTranspiler.Transpile(dto.LoliCode);
+        return new ConvertedStackDto
+        {
+            Stack = converted
+        };
+    }
+
+    /// <summary>
+    /// Convert a Stack of blocks to a LoliCode script.
+    /// </summary>
+    [Admin]
+    [HttpPost("convert/stack-lolicode")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
+        ConvertStackToLoliCodeDto dto)
+    {
+        var converted = Stack2LoliTranspiler.Transpile(dto.Stack);
+        return new ConvertedLoliCodeDto
+        {
+            LoliCode = converted
+        };
+    }
+
+    /// <summary>
+    /// Convert a Stack of blocks to a C# script.
+    /// </summary>
+    [Admin]
+    [HttpPost("convert/stack-csharp")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<ConvertedCSharpDto>> ConvertStackToCSharp(
+        ConvertStackToCSharpDto dto)
+    {
+        var config = await _configRepo.Get(dto.ConfigId);
+        var converted = Stack2CSharpTranspiler
+            .Transpile(dto.Stack, config.Settings);
+        return new ConvertedCSharpDto
+        {
+            CSharpScript = converted
         };
     }
 
