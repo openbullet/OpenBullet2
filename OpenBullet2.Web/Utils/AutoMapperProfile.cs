@@ -104,9 +104,11 @@ internal class AutoMapperProfile : Profile
                 c.Settings.ProxySettings.UseProxies));
 
         CreateMap<Config, ConfigDto>();
-        CreateMap<ConfigMetadata, ConfigMetadataDto>().ReverseMap();
+        CreateMap<UpdateConfigDto, Config>();
+        CreateMap<UpdateConfigMetadataDto, ConfigMetadata>();
+        CreateMap<ConfigMetadata, ConfigMetadataDto>();
         CreateMap<ConfigSettings, ConfigSettingsDto>().ReverseMap();
-        CreateMap<Core.Models.Settings.GeneralSettings, ConfigGeneralSettingsDto>().ReverseMap();
+        CreateMap<RuriLib.Models.Configs.Settings.GeneralSettings, ConfigGeneralSettingsDto>().ReverseMap();
         CreateMap<ProxySettings, ConfigProxySettingsDto>().ReverseMap();
         CreateMap<InputSettings, ConfigInputSettingsDto>().ReverseMap();
         CreateMap<DataSettings, ConfigDataSettingsDto>()
@@ -125,8 +127,8 @@ internal class AutoMapperProfile : Profile
                         s.DataRules.OfType<LinesFromFileResourceOptions>().ToList()),
                     RandomLinesFromFile = ctx.Mapper.Map<List<RandomLinesFromFileResourceDto>>(
                         s.DataRules.OfType<RandomLinesFromFileResourceOptions>().ToList())
-                }))
-            ;
+                }));
+
         CreateMap<ConfigDataSettingsDto, DataSettings>()
             .ForMember(settings => settings.DataRules, e => e.MapFrom(
                     (s, d, i, ctx) => MapDataRules(s.DataRules, ctx.Mapper)
@@ -134,6 +136,7 @@ internal class AutoMapperProfile : Profile
             .ForMember(settings => settings.Resources, e => e.MapFrom(
                     (s, d, i, ctx) => MapResources(s.Resources, ctx.Mapper)
                 ));
+
         CreateMap<BrowserSettings, ConfigBrowserSettingsDto>().ReverseMap();
         CreateMap<ScriptSettings, ConfigScriptSettingsDto>().ReverseMap();
         CreateMap<CustomInput, CustomInputDto>().ReverseMap();

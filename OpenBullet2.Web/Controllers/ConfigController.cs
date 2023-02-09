@@ -97,7 +97,7 @@ public class ConfigController : ApiController
     [Admin]
     [HttpPut]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConfigDto>> UpdateConfig(ConfigDto dto)
+    public async Task<ActionResult<ConfigDto>> UpdateConfig(UpdateConfigDto dto)
     {
         // Make sure a config with this id exists
         var config = GetConfigFromService(dto.Id);
@@ -128,7 +128,7 @@ public class ConfigController : ApiController
             }
         }
 
-        // Apply the new fields to the EXISTING config
+        // Apply the new fields to the existing config
         _mapper.Map(dto, config);
 
         // Save it

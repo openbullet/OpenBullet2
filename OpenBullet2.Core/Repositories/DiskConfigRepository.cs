@@ -17,13 +17,13 @@ namespace OpenBullet2.Core.Repositories;
 /// </summary>
 public class DiskConfigRepository : IConfigRepository
 {
-    private readonly RuriLibSettingsService rlSettings;
+    private readonly RuriLibSettingsService _rlSettings;
 
     private string BaseFolder { get; init; }
 
     public DiskConfigRepository(RuriLibSettingsService rlSettings, string baseFolder)
     {
-        this.rlSettings = rlSettings;
+        _rlSettings = rlSettings;
         BaseFolder = baseFolder;
         Directory.CreateDirectory(baseFolder);
     }
@@ -112,7 +112,7 @@ public class DiskConfigRepository : IConfigRepository
 
         config.Settings.DataSettings.AllowedWordlistTypes = new string[]
         {
-            rlSettings.Environment.WordlistTypes.First().Name
+            _rlSettings.Environment.WordlistTypes.First().Name
         };
 
         await Save(config);
@@ -153,12 +153,12 @@ public class DiskConfigRepository : IConfigRepository
         // Update the last modified date
         config.Metadata.LastModified = DateTime.Now;
 
-        // If not a csharp config, try to build the stack to get required plugins
-        if (config.Mode != ConfigMode.CSharp)
+        // If it's possible to retrieve the block descriptors, get required plugins
+        if (config.Mode is ConfigMode.Stack or ConfigMode.LoliCode)
         {
             try
             {
-                var stack = config.Mode == ConfigMode.Stack
+                var stack = config.Mode is ConfigMode.Stack
                     ? config.Stack
                     : Loli2StackTranspiler.Transpile(config.LoliCodeScript);
 

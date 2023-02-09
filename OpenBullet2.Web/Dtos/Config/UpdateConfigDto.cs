@@ -1,22 +1,18 @@
 ﻿using RuriLib.Models.Configs;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenBullet2.Web.Dtos.Config;
 
 /// <summary>
 /// DTO that contains a config's data.
 /// </summary>
-public class ConfigDto
+public class UpdateConfigDto
 {
     /// <summary>
     /// The unique id of the config.
     /// </summary>
+    [Required]
     public string Id { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Whether the config was downloaded from a remote source and should not
-    /// be edited to avoid synchronization issues.
-    /// </summary>
-    public bool IsRemote { get; set; }
 
     /// <summary>
     /// The current config mode.
@@ -26,7 +22,7 @@ public class ConfigDto
     /// <summary>
     /// The metadata of the config.
     /// </summary>
-    public ConfigMetadataDto Metadata { get; set; } = default!;
+    public UpdateConfigMetadataDto Metadata { get; set; } = default!;
 
     /// <summary>
     /// The config's settings.
