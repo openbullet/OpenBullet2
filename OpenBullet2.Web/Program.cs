@@ -16,6 +16,7 @@ using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +32,7 @@ builder.Services.AddApiVersioning(options =>
 
 builder.Services.AddControllers()
     .AddJsonOptions(opts => {
-        var enumConverter = new JsonStringEnumConverter();
+        var enumConverter = new JsonStringEnumConverter(JsonNamingPolicy.CamelCase);
         opts.JsonSerializerOptions.Converters.Add(enumConverter);
     });
 
