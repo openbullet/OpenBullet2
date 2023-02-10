@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Blocks;
+﻿using OpenBullet2.Web.Dtos.Config.Blocks;
 
 namespace OpenBullet2.Web.Dtos.Config.Convert;
 
@@ -10,5 +10,5 @@ public class ConvertedStackDto
     /// <summary>
     /// The Stack of blocks.
     /// </summary>
-    public List<BlockInstance> Stack { get; set; } = new();
+    public List<object> Stack { get; set; } = new();
 }

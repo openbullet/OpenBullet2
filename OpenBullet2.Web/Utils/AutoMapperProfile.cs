@@ -3,6 +3,8 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Web.Dtos;
 using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Blocks;
+using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
@@ -14,6 +16,9 @@ using OpenBullet2.Web.Dtos.Shared;
 using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Models.Pagination;
+using RuriLib.Models.Blocks;
+using RuriLib.Models.Blocks.Settings;
+using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data.Resources.Options;
@@ -171,6 +176,66 @@ internal class AutoMapperProfile : Profile
 
         RegisterTriggerMaps();
         RegisterActionMaps();
+
+        // Ignore the settings since we map them manually later.
+        CreateMap<BlockInstance, BlockInstanceDto>()
+            .IncludeAllDerived();
+
+        CreateMap<AutoBlockInstance, AutoBlockInstanceDto>();
+        CreateMap<BlockSetting, BlockSettingDto>()
+            .ForMember(dto => dto.FixedSetting, e => e.MapFrom(
+                (s, d, i, ctx) => MapSetting(s.FixedSetting, ctx.Mapper)))
+            .ForMember(dto => dto.InterpolatedSetting, e => e.MapFrom(
+                (s, d, i, ctx) => MapSetting(s.InterpolatedSetting, ctx.Mapper)));
+
+        CreateMap<StringSetting, StringSettingDto>();
+        CreateMap<ListOfStringsSetting, ListOfStringsSettingDto>();
+        CreateMap<IntSetting, IntSettingDto>();
+        CreateMap<FloatSetting, FloatSettingDto>();
+        CreateMap<BoolSetting, BoolSettingDto>();
+        CreateMap<DictionaryOfStringsSetting, DictionaryOfStringsSettingDto>();
+        CreateMap<ByteArraySetting, ByteArraySettingDto>();
+        CreateMap<EnumSetting, EnumSettingDto>();
+
+        CreateMap<InterpolatedStringSetting, InterpolatedStringSettingDto>();
+        CreateMap<InterpolatedListOfStringsSetting, InterpolatedListOfStringsSettingDto>();
+        CreateMap<InterpolatedDictionaryOfStringsSetting, InterpolatedDictionaryOfStringsSettingDto>();
+    }
+
+    private static object MapSetting(Setting setting, IRuntimeMapper mapper)
+    {
+        SettingDto mapped = setting switch
+        {
+            StringSetting x => mapper.Map<StringSettingDto>(x),
+            ListOfStringsSetting x => mapper.Map<ListOfStringsSettingDto>(x),
+            IntSetting x => mapper.Map<IntSettingDto>(x),
+            FloatSetting x => mapper.Map<FloatSettingDto>(x),
+            BoolSetting x => mapper.Map<BoolSettingDto>(x),
+            DictionaryOfStringsSetting x => mapper.Map<DictionaryOfStringsSettingDto>(x),
+            ByteArraySetting x => mapper.Map<ByteArraySettingDto>(x),
+            EnumSetting x => mapper.Map<EnumSettingDto>(x),
+            _ => throw new NotImplementedException()
+        };
+
+        return (object)mapped;
+    }
+
+    private static object? MapSetting(InterpolatedSetting setting, IRuntimeMapper mapper)
+    {
+        if (setting is null)
+        {
+            return null;
+        }
+
+        InterpolatedSettingDto mapped = setting switch
+        {
+            InterpolatedStringSetting x => mapper.Map<InterpolatedStringSettingDto>(x),
+            InterpolatedListOfStringsSetting x => mapper.Map<InterpolatedListOfStringsSettingDto>(x),
+            InterpolatedDictionaryOfStringsSetting x => mapper.Map<InterpolatedDictionaryOfStringsSettingDto>(x),
+            _ => throw new NotImplementedException()
+        };
+
+        return (object)mapped;
     }
 
     private static List<DataRule> MapDataRules(

@@ -5,9 +5,11 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
 using RuriLib.Functions.Files;
 using RuriLib.Helpers;
@@ -15,6 +17,7 @@ using RuriLib.Helpers.Transpilers;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Services;
+using System.Text.Json;
 using static Community.CsharpSqlite.Sqlite3;
 
 namespace OpenBullet2.Web.Controllers;
@@ -295,6 +298,7 @@ public class ConfigController : ApiController
         var config = await _configRepo.Get(dto.ConfigId);
         var converted = Loli2CSharpTranspiler
             .Transpile(dto.LoliCode, config.Settings);
+
         return new ConvertedCSharpDto
         {
             CSharpScript = converted
@@ -311,9 +315,13 @@ public class ConfigController : ApiController
         ConvertLoliCodeToStackDto dto)
     {
         var converted = Loli2StackTranspiler.Transpile(dto.LoliCode);
+
+        var stack = _mapper.Map<IEnumerable<BlockInstanceDto>>(converted)
+            .Cast<object>().ToList();
+
         return new ConvertedStackDto
         {
-            Stack = converted
+            Stack = stack
         };
     }
 
@@ -327,6 +335,7 @@ public class ConfigController : ApiController
         ConvertStackToLoliCodeDto dto)
     {
         var converted = Stack2LoliTranspiler.Transpile(dto.Stack);
+
         return new ConvertedLoliCodeDto
         {
             LoliCode = converted
@@ -345,6 +354,7 @@ public class ConfigController : ApiController
         var config = await _configRepo.Get(dto.ConfigId);
         var converted = Stack2CSharpTranspiler
             .Transpile(dto.Stack, config.Settings);
+
         return new ConvertedCSharpDto
         {
             CSharpScript = converted
