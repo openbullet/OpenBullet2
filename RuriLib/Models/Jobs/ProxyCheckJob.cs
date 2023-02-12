@@ -30,10 +30,10 @@ namespace RuriLib.Models.Jobs
         public IProxyGeolocationProvider GeoProvider { get; set; }
 
         // Getters
-        public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
-        public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
-        public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : System.Threading.Timeout.InfiniteTimeSpan;
-        public int CPM => parallelizer != null ? parallelizer.CPM : 0;
+        public override float Progress => parallelizer?.Progress ?? -1;
+        public TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
+        public TimeSpan Remaining => parallelizer?.Remaining ?? System.Threading.Timeout.InfiniteTimeSpan;
+        public int CPM => parallelizer?.CPM ?? 0;
 
         // Private fields
         private Parallelizer<ProxyCheckInput, Proxy> parallelizer;
@@ -131,7 +131,7 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Controls
-        public override async Task Start()
+        public override async Task Start(CancellationToken cancellationToken = default)
         {
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
@@ -139,6 +139,7 @@ namespace RuriLib.Models.Jobs
             try
             {
                 Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
 
                 if (Proxies == null)
                     throw new NullReferenceException("The proxy list cannot be null");
@@ -165,8 +166,14 @@ namespace RuriLib.Models.Jobs
                 if (!proxies.Any())
                     throw new Exception("No proxies provided to check");
 
+                Status = JobStatus.Waiting;
+                OnStatusChanged?.Invoke(this, Status);
+
                 // Wait for the start condition to be verified
-                await base.Start();
+                await base.Start(cancellationToken).ConfigureAwait(false);
+
+                Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
 
                 var workItems = proxies.Select(p => new ProxyCheckInput(p, Url, SuccessKey, Timeout, GeoProvider));
                 parallelizer = ParallelizerFactory<ProxyCheckInput, Proxy>
@@ -184,7 +191,7 @@ namespace RuriLib.Models.Jobs
                 ResetStats();
                 StartTimer();
                 logger?.LogInfo(Id, "All set, starting the execution");
-                await parallelizer.Start();
+                await parallelizer.Start().ConfigureAwait(false);
             }
             finally
             {
@@ -192,6 +199,7 @@ namespace RuriLib.Models.Jobs
                 if (Status == JobStatus.Starting)
                 {
                     Status = JobStatus.Idle;
+                    OnStatusChanged?.Invoke(this, Status);
                 }
             }
         }
@@ -200,7 +208,10 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await parallelizer?.Stop();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Stop().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -213,7 +224,10 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await parallelizer?.Abort();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Abort().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -226,7 +240,10 @@ namespace RuriLib.Models.Jobs
         {
             try
             {
-                await parallelizer?.Pause();
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Pause().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -237,7 +254,11 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            await parallelizer?.Resume();
+            if (parallelizer is not null)
+            {
+                await parallelizer.Resume().ConfigureAwait(false);
+            }
+
             StartTimer();
             logger?.LogInfo(Id, "Execution resumed");
         }
@@ -246,9 +267,9 @@ namespace RuriLib.Models.Jobs
         #region Wrappers for TaskManager methods
         public async Task ChangeBots(int amount)
         {
-            if (parallelizer != null)
+            if (parallelizer is not null)
             {
-                await parallelizer.ChangeDegreeOfParallelism(amount);
+                await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
             }
         }

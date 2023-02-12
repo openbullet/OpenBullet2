@@ -35,6 +35,7 @@ namespace RuriLib.Functions.Captchas
                 CaptchaServiceType.CustomAntiCaptcha => new CustomAntiCaptchaService(settings.CustomAntiCaptchaApiKey,
                     GetUri(settings.CustomAntiCaptchaDomain, settings.CustomAntiCaptchaPort)),
                 CaptchaServiceType.AnyCaptcha => new AnyCaptchaService(settings.AnyCaptchaApiKey),
+                CaptchaServiceType.CapSolver => new CapSolverService(settings.CapSolverApiKey),
                 _ => throw new NotSupportedException(),
             };
 

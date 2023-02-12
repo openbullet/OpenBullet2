@@ -8,6 +8,7 @@ namespace RuriLib.Models.Blocks.Parameters
     {
         public Type EnumType { get; set; }
         public string DefaultValue { get; set; }
+        public string[] Options => Enum.GetNames(EnumType);
 
         public EnumParameter()
         {

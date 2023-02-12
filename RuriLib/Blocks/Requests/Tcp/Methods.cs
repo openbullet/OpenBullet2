@@ -26,6 +26,9 @@ namespace RuriLib.Blocks.Requests.Tcp
                 TimeSpan.FromMilliseconds(timeoutMilliseconds), data.UseProxy ? data.Proxy : null, data.CancellationToken)
                 .ConfigureAwait(false);
 
+            tcpClient.ReceiveTimeout = timeoutMilliseconds;
+            tcpClient.SendTimeout = timeoutMilliseconds;
+
             var netStream = tcpClient.GetStream();
 
             data.SetObject("netStream", netStream);
@@ -218,9 +221,9 @@ namespace RuriLib.Blocks.Requests.Tcp
             // If gzip, decompress
             if (headers.IndexOf("Content-Encoding: gzip", StringComparison.OrdinalIgnoreCase) > 0)
             {
-                using var decompressionStream = new GZipStream(ms, CompressionMode.Decompress);
+                await using var decompressionStream = new GZipStream(ms, CompressionMode.Decompress);
                 using var decompressedMemory = new MemoryStream();
-                decompressionStream.CopyTo(decompressedMemory);
+                await decompressionStream.CopyToAsync(decompressedMemory, linkedCts.Token).ConfigureAwait(false);
                 decompressedMemory.Position = 0;
                 payload = Encoding.UTF8.GetString(decompressedMemory.ToArray());
             }

@@ -9,18 +9,25 @@ namespace RuriLib.Helpers
     {
         private readonly Dictionary<string, SemaphoreSlim> semaphores = new();
 
-        public async Task Acquire(string key, CancellationToken cancellationToken)
+        public Task Acquire(string key, CancellationToken cancellationToken = default)
         {
             if (!semaphores.ContainsKey(key))
             {
                 semaphores[key] = new SemaphoreSlim(1, 1);
             }
 
-            await semaphores[key].WaitAsync(cancellationToken);
+            return semaphores[key].WaitAsync(cancellationToken);
         }
 
+        public Task Acquire(Type classType, string methodName, CancellationToken cancellationToken = default)
+            => Acquire(CombineTypes(classType, methodName), cancellationToken);
+
         public void Release(string key) => semaphores[key].Release();
-        
+
+        public void Release(Type classType, string methodName) => Release(CombineTypes(classType, methodName));
+
+        private string CombineTypes(Type classType, string methodName) => $"{classType.FullName}.{methodName}";
+
         public void Dispose()
         {
             foreach (var semaphore in semaphores.Values)

@@ -11,15 +11,17 @@
         </div>
         <div class="row">
             <div class="list-group list-group-horizontal">
-                @if (Config.Mode == ConfigMode.CSharp)
-                {
-                    <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)"><span class="oi oi-cog"></span> @Loc["ToggleUsings"]</button>
-                }
-                else
+                @if (Config.Mode != ConfigMode.CSharp)
                 {
                     <!--<button class="btn btn-sm btn-outline-success" @onclick="Transpile"><span class="oi oi-cog"></span> @Loc["TranspileFromBlocks"]</button>-->
                     <button class="btn btn-sm btn-outline-warning" @onclick="ConvertConfig"><span class="oi oi-fire"></span> @Loc["ConvertToCSharpConfig"]</button>
                 }
+                <button class="btn btn-sm btn-outline-primary" @onclick="(() => showUsings = !showUsings)">
+                    <span class="oi oi-cog"></span> @Loc["ToggleUsings"]
+                </button>
+                <button class="btn btn-sm btn-outline-primary" @onclick="(() => showStartupEditor = !showStartupEditor)">
+                    <span class="oi oi-cog"></span> @Loc["ToggleStartupEditor"]
+                </button>
             </div>
         </div>
         @if (showUsings)
@@ -33,10 +35,19 @@
                 </div>
             </div>
         }
+        <div class=@($"row mt-3{(showStartupEditor ? "" : " hidden")}")>
+            <p>@Loc["StartupEditorInfo"]</p><br />
+            <div class="w-100" style="height: 200px;">
+                <MonacoEditor @ref="StartupEditor" Id="startup-loli-editor"
+                    ConstructionOptions="StartupEditorConstructionOptions"
+                    OnDidChangeModelContent="SaveStartupScript" />
+            </div>
+        </div>
         <div class="row">
             <div class="col-xl-6 col-lg-12 pl-0">
                 <div class="w-100 mt-3" style="height: 800px;">
-                    <MonacoEditor @ref="_editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="SaveScript" />
+                    <MonacoEditor @ref="Editor" Id="cs-editor" ConstructionOptions="EditorConstructionOptions"
+                        OnDidChangeModelContent="SaveScript" />
                 </div>
                 <br />
                 <BullettaHelp Title="@help1x00" Messages="new string[] { help1x01, help1x02 }" />
@@ -58,6 +69,7 @@
 
 @code {
     private bool showUsings = false;
+    private bool showStartupEditor = false;
 
     private string help1x00 => Loc["Help1x00"];
     private string help1x01 => Loc["Help1x01"];

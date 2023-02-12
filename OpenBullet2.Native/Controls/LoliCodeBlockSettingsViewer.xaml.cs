@@ -1,5 +1,6 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.ViewModels;
 using RuriLib.Models.Blocks;
@@ -35,6 +36,7 @@ namespace OpenBullet2.Native.Controls
             editor.WordWrap = obSettingsService.Settings.CustomizationSettings.WordWrap;
             editor.Text = vm.Script;
             HighlightSyntax();
+            SearchPanel.Install(editor);
         }
 
         private void EditorLostFocus(object sender, RoutedEventArgs e) => vm.Script = editor.Text;

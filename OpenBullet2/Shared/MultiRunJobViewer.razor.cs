@@ -42,6 +42,7 @@ namespace OpenBullet2.Shared
         private Hit lastSelectedHit;
         private Timer uiRefreshTimer;
         private List<ProxyGroupEntity> proxyGroups;
+        private CancellationTokenSource startCTS;
 
         protected override async Task OnInitializedAsync()
         {
@@ -145,15 +146,20 @@ namespace OpenBullet2.Shared
         {
             try
             {
+                startCTS = new CancellationTokenSource();
                 await AskCustomInputs();
 
                 Logger.LogInfo(Job.Id, Loc["StartedWaiting"]);
-                await Job.Start();
+                await Job.Start(startCTS.Token);
                 Logger.LogInfo(Job.Id, Loc["StartedChecking"]);
             }
             catch (Exception ex)
             {
                 await js.AlertException(ex);
+            }
+            finally
+            {
+                startCTS?.Dispose();
             }
         }
 
@@ -172,6 +178,12 @@ namespace OpenBullet2.Shared
 
         private async Task Abort()
         {
+            if (Job.Status is JobStatus.Starting or JobStatus.Waiting)
+            {
+                startCTS.Cancel();
+                return;
+            }
+
             try
             {
                 Logger.LogInfo(Job.Id, Loc["HardStopMessage"]);

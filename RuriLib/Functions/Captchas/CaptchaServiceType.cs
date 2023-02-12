@@ -49,6 +49,9 @@
         CustomAntiCaptcha,
 
         /// <summary>The service provided by anycaptcha.com</summary>
-        AnyCaptcha
+        AnyCaptcha,
+
+        /// <summary>The service provided by capsolver.com</summary>
+        CapSolver
     }
 }

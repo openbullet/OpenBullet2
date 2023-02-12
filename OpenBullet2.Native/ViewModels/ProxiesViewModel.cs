@@ -105,12 +105,12 @@ namespace OpenBullet2.Native.ViewModels
             OnPropertyChanged(nameof(NotWorking));
         }
 
-        public async Task AddGroup(ProxyGroupEntity group)
+        public Task AddGroup(ProxyGroupEntity group)
         {
             ProxyGroupsCollection.Add(group);
             SelectedGroupId = allGroup.Id;
-            
-            await proxyGroupRepo.Add(group);
+
+            return proxyGroupRepo.Add(group);
         }
 
         public async Task EditGroup(ProxyGroupEntity group)

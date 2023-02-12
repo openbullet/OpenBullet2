@@ -180,7 +180,7 @@ namespace OpenBullet2.Native.Views.Pages
 
             // Write the temporary file
             var tempFile = Path.GetTempFileName();
-            File.WriteAllLines(tempFile, SelectedHits.Select(h => h.Data));
+            await File.WriteAllLinesAsync(tempFile, SelectedHits.Select(h => h.Data)).ConfigureAwait(false);
             var dataPoolOptions = new FileDataPoolOptions
             {
                 FileName = tempFile,
@@ -199,10 +199,12 @@ namespace OpenBullet2.Native.Views.Pages
                 JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
             };
 
-            var jobs = SP.GetService<ViewModelsService>().Jobs;
-            var jobVM = await jobs.CreateJob(jobOptions);
-
-            window.DisplayJob(jobVM);
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                var jobs = SP.GetService<ViewModelsService>().Jobs;
+                var jobVM = await jobs.CreateJob(jobOptions);
+                window.DisplayJob(jobVM);
+            });
         }
 
         private void CopySelected(object sender, RoutedEventArgs e)

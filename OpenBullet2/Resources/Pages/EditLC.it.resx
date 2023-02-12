@@ -132,11 +132,20 @@
   <data name="Help1x03" xml:space="preserve">
     <value>Se hai bisogno di usare classi ecc. da un %namespace% che non è importato automaticamente da OB2 quando compila lo script, puoi aggiungerlo in cima cliccando sul pulsante %Mostra/Nascondi Usings% e scrivendolo nella textbox. Per esempio, per aggiungere il namespace per la classe `Regex` puoi scrivere `System.Text.RegularExpressions` in una riga della textbox.</value>
   </data>
+  <data name="Help1x04" xml:space="preserve">
+    <value>L'editor %startup% LoliCode è utile quando vuoi inizializzare le variabili globali all'inizio di un job (ad esempio potresti ottenere un cookie o leggere un file). Attenzione però, la variabile `data` verrà resettata, quindi ricordati di salvare le informazioni solamente nell'oggetto `globals`!</value>
+  </data>
   <data name="LoliCodeEditor" xml:space="preserve">
     <value>Editor LoliCode</value>
   </data>
   <data name="SaveScript" xml:space="preserve">
     <value>Salva Script</value>
+  </data>
+  <data name="StartupEditorInfo" xml:space="preserve">
+    <value>Puoi scrivere uno script LoliCode che verrà eseguito quando il job viene lanciato</value>
+  </data>
+  <data name="ToggleStartupEditor" xml:space="preserve">
+    <value>Mostra/Nascondi Editor Startup</value>
   </data>
   <data name="ToggleUsings" xml:space="preserve">
     <value>Mostra/Nascondi Usings</value>

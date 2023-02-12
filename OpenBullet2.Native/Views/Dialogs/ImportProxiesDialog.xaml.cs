@@ -49,7 +49,7 @@ namespace OpenBullet2.Native.Views.Dialogs
                 {
                     // File
                     case 0:
-                        ReturnLines(File.ReadAllText(locationTextbox.Text));
+                        ReturnLines(await File.ReadAllTextAsync(locationTextbox.Text).ConfigureAwait(false));
                         break;
 
                     // Paste

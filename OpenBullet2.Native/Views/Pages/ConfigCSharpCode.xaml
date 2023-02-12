@@ -5,20 +5,97 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
       xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="780"
       Title="C# Code">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel 
+            Grid.Row="0"
+            Orientation="Horizontal">
+            <Button Click="ToggleUsings" 
+                    Margin="0 5 5 5" Style="{StaticResource StyledPrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconRadixIcons Kind="ActivityLog" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle usings</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Click="ToggleStartup" 
+                    Margin="5" Style="{StaticResource StyledPrimaryButton}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconRadixIcons Kind="Code" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Toggle Startup C#</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Grid 
+            Grid.Row="1"
+            Height="100"
+            x:Name="usingsContainer"
+            Margin="0 0 0 10"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Foreground="{DynamicResource ForegroundMain}">Using statements</Label>
+            <TextBox x:Name="usingsTextBox"
+                Background="{DynamicResource BackgroundSecondary}" 
+                Foreground="{DynamicResource ForegroundMain}" 
+                FontFamily="Consolas"
+                Grid.Row="1"
+                AcceptsReturn="True"
+                IsReadOnly="True"
+                Text="{Binding UsingsString}" />
+        </Grid>
+
+        <Grid
+            Grid.Row="2"
+            Height="200"
+            x:Name="startupEditorContainer"
+            Margin="0 0 0 10"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Foreground="{DynamicResource ForegroundMain}">Startup LoliCode</Label>
+            <avalonEdit:TextEditor
+                Grid.Row="1"
+                x:Name="startupEditor"
+                FontFamily="Consolas"
+                FontSize="10pt"
+                Foreground="Gainsboro"
+                Background="#111"
+                HorizontalAlignment="Stretch"
+                ShowLineNumbers="True"
+                IsReadOnly="True"
+                WordWrap="{Binding WordWrap}"
+                MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
+                MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
+        </Grid>
+
         <avalonEdit:TextEditor
-            Grid.Column="0"
+            Grid.Row="3"
             x:Name="editor"
             FontFamily="Consolas"
             FontSize="10pt"
             Foreground="Gainsboro"
             Background="#111"
             HorizontalAlignment="Stretch"
+            IsReadOnly="True"
             ShowLineNumbers="True"
-            IsReadOnly="True" />
+            WordWrap="{Binding WordWrap}"
+            MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
+            MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
     </Grid>
 </Page>

@@ -40,14 +40,13 @@ namespace RuriLib.Models.Jobs
             this.logger = logger;
         }
 
-        public virtual async Task Start()
+        public virtual async Task Start(CancellationToken cancellationToken = default)
         {
             waitFinished = false;
             cts?.Dispose();
             cts = new CancellationTokenSource();
 
             StartTime = DateTime.Now;
-            Status = JobStatus.Waiting;
 
             try
             {

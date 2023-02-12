@@ -383,19 +383,19 @@ namespace RuriLib.Legacy.Blocks
                     {
                         case StringResponse r:
                             InsertVariable(ls, false, r.Response, "SOLUTION");
-                            data.Logger.Log($"Captcha solved successfully! Id: {r.Id} Solution: {r.Response}", LogColors.GreenYellow);
+                            data.Logger.Log($"Captcha solved successfully! Id: {r.IdString} Solution: {r.Response}", LogColors.GreenYellow);
                             break;
 
                         case GeeTestResponse r:
                             InsertVariable(ls, false, r.Challenge, "GT_CHALLENGE");
                             InsertVariable(ls, false, r.Validate, "GT_VALIDATE");
                             InsertVariable(ls, false, r.SecCode, "GT_SECCODE");
-                            data.Logger.Log($"Captcha solved successfully! Id: {r.Id} Challenge: {r.Challenge}\r\nValidate: {r.Validate}\r\nSecCode: {r.SecCode}", LogColors.GreenYellow);
+                            data.Logger.Log($"Captcha solved successfully! Id: {r.IdString} Challenge: {r.Challenge}\r\nValidate: {r.Validate}\r\nSecCode: {r.SecCode}", LogColors.GreenYellow);
                             break;
                     }
 
                     // Save the captcha id for reporting
-                    data.SetObject("lastCaptchaInfo", new CaptchaInfo { Id = response.Id, Type = Type });
+                    data.SetObject("lastCaptchaInfo", new CaptchaInfo { Id = response.IdString, Type = Type });
 
                     return;
                 }

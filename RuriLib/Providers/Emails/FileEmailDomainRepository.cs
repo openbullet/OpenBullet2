@@ -70,7 +70,7 @@ namespace RuriLib.Providers.Emails
                 }
                 catch
                 {
-
+                    // ignored
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace RuriLib.Providers.Emails
                 }
                 catch
                 {
-
+                    // ignored
                 }
             }
 

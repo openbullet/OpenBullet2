@@ -67,6 +67,10 @@ namespace OpenBullet2.Native
             configService.ReloadConfigs().Wait();
 
             AutocompletionProvider.Init();
+
+            // Start the job monitor at the start of the application,
+            // otherwise it will only be started when navigating to the page
+            _ = serviceProvider.GetService<JobMonitorService>();
         }
 
         private void ConfigureServices(IServiceCollection services)

@@ -4,7 +4,7 @@ namespace RuriLib.Models.Variables
 {
     public class ListOfStringsVariable : Variable
     {
-        private readonly List<string> value = new();
+        private readonly List<string> value;
 
         public ListOfStringsVariable(List<string> value)
         {

@@ -1,8 +1,10 @@
-﻿using ICSharpCode.AvalonEdit.CodeCompletion;
+﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Native.Helpers;
@@ -37,8 +39,13 @@ namespace OpenBullet2.Native.Views.Pages
             configService = SP.GetService<ConfigService>();
             configRepo = SP.GetService<IConfigRepository>();
 
-            HighlightSyntax();
-            AddAutoCompletion();
+            HighlightSyntax(editor);
+            AddAutoCompletion(editor);
+            SearchPanel.Install(editor);
+
+            HighlightSyntax(startupEditor);
+            AddAutoCompletion(startupEditor);
+            SearchPanel.Install(startupEditor);
         }
 
         public void UpdateViewModel()
@@ -48,7 +55,14 @@ namespace OpenBullet2.Native.Views.Pages
                 // Try to change the mode to LoliCode and set the editor's text
                 configService.SelectedConfig.ChangeMode(ConfigMode.LoliCode);
                 editor.Text = configService.SelectedConfig.LoliCodeScript;
+                startupEditor.Text = configService.SelectedConfig.StartupLoliCodeScript;
                 vm.UpdateViewModel();
+
+                if (configService.SelectedConfig.StartupLoliCodeScript is not null &&
+                    configService.SelectedConfig.StartupLoliCodeScript.Length > 0)
+                {
+                    startupEditorContainer.Visibility = Visibility.Visible;
+                }
             }
             catch (Exception ex)
             {
@@ -62,23 +76,30 @@ namespace OpenBullet2.Native.Views.Pages
         /// Call this when changing page via the dropdown menu otherwise it
         /// will not trigger the LostFocus event on the editor.
         /// </summary>
-        public void OnPageChanged() => configService.SelectedConfig.LoliCodeScript = editor.Text;
-
-        private void EditorLostFocus(object sender, RoutedEventArgs e) 
-            => configService.SelectedConfig.LoliCodeScript = editor.Text;
-
-        private void HighlightSyntax()
+        public void OnPageChanged()
         {
-            using var reader = XmlReader.Create("Highlighting/LoliCode.xshd");
-            editor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-            editor.TextArea.TextView.LinkTextForegroundBrush = new SolidColorBrush(Colors.DodgerBlue);
-            editor.TextArea.TextView.LinkTextUnderline = false;
+            configService.SelectedConfig.LoliCodeScript = editor.Text;
+            configService.SelectedConfig.StartupLoliCodeScript= startupEditor.Text;
         }
 
-        private void AddAutoCompletion()
+        private void EditorLostFocus(object sender, RoutedEventArgs e)
         {
-            editor.TextArea.TextEntering += TextEntering;
-            editor.TextArea.TextEntered += TextEntered;
+            configService.SelectedConfig.LoliCodeScript = editor.Text;
+            configService.SelectedConfig.StartupLoliCodeScript = startupEditor.Text;
+        }
+
+        private void HighlightSyntax(TextEditor textEditor)
+        {
+            using var reader = XmlReader.Create("Highlighting/LoliCode.xshd");
+            textEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+            textEditor.TextArea.TextView.LinkTextForegroundBrush = new SolidColorBrush(Colors.DodgerBlue);
+            textEditor.TextArea.TextView.LinkTextUnderline = false;
+        }
+
+        private void AddAutoCompletion(TextEditor textEditor)
+        {
+            textEditor.TextArea.TextEntering += TextEntering;
+            textEditor.TextArea.TextEntered += TextEntered;
         }
 
         private void TextEntering(object sender, TextCompositionEventArgs e)
@@ -100,9 +121,10 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                var offset = editor.CaretOffset;
-                var documentLine = editor.Document.GetLineByOffset(offset);
-                var line = editor.Document.GetText(documentLine.Offset, documentLine.Length);
+                var textArea = sender as TextArea;
+                var offset = textArea.Caret.Offset;
+                var documentLine = textArea.Document.GetLineByOffset(offset);
+                var line = textArea.Document.GetText(documentLine.Offset, documentLine.Length);
 
                 // Do not complete if we are not typing at the start of the line without spaces
                 if (!string.IsNullOrWhiteSpace(line) && !line.Contains(' '))
@@ -117,7 +139,7 @@ namespace OpenBullet2.Native.Views.Pages
                     }
 
                     // Open code completion:
-                    completionWindow = new CompletionWindow(editor.TextArea)
+                    completionWindow = new CompletionWindow(textArea)
                     {
                         Foreground = Brushes.Gainsboro,
                         Background = Helpers.Brush.FromHex("#222")
@@ -146,13 +168,17 @@ namespace OpenBullet2.Native.Views.Pages
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
             {
                 configService.SelectedConfig.LoliCodeScript = editor.Text;
+                configService.SelectedConfig.StartupLoliCodeScript = startupEditor.Text;
                 await configRepo.Save(configService.SelectedConfig);
                 Alert.Success("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
             }
         }
 
-        private void ToggleUsings(object sender, RoutedEventArgs e) => usingsTextBox.Visibility =
-            usingsTextBox.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        private void ToggleUsings(object sender, RoutedEventArgs e) => usingsContainer.Visibility =
+            usingsContainer.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+
+        private void ToggleStartup(object sender, RoutedEventArgs e) => startupEditorContainer.Visibility =
+            startupEditorContainer.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public class ConfigLoliCodeViewModel : ViewModelBase

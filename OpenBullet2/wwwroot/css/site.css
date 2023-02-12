@@ -295,6 +295,10 @@ app {
     cursor: pointer;
 }
 
+.hidden {
+    display: none;
+}
+
 /*  INPUTS -- */
 input:not([type=checkbox]), textarea {
     background-color: var(--bg-secondary);

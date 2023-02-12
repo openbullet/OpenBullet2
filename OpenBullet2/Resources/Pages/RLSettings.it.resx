@@ -150,6 +150,9 @@
   <data name="CapMonsterPort" xml:space="preserve">
     <value>CapMonster Porta</value>
   </data>
+  <data name="CapSolverApiKey" xml:space="preserve">
+    <value>CapSolver API Key</value>
+  </data>
   <data name="Captchas" xml:space="preserve">
     <value>Captcha</value>
   </data>

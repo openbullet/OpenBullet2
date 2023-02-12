@@ -20,9 +20,9 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000)
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             pool.RemoveDuplicates();
             Assert.Single(pool.Proxies);
         }
@@ -35,9 +35,9 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000)
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.NotNull(pool.GetProxy());
         }
 
@@ -49,9 +49,9 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.Null(pool.GetProxy());
         }
 
@@ -63,9 +63,9 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { ProxyStatus = ProxyStatus.Busy }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.NotNull(pool.GetProxy(true));
         }
 
@@ -77,9 +77,9 @@ namespace RuriLib.Tests.Models.Proxies
                 new Proxy("127.0.0.1", 8000) { TotalUses = 3 }
             });
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll();
+            await pool.ReloadAllAsync();
             Assert.Null(pool.GetProxy(true, 3));
         }
 
@@ -98,11 +98,11 @@ echo 127.0.0.1:1111
 echo 127.0.0.1:2222
 echo (Socks5)127.0.0.1:3333
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();
@@ -128,17 +128,23 @@ echo (Socks5)127.0.0.1:3333
                 // Well, Only Windows contains Powershell.
                 return;
             }
+
             var tmpBatchFilePath = Path.GetTempFileName() + ".ps1";
+            // Setting Execution Policy is needed both in the test and real-world use cases of the functionality.
+            // users can use "Set-ExecutionPolicy unrestricted -Scope CurrentUser" apply for all scripts.
+            string command = $"/c powershell -executionpolicy unrestricted \"${tmpBatchFilePath}\"";
+            System.Diagnostics.Process.Start("cmd.exe", command);
+
             await File.WriteAllTextAsync(tmpBatchFilePath, @"
 Write-Output 127.0.0.1:1111
 Write-Output 127.0.0.1:2222
 Write-Output ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();
@@ -170,11 +176,11 @@ echo 127.0.0.1:1111
 echo 127.0.0.1:2222
 echo ""(Socks5)127.0.0.1:3333""
 ", Encoding.UTF8);
-            FileProxySource source = new(tmpBatchFilePath);
+            using FileProxySource source = new(tmpBatchFilePath);
 
-            var pool = new ProxyPool(new ProxySource[] { source });
+            using var pool = new ProxyPool(new ProxySource[] { source });
 
-            await pool.ReloadAll(false);
+            await pool.ReloadAllAsync(false);
             File.Delete(tmpBatchFilePath);
             Assert.Equal(3, pool.Proxies.Count());
             var proxy = pool.GetProxy();

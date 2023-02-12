@@ -142,8 +142,7 @@ namespace RuriLib.Helpers.LoliCode
 
         private static string ToLiteral(string input)
         {
-            if (input == null)
-                input = string.Empty;
+            input ??= string.Empty;
 
             return SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression, SyntaxFactory.Literal(input)).ToFullString();
         }
@@ -156,7 +155,7 @@ namespace RuriLib.Helpers.LoliCode
             if (input == null)
                 return "[]";
 
-            return "[" + string.Join(", ", input.Select(i => ToLiteral(i))) + "]";
+            return "[" + string.Join(", ", input.Select(ToLiteral)) + "]";
         }
 
         private static string SerializeDictionary(Dictionary<string, string> input) 

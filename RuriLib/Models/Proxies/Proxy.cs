@@ -10,8 +10,8 @@ namespace RuriLib.Models.Proxies
         public int Id { get; set; }
         public string Host { get; set; }
         public int Port { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        public string Username { get; set; }
+        public string Password { get; set; }
         public ProxyType Type { get; set; }
 
         public ProxyWorkingStatus WorkingStatus { get; set; } = ProxyWorkingStatus.Untested;
@@ -102,11 +102,11 @@ namespace RuriLib.Models.Proxies
             else
                 throw new FormatException("The proxy port must be an integer");
 
-            if (fields.Count() == 3)
+            if (fields.Length == 3)
                 throw new FormatException("Expected 4 colon-separated fields, got 3");
 
             // Set the other two if they are present
-            if (fields.Count() > 2)
+            if (fields.Length > 2)
             {
                 proxy.Username = fields[2];
                 proxy.Password = fields[3];

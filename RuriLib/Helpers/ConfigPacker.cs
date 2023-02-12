@@ -40,14 +40,17 @@ namespace RuriLib.Helpers
                     case ConfigMode.Stack:
                         config.LoliCodeScript = Stack2LoliTranspiler.Transpile(config.Stack);
                         await CreateZipEntryFromString(archive, "script.loli", config.LoliCodeScript);
+                        await CreateZipEntryFromString(archive, "startup.loli", config.StartupLoliCodeScript);
                         break;
 
                     case ConfigMode.LoliCode:
                         await CreateZipEntryFromString(archive, "script.loli", config.LoliCodeScript);
+                        await CreateZipEntryFromString(archive, "startup.loli", config.StartupLoliCodeScript);
                         break;
 
                     case ConfigMode.CSharp:
                         await CreateZipEntryFromString(archive, "script.cs", config.CSharpScript);
+                        await CreateZipEntryFromString(archive, "startup.cs", config.StartupCSharpScript);
                         break;
 
                     case ConfigMode.DLL:
@@ -106,7 +109,7 @@ namespace RuriLib.Helpers
         /// <summary>
         /// Unpacks a <paramref name="stream"/> to a Config.
         /// </summary>
-        public static async Task<Config> Unpack(Stream stream)
+        public static Task<Config> Unpack(Stream stream)
         {
             var config = new Config();
 
@@ -154,6 +157,9 @@ namespace RuriLib.Helpers
                     {
                         throw new FileLoadException("Could not load the file from the opk archive", "script.cs");
                     }
+
+                    // startup.cs
+                    config.StartupCSharpScript = ReadStringFromZipEntry(archive, "startup.cs", essential: false);
                 }
                 else if (archive.Entries.Any(e => e.Name.Contains("build.dll")))
                 {
@@ -193,11 +199,14 @@ namespace RuriLib.Helpers
                     {
                         throw new FileLoadException("Could not load the file from the opk archive", "script.loli");
                     }
+
+                    // startup.loli
+                    config.StartupLoliCodeScript = ReadStringFromZipEntry(archive, "startup.loli", essential: false);
                 }
             }
 
             config.UpdateHashes();
-            return await Task.FromResult(config);
+            return Task.FromResult(config);
         }
 
         private static async Task CreateZipEntryFromString(ZipArchive archive, string path, string content)
@@ -205,7 +214,7 @@ namespace RuriLib.Helpers
             var zipFile = archive.CreateEntry(path);
 
             using var sourceFileStream = new MemoryStream(Encoding.UTF8.GetBytes(content));
-            using var zipEntryStream = zipFile.Open();
+            await using var zipEntryStream = zipFile.Open();
             await sourceFileStream.CopyToAsync(zipEntryStream);
         }
 
@@ -214,16 +223,21 @@ namespace RuriLib.Helpers
             var zipFile = archive.CreateEntry(path);
 
             using var sourceFileStream = new MemoryStream(content);
-            using var zipEntryStream = zipFile.Open();
+            await using var zipEntryStream = zipFile.Open();
             await sourceFileStream.CopyToAsync(zipEntryStream);
         }
 
-        private static string ReadStringFromZipEntry(ZipArchive archive, string path)
-            => Encoding.UTF8.GetString(ReadBytesFromZipEntry(archive, path));
+        private static string ReadStringFromZipEntry(ZipArchive archive, string path, bool essential = true)
+            => Encoding.UTF8.GetString(ReadBytesFromZipEntry(archive, path, essential));
 
-        private static byte[] ReadBytesFromZipEntry(ZipArchive archive, string path)
+        private static byte[] ReadBytesFromZipEntry(ZipArchive archive, string path, bool essential = true)
         {
             var entry = archive.GetEntry(path);
+
+            if (entry is null && !essential)
+            {
+                return Array.Empty<byte>();
+            }
 
             using var stream = entry.Open();
             using var ms = new MemoryStream();

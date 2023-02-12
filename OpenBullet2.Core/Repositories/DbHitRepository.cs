@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Extensions;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpenBullet2.Core.Repositories
@@ -20,14 +21,14 @@ namespace OpenBullet2.Core.Repositories
         /// <inheritdoc/>
         public void Purge() => _ = context.Database.ExecuteSqlRaw($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
 
-        public async override Task Update(HitEntity entity)
+        public async override Task Update(HitEntity entity, CancellationToken cancellationToken = default)
         {
             context.DetachLocal<HitEntity>(entity.Id);
             context.Entry(entity).State = EntityState.Modified;
-            await base.Update(entity);
+            await base.Update(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        public async override Task Update(IEnumerable<HitEntity> entities)
+        public async override Task Update(IEnumerable<HitEntity> entities, CancellationToken cancellationToken = default)
         {
             foreach (var entity in entities)
             {
@@ -35,7 +36,7 @@ namespace OpenBullet2.Core.Repositories
                 context.Entry(entity).State = EntityState.Modified;
             }
 
-            await base.Update(entities);
+            await base.Update(entities, cancellationToken).ConfigureAwait(false);
         }
     }
 }

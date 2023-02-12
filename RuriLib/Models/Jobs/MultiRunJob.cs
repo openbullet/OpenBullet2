@@ -59,10 +59,10 @@ namespace RuriLib.Models.Jobs
         public BotData[] CurrentBotDatas { get; set; }
 
         // Getters
-        public override float Progress => parallelizer != null ? parallelizer.Progress : -1;
-        public TimeSpan Elapsed => parallelizer != null ? parallelizer.Elapsed : TimeSpan.Zero;
-        public TimeSpan Remaining => parallelizer != null ? parallelizer.Remaining : Timeout.InfiniteTimeSpan;
-        public int CPM => parallelizer != null ? parallelizer.CPM : 0;
+        public override float Progress => parallelizer?.Progress ?? -1;
+        public TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
+        public TimeSpan Remaining => parallelizer?.Remaining ?? Timeout.InfiniteTimeSpan;
+        public int CPM => parallelizer?.CPM ?? 0;
 
         // Private fields
         private readonly string[] badStatuses = new string[] { "FAIL", "RETRY", "BAN", "ERROR", "INVALID" };
@@ -227,7 +227,22 @@ namespace RuriLib.Models.Jobs
                         {
                             if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                             {
-                                await input.ProxyPool.ReloadAll().ConfigureAwait(false);
+                                try
+                                {
+                                    await input.BotData.AsyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
+                                        input.BotData.CancellationToken).ConfigureAwait(false);
+                                    
+                                    botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode, input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
+                                    
+                                    if (botData.Proxy == null)
+                                    {
+                                        await input.ProxyPool.ReloadAllAsync(true, token).ConfigureAwait(false);
+                                    }
+                                }
+                                finally
+                                {
+                                    input.BotData.AsyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                                }
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
                             {
@@ -351,7 +366,7 @@ namespace RuriLib.Models.Jobs
                             {
                                 botData.ExecutingBlock("Reporting bad captcha upon RETRY status");
                                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                                await botData.Providers.Captcha.ReportSolution(lastCaptcha.Id, lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
+                                await botData.Providers.Captcha.ReportSolution(long.Parse(lastCaptcha.Id), lastCaptcha.Type, false, cts.Token).ConfigureAwait(false);
                                 botData.ExecutingBlock("Bad captcha reported!");
                             }
                             catch
@@ -431,14 +446,19 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Controls
-        public override async Task Start()
+        public override async Task Start(CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
 
             try
             {
                 Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
+
+                asyncLocker = new();
 
                 if (Config == null)
                     throw new NullReferenceException("The Config cannot be null");
@@ -462,7 +482,15 @@ namespace RuriLib.Models.Jobs
 
                     var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
-                    await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                    try
+                    {
+                        await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                        await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                    }
 
                     if (!proxyPool.Proxies.Any())
                     {
@@ -470,8 +498,20 @@ namespace RuriLib.Models.Jobs
                     }
                 }
 
+                Status = JobStatus.Waiting;
+                OnStatusChanged?.Invoke(this, Status);
+
                 // Wait for the start condition to be verified
-                await base.Start().ConfigureAwait(false);
+                await base.Start(cancellationToken).ConfigureAwait(false);
+
+                Status = JobStatus.Starting;
+                OnStatusChanged?.Invoke(this, Status);
+
+                // Execute the startup script
+                if (Config.Mode == ConfigMode.LoliCode || Config.Mode == ConfigMode.Stack)
+                {
+                    Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(Config.StartupLoliCodeScript, Config.Settings);
+                }
 
                 Script script = null;
                 MethodInfo method = null;
@@ -502,7 +542,7 @@ namespace RuriLib.Models.Jobs
                     }
 
                     script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    script.Compile();
+                    script.Compile(cancellationToken);
                 }
 
                 Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
@@ -539,11 +579,23 @@ namespace RuriLib.Models.Jobs
 
                 globalVariables.Resources = resources;
                 httpClient = new();
-                asyncLocker = new();
                 var runtime = Python.CreateRuntime();
                 var pyengine = runtime.GetEngine("py");
                 var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
                 pco.Module &= ~ModuleOptions.Optimized;
+
+                if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
+                {
+                    var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, pluginRepo);
+                    var startupBotData = new BotData(Providers, Config.Settings, new BotLogger(), new DataLine(string.Empty, wordlistType), null, false)
+                    {
+                        CancellationToken = cancellationToken
+                    };
+                    var startupGlobals = new ScriptGlobals(startupBotData, globalVariables);
+                    await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 long index = 0;
                 var workItems = DataPool.DataList.Select(line =>
@@ -574,6 +626,8 @@ namespace RuriLib.Models.Jobs
                     return input;
                 });
 
+                cancellationToken.ThrowIfCancellationRequested();
+
                 parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                     .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems,
                         workFunction, Bots, DataPool.Size, Skip, BotLimit);
@@ -598,9 +652,10 @@ namespace RuriLib.Models.Jobs
             finally
             {
                 // Reset the status
-                if (Status == JobStatus.Starting)
+                if (Status is JobStatus.Starting)
                 {
                     Status = JobStatus.Idle;
+                    OnStatusChanged?.Invoke(this, Status);
                 }
             }
         }
@@ -668,14 +723,26 @@ namespace RuriLib.Models.Jobs
         #endregion
 
         #region Public Methods
-        public async Task FetchProxiesFromSources()
-            => await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+        public async Task FetchProxiesFromSources(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
+                await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
+            }
+            finally
+            {
+                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+            }
+
+        }
+
         #endregion
 
         #region Wrappers for Parallelizer methods
         public async Task ChangeBots(int amount)
         {
-            if (parallelizer != null)
+            if (parallelizer is not null)
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
                 logger?.LogInfo(Id, $"Changed bots to {amount}");
@@ -729,9 +796,24 @@ namespace RuriLib.Models.Jobs
             {
                 proxyReloadTimer = new Timer(new TimerCallback(async _ =>
                 {
+                    // BEWARE: Fire-and-forget async-void delegate
+                    // Unhandled exceptions will crash the process
                     if (proxyPool is not null)
                     {
-                        await proxyPool.ReloadAll(ShuffleProxies).ConfigureAwait(false);
+                        try
+                        {
+                            await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
+                                .ConfigureAwait(false);
+                            await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+                        finally
+                        {
+                            asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
+                        }
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
             }
@@ -896,6 +978,16 @@ namespace RuriLib.Models.Jobs
                 catch
                 {
 
+                }
+            }
+
+            proxyPool?.Dispose();
+
+            if (ProxySources is not null)
+            {
+                for (int i = 0; i < ProxySources.Count; i++)
+                {
+                    ProxySources[i]?.Dispose();
                 }
             }
 

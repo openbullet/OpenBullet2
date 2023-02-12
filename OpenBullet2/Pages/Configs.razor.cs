@@ -45,7 +45,7 @@ namespace OpenBullet2.Pages
         private CGrid<Config> grid;
         private Task gridLoad;
 
-        protected override async Task OnParametersSetAsync()
+        protected override Task OnParametersSetAsync()
         {
             AddEventHandlers();
 
@@ -88,7 +88,7 @@ namespace OpenBullet2.Pages
 
             // Set new items to grid
             gridLoad = client.UpdateGrid();
-            await gridLoad;
+            return gridLoad;
         }
 
         private ItemsDTO<Config> GetGridRows(Action<IGridColumnCollection<Config>> columns,
@@ -414,7 +414,10 @@ namespace OpenBullet2.Pages
         }
 
         public void Dispose()
-            => RemoveEventHandlers();
+        {
+            RemoveEventHandlers();
+            GC.SuppressFinalize(this);
+        }
 
         ~Configs()
             => Dispose();

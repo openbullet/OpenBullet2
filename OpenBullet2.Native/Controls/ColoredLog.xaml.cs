@@ -17,14 +17,14 @@ namespace OpenBullet2.Native.Controls
             InitializeComponent();
         }
 
-        public void Append(string message, Color color)
+        public void Append(string message, Color color, bool addTimestamp = true)
         {
             var brush = new SolidColorBrush(color);
             brush.Freeze();
 
             var block = new TextBlock
             {
-                Text = message,
+                Text = $"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] {message}",
                 Foreground = brush
             };
 

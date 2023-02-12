@@ -407,12 +407,12 @@ namespace OpenBullet2.Native.ViewModels
 
         public void SetBackgroundImage(string path) => BackgroundImagePath = path;
 
-        public async Task Save()
+        public Task Save()
         {
             General.ProxyCheckTargets = ProxyCheckTargetsCollection.ToList();
             General.CustomSnippets = CustomSnippetsCollection.ToList();
             Remote.ConfigsEndpoints = RemoteConfigsEndpointsCollection.ToList();
-            await service.Save();
+            return service.Save();
         }
 
         public void Reset()

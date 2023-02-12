@@ -19,7 +19,7 @@ namespace RuriLib.Functions.Networking
         public static async Task<List<string>> FromGoogle(string domain, string type, Proxy proxy = null,
             int timeout = 30000, CancellationToken cancellationToken = default)
         {
-            var url = $"{"https"}://dns.google.com/resolve?name={Uri.EscapeDataString(domain)}&type={type}";
+            var url = $"https://dns.google.com/resolve?name={Uri.EscapeDataString(domain)}&type={type}";
             
             using var httpClient = HttpFactory.GetRLHttpClient(proxy, new() 
             {
