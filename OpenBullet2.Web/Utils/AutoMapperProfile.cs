@@ -164,21 +164,21 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<TriggeredAction, TriggeredActionDto>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.Actions, ctx.Mapper)));
 
         CreateMap<CreateTriggeredActionDto, TriggeredAction>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+                (s, d, i, ctx) => PolyMapper.MapBetween<TriggerDto, Trigger>(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, RuriLib.Models.Jobs.Monitor.Actions.Action>(s.Actions, ctx.Mapper)));
 
         CreateMap<UpdateTriggeredActionDto, TriggeredAction>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapTriggers(s.Triggers, ctx.Mapper)))
+                (s, d, i, ctx) => PolyMapper.MapBetween<TriggerDto, Trigger>(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => Mappings.MapActions(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, RuriLib.Models.Jobs.Monitor.Actions.Action>(s.Actions, ctx.Mapper)));
 
         RegisterTriggerMaps();
         RegisterActionMaps();

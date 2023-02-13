@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Web.Attributes;
+using RuriLib.Models.Jobs.Monitor.Actions;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -13,7 +14,9 @@ public class MultiRunJobActionDto : ActionDto
 /// <summary>
 /// Sets the number of bots.
 /// </summary>
-[PolyType("setBots")]
+[PolyType("setBotsAction")]
+[MapsFrom(typeof(SetBotsAction))]
+[MapsTo(typeof(SetBotsAction))]
 public class SetBotsActionDto : MultiRunJobActionDto
 {
     /// <summary>
@@ -25,7 +28,9 @@ public class SetBotsActionDto : MultiRunJobActionDto
 /// <summary>
 /// Reloads proxies.
 /// </summary>
-[PolyType("reloadProxies")]
+[PolyType("reloadProxiesAction")]
+[MapsFrom(typeof(ReloadProxiesAction))]
+[MapsTo(typeof(ReloadProxiesAction))]
 public class ReloadProxiesActionDto : MultiRunJobActionDto
 {
 

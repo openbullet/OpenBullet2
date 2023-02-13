@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Web.Attributes;
+using RuriLib.Models.Jobs.Monitor.Actions;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -14,7 +15,9 @@ public class ActionDto : PolyDto
 /// Waits for a certain amount of time before executing
 /// the next action in the chain.
 /// </summary>
-[PolyType("wait")]
+[PolyType("waitAction")]
+[MapsFrom(typeof(WaitAction))]
+[MapsTo(typeof(WaitAction))]
 public class WaitActionDto : ActionDto
 {
     /// <summary>
@@ -26,7 +29,9 @@ public class WaitActionDto : ActionDto
 /// <summary>
 /// Sets the relative start condition of a job to the given time span.
 /// </summary>
-[PolyType("setRelativeStartCondition")]
+[PolyType("setRelativeStartConditionAction")]
+[MapsFrom(typeof(SetRelativeStartConditionAction))]
+[MapsTo(typeof(SetRelativeStartConditionAction))]
 public class SetRelativeStartConditionActionDto : ActionDto
 {
     /// <summary>
@@ -44,7 +49,9 @@ public class SetRelativeStartConditionActionDto : ActionDto
 /// <summary>
 /// Stops the target job.
 /// </summary>
-[PolyType("stopJob")]
+[PolyType("stopJobAction")]
+[MapsFrom(typeof(StopJobAction))]
+[MapsTo(typeof(StopJobAction))]
 public class StopJobActionDto : ActionDto
 {
     /// <summary>
@@ -56,7 +63,9 @@ public class StopJobActionDto : ActionDto
 /// <summary>
 /// Aborts the target job.
 /// </summary>
-[PolyType("abortJob")]
+[PolyType("abortJobAction")]
+[MapsFrom(typeof(AbortJobAction))]
+[MapsTo(typeof(AbortJobAction))]
 public class AbortJobActionDto : ActionDto
 {
     /// <summary>
@@ -68,7 +77,9 @@ public class AbortJobActionDto : ActionDto
 /// <summary>
 /// Starts the target job.
 /// </summary>
-[PolyType("startJob")]
+[PolyType("startJobAction")]
+[MapsFrom(typeof(StartJobAction))]
+[MapsTo(typeof(StartJobAction))]
 public class StartJobActionDto : ActionDto
 {
     /// <summary>
@@ -80,7 +91,9 @@ public class StartJobActionDto : ActionDto
 /// <summary>
 /// Sends a message through a discord webhook.
 /// </summary>
-[PolyType("discordWebhook")]
+[PolyType("discordWebhookAction")]
+[MapsFrom(typeof(DiscordWebhookAction))]
+[MapsTo(typeof(DiscordWebhookAction))]
 public class DiscordWebhookActionDto : ActionDto
 {
     /// <summary>
@@ -97,7 +110,9 @@ public class DiscordWebhookActionDto : ActionDto
 /// <summary>
 /// Sends a message through a telegram bot.
 /// </summary>
-[PolyType("telegramBot")]
+[PolyType("telegramBotAction")]
+[MapsFrom(typeof(TelegramBotAction))]
+[MapsTo(typeof(TelegramBotAction))]
 public class TelegramBotActionDto : ActionDto
 {
     /// <summary>

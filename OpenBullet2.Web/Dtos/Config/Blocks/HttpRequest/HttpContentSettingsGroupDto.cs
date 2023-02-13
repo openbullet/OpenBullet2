@@ -5,7 +5,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 /// <summary>
 /// DTO that represents a multipart setting.
 /// </summary>
-public class HttpContentSettingsGroupDto
+public class HttpContentSettingsGroupDto : PolyDto
 {
     /// <summary>
     /// The type of http content settings group.

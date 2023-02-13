@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Conditions.Comparisons;
+using RuriLib.Models.Jobs.Monitor.Triggers;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -14,7 +15,9 @@ public class MultiRunJobTriggerDto : TriggerDto
 /// <summary>
 /// Triggers when a job finishes.
 /// </summary>
-[PolyType("jobFinished")]
+[PolyType("jobFinishedTrigger")]
+[MapsFrom(typeof(JobFinishedTrigger))]
+[MapsTo(typeof(JobFinishedTrigger))]
 public class JobFinishedTriggerDto : MultiRunJobTriggerDto
 {
 
@@ -58,7 +61,9 @@ public class TimeComparisonTrigger : MultiRunJobTriggerDto
 /// Triggers when the number of tested data lines reaches a given
 /// threshold.
 /// </summary>
-[PolyType("testedCount")]
+[PolyType("testedCountTrigger")]
+[MapsFrom(typeof(TestedCountTrigger))]
+[MapsTo(typeof(TestedCountTrigger))]
 public class TestedCountTriggerDto : NumComparisonTrigger
 {
 
@@ -67,7 +72,9 @@ public class TestedCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of hits reaches a given threshold.
 /// </summary>
-[PolyType("hitCount")]
+[PolyType("hitCountTrigger")]
+[MapsFrom(typeof(HitCountTrigger))]
+[MapsTo(typeof(HitCountTrigger))]
 public class HitCountTriggerDto : NumComparisonTrigger
 {
     
@@ -76,7 +83,9 @@ public class HitCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of customs reaches a given threshold.
 /// </summary>
-[PolyType("customCount")]
+[PolyType("customCountTrigger")]
+[MapsFrom(typeof(CustomCountTrigger))]
+[MapsTo(typeof(CustomCountTrigger))]
 public class CustomCountTriggerDto : NumComparisonTrigger
 {
     
@@ -85,7 +94,9 @@ public class CustomCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of toChecks reaches a given threshold.
 /// </summary>
-[PolyType("toCheckCount")]
+[PolyType("toCheckCountTrigger")]
+[MapsFrom(typeof(ToCheckCountTrigger))]
+[MapsTo(typeof(ToCheckCountTrigger))]
 public class ToCheckCountTriggerDto : NumComparisonTrigger
 {
     
@@ -94,7 +105,9 @@ public class ToCheckCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of fails reaches a given threshold.
 /// </summary>
-[PolyType("failCount")]
+[PolyType("failCountTrigger")]
+[MapsFrom(typeof(FailCountTrigger))]
+[MapsTo(typeof(FailCountTrigger))]
 public class FailCountTriggerDto : NumComparisonTrigger
 {
 
@@ -103,7 +116,9 @@ public class FailCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of retries reaches a given threshold.
 /// </summary>
-[PolyType("retryCount")]
+[PolyType("retryCountTrigger")]
+[MapsFrom(typeof(RetryCountTrigger))]
+[MapsTo(typeof(RetryCountTrigger))]
 public class RetryCountTriggerDto : NumComparisonTrigger
 {
     
@@ -112,7 +127,9 @@ public class RetryCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of bans reaches a given threshold.
 /// </summary>
-[PolyType("banCount")]
+[PolyType("banCountTrigger")]
+[MapsFrom(typeof(BanCountTrigger))]
+[MapsTo(typeof(BanCountTrigger))]
 public class BanCountTriggerDto : NumComparisonTrigger
 {
     
@@ -121,7 +138,9 @@ public class BanCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of errors reaches a given threshold.
 /// </summary>
-[PolyType("errorCount")]
+[PolyType("errorCountTrigger")]
+[MapsFrom(typeof(ErrorCountTrigger))]
+[MapsTo(typeof(ErrorCountTrigger))]
 public class ErrorCountTriggerDto : NumComparisonTrigger
 {
 
@@ -130,7 +149,9 @@ public class ErrorCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of alive proxies reaches a given threshold.
 /// </summary>
-[PolyType("aliveProxiesCount")]
+[PolyType("aliveProxiesCountTrigger")]
+[MapsFrom(typeof(AliveProxiesCountTrigger))]
+[MapsTo(typeof(AliveProxiesCountTrigger))]
 public class AliveProxiesCountTriggerDto : NumComparisonTrigger
 {
     
@@ -139,7 +160,9 @@ public class AliveProxiesCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the number of banned proxies reaches a given threshold.
 /// </summary>
-[PolyType("bannedProxiesCount")]
+[PolyType("bannedProxiesCountTrigger")]
+[MapsFrom(typeof(BannedProxiesCountTrigger))]
+[MapsTo(typeof(BannedProxiesCountTrigger))]
 public class BannedProxiesCountTriggerDto : NumComparisonTrigger
 {
     
@@ -148,7 +171,9 @@ public class BannedProxiesCountTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the CPM reaches a given threshold.
 /// </summary>
-[PolyType("cpmCount")]
+[PolyType("cpmCountTrigger")]
+[MapsFrom(typeof(CPMTrigger))]
+[MapsTo(typeof(CPMTrigger))]
 public class CPMTriggerDto : NumComparisonTrigger
 {
     
@@ -157,7 +182,9 @@ public class CPMTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the captcha credit reaches a given threshold.
 /// </summary>
-[PolyType("captchaCredit")]
+[PolyType("captchaCreditTrigger")]
+[MapsFrom(typeof(CaptchaCreditTrigger))]
+[MapsTo(typeof(CaptchaCreditTrigger))]
 public class CaptchaCreditTriggerDto : NumComparisonTrigger
 {
     
@@ -166,7 +193,9 @@ public class CaptchaCreditTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the progress reaches a given threshold.
 /// </summary>
-[PolyType("progress")]
+[PolyType("progressTrigger")]
+[MapsFrom(typeof(ProgressTrigger))]
+[MapsTo(typeof(ProgressTrigger))]
 public class ProgressTriggerDto : NumComparisonTrigger
 {
     
@@ -175,7 +204,9 @@ public class ProgressTriggerDto : NumComparisonTrigger
 /// <summary>
 /// Triggers when the elapsed time reaches a given threshold.
 /// </summary>
-[PolyType("timeElapsed")]
+[PolyType("timeElapsedTrigger")]
+[MapsFrom(typeof(TimeElapsedTrigger))]
+[MapsTo(typeof(TimeElapsedTrigger))]
 public class TimeElapsedTriggerDto : TimeComparisonTrigger
 {
 
@@ -184,7 +215,9 @@ public class TimeElapsedTriggerDto : TimeComparisonTrigger
 /// <summary>
 /// Triggers when the remaining time reaches a given threshold.
 /// </summary>
-[PolyType("timeRemaining")]
+[PolyType("timeRemainingTrigger")]
+[MapsFrom(typeof(TimeRemainingTrigger))]
+[MapsTo(typeof(TimeRemainingTrigger))]
 public class TimeRemainingTriggerDto : TimeComparisonTrigger
 {
     

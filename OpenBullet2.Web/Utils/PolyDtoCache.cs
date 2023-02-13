@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Web.Attributes;
+﻿using Microsoft.Scripting.Utils;
+using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos;
 using System.Reflection;
 
@@ -12,6 +13,7 @@ static internal class PolyDtoCache
     private static readonly Dictionary<Type, Type[]> _subTypes = new();
     private static readonly Dictionary<Type, string> _polyTypeNames = new();
     private static readonly Dictionary<string, Type> _polyTypes = new();
+    private static readonly Dictionary<Type, Type> _mappings = new();
 
     static internal void Scan()
     {
@@ -55,6 +57,25 @@ static internal class PolyDtoCache
                 }
             }
         }
+
+        // Scan for type mappings
+        // Note that the relationships should be bijective (1:1)
+        foreach (var type in assembly.GetTypes())
+        {
+            var mapsFromAttributes = type.GetCustomAttributes<MapsFromAttribute>();
+
+            foreach (var mapsFrom in mapsFromAttributes)
+            {
+                _mappings[mapsFrom.SourceType] = type;
+            }
+
+            var mapsToAttributes = type.GetCustomAttributes<MapsToAttribute>();
+
+            foreach (var mapsTo in mapsToAttributes)
+            {
+                _mappings[type] = mapsTo.DestinationType;
+            }
+        }
     }
 
     static internal Type[] GetSubTypes<T>() where T : PolyDto
@@ -74,4 +95,8 @@ static internal class PolyDtoCache
     static internal Type? GetPolyTypeFromName(string polyTypeName)
         => _polyTypes.TryGetValue(polyTypeName, out var type)
             ? type : null;
+
+    static internal Type? GetMapping(Type type)
+    => _mappings.TryGetValue(type, out var mappedType)
+        ? mappedType : null;
 }

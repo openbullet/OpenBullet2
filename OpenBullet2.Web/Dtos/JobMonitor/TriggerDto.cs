@@ -1,5 +1,6 @@
 ﻿using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Jobs;
+using RuriLib.Models.Jobs.Monitor.Triggers;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -14,7 +15,9 @@ public class TriggerDto : PolyDto
 /// <summary>
 /// Job status trigger DTO.
 /// </summary>
-[PolyType("jobStatus")]
+[PolyType("jobStatusTrigger")]
+[MapsFrom(typeof(JobStatusTrigger))]
+[MapsTo(typeof(JobStatusTrigger))]
 public class JobStatusTriggerDto : TriggerDto
 {
     /// <summary>

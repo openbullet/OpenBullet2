@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace OpenBullet2.Web.Attributes;
+﻿namespace OpenBullet2.Web.Attributes;
 
 /// <summary>
 /// Used to decorate a class derived from another class
