@@ -6,6 +6,7 @@ using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
+using OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
@@ -21,6 +22,7 @@ using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.Keycheck;
+using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Configs;
@@ -267,6 +269,17 @@ internal class AutoMapperProfile : Profile
         CreateMap<MultipartRequestParams, MultipartRequestParamsDto>()
             .ForMember(dto => dto.Contents, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Contents, ctx.Mapper)));
+
+        // Descriptors
+        CreateMap<BlockDescriptor, BlockDescriptorDto>()
+            .ForMember(dto => dto.Parameters, e => e.MapFrom(
+                (s, d, i, ctx) => s.Parameters.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => PolyMapper.MapFrom(kvp.Value, ctx.Mapper))));
+
+        CreateMap<BlockCategory, BlockCategoryDto>();
+        CreateMap<EnumParameter, EnumBlockParameterDto>()
+            .ForMember(dto => dto.Type, e => e.MapFrom(s => s.EnumType.Name));
     }
 
     private static object MapBlockSettingValue(BlockSetting setting)

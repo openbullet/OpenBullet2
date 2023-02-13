@@ -1,6 +1,5 @@
 ﻿using RuriLib.Extensions;
 using RuriLib.Models.Blocks.Settings;
-using RuriLib.Models.Variables;
 using System;
 
 namespace RuriLib.Models.Blocks.Parameters
@@ -13,7 +12,6 @@ namespace RuriLib.Models.Blocks.Parameters
         public string Description { get; set; } = null;
         public SettingInputMode InputMode { get; set; } = SettingInputMode.Fixed;
         public string DefaultVariableName { get; set; } = string.Empty;
-        public string Type => GetType().Name;
 
         public virtual BlockSetting ToBlockSetting()
              => throw new NotImplementedException();

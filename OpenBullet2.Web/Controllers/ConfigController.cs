@@ -361,6 +361,18 @@ public class ConfigController : ApiController
         };
     }
 
+    /// <summary>
+    /// Get the descriptors of all the available blocks.
+    /// </summary>
+    /// <returns></returns>
+    [Admin]
+    [HttpGet("block/descriptors")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<Dictionary<string, BlockDescriptorDto>> GetBlockDescriptors()
+        => RuriLib.Globals.DescriptorsRepository.Descriptors.ToDictionary(
+            kvp => kvp.Key,
+            kvp => _mapper.Map<BlockDescriptorDto>(kvp.Value));
+
     private Config GetConfigFromService(string id)
     {
         var config = _configService.Configs.FirstOrDefault(c => c.Id == id);
