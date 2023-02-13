@@ -1,18 +1,15 @@
-﻿using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
+﻿using OpenBullet2.Web.Attributes;
+using RuriLib.Models.Blocks.Custom.HttpRequest;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 
 /// <summary>
 /// DTO that represents raw request params.
 /// </summary>
+[PolyType("rawRequestParams")]
+[MapsFrom(typeof(RawRequestParams))]
 public class RawRequestParamsDto : RequestParamsDto
 {
-    /// <summary></summary>
-    public RawRequestParamsDto()
-    {
-        Type = RequestParamsType.Raw;
-    }
-
     /// <summary>
     /// The request content.
     /// </summary>

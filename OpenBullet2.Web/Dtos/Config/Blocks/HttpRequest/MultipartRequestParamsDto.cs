@@ -1,18 +1,15 @@
-﻿using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
+﻿using OpenBullet2.Web.Attributes;
+using RuriLib.Models.Blocks.Custom.HttpRequest;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 
 /// <summary>
 /// DTO that represents standard request params.
 /// </summary>
+[PolyType("multipartRequestParams")]
+[MapsFrom(typeof(MultipartRequestParams), autoMap: false)]
 public class MultipartRequestParamsDto : RequestParamsDto
 {
-    /// <summary></summary>
-    public MultipartRequestParamsDto()
-    {
-        Type = RequestParamsType.Multipart;
-    }
-
     /// <summary>
     /// The multipart contents.
     /// </summary>

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using OpenBullet2.Web.Dtos;
-using OpenBullet2.Web.Dtos.JobMonitor;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -17,24 +16,56 @@ static internal class PolyMapper
         }
     };
 
-    static internal List<object> MapFrom<T>(
+    static internal object? MapFrom<T>(
+        T item, IRuntimeMapper mapper)
+    {
+        if (item is null)
+        {
+            return null;
+        }
+
+        var type = item.GetType();
+        var mappedType = PolyDtoCache.GetMapping(type);
+        var mapped = (PolyDto)mapper.Map(item, type, mappedType);
+
+        mapped.PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType(
+            mapped.GetType()) ?? string.Empty;
+
+        return mapped;
+    }
+
+    static internal List<object> MapAllFrom<T>(
         IEnumerable<T> list, IRuntimeMapper mapper) where T : notnull
     {
         var mappedList = new List<object>();
 
         foreach (var item in list)
         {
-            var type = item.GetType();
-            var mappedType = PolyDtoCache.GetMapping(type);
-            var mapped = (PolyDto)mapper.Map(item, type, mappedType);
-
-            mapped.PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType(
-                mapped.GetType()) ?? string.Empty;
-
-            mappedList.Add(mapped);
+            var mapped = MapFrom(item, mapper);
+            
+            if (mapped is not null)
+            {
+                mappedList.Add(mapped);
+            }
         }
 
         return mappedList;
+    }
+
+    static internal TDest? MapBetween<TSource, TDest>(
+        JsonDocument jsonDocument,
+        IRuntimeMapper mapper) where TSource : PolyDto
+    {
+        var item = ConvertPolyDto<TSource>(jsonDocument);
+
+        if (item is null)
+        {
+            return default;
+        }
+
+        var type = item.GetType();
+        var targetType = PolyDtoCache.GetMapping(type);
+        return (TDest)mapper.Map(item, type, targetType);
     }
 
     static internal List<TDest> MapBetween<TSource, TDest>(
@@ -42,48 +73,18 @@ static internal class PolyMapper
         IRuntimeMapper mapper) where TSource : PolyDto
     {
         var mappedList = new List<TDest>();
-        var list = ConvertPolyDtoList<TSource>(jsonDocuments);
 
-        foreach (var item in list)
+        foreach (var jsonDocument in jsonDocuments)
         {
-            var type = item.GetType();
-            var targetType = PolyDtoCache.GetMapping(type);
-            var mapped = (TDest)mapper.Map(item, type, targetType);
+            var mapped = MapBetween<TSource, TDest>(jsonDocument, mapper);
 
-            mappedList.Add(mapped);
-        }
-
-        return mappedList;
-    }
-
-    private static List<T> ConvertPolyDtoList<T>(
-        IEnumerable<JsonDocument>? list) where T : PolyDto
-    {
-        if (list is null)
-        {
-            return new List<T>();
-        }
-
-        var subTypes = PolyDtoCache.GetSubTypes<T>();
-
-        if (subTypes.Length == 0)
-        {
-            throw new Exception($"No subtypes found for type {typeof(T).FullName}");
-        }
-
-        var items = new List<T>();
-
-        foreach (var jsonDocument in list)
-        {
-            var item = ConvertPolyDto<T>(jsonDocument);
-
-            if (item is not null)
+            if (mapped is not null)
             {
-                items.Add(item);
+                mappedList.Add(mapped);
             }
         }
 
-        return items;
+        return mappedList;
     }
 
     private static T? ConvertPolyDto<T>(
@@ -92,6 +93,13 @@ static internal class PolyMapper
         if (jsonDocument is null)
         {
             return null;
+        }
+
+        var subTypes = PolyDtoCache.GetSubTypes<T>();
+
+        if (subTypes.Length == 0)
+        {
+            throw new Exception($"No subtypes found for type {typeof(T).FullName}");
         }
 
         var polyTypeName = jsonDocument.RootElement

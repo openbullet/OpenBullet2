@@ -12,10 +12,18 @@ public class MapsToAttribute : Attribute
     public Type DestinationType { get; init; }
 
     /// <summary>
-    /// Assigns the given destination type.
+    /// Whether to register a default mapping in <see cref="AutoMapper.Mapper"/>.
     /// </summary>
-    public MapsToAttribute(Type destinationType)
+    public bool AutoMap { get; set; }
+
+    /// <summary>
+    /// Assigns the given destination type. If <paramref name="autoMap"/>
+    /// is <see langword="true"/>, it will also register a default mapping
+    /// in <see cref="AutoMapper.Mapper"/>.
+    /// </summary>
+    public MapsToAttribute(Type destinationType, bool autoMap = true)
     {
         DestinationType = destinationType;
+        AutoMap = autoMap;
     }
 }

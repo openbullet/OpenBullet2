@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Settings;
-using OpenBullet2.Web.Dtos;
+using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
-using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
@@ -21,7 +20,6 @@ using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
-using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
@@ -33,7 +31,7 @@ using RuriLib.Models.Environment;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
-using System.Text.Json;
+using System.Reflection;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -41,6 +39,30 @@ internal class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
+        // Register the auto mappings for DTOs
+        foreach (var type in typeof(AutoMapperProfile).Assembly.GetTypes())
+        {
+            var mapsFromAttributes = type.GetCustomAttributes<MapsFromAttribute>();
+
+            foreach (var mapsFrom in mapsFromAttributes)
+            {
+                if (mapsFrom.AutoMap)
+                {
+                    CreateMap(mapsFrom.SourceType, type);
+                }
+            }
+
+            var mapsToAttributes = type.GetCustomAttributes<MapsToAttribute>();
+
+            foreach (var mapsTo in mapsToAttributes)
+            {
+                if (mapsTo.AutoMap)
+                {
+                    CreateMap(type, mapsTo.DestinationType);
+                }
+            }
+        }
+
         CreateMap<CreateGuestDto, GuestEntity>()
             .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto => 
                 BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.SaltRevision.Revision2B)))
@@ -162,11 +184,12 @@ internal class AutoMapperProfile : Profile
         // (the types must be mapped separately)
         CreateMap(typeof(PagedList<>), typeof(PagedList<>));
 
+        // Triggered Actions
         CreateMap<TriggeredAction, TriggeredActionDto>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
-                (s, d, i, ctx) => PolyMapper.MapFrom(s.Triggers, ctx.Mapper)))
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => PolyMapper.MapFrom(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Actions, ctx.Mapper)));
 
         CreateMap<CreateTriggeredActionDto, TriggeredAction>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
@@ -180,202 +203,7 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.Actions, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, RuriLib.Models.Jobs.Monitor.Actions.Action>(s.Actions, ctx.Mapper)));
 
-        RegisterTriggerMaps();
-        RegisterActionMaps();
-
-        // Ignore the settings since we map them manually later.
-        CreateMap<BlockInstance, BlockInstanceDto>()
-            .IncludeAllDerived();
-
-        CreateMap<AutoBlockInstance, AutoBlockInstanceDto>();
-        CreateMap<ParseBlockInstance, ParseBlockInstanceDto>();
-        CreateMap<ScriptBlockInstance, ScriptBlockInstanceDto>();
-        CreateMap<KeycheckBlockInstance, KeycheckBlockInstanceDto>();
-        CreateMap<HttpRequestBlockInstance, HttpRequestBlockInstanceDto>()
-            .ForMember(dto => dto.RequestParams, e => e.MapFrom(
-                 (s, d, i, ctx) => MapRequestParams(s.RequestParams, ctx.Mapper)));
-        CreateMap<BlockSetting, BlockSettingDto>()
-            .ForMember(dto => dto.FixedSetting, e => e.MapFrom(
-                (s, d, i, ctx) => MapSetting(s.FixedSetting, ctx.Mapper)))
-            .ForMember(dto => dto.InterpolatedSetting, e => e.MapFrom(
-                (s, d, i, ctx) => MapSetting(s.InterpolatedSetting, ctx.Mapper)));
-
-        CreateMap<StringSetting, StringSettingDto>();
-        CreateMap<ListOfStringsSetting, ListOfStringsSettingDto>();
-        CreateMap<IntSetting, IntSettingDto>();
-        CreateMap<FloatSetting, FloatSettingDto>();
-        CreateMap<BoolSetting, BoolSettingDto>();
-        CreateMap<DictionaryOfStringsSetting, DictionaryOfStringsSettingDto>();
-        CreateMap<ByteArraySetting, ByteArraySettingDto>();
-        CreateMap<EnumSetting, EnumSettingDto>();
-
-        CreateMap<InterpolatedStringSetting, InterpolatedStringSettingDto>();
-        CreateMap<InterpolatedListOfStringsSetting, InterpolatedListOfStringsSettingDto>();
-        CreateMap<InterpolatedDictionaryOfStringsSetting, InterpolatedDictionaryOfStringsSettingDto>();
-
-        CreateMap<Keychain, KeychainDto>()
-            .ForMember(dto => dto.Keys, e => e.MapFrom(
-                (s, d, i, ctx) => s.Keys.Select(
-                    k => MapKey(k, ctx.Mapper)).ToList()));
-
-        CreateMap<Key, KeyDto>().IncludeAllDerived();
-        CreateMap<StringKey, StringKeyDto>();
-        CreateMap<IntKey, IntKeyDto>();
-        CreateMap<FloatKey, FloatKeyDto>();
-        CreateMap<ListKey, ListKeyDto>();
-        CreateMap<DictionaryKey, DictionaryKeyDto>();
-        CreateMap<BoolKey, BoolKeyDto>();
-
-        CreateMap<RequestParams, RequestParamsDto>().IncludeAllDerived();
-        CreateMap<StandardRequestParams, StandardRequestParamsDto>();
-        CreateMap<RawRequestParams, RawRequestParamsDto>();
-        CreateMap<BasicAuthRequestParams, BasicAuthRequestParamsDto>();
-        CreateMap<MultipartRequestParams, MultipartRequestParamsDto>()
-            .ForMember(dto => dto.Contents, e => e.MapFrom(
-                (s, d, i, ctx) => s.Contents.Select(
-                    c => MapHttpContentSettingsGroup(c, ctx.Mapper)).ToList()));
-
-        CreateMap<HttpContentSettingsGroup, HttpContentSettingsGroupDto>()
-            .IncludeAllDerived();
-        CreateMap<StringHttpContentSettingsGroup, StringHttpContentSettingsGroupDto>();
-        CreateMap<RawHttpContentSettingsGroup, RawHttpContentSettingsGroupDto>();
-        CreateMap<FileHttpContentSettingsGroup, FileHttpContentSettingsGroupDto>();
-    }
-
-    private static object MapSetting(Setting setting, IRuntimeMapper mapper)
-    {
-        SettingDto mapped = setting switch
-        {
-            StringSetting x => mapper.Map<StringSettingDto>(x),
-            ListOfStringsSetting x => mapper.Map<ListOfStringsSettingDto>(x),
-            IntSetting x => mapper.Map<IntSettingDto>(x),
-            FloatSetting x => mapper.Map<FloatSettingDto>(x),
-            BoolSetting x => mapper.Map<BoolSettingDto>(x),
-            DictionaryOfStringsSetting x => mapper.Map<DictionaryOfStringsSettingDto>(x),
-            ByteArraySetting x => mapper.Map<ByteArraySettingDto>(x),
-            EnumSetting x => mapper.Map<EnumSettingDto>(x),
-            _ => throw new NotImplementedException()
-        };
-
-        return mapped;
-    }
-
-    private static object? MapSetting(InterpolatedSetting setting, IRuntimeMapper mapper)
-    {
-        if (setting is null)
-        {
-            return null;
-        }
-
-        InterpolatedSettingDto mapped = setting switch
-        {
-            InterpolatedStringSetting x => mapper.Map<InterpolatedStringSettingDto>(x),
-            InterpolatedListOfStringsSetting x => mapper.Map<InterpolatedListOfStringsSettingDto>(x),
-            InterpolatedDictionaryOfStringsSetting x => mapper.Map<InterpolatedDictionaryOfStringsSettingDto>(x),
-            _ => throw new NotImplementedException()
-        };
-
-        return mapped;
-    }
-
-    private static object? MapKey(Key key, IRuntimeMapper mapper)
-    {
-        if (key is null)
-        {
-            return null;
-        }
-
-        KeyDto mapped = key switch
-        {
-            StringKey x => mapper.Map<StringKeyDto>(x),
-            IntKey x => mapper.Map<IntKeyDto>(x),
-            FloatKey x => mapper.Map<FloatKeyDto>(x),
-            ListKey x => mapper.Map<ListKeyDto>(x),
-            DictionaryKey x => mapper.Map<DictionaryKeyDto>(x),
-            BoolKey x => mapper.Map<BoolKeyDto>(x),
-            _ => throw new NotImplementedException()
-        };
-
-        return mapped;
-    }
-
-    private static object? MapRequestParams(RequestParams requestParams, IRuntimeMapper mapper)
-    {
-        if (requestParams is null)
-        {
-            return null;
-        }
-
-        RequestParamsDto mapped = requestParams switch
-        {
-            StandardRequestParams x => mapper.Map<StandardRequestParamsDto>(x),
-            RawRequestParams x => mapper.Map<RawRequestParamsDto>(x),
-            BasicAuthRequestParams x => mapper.Map<BasicAuthRequestParamsDto>(x),
-            MultipartRequestParams x => mapper.Map<MultipartRequestParamsDto>(x),
-            _ => throw new NotImplementedException()
-        };
-
-        return mapped;
-    }
-
-    private static object? MapHttpContentSettingsGroup(
-        HttpContentSettingsGroup group, IRuntimeMapper mapper)
-    {
-        if (group is null)
-        {
-            return null;
-        }
-
-        HttpContentSettingsGroupDto mapped = group switch
-        {
-            StringHttpContentSettingsGroup x => mapper.Map<StringHttpContentSettingsGroupDto>(x),
-            RawHttpContentSettingsGroup x => mapper.Map<RawHttpContentSettingsGroupDto>(x),
-            FileHttpContentSettingsGroup x => mapper.Map<FileHttpContentSettingsGroupDto>(x),
-            _ => throw new NotImplementedException()
-        };
-
-        return mapped;
-    }
-
-    private static List<DataRule> MapDataRules(
-        DataRulesDto dto, IRuntimeMapper mapper)
-    {
-        List<DataRule> rules = new();
-        rules.AddRange(mapper.Map<List<SimpleDataRule>>(dto.Simple));
-        rules.AddRange(mapper.Map<List<RegexDataRule>>(dto.Regex));
-        return rules;
-    }
-
-    private static List<ConfigResourceOptions> MapResources(
-        ResourcesDto dto, IRuntimeMapper mapper)
-    {
-        List<ConfigResourceOptions> resources = new();
-        resources.AddRange(mapper.Map<List<LinesFromFileResourceOptions>>(
-            dto.LinesFromFile));
-        resources.AddRange(mapper.Map<List<RandomLinesFromFileResourceOptions>>(
-            dto.RandomLinesFromFile));
-        return resources;
-    }
-
-    private void RegisterTriggerMaps()
-    {
-        CreateMap<JobStatusTriggerDto, JobStatusTrigger>().ReverseMap();
-        CreateMap<JobFinishedTriggerDto, JobFinishedTrigger>().ReverseMap();
-
-        CreateMap<TestedCountTriggerDto, TestedCountTrigger>().ReverseMap();
-        CreateMap<HitCountTriggerDto, HitCountTrigger>().ReverseMap();
-        CreateMap<CustomCountTriggerDto, CustomCountTrigger>().ReverseMap();
-        CreateMap<ToCheckCountTriggerDto, ToCheckCountTrigger>().ReverseMap();
-        CreateMap<FailCountTriggerDto, FailCountTrigger>().ReverseMap();
-        CreateMap<RetryCountTriggerDto, RetryCountTrigger>().ReverseMap();
-        CreateMap<BanCountTriggerDto, BanCountTrigger>().ReverseMap();
-        CreateMap<ErrorCountTriggerDto, ErrorCountTrigger>().ReverseMap();
-        CreateMap<AliveProxiesCountTriggerDto, AliveProxiesCountTrigger>().ReverseMap();
-        CreateMap<BannedProxiesCountTriggerDto, BannedProxiesCountTrigger>().ReverseMap();
-        CreateMap<CPMTriggerDto, CPMTrigger>().ReverseMap();
-        CreateMap<CaptchaCreditTriggerDto, CaptchaCreditTrigger>().ReverseMap();
-        CreateMap<ProgressTriggerDto, ProgressTrigger>().ReverseMap();
-        
+        // Triggers
         CreateMap<TimeElapsedTriggerDto, TimeElapsedTrigger>()
             .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
             .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
@@ -395,10 +223,8 @@ internal class AutoMapperProfile : Profile
         CreateMap<TimeRemainingTrigger, TimeRemainingTriggerDto>()
             .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
                 new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
-    }
 
-    private void RegisterActionMaps()
-    {
+        // Actions
         CreateMap<WaitActionDto, WaitAction>()
             .ForMember(t => t.Days, e => e.MapFrom(dto => dto.TimeSpan.Days))
             .ForMember(t => t.Hours, e => e.MapFrom(dto => dto.TimeSpan.Hours))
@@ -419,12 +245,111 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.TimeSpan, e => e.MapFrom(t =>
                 new TimeSpan(t.Days, t.Hours, t.Minutes, t.Seconds)));
 
-        CreateMap<StopJobAction, StopJobActionDto>().ReverseMap();
-        CreateMap<AbortJobAction, AbortJobActionDto>().ReverseMap();
-        CreateMap<StartJobAction, StartJobActionDto>().ReverseMap();
-        CreateMap<DiscordWebhookAction, DiscordWebhookActionDto>().ReverseMap();
-        CreateMap<TelegramBotAction, TelegramBotActionDto>().ReverseMap();
-        CreateMap<SetBotsAction, SetBotsActionDto>().ReverseMap();
-        CreateMap<ReloadProxiesAction, ReloadProxiesActionDto>().ReverseMap();
+        // Blocks
+        CreateMap<BlockInstance, BlockInstanceDto>()
+            .IncludeAllDerived();
+
+        CreateMap<AutoBlockInstance, AutoBlockInstanceDto>();
+        CreateMap<ParseBlockInstance, ParseBlockInstanceDto>();
+        CreateMap<ScriptBlockInstance, ScriptBlockInstanceDto>();
+        CreateMap<KeycheckBlockInstance, KeycheckBlockInstanceDto>();
+        CreateMap<HttpRequestBlockInstance, HttpRequestBlockInstanceDto>()
+            .ForMember(dto => dto.RequestParams, e => e.MapFrom(
+                 (s, d, i, ctx) => PolyMapper.MapFrom(s.RequestParams, ctx.Mapper)));
+        CreateMap<BlockSetting, BlockSettingDto>()
+            .ForMember(dto => dto.Value, e => e.MapFrom(s => MapBlockSettingValue(s)))
+            .ForMember(dto => dto.Type, e => e.MapFrom(s => MapBlockSettingType(s)));
+
+        CreateMap<Keychain, KeychainDto>()
+            .ForMember(dto => dto.Keys, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Keys, ctx.Mapper)));
+
+        CreateMap<MultipartRequestParams, MultipartRequestParamsDto>()
+            .ForMember(dto => dto.Contents, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Contents, ctx.Mapper)));
+    }
+
+    private static object MapBlockSettingValue(BlockSetting setting)
+    {
+        if (setting.InputMode is SettingInputMode.Variable)
+        {
+            return setting.InputVariableName;
+        }
+
+        else if (setting.InputMode is SettingInputMode.Interpolated)
+        {
+            return setting.InterpolatedSetting switch
+            {
+                InterpolatedStringSetting x => x.Value,
+                InterpolatedListOfStringsSetting x => x.Value,
+                InterpolatedDictionaryOfStringsSetting x => x.Value,
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        return setting.FixedSetting switch
+        {
+            StringSetting x => x.Value,
+            IntSetting x => x.Value,
+            FloatSetting x => x.Value,
+            BoolSetting x => x.Value,
+            ByteArraySetting x => x.Value,
+            EnumSetting x => x.Value,
+            ListOfStringsSetting x => x.Value,
+            DictionaryOfStringsSetting x => x.Value,
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    private static BlockSettingType MapBlockSettingType(BlockSetting setting)
+    {
+        if (setting.InputMode is SettingInputMode.Variable)
+        {
+            return BlockSettingType.None;
+        }
+
+        else if (setting.InputMode is SettingInputMode.Interpolated)
+        {
+            return setting.InterpolatedSetting switch
+            {
+                InterpolatedStringSetting => BlockSettingType.String,
+                InterpolatedListOfStringsSetting => BlockSettingType.ListOfStrings,
+                InterpolatedDictionaryOfStringsSetting => BlockSettingType.DictionaryOfStrings,
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        return setting.FixedSetting switch
+        {
+            StringSetting => BlockSettingType.String,
+            IntSetting => BlockSettingType.Int,
+            FloatSetting => BlockSettingType.Float,
+            BoolSetting => BlockSettingType.Bool,
+            ByteArraySetting => BlockSettingType.ByteArray,
+            EnumSetting => BlockSettingType.Enum,
+            ListOfStringsSetting => BlockSettingType.ListOfStrings,
+            DictionaryOfStringsSetting => BlockSettingType.DictionaryOfStrings,
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    private static List<DataRule> MapDataRules(
+        DataRulesDto dto, IRuntimeMapper mapper)
+    {
+        List<DataRule> rules = new();
+        rules.AddRange(mapper.Map<List<SimpleDataRule>>(dto.Simple));
+        rules.AddRange(mapper.Map<List<RegexDataRule>>(dto.Regex));
+        return rules;
+    }
+
+    private static List<ConfigResourceOptions> MapResources(
+        ResourcesDto dto, IRuntimeMapper mapper)
+    {
+        List<ConfigResourceOptions> resources = new();
+        resources.AddRange(mapper.Map<List<LinesFromFileResourceOptions>>(
+            dto.LinesFromFile));
+        resources.AddRange(mapper.Map<List<RandomLinesFromFileResourceOptions>>(
+            dto.RandomLinesFromFile));
+        return resources;
     }
 }

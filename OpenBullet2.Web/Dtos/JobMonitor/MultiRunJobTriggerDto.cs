@@ -205,8 +205,8 @@ public class ProgressTriggerDto : NumComparisonTrigger
 /// Triggers when the elapsed time reaches a given threshold.
 /// </summary>
 [PolyType("timeElapsedTrigger")]
-[MapsFrom(typeof(TimeElapsedTrigger))]
-[MapsTo(typeof(TimeElapsedTrigger))]
+[MapsFrom(typeof(TimeElapsedTrigger), autoMap: false)]
+[MapsTo(typeof(TimeElapsedTrigger), autoMap: false)]
 public class TimeElapsedTriggerDto : TimeComparisonTrigger
 {
 
@@ -216,8 +216,8 @@ public class TimeElapsedTriggerDto : TimeComparisonTrigger
 /// Triggers when the remaining time reaches a given threshold.
 /// </summary>
 [PolyType("timeRemainingTrigger")]
-[MapsFrom(typeof(TimeRemainingTrigger))]
-[MapsTo(typeof(TimeRemainingTrigger))]
+[MapsFrom(typeof(TimeRemainingTrigger), autoMap: false)]
+[MapsTo(typeof(TimeRemainingTrigger), autoMap: false)]
 public class TimeRemainingTriggerDto : TimeComparisonTrigger
 {
     

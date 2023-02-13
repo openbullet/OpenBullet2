@@ -1,5 +1,4 @@
 ﻿using OpenBullet2.Web.Attributes;
-using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
@@ -11,12 +10,6 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 [MapsFrom(typeof(FileHttpContentSettingsGroup))]
 public class FileHttpContentSettingsGroupDto : HttpContentSettingsGroupDto
 {
-    /// <summary></summary>
-    public FileHttpContentSettingsGroupDto()
-    {
-        Type = HttpContentSettingsGroupType.File;
-    }
-
     /// <summary>
     /// The file name.
     /// </summary>

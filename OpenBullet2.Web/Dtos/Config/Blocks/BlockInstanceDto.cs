@@ -1,6 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Config.Blocks.Settings;
-
-namespace OpenBullet2.Web.Dtos.Config.Blocks;
+﻿namespace OpenBullet2.Web.Dtos.Config.Blocks;
 
 /// <summary>
 /// DTO that represents a block instance.

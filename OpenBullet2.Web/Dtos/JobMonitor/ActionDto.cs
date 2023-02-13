@@ -16,8 +16,8 @@ public class ActionDto : PolyDto
 /// the next action in the chain.
 /// </summary>
 [PolyType("waitAction")]
-[MapsFrom(typeof(WaitAction))]
-[MapsTo(typeof(WaitAction))]
+[MapsFrom(typeof(WaitAction), autoMap: false)]
+[MapsTo(typeof(WaitAction), autoMap: false)]
 public class WaitActionDto : ActionDto
 {
     /// <summary>
@@ -30,8 +30,8 @@ public class WaitActionDto : ActionDto
 /// Sets the relative start condition of a job to the given time span.
 /// </summary>
 [PolyType("setRelativeStartConditionAction")]
-[MapsFrom(typeof(SetRelativeStartConditionAction))]
-[MapsTo(typeof(SetRelativeStartConditionAction))]
+[MapsFrom(typeof(SetRelativeStartConditionAction), autoMap: false)]
+[MapsTo(typeof(SetRelativeStartConditionAction), autoMap: false)]
 public class SetRelativeStartConditionActionDto : ActionDto
 {
     /// <summary>
