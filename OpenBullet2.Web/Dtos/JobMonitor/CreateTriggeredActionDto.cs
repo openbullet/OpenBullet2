@@ -37,11 +37,11 @@ public class CreateTriggeredActionDto
     /// All triggers that must be verified at the same time in order
     /// to start the execution of the action.
     /// </summary>
-    public List<JsonDocument> Triggers { get; set; } = new();
+    public List<JsonElement> Triggers { get; set; } = new();
 
     /// <summary>
     /// All actions that will be executed sequentially when the
     /// triggering conditions are verified.
     /// </summary>
-    public List<JsonDocument> Actions { get; set; } = new();
+    public List<JsonElement> Actions { get; set; } = new();
 }

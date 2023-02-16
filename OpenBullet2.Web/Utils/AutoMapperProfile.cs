@@ -21,6 +21,7 @@ using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
+using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Blocks.Settings;
@@ -34,6 +35,7 @@ using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
 using System.Reflection;
+using System.Text.Json;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -255,9 +257,17 @@ internal class AutoMapperProfile : Profile
         CreateMap<ParseBlockInstance, ParseBlockInstanceDto>();
         CreateMap<ScriptBlockInstance, ScriptBlockInstanceDto>();
         CreateMap<KeycheckBlockInstance, KeycheckBlockInstanceDto>();
+        CreateMap<LoliCodeBlockInstance, LoliCodeBlockInstanceDto>();
+
         CreateMap<HttpRequestBlockInstance, HttpRequestBlockInstanceDto>()
             .ForMember(dto => dto.RequestParams, e => e.MapFrom(
                  (s, d, i, ctx) => PolyMapper.MapFrom(s.RequestParams, ctx.Mapper)));
+
+        CreateMap<HttpRequestBlockInstanceDto, HttpRequestBlockInstance>()
+            .ForMember(m => m.RequestParams, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<RequestParamsDto, RequestParams>(
+                    (JsonElement)s.RequestParams!, ctx.Mapper)));
+
         CreateMap<BlockSetting, BlockSettingDto>()
             .ForMember(dto => dto.Value, e => e.MapFrom(s => MapBlockSettingValue(s)))
             .ForMember(dto => dto.Type, e => e.MapFrom(s => MapBlockSettingType(s)));
@@ -265,6 +275,11 @@ internal class AutoMapperProfile : Profile
         CreateMap<Keychain, KeychainDto>()
             .ForMember(dto => dto.Keys, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapAllFrom(s.Keys, ctx.Mapper)));
+
+        CreateMap<KeychainDto, Keychain>()
+            .ForMember(m => m.Keys, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<KeyDto, Key>(
+                    s.Keys.Cast<JsonElement>(), ctx.Mapper)));
 
         CreateMap<MultipartRequestParams, MultipartRequestParamsDto>()
             .ForMember(dto => dto.Contents, e => e.MapFrom(

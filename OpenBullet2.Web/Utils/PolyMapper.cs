@@ -1,21 +1,11 @@
 ﻿using AutoMapper;
 using OpenBullet2.Web.Dtos;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web.Utils;
 
 static internal class PolyMapper
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters =
-        {
-            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-        }
-    };
-
     static internal object? MapFrom<T>(
         T item, IRuntimeMapper mapper)
     {
@@ -53,10 +43,10 @@ static internal class PolyMapper
     }
 
     static internal TDest? MapBetween<TSource, TDest>(
-        JsonDocument jsonDocument,
+        JsonElement jsonElement,
         IRuntimeMapper mapper) where TSource : PolyDto
     {
-        var item = ConvertPolyDto<TSource>(jsonDocument);
+        var item = ConvertPolyDto<TSource>(jsonElement);
 
         if (item is null)
         {
@@ -69,14 +59,14 @@ static internal class PolyMapper
     }
 
     static internal List<TDest> MapBetween<TSource, TDest>(
-        IEnumerable<JsonDocument> jsonDocuments,
+        IEnumerable<JsonElement> jsonElements,
         IRuntimeMapper mapper) where TSource : PolyDto
     {
         var mappedList = new List<TDest>();
 
-        foreach (var jsonDocument in jsonDocuments)
+        foreach (var jsonElement in jsonElements)
         {
-            var mapped = MapBetween<TSource, TDest>(jsonDocument, mapper);
+            var mapped = MapBetween<TSource, TDest>(jsonElement, mapper);
 
             if (mapped is not null)
             {
@@ -87,10 +77,10 @@ static internal class PolyMapper
         return mappedList;
     }
 
-    private static T? ConvertPolyDto<T>(
-        JsonDocument? jsonDocument) where T : PolyDto
+    static internal T? ConvertPolyDto<T>(
+        JsonElement jsonElement) where T : PolyDto
     {
-        if (jsonDocument is null)
+        if (jsonElement.ValueKind is JsonValueKind.Null)
         {
             return null;
         }
@@ -102,7 +92,7 @@ static internal class PolyMapper
             throw new Exception($"No subtypes found for type {typeof(T).FullName}");
         }
 
-        var polyTypeName = jsonDocument.RootElement
+        var polyTypeName = jsonElement
             .GetProperty("_polyTypeName").GetString();
 
         if (polyTypeName is null)
@@ -118,6 +108,6 @@ static internal class PolyMapper
             throw new Exception($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
         }
 
-        return (T?)jsonDocument.Deserialize(subType, _jsonOptions);
+        return (T?)JsonSerializer.Deserialize(jsonElement, subType, Globals.JsonOptions);
     }
 }

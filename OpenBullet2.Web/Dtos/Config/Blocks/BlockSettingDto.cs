@@ -8,15 +8,20 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks;
 public class BlockSettingDto
 {
     /// <summary>
-    /// The input mode of this setting.
+    /// The setting's name.
     /// </summary>
-    public SettingInputMode InputMode { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The value of the setting. Depends on the input mode
     /// and the type of setting.
     /// </summary>
     public object? Value { get; set; }
+
+    /// <summary>
+    /// The input mode of this setting.
+    /// </summary>
+    public SettingInputMode InputMode { get; set; }
 
     /// <summary>
     /// The type of block setting.

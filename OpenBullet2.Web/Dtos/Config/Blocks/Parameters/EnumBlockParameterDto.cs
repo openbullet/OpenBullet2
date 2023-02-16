@@ -11,7 +11,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
 public class EnumBlockParameterDto : BlockParameterDto
 {
     /// <summary>
-    /// The unique enum type.
+    /// The enum type.
     /// </summary>
     public string Type { get; set; } = string.Empty;
 

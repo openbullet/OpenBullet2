@@ -3,7 +3,6 @@ using RuriLib.Extensions;
 using RuriLib.Functions.Conversion;
 using RuriLib.Functions.Crypto;
 using RuriLib.Helpers;
-using RuriLib.Helpers.CSharp;
 using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks.Custom.Script;
 using RuriLib.Models.Configs;

@@ -1,5 +1,5 @@
-﻿using RuriLib.Models.Blocks;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace OpenBullet2.Web.Dtos.Config.Convert;
 
@@ -19,5 +19,5 @@ public class ConvertStackToCSharpDto
     /// The Stack of blocks to convert.
     /// </summary>
     [Required]
-    public List<BlockInstance> Stack { get; set; } = new();
+    public List<JsonElement> Stack { get; set; } = new();
 }

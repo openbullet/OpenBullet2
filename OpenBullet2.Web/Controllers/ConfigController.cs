@@ -334,7 +334,8 @@ public class ConfigController : ApiController
     public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
         ConvertStackToLoliCodeDto dto)
     {
-        var converted = Stack2LoliTranspiler.Transpile(dto.Stack);
+        var mapped = BlockMapper.MapStack(dto.Stack, _mapper);
+        var converted = Stack2LoliTranspiler.Transpile(mapped);
 
         return new ConvertedLoliCodeDto
         {
@@ -352,8 +353,9 @@ public class ConfigController : ApiController
         ConvertStackToCSharpDto dto)
     {
         var config = await _configRepo.Get(dto.ConfigId);
+        var mapped = BlockMapper.MapStack(dto.Stack, _mapper);
         var converted = Stack2CSharpTranspiler
-            .Transpile(dto.Stack, config.Settings);
+            .Transpile(mapped, config.Settings);
 
         return new ConvertedCSharpDto
         {
