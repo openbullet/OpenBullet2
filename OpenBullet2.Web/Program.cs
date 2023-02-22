@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
@@ -10,6 +9,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Middleware;
 using OpenBullet2.Web.Services;
+using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
 using RuriLib.Helpers;
 using RuriLib.Logging;
@@ -37,6 +37,8 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+builder.Services.AddSignalR();
 
 // Swagger with versioning implemented according to this guide
 // https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/
@@ -96,6 +98,7 @@ builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
     "UserData/Logs/Jobs"));
+builder.Services.AddSingleton<ConfigDebuggerService>();
 
 // Hosted Services
 builder.Services.AddHostedService<IUpdateService>(b =>
@@ -116,14 +119,15 @@ app.UseSwaggerUI(options =>
     }
 });
 
-app.UseAuthorization();
-
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthTokenVerificationMiddleware>();
 
-app.MapControllers();
-
 app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<ConfigDebuggerHub>("hubs/config-debugger");
 
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
     ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");

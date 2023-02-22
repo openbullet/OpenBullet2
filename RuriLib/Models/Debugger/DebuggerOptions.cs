@@ -1,5 +1,6 @@
 ﻿using RuriLib.Models.Proxies;
 using RuriLib.Models.Variables;
+using System;
 using System.Collections.Generic;
 
 namespace RuriLib.Models.Debugger
@@ -42,6 +43,7 @@ namespace RuriLib.Models.Debugger
         /// <summary>
         /// The list of variables that were found during the last debug.
         /// </summary>
+        [Obsolete("Move this outside of the options")]
         public List<Variable> Variables { get; set; } = new List<Variable>();
 
         /// <summary>

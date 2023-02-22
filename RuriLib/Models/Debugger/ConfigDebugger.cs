@@ -38,7 +38,7 @@ namespace RuriLib.Models.Debugger
         WaitingForStep
     }
 
-    public class ConfigDebugger
+    public class ConfigDebugger : IDisposable
     {
         public IRandomUAProvider RandomUAProvider { get; set; }
         public IRNGProvider RNGProvider { get; set; }
@@ -47,12 +47,13 @@ namespace RuriLib.Models.Debugger
 
         public ConfigDebuggerStatus Status { get; private set; }
 
+        public Config Config { get; init; }
+        public DebuggerOptions Options { get; init; }
+        public BotLogger Logger { get; init; }
+
         public event EventHandler<ConfigDebuggerStatus> StatusChanged;
         public event EventHandler<BotLoggerEntry> NewLogEntry;
 
-        private readonly Config config;
-        private readonly DebuggerOptions options;
-        private readonly BotLogger logger;
         private BotData data;
         private Stepper stepper;
         private CancellationTokenSource cts;
@@ -61,54 +62,56 @@ namespace RuriLib.Models.Debugger
 
         public ConfigDebugger(Config config, DebuggerOptions options = null, BotLogger logger = null)
         {
-            this.config = config;
-            this.options = options ?? new DebuggerOptions();
-            this.logger = logger ?? new BotLogger();
+            Config = config;
+            Options = options ?? new DebuggerOptions();
+            Logger = logger ?? new BotLogger();
             logger.NewEntry += OnNewEntry;
         }
 
         public async Task Run()
         {
             // Build the C# script if in Stack or LoliCode mode
-            if (config.Mode == ConfigMode.Stack || config.Mode == ConfigMode.LoliCode)
+            if (Config.Mode == ConfigMode.Stack || Config.Mode == ConfigMode.LoliCode)
             {
-                config.CSharpScript = config.Mode == ConfigMode.Stack
-                    ? Stack2CSharpTranspiler.Transpile(config.Stack, config.Settings, options.StepByStep)
-                    : Loli2CSharpTranspiler.Transpile(config.LoliCodeScript, config.Settings, options.StepByStep);
+                Config.CSharpScript = Config.Mode == ConfigMode.Stack
+                    ? Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings, Options.StepByStep)
+                    : Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings, Options.StepByStep);
 
                 // Stacker is not currently available for the startup phase
-                config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(config.StartupLoliCodeScript, config.Settings, options.StepByStep);
+                Config.StartupCSharpScript = Loli2CSharpTranspiler.Transpile(Config.StartupLoliCodeScript, Config.Settings, Options.StepByStep);
             }
 
-            if (options.UseProxy && !options.TestProxy.Contains(':'))
+            if (Options.UseProxy && !Options.TestProxy.Contains(':'))
             {
-                throw new InvalidProxyException(options.TestProxy);
+                throw new InvalidProxyException(Options.TestProxy);
             }
 
-            if (!options.PersistLog)
+            if (!Options.PersistLog)
             {
-                logger.Clear();
+                Logger.Clear();
             }
 
             // Close any previously opened browsers
             if (lastPuppeteerBrowser != null)
             {
                 await lastPuppeteerBrowser.CloseAsync().ConfigureAwait(false);
+                await lastPuppeteerBrowser.DisposeAsync();
             }
 
             if (lastSeleniumBrowser != null)
             {
                 lastSeleniumBrowser.Quit();
+                lastSeleniumBrowser.Dispose();
             }
 
-            options.Variables.Clear();
+            Options.Variables.Clear();
             Status = ConfigDebuggerStatus.Running;
             cts = new CancellationTokenSource();
             var sw = new Stopwatch();
 
-            var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == options.WordlistType);
-            var dataLine = new DataLine(options.TestData, wordlistType);
-            var proxy = options.UseProxy ? Proxy.Parse(options.TestProxy, options.ProxyType) : null;
+            var wordlistType = RuriLibSettings.Environment.WordlistTypes.First(w => w.Name == Options.WordlistType);
+            var dataLine = new DataLine(Options.TestData, wordlistType);
+            var proxy = Options.UseProxy ? Proxy.Parse(Options.TestProxy, Options.ProxyType) : null;
 
             var providers = new Bots.Providers(RuriLibSettings)
             {
@@ -130,7 +133,7 @@ namespace RuriLib.Models.Debugger
             stepper.WaitingForStep += OnWaitingForStep;
 
             // Build the BotData
-            data = new BotData(providers, config.Settings, logger, dataLine, proxy, options.UseProxy)
+            data = new BotData(providers, Config.Settings, Logger, dataLine, proxy, Options.UseProxy)
             {
                 CancellationToken = cts.Token,
                 Stepper = stepper
@@ -147,25 +150,25 @@ namespace RuriLib.Models.Debugger
             dynamic globals = new ExpandoObject();
 
             var script = new ScriptBuilder()
-                .Build(config.CSharpScript, config.Settings.ScriptSettings, PluginRepo);
+                .Build(Config.CSharpScript, Config.Settings.ScriptSettings, PluginRepo);
 
-            var startupScript = new ScriptBuilder().Build(config.StartupCSharpScript, config.Settings.ScriptSettings, PluginRepo);
+            var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript, Config.Settings.ScriptSettings, PluginRepo);
 
-            logger.Log($"Sliced {dataLine.Data} into:");
+            Logger.Log($"Sliced {dataLine.Data} into:");
             foreach (var slice in dataLine.GetVariables())
             {
                 var sliceValue = data.ConfigSettings.DataSettings.UrlEncodeDataAfterSlicing
                     ? Uri.EscapeDataString(slice.AsString())
                     : slice.AsString();
 
-                logger.Log($"{slice.Name}: {sliceValue}");
+                Logger.Log($"{slice.Name}: {sliceValue}");
             }
 
             // Initialize resources
             Dictionary<string, ConfigResource> resources = new();
 
             // Resources will need to be disposed of
-            foreach (var opt in config.Settings.DataSettings.Resources)
+            foreach (var opt in Config.Settings.DataSettings.Resources)
             {
                 try
                 {
@@ -178,7 +181,7 @@ namespace RuriLib.Models.Debugger
                 }
                 catch
                 {
-                    logger.Log($"Could not create resource {opt.Name}", LogColors.Tomato);
+                    Logger.Log($"Could not create resource {opt.Name}", LogColors.Tomato);
                 }
             }
 
@@ -187,13 +190,13 @@ namespace RuriLib.Models.Debugger
             var scriptGlobals = new ScriptGlobals(data, globals);
 
             // Set custom inputs
-            foreach (var input in config.Settings.InputSettings.CustomInputs)
+            foreach (var input in Config.Settings.InputSettings.CustomInputs)
             {
                 (scriptGlobals.input as IDictionary<string, object>).Add(input.VariableName, input.DefaultAnswer);
             }
 
             // [LEGACY] Set up the VariablesList
-            if (config.Mode == ConfigMode.Legacy)
+            if (Config.Mode == ConfigMode.Legacy)
             {
                 var slices = new List<Variable>();
 
@@ -208,7 +211,7 @@ namespace RuriLib.Models.Debugger
 
                 var legacyVariables = new VariablesList(slices);
 
-                foreach (var input in config.Settings.InputSettings.CustomInputs)
+                foreach (var input in Config.Settings.InputSettings.CustomInputs)
                 {
                     legacyVariables.Set(new StringVariable(input.DefaultAnswer) { Name = input.VariableName });
                 }
@@ -221,26 +224,26 @@ namespace RuriLib.Models.Debugger
                 sw.Start();
                 StatusChanged?.Invoke(this, ConfigDebuggerStatus.Running);
 
-                if (config.Mode != ConfigMode.Legacy)
+                if (Config.Mode != ConfigMode.Legacy)
                 {
                     // If the startup script is not empty, execute it
-                    if (!string.IsNullOrWhiteSpace(config.StartupCSharpScript))
+                    if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
                     {
                         // This data is temporary and will not be persisted to the bots, it is
                         // only used in this context to be able to use variables e.g. data.SOURCE
                         // and other things like providers, settings, logger.
                         // By default it doesn't support proxies.
-                        var startupData = new BotData(providers, config.Settings, logger,
+                        var startupData = new BotData(providers, Config.Settings, Logger,
                             new DataLine(string.Empty, wordlistType), null, false)
                         {
                             CancellationToken = cts.Token,
                             Stepper = stepper
                         };
 
-                        logger.Log("Executing startup script...");
+                        Logger.Log("Executing startup script...");
                         var startupGlobals = new ScriptGlobals(startupData, globals);
                         await startupScript.RunAsync(startupGlobals, null, cts.Token).ConfigureAwait(false);
-                        logger.Log("Executing main script...");
+                        Logger.Log("Executing main script...");
                     }
                     
                     var state = await script.RunAsync(scriptGlobals, null, cts.Token).ConfigureAwait(false);
@@ -255,7 +258,7 @@ namespace RuriLib.Models.Debugger
                             {
                                 var variable = DescriptorsRepository.ToVariable(scriptVar.Name, scriptVar.Type, scriptVar.Value);
                                 variable.MarkedForCapture = data.MarkedForCapture.Contains(scriptVar.Name);
-                                options.Variables.Add(variable);
+                                Options.Variables.Add(variable);
                             }
                         }
                         catch
@@ -268,7 +271,7 @@ namespace RuriLib.Models.Debugger
                 else
                 {
                     // [LEGACY] Run the LoliScript in the old way
-                    var loliScript = new LoliScript(config.LoliScript);
+                    var loliScript = new LoliScript(Config.LoliScript);
                     var lsGlobals = new LSGlobals(data);
 
                     do
@@ -280,10 +283,10 @@ namespace RuriLib.Models.Debugger
 
                         await loliScript.TakeStep(lsGlobals).ConfigureAwait(false);
 
-                        options.Variables.Clear();
+                        Options.Variables.Clear();
                         var legacyVariables = data.TryGetObject<VariablesList>("legacyVariables");
-                        options.Variables.AddRange(legacyVariables.Variables);
-                        options.Variables.AddRange(lsGlobals.Globals.Variables);
+                        Options.Variables.AddRange(legacyVariables.Variables);
+                        Options.Variables.AddRange(lsGlobals.Globals.Variables);
                     }
                     while (loliScript.CanProceed);
                 }
@@ -291,7 +294,7 @@ namespace RuriLib.Models.Debugger
             catch (OperationCanceledException)
             {
                 data.STATUS = "ERROR";
-                logger.Log($"Operation canceled", LogColors.Tomato);
+                Logger.Log($"Operation canceled", LogColors.Tomato);
             }
             catch (Exception ex)
             {
@@ -301,7 +304,7 @@ namespace RuriLib.Models.Debugger
                     ? ex.ToString()
                     : ex.Message;
 
-                logger.Log($"[{data.ExecutionInfo}] {ex.GetType().Name}: {logErrorMessage}", LogColors.Tomato);
+                Logger.Log($"[{data.ExecutionInfo}] {ex.GetType().Name}: {logErrorMessage}", LogColors.Tomato);
                 Status = ConfigDebuggerStatus.Idle;
                 throw;
             }
@@ -309,7 +312,7 @@ namespace RuriLib.Models.Debugger
             {
                 sw.Stop();
 
-                logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
+                Logger.Log($"BOT ENDED AFTER {sw.ElapsedMilliseconds} ms WITH STATUS: {data.STATUS}");
 
                 // Save the browsers for later use
                 lastPuppeteerBrowser = data.TryGetObject<Browser>("puppeteer");
@@ -354,6 +357,23 @@ namespace RuriLib.Models.Debugger
         {
             Status = ConfigDebuggerStatus.WaitingForStep;
             StatusChanged?.Invoke(this, ConfigDebuggerStatus.WaitingForStep);
+        }
+
+
+
+        public void Dispose()
+        {
+            Logger.NewEntry -= OnNewEntry;
+
+            if (stepper is not null)
+            {
+                stepper.WaitingForStep -= OnWaitingForStep;
+            }
+
+            lastPuppeteerBrowser?.Dispose();
+            lastSeleniumBrowser?.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }
