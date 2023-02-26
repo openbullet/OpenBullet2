@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
-using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
-using OpenBullet2.Web.Utils;
-using RuriLib.Logging;
 using RuriLib.Models.Debugger;
-using RuriLib.Models.Variables;
 
 namespace OpenBullet2.Web.SignalR;
+
+// NOTE: Hubs are short lived and are disposed after every invocation.
 
 /// <summary>
 /// SignalR hub for the config debugger.
@@ -19,12 +17,6 @@ public class ConfigDebuggerHub : AuthorizedHub
     private readonly ConfigDebuggerService _debuggerService;
     private readonly ILogger<ConfigDebuggerHub> _logger;
     private readonly IMapper _mapper;
-    private ConfigDebugger? _debugger;
-    private string _configId = string.Empty;
-
-    // Event handlers
-    private readonly EventHandler<BotLoggerEntry> _onNewLog;
-    private readonly EventHandler<ConfigDebuggerStatus> _onStatusChanged;
 
     /// <summary></summary>
     public ConfigDebuggerHub(ConfigDebuggerService debuggerService,
@@ -36,16 +28,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         _logger = logger;
         _mapper = mapper;
 
-        // Create the event handlers
-        _onNewLog = EventHandlers.TryAsync<BotLoggerEntry>(
-            OnNewLogEntry,
-            BroadcastError
-        );
-
-        _onStatusChanged = EventHandlers.TryAsync<ConfigDebuggerStatus>(
-            OnStatusChanged,
-            BroadcastError
-        );
+        
     }
 
     /// <inheritdoc/>
@@ -53,212 +36,123 @@ public class ConfigDebuggerHub : AuthorizedHub
     {
         await base.OnConnectedAsync();
 
-        // Read the id of the config that is being debugged
-        var request = Context.GetHttpContext()!.Request;
-        var configId = request.Query["configId"].FirstOrDefault();
+        var configId = GetConfigId();
 
         if (configId is null)
         {
             throw new Exception("Please specify a config id");
         }
 
-        _configId = configId;
+        _debuggerService.RegisterConnection(Context.ConnectionId, configId);
+    }
 
-        // Try to get an existing debugger
-        _debugger = _debuggerService.TryGet(_configId);
+    /// <inheritdoc/>
+    public async override Task OnDisconnectedAsync(Exception? exception)
+    {
+        await base.OnDisconnectedAsync(exception);
 
-        // If there is none, just return
-        if (_debugger is null)
-        {
-            return;
-        }
+        var configId = GetConfigId();
 
-        // Otherwise, hook the event listeners
-        _debugger.NewLogEntry += _onNewLog;
-        _debugger.StatusChanged += _onStatusChanged;
+        _debuggerService.UnregisterConnection(Context.ConnectionId, configId!);
     }
 
     /// <summary>
     /// Start the debugger with the given options.
     /// </summary>
-    public async Task Start(DbgStartRequestDto dto)
-    {
-        // We don't need to unsubscribe here since the publisher
-        // will get GC'd
-        _debugger = _debuggerService.CreateNew(
-            _configId,
-            new DebuggerOptions
-            {
-                PersistLog = dto.PersistLog
-            }
+    [HubMethodName("start")]
+    public void Start(DbgStartRequestDto dto) => _debuggerService.StartNew(
+            GetConfigId()!,
+            _mapper.Map<DebuggerOptions>(dto)
         );
-
-        // Hook the event listeners to the new debugger
-        _debugger.NewLogEntry += _onNewLog;
-        _debugger.StatusChanged += _onStatusChanged;
-
-        // Fire and forget
-        _ = Task.Run(async () =>
-        {
-            // Wrap everything inside a try/catch so we don't
-            // lose the exceptions.
-            try
-            {
-                await _debugger.Run();
-            }
-            catch (Exception ex)
-            {
-                var message = new DbgErrorMessage
-                {
-                    Type = ex.GetType().Name,
-                    Message = ex.Message,
-                    StackTrace = ex.ToString()
-                };
-                await Clients.All.SendAsync(Methods.Error, message);
-            }
-        });
-    }
 
     /// <summary>
     /// Stop the debugger.
     /// </summary>
-    public Task Stop()
+    [HubMethodName("stop")]
+    public async Task Stop()
     {
-        if (_debugger is null)
+        var debugger = _debuggerService.TryGet(GetConfigId()!)!;
+
+        if (debugger.Status is ConfigDebuggerStatus.Idle)
         {
-            throw new Exception("Start the debugger first");
+            await Clients.Caller.SendAsync(
+                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                {
+                    Type = "Invalid operation",
+                    Message = "The debugger is not running"
+                });
+
+            return;
         }
 
-        if (_debugger.Status is ConfigDebuggerStatus.Idle)
-        {
-            throw new Exception("The debugger is not running");
-        }
-
-        _debugger.Stop();
-        return Task.CompletedTask;
+        debugger.Stop();
     }
 
     /// <summary>
     /// Take a step in step-by-step mode.
     /// </summary>
-    public Task TakeStep()
+    [HubMethodName("takeStep")]
+    public async Task TakeStep()
     {
-        if (_debugger is null)
+        var debugger = _debuggerService.TryGet(GetConfigId()!)!;
+
+        if (!debugger.Options.StepByStep)
         {
-            throw new Exception("Start the debugger first");
+            await Clients.Caller.SendAsync(
+                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                {
+                    Type = "Invalid operation",
+                    Message = "The debugger is not in step by step mode"
+                });
+
+            return;
         }
 
-        if (_debugger.Status is not ConfigDebuggerStatus.WaitingForStep)
+        if (debugger.Status is not ConfigDebuggerStatus.WaitingForStep)
         {
-            throw new Exception("The debugger is not waiting for a step");
+            await Clients.Caller.SendAsync(
+                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                {
+                    Type = "Invalid operation",
+                    Message = "The debugger is not waiting for a step"
+                });
+
+            return;
         }
 
-        if (!_debugger.Options.StepByStep)
-        {
-            throw new Exception("The debugger is not in step by step mode");
-        }
-
-        _debugger.TryTakeStep();
-        return Task.CompletedTask;
+        debugger.TryTakeStep();
     }
 
     /// <summary>
     /// Get the state of the debugger.
     /// </summary>
+    [HubMethodName("getState")]
     public async Task GetState()
     {
         DbgStateDto? state = null;
 
         // Try to get an existing debugger
-        _debugger = _debuggerService.TryGet(_configId);
+        var debugger = _debuggerService.TryGet(GetConfigId()!);
 
         // If there is a debugger
-        if (_debugger is not null)
+        if (debugger is not null)
         {
             state = new DbgStateDto
             {
-                Log = _debugger.Logger.Entries,
-                Status = _debugger.Status,
-                Variables = _debugger.Options.Variables.Select(MapVariable)
+                Log = debugger.Logger.Entries,
+                Status = debugger.Status,
+                Variables = debugger.Options.Variables.Select(
+                    ConfigDebuggerService.MapVariable)
             };
         }
 
-        await Clients.All.SendAsync(Methods.DebuggerState, state);
+        await Clients.Caller.SendAsync(
+            ConfigDebuggerMethods.DebuggerState, state);
     }
 
-    private async Task OnNewLogEntry(object? sender, BotLoggerEntry e)
+    private string? GetConfigId()
     {
-        var message = new DbgNewLogMessage
-        {
-            NewMessage = e
-        };
-
-        // Broadcast
-        await Clients.All.SendAsync(Methods.NewLogEntry, message);
-    }
-
-    private async Task OnStatusChanged(object? sender, ConfigDebuggerStatus e)
-    {
-        var message = new DbgStatusChangedMessage
-        {
-            NewStatus = e
-        };
-
-        // Broadcast
-        await Clients.All.SendAsync(Methods.StatusChanged, message);
-
-        // Right now, only when the status goes back to idle, we
-        // update the variables.
-        // TODO: In the future it would be nice to update them more often.
-        var varMessage = new DbgVariablesChangedMessage
-        {
-            Variables = (sender as ConfigDebugger)!.Options.Variables.Select(MapVariable)
-        };
-
-        // Broadcast
-        await Clients.All.SendAsync(Methods.VariablesChanged, varMessage);
-    }
-
-    private void BroadcastError(Exception ex)
-        => _logger.LogError(ex, "Error while broadcasting message to clients");
-
-    private static VariableDto MapVariable(Variable v)
-        => new()
-        {
-            Name = v.Name,
-            MarkedForCapture = v.MarkedForCapture,
-            Type = v.Type,
-            Value = v switch
-            {
-                StringVariable x => x.AsString(),
-                IntVariable x => x.AsInt(),
-                FloatVariable x => x.AsFloat(),
-                ListOfStringsVariable x => x.AsListOfStrings(),
-                DictionaryOfStringsVariable x => x.AsDictionaryOfStrings(),
-                BoolVariable x => x.AsBool(),
-                ByteArrayVariable x => x.AsByteArray(),
-                _ => throw new NotImplementedException()
-            }
-        };
-
-    /// <inheritdoc/>
-    protected override void Dispose(bool disposing)
-    {
-        if (_debugger is not null)
-        {
-            _debugger.NewLogEntry -= _onNewLog;
-            _debugger.StatusChanged -= _onStatusChanged;
-        }
-
-        base.Dispose(disposing);
-    }
-
-    private class Methods
-    {
-        public const string NewLogEntry = "newLogEntry";
-        public const string DebuggerState = "debuggerState";
-        public const string StatusChanged = "statusChanged";
-        public const string VariablesChanged = "variablesChanged";
-        public const string Error = "error";
+        var request = Context.GetHttpContext()!.Request;
+        return request.Query["configId"].FirstOrDefault();
     }
 }

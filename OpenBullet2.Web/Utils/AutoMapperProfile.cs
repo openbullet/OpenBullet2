@@ -299,7 +299,7 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.Type, e => e.MapFrom(s => s.EnumType.Name));
 
         // Hub messages
-        CreateMap<DebuggerOptions, DbgStartRequestDto>();
+        CreateMap<DbgStartRequestDto, DebuggerOptions>();
     }
 
     private static object MapBlockSettingValue(BlockSetting setting)

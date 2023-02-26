@@ -65,7 +65,7 @@ namespace RuriLib.Models.Debugger
             Config = config;
             Options = options ?? new DebuggerOptions();
             Logger = logger ?? new BotLogger();
-            logger.NewEntry += OnNewEntry;
+            Logger.NewEntry += OnNewEntry;
         }
 
         public async Task Run()

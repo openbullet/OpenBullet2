@@ -38,7 +38,13 @@ builder.Services.AddControllers()
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        var enumConverter = new JsonStringEnumConverter(JsonNamingPolicy.CamelCase);
+        options.PayloadSerializerOptions.Converters.Add(enumConverter);
+    });
 
 // Swagger with versioning implemented according to this guide
 // https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/

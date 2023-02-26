@@ -1,5 +1,11 @@
-﻿using OpenBullet2.Core.Services;
+﻿using Microsoft.AspNetCore.SignalR;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.ConfigDebugger;
+using OpenBullet2.Web.SignalR;
+using OpenBullet2.Web.Utils;
+using RuriLib.Logging;
 using RuriLib.Models.Debugger;
+using RuriLib.Models.Variables;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
@@ -11,25 +17,150 @@ namespace OpenBullet2.Web.Services;
 /// This holds 1 instance for each config.
 /// </summary>
 public class ConfigDebuggerService : IDisposable
-{
-    private readonly Dictionary<string, ConfigDebugger> _debuggers = new();
+{   
     private readonly PluginRepository _pluginRepo;
     private readonly IRandomUAProvider _randomUAProvider;
     private readonly IRNGProvider _rngProvider;
     private readonly RuriLibSettingsService _rlSettingsService;
     private readonly ConfigService _configService;
+    private readonly IHubContext<ConfigDebuggerHub> _hub;
+    private readonly ILogger<ConfigDebuggerService> _logger;
+
+    // Maps config IDs to debuggers
+    private readonly Dictionary<string, ConfigDebugger> _debuggers = new();
+
+    // Maps debuggers to connections
+    private readonly Dictionary<ConfigDebugger, List<string>> _connections = new();
+
+    // Event handlers
+    private readonly EventHandler<BotLoggerEntry> _onNewLog;
+    private readonly EventHandler<ConfigDebuggerStatus> _onStatusChanged;
 
     /// <summary></summary>
     public ConfigDebuggerService(PluginRepository pluginRepo,
         IRandomUAProvider randomUAProvider, IRNGProvider rngProvider,
-        RuriLibSettingsService rlSettingsService, ConfigService configService)
+        RuriLibSettingsService rlSettingsService, ConfigService configService,
+        IHubContext<ConfigDebuggerHub> hub, ILogger<ConfigDebuggerService> logger)
     {
         _pluginRepo = pluginRepo;
         _randomUAProvider = randomUAProvider;
         _rngProvider = rngProvider;
         _rlSettingsService = rlSettingsService;
         _configService = configService;
+        _hub = hub;
+        _logger = logger;
+
+        // Create the event handlers
+        _onNewLog = EventHandlers.TryAsync<BotLoggerEntry>(
+            OnNewLogEntry,
+            SendError
+        );
+
+        _onStatusChanged = EventHandlers.TryAsync<ConfigDebuggerStatus>(
+            OnStatusChanged,
+            SendError
+        );
     }
+
+    /// <summary>
+    /// Registers a new connection, a.k.a. a debugging session started
+    /// by a given client for a given config.
+    /// </summary>
+    public void RegisterConnection(string connectionId, string configId)
+    {
+        // If we don't already have a debugger for this config, create one
+        if(!_debuggers.TryGetValue(configId, out var debugger))
+        {
+            var config = _configService.Configs.FirstOrDefault(c => c.Id == configId);
+            debugger = new ConfigDebugger(config);
+            _debuggers[configId] = debugger;
+            _connections[debugger] = new();
+
+            // Hook the events to the newly created debugger
+            debugger.NewLogEntry += _onNewLog;
+            debugger.StatusChanged += _onStatusChanged;
+        }
+
+        // Add the connection to the list
+        _connections[debugger].Add(connectionId);
+
+        _logger.LogDebug($"Registered new connection {connectionId} for debugger of config {configId}");
+    }
+
+    /// <summary>
+    /// Unregisters an existing connection.
+    /// </summary>
+    public void UnregisterConnection(string connectionId, string configId)
+    {
+        if (_debuggers.TryGetValue(configId, out var debugger))
+        {
+            _connections[debugger].Remove(connectionId);
+        }
+
+        _logger.LogDebug($"Unregistered connection {connectionId} for debugger of config {configId}");
+    }
+
+    private async Task OnNewLogEntry(object? sender, BotLoggerEntry e)
+    {
+        var message = new DbgNewLogMessage
+        {
+            NewMessage = e
+        };
+
+        var debugger = (sender as ConfigDebugger);
+
+        await _hub.Clients.Clients(_connections[debugger!]).SendAsync(
+            ConfigDebuggerMethods.NewLogEntry, message);
+    }
+
+    private async Task OnStatusChanged(object? sender, ConfigDebuggerStatus e)
+    {
+        var message = new DbgStatusChangedMessage
+        {
+            NewStatus = e
+        };
+
+        var debugger = (sender as ConfigDebugger);
+
+        await _hub.Clients.Clients(_connections[debugger!]).SendAsync(
+            ConfigDebuggerMethods.StatusChanged, message);
+
+        // Right now, only when the status goes back to idle, we
+        // update the variables.
+        // TODO: In the future it would be nice to update them more often.
+        var varMessage = new DbgVariablesChangedMessage
+        {
+            Variables = (sender as ConfigDebugger)!.Options.Variables.Select(MapVariable)
+        };
+
+        await _hub.Clients.Clients(_connections[debugger!]).SendAsync(
+            ConfigDebuggerMethods.VariablesChanged, varMessage);
+    }
+
+    private void SendError(Exception ex)
+        => _logger.LogError(ex, "Error while sending message to the client");
+
+    /// <summary>
+    /// Maps a <see cref="Variable"/> to a <see cref="VariableDto"/>.
+    /// </summary>
+    public static VariableDto MapVariable(Variable v)
+        => new()
+        {
+            Name = v.Name,
+            MarkedForCapture = v.MarkedForCapture,
+            Type = v.Type,
+            Value = v switch
+            {
+                StringVariable x => x.AsString(),
+                IntVariable x => x.AsInt(),
+                FloatVariable x => x.AsFloat(),
+                ListOfStringsVariable x => x.AsListOfStrings(),
+                DictionaryOfStringsVariable x => x.AsDictionaryOfStrings(),
+                BoolVariable x => x.AsBool(),
+                ByteArrayVariable x => x.AsByteArray(),
+                _ => throw new NotImplementedException()
+            }
+        };
 
     /// <summary>
     /// Gets an existing <see cref="ConfigDebugger"/> for the given
@@ -39,10 +170,42 @@ public class ConfigDebuggerService : IDisposable
         => _debuggers.TryGetValue(configId, out var value) ? value : null;
 
     /// <summary>
-    /// Starts the debugger for the given config with the given options.
+    /// Starts a debugger for the given config with the given options,
+    /// after disposing the previous one (if any).
     /// </summary>
-    public ConfigDebugger CreateNew(string configId, DebuggerOptions options)
+    /// <param name="configId"></param>
+    /// <param name="options"></param>
+    public void StartNew(string configId, DebuggerOptions options)
     {
+        var debugger = CreateNew(configId, options);
+
+        // Fire and forget
+        _ = Task.Run(async () =>
+        {
+            // Wrap everything inside a try/catch so we don't
+            // lose the exceptions.
+            try
+            {
+                await debugger.Run();
+            }
+            catch (Exception ex)
+            {
+                var message = new DbgErrorMessage
+                {
+                    Type = ex.GetType().Name,
+                    Message = ex.Message,
+                    StackTrace = ex.ToString()
+                };
+
+                await _hub.Clients.Clients(_connections[debugger])
+                    .SendAsync(ConfigDebuggerMethods.Error, message);
+            }
+        });
+    }
+
+    private ConfigDebugger CreateNew(string configId, DebuggerOptions options)
+    {
+        // Get the config
         var config = _configService.Configs.FirstOrDefault(c => c.Id == configId);
 
         if (config is null)
@@ -75,6 +238,21 @@ public class ConfigDebuggerService : IDisposable
         };
 
         _debuggers[config.Id] = debugger;
+
+        // Transfer the connections from the old debugger to the new one
+        if (existing is not null && _connections.TryGetValue(existing, out var connections))
+        {
+            _connections[debugger] = connections;
+            _connections.Remove(existing);
+        }
+        else
+        {
+            _connections[debugger] = new();
+        }
+
+        // Hook the events to the newly created debugger
+        debugger.NewLogEntry += _onNewLog;
+        debugger.StatusChanged += _onStatusChanged;
 
         return debugger;
     }

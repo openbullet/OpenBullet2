@@ -92,11 +92,12 @@ public class HitController : ApiController
 
     /// <summary>
     /// Download a txt file with one hit per line, containing all hits
-    /// that match the filters, formatted with the provided format. A valid
-    /// format can contain the tags &lt;DATA&gt;, &lt;DATE&gt;, &lt;CATEGORY&gt;,
-    /// &lt;CONFIG&gt;, &lt;PROXY&gt;, &lt;TYPE&gt;, &lt;WORDLIST&gt; and &lt;CAPTURE&gt;,
-    /// which will be replaced with the corresponding fields.
+    /// that match the filters, formatted with the provided format.
     /// </summary>
+    /// <param name="dto"></param>
+    /// <param name="format">
+    /// Check the documentation for a list of valid formats.
+    /// </param>
     [HttpGet("download/many")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DownloadMany(

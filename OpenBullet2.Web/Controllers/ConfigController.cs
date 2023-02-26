@@ -7,18 +7,13 @@ using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
-using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
-using RuriLib.Functions.Files;
 using RuriLib.Helpers;
 using RuriLib.Helpers.Transpilers;
-using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Services;
-using System.Text.Json;
-using static Community.CsharpSqlite.Sqlite3;
 
 namespace OpenBullet2.Web.Controllers;
 

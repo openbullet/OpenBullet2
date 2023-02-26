@@ -35,6 +35,7 @@ internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOption
             var comments = new XPathDocument(xmlDocFile);
             options.OperationFilter<XmlCommentsOperationFilter>(comments);
             options.SchemaFilter<XmlCommentsSchemaFilter>(comments);
+            options.IncludeXmlComments(xmlDocFile);
         }
     }
 
@@ -46,7 +47,7 @@ internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOption
     {
         var info = new OpenApiInfo()
         {
-            Title = "Heroes API",
+            Title = "OpenBullet 2 API",
             Version = description.ApiVersion.ToString()
         };
 
