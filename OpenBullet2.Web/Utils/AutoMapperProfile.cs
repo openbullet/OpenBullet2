@@ -8,6 +8,7 @@ using OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 using OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
 using OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
 using OpenBullet2.Web.Dtos.Config.Settings;
+using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
 using OpenBullet2.Web.Dtos.JobMonitor;
@@ -30,6 +31,7 @@ using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
+using RuriLib.Models.Debugger;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
@@ -295,6 +297,9 @@ internal class AutoMapperProfile : Profile
         CreateMap<BlockCategory, BlockCategoryDto>();
         CreateMap<EnumParameter, EnumBlockParameterDto>()
             .ForMember(dto => dto.Type, e => e.MapFrom(s => s.EnumType.Name));
+
+        // Hub messages
+        CreateMap<DebuggerOptions, DbgStartRequestDto>();
     }
 
     private static object MapBlockSettingValue(BlockSetting setting)

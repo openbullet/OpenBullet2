@@ -127,7 +127,14 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ConfigDebuggerHub>("hubs/config-debugger");
+app.MapHub<ConfigDebuggerHub>("hubs/config-debugger", options =>
+{
+    // Incoming messages <= 1 MB
+    options.ApplicationMaxBufferSize = 1_000_000;
+
+    // Outgoing messages <= 10 MB
+    options.TransportMaxBufferSize = 10_000_000;
+});
 
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
     ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");

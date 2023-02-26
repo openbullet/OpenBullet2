@@ -1,4 +1,4 @@
-﻿using RuriLib.Models.Configs;
+﻿using OpenBullet2.Core.Services;
 using RuriLib.Models.Debugger;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
@@ -17,35 +17,55 @@ public class ConfigDebuggerService : IDisposable
     private readonly IRandomUAProvider _randomUAProvider;
     private readonly IRNGProvider _rngProvider;
     private readonly RuriLibSettingsService _rlSettingsService;
+    private readonly ConfigService _configService;
 
     /// <summary></summary>
     public ConfigDebuggerService(PluginRepository pluginRepo,
         IRandomUAProvider randomUAProvider, IRNGProvider rngProvider,
-        RuriLibSettingsService rlSettingsService)
+        RuriLibSettingsService rlSettingsService, ConfigService configService)
     {
         _pluginRepo = pluginRepo;
         _randomUAProvider = randomUAProvider;
         _rngProvider = rngProvider;
         _rlSettingsService = rlSettingsService;
+        _configService = configService;
     }
 
     /// <summary>
     /// Gets an existing <see cref="ConfigDebugger"/> for the given
-    /// config or creates a new one.
+    /// config or returns null if none was created.
     /// </summary>
-    /// <param name="config"></param>
-    /// <param name="options"></param>
-    /// <returns></returns>
-    public ConfigDebugger Get(Config config, DebuggerOptions options)
+    public ConfigDebugger? TryGet(string configId)
+        => _debuggers.TryGetValue(configId, out var value) ? value : null;
+
+    /// <summary>
+    /// Starts the debugger for the given config with the given options.
+    /// </summary>
+    public ConfigDebugger CreateNew(string configId, DebuggerOptions options)
     {
-        // If we already have a debugger for this config,
-        // return the existing debugger instance.
-        if (_debuggers.ContainsKey(config.Id))
+        var config = _configService.Configs.FirstOrDefault(c => c.Id == configId);
+
+        if (config is null)
         {
-            return _debuggers[config.Id];
+            throw new ArgumentException($"Invalid config id: {configId}");
         }
 
-        // Otherwise, start a brand new one.
+        // If we already have a debugger, we need to dispose it
+        if (_debuggers.TryGetValue(config.Id, out var existing))
+        {
+            // If it's still running we cannot do that
+            if (existing.Status is not ConfigDebuggerStatus.Idle)
+            {
+                throw new Exception("The debugger status is not idle, so it cannot be started");
+            }
+
+            _debuggers.Remove(config.Id);
+
+            // This will also remove all the event listeners
+            existing.Dispose();
+        }
+
+        // Create the new instance
         var debugger = new ConfigDebugger(config, options)
         {
             PluginRepo = _pluginRepo,
@@ -55,6 +75,7 @@ public class ConfigDebuggerService : IDisposable
         };
 
         _debuggers[config.Id] = debugger;
+
         return debugger;
     }
 
