@@ -130,8 +130,7 @@ public class WordlistController : ApiController
         // owner of the wordlist, for access control purposes.
         if (apiUser.Role is UserRole.Guest)
         {
-            var owner = await _guestRepo.Get(apiUser.Id);
-            entity.Owner = owner;
+            entity.Owner = await _guestRepo.Get(apiUser.Id);
         }
 
         await _wordlistRepo.Add(entity);

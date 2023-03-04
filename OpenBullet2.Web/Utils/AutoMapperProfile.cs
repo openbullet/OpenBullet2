@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Config;
@@ -11,6 +13,8 @@ using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
+using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using OpenBullet2.Web.Dtos.JobMonitor;
 using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Dtos.ProxyGroup;
@@ -33,6 +37,7 @@ using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Debugger;
 using RuriLib.Models.Environment;
+using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
@@ -129,6 +134,28 @@ internal class AutoMapperProfile : Profile
         CreateMap<ProxyGroupEntity, ProxyGroupDto>();
         CreateMap<CreateProxyGroupDto, ProxyGroupEntity>();
         CreateMap<UpdateProxyGroupDto, ProxyGroupEntity>();
+
+        CreateMap<MultiRunJob, MultiRunJobOverviewDto>();
+        CreateMap<MultiRunJob, MultiRunJobDto>();
+
+        CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>();
+        CreateMap<ProxyCheckJob, ProxyCheckJobDto>();
+        
+        CreateMap<ProxyCheckTarget, ProxyCheckTargetDto>().ReverseMap();
+        
+        CreateMap<CreateProxyCheckJobDto, ProxyCheckJobOptions>()
+            .ForMember(o => o.CheckOutput, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
+                    (JsonElement)s.CheckOutput!, ctx.Mapper)));
+
+        CreateMap<UpdateProxyCheckJobDto, ProxyCheckJobOptions>()
+            .ForMember(o => o.CheckOutput, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
+                    (JsonElement)s.CheckOutput!, ctx.Mapper)));
+
+        CreateMap<ProxyCheckJobOptions, ProxyCheckJobOptionsDto>()
+            .ForMember(dto => dto.CheckOutput, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.CheckOutput, ctx.Mapper)));
 
         CreateMap<Config, ConfigInfoDto>()
             .ForMember(dto => dto.AllowedWordlistTypes, e => e.MapFrom(c =>

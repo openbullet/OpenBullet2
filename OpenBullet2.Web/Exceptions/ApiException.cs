@@ -101,6 +101,11 @@ public enum ErrorCode
     TRIGGERED_ACTION_NOT_FOUND = 1008,
 
     /// <summary>
+    /// Job not found.
+    /// </summary>
+    JOB_NOT_FOUND = 1009,
+
+    /// <summary>
     /// Endpoint already exists.
     /// </summary>
     ENDPOINT_ALREADY_EXISTS = 1106,
@@ -109,6 +114,16 @@ public enum ErrorCode
     /// The proxy group is being used in a job.
     /// </summary>
     PROXY_GROUP_IN_USE = 2001,
+
+    /// <summary>
+    /// The job is not idle.
+    /// </summary>
+    JOB_NOT_IDLE = 2002,
+
+    /// <summary>
+    /// Invalid job type.
+    /// </summary>
+    INVALID_JOB_TYPE = 3001,
 
     /// <summary>
     /// Action not allowed for a remote config.
