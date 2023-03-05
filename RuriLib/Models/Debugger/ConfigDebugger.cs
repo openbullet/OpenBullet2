@@ -142,7 +142,6 @@ namespace RuriLib.Models.Debugger
             var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
             pco.Module &= ~ModuleOptions.Optimized;
             data.SetObject("ironPyEngine", pyengine);
-            data.AsyncLocker = new();
 
             dynamic globals = new ExpandoObject();
 
@@ -324,8 +323,6 @@ namespace RuriLib.Models.Debugger
                 {
                     resource.Dispose();
                 }
-
-                data.AsyncLocker.Dispose();
             }
 
             Status = ConfigDebuggerStatus.Idle;

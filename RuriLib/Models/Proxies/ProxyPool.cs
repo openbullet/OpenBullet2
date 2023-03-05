@@ -25,7 +25,6 @@ namespace RuriLib.Models.Proxies
 
         private readonly int minBackoff = 5000;
         private readonly int maxReloadTries = 10;
-        private AsyncLocker asyncLocker;
 
         /// <summary>
         /// Initializes the proxy pool given the proxy sources.
@@ -34,7 +33,6 @@ namespace RuriLib.Models.Proxies
         {
             this.sources = sources.ToList();
             this.options = options ?? new ProxyPoolOptions();
-            this.asyncLocker = new();
         }
 
         /// <summary>
@@ -157,13 +155,12 @@ namespace RuriLib.Models.Proxies
                 return;
             }
 
-            try
+            isReloadingProxies = true;
+            using (await AsyncLocker.LockAsync(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false))
             {
-                isReloadingProxies = true;
-                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
                 var currentTry = 0;
                 var currentBackoff = minBackoff;
-                
+
                 // For a maximum of 'maxReloadTries' times
                 while (currentTry < maxReloadTries)
                 {
@@ -180,11 +177,7 @@ namespace RuriLib.Models.Proxies
                     currentTry++;
                     currentBackoff *= 2;
                 }
-            }
-            finally
-            {
                 isReloadingProxies = false;
-                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
             }
         }
 
@@ -239,18 +232,6 @@ namespace RuriLib.Models.Proxies
 
         public void Dispose()
         {
-            if (asyncLocker is not null)
-            {
-                try
-                {
-                    asyncLocker.Dispose();
-                    asyncLocker = null;
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
         }
     }
 }

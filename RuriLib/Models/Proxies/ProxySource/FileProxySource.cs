@@ -11,12 +11,10 @@ namespace RuriLib.Models.Proxies.ProxySources
     public class FileProxySource : ProxySource
     {
         public string FileName { get; set; }
-        private AsyncLocker asyncLocker;
 
         public FileProxySource(string fileName)
         {
             FileName = fileName;
-            asyncLocker = new();
         }
 
         public async override Task<IEnumerable<Proxy>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -29,14 +27,15 @@ namespace RuriLib.Models.Proxies.ProxySources
                 // The file is a script.
                 // We will run the execute and read it's stdout for proxies.
                 // just like raw proxy files, one proxy per line
-                await asyncLocker.Acquire("ProxySourceReloadScriptFile", CancellationToken.None).ConfigureAwait(false);
-                var stdout = await RunScript.RunScriptAndGetStdOut(FileName).ConfigureAwait(false);
-                if (stdout is null)
+                using (await AsyncLocker.LockAsync("ProxySourceReloadScriptFile").ConfigureAwait(false))
                 {
-                    throw new Exception($"Failed to get stdout of {FileName}");
+                    var stdout = await RunScript.RunScriptAndGetStdOut(FileName).ConfigureAwait(false);
+                    if (stdout is null)
+                    {
+                        throw new Exception($"Failed to get stdout of {FileName}");
+                    }
+                    lines = stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries);
                 }
-                lines = stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                asyncLocker.Release("ProxySourceReloadScriptFile");
             }
             else
             {
@@ -50,15 +49,6 @@ namespace RuriLib.Models.Proxies.ProxySources
 
         public override void Dispose()
         {
-            try
-            {
-                asyncLocker.Dispose();
-                asyncLocker = null;
-            }
-            catch
-            {
-                // ignored
-            }
         }
     }
 }
