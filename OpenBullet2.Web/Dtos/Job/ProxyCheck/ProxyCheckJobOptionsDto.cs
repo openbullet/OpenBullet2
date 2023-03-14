@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+﻿namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
 
-namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
-
+/// <summary>
+/// The options of a proxy check job.
+/// </summary>
 public class ProxyCheckJobOptionsDto
 {
     /// <summary>

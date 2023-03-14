@@ -14,5 +14,6 @@ public class PolyDto
     /// The polymorphic type name.
     /// </summary>
     [JsonPropertyName("_polyTypeName")]
+    [JsonPropertyOrder(-1000)]
     public string PolyTypeName { get; set; } = string.Empty;
 }

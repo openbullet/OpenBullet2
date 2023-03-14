@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Models.Settings;
@@ -14,6 +16,7 @@ using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
 using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Dtos.Job.MultiRun;
 using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using OpenBullet2.Web.Dtos.JobMonitor;
 using OpenBullet2.Web.Dtos.Proxy;
@@ -33,6 +36,8 @@ using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
+using RuriLib.Models.Data;
+using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Debugger;
@@ -135,8 +140,7 @@ internal class AutoMapperProfile : Profile
         CreateMap<CreateProxyGroupDto, ProxyGroupEntity>();
         CreateMap<UpdateProxyGroupDto, ProxyGroupEntity>();
 
-        CreateMap<MultiRunJob, MultiRunJobOverviewDto>();
-        CreateMap<MultiRunJob, MultiRunJobDto>();
+        // Multi run job is too complex for the mapper
 
         CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>();
         CreateMap<ProxyCheckJob, ProxyCheckJobDto>();
@@ -148,10 +152,40 @@ internal class AutoMapperProfile : Profile
                 (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
                     (JsonElement)s.CheckOutput!, ctx.Mapper)));
 
+        CreateMap<CreateMultiRunJobDto, MultiRunJobOptions>()
+            .ForMember(o => o.DataPool, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
+                    (JsonElement)s.DataPool!, ctx.Mapper)))
+            .ForMember(o => o.ProxySources, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<ProxySourceOptionsDto, ProxySourceOptions>(
+                    s.ProxySources, ctx.Mapper)))
+            .ForMember(o => o.HitOutputs, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<HitOutputOptionsDto, HitOutputOptions>(
+                    s.HitOutputs, ctx.Mapper)));
+
         CreateMap<UpdateProxyCheckJobDto, ProxyCheckJobOptions>()
             .ForMember(o => o.CheckOutput, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
                     (JsonElement)s.CheckOutput!, ctx.Mapper)));
+
+        CreateMap<UpdateMultiRunJobDto, MultiRunJobOptions>()
+            .ForMember(o => o.DataPool, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<DataPoolOptionsDto, DataPoolOptions>(
+                    (JsonElement)s.DataPool!, ctx.Mapper)))
+            .ForMember(o => o.ProxySources, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<ProxySourceOptionsDto, ProxySourceOptions>(
+                    s.ProxySources, ctx.Mapper)))
+            .ForMember(o => o.HitOutputs, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<HitOutputOptionsDto, HitOutputOptions>(
+                    s.HitOutputs, ctx.Mapper)));
+
+        CreateMap<MultiRunJobOptions, MultiRunJobOptionsDto>()
+            .ForMember(dto => dto.DataPool, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.DataPool, ctx.Mapper)))
+            .ForMember(dto => dto.ProxySources, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.ProxySources, ctx.Mapper)))
+            .ForMember(dto => dto.HitOutputs, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapAllFrom(s.HitOutputs, ctx.Mapper)));
 
         CreateMap<ProxyCheckJobOptions, ProxyCheckJobOptionsDto>()
             .ForMember(dto => dto.CheckOutput, e => e.MapFrom(
