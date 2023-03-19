@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
@@ -27,8 +28,6 @@ public class ConfigDebuggerHub : AuthorizedHub
         _debuggerService = debuggerService;
         _logger = logger;
         _mapper = mapper;
-
-        
     }
 
     /// <inheritdoc/>
@@ -76,7 +75,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is ConfigDebuggerStatus.Idle)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                ConfigDebuggerMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not running"
@@ -99,7 +98,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (!debugger.Options.StepByStep)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                ConfigDebuggerMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not in step by step mode"
@@ -111,7 +110,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is not ConfigDebuggerStatus.WaitingForStep)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new DbgErrorMessage
+                ConfigDebuggerMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not waiting for a step"

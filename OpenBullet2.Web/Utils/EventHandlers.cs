@@ -30,4 +30,21 @@ static internal class EventHandlers
             }
         });
     }
+
+    public static EventHandler TryAsync(
+        Func<object?, EventArgs, Task> callback,
+        Func<Exception, Task> errorHandler)
+    {
+        return new EventHandler(async (object? s, EventArgs e) =>
+        {
+            try
+            {
+                await callback.Invoke(s, e);
+            }
+            catch (Exception ex)
+            {
+                await errorHandler.Invoke(ex);
+            }
+        });
+    }
 }

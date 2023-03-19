@@ -25,7 +25,7 @@ namespace RuriLib.Models.Jobs
         public string SuccessKey { get; set; } = "title>Google";
         public IEnumerable<Proxy> Proxies { get; set; }
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(10);
-        public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
+        public TimeSpan TickInterval = TimeSpan.FromSeconds(1);
         public IProxyCheckOutput ProxyOutput { get; set; }
         public IProxyGeolocationProvider GeoProvider { get; set; }
 

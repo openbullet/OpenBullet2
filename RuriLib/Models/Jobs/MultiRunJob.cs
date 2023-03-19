@@ -54,7 +54,7 @@ namespace RuriLib.Models.Jobs
         public TimeSpan PeriodicReloadInterval { get; set; } = TimeSpan.Zero;
         public List<IHitOutput> HitOutputs { get; set; } = new List<IHitOutput>();
         public Bots.Providers Providers { get; set; }
-        public TimeSpan TickInterval = TimeSpan.FromMinutes(1);
+        public TimeSpan TickInterval = TimeSpan.FromSeconds(1);
         public Dictionary<string, string> CustomInputsAnswers { get; set; } = new Dictionary<string, string>();
         public BotData[] CurrentBotDatas { get; set; }
 

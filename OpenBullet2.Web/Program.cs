@@ -105,6 +105,7 @@ builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
     "UserData/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
+builder.Services.AddSingleton<ProxyCheckJobService>();
 
 // Hosted Services
 builder.Services.AddHostedService<IUpdateService>(b =>
@@ -133,7 +134,17 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.MapHub<ConfigDebuggerHub>("hubs/config-debugger", options =>
+{
+    // Incoming messages <= 1 MB
+    options.ApplicationMaxBufferSize = 1_000_000;
+
+    // Outgoing messages <= 10 MB
+    options.TransportMaxBufferSize = 10_000_000;
+});
+
+app.MapHub<ProxyCheckJobHub>("hubs/proxy-check-job", options =>
 {
     // Incoming messages <= 1 MB
     options.ApplicationMaxBufferSize = 1_000_000;

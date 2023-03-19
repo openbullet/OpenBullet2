@@ -1,9 +1,9 @@
-﻿namespace OpenBullet2.Web.Dtos.ConfigDebugger;
+﻿namespace OpenBullet2.Web.Dtos.Common;
 
 /// <summary>
 /// A new error was raised.
 /// </summary>
-public class DbgErrorMessage
+public class ErrorMessage
 {
     /// <summary>
     /// The error type.

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
@@ -76,7 +77,7 @@ public class ConfigDebuggerService : IDisposable
             _debuggers[configId] = debugger;
             _connections[debugger] = new();
 
-            // Hook the events to the newly created debugger
+            // Hook the event handlers to the newly created debugger
             debugger.NewLogEntry += _onNewLog;
             debugger.StatusChanged += _onStatusChanged;
         }
@@ -137,8 +138,11 @@ public class ConfigDebuggerService : IDisposable
             ConfigDebuggerMethods.VariablesChanged, varMessage);
     }
 
-    private void SendError(Exception ex)
-        => _logger.LogError(ex, "Error while sending message to the client");
+    private Task SendError(Exception ex)
+    {
+        _logger.LogError(ex, "Error while sending message to the client");
+        return Task.CompletedTask;
+    }
 
     /// <summary>
     /// Maps a <see cref="Variable"/> to a <see cref="VariableDto"/>.
@@ -190,7 +194,7 @@ public class ConfigDebuggerService : IDisposable
             }
             catch (Exception ex)
             {
-                var message = new DbgErrorMessage
+                var message = new ErrorMessage
                 {
                     Type = ex.GetType().Name,
                     Message = ex.Message,
