@@ -15,7 +15,6 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using RuriLib.Models.Data.DataPools;
-using RuriLib.Models.Data;
 using RuriLib.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using RuriLib.Models.Proxies.ProxySources;

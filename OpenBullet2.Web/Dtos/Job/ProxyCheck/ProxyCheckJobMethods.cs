@@ -2,6 +2,5 @@
 
 internal class ProxyCheckJobMethods
 {
-    public const string StatusChanged = "statusChanged";
-    public const string Error = "error";
+    public const string NewResult = "newResult";
 }

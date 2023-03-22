@@ -202,7 +202,7 @@ public class ConfigDebuggerService : IDisposable
                 };
 
                 await _hub.Clients.Clients(_connections[debugger])
-                    .SendAsync(ConfigDebuggerMethods.Error, message);
+                    .SendAsync(CommonMethods.Error, message);
             }
         });
     }

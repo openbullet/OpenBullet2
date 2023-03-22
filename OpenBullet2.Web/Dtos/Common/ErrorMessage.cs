@@ -8,7 +8,7 @@ public class ErrorMessage
     /// <summary>
     /// The error type.
     /// </summary>
-    public string Type { get; set; } = "Generic Error";
+    public string Type { get; set; } = nameof(Exception);
 
     /// <summary>
     /// The error message.
@@ -19,4 +19,16 @@ public class ErrorMessage
     /// The full stack trace of the exception.
     /// </summary>
     public string StackTrace { get; set; } = string.Empty;
+
+    /// <summary></summary>
+    public ErrorMessage(string message)
+    {
+        Message = message;
+    }
+
+    /// <summary></summary>
+    public ErrorMessage()
+    {
+        
+    }
 }

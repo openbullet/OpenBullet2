@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,6 +13,7 @@ namespace OpenBullet2.Web.SignalR;
 public abstract class AuthorizedHub : Hub
 {
     private readonly IAuthTokenService _tokenService;
+    private readonly OpenBulletSettingsService _obSettingsService;
 
     /// <summary>
     /// The verified user.
@@ -23,33 +26,77 @@ public abstract class AuthorizedHub : Hub
     public bool OnlyAdmin { get; } = false;
 
     /// <summary></summary>
-    public AuthorizedHub(IAuthTokenService tokenService, bool onlyAdmin)
+    public AuthorizedHub(IAuthTokenService tokenService,
+        OpenBulletSettingsService obSettingsService, bool onlyAdmin)
     {
         _tokenService = tokenService;
+        _obSettingsService = obSettingsService;
         OnlyAdmin = onlyAdmin;
     }
 
     /// <inheritdoc/>
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
+        // If the admin user does not need any login, allow anonymous requests
+        if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
+        {
+            User = new ApiUser
+            {
+                Id = -1,
+                Role = UserRole.Admin,
+                Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
+            };
+
+            return;
+        }
+
         // Make sure the user provided a valid auth token
         var request = Context.GetHttpContext()!.Request;
         var authHeader = request.Headers["Authorization"].FirstOrDefault();
 
         if (authHeader is null)
         {
+            await Clients.Caller.SendAsync(
+                CommonMethods.Error,
+                new ErrorMessage
+                {
+                    Message = "Missing auth token",
+                    Type = nameof(UnauthorizedAccessException)
+                });
+
             throw new UnauthorizedAccessException("Missing auth token");
         }
 
-        var token = authHeader.Split(' ').Last();
-        var validToken = _tokenService.ValidateToken(token);
-        User = ApiUser.FromToken(validToken);
+        try
+        {
+            var token = authHeader.Split(' ').Last();
+            var validToken = _tokenService.ValidateToken(token);
+            User = ApiUser.FromToken(validToken);
+        }
+        catch (Exception ex)
+        {
+            await Clients.Caller.SendAsync(
+                CommonMethods.Error,
+                new ErrorMessage
+                {
+                    Message = ex.Message,
+                    Type = ex.GetType().Name
+                });
+
+            throw;
+        }
 
         if (OnlyAdmin && User.Role is not UserRole.Admin)
         {
+            await Clients.Caller.SendAsync(
+                CommonMethods.Error,
+                new ErrorMessage
+                {
+                    Message = "You must be an admin to use this hub",
+                    Type = nameof(UnauthorizedAccessException)
+                });
+
             throw new UnauthorizedAccessException("You must be an admin to use this hub");
         }
-
-        return Task.CompletedTask;
     }
 }

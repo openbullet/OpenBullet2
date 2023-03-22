@@ -1,5 +1,4 @@
 ﻿using OpenBullet2.Core.Models.Proxies;
-using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Attributes;
 using RuriLib.Models.Proxies;
 
@@ -16,7 +15,7 @@ public class ProxySourceOptionsDto : PolyDto
 /// <summary>
 /// Reads proxies from a proxy group in the database.
 /// </summary>
-[PolyType("group")]
+[PolyType("groupProxySourceOptions")]
 [MapsFrom(typeof(GroupProxySourceOptions))]
 [MapsTo(typeof(GroupProxySourceOptions))]
 public class GroupProxySourceOptionsDto : ProxySourceOptionsDto
@@ -30,7 +29,7 @@ public class GroupProxySourceOptionsDto : ProxySourceOptionsDto
 /// <summary>
 /// Reads proxies from a file.
 /// </summary>
-[PolyType("file")]
+[PolyType("fileProxySourceOptions")]
 [MapsFrom(typeof(FileProxySourceOptions))]
 [MapsTo(typeof(FileProxySourceOptions))]
 public class FileProxySourceOptionsDto : ProxySourceOptionsDto
@@ -50,7 +49,7 @@ public class FileProxySourceOptionsDto : ProxySourceOptionsDto
 /// <summary>
 /// Reads proxies from a remote endpoint.
 /// </summary>
-[PolyType("remote")]
+[PolyType("remoteProxySourceOptions")]
 [MapsFrom(typeof(RemoteProxySourceOptions))]
 [MapsTo(typeof(RemoteProxySourceOptions))]
 public class RemoteProxySourceOptionsDto : ProxySourceOptionsDto

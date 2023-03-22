@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace OpenBullet2.Web.Attributes;
 
@@ -17,4 +16,4 @@ internal class GuestAttribute : Attribute, IAuthorizationFilter
                 "You must be a guest or admin user to perform this operation");
         }
     }
-}
+}   

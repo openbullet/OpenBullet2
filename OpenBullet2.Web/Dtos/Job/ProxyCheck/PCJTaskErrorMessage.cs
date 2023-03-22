@@ -3,7 +3,7 @@
 /// <summary>
 /// An error happened in a task.
 /// </summary>
-public class PCJobTaskErrorMessage
+public class PCJTaskErrorMessage
 {
     /// <summary>
     /// The host of the proxy.

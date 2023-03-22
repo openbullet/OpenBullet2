@@ -1,0 +1,9 @@
+﻿namespace OpenBullet2.Web.Dtos.Job;
+
+internal class JobMethods
+{
+    public const string StatusChanged = "statusChanged";
+    public const string TimerTick = "timerTick";
+    public const string TaskError = "taskError";
+    public const string Completed = "completed";
+}

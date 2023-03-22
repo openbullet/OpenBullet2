@@ -14,7 +14,7 @@ public class HitOutputOptionsDto : PolyDto
 /// <summary>
 /// Saves hits to the database.
 /// </summary>
-[PolyType("database")]
+[PolyType("databaseHitOutputOptions")]
 [MapsFrom(typeof(DatabaseHitOutputOptions))]
 [MapsTo(typeof(DatabaseHitOutputOptions))]
 public class DatabaseHitOutputOptionsDto : HitOutputOptionsDto
@@ -25,7 +25,7 @@ public class DatabaseHitOutputOptionsDto : HitOutputOptionsDto
 /// <summary>
 /// Saves hits to the filesystem.
 /// </summary>
-[PolyType("fileSystem")]
+[PolyType("fileSystemHitOutputOptions")]
 [MapsFrom(typeof(FileSystemHitOutputOptions))]
 [MapsTo(typeof(FileSystemHitOutputOptions))]
 public class FileSystemHitOutputOptionsDto : HitOutputOptionsDto
@@ -39,7 +39,7 @@ public class FileSystemHitOutputOptionsDto : HitOutputOptionsDto
 /// <summary>
 /// Sends hits to a discord webhook.
 /// </summary>
-[PolyType("discordWebhook")]
+[PolyType("discordWebhookHitOutputOptions")]
 [MapsFrom(typeof(DiscordWebhookHitOutputOptions))]
 [MapsTo(typeof(DiscordWebhookHitOutputOptions))]
 public class DiscordWebhookHitOutputOptionsDto : HitOutputOptionsDto
@@ -68,7 +68,7 @@ public class DiscordWebhookHitOutputOptionsDto : HitOutputOptionsDto
 /// <summary>
 /// Sends hits to a telegram bot.
 /// </summary>
-[PolyType("telegramBot")]
+[PolyType("telegramBotHitOutputOptions")]
 [MapsFrom(typeof(TelegramBotHitOutputOptions))]
 [MapsTo(typeof(TelegramBotHitOutputOptions))]
 public class TelegramBotHitOutputOptionsDto : HitOutputOptionsDto
@@ -97,7 +97,7 @@ public class TelegramBotHitOutputOptionsDto : HitOutputOptionsDto
 /// <summary>
 /// Sends hits to a custom webhook.
 /// </summary>
-[PolyType("customWebhook")]
+[PolyType("customWebhookHitOutputOptions")]
 [MapsFrom(typeof(CustomWebhookHitOutputOptions))]
 [MapsTo(typeof(CustomWebhookHitOutputOptions))]
 public class CustomWebhookHitOutputOptionsDto : HitOutputOptionsDto

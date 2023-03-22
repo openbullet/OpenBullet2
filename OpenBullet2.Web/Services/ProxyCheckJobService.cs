@@ -4,6 +4,7 @@ using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;
 using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
 using RuriLib.Models.Jobs;
@@ -122,6 +123,100 @@ public class ProxyCheckJobService : IDisposable
         _logger.LogDebug($"Unregistered connection {connectionId} for proxy check job {jobId}");
     }
 
+    /// <summary>
+    /// Start a job.
+    /// </summary>
+    public void Start(int jobId)
+    {
+        var job = GetJob(jobId);
+
+        // We can only do a closure on this logger because this
+        // service is a singleton!!!
+        job.Start().Forget(
+            async ex => {
+                _logger.LogError(ex, $"Could not start job {jobId}");
+                await SendError(ex);
+            });
+    }
+
+    /// <summary>
+    /// Stop a job.
+    /// </summary>
+    public void Stop(int jobId)
+    {
+        var job = GetJob(jobId);
+
+        // We can only do a closure on this logger because this
+        // service is a singleton!!!
+        job.Stop().Forget(
+            async ex => {
+                _logger.LogError(ex, $"Could not stop job {jobId}");
+                await SendError(ex);
+            });
+    }
+
+    /// <summary>
+    /// Abort a job.
+    /// </summary>
+    public void Abort(int jobId)
+    {
+        var job = GetJob(jobId);
+
+        // We can only do a closure on this logger because this
+        // service is a singleton!!!
+        job.Abort().Forget(
+            async ex => {
+                _logger.LogError(ex, $"Could not abort job {jobId}");
+                await SendError(ex);
+            });
+    }
+
+    /// <summary>
+    /// Abort a job.
+    /// </summary>
+    public void Pause(int jobId)
+    {
+        var job = GetJob(jobId);
+
+        // We can only do a closure on this logger because this
+        // service is a singleton!!!
+        job.Pause().Forget(
+            async ex => {
+                _logger.LogError(ex, $"Could not pause job {jobId}");
+                await SendError(ex);
+            });
+    }
+
+    /// <summary>
+    /// Abort a job.
+    /// </summary>
+    public void Resume(int jobId)
+    {
+        var job = GetJob(jobId);
+
+        // We can only do a closure on this logger because this
+        // service is a singleton!!!
+        job.Resume().Forget(
+            async ex => {
+                _logger.LogError(ex, $"Could not resume job {jobId}");
+                await SendError(ex);
+            });
+    }
+
+    /// <summary>
+    /// Abort a job.
+    /// </summary>
+    public void SkipWait(int jobId)
+    {
+        var job = GetJob(jobId);
+        job.SkipWait();
+    }
+
+    // The job exists and is of the correct type, otherwise
+    // we wouldn't have been able to register the connection
+    private ProxyCheckJob GetJob(int jobId)
+        => (ProxyCheckJob)_jobManager.Jobs.First(j => j.Id == jobId);
+
     private async Task OnStatusChanged(object? sender, JobStatus e)
     {
         var message = new JobStatusChangedMessage
@@ -129,14 +224,14 @@ public class ProxyCheckJobService : IDisposable
             NewStatus = e
         };
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, JobMethods.StatusChanged);
     }
 
     private async Task OnCompleted(object? sender, EventArgs e)
     {
         var message = new JobCompletedMessage();
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, JobMethods.Completed);
     }
 
     private async Task OnError(object? sender, Exception e)
@@ -148,24 +243,24 @@ public class ProxyCheckJobService : IDisposable
             StackTrace = e.ToString()
         };
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, CommonMethods.Error);
     }
     
     private async Task OnTaskError(object? sender, ErrorDetails<ProxyCheckInput> e)
     {
-        var message = new PCJobTaskErrorMessage
+        var message = new PCJTaskErrorMessage
         {
             ProxyHost = e.Item.Proxy.Host,
             ProxyPort = e.Item.Proxy.Port,
             ErrorMessage = e.Exception.Message
         };
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, JobMethods.TaskError);
     }
 
     private async Task OnResult(object? sender, ResultDetails<ProxyCheckInput, Proxy> e)
     {
-        var message = new PCJobNewResultMessage
+        var message = new PCJNewResultMessage
         {
             ProxyHost = e.Result.Host,
             ProxyPort = e.Result.Port,
@@ -174,14 +269,14 @@ public class ProxyCheckJobService : IDisposable
             Country = e.Result.Country
         };
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, ProxyCheckJobMethods.NewResult);
     }
 
     private async Task OnTimerTick(object? sender, EventArgs e)
     {
         var job = (sender as ProxyCheckJob)!;
 
-        var message = new PCJobStatsMessage
+        var message = new PCJStatsMessage
         {
             Tested = job.Tested,
             Working = job.Working,
@@ -192,15 +287,16 @@ public class ProxyCheckJobService : IDisposable
             Progress = job.Progress
         };
 
-        await NotifyClients(sender, message);
+        await NotifyClients(sender, message, JobMethods.TimerTick);
     }
 
-    private async Task NotifyClients(object? sender, object message)
+    private async Task NotifyClients(object? sender, object message,
+        string method)
     {
         var job = (sender as ProxyCheckJob);
 
         await _hub.Clients.Clients(_connections[job!]).SendAsync(
-            ProxyCheckJobMethods.StatusChanged, message);
+            method, message);
     }
 
     private Task SendError(Exception ex)

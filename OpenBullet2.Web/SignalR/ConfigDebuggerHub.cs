@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Interfaces;
@@ -22,8 +23,8 @@ public class ConfigDebuggerHub : AuthorizedHub
     /// <summary></summary>
     public ConfigDebuggerHub(ConfigDebuggerService debuggerService,
         IAuthTokenService tokenService, ILogger<ConfigDebuggerHub> logger,
-        IMapper mapper)
-        : base(tokenService, onlyAdmin: true)
+        IMapper mapper, OpenBulletSettingsService obSettingsService)
+        : base(tokenService, obSettingsService, onlyAdmin: true)
     {
         _debuggerService = debuggerService;
         _logger = logger;
@@ -39,6 +40,10 @@ public class ConfigDebuggerHub : AuthorizedHub
 
         if (configId is null)
         {
+            await Clients.Caller.SendAsync(
+                CommonMethods.Error,
+                new ErrorMessage("Please specify a config id"));
+
             throw new Exception("Please specify a config id");
         }
 
@@ -75,7 +80,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is ConfigDebuggerStatus.Idle)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new ErrorMessage
+                CommonMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not running"
@@ -98,7 +103,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (!debugger.Options.StepByStep)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new ErrorMessage
+                CommonMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not in step by step mode"
@@ -110,7 +115,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is not ConfigDebuggerStatus.WaitingForStep)
         {
             await Clients.Caller.SendAsync(
-                ConfigDebuggerMethods.Error, new ErrorMessage
+                CommonMethods.Error, new ErrorMessage
                 {
                     Type = "Invalid operation",
                     Message = "The debugger is not waiting for a step"

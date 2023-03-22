@@ -14,7 +14,7 @@ public class DataPoolOptionsDto : PolyDto
 /// <summary>
 /// Reads data lines from a wordlist.
 /// </summary>
-[PolyType("wordlist")]
+[PolyType("wordlistDataPool")]
 [MapsFrom(typeof(WordlistDataPoolOptions))]
 [MapsTo(typeof(WordlistDataPoolOptions))]
 public class WordlistDataPoolOptionsDto : DataPoolOptionsDto
@@ -28,7 +28,7 @@ public class WordlistDataPoolOptionsDto : DataPoolOptionsDto
 /// <summary>
 /// Reads data lines from a file.
 /// </summary>
-[PolyType("file")]
+[PolyType("fileDataPool")]
 [MapsFrom(typeof(FileDataPoolOptions))]
 [MapsTo(typeof(FileDataPoolOptions))]
 public class FileDataPoolOptionsDto : DataPoolOptionsDto
@@ -47,7 +47,7 @@ public class FileDataPoolOptionsDto : DataPoolOptionsDto
 /// <summary>
 /// Generates data lines from a range of values.
 /// </summary>
-[PolyType("range")]
+[PolyType("rangeDataPool")]
 [MapsFrom(typeof(RangeDataPoolOptions))]
 [MapsTo(typeof(RangeDataPoolOptions))]
 public class RangeDataPoolOptionsDto : DataPoolOptionsDto
@@ -82,7 +82,7 @@ public class RangeDataPoolOptionsDto : DataPoolOptionsDto
 /// <summary>
 /// Generates data lines from combinations.
 /// </summary>
-[PolyType("combinations")]
+[PolyType("combinationsDataPool")]
 [MapsFrom(typeof(CombinationsDataPoolOptions))]
 [MapsTo(typeof(CombinationsDataPoolOptions))]
 public class CombinationsDataPoolOptionsDto : DataPoolOptionsDto
@@ -106,7 +106,7 @@ public class CombinationsDataPoolOptionsDto : DataPoolOptionsDto
 /// <summary>
 /// Generates infinite blank data lines.
 /// </summary>
-[PolyType("infinite")]
+[PolyType("infiniteDataPool")]
 [MapsFrom(typeof(InfiniteDataPoolOptions))]
 [MapsTo(typeof(InfiniteDataPoolOptions))]
 public class InfiniteDataPoolOptionsDto : DataPoolOptionsDto
