@@ -126,6 +126,11 @@ public enum ErrorCode
     INVALID_JOB_TYPE = 3001,
 
     /// <summary>
+    /// Invalid job configuration.
+    /// </summary>
+    INVALID_JOB_CONFIGURATION = 3002,
+
+    /// <summary>
     /// Action not allowed for a remote config.
     /// </summary>
     REMOTE_CONFIG = 5000

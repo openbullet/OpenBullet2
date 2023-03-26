@@ -5,16 +5,16 @@ using OpenBullet2.Web.Services;
 namespace OpenBullet2.Web.SignalR;
 
 /// <summary>
-/// SignalR hub for a proxy check job.
+/// SignalR hub for a multi run job.
 /// </summary>
-public class ProxyCheckJobHub : JobHub
+public class MultiRunJobHub : JobHub
 {
-    private readonly ILogger<ProxyCheckJobHub> _logger;
-    private readonly ProxyCheckJobService _jobService;
+    private readonly ILogger<MultiRunJobHub> _logger;
+    private readonly MultiRunJobService _jobService;
 
     /// <summary></summary>
-    public ProxyCheckJobHub(IAuthTokenService tokenService,
-        ILogger<ProxyCheckJobHub> logger, ProxyCheckJobService jobService,
+    public MultiRunJobHub(IAuthTokenService tokenService,
+        ILogger<MultiRunJobHub> logger, MultiRunJobService jobService,
         OpenBulletSettingsService obSettingsService)
         : base(tokenService, logger, jobService, obSettingsService)
     {

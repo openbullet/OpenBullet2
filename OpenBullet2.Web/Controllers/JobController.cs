@@ -126,17 +126,8 @@ public class JobController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<MultiRunJobDto> GetMultiRunJob(int id)
     {
-        var job = GetJob(id);
-        EnsureOwnership(job);
-
-        if (job is not MultiRunJob mrJob)
-        {
-            throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
-                $"The job with id {id} is not a multi run job");
-        }
-
-        return MapMultiRunJobDto(mrJob);
+        var job = GetJob<MultiRunJob>(id);
+        return MapMultiRunJobDto(job);
     }
 
     /// <summary>
@@ -146,17 +137,8 @@ public class JobController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<ProxyCheckJobDto> GetProxyCheckJob(int id)
     {
-        var job = GetJob(id);
-        EnsureOwnership(job);
-
-        if (job is not ProxyCheckJob pcJob)
-        {
-            throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
-                $"The job with id {id} is not a proxy check job");
-        }
-
-        return _mapper.Map<ProxyCheckJobDto>(pcJob);
+        var job = GetJob<ProxyCheckJob>(id);
+        return _mapper.Map<ProxyCheckJobDto>(job);
     }
 
     /// <summary>
@@ -340,20 +322,12 @@ public class JobController : ApiController
         UpdateMultiRunJobDto dto)
     {
         // Make sure job is idle
-        var job = GetJob(dto.Id);
-        EnsureOwnership(job);
-
+        var job = GetJob<MultiRunJob>(dto.Id);
+        
         if (job.Status is not JobStatus.Idle)
         {
             throw new ResourceInUseException(ErrorCode.JOB_NOT_IDLE,
                 $"Job {dto.Id} is not idle");
-        }
-
-        if (job is not MultiRunJob mrJob)
-        {
-            throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
-                $"The job with id {dto.Id} is not a multi run job");
         }
 
         var entity = await GetEntityAsync(dto.Id);
@@ -391,20 +365,12 @@ public class JobController : ApiController
         UpdateProxyCheckJobDto dto)
     {
         // Make sure job is idle
-        var job = GetJob(dto.Id);
-        EnsureOwnership(job);
+        var job = GetJob<ProxyCheckJob>(dto.Id);
 
         if (job.Status is not JobStatus.Idle)
         {
             throw new ResourceInUseException(ErrorCode.JOB_NOT_IDLE,
                 $"Job {dto.Id} is not idle");
-        }
-
-        if (job is not ProxyCheckJob pcJob)
-        {
-            throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
-                $"The job with id {dto.Id} is not a proxy check job");
         }
 
         var entity = await GetEntityAsync(dto.Id);
@@ -455,6 +421,50 @@ public class JobController : ApiController
 
             default:
                 throw new NotSupportedException();
+        }
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Get the custom user inputs that can be set in a given multi run job for
+    /// the currently selected config.
+    /// </summary>
+    [HttpGet("multi-run/custom-inputs")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<IEnumerable<CustomInputQuestionDto>> GetCustomInputs(int id)
+    {
+        var job = GetJob<MultiRunJob>(id);
+
+        if (job.Config is null)
+        {
+            throw new BadRequestException(
+                ErrorCode.INVALID_JOB_CONFIGURATION,
+                $"The job with id {id} is missing a config");
+        }
+
+        return Ok(job.Config.Settings.InputSettings.CustomInputs.Select(i =>
+        new CustomInputQuestionDto
+        {
+            Description = i.Description,
+            DefaultAnswer = i.DefaultAnswer,
+            VariableName = i.VariableName
+        }));
+    }
+
+    /// <summary>
+    /// Set the values of custom inputs in a multi run job for the
+    /// currently selected config.
+    /// </summary>
+    [HttpPost("multi-run/custom-inputs")]
+    [MapToApiVersion("1.0")]
+    public ActionResult SetCustomInputs(CustomInputsDto dto)
+    {
+        var job = GetJob<MultiRunJob>(dto.Id);
+
+        foreach (var input in dto.Inputs)
+        {
+            job.CustomInputsAnswers[input.VariableName] = input.Answer;
         }
 
         return Ok();
@@ -574,6 +584,21 @@ public class JobController : ApiController
         }
 
         return job;
+    }
+
+    private T GetJob<T>(int id) where T : Job
+    {
+        var job = GetJob(id);
+        EnsureOwnership(job);
+
+        if (job is not T typedJob)
+        {
+            throw new BadRequestException(
+                ErrorCode.INVALID_JOB_TYPE,
+                $"The job with id {id} is not of type {typeof(T).Name}");
+        }
+
+        return typedJob;
     }
 
     private async Task<JobEntity> GetEntityAsync(int id)

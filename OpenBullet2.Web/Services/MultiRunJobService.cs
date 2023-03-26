@@ -2,41 +2,43 @@
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;
-using OpenBullet2.Web.Dtos.Job.ProxyCheck;
+using OpenBullet2.Web.Dtos.Job.MultiRun;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
+using RuriLib.Models.Hits;
 using RuriLib.Models.Jobs;
-using RuriLib.Models.Proxies;
 using RuriLib.Parallelization.Models;
 
 namespace OpenBullet2.Web.Services;
 
 /// <summary>
-/// Notifies clients about updates on proxy check jobs.
+/// Notifies clients about updates on multi run jobs.
 /// </summary>
-public class ProxyCheckJobService : IJobService, IDisposable
+public class MultiRunJobService : IJobService, IDisposable
 {
     private readonly JobManagerService _jobManager;
-    private readonly IHubContext<ProxyCheckJobHub> _hub;
-    private readonly ILogger<ProxyCheckJobService> _logger;
+    private readonly IHubContext<MultiRunJobHub> _hub;
+    private readonly ILogger<MultiRunJobService> _logger;
 
     // Maps jobs to connections
-    private readonly Dictionary<ProxyCheckJob, List<string>> _connections = new();
+    private readonly Dictionary<MultiRunJob, List<string>> _connections = new();
 
     // Event handlers
     private readonly EventHandler<JobStatus> _onStatusChanged;
     private readonly EventHandler _onCompleted;
     private readonly EventHandler<Exception> _onError;
-    private readonly EventHandler<ErrorDetails<ProxyCheckInput>> _onTaskError;
-    private readonly EventHandler<ResultDetails<ProxyCheckInput, Proxy>> _onResult;
+    private readonly EventHandler<ErrorDetails<MultiRunInput>> _onTaskError;
+    private readonly EventHandler<ResultDetails<MultiRunInput, CheckResult>> _onResult;
     private readonly EventHandler _onTimerTick;
+    private readonly EventHandler<Hit> _onHit;
+    private readonly EventHandler _onBotsChanged;
 
     /// <summary></summary>
-    public ProxyCheckJobService(JobManagerService jobManager,
-        IHubContext<ProxyCheckJobHub> hub, ILogger<ProxyCheckJobService> logger)
+    public MultiRunJobService(JobManagerService jobManager,
+        IHubContext<MultiRunJobHub> hub, ILogger<MultiRunJobService> logger)
     {
         _jobManager = jobManager;
         _hub = hub;
@@ -57,18 +59,28 @@ public class ProxyCheckJobService : IJobService, IDisposable
             SendError
         );
 
-        _onTaskError = EventHandlers.TryAsync<ErrorDetails<ProxyCheckInput>>(
+        _onTaskError = EventHandlers.TryAsync<ErrorDetails<MultiRunInput>>(
             OnTaskError,
             SendError
         );
 
-        _onResult = EventHandlers.TryAsync<ResultDetails<ProxyCheckInput, Proxy>>(
+        _onResult = EventHandlers.TryAsync<ResultDetails<MultiRunInput, CheckResult>>(
             OnResult,
             SendError
         );
 
         _onTimerTick = EventHandlers.TryAsync(
             OnTimerTick,
+            SendError
+        );
+
+        _onHit = EventHandlers.TryAsync<Hit>(
+            OnHit,
+            SendError
+        );
+
+        _onBotsChanged = EventHandlers.TryAsync(
+            OnBotsChanged,
             SendError
         );
     }
@@ -84,39 +96,40 @@ public class ProxyCheckJobService : IJobService, IDisposable
                 $"Job with id {jobId} not found");
         }
 
-        if (job is not ProxyCheckJob pcJob)
+        if (job is not MultiRunJob mrJob)
         {
             throw new BadRequestException(ErrorCode.INVALID_JOB_TYPE,
-                $"Job with id {jobId} is not a proxy check job");
+                $"Job with id {jobId} is not a multi run job");
         }
 
-        if (!_connections.ContainsKey(pcJob))
+        if (!_connections.ContainsKey(mrJob))
         {
-            _connections[pcJob] = new();
+            _connections[mrJob] = new();
 
             // Hook the event handlers to the job
-            pcJob.OnStatusChanged += _onStatusChanged;
-            pcJob.OnCompleted += _onCompleted;
-            pcJob.OnError += _onError;
-            pcJob.OnTaskError += _onTaskError;
-            pcJob.OnResult += _onResult;
-            pcJob.OnTimerTick += _onTimerTick;
+            mrJob.OnStatusChanged += _onStatusChanged;
+            mrJob.OnCompleted += _onCompleted;
+            mrJob.OnError += _onError;
+            mrJob.OnTaskError += _onTaskError;
+            mrJob.OnResult += _onResult;
+            mrJob.OnTimerTick += _onTimerTick;
+            mrJob.OnHit += _onHit;
         }
 
         // Add the connection to the list
-        _connections[pcJob].Add(connectionId);
+        _connections[mrJob].Add(connectionId);
 
-        _logger.LogDebug($"Registered new connection {connectionId} for proxy check job {jobId}");
+        _logger.LogDebug($"Registered new connection {connectionId} for multi run job {jobId}");
     }
 
     /// <inheritdoc/>
     public void UnregisterConnection(string connectionId, int jobId)
     {
-        var job = (ProxyCheckJob)_jobManager.Jobs.First(j => j.Id == jobId);
+        var job = (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
 
         _connections[job].Remove(connectionId);
 
-        _logger.LogDebug($"Unregistered connection {connectionId} for proxy check job {jobId}");
+        _logger.LogDebug($"Unregistered connection {connectionId} for multi run job {jobId}");
     }
 
     /// <inheritdoc/>
@@ -198,8 +211,8 @@ public class ProxyCheckJobService : IJobService, IDisposable
 
     // The job exists and is of the correct type, otherwise
     // we wouldn't have been able to register the connection
-    private ProxyCheckJob GetJob(int jobId)
-        => (ProxyCheckJob)_jobManager.Jobs.First(j => j.Id == jobId);
+    private MultiRunJob GetJob(int jobId)
+        => (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
 
     private async Task OnStatusChanged(object? sender, JobStatus e)
     {
@@ -229,43 +242,67 @@ public class ProxyCheckJobService : IJobService, IDisposable
 
         await NotifyClients(sender, message, CommonMethods.Error);
     }
-    
-    private async Task OnTaskError(object? sender, ErrorDetails<ProxyCheckInput> e)
+
+    private async Task OnTaskError(object? sender, ErrorDetails<MultiRunInput> e)
     {
-        var message = new PCJTaskErrorMessage
+        var message = new MRJTaskErrorMessage
         {
-            ProxyHost = e.Item.Proxy.Host,
-            ProxyPort = e.Item.Proxy.Port,
+            DataLine = e.Item.BotData.Line.Data,
+            Proxy = e.Item.BotData.Proxy is null ? null : new MRJProxy
+            {
+                Host = e.Item.BotData.Proxy.Host,
+                Port = e.Item.BotData.Proxy.Port
+            },
             ErrorMessage = e.Exception.Message
         };
 
         await NotifyClients(sender, message, JobMethods.TaskError);
     }
 
-    private async Task OnResult(object? sender, ResultDetails<ProxyCheckInput, Proxy> e)
+    private async Task OnResult(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
     {
-        var message = new PCJNewResultMessage
+        var message = new MRJNewResultMessage
         {
-            ProxyHost = e.Result.Host,
-            ProxyPort = e.Result.Port,
-            WorkingStatus = e.Result.WorkingStatus,
-            Ping = e.Result.Ping,
-            Country = e.Result.Country
+            DataLine = e.Item.BotData.Line.Data,
+            Proxy = e.Item.BotData.Proxy is null ? null : new MRJProxy
+            {
+                Host = e.Item.BotData.Proxy.Host,
+                Port = e.Item.BotData.Proxy.Port
+            },
+            Status = e.Result.BotData.STATUS
         };
 
-        await NotifyClients(sender, message, ProxyCheckJobMethods.NewResult);
+        await NotifyClients(sender, message, MultiRunJobMethods.NewResult);
     }
 
     private async Task OnTimerTick(object? sender, EventArgs e)
     {
-        var job = (sender as ProxyCheckJob)!;
+        var job = (sender as MultiRunJob)!;
 
-        var message = new PCJStatsMessage
+        var message = new MRJStatsMessage
         {
-            Tested = job.Tested,
-            Working = job.Working,
-            NotWorking = job.NotWorking,
+            DataStats = new MRJDataStatsDto
+            {
+                Hits = job.DataHits,
+                Custom = job.DataCustom,
+                Fails = job.DataFails,
+                Invalid = job.DataInvalid,
+                Retried = job.DataRetried,
+                Banned = job.DataBanned,
+                Errors = job.DataErrors,
+                ToCheck = job.DataToCheck,
+                Total = job.DataPool.Size,
+                Tested = job.DataTested
+            },
+            ProxyStats = new MRJProxyStatsDto
+            {
+                Total = job.ProxiesTotal,
+                Alive = job.ProxiesAlive,
+                Bad = job.ProxiesBad,
+                Banned = job.ProxiesBanned
+            },
             CPM = job.CPM,
+            CaptchaCredit = job.CaptchaCredit,
             Elapsed = job.Elapsed,
             Remaining = job.Remaining,
             Progress = job.Progress
@@ -274,10 +311,40 @@ public class ProxyCheckJobService : IJobService, IDisposable
         await NotifyClients(sender, message, JobMethods.TimerTick);
     }
 
+    private async Task OnHit(object? sender, Hit e)
+    {
+        var message = new MRJNewHitMessage
+        {
+            DataLine = e.DataString,
+            Proxy = e.Proxy is null ? null : new MRJProxy
+            {
+                Host = e.Proxy.Host,
+                Port = e.Proxy.Port
+            },
+            Date = e.Date,
+            Type = e.Type,
+            CaptureString = e.CapturedDataString
+        };
+
+        await NotifyClients(sender, message, MultiRunJobMethods.NewHit);
+    }
+
+    private async Task OnBotsChanged(object? sender, EventArgs e)
+    {
+        var job = (sender as MultiRunJob)!;
+
+        var message = new MRJBotsChangedMessage
+        {
+            NewValue = job.Bots
+        };
+
+        await NotifyClients(sender, message, MultiRunJobMethods.BotsChanged);
+    }
+
     private async Task NotifyClients(object? sender, object message,
         string method)
     {
-        var job = (sender as ProxyCheckJob);
+        var job = (sender as MultiRunJob);
 
         await _hub.Clients.Clients(_connections[job!]).SendAsync(
             method, message);
@@ -299,6 +366,8 @@ public class ProxyCheckJobService : IJobService, IDisposable
             job.OnError -= _onError;
             job.OnTaskError -= _onTaskError;
             job.OnResult -= _onResult;
+            job.OnHit -= _onHit;
+            job.OnBotsChanged -= _onBotsChanged;
         }
     }
 }
