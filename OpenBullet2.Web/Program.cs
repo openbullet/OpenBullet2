@@ -5,6 +5,7 @@ using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web;
+using OpenBullet2.Web.Controllers;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Middleware;
@@ -155,7 +156,10 @@ app.MapHub<ProxyCheckJobHub>("hubs/proxy-check-job", options =>
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-app.MapFallbackToController("Index", "Fallback");
+app.MapFallbackToController(
+    nameof(FallbackController.Index),
+    nameof(FallbackController).Replace("Controller", "")
+);
 
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
     ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");
