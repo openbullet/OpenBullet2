@@ -153,6 +153,10 @@ app.MapHub<ProxyCheckJobHub>("hubs/proxy-check-job", options =>
     options.TransportMaxBufferSize = 10_000_000;
 });
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToController("Index", "Fallback");
+
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
     ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");
 
