@@ -1,0 +1,18 @@
+@import "../../styles/variables.scss";
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background-color: $bgSecondary;
+    width: 230px;
+    min-width: 230px;
+    overflow-y: auto;
+}
+
+.content {
+    background-color: $bgPrimary;
+    flex: 1 0 auto;
+}
