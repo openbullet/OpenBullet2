@@ -1,0 +1,31 @@
+@import "../../../../../styles/variables.scss";
+
+.menu-item {
+    width: 180px;
+    height: 25px;
+    margin: 15px 0px 15px 30px;
+    padding: 0px 0px 0px 15px;
+    color: $fgPrimary;
+    cursor: pointer;
+
+    .menu-item-label {
+        font-weight: 200;
+        font-size: 16px;
+        margin-left: 20px;
+    }
+}
+
+.menu-item:not(.selected):hover {
+    color: $fgAccent;
+    background-color: $bgAccent;
+    border-left: 1px solid $fgInactive;
+    opacity: 0.9;
+    font-weight: bold;
+    margin-left: 29px;
+}
+
+.menu-item.selected {
+    color: $fgLight;
+    border-left: 1px solid $fgAccent;
+    margin-left: 29px;
+}

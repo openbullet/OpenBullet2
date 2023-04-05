@@ -6,6 +6,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { MainComponent } from './main.component';
 import { MainRoutingModule } from './main-routing.module';
 import { HomeComponent } from './components/home/home.component';
+import { MenuItemComponent } from './components/menu/menu-item/menu-item.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 
@@ -13,11 +15,13 @@ import { HomeComponent } from './components/home/home.component';
   declarations: [
     MenuComponent,
     MainComponent,
-    HomeComponent
+    HomeComponent,
+    MenuItemComponent
   ],
   imports: [
     CommonModule,
-    MainRoutingModule
+    MainRoutingModule,
+    FontAwesomeModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

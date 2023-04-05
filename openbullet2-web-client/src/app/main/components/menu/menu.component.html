@@ -1,1 +1,12 @@
-<p>menu works!</p>
+<div *ngFor="let section of menu">
+    <div class="menu-section">
+        <span>{{section.label}}</span>
+    </div>
+    <app-menu-item *ngFor="let item of section.items"
+        [icon]="item.icon"
+        [label]="item.label"
+        [link]="item.link"
+        [active]="isItemActive(item)">
+
+    </app-menu-item>
+</div>
