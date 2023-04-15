@@ -80,7 +80,7 @@ export class MenuComponent {
       ]
     },
     {
-      label: 'Extras',
+      label: 'More',
       items: [
         {
           icon: faUsers,
@@ -96,12 +96,7 @@ export class MenuComponent {
           icon: faRetweet,
           label: 'Sharing',
           link: '/sharing'
-        }
-      ]
-    },
-    {
-      label: 'More',
-      items: [
+        },
         {
           icon: faInfo,
           label: 'Info',

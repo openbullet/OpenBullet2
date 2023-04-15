@@ -1,11 +1,38 @@
 @import "variables";
 @import "fonts";
 
+html {
+    background-color: $bgPrimary;
+    color: $fgPrimary;
+}
+
 body {
     margin: 0;
     font-family: Poppins;
+    background-color: $bgPrimary;
+    color: $fgPrimary;
 }
 
 * {
     font-family: Poppins;
+}
+
+.monospace {
+    font-family: Chivo Mono;
+}
+
+.p-card-body {
+    background-color: $bgSecondary;
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 1rem !important;
+}
+
+.p-card-content {
+    padding: 0px !important;
+}
+
+code {
+    color: $fgAccentLight !important;
+    margin: 0rem .2rem;
 }

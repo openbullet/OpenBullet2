@@ -8,20 +8,32 @@ import { MainRoutingModule } from './main-routing.module';
 import { HomeComponent } from './components/home/home.component';
 import { MenuItemComponent } from './components/menu/menu-item/menu-item.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
-
+import { NotFoundComponent } from './components/not-found/not-found.component';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { MarkdownModule } from 'ngx-markdown';
+import { SharedModule } from '../shared/shared.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
     MenuComponent,
     MainComponent,
     HomeComponent,
-    MenuItemComponent
+    MenuItemComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,
     MainRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    CardModule,
+    ButtonModule,
+    TooltipModule,
+    MarkdownModule.forRoot(),
+    SharedModule,
+    NgxSpinnerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }

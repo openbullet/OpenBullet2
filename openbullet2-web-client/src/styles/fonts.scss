@@ -1,4 +1,19 @@
 @font-face {
+    font-family: 'Chivo Mono';
+    src: url('../assets/fonts/ChivoMono-VariableFont_wght.ttf') format("truetype-variations");
+    font-weight: 1 999;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Chivo Mono';
+    src: url('../assets/fonts/ChivoMono-Italic-VariableFont_wght.ttf') format("truetype-variations");
+    font-style: italic;
+    font-weight: 1 999;
+    font-display: swap;
+}
+
+@font-face {
     font-family: 'Poppins';
     src: url('../assets/fonts/Poppins-Bold.ttf') format('truetype');
     font-weight: bold;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-spinner',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent {
-
+  @Input() fullWidth: boolean = false;
 }

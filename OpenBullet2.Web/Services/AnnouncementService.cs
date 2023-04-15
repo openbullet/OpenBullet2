@@ -26,7 +26,7 @@ public class AnnouncementService : IAnnouncementService
         if (isDebug)
         {
             await Task.Delay(1);
-            return "Test 1234"; // Change this to some valid markdown string to test announcements in debug mode
+            return "This is a **test** `message`"; // Change this to some valid markdown string to test announcements in debug mode
         }
         else
         {

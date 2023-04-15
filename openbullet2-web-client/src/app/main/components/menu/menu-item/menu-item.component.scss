@@ -17,7 +17,7 @@
 
 .menu-item:not(.selected):hover {
     color: $fgAccent;
-    background-color: $bgAccent;
+    /* background-color: $bgAccent; */
     border-left: 1px solid $fgInactive;
     opacity: 0.9;
     font-weight: bold;

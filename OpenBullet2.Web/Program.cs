@@ -127,6 +127,8 @@ app.UseSwaggerUI(options =>
     }
 });
 
+app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthTokenVerificationMiddleware>();
 

@@ -1,1 +1,63 @@
-<p>home works!</p>
+<div class="container-fluid">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>OpenBullet 2</h1>
+            <h5>Welcome back, {{ 'admin' | titlecase }}!</h5>
+        </div>
+        <div class="col-4 text-right">
+            <span class="info-label">Server Time</span><br />
+            <span *ngIf="serverTime !== null" class="info">{{serverTime}}</span>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="serverInfo === null || announcement === null" [fullWidth]="true" />
+
+<div class="mt-4">
+    <p-card *ngIf="announcement !== null">
+        <p class="announcement-label">Announcement</p>
+        <p class="announcement" 
+        [innerHTML]="announcement.markdownText | markdown"></p>
+    </p-card>
+</div>
+
+<!-- Use the position-relative class and put the spinner inside the 
+div if you want to display it only inside that div-->
+<div *ngIf="serverInfo !== null" class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <span class="info-label">Webserver Uptime</span><br />
+            <span *ngIf="serverUptime !== null" 
+            class="info">{{serverUptime}}</span>
+            <span *ngIf="serverUptime === null">Unknown</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Client IP Address</span><br />
+            <span class="info monospace">{{serverInfo.clientIpAddress}}</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Build Number</span><br />
+            <span class="info monospace">{{serverInfo.buildNumber}}</span>
+        </div>
+    </div>
+    <div class="row mt-3 justify-content-between">
+        <div class="col-4">
+            <span class="info-label">Operating System</span><br />
+            <span class="info">{{serverInfo.operatingSystem}}</span>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Current Working Directory</span><br />
+            <span class="info">{{serverInfo.currentWorkingDirectory | truncate:[30]}}</span>
+            <button class="transparent-button ml-3" 
+                (click)="copyCurrentWorkingDirectory()"
+                pInputText pTooltip="Copy to clipboard" >
+                <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+        <div class="col-4">
+            <span class="info-label">Build Date</span><br />
+            <span *ngIf="buildDate !== null" 
+            class="info">{{buildDate}}</span>
+        </div>
+    </div>
+</div>
