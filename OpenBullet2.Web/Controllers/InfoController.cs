@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
+using OpenBullet2.Web.Services;
+using RuriLib.Services;
 using System.Net;
 using System.Runtime.InteropServices;
 
@@ -19,14 +24,20 @@ public class InfoController : ApiController
     private readonly IAnnouncementService _announcementService;
     private readonly IUpdateService _updateService;
     private readonly IMapper _mapper;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly PerformanceMonitorService _performanceMonitorService;
 
     /// <summary></summary>
     public InfoController(IAnnouncementService announcementService,
-        IUpdateService updateService, IMapper mapper)
+        IUpdateService updateService, IMapper mapper,
+        IServiceProvider serviceProvider,
+        PerformanceMonitorService performanceMonitorService)
     {
         _announcementService = announcementService;
         _updateService = updateService;
         _mapper = mapper;
+        _serviceProvider = serviceProvider;
+        _performanceMonitorService = performanceMonitorService;
     }
 
     /// <summary>
@@ -143,6 +154,46 @@ public class InfoController : ApiController
         CurrentVersionType = _updateService.CurrentVersionType,
         RemoteVersionType = _updateService.RemoteVersionType
     };
+
+    /// <summary>
+    /// Get information about your collection of wordlists, proxies etc.
+    /// </summary>
+    [HttpGet("collection")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<CollectionInfoDto>> GetCollectionInfo()
+    {
+        var jobsCount = _serviceProvider
+            .GetRequiredService<JobManagerService>().Jobs.Count();
+
+        var proxiesCount = await _serviceProvider
+            .GetRequiredService<IProxyRepository>().GetAll().CountAsync();
+
+        var wordlistsCount = await _serviceProvider
+            .GetRequiredService<IWordlistRepository>().GetAll().CountAsync();
+
+        var hitsCount = await _serviceProvider
+            .GetRequiredService<IHitRepository>().GetAll().CountAsync();
+
+        var configsCount = _serviceProvider
+            .GetRequiredService<ConfigService>().Configs.Count;
+
+        var guestsCount = await _serviceProvider
+            .GetRequiredService<IGuestRepository>().GetAll().CountAsync();
+
+        var pluginsCount = _serviceProvider
+            .GetRequiredService<PluginRepository>().GetPlugins().Count();
+
+        return new CollectionInfoDto
+        {
+            JobsCount = jobsCount,
+            ProxiesCount = proxiesCount,
+            WordlistsCount = wordlistsCount,
+            HitsCount = hitsCount,
+            ConfigsCount = configsCount,
+            GuestsCount = guestsCount,
+            PluginsCount = pluginsCount
+        };
+    }
 
     private static string GetOperatingSystem()
     {

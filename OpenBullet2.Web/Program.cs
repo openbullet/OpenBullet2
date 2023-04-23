@@ -80,9 +80,11 @@ builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
 
 // Singleton
+builder.Services.AddSingleton(sp => sp); // The service provider itself
 builder.Services.AddSingleton<IAuthTokenService, AuthTokenService>();
 builder.Services.AddSingleton<IAnnouncementService, AnnouncementService>();
 builder.Services.AddSingleton<IUpdateService, UpdateService>();
+builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
     "UserData/Configs"));
@@ -109,8 +111,10 @@ builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 
 // Hosted Services
-builder.Services.AddHostedService<IUpdateService>(b =>
-    b.GetRequiredService<IUpdateService>());
+builder.Services.AddHostedService(
+    b => b.GetRequiredService<IUpdateService>());
+builder.Services.AddHostedService(
+    b => b.GetRequiredService<PerformanceMonitorService>());
 
 var app = builder.Build();
 
@@ -155,6 +159,8 @@ app.MapHub<ProxyCheckJobHub>("hubs/proxy-check-job", options =>
     // Outgoing messages <= 10 MB
     options.TransportMaxBufferSize = 10_000_000;
 });
+
+app.MapHub<SystemPerformanceHub>("hubs/system-performance");
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

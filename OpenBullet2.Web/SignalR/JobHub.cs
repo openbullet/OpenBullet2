@@ -42,6 +42,16 @@ public abstract class JobHub : AuthorizedHub
         _jobService.RegisterConnection(Context.ConnectionId, (int)jobId);
     }
 
+    /// <inheritdoc/>
+    public async override Task OnDisconnectedAsync(Exception? exception)
+    {
+        await base.OnDisconnectedAsync(exception);
+
+        var jobId = GetJobId();
+
+        _jobService.UnregisterConnection(Context.ConnectionId, (int)jobId!);
+    }
+
     /// <summary>
     /// Start a job.
     /// </summary>
