@@ -1,3 +1,4 @@
+<!-- Top information -->
 <div class="container-fluid">
     <div class="row justify-content-between">
         <div class="col-4">
@@ -13,7 +14,8 @@
 
 <app-spinner *ngIf="serverInfo === null || announcement === null" [fullWidth]="true" />
 
-<div class="mt-4">
+<!-- Announcement -->
+<div class="mt-4 mx-3">
     <p-card *ngIf="announcement !== null">
         <p class="announcement-label">Announcement</p>
         <p class="announcement" 
@@ -21,6 +23,85 @@
     </p-card>
 </div>
 
+<!-- System performance information -->
+<app-sysperf-cards />
+
+<!-- Collection -->
+<h6 class="mx-3 mt-4">Your collection</h6>
+<div class="container-fluid mt-4">
+    <div *ngIf="collectionInfo !== null" class="row">
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.jobsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Jobs
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.proxiesCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Proxies
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.wordlistsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Wordlists
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.hitsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Hits
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.configsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Configs
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.guestsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Guests
+            </div>
+        </div>
+        <div class="col">
+            <div class="collection-item-value">
+                {{collectionInfo.pluginsCount | number}}
+            </div>
+            <div class="collection-item-label">
+                Plugins
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats and performance -->
+<h6 class="mx-3 mt-4">Recent hits</h6>
+<div class="container-fluid">
+    <div class="row justify-content-between">
+        <div class="col-12">
+            <p-card>
+                
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<!-- Other server information -->
 <!-- Use the position-relative class and put the spinner inside the 
 div if you want to display it only inside that div-->
 <div *ngIf="serverInfo !== null" class="container-fluid mt-4">
@@ -47,7 +128,7 @@ div if you want to display it only inside that div-->
         </div>
         <div class="col-4">
             <span class="info-label">Current Working Directory</span><br />
-            <span class="info">{{serverInfo.currentWorkingDirectory | truncate:[30]}}</span>
+            <span class="info" [pTooltip]="serverInfo.currentWorkingDirectory" tooltipPosition="bottom">{{serverInfo.currentWorkingDirectory | truncate:[30]}}</span>
             <button class="transparent-button ml-3" 
                 (click)="copyCurrentWorkingDirectory()"
                 pInputText pTooltip="Copy to clipboard" >

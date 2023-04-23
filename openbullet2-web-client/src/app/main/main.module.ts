@@ -12,9 +12,12 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { ChipModule } from 'primeng/chip';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgChartsModule } from 'ng2-charts';
+import { SysperfCardsComponent } from './components/home/sysperf-cards/sysperf-cards.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     MainComponent,
     HomeComponent,
     MenuItemComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    SysperfCardsComponent
   ],
   imports: [
     CommonModule,
@@ -31,6 +35,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     CardModule,
     ButtonModule,
     TooltipModule,
+    ChipModule,
+    NgChartsModule,
     MarkdownModule.forRoot(),
     SharedModule,
     NgxSpinnerModule

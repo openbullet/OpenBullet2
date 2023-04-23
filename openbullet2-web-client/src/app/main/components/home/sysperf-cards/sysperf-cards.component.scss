@@ -1,0 +1,29 @@
+@import "../../../../../styles/variables.scss";
+
+.perf-timespan {
+    color: $fgInactive;
+    font-size: 12px;
+    margin-left: 1rem;
+}
+
+.perf-up {
+    color: $fgGood;
+}
+
+.perf-down {
+    color: $fgBad;
+}
+
+.perf-flat {
+    color: $fgInactive;
+}
+
+.perf-metric {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.perf-metric-small {
+    font-size: 18px;
+    font-weight: 500;
+}

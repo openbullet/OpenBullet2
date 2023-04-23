@@ -1,0 +1,65 @@
+<h6 class="mt-4 mx-3">System performance</h6>
+<div class="container-fluid mt-4">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <p-card>
+                <div class="row">
+                    <div class="col-8">
+                        <span>CPU</span>
+                        <span class="perf-timespan">Last minute</span>
+                    </div>
+                    <div class="col-4 text-right">
+                        <p-chip class="ml-auto">
+                            <fa-icon [ngClass]="cpuChipClass"
+                                [icon]="cpuChipIcon"
+                                [fixedWidth]="true"></fa-icon>
+                            <span class="ml-2">{{cpuChipValue | number : '1.2-2'}}%</span>
+                        </p-chip>
+                    </div>
+                </div>
+                <div class="row mt-3 align-items-center">
+                    <div class="col-6">
+                        <div class="perf-metric">{{cpuValue | number : '1.2-2'}}%</div>
+                    </div>
+                    <div class="col-6">
+                        <canvas baseChart #cpuChart class="chart"
+                            height="100px"
+                            [data]="cpuLineChartData"
+                            [options]="lineChartOptions"
+                            [type]="'line'"></canvas>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4">
+            <p-card>
+                <div class="row">
+                    <div class="col-8">
+                        <span>Memory</span>
+                        <span class="perf-timespan">Last minute</span>
+                    </div>
+                    <div class="col-4 text-right">
+                        <p-chip class="ml-auto">
+                            <fa-icon [ngClass]="memoryChipClass"
+                                [icon]="memoryChipIcon"
+                                [fixedWidth]="true"></fa-icon>
+                            <span class="ml-2">{{memoryChipValue | number : '1.2-2'}}%</span>
+                        </p-chip>
+                    </div>
+                </div>
+                <div class="row mt-3 align-items-center">
+                    <div class="col-6">
+                        <div class="perf-metric">{{memoryValue | bytes}}</div>
+                    </div>
+                    <div class="col-6">
+                        <canvas baseChart #memoryChart class="chart"
+                            height="100px"
+                            [data]="memoryLineChartData"
+                            [options]="lineChartOptions"
+                            [type]="'line'"></canvas>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>

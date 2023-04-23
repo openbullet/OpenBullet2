@@ -32,6 +32,11 @@ body {
     padding: 0px !important;
 }
 
+.p-chip {
+    background-color: $bgSecondary !important;
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
 code {
     color: $fgAccentLight !important;
     margin: 0rem .2rem;
