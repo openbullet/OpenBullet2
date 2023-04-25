@@ -24,6 +24,23 @@
 }
 
 .perf-metric-small {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 500;
+}
+
+.perf-metric-label {
+    color: $fgInactive;
+    font-size: 10px;
+}
+
+.perf-network-down {
+    color: $fgAccent;
+    line-height: 14px;
+    height: 14px;
+}
+
+.perf-network-up {
+    color: $fgInactive;
+    line-height: 14px;
+    height: 14px;
 }

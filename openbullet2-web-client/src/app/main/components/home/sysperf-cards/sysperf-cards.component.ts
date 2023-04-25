@@ -1,5 +1,12 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { IconDefinition, faCircleArrowDown, faCircleArrowUp, faCircleMinus } from '@fortawesome/free-solid-svg-icons';
+import { 
+  IconDefinition, 
+  faCircleArrowDown, 
+  faCircleArrowUp, 
+  faCircleMinus ,
+  faCaretDown,
+  faCaretUp
+} from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
@@ -14,6 +21,8 @@ export class SysperfCardsComponent implements OnInit {
   faCircleArrowUp = faCircleArrowUp;
   faCircleArrowDown = faCircleArrowDown;
   faCircleMinus = faCircleMinus;
+  faCaretDown = faCaretDown;
+  faCaretUp = faCaretUp;
 
   // CPU
   cpuChipValue = 0;
@@ -27,6 +36,10 @@ export class SysperfCardsComponent implements OnInit {
   memoryChipIcon = faCircleMinus;
   memoryValue = 0;
 
+  // NETWORK
+  networkDownloadValue = 0;
+  networkUploadValue = 0;
+
   cpuLineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
@@ -34,16 +47,13 @@ export class SysperfCardsComponent implements OnInit {
         label: '',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
         fill: false,
         tension: 0
       }
     ],
     labels: Array(this.CHART_DATA_POINTS).fill('')
   };
+
   memoryLineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
@@ -51,17 +61,36 @@ export class SysperfCardsComponent implements OnInit {
         label: '',
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)',
         fill: false,
         tension: 0
       }
     ],
     labels: Array(this.CHART_DATA_POINTS).fill('')
   };
-  networkLineChartData: ChartConfiguration['data'] = {datasets: []};
+
+  networkLineChartData: ChartConfiguration['data'] = {
+    datasets: [
+      // Download
+      {
+        data: [],
+        label: '',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: 'rgba(50,90,245,1)',
+        fill: false,
+        tension: 0
+      },
+      // Upload
+      {
+        data: [],
+        label: '',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: 'rgba(100,100,100,1)',
+        fill: false,
+        tension: 0
+      }
+    ],
+    labels: Array(this.CHART_DATA_POINTS).fill('')
+  };
 
   lineChartOptions: ChartConfiguration['options'] = <ChartOptions>{
     events: [], // Remove this to get back the tooltips on hover
@@ -102,7 +131,7 @@ export class SysperfCardsComponent implements OnInit {
       }
     },
     animation: {
-      duration: 300
+      duration: 0
     },
     plugins: {
       legend: { display: false }
@@ -124,10 +153,13 @@ export class SysperfCardsComponent implements OnInit {
 
   onNewMetrics(perf: PerformanceInfoDto) {
     const cpuChart = this.charts?.get(0);
-    const memoryChart = this.charts?.get(1);
+    const networkChart = this.charts?.get(1);
+    const memoryChart = this.charts?.get(2);
 
     this.cpuValue = perf.cpuUsage;
     this.memoryValue = perf.memoryUsage;
+    this.networkDownloadValue = perf.networkDownload;
+    this.networkUploadValue = perf.networkUpload;
     
     // CPU
     const cpuData = this.cpuLineChartData.datasets[0].data as number[];
@@ -160,7 +192,20 @@ export class SysperfCardsComponent implements OnInit {
     memoryChart?.update();
 
     // NETWORK
-    // TODO
+    const networkDownloadData = this.networkLineChartData.datasets[0].data as number[];
+    const networkUploadData = this.networkLineChartData.datasets[1].data as number[];
+
+    if (networkDownloadData.length >= this.CHART_DATA_POINTS) {
+      networkDownloadData.shift();
+    }
+    networkDownloadData.push(perf.networkDownload);
+
+    if (networkUploadData.length >= this.CHART_DATA_POINTS) {
+      networkUploadData.shift();
+    }
+    networkUploadData.push(perf.networkUpload);
+
+    networkChart?.update();
   }
 
   getChipInfo(data: number[]): [string, IconDefinition, number] {
