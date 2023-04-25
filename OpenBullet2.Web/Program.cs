@@ -131,7 +131,12 @@ app.UseSwaggerUI(options =>
     }
 });
 
-app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(o => o
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
+    .WithOrigins("http://localhost:4200") // TODO: Make this editable from the config, if not configured get it from the value of --urls
+);
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<AuthTokenVerificationMiddleware>();

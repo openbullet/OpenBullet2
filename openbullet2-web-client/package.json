@@ -21,6 +21,7 @@
     "@fortawesome/angular-fontawesome": "^0.12.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@microsoft/signalr": "^7.0.5",
     "bootstrap": "^4.6.0",
     "chart.js": "^3.6.0",
     "marked": "^4.3.0",

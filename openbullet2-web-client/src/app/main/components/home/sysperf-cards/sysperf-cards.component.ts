@@ -1,4 +1,5 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { formatNumber } from '@angular/common';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { 
   IconDefinition, 
   faCircleArrowDown, 
@@ -10,13 +11,15 @@ import {
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
+import { SysPerfHubService } from 'src/app/main/services/sysperf.hub.service';
+import { formatBytes } from 'src/app/shared/utils/bytes';
 
 @Component({
   selector: 'app-sysperf-cards',
   templateUrl: './sysperf-cards.component.html',
   styleUrls: ['./sysperf-cards.component.scss']
 })
-export class SysperfCardsComponent implements OnInit {
+export class SysperfCardsComponent implements OnInit, OnDestroy {
   CHART_DATA_POINTS = 60;
   faCircleArrowUp = faCircleArrowUp;
   faCircleArrowDown = faCircleArrowDown;
@@ -125,8 +128,26 @@ export class SysperfCardsComponent implements OnInit {
         angleLines: {
           display: false
         },
+        beginAtZero: true,
         ticks: {
-          display: false
+          display: true,
+          maxTicksLimit: 2,
+          callback: function (value, index, values) {
+            if (values.length === 0) return value;
+            if (typeof value === 'string') return;
+
+            const chartId = this.chart.canvas.id;
+
+            if (chartId === 'cpuChart') {
+              return formatNumber(value, 'en-US', '1.0-0') + '%';
+            } else if (chartId === 'networkChart') {
+              return formatBytes(value, 0) + '/s';
+            } else if (chartId === 'memoryChart') {
+              return formatBytes(value, 0);
+            }
+
+            return value;
+          }
         }
       }
     },
@@ -140,7 +161,11 @@ export class SysperfCardsComponent implements OnInit {
 
   @ViewChildren(BaseChartDirective) charts?: QueryList<BaseChartDirective>;
 
+  constructor(private sysPerfHubService: SysPerfHubService) { }
+
   ngOnInit(): void {
+    // Mocked metrics, to use when debugging
+    /*
     setInterval(() => {
       this.onNewMetrics({
         memoryUsage: Math.floor(Math.random() * 20),
@@ -149,6 +174,18 @@ export class SysperfCardsComponent implements OnInit {
         networkUpload: Math.floor(Math.random() * 20)
       })
     }, 1000);
+    */
+
+    this.sysPerfHubService.createHubConnection();
+    this.sysPerfHubService.metrics$.subscribe(metrics => {
+      if (metrics !== null) {
+        this.onNewMetrics(metrics);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sysPerfHubService.stopHubConnection();
   }
 
   onNewMetrics(perf: PerformanceInfoDto) {
@@ -223,9 +260,9 @@ export class SysperfCardsComponent implements OnInit {
       if (last === 0) {
         return ['perf-flat', faCircleMinus, 0];
       } else if (last > 0) {
-        return ['perf-up', faCircleArrowUp, 0];
+        return ['perf-bad', faCircleArrowUp, 0];
       } else {
-        return ['perf-down', faCircleArrowDown, 0];
+        return ['perf-good', faCircleArrowDown, 0];
       }
     }
 
@@ -235,10 +272,10 @@ export class SysperfCardsComponent implements OnInit {
       return ['perf-flat', faCircleMinus, 0];
     }
     else if (percIncrement > 0) {
-      return ['perf-up', faCircleArrowUp, percIncrement * 100];
+      return ['perf-bad', faCircleArrowUp, percIncrement * 100];
     }
     else {
-      return ['perf-down', faCircleArrowDown, percIncrement * 100];
+      return ['perf-good', faCircleArrowDown, percIncrement * 100];
     }
   }
 }

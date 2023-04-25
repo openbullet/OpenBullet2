@@ -24,6 +24,7 @@
                     <div class="col-6">
                         <canvas baseChart class="chart"
                             height="100px"
+                            [id]="'cpuChart'"
                             [data]="cpuLineChartData"
                             [options]="lineChartOptions"
                             [type]="'line'"></canvas>
@@ -72,6 +73,7 @@
                     <div class="col-6">
                         <canvas baseChart class="chart"
                             height="100px"
+                            [id]="'networkChart'"
                             [data]="networkLineChartData"
                             [options]="lineChartOptions"
                             [type]="'line'"></canvas>
@@ -102,6 +104,7 @@
                     <div class="col-6">
                         <canvas baseChart class="chart"
                             height="100px"
+                            [id]="'memoryChart'"
                             [data]="memoryLineChartData"
                             [options]="lineChartOptions"
                             [type]="'line'"></canvas>
