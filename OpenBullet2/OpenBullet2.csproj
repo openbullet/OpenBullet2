@@ -37,7 +37,7 @@
     <PackageReference Include="Blazored.LocalStorage" Version="3.0.0" />
     <PackageReference Include="Blazored.Modal" Version="4.1.0" />
     <PackageReference Include="BlazorMonaco" Version="2.1.0" />
-    <PackageReference Include="CaptchaSharp" Version="1.0.11" />
+    <PackageReference Include="CaptchaSharp" Version="1.0.13" />
     <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.6" />
     <PackageReference Include="GridBlazor" Version="2.1.10" />
     <PackageReference Include="GridMvcCore" Version="4.1.3" />
