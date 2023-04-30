@@ -13,11 +13,15 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipModule } from 'primeng/chip';
+import { MessagesModule } from 'primeng/messages';
+import { AvatarModule } from 'primeng/avatar';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgChartsModule } from 'ng2-charts';
 import { SysperfCardsComponent } from './components/home/sysperf-cards/sysperf-cards.component';
+import { InfoComponent } from './components/info/info.component';
+import { ContributorComponent } from './components/info/contributor/contributor.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,9 @@ import { SysperfCardsComponent } from './components/home/sysperf-cards/sysperf-c
     HomeComponent,
     MenuItemComponent,
     NotFoundComponent,
-    SysperfCardsComponent
+    SysperfCardsComponent,
+    InfoComponent,
+    ContributorComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +40,9 @@ import { SysperfCardsComponent } from './components/home/sysperf-cards/sysperf-c
     FontAwesomeModule,
     CardModule,
     ButtonModule,
+    AvatarModule,
     TooltipModule,
+    MessagesModule,
     ChipModule,
     NgChartsModule,
     MarkdownModule.forRoot(),

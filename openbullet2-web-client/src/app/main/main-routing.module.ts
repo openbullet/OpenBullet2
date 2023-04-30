@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './main.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HomeComponent } from './components/home/home.component';
+import { InfoComponent } from './components/info/info.component';
 
 const routes: Routes = [
   // Main component layout
@@ -13,6 +14,10 @@ const routes: Routes = [
       {
         component: HomeComponent,
         path: 'home'
+      },
+      {
+        component: InfoComponent,
+        path: 'info'
       }
     ]
   },
