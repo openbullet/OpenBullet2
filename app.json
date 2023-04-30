@@ -1,0 +1,28 @@
+{
+    "name": "OpenBullet2",
+    "description": "OpenBullet2",
+    "repository": "https://github.com/openbullet/OpenBullet2",
+    "stack": "container",
+      "env": {
+    "WATCHTOWER_CLEANUP": {
+      "description": "Don't Change It If You Not Know What To Do",
+      "value" : "true",
+      "required": true
+    },
+    "WATCHTOWER_LABEL_ENABLE" : {
+      "description": "Don't Change It If You Not Know What To Do",
+      "value" : "true",
+      "required" : true
+    },
+    "WATCHTOWER_INCLUDE_RESTARTING" : {
+      "description": "Don't Change It If You Not Know What To Do",
+      "value" : "true",
+      "required" : true
+    }
+  },
+      "buildpacks": [
+    {
+      "url": "https://github.com/dockhero/heroku-buildpack-docker-compose.git"
+    }
+  ]
+  }
