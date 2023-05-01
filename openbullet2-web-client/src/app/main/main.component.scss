@@ -1,5 +1,7 @@
 @import "../../styles/variables.scss";
 
+$sidebarWidth: 230px;
+
 .wrapper {
     display: flex;
     min-height: 100vh;
@@ -7,16 +9,17 @@
 
 .sidebar {
     background-color: $bgSecondary;
-    width: 230px;
-    min-width: 230px;
+    width: $sidebarWidth;
+    min-width: $sidebarWidth;
     overflow-y: auto;
     overflow-x: hidden;
+    flex: 0 1 $sidebarWidth;
 }
 
 .content {
     background-color: $bgPrimary;
     color: $fgPrimary;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     padding: 30px 80px;
 }
 

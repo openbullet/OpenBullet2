@@ -15,6 +15,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ChipModule } from 'primeng/chip';
 import { MessagesModule } from 'primeng/messages';
 import { AvatarModule } from 'primeng/avatar';
+import { AccordionModule } from 'primeng/accordion';
+import { DialogModule } from 'primeng/dialog';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -43,6 +45,8 @@ import { ContributorComponent } from './components/info/contributor/contributor.
     AvatarModule,
     TooltipModule,
     MessagesModule,
+    AccordionModule,
+    DialogModule,
     ChipModule,
     NgChartsModule,
     MarkdownModule.forRoot(),

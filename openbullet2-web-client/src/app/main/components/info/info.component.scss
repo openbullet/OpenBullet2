@@ -1,3 +1,44 @@
+@import '../../../../styles/variables.scss';
+
 .disclaimer {
     color: tomato;
+}
+
+.supporter {
+    border-radius: 10px;
+    border: 1px solid $fgInactive;
+    background-color: $bgSecondary;
+    padding: 5px 10px;
+    display: inline-block;
+    margin: 10px 10px 0px 0px;
+}
+
+.gold {
+    color: $fgGold;
+}
+
+.silver {
+    color: $fgSilver;
+}
+
+.bronze {
+    color: $fgBronze;
+}
+
+.button img {
+    width: 25px;
+    height: 25px;
+}
+
+.button span {
+    line-height: 25px;
+}
+
+.white-icon {
+    filter: invert(100%) sepia(5%) saturate(7499%) hue-rotate(285deg) brightness(114%) contrast(125%);
+}
+
+.donate-with img {
+    width: 50px;
+    height: 50px;
 }
