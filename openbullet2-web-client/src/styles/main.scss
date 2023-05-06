@@ -58,6 +58,16 @@ code {
     font-size: 14px;
 }
 
+.button-transparent {
+    background-color: transparent;
+    border: 0px solid black;
+}
+
+.button-transparent:hover {
+    background-color: transparent;
+    border: 0px solid black;
+}
+
 .button-accent {
     background-color: $fgAccent;
 }
@@ -80,8 +90,35 @@ code {
 input {
     background-color: transparent;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 4px;
     border: 1px solid $fgInactive;
     box-shadow: none;
     outline: none;
+}
+
+/*
+input:not([pinputtext]) {
+    
+}
+*/
+
+textarea {
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid $fgInactive;
+    box-shadow: none;
+    outline: none;
+}
+
+.color-bad {
+    color: $fgBad;
+}
+
+.color-inactive {
+    color: $fgInactive;
+}
+
+.text-small {
+    font-size: 12px;
 }
