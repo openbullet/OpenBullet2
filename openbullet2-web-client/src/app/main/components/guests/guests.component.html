@@ -15,6 +15,12 @@
         >
         <ng-template pTemplate="caption">
             <div class="d-flex">
+                <button class="button button-accent mr-2"
+                    pTooltip="New guest user" tooltipPosition="bottom"
+                    (click)="createGuestComponent.reset(); openCreateGuestModal()">
+                    New
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
                 <button class="button button-secondary"
                     pTooltip="Clear filters" tooltipPosition="bottom"
                     (click)="guestsDt.clear()">
@@ -81,7 +87,11 @@
 </div>
 
 <p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog 
+    [style]="{width: '25vw'}"
+    [dismissableMask]="true"
+    [closeOnEscape]="true">
+</p-confirmDialog>
 
 <p-dialog 
     #createGuestModal
@@ -93,7 +103,9 @@
     [closeOnEscape]="true"
     [draggable]="false" 
     [resizable]="false">
-    <app-create-guest (confirm)="createGuest($event)" />
+    <app-create-guest
+        #createGuestComponent
+        (confirm)="createGuest($event)" />
 </p-dialog>
 
 <p-dialog 

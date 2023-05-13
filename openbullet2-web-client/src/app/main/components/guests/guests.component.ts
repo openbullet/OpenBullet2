@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GuestService } from '../../services/guest.service';
 import { GuestDto } from '../../dtos/guests/guest.dto';
-import { faFilter, faFilterCircleXmark, faKey, faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import { faFilter, faFilterCircleXmark, faKey, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UpdateGuestInfoDto } from '../../dtos/guests/update-guest-info.dto';
 import { UpdateGuestPasswordDto } from '../../dtos/guests/update-guest-password.dto';
@@ -21,6 +21,7 @@ export class GuestsComponent implements OnInit {
   faFilterCircleXmark = faFilterCircleXmark;
   faFilter = faFilter;
   faX = faX;
+  faPlus = faPlus;
 
   selectedGuest: GuestDto | null = null;
   
