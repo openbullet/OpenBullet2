@@ -24,8 +24,26 @@ Overrides for component libraries such as PrimeNG
 .p-dialog-content,
 .p-dialog-footer,
 .p-fileupload-buttonbar,
-.p-fileupload-content
+.p-fileupload-content,
+.p-picklist-header,
+.p-picklist-filter-container,
+.p-picklist-list
 {
+    background-color: $bgSecondary !important;
+}
+
+.p-picklist-buttons > .p-button {
+    background-color: $bgSecondary !important;
+    border: 1px solid $fgInactive !important;
+    color: $fgInactive !important;
+}
+
+.p-picklist-item.p-highlight {
+    background-color: $bgTertiary !important;
+    color: $fgLight !important;
+}
+
+.p-inputtext {
     background-color: $bgSecondary !important;
 }
 

@@ -22,6 +22,7 @@ export class SharingComponent implements OnInit {
   faCircleQuestion = faCircleQuestion;
 
   selectedEndpoint: EndpointDto | null = null;
+  selectedConfigs: ConfigInfoDto[] | null = null;
 
   createEndpointModalVisible = false;
   updateEndpointModalVisible = false;
@@ -34,7 +35,6 @@ export class SharingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.refreshEndpoints();
     this.refreshConfigs();
   }
 
@@ -45,21 +45,26 @@ export class SharingComponent implements OnInit {
 
         // Try to re-select the same route if possible
         if (this.selectedEndpoint !== null) {
-          const match = this.endpoints.filter(e => e.route === this.selectedEndpoint?.route);
+          const match = endpoints.filter(e => e.route === this.selectedEndpoint?.route);
 
           if (match.length > 0) {
-            this.selectedEndpoint = match[0];
+            this.selectEndpoint(match[0]);
             return;
           }
         }
 
-        this.selectedEndpoint = endpoints.length > 0 ? endpoints[0] : null;
+        if (endpoints.length > 0) {
+          this.selectEndpoint(endpoints[0]);
+        }
       });
   }
 
   refreshConfigs() {
     this.configService.getAllConfigs()
-      .subscribe(configs => this.configs = configs);
+      .subscribe(configs => {
+        this.configs = configs;
+        this.refreshEndpoints();
+      });
   }
 
   openCreateEndpointModal() {
@@ -121,7 +126,9 @@ export class SharingComponent implements OnInit {
   }
 
   selectEndpoint(endpoint: EndpointDto) {
+    if (this.configs === null) return;
     this.selectedEndpoint = endpoint;
+    this.selectedConfigs = this.configs.filter(c => endpoint.configIds.includes(c.id));
   }
 
   getButtonClass(endpoint: EndpointDto) {
@@ -137,5 +144,10 @@ export class SharingComponent implements OnInit {
     if (index > -1) {
       endpoint.apiKeys.splice(index, 1);
     }
+  }
+
+  updateConfigIds(endpoint: EndpointDto) {
+    if (this.selectedConfigs === null) return;
+    endpoint.configIds = this.selectedConfigs.map(c => c.id);
   }
 }

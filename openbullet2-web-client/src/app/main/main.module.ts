@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PickListModule } from 'primeng/picklist';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
@@ -70,6 +71,7 @@ import { CreateEndpointComponent } from './components/sharing/create-endpoint/cr
     AvatarModule,
     TooltipModule,
     MessagesModule,
+    PickListModule,
     AccordionModule,
     CalendarModule,
     ToastModule,

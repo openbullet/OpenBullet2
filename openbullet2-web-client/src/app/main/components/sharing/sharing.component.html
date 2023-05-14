@@ -22,11 +22,12 @@
                 </li>
             </ul>
         </div>
-        <div class="col-10 pr-0" *ngIf="selectedEndpoint !== null">
+        <div class="col-10 pr-0" 
+            *ngIf="selectedEndpoint !== null && configs !== null && selectedConfigs !== null">
             <div class="container-fluid">
                 <div class="row justify-content-between">
                     <div class="col-4 text-bold">
-                        <h4>/{{ selectedEndpoint.route }}</h4>
+                        <h4 class="font-weight-bold">/{{ selectedEndpoint.route }}</h4>
                     </div>
                     <div class="col-4">
                         <div class="text-right w-100">
@@ -67,7 +68,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col">
-                        <h5>
+                        <h5 class="mb-3">
                             Configs
                             <span class="text-small">
                                 <fa-icon [icon]="faCircleQuestion"
@@ -75,7 +76,31 @@
                                 [fixedWidth]="true"></fa-icon>
                             </span>
                         </h5>
-                        <span>[TODO]</span>
+                        <p-pickList
+                            class="configs-picker"
+                            [source]="configs" sourceHeader="Available" [sourceStyle]="{ height: '30rem' }"
+                            sourceFilterPlaceholder="Search by name"
+                            [target]="selectedConfigs" targetHeader="Selected" [targetStyle]="{ height: '30rem' }"
+                            targetFilterPlaceholder="Search by name"
+                            [dragdrop]="true" [responsive]="true"
+                            (onMoveToSource)="updateConfigIds(selectedEndpoint)"
+                            (onMoveToTarget)="updateConfigIds(selectedEndpoint)"
+                            (onMoveAllToSource)="updateConfigIds(selectedEndpoint)"
+                            (onMoveAllToTarget)="updateConfigIds(selectedEndpoint)"
+                            filterBy="name" breakpoint="1400px">
+                            <ng-template let-config pTemplate="item">
+                                <div class="row">
+                                    <img class="config-icon" 
+                                        [src]="'data:image/png;base64,' + config.base64Image" />
+                                    <div class="flex-1 flex flex-column gap-2">
+                                        <span class="font-weight-bold">{{ config.name }}</span>
+                                        <div class="flex align-products-center gap-2">
+                                            <span class="font-italic text-small">{{ config.author }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-pickList>
                     </div>
                 </div>
             </div>

@@ -128,3 +128,8 @@ textarea {
 .text-accent  {
     color: $fgAccent;
 }
+
+p-pickList.configs-picker > div > div.p-picklist-source-controls,
+p-pickList.configs-picker > div > div.p-picklist-target-controls {
+    display: none !important;
+}
