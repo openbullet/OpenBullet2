@@ -37,7 +37,6 @@ export class PluginsComponent implements OnInit {
   }
 
   addPlugin(file: File) {
-    console.log("file", file);
     this.pluginService.addPlugin(file)
       .subscribe(resp => {
         this.messageService.add({

@@ -1,0 +1,106 @@
+<h1>Sharing</h1>
+
+<h3 class="my-3">Endpoints</h3>
+
+<app-spinner *ngIf="endpoints === null || configs === null" [fullWidth]="true" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 pl-0">
+            <ul class="endpoints-wrapper">
+                <li *ngFor="let endpoint of endpoints">
+                    <button
+                        (click)="selectEndpoint(endpoint)" 
+                        [ngClass]="getButtonClass(endpoint)">
+                        {{ endpoint.route }}
+                    </button>
+                </li>
+                <li>
+                    <button (click)="createEndpointComponent.reset(); openCreateEndpointModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon> New
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-10 pr-0" *ngIf="selectedEndpoint !== null">
+            <div class="container-fluid">
+                <div class="row justify-content-between">
+                    <div class="col-4 text-bold">
+                        <h4>/{{ selectedEndpoint.route }}</h4>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-right w-100">
+                            <button class="button button-bad ml-2" 
+                                pTooltip="Delete this endpoint"
+                                tooltipPosition="bottom"
+                                (click)="confirmDeleteEndpoint(selectedEndpoint)">
+                                Delete
+                            </button>
+                            <button class="button button-accent ml-2" 
+                                pTooltip="Update this endpoint"
+                                tooltipPosition="bottom"
+                                (click)="updateEndpoint(selectedEndpoint)">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <h5>
+                            API Keys
+                            <button class="button button-secondary" 
+                                pTooltip="Generate random API key"
+                                (click)="generateApiKey(selectedEndpoint)">
+                                <fa-icon [icon]="faDiceFive" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </h5>
+                        <div class="api-key">
+                            <p-chip class="mr-2"
+                                *ngFor="let apiKey of selectedEndpoint.apiKeys" 
+                                [label]="apiKey"
+                                [removable]="true"
+                                (onRemove)="removeApiKey(selectedEndpoint, apiKey)">
+                            </p-chip>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col">
+                        <h5>
+                            Configs
+                            <span class="text-small">
+                                <fa-icon [icon]="faCircleQuestion"
+                                pTooltip="These configs are shared with all people that have access to this endpoint."
+                                [fixedWidth]="true"></fa-icon>
+                            </span>
+                        </h5>
+                        <span>[TODO]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog 
+    [style]="{width: '25vw'}"
+    [dismissableMask]="true"
+    [closeOnEscape]="true">
+</p-confirmDialog>
+
+<p-dialog 
+    #createEndpointModal
+    header="New endpoint" 
+    [(visible)]="createEndpointModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-endpoint
+        #createEndpointComponent
+        (confirm)="createEndpoint($event)" />
+</p-dialog>

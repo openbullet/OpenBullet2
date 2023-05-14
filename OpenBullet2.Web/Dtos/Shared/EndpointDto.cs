@@ -10,7 +10,7 @@ public class EndpointDto
     /// <summary>
     /// The route of this endpoint in the URI.
     /// </summary>
-    [Required]
+    [Required, MinLength(1), RegularExpression(@"^[\w-]+$")]
     public string Route { get; set; } = string.Empty;
 
     /// <summary>

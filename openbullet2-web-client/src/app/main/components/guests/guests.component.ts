@@ -19,7 +19,6 @@ export class GuestsComponent implements OnInit {
   faPen = faPen;
   faKey = faKey;
   faFilterCircleXmark = faFilterCircleXmark;
-  faFilter = faFilter;
   faX = faX;
   faPlus = faPlus;
 

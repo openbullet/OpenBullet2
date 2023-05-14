@@ -1,0 +1,141 @@
+import { Component, OnInit } from '@angular/core';
+import { EndpointDto } from '../../dtos/sharing/endpoint.dto';
+import { faCircleQuestion, faDiceFive, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { SharingService } from '../../services/sharing.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfigService } from '../../services/config.service';
+import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
+
+@Component({
+  selector: 'app-sharing',
+  templateUrl: './sharing.component.html',
+  styleUrls: ['./sharing.component.scss'],
+  providers: [ConfirmationService, MessageService]
+})
+export class SharingComponent implements OnInit {
+  endpoints: EndpointDto[] | null = null;
+  configs: ConfigInfoDto[] | null = null;
+  faPen = faPen;
+  faX = faX;
+  faPlus = faPlus;
+  faDiceFive = faDiceFive;
+  faCircleQuestion = faCircleQuestion;
+
+  selectedEndpoint: EndpointDto | null = null;
+
+  createEndpointModalVisible = false;
+  updateEndpointModalVisible = false;
+
+  constructor(private sharingService: SharingService,
+    private configService: ConfigService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService) {
+
+  }
+
+  ngOnInit(): void {
+    this.refreshEndpoints();
+    this.refreshConfigs();
+  }
+
+  refreshEndpoints() {
+    this.sharingService.getAllEndpoints()
+      .subscribe(endpoints => {
+        this.endpoints = endpoints;
+
+        // Try to re-select the same route if possible
+        if (this.selectedEndpoint !== null) {
+          const match = this.endpoints.filter(e => e.route === this.selectedEndpoint?.route);
+
+          if (match.length > 0) {
+            this.selectedEndpoint = match[0];
+            return;
+          }
+        }
+
+        this.selectedEndpoint = endpoints.length > 0 ? endpoints[0] : null;
+      });
+  }
+
+  refreshConfigs() {
+    this.configService.getAllConfigs()
+      .subscribe(configs => this.configs = configs);
+  }
+
+  openCreateEndpointModal() {
+    this.createEndpointModalVisible = true;
+  }
+
+  openUpdateEndpointModal() {
+    this.updateEndpointModalVisible = true;
+  }
+
+  createEndpoint(endpoint: EndpointDto) {
+    this.sharingService.createEndpoint(endpoint)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Created',
+          detail: `Endpoint ${resp.route} was created`
+        });
+        this.createEndpointModalVisible = false;
+        this.refreshEndpoints();
+      })
+  }
+
+  updateEndpoint(endpoint: EndpointDto) {
+    console.log(endpoint);
+    this.sharingService.updateEndpoint(endpoint)
+      .subscribe(resp => {
+        console.log("resp", resp);
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Updated',
+          detail: `Endpoint ${resp.route} was updated`
+        });
+        this.updateEndpointModalVisible = false;
+        this.refreshEndpoints();
+      })
+  }
+
+  deleteEndpoint(endpoint: EndpointDto) {
+    this.sharingService.deleteEndpoint(endpoint.route)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Deleted',
+          detail: `Endpoint ${endpoint.route} was deleted`
+        });
+        this.refreshEndpoints();
+      });
+  }
+
+  confirmDeleteEndpoint(endpoint: EndpointDto) {
+    this.confirmationService.confirm({
+      message: `You are about to delete the endpoint ${endpoint.route}. 
+      Are you sure that you want to proceed?`,
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => this.deleteEndpoint(endpoint)
+    });
+  }
+
+  selectEndpoint(endpoint: EndpointDto) {
+    this.selectedEndpoint = endpoint;
+  }
+
+  getButtonClass(endpoint: EndpointDto) {
+    return endpoint === this.selectedEndpoint ? 'selected-endpoint' : '';
+  }
+
+  generateApiKey(endpoint: EndpointDto) {
+    endpoint.apiKeys.push(crypto.randomUUID());
+  }
+
+  removeApiKey(endpoint: EndpointDto, apiKey: string) {
+    const index = endpoint.apiKeys.indexOf(apiKey);
+    if (index > -1) {
+      endpoint.apiKeys.splice(index, 1);
+    }
+  }
+}

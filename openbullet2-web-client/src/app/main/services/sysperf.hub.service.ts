@@ -12,7 +12,6 @@ export class SysPerfHubService {
 
     createHubConnection() {
         // TODO: Add jwt injector here
-        console.log(getBaseHubUrl());
         this.hubConnection = new HubConnectionBuilder()
             .withUrl(getBaseHubUrl() + '/system-performance')
             .withAutomaticReconnect()

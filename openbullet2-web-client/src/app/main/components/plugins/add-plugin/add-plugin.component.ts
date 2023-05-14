@@ -16,10 +16,6 @@ export class AddPluginComponent {
     this.selectedFile = null;
   }
 
-  onSelect(event: any) {
-    console.log(event);
-  }
-
   submitForm() {
     if (this.selectedFile === null) {
       console.log('No files selected');

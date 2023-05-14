@@ -19,7 +19,6 @@ export class PluginService {
 
     addPlugin(file: File) {
         const formData: FormData = new FormData();
-        console.log(file.name);
         formData.append('file', file, file.name);
         return this.http.post(
             getBaseUrl() + '/plugin', formData

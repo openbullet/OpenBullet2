@@ -37,6 +37,8 @@ import { UpdateGuestInfoComponent } from './components/guests/update-guest-info/
 import { UpdateGuestPasswordComponent } from './components/guests/update-guest-password/update-guest-password.component';
 import { PluginsComponent } from './components/plugins/plugins.component';
 import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.component';
+import { SharingComponent } from './components/sharing/sharing.component';
+import { CreateEndpointComponent } from './components/sharing/create-endpoint/create-endpoint.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.c
     UpdateGuestInfoComponent,
     UpdateGuestPasswordComponent,
     PluginsComponent,
-    AddPluginComponent
+    AddPluginComponent,
+    SharingComponent,
+    CreateEndpointComponent
   ],
   imports: [
     CommonModule,
