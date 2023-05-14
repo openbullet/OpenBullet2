@@ -7,6 +7,7 @@
         #guestsDt
         [value]="guests"
         [tableStyle]="{ 'min-width': '50rem' }"
+        [paginator]="guests.length > 10"
         [rows]="10"
         [showCurrentPageReport]="true"
         [rowsPerPageOptions]="[10, 25, 50]"

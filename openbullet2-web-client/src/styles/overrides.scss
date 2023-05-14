@@ -1,0 +1,121 @@
+/*
+Overrides for component libraries such as PrimeNG
+*/
+
+.p-card-body {
+    background-color: $bgSecondary;
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 1rem !important;
+}
+
+.p-card-content {
+    padding: 0px !important;
+}
+
+.p-chip {
+    background-color: $bgSecondary !important;
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.p-accordion-header-link,
+.p-accordion-content,
+.p-dialog-header,
+.p-dialog-content,
+.p-dialog-footer
+{
+    background-color: $bgSecondary !important;
+}
+
+.p-confirm-dialog-reject {
+    background-color: $fgBad !important;
+    color: $fgLight !important;
+    border: 0px !important;
+}
+
+.p-confirm-dialog-accept {
+    background-color: $fgAccent !important;
+    color: $fgLight !important;
+    border: 0px !important;
+}
+
+.p-datatable-header {
+    border: 0px !important;
+    background-color: transparent !important;
+    padding: 1rem 0 !important;
+}
+
+.p-datatable-thead > tr {
+    border: 0px !important;
+}
+
+.p-datatable-thead > tr > th {
+    background-color: $bgSecondary !important;
+}
+
+.p-datatable-thead > tr > th {
+    border: 0px !important;
+}
+
+.p-datatable-wrapper {
+    border: 1px solid $fgInactive;
+    border-radius: 10px;
+}
+
+.p-datatable-tbody > tr:last-child {
+    border: 0px !important;
+}
+
+.p-datatable-tbody > tr > td {
+    border-top: 1px solid $fgInactive !important;
+}
+
+.p-datatable-tbody > tr:nth-child(odd) {
+    background-color: $bgPrimary !important;
+}
+
+.p-datatable-tbody > tr:nth-child(even) {
+    background-color: $bgSecondary !important;
+}
+
+.p-paginator {
+    background-color: transparent !important;
+}
+
+.p-paginator-current {
+    color: $fgPrimary !important;
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+    border: 1px solid $fgInactive !important;
+}
+
+.p-paginator-element {
+    color: $fgPrimary !important;
+    border: 1px solid $fgInactive !important;
+}
+
+.p-paginator-last {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
+.p-paginator-element.p-highlight {
+    background-color: $bgSecondary !important;
+}
+
+.p-dropdown {
+    background-color: $bgSecondary !important;
+    border: 1px solid $fgInactive !important;
+    border-radius: 5px !important;
+}
+
+.p-dropdown-items-wrapper {
+    background-color: $bgSecondary !important;
+    border: 1px solid $fgInactive !important;
+    border-radius: 5px !important;
+}
+
+.p-dropdown-item.p-highlight {
+    background-color: $fgAccent !important;
+    color: $fgLight !important;
+}
