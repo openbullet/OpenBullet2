@@ -5,6 +5,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { HomeComponent } from './components/home/home.component';
 import { InfoComponent } from './components/info/info.component';
 import { GuestsComponent } from './components/guests/guests.component';
+import { PluginsComponent } from './components/plugins/plugins.component';
 
 const routes: Routes = [
   // Main component layout
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         component: GuestsComponent,
         path: 'guests'
+      },
+      {
+        component: PluginsComponent,
+        path: 'plugins'
       },
       {
         component: InfoComponent,

@@ -22,9 +22,29 @@ Overrides for component libraries such as PrimeNG
 .p-accordion-content,
 .p-dialog-header,
 .p-dialog-content,
-.p-dialog-footer
+.p-dialog-footer,
+.p-fileupload-buttonbar,
+.p-fileupload-content
 {
     background-color: $bgSecondary !important;
+}
+
+.p-fileupload-buttonbar,
+.p-fileupload-content {
+    border: 1px solid $fgInactive !important;
+}
+
+.p-fileupload-content {
+    border-top: 0px !important;
+    padding: .5rem 1rem !important;
+}
+
+.p-fileupload-content > p-progressbar {
+    display: none;
+}
+
+.p-fileupload-content:not(:has(p-progressbar)) {
+    display: none;
 }
 
 .p-confirm-dialog-reject {
@@ -35,6 +55,18 @@ Overrides for component libraries such as PrimeNG
 
 .p-confirm-dialog-accept {
     background-color: $fgAccent !important;
+    color: $fgLight !important;
+    border: 0px !important;
+}
+
+.p-fileupload-choose {
+    background-color: $fgAccent !important;
+    color: $fgLight !important;
+    border: 0px !important;
+}
+
+.p-fileupload-row > div > .p-button-icon-only {
+    background-color: $fgBad !important;
     color: $fgLight !important;
     border: 0px !important;
 }

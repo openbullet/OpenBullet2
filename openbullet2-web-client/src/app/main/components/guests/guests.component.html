@@ -14,6 +14,11 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [globalFilterFields]="['username', 'accessExpiration', 'allowedAddresses']"
         >
+        <ng-template pTemplate="emptymessage">
+            <div class="m-3">
+                <span>No guests added yet</span>
+            </div>
+        </ng-template>
         <ng-template pTemplate="caption">
             <div class="d-flex">
                 <button class="button button-accent mr-2"

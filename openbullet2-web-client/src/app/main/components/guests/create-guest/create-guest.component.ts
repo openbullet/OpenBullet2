@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
-import { CreateGuestDto } from 'src/app/main/dtos/guests/create-guest.dto';
+import { CreateGuestDto } from 'src/app/main/dtos/guest/create-guest.dto';
 
 @Component({
   selector: 'app-create-guest',

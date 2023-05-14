@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { GuestService } from '../../services/guest.service';
-import { GuestDto } from '../../dtos/guests/guest.dto';
+import { GuestDto } from '../../dtos/guest/guest.dto';
 import { faFilter, faFilterCircleXmark, faKey, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { UpdateGuestInfoDto } from '../../dtos/guests/update-guest-info.dto';
-import { UpdateGuestPasswordDto } from '../../dtos/guests/update-guest-password.dto';
-import { CreateGuestDto } from '../../dtos/guests/create-guest.dto';
+import { UpdateGuestInfoDto } from '../../dtos/guest/update-guest-info.dto';
+import { UpdateGuestPasswordDto } from '../../dtos/guest/update-guest-password.dto';
+import { CreateGuestDto } from '../../dtos/guest/create-guest.dto';
 import * as moment from 'moment';
 
 @Component({
@@ -111,10 +111,11 @@ export class GuestsComponent implements OnInit {
 
   confirmDeleteGuest(guest: GuestDto) {
     this.confirmationService.confirm({
-      message: 'Are you sure that you want to proceed?',
+      message: `You are about to delete the guest user ${guest.username}. 
+      Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.deleteGuest(guest)
-  });
+    });
   }
 }

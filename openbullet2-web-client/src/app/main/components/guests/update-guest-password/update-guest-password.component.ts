@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { GuestDto } from 'src/app/main/dtos/guests/guest.dto';
-import { UpdateGuestPasswordDto } from 'src/app/main/dtos/guests/update-guest-password.dto';
+import { GuestDto } from 'src/app/main/dtos/guest/guest.dto';
+import { UpdateGuestPasswordDto } from 'src/app/main/dtos/guest/update-guest-password.dto';
 
 @Component({
   selector: 'app-update-guest-password',

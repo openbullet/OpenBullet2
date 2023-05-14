@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
-import { GuestDto } from "../dtos/guests/guest.dto";
-import { CreateGuestDto } from "../dtos/guests/create-guest.dto";
-import { UpdateGuestInfoDto } from "../dtos/guests/update-guest-info.dto";
-import { UpdateGuestPasswordDto } from "../dtos/guests/update-guest-password.dto";
+import { GuestDto } from "../dtos/guest/guest.dto";
+import { CreateGuestDto } from "../dtos/guest/create-guest.dto";
+import { UpdateGuestInfoDto } from "../dtos/guest/update-guest-info.dto";
+import { UpdateGuestPasswordDto } from "../dtos/guest/update-guest-password.dto";
 
 @Injectable({
     providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { faCircleQuestion, faUser } from '@fortawesome/free-solid-svg-icons';
-import { GuestDto } from 'src/app/main/dtos/guests/guest.dto';
-import { UpdateGuestInfoDto } from 'src/app/main/dtos/guests/update-guest-info.dto';
+import { GuestDto } from 'src/app/main/dtos/guest/guest.dto';
+import { UpdateGuestInfoDto } from 'src/app/main/dtos/guest/update-guest-info.dto';
 
 @Component({
   selector: 'app-update-guest-info',

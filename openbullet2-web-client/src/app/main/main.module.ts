@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { FileUploadModule } from 'primeng/fileupload';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -34,6 +35,8 @@ import { GuestsComponent } from './components/guests/guests.component';
 import { CreateGuestComponent } from './components/guests/create-guest/create-guest.component';
 import { UpdateGuestInfoComponent } from './components/guests/update-guest-info/update-guest-info.component';
 import { UpdateGuestPasswordComponent } from './components/guests/update-guest-password/update-guest-password.component';
+import { PluginsComponent } from './components/plugins/plugins.component';
+import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,9 @@ import { UpdateGuestPasswordComponent } from './components/guests/update-guest-p
     GuestsComponent,
     CreateGuestComponent,
     UpdateGuestInfoComponent,
-    UpdateGuestPasswordComponent
+    UpdateGuestPasswordComponent,
+    PluginsComponent,
+    AddPluginComponent
   ],
   imports: [
     CommonModule,
@@ -66,6 +71,7 @@ import { UpdateGuestPasswordComponent } from './components/guests/update-guest-p
     ToastModule,
     ConfirmPopupModule,
     ConfirmDialogModule,
+    FileUploadModule,
     DialogModule,
     TableModule,
     ChipModule,
