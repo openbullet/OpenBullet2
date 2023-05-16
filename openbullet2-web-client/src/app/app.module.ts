@@ -9,6 +9,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxSpinnerConfig } from 'ngx-spinner/lib/config';
 import { NgChartsModule } from 'ng2-charts';
+import { MessagesModule } from 'primeng/messages';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,11 @@ import { NgChartsModule } from 'ng2-charts';
       size: 'medium',
       color: '#fff'
     }),
-    NgChartsModule
+    NgChartsModule,
+    MessagesModule,
+    ConfirmPopupModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [AppComponent]

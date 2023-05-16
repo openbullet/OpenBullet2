@@ -7,8 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 @Component({
   selector: 'app-plugins',
   templateUrl: './plugins.component.html',
-  styleUrls: ['./plugins.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  styleUrls: ['./plugins.component.scss']
 })
 export class PluginsComponent implements OnInit {
   plugins: PluginDto[] | null = null;

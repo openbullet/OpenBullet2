@@ -9,8 +9,7 @@ import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
 @Component({
   selector: 'app-sharing',
   templateUrl: './sharing.component.html',
-  styleUrls: ['./sharing.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  styleUrls: ['./sharing.component.scss']
 })
 export class SharingComponent implements OnInit {
   endpoints: EndpointDto[] | null = null;

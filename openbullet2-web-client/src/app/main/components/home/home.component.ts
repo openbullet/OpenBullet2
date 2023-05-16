@@ -10,7 +10,6 @@ import { TimeSpan } from 'src/app/shared/utils/timespan';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { addTimeSpan, parseTimeSpan } from 'src/app/shared/utils/dates';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { CollectionInfoDto } from '../../dtos/info/collection-info.dto';
 
 @Component({

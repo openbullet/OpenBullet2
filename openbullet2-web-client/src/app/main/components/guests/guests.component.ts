@@ -11,8 +11,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-guests',
   templateUrl: './guests.component.html',
-  styleUrls: ['./guests.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  styleUrls: ['./guests.component.scss']
 })
 export class GuestsComponent implements OnInit {
   guests: GuestDto[] | null = null;

@@ -6,11 +6,14 @@ import {
   faCircleArrowUp, 
   faCircleMinus ,
   faCaretDown,
-  faCaretUp
+  faCaretUp,
+  faTrashCan
 } from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { MessageService } from 'primeng/api';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
+import { DebugService } from 'src/app/main/services/debug.service';
 import { SysPerfHubService } from 'src/app/main/services/sysperf.hub.service';
 import { formatBytes } from 'src/app/shared/utils/bytes';
 
@@ -26,6 +29,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
   faCircleMinus = faCircleMinus;
   faCaretDown = faCaretDown;
   faCaretUp = faCaretUp;
+  faTrashCan = faTrashCan;
 
   // CPU
   cpuChipValue = 0;
@@ -161,7 +165,10 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
 
   @ViewChildren(BaseChartDirective) charts?: QueryList<BaseChartDirective>;
 
-  constructor(private sysPerfHubService: SysPerfHubService) { }
+  constructor(
+    private sysPerfHubService: SysPerfHubService,
+    private debugService: DebugService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Mocked metrics, to use when debugging
@@ -186,6 +193,17 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sysPerfHubService.stopHubConnection();
+  }
+
+  garbageCollect() {
+    this.debugService.garbageCollect()
+      .subscribe(() => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Requested',
+          detail: `Garbage Collection is on the way!`
+        });
+      });
   }
 
   onNewMetrics(perf: PerformanceInfoDto) {

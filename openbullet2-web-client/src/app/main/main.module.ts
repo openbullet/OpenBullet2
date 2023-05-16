@@ -14,15 +14,11 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipModule } from 'primeng/chip';
-import { MessagesModule } from 'primeng/messages';
 import { AvatarModule } from 'primeng/avatar';
 import { CalendarModule } from 'primeng/calendar';
 import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PickListModule } from 'primeng/picklist';
 import { FileUploadModule } from 'primeng/fileupload';
 import { MarkdownModule } from 'ngx-markdown';
@@ -70,13 +66,9 @@ import { CreateEndpointComponent } from './components/sharing/create-endpoint/cr
     ButtonModule,
     AvatarModule,
     TooltipModule,
-    MessagesModule,
     PickListModule,
     AccordionModule,
     CalendarModule,
-    ToastModule,
-    ConfirmPopupModule,
-    ConfirmDialogModule,
     FileUploadModule,
     DialogModule,
     TableModule,

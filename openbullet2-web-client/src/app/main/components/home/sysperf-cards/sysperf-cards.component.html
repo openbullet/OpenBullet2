@@ -87,6 +87,11 @@
                     <div class="col-6">
                         <span>Memory</span>
                         <span class="perf-timespan">Last minute</span>
+                        <button class="button button-transparent ml-2" 
+                            pTooltip="Trigger aggressive server-side Garbage Collection"
+                            (click)="garbageCollect()">
+                            <fa-icon [icon]="faTrashCan" [fixedWidth]="true"></fa-icon>
+                        </button>
                     </div>
                     <div class="col-6 text-right">
                         <p-chip class="ml-auto">
