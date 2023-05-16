@@ -18,6 +18,10 @@ Overrides for component libraries such as PrimeNG
     box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
 }
 
+p-chip.mt-2 > .p-chip {
+    margin-top: 0.5rem !important;
+}
+
 .p-accordion-header-link,
 .p-accordion-content,
 .p-dialog-header,
