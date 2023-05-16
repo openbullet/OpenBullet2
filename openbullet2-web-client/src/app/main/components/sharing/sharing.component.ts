@@ -98,6 +98,7 @@ export class SharingComponent implements OnInit {
           detail: `Endpoint ${resp.route} was updated`
         });
         this.updateEndpointModalVisible = false;
+        this.selectedConfigs = null;
         this.refreshEndpoints();
       })
   }
