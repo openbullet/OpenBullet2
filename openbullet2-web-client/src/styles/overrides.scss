@@ -173,3 +173,11 @@ p-chip.mt-2 > .p-chip {
     background-color: $fgAccent !important;
     color: $fgLight !important;
 }
+
+.p-dropdown-trigger {
+    background-color: $bgPrimary !important;
+}
+
+.p-inputtext, .p-link {
+    font-family: Poppins !important;
+}
