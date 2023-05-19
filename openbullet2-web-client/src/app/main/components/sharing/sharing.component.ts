@@ -21,6 +21,7 @@ export class SharingComponent implements OnInit {
   faCircleQuestion = faCircleQuestion;
 
   selectedEndpoint: EndpointDto | null = null;
+  availableConfigs: ConfigInfoDto[] | null = null;
   selectedConfigs: ConfigInfoDto[] | null = null;
 
   createEndpointModalVisible = false;
@@ -98,6 +99,7 @@ export class SharingComponent implements OnInit {
           detail: `Endpoint ${resp.route} was updated`
         });
         this.updateEndpointModalVisible = false;
+        this.availableConfigs = null;
         this.selectedConfigs = null;
         this.refreshEndpoints();
       })
@@ -128,6 +130,7 @@ export class SharingComponent implements OnInit {
   selectEndpoint(endpoint: EndpointDto) {
     if (this.configs === null) return;
     this.selectedEndpoint = endpoint;
+    this.availableConfigs = this.configs.filter(c => !endpoint.configIds.includes(c.id));
     this.selectedConfigs = this.configs.filter(c => endpoint.configIds.includes(c.id));
   }
 

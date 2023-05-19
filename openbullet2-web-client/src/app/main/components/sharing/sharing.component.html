@@ -23,7 +23,7 @@
             </ul>
         </div>
         <div class="col-10 pr-0" 
-            *ngIf="selectedEndpoint !== null && configs !== null && selectedConfigs !== null">
+            *ngIf="selectedEndpoint !== null && availableConfigs !== null && selectedConfigs !== null">
             <div class="container-fluid">
                 <div class="row justify-content-between">
                     <div class="col-4 text-bold">
@@ -78,7 +78,7 @@
                         </h5>
                         <p-pickList
                             class="configs-picker"
-                            [source]="configs" sourceHeader="Available" [sourceStyle]="{ height: '30rem' }"
+                            [source]="availableConfigs" sourceHeader="Available" [sourceStyle]="{ height: '30rem' }"
                             sourceFilterPlaceholder="Search by name"
                             [target]="selectedConfigs" targetHeader="Selected" [targetStyle]="{ height: '30rem' }"
                             targetFilterPlaceholder="Search by name"
