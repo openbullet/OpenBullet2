@@ -21,7 +21,7 @@
             <h3>General</h3>
         </div>
     </div>
-    <div class="row my-2">
+    <div class="row my-3">
         <div class="col-12">
             <span class="mr-2">When editing a config, navigate to</span>
             <p-dropdown
@@ -29,15 +29,15 @@
                 [options]="configSections"
                 [(ngModel)]="settings.generalSettings.configSectionOnLoad">
                 <ng-template let-item pTemplate="selectedItem">
-                    {{item | titlecase}}
+                    <span class="input-small">{{item | titlecase}}</span>
                 </ng-template>
                 <ng-template let-item pTemplate="item">
-                    {{item | titlecase}}
+                    <span class="input-small">{{item | titlecase}}</span>
                 </ng-template>
             </p-dropdown>
         </div>
     </div>
-    <div class="row my-2">
+    <div class="row my-3">
         <div class="col-12">
             <p-checkbox
                 (onChange)="touched = true"
@@ -46,13 +46,21 @@
                 label="Automatically set the recommended bots when a config is selected in the job creation page"></p-checkbox>
         </div>
     </div>
-    <div class="row my-2">
+    <div class="row my-3">
         <div class="col-12">
             <p-checkbox
                 (onChange)="touched = true"
                 [(ngModel)]="settings.generalSettings.warnConfigNotSaved"
                 [binary]="true" inputId="warnConfigNotSaved"
                 label="Show a warning when the currently loaded config was not saved and another one is loaded"></p-checkbox>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Default author on newly created configs</span>
+            <input id="defaultAuthor" type="text" class="input-small"
+                [(ngModel)]="settings.generalSettings.defaultAuthor"
+                placeholder="Anonymous" />
         </div>
     </div>
 </div>
