@@ -7,6 +7,7 @@ import { InfoComponent } from './components/info/info.component';
 import { GuestsComponent } from './components/guests/guests.component';
 import { PluginsComponent } from './components/plugins/plugins.component';
 import { SharingComponent } from './components/sharing/sharing.component';
+import { OBSettingsComponent } from './components/ob-settings/ob-settings.component';
 
 const routes: Routes = [
   // Main component layout
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         component: HomeComponent,
         path: 'home'
+      },
+      {
+        component: OBSettingsComponent,
+        path: 'settings'
       },
       {
         component: GuestsComponent,

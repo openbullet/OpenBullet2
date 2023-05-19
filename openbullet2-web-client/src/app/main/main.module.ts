@@ -13,8 +13,10 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { DropdownModule } from 'primeng/dropdown';
 import { ChipModule } from 'primeng/chip';
 import { AvatarModule } from 'primeng/avatar';
+import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar';
 import { AccordionModule } from 'primeng/accordion';
 import { DialogModule } from 'primeng/dialog';
@@ -36,6 +38,7 @@ import { PluginsComponent } from './components/plugins/plugins.component';
 import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.component';
 import { SharingComponent } from './components/sharing/sharing.component';
 import { CreateEndpointComponent } from './components/sharing/create-endpoint/create-endpoint.component';
+import { OBSettingsComponent } from './components/ob-settings/ob-settings.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,8 @@ import { CreateEndpointComponent } from './components/sharing/create-endpoint/cr
     PluginsComponent,
     AddPluginComponent,
     SharingComponent,
-    CreateEndpointComponent
+    CreateEndpointComponent,
+    OBSettingsComponent
   ],
   imports: [
     CommonModule,
@@ -66,8 +70,10 @@ import { CreateEndpointComponent } from './components/sharing/create-endpoint/cr
     ButtonModule,
     AvatarModule,
     TooltipModule,
+    DropdownModule,
     PickListModule,
     AccordionModule,
+    CheckboxModule,
     CalendarModule,
     FileUploadModule,
     DialogModule,

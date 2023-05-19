@@ -1,0 +1,58 @@
+<div *ngIf="settings === null">
+    <h1>Settings</h1>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>Settings</h1>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-secondary ml-2" 
+                (click)="confirmRestoreDefaults()">Restore Defaults</button>
+            <button class="button button-accent ml-2"
+                [disabled]="!touched"
+                (click)="saveSettings()">Save</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h3>General</h3>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <span class="mr-2">When editing a config, navigate to</span>
+            <p-dropdown
+                (onChange)="touched = true"
+                [options]="configSections"
+                [(ngModel)]="settings.generalSettings.configSectionOnLoad">
+                <ng-template let-item pTemplate="selectedItem">
+                    {{item | titlecase}}
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    {{item | titlecase}}
+                </ng-template>
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true"
+                [(ngModel)]="settings.generalSettings.autoSetRecommendedBots"
+                [binary]="true" inputId="autoSetRecommendedBots"
+                label="Automatically set the recommended bots when a config is selected in the job creation page"></p-checkbox>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true"
+                [(ngModel)]="settings.generalSettings.warnConfigNotSaved"
+                [binary]="true" inputId="warnConfigNotSaved"
+                label="Show a warning when the currently loaded config was not saved and another one is loaded"></p-checkbox>
+        </div>
+    </div>
+</div>

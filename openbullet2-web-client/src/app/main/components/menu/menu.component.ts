@@ -69,13 +69,13 @@ export class MenuComponent {
       items: [
         {
           icon: faWrench,
-          label: 'RL Settings',
-          link: '/rl-settings'
+          label: 'Settings',
+          link: '/settings'
         },
         {
           icon: faWrench,
-          label: 'OB Settings',
-          link: '/ob-settings'
+          label: 'RL Settings',
+          link: '/rl-settings'
         }
       ]
     },

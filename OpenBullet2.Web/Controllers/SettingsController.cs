@@ -49,6 +49,15 @@ public class SettingsController : ApiController
         => _ruriLibSettingsService.RuriLibSettings;
 
     /// <summary>
+    /// Get the RuriLib default settings.
+    /// </summary>
+    [Admin]
+    [HttpGet("rurilib/default")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<GlobalSettings> GetRuriLibDefaultSettings()
+        => new GlobalSettings();
+
+    /// <summary>
     /// Update the RuriLib settings.
     /// </summary>
     [Admin]
@@ -78,6 +87,15 @@ public class SettingsController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<OpenBulletSettingsDto> GetSettings()
         => _mapper.Map<OpenBulletSettingsDto>(_obSettingsService.Settings);
+
+    /// <summary>
+    /// Get the default OpenBullet settings.
+    /// </summary>
+    [Admin]
+    [HttpGet("default")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<OpenBulletSettingsDto> GetDefaultSettings()
+        => _mapper.Map<OpenBulletSettingsDto>(new OpenBulletSettings());
 
     /// <summary>
     /// Update the OpenBullet settings.

@@ -60,7 +60,7 @@ export class GuestsComponent implements OnInit {
     this.guestService.createGuest(guest)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Created',
           detail: `Guest ${resp.username} was created`
         });
@@ -73,7 +73,7 @@ export class GuestsComponent implements OnInit {
     this.guestService.updateGuestInfo(guest)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Updated',
           detail: `Guest ${resp.username} was updated`
         });
@@ -86,7 +86,7 @@ export class GuestsComponent implements OnInit {
     this.guestService.updateGuestPassword(guest)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Password updated',
           detail: `Changed the password of ${resp.username}`
         });
@@ -99,7 +99,7 @@ export class GuestsComponent implements OnInit {
     this.guestService.deleteGuest(guest.id)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Deleted',
           detail: `Guest ${guest.username} was deleted`
         });

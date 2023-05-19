@@ -133,3 +133,15 @@ p-pickList.configs-picker > div > div.p-picklist-source-controls,
 p-pickList.configs-picker > div > div.p-picklist-target-controls {
     display: none !important;
 }
+
+.no-paddings {
+    .row {
+        .col, .col-1, .col-2, .col-3, .col-4, .col-6, .col-12 {
+            padding: 0px;
+        }
+    }
+}
+
+label {
+    margin-bottom: 0px !important;
+}

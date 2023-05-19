@@ -79,7 +79,7 @@ export class SharingComponent implements OnInit {
     this.sharingService.createEndpoint(endpoint)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Created',
           detail: `Endpoint ${resp.route} was created`
         });
@@ -94,7 +94,7 @@ export class SharingComponent implements OnInit {
       .subscribe(resp => {
         console.log("resp", resp);
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Updated',
           detail: `Endpoint ${resp.route} was updated`
         });
@@ -109,7 +109,7 @@ export class SharingComponent implements OnInit {
     this.sharingService.deleteEndpoint(endpoint.route)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Deleted',
           detail: `Endpoint ${endpoint.route} was deleted`
         });

@@ -39,7 +39,7 @@ export class PluginsComponent implements OnInit {
     this.pluginService.addPlugin(file)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Added',
           detail: `Plugin ${file.name} was added`
         });
@@ -52,7 +52,7 @@ export class PluginsComponent implements OnInit {
     this.pluginService.deletePlugin(plugin.name)
       .subscribe(resp => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Deleted',
           detail: `Plugin ${plugin.name} was deleted`
         });
