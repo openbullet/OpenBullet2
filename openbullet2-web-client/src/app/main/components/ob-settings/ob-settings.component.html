@@ -59,6 +59,7 @@
         <div class="col-12">
             <span class="mr-2">Default author on newly created configs</span>
             <input id="defaultAuthor" type="text" class="input-small"
+                (input)="touched = true"
                 [(ngModel)]="settings.generalSettings.defaultAuthor"
                 placeholder="Anonymous" />
         </div>
