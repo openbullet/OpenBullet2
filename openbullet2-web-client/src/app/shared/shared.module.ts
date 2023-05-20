@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { BytesPipe } from './pipes/bytes.pipe';
+import { InputTextComponent } from './components/input-text/input-text.component';
+import { InputNumberComponent } from './components/input-number/input-number.component';
 
 
 
@@ -10,7 +12,9 @@ import { BytesPipe } from './pipes/bytes.pipe';
   declarations: [
     SpinnerComponent,
     TruncatePipe,
-    BytesPipe
+    BytesPipe,
+    InputTextComponent,
+    InputNumberComponent
   ],
   imports: [
     CommonModule
@@ -18,7 +22,9 @@ import { BytesPipe } from './pipes/bytes.pipe';
   exports: [
     SpinnerComponent,
     TruncatePipe,
-    BytesPipe
+    BytesPipe,
+    InputTextComponent,
+    InputNumberComponent
   ]
 })
 export class SharedModule { }

@@ -12,7 +12,7 @@
             <button class="button button-secondary ml-2" 
                 (click)="confirmRestoreDefaults()">Restore Defaults</button>
             <button class="button button-accent ml-2"
-                [disabled]="!touched"
+                [disabled]="!canSave()"
                 (click)="saveSettings()">Save</button>
         </div>
     </div>
@@ -58,10 +58,30 @@
     <div class="row my-3">
         <div class="col-12">
             <span class="mr-2">Default author on newly created configs</span>
-            <input id="defaultAuthor" type="text" class="input-small"
-                (input)="touched = true"
+            <app-input-text key="defaultAuthor" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
                 [(ngModel)]="settings.generalSettings.defaultAuthor"
-                placeholder="Anonymous" />
+                placeholder="Anonymous" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true"
+                [(ngModel)]="settings.generalSettings.enableJobLogging"
+                [binary]="true" inputId="enableJobLogging"
+                label="Enable logging in the job viewer page"></p-checkbox>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Maximum number of entries in the log</span>
+            <app-input-number key="logBufferSize" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.logBufferSize"
+                [placeholder]="30" [min]="0" [integer]="true" />
         </div>
     </div>
 </div>

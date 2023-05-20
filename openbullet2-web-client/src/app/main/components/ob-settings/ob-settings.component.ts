@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
 import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { FieldValidity } from 'src/app/shared/utils/forms';
 
 @Component({
   selector: 'app-ob-settings',
@@ -15,6 +16,7 @@ export class OBSettingsComponent implements OnInit {
     return !this.touched;
   }
 
+  fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
   touched: boolean = false;
   configSections: string[] = [
@@ -49,8 +51,8 @@ export class OBSettingsComponent implements OnInit {
           summary: 'Saved',
           detail: 'The settings were successfully saved'
         });
-        this.settings = settings;
         this.touched = false;
+        this.settings = settings;
       });
   }
 
@@ -78,5 +80,16 @@ export class OBSettingsComponent implements OnInit {
             this.settings = settings;
           })
       });
+  }
+
+  onValidityChange(validity: FieldValidity) {
+    this.fieldsValidity[validity.key] = validity.valid;
+    console.log('onValidityChange', validity);
+  }
+
+  // Can save if touched and every field is valid
+  canSave() {
+    console.log('canSave', this.touched && Object.values(this.fieldsValidity).every(v => v));
+    return this.touched && Object.values(this.fieldsValidity).every(v => v);
   }
 }

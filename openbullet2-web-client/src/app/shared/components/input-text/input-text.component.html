@@ -1,0 +1,9 @@
+<input 
+    type="text"
+    [id]="id"
+    [class]="computeClass()"
+    (input)="valueChanging($event)"
+    [value]="ngModel"
+    (change)="valueChanged($event)"
+    [placeholder]="placeholder"
+/>
