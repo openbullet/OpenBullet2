@@ -28,6 +28,10 @@ export class OBSettingsComponent implements OnInit {
     'cSharpCode',
     'loliScript'
   ];
+  jobDisplayModes: string[] = [
+    'standard',
+    'detailed'
+  ];
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,

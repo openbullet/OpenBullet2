@@ -37,7 +37,7 @@
                 (onChange)="touched = true"
                 [(ngModel)]="settings.generalSettings.autoSetRecommendedBots"
                 [binary]="true" inputId="autoSetRecommendedBots"
-                label="Automatically set the recommended bots when a config is selected in the job creation page"></p-checkbox>
+                label="Automatically set the recommended bots when a config is selected in the job creation page" />
         </div>
     </div>
     <div class="row my-3">
@@ -46,7 +46,7 @@
                 (onChange)="touched = true"
                 [(ngModel)]="settings.generalSettings.warnConfigNotSaved"
                 [binary]="true" inputId="warnConfigNotSaved"
-                label="Show a warning when the currently loaded config was not saved and another one is loaded"></p-checkbox>
+                label="Show a warning when the currently loaded config was not saved and another one is loaded" />
         </div>
     </div>
     <div class="row my-3">
@@ -65,7 +65,7 @@
                 (onChange)="touched = true"
                 [(ngModel)]="settings.generalSettings.enableJobLogging"
                 [binary]="true" inputId="enableJobLogging"
-                label="Enable logging in the job viewer page"></p-checkbox>
+                label="Enable logging in the job viewer page" />
         </div>
     </div>
     <div class="row my-3">
@@ -76,6 +76,71 @@
                 (touched)="touched = true" ngDefaultControl
                 [(ngModel)]="settings.generalSettings.logBufferSize"
                 [placeholder]="30" [min]="0" [integer]="true" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Job manager update interval</span>
+            <app-input-number key="jobManagerUpdateInterval" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.jobManagerUpdateInterval"
+                [placeholder]="1000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Job update interval</span>
+            <app-input-number key="jobUpdateInterval" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.generalSettings.jobUpdateInterval"
+                [placeholder]="1000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Default job display mode</span>
+            <app-input-dropdown key="defaultJobDisplayMode"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="jobDisplayModes"
+                [(ngModel)]="settings.generalSettings.defaultJobDisplayMode" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true"
+                [(ngModel)]="settings.generalSettings.groupCapturesInDebugger"
+                [binary]="true" inputId="groupCapturesInDebugger"
+                label="Group captures in debugger" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true"
+                [(ngModel)]="settings.generalSettings.ignoreWordlistNameOnHitsDedupe"
+                [binary]="true" inputId="ignoreWordlistNameOnHitsDedupe"
+                label="Ignore the wordlist name when removing duplicates from hits" />
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Security</h3>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Remote</h3>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Customization</h3>
         </div>
     </div>
 </div>
