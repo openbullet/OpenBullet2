@@ -1,0 +1,10 @@
+<p-dropdown
+    (onChange)="valueChanged($event.value)"
+    [options]="options">
+    <ng-template let-item pTemplate="selectedItem">
+        <span [class]="computeItemClass()">{{ngModel | titlecase}}</span>
+    </ng-template>
+    <ng-template let-item pTemplate="item">
+        <span [class]="optionClass">{{item | titlecase}}</span>
+    </ng-template>
+</p-dropdown>

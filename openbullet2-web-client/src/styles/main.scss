@@ -157,3 +157,15 @@ label {
     height: 25px !important;
     line-height: 10px !important;
 }
+
+.input-valid {
+    border-color: $fgAccentLight;
+}
+
+.input-invalid {
+    border-color: $fgBad;
+}
+
+.p-dropdown:has(span > span.input-valid) {
+    border-color: $fgAccentLight !important;
+}

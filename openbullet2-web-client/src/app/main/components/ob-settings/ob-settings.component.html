@@ -24,17 +24,11 @@
     <div class="row my-3">
         <div class="col-12">
             <span class="mr-2">When editing a config, navigate to</span>
-            <p-dropdown
-                (onChange)="touched = true"
+            <app-input-dropdown key="configSectionOnLoad"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
                 [options]="configSections"
-                [(ngModel)]="settings.generalSettings.configSectionOnLoad">
-                <ng-template let-item pTemplate="selectedItem">
-                    <span class="input-small">{{item | titlecase}}</span>
-                </ng-template>
-                <ng-template let-item pTemplate="item">
-                    <span class="input-small">{{item | titlecase}}</span>
-                </ng-template>
-            </p-dropdown>
+                [(ngModel)]="settings.generalSettings.configSectionOnLoad" />
         </div>
     </div>
     <div class="row my-3">
