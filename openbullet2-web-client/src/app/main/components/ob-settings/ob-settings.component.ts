@@ -84,12 +84,10 @@ export class OBSettingsComponent implements OnInit {
 
   onValidityChange(validity: FieldValidity) {
     this.fieldsValidity[validity.key] = validity.valid;
-    console.log('onValidityChange', validity);
   }
 
   // Can save if touched and every field is valid
   canSave() {
-    console.log('canSave', this.touched && Object.values(this.fieldsValidity).every(v => v));
     return this.touched && Object.values(this.fieldsValidity).every(v => v);
   }
 }
