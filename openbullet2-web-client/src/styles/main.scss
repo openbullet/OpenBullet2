@@ -18,6 +18,10 @@ body {
     font-family: Poppins;
 }
 
+a {
+    color: $fgAccentLight !important;
+}
+
 .monospace {
     font-family: Chivo Mono;
 }
@@ -109,28 +113,32 @@ textarea {
     outline: none;
 }
 
+.color-primary {
+    color: $fgPrimary !important;
+}
+
 .color-bad {
-    color: $fgBad;
+    color: $fgBad !important;
 }
 
 .color-inactive {
-    color: $fgInactive;
+    color: $fgInactive !important;
+}
+
+.color-inactive {
+    color: $fgInactive !important;
+}
+
+.color-accent  {
+    color: $fgAccent !important;
+}
+
+.color-accent-light {
+    color: $fgAccentLight !important;
 }
 
 .text-small {
     font-size: 12px;
-}
-
-.color-inactive {
-    color: $fgInactive;
-}
-
-.color-accent  {
-    color: $fgAccent;
-}
-
-.color-accent-light {
-    color: $fgAccentLight;
 }
 
 p-pickList.configs-picker > div > div.p-picklist-source-controls,

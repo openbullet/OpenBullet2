@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { OBSettingsDto, ProxyCheckTarget } from '../../dtos/settings/ob-settings.dto';
+import { CustomSnippet, OBSettingsDto, ProxyCheckTarget } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
-import { faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faPen, faPlus, faUpRightFromSquare, faX } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ob-settings',
@@ -20,8 +20,12 @@ export class OBSettingsComponent implements OnInit {
   faPlus = faPlus;
   faX = faX;
   faPen = faPen;
-  createProxyCheckTargetModalVisible: boolean = false;
-  updateProxyCheckTargetModalVisible: boolean = false;
+  faLink = faLink;
+  faUpRightFromSquare = faUpRightFromSquare;
+  createProxyCheckTargetModalVisible = false;
+  updateProxyCheckTargetModalVisible = false;
+  createCustomSnippetModalVisible = false;
+  updateCustomSnippetModalVisible = false;
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
   touched: boolean = false;
@@ -39,6 +43,7 @@ export class OBSettingsComponent implements OnInit {
     'detailed'
   ];
   selectedProxyCheckTarget: ProxyCheckTarget | null = null;
+  selectedCustomSnippet: CustomSnippet | null = null;
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
@@ -129,6 +134,38 @@ export class OBSettingsComponent implements OnInit {
     const index = this.settings!.generalSettings.proxyCheckTargets.indexOf(target);
     if (index !== -1) {
       this.settings!.generalSettings.proxyCheckTargets.splice(index, 1);
+      this.touched = true;
+    }
+  }
+
+  openCreateCustomSnippetModal() {
+    this.createCustomSnippetModalVisible = true;
+  }
+
+  openUpdateCustomSnippetModal(snippet: CustomSnippet) {
+    this.selectedCustomSnippet = snippet;
+    this.updateCustomSnippetModalVisible = true;
+  }
+
+  createCustomSnippet(snippet: CustomSnippet) {
+    this.settings!.generalSettings.customSnippets.push(snippet);
+    this.touched = true;
+    this.createCustomSnippetModalVisible = false;
+  }
+
+  updateCustomSnippet(snippet: CustomSnippet) {
+    if (this.selectedCustomSnippet === null) return;
+    this.selectedCustomSnippet.name = snippet.name;
+    this.selectedCustomSnippet.description = snippet.description;
+    this.selectedCustomSnippet.body = snippet.body;
+    this.touched = true;
+    this.updateCustomSnippetModalVisible = false;
+  }
+
+  deleteCustomSnippet(snippet: CustomSnippet) {
+    const index = this.settings!.generalSettings.customSnippets.indexOf(snippet);
+    if (index !== -1) {
+      this.settings!.generalSettings.customSnippets.splice(index, 1);
       this.touched = true;
     }
   }

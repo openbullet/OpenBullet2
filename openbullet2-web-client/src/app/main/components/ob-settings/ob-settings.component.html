@@ -134,11 +134,18 @@
         </div>
         <div class="col-4 text-right">
             <button class="button button-accent"
-                    pTooltip="New guest user" tooltipPosition="bottom"
+                    pTooltip="New proxy check target" tooltipPosition="bottom"
                     (click)="createProxyCheckTargetComponent.reset(); openCreateProxyCheckTargetModal()">
                     New
                     <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
                 </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                The proxy targets available in a Proxy Check Job. The proxies will be checked against the target URL and if the success key is found in the downloaded source, the proxy will be marked as working.
+            </span>
         </div>
     </div>
     <div class="row mt-3 mb-5">
@@ -153,7 +160,6 @@
                 [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                [globalFilterFields]="['url', 'successKey']"
                 >
                 <ng-template pTemplate="emptymessage">
                     <div class="m-2">
@@ -163,9 +169,13 @@
                 <ng-template pTemplate="caption" />
                 <ng-template pTemplate="body" let-target>
                     <tr>
-                        <td>{{ target.url }}</td>
-                        <td>{{ target.successKey }}</td>
-                        <td>
+                        <td width="40%">
+                            <a class="color-primary" [href]="target.url" target=”_blank”>
+                                {{ target.url }}<fa-icon [icon]="faUpRightFromSquare" class="color-inactive text-small ml-1" [fixedWidth]="true"></fa-icon>
+                            </a>
+                        </td>
+                        <td width="40%">{{ target.successKey }}</td>
+                        <td width="20%" class="text-right">
                             <button class="button button-transparent"
                                 pTooltip="Edit" tooltipPosition="bottom"
                                 (click)="openUpdateProxyCheckTargetModal(target)">
@@ -174,6 +184,66 @@
                             <button class="button button-transparent ml-2"
                                 pTooltip="Delete" tooltipPosition="bottom"
                                 (click)="deleteProxyCheckTarget(target)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Custom Snippets</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                    pTooltip="New custom snippet" tooltipPosition="bottom"
+                    (click)="createCustomSnippetComponent.reset(); openCreateCustomSnippetModal()">
+                    New
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                Custom snippets of code that you can configure to get your own autocompletions in the LoliCode editor.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #customSnippetsDt
+                class="no-header"
+                [value]="settings.generalSettings.customSnippets"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.generalSettings.customSnippets.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No custom snippets added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-snippet>
+                    <tr>
+                        <td width="40%">{{ snippet.name }}</td>
+                        <td width="40%">{{ snippet.description }}</td>
+                        <td width="20%" class="text-right">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateCustomSnippetModal(snippet)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteCustomSnippet(snippet)">
                                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                             </button>
                         </td>
@@ -215,7 +285,7 @@
 </p-dialog>
 
 <p-dialog 
-    #updateGuestInfoModal
+    #updateProxyCheckTargetModal
     header="Update proxy check target" 
     [(visible)]="updateProxyCheckTargetModalVisible" 
     [modal]="true" 
@@ -227,4 +297,34 @@
     <app-update-proxy-check-target
         [target]="selectedProxyCheckTarget!"
         (confirm)="updateProxyCheckTarget($event)" />
+</p-dialog>
+
+<p-dialog 
+    #createCustomSnippetModal
+    header="New custom snippet" 
+    [(visible)]="createCustomSnippetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-custom-snippet
+        #createCustomSnippetComponent
+        (confirm)="createCustomSnippet($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateCustomSnippetModal
+    header="Update custom snippet" 
+    [(visible)]="updateCustomSnippetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-custom-snippet
+        [snippet]="selectedCustomSnippet!"
+        (confirm)="updateCustomSnippet($event)" />
 </p-dialog>

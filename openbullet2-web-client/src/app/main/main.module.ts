@@ -41,6 +41,8 @@ import { CreateEndpointComponent } from './components/sharing/create-endpoint/cr
 import { OBSettingsComponent } from './components/ob-settings/ob-settings.component';
 import { CreateProxyCheckTargetComponent } from './components/ob-settings/create-proxy-check-target/create-proxy-check-target.component';
 import { UpdateProxyCheckTargetComponent } from './components/ob-settings/update-proxy-check-target/update-proxy-check-target.component';
+import { CreateCustomSnippetComponent } from './components/ob-settings/create-custom-snippet/create-custom-snippet.component';
+import { UpdateCustomSnippetComponent } from './components/ob-settings/update-custom-snippet/update-custom-snippet.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { UpdateProxyCheckTargetComponent } from './components/ob-settings/update
     CreateEndpointComponent,
     OBSettingsComponent,
     CreateProxyCheckTargetComponent,
-    UpdateProxyCheckTargetComponent
+    UpdateProxyCheckTargetComponent,
+    CreateCustomSnippetComponent,
+    UpdateCustomSnippetComponent
   ],
   imports: [
     CommonModule,
