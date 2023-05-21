@@ -109,6 +109,7 @@ p-chip.mt-2 > .p-chip {
 
 .p-datatable-thead > tr > th {
     border: 0px !important;
+    padding: 0.4rem 1rem !important;
 }
 
 .p-datatable-wrapper {
@@ -122,6 +123,7 @@ p-chip.mt-2 > .p-chip {
 
 .p-datatable-tbody > tr > td {
     border-top: 0px solid $fgInactive !important;
+    padding: 0.4rem 1rem !important;
 }
 
 .p-datatable-tbody > tr:not(:first-child) > td {
