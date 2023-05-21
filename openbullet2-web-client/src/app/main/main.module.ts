@@ -39,6 +39,8 @@ import { AddPluginComponent } from './components/plugins/add-plugin/add-plugin.c
 import { SharingComponent } from './components/sharing/sharing.component';
 import { CreateEndpointComponent } from './components/sharing/create-endpoint/create-endpoint.component';
 import { OBSettingsComponent } from './components/ob-settings/ob-settings.component';
+import { CreateProxyCheckTargetComponent } from './components/ob-settings/create-proxy-check-target/create-proxy-check-target.component';
+import { UpdateProxyCheckTargetComponent } from './components/ob-settings/update-proxy-check-target/update-proxy-check-target.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { OBSettingsComponent } from './components/ob-settings/ob-settings.compon
     AddPluginComponent,
     SharingComponent,
     CreateEndpointComponent,
-    OBSettingsComponent
+    OBSettingsComponent,
+    CreateProxyCheckTargetComponent,
+    UpdateProxyCheckTargetComponent
   ],
   imports: [
     CommonModule,

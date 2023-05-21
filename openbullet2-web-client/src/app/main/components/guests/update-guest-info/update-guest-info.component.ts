@@ -36,4 +36,8 @@ export class UpdateGuestInfoComponent implements OnChanges {
       allowedAddresses: this.allowedAddresses.split('\n')
     });
   }
+
+  isFormValid() {
+    return this.username.length >= 3 && this.username.length <= 32;
+  }
 }

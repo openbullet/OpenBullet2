@@ -53,6 +53,7 @@
     <div class="row mt-4 mb-2">
         <div class="col-12">
             <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
                 (click)="submitForm()">
                 Update
             </button>

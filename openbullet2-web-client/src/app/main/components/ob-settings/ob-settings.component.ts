@@ -1,8 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
+import { OBSettingsDto, ProxyCheckTarget } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
+import { faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ob-settings',
@@ -16,6 +17,11 @@ export class OBSettingsComponent implements OnInit {
     return !this.touched;
   }
 
+  faPlus = faPlus;
+  faX = faX;
+  faPen = faPen;
+  createProxyCheckTargetModalVisible: boolean = false;
+  updateProxyCheckTargetModalVisible: boolean = false;
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
   touched: boolean = false;
@@ -32,6 +38,7 @@ export class OBSettingsComponent implements OnInit {
     'standard',
     'detailed'
   ];
+  selectedProxyCheckTarget: ProxyCheckTarget | null = null;
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
@@ -93,5 +100,36 @@ export class OBSettingsComponent implements OnInit {
   // Can save if touched and every field is valid
   canSave() {
     return this.touched && Object.values(this.fieldsValidity).every(v => v);
+  }
+
+  openCreateProxyCheckTargetModal() {
+    this.createProxyCheckTargetModalVisible = true;
+  }
+
+  openUpdateProxyCheckTargetModal(target: ProxyCheckTarget) {
+    this.selectedProxyCheckTarget = target;
+    this.updateProxyCheckTargetModalVisible = true;
+  }
+
+  createProxyCheckTarget(target: ProxyCheckTarget) {
+    this.settings!.generalSettings.proxyCheckTargets.push(target);
+    this.touched = true;
+    this.createProxyCheckTargetModalVisible = false;
+  }
+
+  updateProxyCheckTarget(target: ProxyCheckTarget) {
+    if (this.selectedProxyCheckTarget === null) return;
+    this.selectedProxyCheckTarget.url = target.url;
+    this.selectedProxyCheckTarget.successKey = target.successKey;
+    this.touched = true;
+    this.updateProxyCheckTargetModalVisible = false;
+  }
+
+  deleteProxyCheckTarget(target: ProxyCheckTarget) {
+    const index = this.settings!.generalSettings.proxyCheckTargets.indexOf(target);
+    if (index !== -1) {
+      this.settings!.generalSettings.proxyCheckTargets.splice(index, 1);
+      this.touched = true;
+    }
   }
 }

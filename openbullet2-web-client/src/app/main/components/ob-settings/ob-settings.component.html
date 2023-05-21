@@ -128,6 +128,60 @@
                 label="Ignore the wordlist name when removing duplicates from hits" />
         </div>
     </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Proxy Check Targets</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                    pTooltip="New guest user" tooltipPosition="bottom"
+                    (click)="createProxyCheckTargetComponent.reset(); openCreateProxyCheckTargetModal()">
+                    New
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #proxyCheckTargetsDt
+                class="no-header"
+                [value]="settings.generalSettings.proxyCheckTargets"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.generalSettings.proxyCheckTargets.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [globalFilterFields]="['url', 'successKey']"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No proxy check targets added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-target>
+                    <tr>
+                        <td>{{ target.url }}</td>
+                        <td>{{ target.successKey }}</td>
+                        <td>
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateProxyCheckTargetModal(target)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteProxyCheckTarget(target)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-12">
             <h3>Security</h3>
@@ -144,3 +198,33 @@
         </div>
     </div>
 </div>
+
+<p-dialog 
+    #createProxyCheckTargetModal
+    header="New proxy check target" 
+    [(visible)]="createProxyCheckTargetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-proxy-check-target
+        #createProxyCheckTargetComponent
+        (confirm)="createProxyCheckTarget($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateGuestInfoModal
+    header="Update proxy check target" 
+    [(visible)]="updateProxyCheckTargetModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-update-proxy-check-target
+        [target]="selectedProxyCheckTarget!"
+        (confirm)="updateProxyCheckTarget($event)" />
+</p-dialog>

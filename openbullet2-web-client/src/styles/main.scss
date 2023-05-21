@@ -121,12 +121,16 @@ textarea {
     font-size: 12px;
 }
 
-.text-inactive {
+.color-inactive {
     color: $fgInactive;
 }
 
-.text-accent  {
+.color-accent  {
     color: $fgAccent;
+}
+
+.color-accent-light {
+    color: $fgAccentLight;
 }
 
 p-pickList.configs-picker > div > div.p-picklist-source-controls,
@@ -168,4 +172,16 @@ label {
 
 .p-dropdown:has(span > span.input-valid) {
     border-color: $fgAccentLight !important;
+}
+
+p-table.no-header {
+    .p-datatable {
+        .p-datatable-header {
+            display: none !important;
+        }
+
+        .p-datatable-wrapper > table > tbody > tr > td {
+            padding: 0.2rem 0.6rem !important;
+        }
+    }
 }
