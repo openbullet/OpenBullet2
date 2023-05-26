@@ -10,7 +10,7 @@
                 </span>
             </div>
             <input id="name" type="text" class="w-100"
-                [(ngModel)]="name"
+                [(ngModel)]="name" ngDefaultControl 
                 placeholder="MySnippet" />
             <br />
         </div>
@@ -24,7 +24,7 @@
             </div>
             <textarea class="w-100"
                 [ngStyle]="{ minHeight: '150px' }"
-                [(ngModel)]="description"
+                [(ngModel)]="description" ngDefaultControl 
                 placeholder="This snippet can be used for...">
             </textarea>
             <br />
@@ -34,11 +34,13 @@
         <div class="col-12">
             <div class="mb-1">
                 <span class="text-small">
-                    Code
+                    LoliCode
                 </span>
             </div>
             <div style="height: 300px; width: 100%">
-                <app-code-editor />
+                <app-code-editor
+                    language="lolicode" ngDefaultControl 
+                    [(ngModel)]="body" />
             </div>
         </div>
     </div>

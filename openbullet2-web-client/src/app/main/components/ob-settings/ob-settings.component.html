@@ -34,7 +34,7 @@
     <div class="row my-3">
         <div class="col-12">
             <p-checkbox
-                (onChange)="touched = true"
+                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.autoSetRecommendedBots"
                 [binary]="true" inputId="autoSetRecommendedBots"
                 label="Automatically set the recommended bots when a config is selected in the job creation page" />
@@ -43,7 +43,7 @@
     <div class="row my-3">
         <div class="col-12">
             <p-checkbox
-                (onChange)="touched = true"
+                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.warnConfigNotSaved"
                 [binary]="true" inputId="warnConfigNotSaved"
                 label="Show a warning when the currently loaded config was not saved and another one is loaded" />
@@ -62,7 +62,7 @@
     <div class="row my-3">
         <div class="col-12">
             <p-checkbox
-                (onChange)="touched = true"
+                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.enableJobLogging"
                 [binary]="true" inputId="enableJobLogging"
                 label="Enable logging in the job viewer page" />
@@ -113,7 +113,7 @@
     <div class="row my-3">
         <div class="col-12">
             <p-checkbox
-                (onChange)="touched = true"
+                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.groupCapturesInDebugger"
                 [binary]="true" inputId="groupCapturesInDebugger"
                 label="Group captures in debugger" />
@@ -122,7 +122,7 @@
     <div class="row my-3">
         <div class="col-12">
             <p-checkbox
-                (onChange)="touched = true"
+                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.ignoreWordlistNameOnHitsDedupe"
                 [binary]="true" inputId="ignoreWordlistNameOnHitsDedupe"
                 label="Ignore the wordlist name when removing duplicates from hits" />

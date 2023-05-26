@@ -89,7 +89,6 @@ export class SharingComponent implements OnInit {
   }
 
   updateEndpoint(endpoint: EndpointDto) {
-    console.log(endpoint);
     this.sharingService.updateEndpoint(endpoint)
       .subscribe(resp => {
         console.log("resp", resp);
