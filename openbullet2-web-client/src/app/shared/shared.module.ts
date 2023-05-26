@@ -11,6 +11,8 @@ import { LolicodeEditorComponent } from './components/code-editor/code-editor.co
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { registerLoliCode } from './languages/lolicode';
+import { InputListComponent } from './components/input-list/input-list.component';
+import { PascalCasePipe } from './pipes/pascalcase.pipe';
 
 declare const monaco: any;
 
@@ -29,10 +31,12 @@ const monacoConfig: NgxMonacoEditorConfig = {
     SpinnerComponent,
     TruncatePipe,
     BytesPipe,
+    PascalCasePipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
-    LolicodeEditorComponent
+    LolicodeEditorComponent,
+    InputListComponent
   ],
   imports: [
     CommonModule,
@@ -44,9 +48,11 @@ const monacoConfig: NgxMonacoEditorConfig = {
     SpinnerComponent,
     TruncatePipe,
     BytesPipe,
+    PascalCasePipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
+    InputListComponent,
     LolicodeEditorComponent
   ]
 })

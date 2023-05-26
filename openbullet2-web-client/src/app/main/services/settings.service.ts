@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
 import { OBSettingsDto } from "../dtos/settings/ob-settings.dto";
+import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -23,9 +24,27 @@ export class SettingsService {
         );
     }
 
+    getRuriLibSettings() {
+        return this.http.get<RLSettingsDto>(
+            getBaseUrl() + '/settings/rurilib'
+        );
+    }
+
+    getDefaultRuriLibSettings() {
+        return this.http.get<RLSettingsDto>(
+            getBaseUrl() + '/settings/rurilib/default'
+        );
+    }
+
     updateSettings(updated: OBSettingsDto) {
         return this.http.put<OBSettingsDto>(
             getBaseUrl() + '/settings', updated
+        );
+    }
+
+    updateRuriLibSettings(updated: RLSettingsDto) {
+        return this.http.put<RLSettingsDto>(
+            getBaseUrl() + '/settings/rurilib', updated
         );
     }
 

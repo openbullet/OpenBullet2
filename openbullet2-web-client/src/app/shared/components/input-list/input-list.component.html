@@ -1,12 +1,11 @@
-<input 
-    type="number"
+<textarea 
+    type="text"
     [id]="id"
-    [min]="min"
-    [max]="max"
     [class]="computeClass()"
     [style]="style"
     (input)="valueChanging($event)"
-    [value]="ngModel"
+    [value]="value"
     (change)="valueChanged($event)"
+    [disabled]="disabled"
     [placeholder]="placeholder"
-/>
+></textarea>

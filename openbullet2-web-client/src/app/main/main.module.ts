@@ -46,6 +46,7 @@ import { UpdateCustomSnippetComponent } from './components/ob-settings/update-cu
 import { ChangeAdminPasswordComponent } from './components/ob-settings/change-admin-password/change-admin-password.component';
 import { CreateRemoteConfigsEndpointComponent } from './components/ob-settings/create-remote-configs-endpoint/create-remote-configs-endpoint.component';
 import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/update-remote-configs-endpoint/update-remote-configs-endpoint.component';
+import { RlSettingsComponent } from './components/rl-settings/rl-settings.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/u
     UpdateCustomSnippetComponent,
     ChangeAdminPasswordComponent,
     CreateRemoteConfigsEndpointComponent,
-    UpdateRemoteConfigsEndpointComponent
+    UpdateRemoteConfigsEndpointComponent,
+    RlSettingsComponent
   ],
   imports: [
     CommonModule,

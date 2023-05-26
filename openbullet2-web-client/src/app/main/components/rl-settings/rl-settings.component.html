@@ -1,0 +1,201 @@
+<div *ngIf="settings === null">
+    <h1>RuriLib Settings</h1>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>Settings</h1>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-secondary ml-2" 
+                (click)="confirmRestoreDefaults()">Restore Defaults</button>
+            <button class="button button-accent ml-2"
+                [disabled]="!canSave()"
+                (click)="saveSettings()">Save</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <h3>General</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Parallelizer type</span>
+            <app-input-dropdown key="parallelizerType"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="parallelizerTypes"
+                [(ngModel)]="settings.generalSettings.parallelizerType" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.logJobActivityToFile"
+                [binary]="true" inputId="logJobActivityToFile"
+                label="Log job activity to file" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.enableBotLogging"
+                [binary]="true" inputId="enableBotLogging"
+                label="Enable bot logging" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.verboseMode"
+                [binary]="true" inputId="verboseMode"
+                label="Verbose mode" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.restrictBlocksToCWD"
+                [binary]="true" inputId="restrictBlocksToCWD"
+                label="Restrict blocks I/O capabilities to the Current Working Directory only" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.generalSettings.useCustomUserAgentsList"
+                [binary]="true" inputId="useCustomUserAgentsList"
+                label="Use custom User Agents list" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>User Agents</span>
+            <app-input-list key="userAgents"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [disabled]="!settings.generalSettings.useCustomUserAgentsList"
+                [(ngModel)]="settings.generalSettings.userAgents"
+                placeholder="Mozilla/5.0 ..." />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Proxies</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Connect timeout</span>
+            <app-input-number key="proxyConnectTimeoutMilliseconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.proxySettings.proxyConnectTimeoutMilliseconds"
+                [placeholder]="5000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Read/Write timeout</span>
+            <app-input-number key="proxyReadWriteTimeoutMilliseconds" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.proxySettings.proxyReadWriteTimeoutMilliseconds"
+                [placeholder]="10000" [min]="0" [integer]="true" />
+            <span class="ml-2">milliseconds</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Global ban keys</span>
+            <app-input-list key="globalBanKeys"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.proxySettings.globalBanKeys" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Global retry keys</span>
+            <app-input-list key="globalRetryKeys"
+                class="d-block w-100 mt-2"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.proxySettings.globalRetryKeys" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Captchas</h3>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <span class="color-inactive">Coming soon &trade;</span>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Puppeteer</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Chrome binary location</span>
+            <app-input-text key="puppeteerChromeBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.puppeteerSettings.chromeBinaryLocation"
+                placeholder="/path/to/chrome" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Selenium</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Browser type</span>
+            <app-input-dropdown key="browserType"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="browserTypes"
+                [(ngModel)]="settings.seleniumSettings.browserType" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Chrome binary location</span>
+            <app-input-text key="seleniumChromeBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.seleniumSettings.chromeBinaryLocation"
+                placeholder="/path/to/chrome" regex="^.+$" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Firefox binary location</span>
+            <app-input-text key="seleniumFirefoxBinaryLocation"
+                class="input-small" [style]="{ width: '600px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.seleniumSettings.firefoxBinaryLocation"
+                placeholder="/path/to/firefox" regex="^.+$" />
+        </div>
+    </div>
+</div>

@@ -27,9 +27,9 @@ export class InputDropdownComponent {
   }
 
   // Called when the value in the input field changed
-  valueChanged(newValue: string) {
-    this.ngModelChange.emit(newValue);
+  valueChanged() {
     this.notifyTouched();
+    this.ngModelChange.emit(this.ngModel!);
   }
 
   computeItemClass(): string {

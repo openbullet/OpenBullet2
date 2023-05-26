@@ -1,26 +1,32 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FieldValidity } from '../../utils/forms';
 
 @Component({
-  selector: 'app-input-text',
-  templateUrl: './input-text.component.html',
-  styleUrls: ['./input-text.component.scss']
+  selector: 'app-input-list',
+  templateUrl: './input-list.component.html',
+  styleUrls: ['./input-list.component.scss']
 })
-export class InputTextComponent {
+export class InputListComponent implements OnChanges {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() class: string | null = null;
   @Input() style: { [id: string] : any; } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder: string = '';
-  @Input() ngModel: string | null = null;
+  @Input() ngModel: string[] | null = null;
+  @Input() disabled: boolean = false;
 
   @Output() touched = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();
-  @Output() ngModelChange = new EventEmitter<string>();
+  @Output() ngModelChange = new EventEmitter<string[]>();
 
   isValid = true;
   isTouched = false;
+  value = '';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.value = this.ngModel === null ? '' : this.ngModel.join('\n');
+  }
 
   // Notifies the subscribers that this input was touched
   notifyTouched() {
@@ -60,7 +66,9 @@ export class InputTextComponent {
     const valid = this.checkValidity(newValue);
 
     if (valid) {
-      this.ngModelChange.emit(newValue);
+      this.ngModelChange.emit(
+        newValue.split('\n').filter(v => v.trim() !== '')
+      );
     }
 
     this.notifyValidity(valid);

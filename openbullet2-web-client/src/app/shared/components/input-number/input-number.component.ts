@@ -13,7 +13,8 @@ export class InputNumberComponent {
   @Input() max: number | null = null;
   @Input() integer: boolean = true;
   @Input() class: string | null = null;
-  @Input() placeholder: number | null = null;
+  @Input() style: { [id: string] : any; } = {};
+  @Input() placeholder: number | string = '';
   @Input() ngModel: number | null = null;
 
   @Output() touched = new EventEmitter();

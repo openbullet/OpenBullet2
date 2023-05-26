@@ -128,7 +128,7 @@ div if you want to display it only inside that div-->
         </div>
         <div class="col-4">
             <span class="info-label">Current Working Directory</span><br />
-            <span class="info" [pTooltip]="serverInfo.currentWorkingDirectory" tooltipPosition="bottom">{{serverInfo.currentWorkingDirectory | truncate:[30]}}</span>
+            <span class="info" [pTooltip]="serverInfo.currentWorkingDirectory" tooltipPosition="bottom">{{serverInfo.currentWorkingDirectory | truncate : 30}}</span>
             <button class="transparent-button ml-3" 
                 (click)="copyCurrentWorkingDirectory()"
                 pInputText pTooltip="Copy to clipboard" >

@@ -104,6 +104,12 @@ internal class AutoMapperProfile : Profile
         CreateMap<SecuritySettings, OBSecuritySettingsDto>().ReverseMap();
         CreateMap<Core.Models.Settings.GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
         CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
+        CreateMap<RuriLib.Models.Settings.GlobalSettings, RuriLib.Models.Settings.GlobalSettings>();
+        CreateMap<RuriLib.Models.Settings.GeneralSettings, RuriLib.Models.Settings.GeneralSettings>();
+        CreateMap<RuriLib.Models.Settings.CaptchaSettings, RuriLib.Models.Settings.CaptchaSettings>();
+        CreateMap<RuriLib.Models.Settings.ProxySettings, RuriLib.Models.Settings.ProxySettings>();
+        CreateMap<RuriLib.Models.Settings.PuppeteerSettings, RuriLib.Models.Settings.PuppeteerSettings>();
+        CreateMap<RuriLib.Models.Settings.SeleniumSettings, RuriLib.Models.Settings.SeleniumSettings>();
 
         CreateMap<HitEntity, HitDto>();
         CreateMap<UpdateHitDto, HitEntity>();
