@@ -188,40 +188,4 @@ export class OBSettingsComponent implements OnInit {
         });
       });
   }
-
-  showSuccess() {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Test',
-      detail: 'This is a test message',
-      sticky: true
-    });
-  }
-  
-  showInfo() {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Test',
-      detail: 'This is a test message',
-      sticky: true
-    });
-  }
-
-  showWarn() {
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Test',
-      detail: 'This is a test message',
-      sticky: true
-    });
-  }
-
-  showError() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Test',
-      detail: 'This is a test message',
-      sticky: true
-    });
-  }
 }

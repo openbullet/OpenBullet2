@@ -200,3 +200,45 @@ p-chip.mt-2 > .p-chip {
     font-size: 14px !important;
     padding: 0.3rem 0.5rem !important;
 }
+
+.p-toast  {
+    .p-toast-message {
+        border: 1px solid $fgInactive !important;
+    }
+
+    .p-toast-message.p-toast-message-success {
+        background-color: $bgSecondary !important;
+        color: $fgPrimary !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: $fgGood !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-info {
+        background-color: $bgSecondary !important;
+        color: $fgPrimary !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: $fgAccentLight !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-warn {
+        background-color: $bgSecondary !important;
+        color: $fgPrimary !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: $fgCustom !important;
+        }
+    }
+
+    .p-toast-message.p-toast-message-error {
+        background-color: $bgSecondary !important;
+        color: $fgPrimary !important;
+        .p-toast-message-icon, .p-toast-summary {
+            color: $fgBad !important;
+        }
+    }
+}
+
+.p-toast-icon-close {
+    color: $fgInactive !important;
+}
