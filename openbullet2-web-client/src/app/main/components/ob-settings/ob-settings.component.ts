@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { CustomSnippet, OBSettingsDto, ProxyCheckTarget } from '../../dtos/settings/ob-settings.dto';
+import { CustomSnippet, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { faLink, faPen, faPlus, faUpRightFromSquare, faX } from '@fortawesome/free-solid-svg-icons';
@@ -29,6 +29,8 @@ export class OBSettingsComponent implements OnInit {
   createCustomSnippetModalVisible = false;
   updateCustomSnippetModalVisible = false;
   changeAdminPasswordModalVisible = false;
+  createRemoteConfigsEndpointModalVisible = false;
+  updateRemoteConfigsEndpointModalVisible = false;
 
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
@@ -48,6 +50,7 @@ export class OBSettingsComponent implements OnInit {
   ];
   selectedProxyCheckTarget: ProxyCheckTarget | null = null;
   selectedCustomSnippet: CustomSnippet | null = null;
+  selectedRemoteConfigsEndpoint: RemoteConfigsEndpoint | null = null;
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
@@ -187,5 +190,36 @@ export class OBSettingsComponent implements OnInit {
           detail: 'The admin password was changed'
         });
       });
+  }
+
+  openCreateRemoteConfigsEndpointModal() {
+    this.createRemoteConfigsEndpointModalVisible = true;
+  }
+
+  openUpdateRemoteConfigsEndpointModal(endpoint: RemoteConfigsEndpoint) {
+    this.selectedRemoteConfigsEndpoint = endpoint;
+    this.updateRemoteConfigsEndpointModalVisible = true;
+  }
+
+  createRemoteConfigsEndpoint(endpoint: RemoteConfigsEndpoint) {
+    this.settings!.remoteSettings.configsEndpoints.push(endpoint);
+    this.touched = true;
+    this.createRemoteConfigsEndpointModalVisible = false;
+  }
+
+  updateRemoteConfigsEndpoint(endpoint: RemoteConfigsEndpoint) {
+    if (this.selectedRemoteConfigsEndpoint === null) return;
+    this.selectedRemoteConfigsEndpoint.url = endpoint.url;
+    this.selectedRemoteConfigsEndpoint.apiKey = endpoint.apiKey;
+    this.touched = true;
+    this.updateRemoteConfigsEndpointModalVisible = false;
+  }
+
+  deleteRemoteConfigsEndpoint(endpoint: RemoteConfigsEndpoint) {
+    const index = this.settings!.remoteSettings.configsEndpoints.indexOf(endpoint);
+    if (index !== -1) {
+      this.settings!.remoteSettings.configsEndpoints.splice(index, 1);
+      this.touched = true;
+    }
   }
 }

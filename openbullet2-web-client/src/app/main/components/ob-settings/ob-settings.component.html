@@ -252,7 +252,7 @@
             </p-table>
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row mt-5">
         <div class="col-12">
             <h3>Security</h3>
         </div>
@@ -312,9 +312,79 @@
             <span class="ml-2">hours</span>
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Remote</h3>
+        </div>
+    </div>
+    <div class="row mt-3 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Remote Configs Endpoints</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New remote configs endpoint" tooltipPosition="bottom"
+                (click)="createRemoteConfigsEndpointComponent.reset(); openCreateRemoteConfigsEndpointModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                These are the remote endpoints that will be queried upon reload of the config repository in order to get configs hosted on another machine.
+            </span>
+        </div>
+    </div>
+    <div class="row mt-3 mb-5">
+        <div class="col-12">
+            <p-table
+                #remoteConfigsEndpointsDt
+                class="no-header"
+                [value]="settings.remoteSettings.configsEndpoints"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="settings.remoteSettings.configsEndpoints.length > 10"
+                [rows]="10"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-2">
+                        <span>No remote configs endpoints added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="caption" />
+                <ng-template pTemplate="body" let-endpoint>
+                    <tr>
+                        <td width="40%">{{ endpoint.url }}</td>
+                        <td width="40%">{{ endpoint.apiKey }}</td>
+                        <td width="20%" class="text-right">
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateRemoteConfigsEndpointModal(endpoint)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent ml-2"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="deleteRemoteConfigsEndpoint(endpoint)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="row mt-5">
         <div class="col-12">
             <h3>Customization</h3>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12">
+            <span class="color-inactive">Coming soon &trade;</span>
         </div>
     </div>
 </div>
@@ -392,4 +462,34 @@
     <app-change-admin-password
         #changeAdminPasswordComponent
         (confirm)="changeAdminPassword($event)" />
+</p-dialog>
+
+<p-dialog 
+    #createRemoteConfigsEndpointModal
+    header="New remote configs endpoint" 
+    [(visible)]="createRemoteConfigsEndpointModalVisible" 
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-create-remote-configs-endpoint
+        #createRemoteConfigsEndpointComponent
+        (confirm)="createRemoteConfigsEndpoint($event)" />
+</p-dialog>
+
+<p-dialog 
+    #updateRemoteConfigsEndpointModal
+    header="Update remote configs endpoint" 
+    [(visible)]="updateRemoteConfigsEndpointModalVisible" 
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-update-remote-configs-endpoint
+        [endpoint]="selectedRemoteConfigsEndpoint!"
+        (confirm)="updateRemoteConfigsEndpoint($event)" />
 </p-dialog>
