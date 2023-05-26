@@ -23,7 +23,7 @@ export interface CaptchaRLSettings {
     pollingIntervalMilliseconds: number,
     checkBalanceBeforeSolving: boolean,
     antiCaptchaApiKey: string,
-    aZCaptchaApiKey: string,
+    azCaptchaApiKey: string,
     capMonsterHost: string,
     capMonsterPort: number,
     captchasDotIoApiKey: string,

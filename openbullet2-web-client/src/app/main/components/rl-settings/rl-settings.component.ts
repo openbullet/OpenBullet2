@@ -28,6 +28,25 @@ export class RlSettingsComponent implements OnInit {
     'chrome',
     'firefox'
   ];
+  captchaServiceTypes: string[] = [
+    'twoCaptcha',
+    'antiCaptcha',
+    'customTwoCaptcha',
+    'deathByCaptcha',
+    'deCaptcher',
+    'imageTyperz',
+    'capMonster',
+    'aZCaptcha',
+    'captchasIO',
+    'ruCaptcha',
+    'solveCaptcha',
+    'solveRecaptcha',
+    'trueCaptcha',
+    'nineKW',
+    'customAntiCaptcha',
+    'anyCaptcha',
+    'capSolver'
+  ];
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
@@ -89,5 +108,9 @@ export class RlSettingsComponent implements OnInit {
   // Can save if touched and every field is valid
   canSave() {
     return this.touched && Object.values(this.fieldsValidity).every(v => v);
+  }
+
+  onCaptchaServiceChange(newValue: string) {
+    this.settings!.captchaSettings.currentService = newValue;
   }
 }
