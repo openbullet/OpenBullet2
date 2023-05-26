@@ -22,10 +22,14 @@ export class OBSettingsComponent implements OnInit {
   faPen = faPen;
   faLink = faLink;
   faUpRightFromSquare = faUpRightFromSquare;
+  
+  // Modals
   createProxyCheckTargetModalVisible = false;
   updateProxyCheckTargetModalVisible = false;
   createCustomSnippetModalVisible = false;
   updateCustomSnippetModalVisible = false;
+  changeAdminPasswordModalVisible = false;
+
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
   touched: boolean = false;
@@ -168,5 +172,56 @@ export class OBSettingsComponent implements OnInit {
       this.settings!.generalSettings.customSnippets.splice(index, 1);
       this.touched = true;
     }
+  }
+
+  openChangeAdminPasswordModal() {
+    this.changeAdminPasswordModalVisible = true;
+  }
+
+  changeAdminPassword(password: string) {
+    this.settingsService.updateAdminPassword(password)
+      .subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Changed',
+          detail: 'The admin password was changed'
+        });
+      });
+  }
+
+  showSuccess() {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Test',
+      detail: 'This is a test message',
+      sticky: true
+    });
+  }
+  
+  showInfo() {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Test',
+      detail: 'This is a test message',
+      sticky: true
+    });
+  }
+
+  showWarn() {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Test',
+      detail: 'This is a test message',
+      sticky: true
+    });
+  }
+
+  showError() {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Test',
+      detail: 'This is a test message',
+      sticky: true
+    });
   }
 }

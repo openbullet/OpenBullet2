@@ -43,6 +43,7 @@ import { CreateProxyCheckTargetComponent } from './components/ob-settings/create
 import { UpdateProxyCheckTargetComponent } from './components/ob-settings/update-proxy-check-target/update-proxy-check-target.component';
 import { CreateCustomSnippetComponent } from './components/ob-settings/create-custom-snippet/create-custom-snippet.component';
 import { UpdateCustomSnippetComponent } from './components/ob-settings/update-custom-snippet/update-custom-snippet.component';
+import { ChangeAdminPasswordComponent } from './components/ob-settings/change-admin-password/change-admin-password.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { UpdateCustomSnippetComponent } from './components/ob-settings/update-cu
     CreateProxyCheckTargetComponent,
     UpdateProxyCheckTargetComponent,
     CreateCustomSnippetComponent,
-    UpdateCustomSnippetComponent
+    UpdateCustomSnippetComponent,
+    ChangeAdminPasswordComponent
   ],
   imports: [
     CommonModule,

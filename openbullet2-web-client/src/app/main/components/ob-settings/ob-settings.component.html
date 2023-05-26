@@ -134,11 +134,11 @@
         </div>
         <div class="col-4 text-right">
             <button class="button button-accent"
-                    pTooltip="New proxy check target" tooltipPosition="bottom"
-                    (click)="createProxyCheckTargetComponent.reset(); openCreateProxyCheckTargetModal()">
-                    New
-                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
-                </button>
+                pTooltip="New proxy check target" tooltipPosition="bottom"
+                (click)="createProxyCheckTargetComponent.reset(); openCreateProxyCheckTargetModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
         </div>
     </div>
     <div class="row">
@@ -198,11 +198,11 @@
         </div>
         <div class="col-4 text-right">
             <button class="button button-accent"
-                    pTooltip="New custom snippet" tooltipPosition="bottom"
-                    (click)="createCustomSnippetComponent.reset(); openCreateCustomSnippetModal()">
-                    New
-                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
-                </button>
+                pTooltip="New custom snippet" tooltipPosition="bottom"
+                (click)="createCustomSnippetComponent.reset(); openCreateCustomSnippetModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
         </div>
     </div>
     <div class="row">
@@ -257,9 +257,80 @@
             <h3>Security</h3>
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.securitySettings.allowSystemWideFileAccess"
+                [binary]="true" inputId="allowSystemWideFileAccess"
+                label="Allow system-wide file access" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.securitySettings.requireAdminLogin"
+                [binary]="true" inputId="requireAdminLogin"
+                label="Require admin login" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Admin username</span>
+            <app-input-text key="adminUsername" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="settings.securitySettings.adminUsername"
+                placeholder="admin" />
+            <button class="button button-accent mt-3 d-block"
+                pTooltip="Change admin password" tooltipPosition="bottom"
+                (click)="changeAdminPasswordComponent.reset(); openChangeAdminPasswordModal()">
+                Change admin password
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Admin session lifetime</span>
+            <app-input-number key="adminSessionLifetimeHours" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.securitySettings.adminSessionLifetimeHours"
+                [placeholder]="72" [min]="0" [integer]="true" />
+            <span class="ml-2">hours</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Guest session lifetime</span>
+            <app-input-number key="guestSessionLifetimeHours" class="input-small"
+                (validityChange)="onValidityChange($event)"
+                (touched)="touched = true" ngDefaultControl
+                [(ngModel)]="settings.securitySettings.guestSessionLifetimeHours"
+                [placeholder]="24" [min]="0" [integer]="true" />
+            <span class="ml-2">hours</span>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-12">
             <h3>Remote</h3>
+            <button class="button button-accent"
+                (click)="showSuccess()">
+                Success
+            </button>
+            <button class="button button-accent"
+                (click)="showInfo()">
+                Info
+            </button>
+            <button class="button button-accent"
+                (click)="showWarn()">
+                Warn
+            </button>
+            <button class="button button-accent"
+                (click)="showError()">
+                Error
+            </button>
         </div>
     </div>
     <div class="row mt-4">
@@ -327,4 +398,19 @@
     <app-update-custom-snippet
         [snippet]="selectedCustomSnippet!"
         (confirm)="updateCustomSnippet($event)" />
+</p-dialog>
+
+<p-dialog 
+    #changeAdminPasswordModal
+    header="Change admin password" 
+    [(visible)]="changeAdminPasswordModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-change-admin-password
+        #changeAdminPasswordComponent
+        (confirm)="changeAdminPassword($event)" />
 </p-dialog>
