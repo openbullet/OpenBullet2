@@ -6,6 +6,8 @@ import { ProxyGroupService } from '../../services/proxy-group.service';
 import { ProxyService } from '../../services/proxy.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PagedList } from '../../dtos/common/paged-list.dto';
+import { UpdateProxyGroupDto } from '../../dtos/proxy-group/update-proxy-group.dto';
+import { CreateProxyGroupDto } from '../../dtos/proxy-group/create-proxy-group.dto';
 
 @Component({
   selector: 'app-proxies',
@@ -85,7 +87,7 @@ export class ProxiesComponent implements OnInit {
     this.importProxiesModalVisible = true;
   }
 
-  createProxyGroup(proxyGroup: ProxyGroupDto) {
+  createProxyGroup(proxyGroup: CreateProxyGroupDto) {
     this.proxyGroupService.createProxyGroup(proxyGroup)
       .subscribe(resp => {
         this.messageService.add({
@@ -98,7 +100,7 @@ export class ProxiesComponent implements OnInit {
       });
   }
 
-  updateProxyGroup(proxyGroup: ProxyGroupDto) {
+  updateProxyGroup(proxyGroup: UpdateProxyGroupDto) {
     this.proxyGroupService.updateProxyGroup(proxyGroup)
       .subscribe(resp => {
         this.messageService.add({
@@ -123,14 +125,15 @@ export class ProxiesComponent implements OnInit {
       });
   }
 
-  confirmDeleteProxyGroup(proxyGroup: ProxyGroupDto) {
+  confirmDeleteProxyGroup() {
     this.confirmationService.confirm({
-      message: `You are about to delete the proxy group ${proxyGroup.name},
+      message: `You are about to delete the proxy group 
+      ${this.selectedProxyGroup.name},
       including all the proxies that it contains. 
       Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.deleteProxyGroup(proxyGroup)
+      accept: () => this.deleteProxyGroup(this.selectedProxyGroup)
     });
   }
 }

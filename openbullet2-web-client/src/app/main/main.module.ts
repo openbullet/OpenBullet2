@@ -48,6 +48,8 @@ import { CreateRemoteConfigsEndpointComponent } from './components/ob-settings/c
 import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/update-remote-configs-endpoint/update-remote-configs-endpoint.component';
 import { RlSettingsComponent } from './components/rl-settings/rl-settings.component';
 import { ProxiesComponent } from './components/proxies/proxies.component';
+import { CreateProxyGroupComponent } from './components/proxies/create-proxy-group/create-proxy-group.component';
+import { UpdateProxyGroupComponent } from './components/proxies/update-proxy-group/update-proxy-group.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { ProxiesComponent } from './components/proxies/proxies.component';
     CreateRemoteConfigsEndpointComponent,
     UpdateRemoteConfigsEndpointComponent,
     RlSettingsComponent,
-    ProxiesComponent
+    ProxiesComponent,
+    CreateProxyGroupComponent,
+    UpdateProxyGroupComponent
   ],
   imports: [
     CommonModule,
