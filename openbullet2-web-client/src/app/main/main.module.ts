@@ -47,6 +47,7 @@ import { ChangeAdminPasswordComponent } from './components/ob-settings/change-ad
 import { CreateRemoteConfigsEndpointComponent } from './components/ob-settings/create-remote-configs-endpoint/create-remote-configs-endpoint.component';
 import { UpdateRemoteConfigsEndpointComponent } from './components/ob-settings/update-remote-configs-endpoint/update-remote-configs-endpoint.component';
 import { RlSettingsComponent } from './components/rl-settings/rl-settings.component';
+import { ProxiesComponent } from './components/proxies/proxies.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { RlSettingsComponent } from './components/rl-settings/rl-settings.compon
     ChangeAdminPasswordComponent,
     CreateRemoteConfigsEndpointComponent,
     UpdateRemoteConfigsEndpointComponent,
-    RlSettingsComponent
+    RlSettingsComponent,
+    ProxiesComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,34 @@
+<h1>Proxies</h1>
+
+<app-spinner *ngIf="proxyGroups === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="proxyGroups !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <span class="mr-2">Select your proxy group</span>
+            <p-dropdown
+                (onChange)="proxyGroupSelected()"
+                optionLabel="name"
+                [options]="proxyGroups" [(ngModel)]="selectedProxyGroup">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span class="input-small">{{item.name}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="proxies !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <ul>
+                <li *ngFor="let proxy of proxies.items">
+                    {{proxy.host}} | {{proxy.port}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -9,6 +9,7 @@ import { PluginsComponent } from './components/plugins/plugins.component';
 import { SharingComponent } from './components/sharing/sharing.component';
 import { OBSettingsComponent } from './components/ob-settings/ob-settings.component';
 import { RlSettingsComponent } from './components/rl-settings/rl-settings.component';
+import { ProxiesComponent } from './components/proxies/proxies.component';
 
 const routes: Routes = [
   // Main component layout
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         component: HomeComponent,
         path: 'home'
+      },
+      {
+        component: ProxiesComponent,
+        path: 'proxies'
       },
       {
         component: OBSettingsComponent,

@@ -66,7 +66,7 @@ export class GuestsComponent implements OnInit {
         });
         this.createGuestModalVisible = false;
         this.refreshGuests();
-      })
+      });
   }
 
   updateGuestInfo(guest: UpdateGuestInfoDto) {
@@ -79,7 +79,7 @@ export class GuestsComponent implements OnInit {
         });
         this.updateGuestInfoModalVisible = false;
         this.refreshGuests();
-      })
+      });
   }
 
   updateGuestPassword(guest: UpdateGuestPasswordDto) {
@@ -92,7 +92,7 @@ export class GuestsComponent implements OnInit {
         });
         this.updateGuestPasswordModalVisible = false;
         this.refreshGuests();
-      })
+      });
   }
 
   deleteGuest(guest: GuestDto) {
