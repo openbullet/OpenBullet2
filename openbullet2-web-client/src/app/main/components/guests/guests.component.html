@@ -16,7 +16,7 @@
         >
         <ng-template pTemplate="emptymessage">
             <div class="m-3">
-                <span>No guests added yet</span>
+                <span>No guests found</span>
             </div>
         </ng-template>
         <ng-template pTemplate="caption">
@@ -39,22 +39,22 @@
             </div>
         </ng-template>
         <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width:15rem">
+            <tr *ngIf="guests.length > 0">
+                <th style="min-width:15rem" pSortableColumn="username">
                     <div class="d-flex align-items-center">
-                        Username
+                        Username <p-sortIcon field="username" />
                         <p-columnFilter type="text" field="username" display="menu"></p-columnFilter>
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th style="min-width:10rem" pSortableColumn="accessExpiration">
                     <div class="flex align-items-center">
-                        Access Expiration
+                        Access Expiration <p-sortIcon field="accessExpiration" />
                         <p-columnFilter type="date" field="accessExpiration" display="menu"></p-columnFilter>
                     </div>
                 </th>
-                <th style="min-width:15rem">
+                <th style="min-width:15rem" pSortableColumn="allowedAddresses">
                     <div class="flex align-items-center">
-                        Allowed Addresses
+                        Allowed Addresses <p-sortIcon field="allowedAddresses" />
                         <p-columnFilter type="text" field="allowedAddresses" display="menu"></p-columnFilter>
                     </div>
                 </th>

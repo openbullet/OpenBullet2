@@ -160,7 +160,7 @@ p-chip.mt-2 > .p-chip {
 }
 
 .p-paginator-element.p-highlight {
-    background-color: $bgSecondary !important;
+    background-color: $bgTertiary !important;
 }
 
 .p-dropdown {
@@ -241,4 +241,34 @@ p-chip.mt-2 > .p-chip {
 
 .p-toast-icon-close {
     color: $fgInactive !important;
+}
+
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+    border-radius: 0px !important;
+    transition: none !important;
+    padding: 0.3rem !important;
+}
+
+.p-menubar {
+    background-color: $bgSecondary !important;
+    padding: .5rem .3rem !important;
+}
+
+p-menubarsub > .p-submenu-list {
+    padding: 0px !important;
+    border: 1px solid $fgInactive !important;
+    background-color: $bgSecondary !important;
+}
+
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link {
+    background-color: $bgTertiary !important;
+}
+
+.p-menubar .p-menuitem-link {
+    padding: .5rem .3rem !important;
+    font-size: 14px !important;
+}
+
+.p-inputtext.p-component {
+    border: 1px solid $fgInactive !important;
 }

@@ -266,7 +266,7 @@ public class ProxyController : ApiController
                 .ThenInclude(g => g.Owner)
                 .Where(p => p.Group.Owner.Id == apiUser.Id);
 
-        if (dto.SearchTerm is not null)
+        if (!string.IsNullOrEmpty(dto.SearchTerm))
         {
             query = query.Where(p =>
                 EF.Functions.Like(p.Host, $"%{dto.SearchTerm}%") ||

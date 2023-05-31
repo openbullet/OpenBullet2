@@ -4,7 +4,7 @@ import { getBaseUrl } from "src/app/shared/utils/host";
 import { ProxyGroupDto } from "../dtos/proxy-group/proxy-group.dto";
 import { UpdateProxyGroupDto } from "../dtos/proxy-group/update-proxy-group.dto";
 import { CreateProxyGroupDto } from "../dtos/proxy-group/create-proxy-group.dto";
-import { ProxyFilterDto } from "../dtos/proxy/proxy-filter.dto";
+import { ProxyFiltersDto } from "../dtos/proxy/proxy-filter.dto";
 import { ProxyDto } from "../dtos/proxy/proxy.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { AddProxiesFromListDto } from "../dtos/proxy/add-proxies-from-list.dto";
@@ -20,7 +20,7 @@ export class ProxyService {
         private http: HttpClient
     ) { }
 
-    getProxies(filter: ProxyFilterDto) {
+    getProxies(filter: ProxyFiltersDto) {
         return this.http.get<PagedList<ProxyDto>>(
             getBaseUrl() + '/proxy/all', {
                 params: <any>Object.fromEntries(
@@ -43,22 +43,27 @@ export class ProxyService {
 
     moveProxies(info: MoveProxiesDto) {
         return this.http.post<AffectedEntriesDto>(
-            getBaseUrl() + '/proxy/move/many', info
-        );
-    }
-
-    downloadProxies(filter: ProxyFilterDto) {
-        return this.http.post<string>(
-            getBaseUrl() + '/proxy/download/many', {
-                params: <any>filter
+            getBaseUrl() + '/proxy/move/many', {
+                params: <any>Object.fromEntries(
+                    Object.entries(info).filter(([_, v]) => v != null))
             }
         );
     }
 
-    deleteProxies(filter: ProxyFilterDto) {
+    downloadProxies(filter: ProxyFiltersDto) {
+        return this.http.post<string>(
+            getBaseUrl() + '/proxy/download/many', {
+                params: <any>Object.fromEntries(
+                    Object.entries(filter).filter(([_, v]) => v != null))
+            }
+        );
+    }
+
+    deleteProxies(filter: ProxyFiltersDto) {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/proxy/many', {
-                params: <any>filter
+                params: <any>Object.fromEntries(
+                    Object.entries(filter).filter(([_, v]) => v != null))
             }
         );
     }

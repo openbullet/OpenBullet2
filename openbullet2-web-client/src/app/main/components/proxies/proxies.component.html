@@ -41,11 +41,148 @@
 <div class="container-fluid" *ngIf="proxies !== null">
     <div class="row my-3">
         <div class="col-12 px-0">
-            <ul>
-                <li *ngFor="let proxy of proxies.items">
-                    {{proxy.host}} | {{proxy.port}}
-                </li>
-            </ul>
+            <p-menubar [model]="proxyMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-8 pl-0">
+            <input id="searchTerm" type="text" pInputText
+                class="mr-2"
+                [(ngModel)]="searchTerm"
+                placeholder="Search..." />
+            <p-dropdown
+                class="mr-2"
+                [(ngModel)]="proxyWorkingStatus"
+                [options]="proxyWorkingStatuses">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+            <p-dropdown
+                [(ngModel)]="proxyType"
+                [options]="proxyTypes">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-accent" 
+                pTooltip="Apply the current filters"
+                tooltipPosition="left"
+                (click)="refreshProxies()">
+                Apply
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #proxiesDt
+                [value]="proxies.items"
+                [lazy]="true"
+                [totalRecords]="proxies.totalCount"
+                [first]="(proxies.pageNumber - 1) * proxies.pageSize"
+                (onLazyLoad)="lazyLoadProxies($event)"
+                [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true"
+                [(rows)]="rowCount"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>No proxies added yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="proxies.items.length > 0">
+                        <!-- TODO: Send sorting info to backend
+                        to implement sorting! -->
+                        <th style="min-width:7rem">
+                            Type
+                        </th>
+                        <th style="min-width:10rem">
+                            Host
+                        </th>
+                        <th style="min-width:7rem">
+                            Port
+                        </th>
+                        <th style="min-width:10rem">
+                            Username
+                        </th>
+                        <th style="min-width:10rem">
+                            Password
+                        </th>
+                        <th style="min-width:10rem">
+                            Country
+                        </th>
+                        <th style="min-width:10rem">
+                            Status
+                        </th>
+                        <th style="min-width:7rem">
+                            Ping
+                        </th>
+                        <th style="min-width:15rem">
+                            Last Checked
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-proxy>
+                    <tr>
+                        <td>{{ proxy.type | pascalcase : true }}</td>
+                        <td>{{ proxy.host }}</td>
+                        <td>{{ proxy.port }}</td>
+                        <td>{{ proxy.username }}</td>
+
+                        <!-- Password -->
+                        <td *ngIf="showPasswords || proxy.password === null || proxy.password === ''">
+                            {{ proxy.password }}
+                            <button *ngIf="proxy.password !== null && proxy.password !== ''"
+                                class="button button-transparent ml-1" 
+                                pTooltip="Hide passwords"
+                                (click)="showPasswords = false">
+                                <fa-icon class="color-inactive"
+                                    [icon]="faEyeSlash"
+                                    [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                        <td *ngIf="!showPasswords && proxy.password !== null && proxy.password !== ''">
+                            {{ '*'.repeat(12) }}
+                            <button class="button button-transparent ml-1" 
+                                pTooltip="Show passwords"
+                                (click)="showPasswords = true">
+                                <fa-icon class="color-inactive"
+                                    [icon]="faEye"
+                                    [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
+                        
+                        <td [class]="proxy.country === 'Unknown' ? 'color-inactive' : ''">{{ proxy.country }}</td>
+                        <td [class]="getWorkingClass(proxy.status)">{{ proxy.status | pascalcase : true }}</td>
+                        <td [class]="proxy.ping === 0 ? 'color-inactive' : ''">{{ proxy.ping }} ms</td>
+
+                        <!-- Last checked -->
+                        <td *ngIf="proxy.lastChecked === null" class="color-inactive">
+                            Never
+                        </td>
+                        <td *ngIf="proxy.lastChecked !== null">
+                            {{ proxy.lastChecked | date : 'medium' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
     </div>
 </div>
@@ -78,4 +215,19 @@
     <app-update-proxy-group
         [proxyGroup]="selectedProxyGroup"
         (confirm)="updateProxyGroup($event)" />
+</p-dialog>
+
+<p-dialog 
+    #deleteSlowProxiesModal
+    [header]="'Delete slow proxies in group ' + selectedProxyGroup.name" 
+    [(visible)]="deleteSlowProxiesModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-delete-slow-proxies
+        [proxyGroup]="selectedProxyGroup"
+        (confirm)="deleteSlowProxies($event)" />
 </p-dialog>

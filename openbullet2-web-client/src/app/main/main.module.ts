@@ -23,6 +23,8 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { PickListModule } from 'primeng/picklist';
 import { FileUploadModule } from 'primeng/fileupload';
+import { MenubarModule } from 'primeng/menubar';
+import { InputTextModule } from 'primeng/inputtext';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -50,6 +52,7 @@ import { RlSettingsComponent } from './components/rl-settings/rl-settings.compon
 import { ProxiesComponent } from './components/proxies/proxies.component';
 import { CreateProxyGroupComponent } from './components/proxies/create-proxy-group/create-proxy-group.component';
 import { UpdateProxyGroupComponent } from './components/proxies/update-proxy-group/update-proxy-group.component';
+import { DeleteSlowProxiesComponent } from './components/proxies/delete-slow-proxies/delete-slow-proxies.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +83,8 @@ import { UpdateProxyGroupComponent } from './components/proxies/update-proxy-gro
     RlSettingsComponent,
     ProxiesComponent,
     CreateProxyGroupComponent,
-    UpdateProxyGroupComponent
+    UpdateProxyGroupComponent,
+    DeleteSlowProxiesComponent
   ],
   imports: [
     CommonModule,
@@ -92,7 +96,9 @@ import { UpdateProxyGroupComponent } from './components/proxies/update-proxy-gro
     ButtonModule,
     AvatarModule,
     TooltipModule,
+    InputTextModule,
     DropdownModule,
+    MenubarModule,
     PickListModule,
     AccordionModule,
     CheckboxModule,

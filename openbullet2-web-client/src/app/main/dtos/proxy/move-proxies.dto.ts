@@ -1,6 +1,6 @@
 export interface MoveProxiesDto {
-    pageNumber: number,
-    pageSize: number,
+    pageNumber: number | null,
+    pageSize: number | null,
     proxyGroupId: number,
     searchTerm: string | null,
     type: string | null,

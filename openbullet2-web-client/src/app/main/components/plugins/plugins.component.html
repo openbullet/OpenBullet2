@@ -16,7 +16,7 @@
         >
         <ng-template pTemplate="emptymessage">
             <div class="m-3">
-                <span>No plugins added yet</span>
+                <span>No plugins found</span>
             </div>
         </ng-template>
         <ng-template pTemplate="caption">
@@ -39,10 +39,10 @@
             </div>
         </ng-template>
         <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width:15rem">
+            <tr *ngIf="plugins.length > 0">
+                <th style="min-width:15rem" pSortableColumn="name">
                     <div class="d-flex">
-                        Name
+                        Name <p-sortIcon field="name" />
                         <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
                     </div>
                 </th>
