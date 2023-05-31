@@ -65,12 +65,23 @@ export class ProxiesComponent implements OnInit {
     {
       label: 'Import',
       icon: 'pi pi-fw pi-file-import',
-      command: e => console.log(e)
-    },
-    {
-      label: 'Export',
-      icon: 'pi pi-fw pi-file-export',
-      command: e => console.log(e)
+      items: [
+        {
+          label: 'From text',
+          icon: 'pi pi-fw pi-bars color-good',
+          command: e => console.log(e)
+        },
+        {
+          label: 'From file',
+          icon: 'pi pi-fw pi-file color-good',
+          command: e => console.log(e)
+        },
+        {
+          label: 'From remote',
+          icon: 'pi pi-fw pi-globe color-good',
+          command: e => console.log(e)
+        }
+      ]
     },
     {
       label: 'Edit',
@@ -81,8 +92,13 @@ export class ProxiesComponent implements OnInit {
           icon: 'pi pi-fw pi-filter-fill',
           items: [
             {
+              label: 'Export',
+              icon: 'pi pi-fw pi-file-export color-accent-light',
+              command: e => console.log(e)
+            },
+            {
               label: 'Move',
-              icon: 'pi pi-fw pi-arrow-right',
+              icon: 'pi pi-fw pi-arrow-right color-accent-light',
               command: e => console.log(e)
             },
             {
