@@ -6,16 +6,13 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
-using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Dtos.Hit;
-using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Extensions;
-using RuriLib.Models.Proxies;
 using System.Text;
 
 namespace OpenBullet2.Web.Controllers;
@@ -235,7 +232,7 @@ public class HitController : ApiController
             : _hitRepo.GetAll()
                 .Where(h => h.OwnerId == apiUser.Id);
 
-        if (dto.SearchTerm is not null)
+        if (!string.IsNullOrEmpty(dto.SearchTerm))
         {
             query = query.Where(h =>
                 EF.Functions.Like(h.Data, $"%{dto.SearchTerm}%") ||

@@ -208,3 +208,7 @@ p-accordiontab.accordion-tab-header-small {
         }
     }
 }
+
+ul.p-submenu-list:has(> .long-menu-item) {
+    min-width: 500px !important;
+}

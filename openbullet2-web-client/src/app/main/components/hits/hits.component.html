@@ -1,0 +1,105 @@
+<h1>Hits</h1>
+
+<app-spinner *ngIf="hits === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="hits !== null">
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-menubar [model]="hitMenuItems">
+                <ng-template pTemplate="submenuicon" let-icon>
+                    <span>{{icon}}</span>
+                </ng-template>
+            </p-menubar>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-8 pl-0">
+            <input id="searchTerm" type="text" pInputText
+                class="mr-2"
+                [(ngModel)]="searchTerm"
+                (keydown)="searchBoxKeyDown($event)"
+                placeholder="Search..." />
+            <p-dropdown
+                [(ngModel)]="hitType"
+                (ngModelChange)="refreshHits()"
+                [options]="hitTypes">
+            </p-dropdown>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-accent" 
+                pTooltip="Apply the current filters"
+                tooltipPosition="left"
+                (click)="refreshHits()">
+                Apply
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-table
+                #hitsDt
+                [value]="hits.items"
+                [lazy]="true"
+                [totalRecords]="hits.totalCount"
+                [first]="(hits.pageNumber - 1) * hits.pageSize"
+                (onLazyLoad)="lazyLoadHits($event)"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="true"
+                [(rows)]="rowCount"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="emptymessage">
+                    <div class="m-3">
+                        <span>No hits found yet</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr *ngIf="hits.items.length > 0">
+                        <!-- TODO: Send sorting info to backend
+                        to implement sorting! -->
+                        <th style="min-width:7rem" pResizableColumn>
+                            Data
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn>
+                            Type
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            Config
+                        </th>
+                        <th style="min-width:10rem">
+                            Date
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn>
+                            Wordlist
+                        </th>
+                        <th style="min-width:10rem" pResizableColumn>
+                            Proxy
+                        </th>
+                        <th style="min-width:15rem" pResizableColumn>
+                            Captured Data
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-hit>
+                    <tr>
+                        <td>{{ hit.data }}</td>
+                        <td>{{ hit.hitType }}</td>
+                        <td>{{ hit.configName }}</td>
+                        <td>{{ hit.date | date : 'medium' }}</td>
+                        <td>{{ hit.wordlist }}</td>
+
+                        <!-- TODO: Hide the proxy password! -->
+                        <td>{{ hit.proxy }}</td>
+                        <td>{{ hit.capturedData }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

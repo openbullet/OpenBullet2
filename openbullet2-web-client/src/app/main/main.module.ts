@@ -57,6 +57,7 @@ import { ImportProxiesFromTextComponent } from './components/proxies/import-prox
 import { ProxySyntaxInfoComponent } from './components/proxies/proxy-syntax-info/proxy-syntax-info.component';
 import { ImportProxiesFromRemoteComponent } from './components/proxies/import-proxies-from-remote/import-proxies-from-remote.component';
 import { ImportProxiesFromFileComponent } from './components/proxies/import-proxies-from-file/import-proxies-from-file.component';
+import { HitsComponent } from './components/hits/hits.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { ImportProxiesFromFileComponent } from './components/proxies/import-prox
     ImportProxiesFromTextComponent,
     ProxySyntaxInfoComponent,
     ImportProxiesFromRemoteComponent,
-    ImportProxiesFromFileComponent
+    ImportProxiesFromFileComponent,
+    HitsComponent
   ],
   imports: [
     CommonModule,

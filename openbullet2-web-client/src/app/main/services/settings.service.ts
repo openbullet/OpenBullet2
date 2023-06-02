@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
 import { OBSettingsDto } from "../dtos/settings/ob-settings.dto";
 import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
+import { EnvironmentSettingsDto } from "../dtos/settings/environment-settings.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,12 @@ export class SettingsService {
     constructor(
         private http: HttpClient
     ) { }
+
+    getEnvironmentSettings() {
+        return this.http.get<EnvironmentSettingsDto>(
+            getBaseUrl() + '/settings/environment'
+        );
+    }
 
     getSettings() {
         return this.http.get<OBSettingsDto>(
