@@ -14,6 +14,8 @@ import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxi
 import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxies-from-text/import-proxies-from-text.component';
 import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './import-proxies-from-remote/import-proxies-from-remote.component';
 import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
+import { HttpResponse } from '@angular/common/http';
+import { saveFile } from 'src/app/shared/utils/files';
 
 @Component({
   selector: 'app-proxies',
@@ -77,20 +79,24 @@ export class ProxiesComponent implements OnInit {
 
   proxyMenuItems: MenuItem[] = [
     {
+      id: 'import',
       label: 'Import',
       icon: 'pi pi-fw pi-file-import',
       items: [
         {
+          id: 'import-from-text',
           label: 'From text',
           icon: 'pi pi-fw pi-bars color-good',
           command: e => this.openImportProxiesFromTextModal()
         },
         {
+          id: 'import-from-file',
           label: 'From file',
           icon: 'pi pi-fw pi-file color-good',
           command: e => this.openImportProxiesFromFileModal()
         },
         {
+          id: 'import-from-remote',
           label: 'From remote',
           icon: 'pi pi-fw pi-globe color-good',
           command: e => this.openImportProxiesFromRemoteModal()
@@ -98,24 +104,29 @@ export class ProxiesComponent implements OnInit {
       ]
     },
     {
+      id: 'edit',
       label: 'Edit',
       icon: 'pi pi-fw pi-pencil',
       items: [
         {
+          id: 'edit-filtered-proxies',
           label: 'Filtered proxies',
           icon: 'pi pi-fw pi-filter-fill',
           items: [
             {
+              id: 'export-filtered-proxies',
               label: 'Export',
               icon: 'pi pi-fw pi-file-export color-accent-light',
-              command: e => console.log(e)
+              command: e => this.downloadProxies()
             },
             {
-              label: 'Move',
+              id: 'move-filtered-proxies',
+              label: 'Move to',
               icon: 'pi pi-fw pi-arrow-right color-accent-light',
-              command: e => console.log(e)
+              items: [] // This array is filled at runtime
             },
             {
+              id: 'delete-filtered-proxies',
               label: 'Delete',
               icon: 'pi pi-fw pi-trash color-bad',
               command: e => this.deleteFilteredProxies()
@@ -125,25 +136,30 @@ export class ProxiesComponent implements OnInit {
       ]
     },
     {
+      id: 'delete',
       label: 'Delete',
       icon: 'pi pi-fw pi-trash',
       items: [
         {
+          id: 'delete-all-proxies',
           label: 'All proxies',
           icon: 'pi pi-fw pi-trash color-bad',
           command: e => this.confirmDeleteAllProxies()
         },
         {
+          id: 'delete-not-working-proxies',
           label: 'Not working proxies',
           icon: 'pi pi-fw pi-trash color-bad',
           command: e => this.deleteNotWorkingProxies()
         },
         {
+          id: 'delete-untested-proxies',
           label: 'Untested proxies',
           icon: 'pi pi-fw pi-trash color-bad',
           command: e => this.deleteUntestedProxies()
         },
         {
+          id: 'delete-slow-proxies',
           label: 'Slow proxies',
           icon: 'pi pi-fw pi-trash color-bad',
           command: e => this.openDeleteSlowProxiesModal()
@@ -173,6 +189,20 @@ export class ProxiesComponent implements OnInit {
           ...proxyGroups
         ];
         this.refreshProxies();
+
+        // Update the "Move to" menu items
+        const moveToMenuItems = proxyGroups.map(pg => {
+          return {
+            label: pg.name,
+            command: () => this.moveProxies(pg)
+          }
+        });
+
+        this.proxyMenuItems
+          .find(i => i.id === 'edit')!
+          .items!.find(i => i.id === 'edit-filtered-proxies')!
+          .items!.find(i => i.id === 'move-filtered-proxies')!
+          .items = moveToMenuItems;
       });
   }
 
@@ -435,5 +465,35 @@ export class ProxiesComponent implements OnInit {
     if (event.key == 'Enter') {
       this.refreshProxies();
     }
+  }
+
+  moveProxies(destinationProxyGroup: ProxyGroupDto) {
+    this.proxyService.moveProxies({
+      pageNumber: null,
+      pageSize: null,
+      proxyGroupId: this.selectedProxyGroup.id,
+      destinationGroupId: destinationProxyGroup.id,
+      searchTerm: this.searchTerm,
+      type: this.proxyType === 'anyType' ? null : this.proxyType,
+      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus
+    }).subscribe(resp => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Moved',
+        detail: `${resp.count} proxies were moved from proxy group ${this.selectedProxyGroup.name} to proxy group ${destinationProxyGroup.name}`
+      });
+      this.refreshProxies();
+    });
+  }
+
+  downloadProxies() {
+    this.proxyService.downloadProxies({
+      pageNumber: null,
+      pageSize: null,
+      proxyGroupId: this.selectedProxyGroup.id,
+      searchTerm: this.searchTerm,
+      type: this.proxyType === 'anyType' ? null : this.proxyType,
+      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus
+    }).subscribe(resp => saveFile(resp));
   }
 }

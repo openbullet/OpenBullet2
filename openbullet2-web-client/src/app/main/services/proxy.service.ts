@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
 import { ProxyGroupDto } from "../dtos/proxy-group/proxy-group.dto";
@@ -11,6 +11,7 @@ import { AddProxiesFromListDto } from "../dtos/proxy/add-proxies-from-list.dto";
 import { AddProxiesFromRemoteDto } from "../dtos/proxy/add-proxies-from-remote.dto";
 import { MoveProxiesDto } from "../dtos/proxy/move-proxies.dto";
 import { PagedList } from "../dtos/common/paged-list.dto";
+import { Observable, map } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -43,18 +44,19 @@ export class ProxyService {
 
     moveProxies(info: MoveProxiesDto) {
         return this.http.post<AffectedEntriesDto>(
-            getBaseUrl() + '/proxy/move/many', {
-                params: <any>Object.fromEntries(
-                    Object.entries(info).filter(([_, v]) => v != null))
-            }
+            getBaseUrl() + '/proxy/move/many',
+            <any>Object.fromEntries(
+                Object.entries(info).filter(([_, v]) => v != null))
         );
     }
 
     downloadProxies(filter: ProxyFiltersDto) {
-        return this.http.post<string>(
+        return this.http.get<Blob>(
             getBaseUrl() + '/proxy/download/many', {
                 params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null))
+                    Object.entries(filter).filter(([_, v]) => v != null)),
+                responseType: 'blob' as 'json',
+                observe: 'response'
             }
         );
     }
