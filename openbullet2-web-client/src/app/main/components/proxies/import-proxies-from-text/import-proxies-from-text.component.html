@@ -1,0 +1,103 @@
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">
+                    Paste your proxies below, one per line
+                </span>
+                <br />
+                <textarea class="w-100 monospace mt-2"
+                    [ngStyle]="{ minHeight: '150px' }"
+                    [(ngModel)]="proxies"
+                    [placeholder]="'127.0.0.1:8080\nmyproxy.com:1234\n127.0.0.1:8080:myusername:mypassword\n(http)127.0.0.1:8080\n(socks5)myproxy.com:5134:myusername:mypassword'">
+                </textarea>
+                <p-accordion>
+                    <p-accordionTab header="Show supported proxy syntax" 
+                        class="accordion-tab-header-small">
+                        <span class="text-small color-inactive">
+                            Proxies that you paste should have one of the following formats:
+                        </span>
+                        <table class="text-small color-inactive w-100">
+                            <thead>
+                                <th class="w-50">Syntax</th>
+                                <th class="w-50">Examples</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="monospace">host:port</td>
+                                    <td class="monospace">127.0.0.1:8080, myproxy.com:1234</td>
+                                </tr>
+                                <tr>
+                                    <td class="monospace">host:port:username:password</td>
+                                    <td class="monospace">127.0.0.1:8080:myusername:mypassword</td>
+                                </tr>
+                                <tr>
+                                    <td class="monospace">(type)host:port</td>
+                                    <td class="monospace">(http)127.0.0.1:8080</td>
+                                </tr>
+                                <tr>
+                                    <td class="monospace">(type)host:port:username:password</td>
+                                    <td class="monospace">(socks5)myproxy.com:5134:myusername:mypassword</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class="text-small color-inactive">
+                            The proxy type can be http, socks4, socks4a or socks5.
+                        </span>
+                    </p-accordionTab>
+                </p-accordion>  
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Type</span>
+            </div>
+            <p-dropdown
+                [(ngModel)]="defaultProxyType"
+                [options]="proxyTypes">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
+            <br />
+            <span class="text-small color-inactive">
+                If the proxy type is specified by a custom syntax, this value will be overridden.
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Default username</span>
+            </div>
+            <input id="defaultUsername" type="text"
+                [(ngModel)]="defaultUsername" />
+        </div>
+        <div class="col-6">
+            <div class="mb-1">
+                <span class="text-small">Default Password</span>
+            </div>
+            <input id="defaultPassword" type="text"
+                [(ngModel)]="defaultPassword" />
+        </div>
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                The username and password to use for all imported proxies when not specified by the syntax (leave blank to disable).
+            </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Import
+            </button>
+        </div>
+    </div>
+</div>

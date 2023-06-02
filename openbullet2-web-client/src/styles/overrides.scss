@@ -272,3 +272,17 @@ p-menubarsub > .p-submenu-list {
 .p-inputtext.p-component {
     border: 1px solid $fgInactive !important;
 }
+
+p-accordiontab {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                border: 1px solid $fgInactive !important;
+            }
+        }
+    }
+}
+
+.p-accordion .p-accordion-content {
+    border: 1px solid $fgInactive !important;
+}

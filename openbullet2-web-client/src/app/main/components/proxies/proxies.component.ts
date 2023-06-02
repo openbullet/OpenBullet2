@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProxyGroupDto } from '../../dtos/proxy-group/proxy-group.dto';
 import { ProxyDto } from '../../dtos/proxy/proxy.dto';
 import { faEye, faEyeSlash, faFilterCircleXmark, faKey, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,7 @@ import { CreateProxyGroupDto } from '../../dtos/proxy-group/create-proxy-group.d
 import { MenuItem } from 'primeng/api';
 import { ProxyFiltersDto } from '../../dtos/proxy/proxy-filter.dto';
 import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxies.component';
+import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxies-from-text/import-proxies-from-text.component';
 
 @Component({
   selector: 'app-proxies',
@@ -18,6 +19,9 @@ import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxi
   styleUrls: ['./proxies.component.scss']
 })
 export class ProxiesComponent implements OnInit {
+  @ViewChild('importProxiesFromTextComponent') 
+  importProxiesFromTextComponent: ImportProxiesFromTextComponent | undefined;
+
   proxyGroups: ProxyGroupDto[] | null = null;
   proxies: PagedList<ProxyDto> | null = null;
   rowCount: number = 10;
@@ -41,8 +45,10 @@ export class ProxiesComponent implements OnInit {
 
   createProxyGroupModalVisible = false;
   updateProxyGroupModalVisible = false;
-  importProxiesModalVisible = false;
   deleteSlowProxiesModalVisible = false;
+  importProxiesFromTextModalVisible = false;
+  importProxiesFromFileModalVisible = false;
+  importProxiesFromRemoteModalVisible = false;
 
   searchTerm: string = '';
   proxyWorkingStatus: string = 'anyStatus';
@@ -69,7 +75,7 @@ export class ProxiesComponent implements OnInit {
         {
           label: 'From text',
           icon: 'pi pi-fw pi-bars color-good',
-          command: e => console.log(e)
+          command: e => this.openImportProxiesFromTextModal()
         },
         {
           label: 'From file',
@@ -193,8 +199,19 @@ export class ProxiesComponent implements OnInit {
     this.updateProxyGroupModalVisible = true;
   }
 
-  openImportProxiesModal() {
-    this.importProxiesModalVisible = true;
+  openImportProxiesFromTextModal() {
+    // Cannot import without choosing a group first
+    if (this.selectedProxyGroup.id === -1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'No proxy group selected',
+        detail: `Select a valid proxy group, or create one, before importing proxies`
+      });
+      return;
+    }
+
+    this.importProxiesFromTextComponent?.reset();
+    this.importProxiesFromTextModalVisible = true;
   }
 
   createProxyGroup(proxyGroup: CreateProxyGroupDto) {
@@ -333,5 +350,23 @@ export class ProxiesComponent implements OnInit {
     } else {
       return 'color-inactive';
     }
+  }
+
+  importProxiesFromText(toImport: ProxiesToImport) {
+    this.proxyService.addProxiesFromList({
+      defaultUsername: toImport.defaultUsername,
+      defaultPassword: toImport.defaultPassword,
+      defaultType: toImport.defaultType,
+      proxyGroupId: this.selectedProxyGroup.id,
+      proxies: toImport.proxies
+    }).subscribe(resp => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Imported',
+        detail: `${resp.count} proxies were imported to proxy group ${this.selectedProxyGroup.name}`
+      });
+      this.importProxiesFromTextModalVisible = false;
+      this.refreshProxies();
+    });
   }
 }

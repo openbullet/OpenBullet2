@@ -197,3 +197,14 @@ p-table.no-header {
 .code-editor * {
     font-family: 'Chivo Mono' !important;
 }
+
+p-accordiontab.accordion-tab-header-small {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                padding: .4rem 1rem !important;
+                font-size: 12px !important;
+            }
+        }
+    }
+}
