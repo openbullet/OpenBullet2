@@ -24,6 +24,7 @@
                 (ngModelChange)="refreshHits()"
                 [options]="hitTypes">
             </p-dropdown>
+            <!-- TODO: Add range calendar for minDate and maxDate! -->
         </div>
         <div class="col-4 pr-0 text-right">
             <button class="button button-accent" 
@@ -63,11 +64,11 @@
                     <tr *ngIf="hits.items.length > 0">
                         <!-- TODO: Send sorting info to backend
                         to implement sorting! -->
-                        <th style="min-width:7rem" pResizableColumn>
-                            Data
-                        </th>
                         <th style="min-width:10rem" pResizableColumn>
                             Type
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            Data
                         </th>
                         <th style="min-width:7rem" pResizableColumn>
                             Config
@@ -84,12 +85,13 @@
                         <th style="min-width:15rem" pResizableColumn>
                             Captured Data
                         </th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-hit>
                     <tr>
+                        <td [style]="{ color: getTypeColor(hit.type) }">{{ hit.type }}</td>
                         <td>{{ hit.data }}</td>
-                        <td>{{ hit.hitType }}</td>
                         <td>{{ hit.configName }}</td>
                         <td>{{ hit.date | date : 'medium' }}</td>
                         <td>{{ hit.wordlist }}</td>
@@ -97,6 +99,19 @@
                         <!-- TODO: Hide the proxy password! -->
                         <td>{{ hit.proxy }}</td>
                         <td>{{ hit.capturedData }}</td>
+
+                        <td>
+                            <button class="button button-transparent"
+                                pTooltip="Edit" tooltipPosition="bottom"
+                                (click)="openUpdateHitModal(hit)">
+                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-transparent"
+                                pTooltip="Delete" tooltipPosition="bottom"
+                                (click)="confirmDeleteHit(hit)">
+                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>

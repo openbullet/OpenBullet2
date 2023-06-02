@@ -242,9 +242,9 @@ public class HitController : ApiController
                 EF.Functions.Like(h.WordlistName, $"%{dto.SearchTerm}%"));
         }
 
-        if (dto.HitType is not null)
+        if (dto.Type is not null)
         {
-            query = query.Where(p => p.Type == dto.HitType);
+            query = query.Where(p => p.Type == dto.Type);
         }
 
         if (dto.MinDate is not null)

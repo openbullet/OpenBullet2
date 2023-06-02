@@ -16,7 +16,7 @@ public class HitFiltersDto : PaginationDto
     /// <summary>
     /// The hit type. Optional.
     /// </summary>
-    public string? HitType { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// The date and time of the oldest hit that should be retrieved.

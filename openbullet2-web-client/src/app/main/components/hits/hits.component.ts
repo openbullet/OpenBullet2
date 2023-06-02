@@ -7,6 +7,7 @@ import { HitDto } from '../../dtos/hit/hit.dto';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import * as moment from 'moment';
 import { saveFile } from 'src/app/shared/utils/files';
+import { faPen, faX } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-hits',
@@ -17,6 +18,9 @@ export class HitsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
   hits: PagedList<HitDto> | null = null;
   rowCount: number = 10;
+
+  faPen = faPen;
+  faX = faX;
 
   searchTerm: string = '';
   hitType: string = 'Any Type';
@@ -51,7 +55,7 @@ export class HitsComponent implements OnInit {
               id: 'send-filtered-hits-to-recheck',
               label: 'Send to recheck',
               icon: 'pi pi-fw pi-arrow-right color-accent-light',
-              command: e => console.log('SEND TO RECHECK!')
+              command: e => console.log('SEND TO RECHECK!') // TODO: Implement
             },
             {
               id: 'delete-filtered-hits',
@@ -130,7 +134,7 @@ export class HitsComponent implements OnInit {
       pageNumber,
       pageSize: pageSize ?? this.rowCount,
       searchTerm: this.searchTerm,
-      hitType: this.hitType === 'Any Type' ? null : this.hitType,
+      type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.minDate.toISOString(),
       maxDate: this.maxDate.toISOString()
     }).subscribe(hits => this.hits = hits);
@@ -154,7 +158,7 @@ export class HitsComponent implements OnInit {
       pageNumber: null,
       pageSize: null,
       searchTerm: this.searchTerm,
-      hitType: this.hitType === 'Any Type' ? null : this.hitType,
+      type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.minDate.toISOString(),
       maxDate: this.maxDate.toISOString()
     }).subscribe(resp => {
@@ -207,9 +211,55 @@ export class HitsComponent implements OnInit {
       pageNumber: null,
       pageSize: null,
       searchTerm: this.searchTerm,
-      hitType: this.hitType === 'Any Type' ? null : this.hitType,
+      type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.minDate.toISOString(),
       maxDate: this.maxDate.toISOString()
     }, format).subscribe(resp => saveFile(resp));
+  }
+
+  getTypeColor(type: string) {
+    if (type === 'SUCCESS') {
+      return 'yellowgreen';
+    } else if (type === 'NONE') {
+      return '#7FFFD4';
+    }
+    
+    // Check if there is a custom status
+    if (this.envSettings !== null) {
+      const customStatus = this.envSettings.customStatuses
+        .find(cs => cs.name === type);
+
+      if (customStatus !== undefined) {
+        return customStatus.color;
+      }
+    }
+    
+    return 'darkorange';
+  }
+
+  openUpdateHitModal(hit: HitDto) {
+    // TODO: implement
+  }
+
+  confirmDeleteHit(hit: HitDto) {
+    this.confirmationService.confirm({
+      message: `You are about to delete the hit ${hit.data}. 
+      Are you sure that you want to proceed?`,
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => this.deleteHit(hit)
+    });
+  }
+
+  deleteHit(hit: HitDto) {
+    this.hitService.deleteHit(hit.id)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: `Hit ${hit.data} was deleted`
+        });
+        this.refreshHits();
+      });
   }
 }
