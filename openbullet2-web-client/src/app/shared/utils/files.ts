@@ -23,9 +23,6 @@ function getFileName(response: HttpResponse<Blob>) {
   try {
     const contentDisposition = response.headers.get('content-disposition');
 
-    console.log(response.headers);
-    console.log(contentDisposition);
-
     if (contentDisposition === null) {
       throw new Error('Could not find content-disposition header');
     }
