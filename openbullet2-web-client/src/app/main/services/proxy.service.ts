@@ -70,7 +70,7 @@ export class ProxyService {
 
     deleteSlowProxies(proxyGroupId: number, maxPing: number) {
         return this.http.delete<AffectedEntriesDto>(
-            getBaseUrl() + '/proxy/many', {
+            getBaseUrl() + '/proxy/slow', {
                 params: {
                     proxyGroupId,
                     maxPing

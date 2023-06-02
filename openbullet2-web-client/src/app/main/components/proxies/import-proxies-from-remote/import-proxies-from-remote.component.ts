@@ -1,20 +1,20 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
-export interface ProxiesToImport {
+export interface RemoteProxiesToImport {
   defaultType: string,
   defaultUsername: string,
   defaultPassword: string,
-  proxies: string[]
+  url: string
 }
 
 @Component({
-  selector: 'app-import-proxies-from-text',
-  templateUrl: './import-proxies-from-text.component.html',
-  styleUrls: ['./import-proxies-from-text.component.scss']
+  selector: 'app-import-proxies-from-remote',
+  templateUrl: './import-proxies-from-remote.component.html',
+  styleUrls: ['./import-proxies-from-remote.component.scss']
 })
-export class ImportProxiesFromTextComponent {
-  @Output() confirm = new EventEmitter<ProxiesToImport>();
-  proxies: string = '';
+export class ImportProxiesFromRemoteComponent {
+  @Output() confirm = new EventEmitter<RemoteProxiesToImport>();
+  url: string = '';
   defaultUsername: string = '';
   defaultPassword: string = '';
   defaultProxyType: string = '';
@@ -26,7 +26,7 @@ export class ImportProxiesFromTextComponent {
   ];
 
   public reset() {
-    this.proxies = '';
+    this.url = '';
     this.defaultUsername = '';
     this.defaultPassword = '';
     this.defaultProxyType = 'http';
@@ -37,15 +37,11 @@ export class ImportProxiesFromTextComponent {
       defaultUsername: this.defaultUsername,
       defaultPassword: this.defaultPassword,
       defaultType: this.defaultProxyType,
-      proxies: this.splitProxies()
+      url: this.url
     });
   }
 
   isFormValid() {
-    return this.splitProxies().length > 0;
-  }
-
-  splitProxies() {
-    return this.proxies.split('\n').filter(p => p.trim() !== '');
+    return this.url.startsWith('http');
   }
 }

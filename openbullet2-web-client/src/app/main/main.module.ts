@@ -55,6 +55,8 @@ import { UpdateProxyGroupComponent } from './components/proxies/update-proxy-gro
 import { DeleteSlowProxiesComponent } from './components/proxies/delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromTextComponent } from './components/proxies/import-proxies-from-text/import-proxies-from-text.component';
 import { ProxySyntaxInfoComponent } from './components/proxies/proxy-syntax-info/proxy-syntax-info.component';
+import { ImportProxiesFromRemoteComponent } from './components/proxies/import-proxies-from-remote/import-proxies-from-remote.component';
+import { ImportProxiesFromFileComponent } from './components/proxies/import-proxies-from-file/import-proxies-from-file.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import { ProxySyntaxInfoComponent } from './components/proxies/proxy-syntax-info
     UpdateProxyGroupComponent,
     DeleteSlowProxiesComponent,
     ImportProxiesFromTextComponent,
-    ProxySyntaxInfoComponent
+    ProxySyntaxInfoComponent,
+    ImportProxiesFromRemoteComponent,
+    ImportProxiesFromFileComponent
   ],
   imports: [
     CommonModule,

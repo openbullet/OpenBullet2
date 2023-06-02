@@ -53,10 +53,12 @@
             <input id="searchTerm" type="text" pInputText
                 class="mr-2"
                 [(ngModel)]="searchTerm"
+                (keydown)="searchBoxKeyDown($event)"
                 placeholder="Search..." />
             <p-dropdown
                 class="mr-2"
                 [(ngModel)]="proxyWorkingStatus"
+                (ngModelChange)="refreshProxies()"
                 [options]="proxyWorkingStatuses">
                 <ng-template let-item pTemplate="selectedItem">
                     <span>{{item | pascalcase : true}}</span>
@@ -67,6 +69,7 @@
             </p-dropdown>
             <p-dropdown
                 [(ngModel)]="proxyType"
+                (ngModelChange)="refreshProxies()"
                 [options]="proxyTypes">
                 <ng-template let-item pTemplate="selectedItem">
                     <span>{{item | pascalcase : true}}</span>
@@ -159,7 +162,7 @@
                             </button>
                         </td>
                         <td *ngIf="!showPasswords && proxy.password !== null && proxy.password !== ''">
-                            {{ '*'.repeat(12) }}
+                            {{ '•'.repeat(12) }}
                             <button class="button button-transparent ml-1" 
                                 pTooltip="Show passwords"
                                 (click)="showPasswords = true">
@@ -245,4 +248,34 @@
     <app-import-proxies-from-text
         #importProxiesFromTextComponent
         (confirm)="importProxiesFromText($event)" />
+</p-dialog>
+
+<p-dialog 
+    #importProxiesFromFileModal
+    header="Import proxies from a file" 
+    [(visible)]="importProxiesFromFileModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-import-proxies-from-file
+        #importProxiesFromFileComponent
+        (confirm)="importProxiesFromText($event)" />
+</p-dialog>
+
+<p-dialog 
+    #importProxiesFromRemoteModal
+    header="Import proxies from a remote source" 
+    [(visible)]="importProxiesFromRemoteModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-import-proxies-from-remote
+        #importProxiesFromRemoteComponent
+        (confirm)="importProxiesFromRemote($event)" />
 </p-dialog>

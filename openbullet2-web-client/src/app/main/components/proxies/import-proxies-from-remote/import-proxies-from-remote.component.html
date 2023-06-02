@@ -1,16 +1,12 @@
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-12">
-            <div class="mb-1">
-                <span class="text-small">
-                    Paste your proxies below, one per line
-                </span>
-                <br />
-                <textarea class="w-100 monospace mt-2"
-                    [ngStyle]="{ minHeight: '150px' }"
-                    [(ngModel)]="proxies"
-                    [placeholder]="'127.0.0.1:8080\nmyproxy.com:1234\n127.0.0.1:8080:myusername:mypassword\n(http)127.0.0.1:8080\n(socks5)myproxy.com:5134:myusername:mypassword'">
-                </textarea>
+            <div class="mb-2">
+                <div class="mb-1">
+                    <span class="text-small">URL of the remote proxy source</span>
+                </div>
+                <input id="url" type="text" class="w-100"
+                    [(ngModel)]="url" />
             </div>
             <app-proxy-syntax-info />
         </div>

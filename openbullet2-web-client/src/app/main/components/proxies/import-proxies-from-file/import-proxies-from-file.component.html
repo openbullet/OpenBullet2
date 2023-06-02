@@ -2,17 +2,19 @@
     <div class="row mb-3">
         <div class="col-12">
             <div class="mb-1">
-                <span class="text-small">
-                    Paste your proxies below, one per line
-                </span>
-                <br />
-                <textarea class="w-100 monospace mt-2"
-                    [ngStyle]="{ minHeight: '150px' }"
-                    [(ngModel)]="proxies"
-                    [placeholder]="'127.0.0.1:8080\nmyproxy.com:1234\n127.0.0.1:8080:myusername:mypassword\n(http)127.0.0.1:8080\n(socks5)myproxy.com:5134:myusername:mypassword'">
-                </textarea>
+                <p-fileUpload 
+                    #fileUpload
+                    name="Upload plugin"
+                    [customUpload]="true"
+                    [auto]="true"
+                    (uploadHandler)="selectedFile = $event.files[0]"
+                    (onRemove)="selectedFile = null"
+                    [multiple]="false"
+                    accept=".txt"
+                    [maxFileSize]="10 * 1000 * 1000">
+
+                </p-fileUpload>
             </div>
-            <app-proxy-syntax-info />
         </div>
     </div>
     <div class="row my-3">

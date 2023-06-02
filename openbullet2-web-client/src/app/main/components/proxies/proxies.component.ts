@@ -12,6 +12,8 @@ import { MenuItem } from 'primeng/api';
 import { ProxyFiltersDto } from '../../dtos/proxy/proxy-filter.dto';
 import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxies-from-text/import-proxies-from-text.component';
+import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './import-proxies-from-remote/import-proxies-from-remote.component';
+import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
 
 @Component({
   selector: 'app-proxies',
@@ -21,6 +23,12 @@ import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxie
 export class ProxiesComponent implements OnInit {
   @ViewChild('importProxiesFromTextComponent') 
   importProxiesFromTextComponent: ImportProxiesFromTextComponent | undefined;
+
+  @ViewChild('importProxiesFromFileComponent')
+  importProxiesFromFileComponent: ImportProxiesFromFileComponent | undefined;
+
+  @ViewChild('importProxiesFromRemoteComponent')
+  importProxiesFromRemoteComponent: ImportProxiesFromRemoteComponent | undefined;
 
   proxyGroups: ProxyGroupDto[] | null = null;
   proxies: PagedList<ProxyDto> | null = null;
@@ -80,12 +88,12 @@ export class ProxiesComponent implements OnInit {
         {
           label: 'From file',
           icon: 'pi pi-fw pi-file color-good',
-          command: e => console.log(e)
+          command: e => this.openImportProxiesFromFileModal()
         },
         {
           label: 'From remote',
           icon: 'pi pi-fw pi-globe color-good',
-          command: e => console.log(e)
+          command: e => this.openImportProxiesFromRemoteModal()
         }
       ]
     },
@@ -214,6 +222,36 @@ export class ProxiesComponent implements OnInit {
     this.importProxiesFromTextModalVisible = true;
   }
 
+  openImportProxiesFromFileModal() {
+    // Cannot import without choosing a group first
+    if (this.selectedProxyGroup.id === -1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'No proxy group selected',
+        detail: `Select a valid proxy group, or create one, before importing proxies`
+      });
+      return;
+    }
+
+    this.importProxiesFromFileComponent?.reset();
+    this.importProxiesFromFileModalVisible = true;
+  }
+
+  openImportProxiesFromRemoteModal() {
+    // Cannot import without choosing a group first
+    if (this.selectedProxyGroup.id === -1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'No proxy group selected',
+        detail: `Select a valid proxy group, or create one, before importing proxies`
+      });
+      return;
+    }
+
+    this.importProxiesFromRemoteComponent?.reset();
+    this.importProxiesFromRemoteModalVisible = true;
+  }
+
   createProxyGroup(proxyGroup: CreateProxyGroupDto) {
     this.proxyGroupService.createProxyGroup(proxyGroup)
       .subscribe(resp => {
@@ -320,6 +358,7 @@ export class ProxiesComponent implements OnInit {
           summary: 'Deleted',
           detail: `${resp.count} proxies were deleted from proxy group ${this.selectedProxyGroup.name}`
         });
+        this.deleteSlowProxiesModalVisible = false;
         this.refreshProxies();
       });
   }
@@ -365,8 +404,36 @@ export class ProxiesComponent implements OnInit {
         summary: 'Imported',
         detail: `${resp.count} proxies were imported to proxy group ${this.selectedProxyGroup.name}`
       });
+
+      // This function can be invoked from both the text and file import
+      // so we need to close both of them
       this.importProxiesFromTextModalVisible = false;
+      this.importProxiesFromFileModalVisible = false;
       this.refreshProxies();
     });
+  }
+
+  importProxiesFromRemote(toImport: RemoteProxiesToImport) {
+    this.proxyService.addProxiesFromRemote({
+      defaultUsername: toImport.defaultUsername,
+      defaultPassword: toImport.defaultPassword,
+      defaultType: toImport.defaultType,
+      proxyGroupId: this.selectedProxyGroup.id,
+      url: toImport.url
+    }).subscribe(resp => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Imported',
+        detail: `${resp.count} proxies were imported to proxy group ${this.selectedProxyGroup.name}`
+      });
+      this.importProxiesFromRemoteModalVisible = false;
+      this.refreshProxies();
+    });
+  }
+
+  searchBoxKeyDown(event: any) {
+    if (event.key == 'Enter') {
+      this.refreshProxies();
+    }
   }
 }
