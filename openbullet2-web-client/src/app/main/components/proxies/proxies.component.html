@@ -97,9 +97,13 @@
                 [totalRecords]="proxies.totalCount"
                 [first]="(proxies.pageNumber - 1) * proxies.pageSize"
                 (onLazyLoad)="lazyLoadProxies($event)"
-                [tableStyle]="{ 'min-width': '50rem' }"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
                 [paginator]="true"
                 [(rows)]="rowCount"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
                 [showCurrentPageReport]="true"
                 [rowsPerPageOptions]="[10, 25, 50]"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -116,19 +120,19 @@
                         <th style="min-width:7rem">
                             Type
                         </th>
-                        <th style="min-width:10rem">
+                        <th style="min-width:10rem" pResizableColumn>
                             Host
                         </th>
                         <th style="min-width:7rem">
                             Port
                         </th>
-                        <th style="min-width:10rem">
+                        <th style="min-width:10rem" pResizableColumn>
                             Username
                         </th>
-                        <th style="min-width:10rem">
+                        <th style="min-width:10rem" pResizableColumn>
                             Password
                         </th>
-                        <th style="min-width:10rem">
+                        <th style="min-width:10rem" pResizableColumn>
                             Country
                         </th>
                         <th style="min-width:10rem">

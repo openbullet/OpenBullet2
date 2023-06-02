@@ -286,3 +286,9 @@ p-accordiontab {
 .p-accordion .p-accordion-content {
     border: 1px solid $fgInactive !important;
 }
+
+.p-column-resizer {
+    content: url("../assets/icons/common/resize-small-horizontal.svg") !important;
+    width: 25px !important;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(93%) saturate(0%) hue-rotate(201deg) brightness(106%) contrast(106%);
+}
