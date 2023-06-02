@@ -21,6 +21,7 @@ $sidebarWidth: 230px;
     color: $fgPrimary;
     flex: 1 1 auto;
     padding: 30px 80px;
+    width: calc(100vw - $sidebarWidth);
 }
 
 .logo {
