@@ -16,7 +16,11 @@
         >
         <ng-template pTemplate="emptymessage">
             <div class="m-3">
-                <span>No guests found</span>
+                <span>
+                    {{ guests.length === 0 
+                        ? 'No guests added yet' 
+                        : 'No guests match the filter' }}
+                </span>
             </div>
         </ng-template>
         <ng-template pTemplate="caption">
@@ -70,7 +74,7 @@
                         <span class="monospace">{{ address }}</span>
                     </p-chip>
                 </td>
-                <td>
+                <td class="text-right">
                     <button class="button button-transparent"
                         pTooltip="Edit" tooltipPosition="bottom"
                         (click)="openUpdateGuestInfoModal(guest)">
