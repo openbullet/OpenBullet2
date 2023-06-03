@@ -92,6 +92,7 @@ input {
     border: 1px solid $fgInactive;
     box-shadow: none;
     outline: none;
+    height: 41px; // This is to match the primeng components
 }
 
 /*
