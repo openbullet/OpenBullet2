@@ -24,7 +24,16 @@
                 (ngModelChange)="refreshHits()"
                 [options]="hitTypes">
             </p-dropdown>
-            <!-- TODO: Add range calendar for minDate and maxDate! -->
+            <p-calendar
+                [(ngModel)]="rangeDates"
+                selectionMode="range"
+                [showTime]="true"
+                class="ml-2"
+                [style]="{ width: '400px' }"
+                appendTo="body"
+                (onSelect)="refreshHits()"
+                [showSeconds]="true">
+            </p-calendar>
         </div>
         <div class="col-4 pr-0 text-right">
             <button class="button button-accent" 

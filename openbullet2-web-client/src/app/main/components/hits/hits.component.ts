@@ -32,8 +32,10 @@ export class HitsComponent implements OnInit {
   ];
 
   // TODO: Add calendar to UI
-  minDate: Date = moment().subtract(7, 'days').toDate();
-  maxDate: Date = moment().endOf('day').toDate();
+  rangeDates: Date[] = [
+    moment().subtract(7, 'days').toDate(),
+    moment().endOf('day').toDate()
+  ];
 
   selectedHit: HitDto | null = null;
   updateHitModalVisible = false;
@@ -139,8 +141,8 @@ export class HitsComponent implements OnInit {
       pageSize: pageSize ?? this.rowCount,
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
-      minDate: this.minDate.toISOString(),
-      maxDate: this.maxDate.toISOString()
+      minDate: this.rangeDates[0].toISOString(),
+      maxDate: this.rangeDates[1].toISOString()
     }).subscribe(hits => this.hits = hits);
   }
 
@@ -163,8 +165,8 @@ export class HitsComponent implements OnInit {
       pageSize: null,
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
-      minDate: this.minDate.toISOString(),
-      maxDate: this.maxDate.toISOString()
+      minDate: this.rangeDates[0].toISOString(),
+      maxDate: this.rangeDates[1].toISOString()
     }).subscribe(resp => {
       this.messageService.add({
         severity: 'success',
@@ -216,8 +218,8 @@ export class HitsComponent implements OnInit {
       pageSize: null,
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
-      minDate: this.minDate.toISOString(),
-      maxDate: this.maxDate.toISOString()
+      minDate: this.rangeDates[0].toISOString(),
+      maxDate: this.rangeDates[1].toISOString()
     }, format).subscribe(resp => saveFile(resp));
   }
 
