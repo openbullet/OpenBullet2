@@ -59,6 +59,7 @@ import { ImportProxiesFromRemoteComponent } from './components/proxies/import-pr
 import { ImportProxiesFromFileComponent } from './components/proxies/import-proxies-from-file/import-proxies-from-file.component';
 import { HitsComponent } from './components/hits/hits.component';
 import { UpdateHitComponent } from './components/hits/update-hit/update-hit.component';
+import { WordlistsComponent } from './components/wordlists/wordlists.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { UpdateHitComponent } from './components/hits/update-hit/update-hit.comp
     ImportProxiesFromRemoteComponent,
     ImportProxiesFromFileComponent,
     HitsComponent,
-    UpdateHitComponent
+    UpdateHitComponent,
+    WordlistsComponent
   ],
   imports: [
     CommonModule,

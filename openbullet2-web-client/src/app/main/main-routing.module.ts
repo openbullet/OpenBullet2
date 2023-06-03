@@ -11,6 +11,7 @@ import { OBSettingsComponent } from './components/ob-settings/ob-settings.compon
 import { RlSettingsComponent } from './components/rl-settings/rl-settings.component';
 import { ProxiesComponent } from './components/proxies/proxies.component';
 import { HitsComponent } from './components/hits/hits.component';
+import { WordlistsComponent } from './components/wordlists/wordlists.component';
 
 const routes: Routes = [
   // Main component layout
@@ -25,6 +26,10 @@ const routes: Routes = [
       {
         component: ProxiesComponent,
         path: 'proxies'
+      },
+      {
+        component: WordlistsComponent,
+        path: 'wordlists'
       },
       {
         component: HitsComponent,

@@ -35,12 +35,12 @@
               }
             ],
             "styles": [
-              "src/styles/main.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/primeng/resources/themes/bootstrap4-dark-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/ngx-spinner/animations/cube-transition.css"
+              "node_modules/ngx-spinner/animations/cube-transition.css",
+              "src/styles/main.scss"
             ],
             "scripts": [
               "node_modules/marked/marked.min.js"
