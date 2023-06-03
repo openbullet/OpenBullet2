@@ -8,6 +8,7 @@ import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings
 import * as moment from 'moment';
 import { saveFile } from 'src/app/shared/utils/files';
 import { faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
 
 @Component({
   selector: 'app-hits',
@@ -33,6 +34,9 @@ export class HitsComponent implements OnInit {
   // TODO: Add calendar to UI
   minDate: Date = moment().subtract(7, 'days').toDate();
   maxDate: Date = moment().endOf('day').toDate();
+
+  selectedHit: HitDto | null = null;
+  updateHitModalVisible = false;
 
   hitMenuItems: MenuItem[] = [
     {
@@ -238,7 +242,8 @@ export class HitsComponent implements OnInit {
   }
 
   openUpdateHitModal(hit: HitDto) {
-    // TODO: implement
+    this.selectedHit = hit;
+    this.updateHitModalVisible = true;
   }
 
   confirmDeleteHit(hit: HitDto) {
@@ -259,6 +264,19 @@ export class HitsComponent implements OnInit {
           summary: 'Deleted',
           detail: `Hit ${hit.data} was deleted`
         });
+        this.refreshHits();
+      });
+  }
+
+  updateHit(updated: UpdateHitDto) {
+    this.hitService.updateHit(updated)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Updated',
+          detail: `Hit ${resp.data} was updated`
+        });
+        this.updateHitModalVisible = false;
         this.refreshHits();
       });
   }
