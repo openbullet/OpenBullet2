@@ -171,6 +171,7 @@ export class WordlistsComponent implements OnInit {
           summary: 'Deleted',
           detail: `${resp.count} wordlists were deleted from the database`
         });
+        this.refreshWordlists();
       });
   }
 }
