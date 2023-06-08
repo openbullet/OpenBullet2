@@ -17,10 +17,19 @@ using RuriLib.Logging;
 using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration tweaks
+var workerThreads = builder.Configuration.GetSection("Resources").GetValue("WorkerThreads", 1000);
+var ioThreads = builder.Configuration.GetSection("Resources").GetValue("IOThreads", 1000);
+var connectionLimit = builder.Configuration.GetSection("Resources").GetValue("ConnectionLimit", 1000);
+
+ThreadPool.SetMinThreads(workerThreads, ioThreads);
+ServicePointManager.DefaultConnectionLimit = connectionLimit;
 
 // Add services to the container.
 
