@@ -148,7 +148,7 @@ public class WordlistController : ApiController
     [Guest]
     [HttpPost("upload")]
     [MapToApiVersion("1.0")]
-    [RequestSizeLimit(1_000_000_000)] // 1 GB limit
+    [RequestSizeLimit(long.MaxValue)]
     public async Task<ActionResult<WordlistFileDto>> Upload(IFormFile file)
     {
         var path = FileUtils.GetFirstAvailableFileName(
