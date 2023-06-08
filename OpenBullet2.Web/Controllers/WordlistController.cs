@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Dom;
 using AutoMapper;
+using IronPython.Runtime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -147,10 +148,11 @@ public class WordlistController : ApiController
     [Guest]
     [HttpPost("upload")]
     [MapToApiVersion("1.0")]
+    [RequestSizeLimit(1_000_000_000)] // 1 GB limit
     public async Task<ActionResult<WordlistFileDto>> Upload(IFormFile file)
     {
         var path = FileUtils.GetFirstAvailableFileName(
-            Path.Combine(_baseDir, file.FileName));
+            Path.Combine(_baseDir, "Wordlists", file.FileName));
 
         using var fileStream = System.IO.File.OpenWrite(path);
         await file.CopyToAsync(fileStream);

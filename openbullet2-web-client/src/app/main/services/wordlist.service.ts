@@ -6,6 +6,7 @@ import { WordlistPreviewDto } from "../dtos/wordlist/wordlist-preview.dto";
 import { CreateWordlistDto } from "../dtos/wordlist/create-wordlist.dto";
 import { UpdateWordlistInfoDto } from "../dtos/wordlist/update-wordlist-info.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
+import { WordlistFileDto } from "../dtos/wordlist/wordlist-file.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -35,8 +36,11 @@ export class WordlistService {
     uploadWordlistFile(file: File) {
         const formData: FormData = new FormData();
         formData.append('file', file, file.name);
-        return this.http.post<WordlistDto>(
-            getBaseUrl() + '/wordlist/upload', formData
+        return this.http.post<WordlistFileDto>(
+            getBaseUrl() + '/wordlist/upload', formData, {
+                reportProgress: true,
+                observe: 'events'
+            }
         );
     }
 

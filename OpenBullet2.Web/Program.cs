@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
@@ -30,6 +31,11 @@ var connectionLimit = builder.Configuration.GetSection("Resources").GetValue("Co
 
 ThreadPool.SetMinThreads(workerThreads, ioThreads);
 ServicePointManager.DefaultConnectionLimit = connectionLimit;
+
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.MultipartBodyLengthLimit = long.MaxValue;
+});
 
 // Add services to the container.
 

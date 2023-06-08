@@ -293,3 +293,19 @@ p-accordiontab {
     width: 25px !important;
     filter: brightness(0) saturate(100%) invert(100%) sepia(93%) saturate(0%) hue-rotate(201deg) brightness(106%) contrast(106%);
 }
+
+.p-progressbar {
+    background-color: $bgTertiary !important;
+
+    .p-progressbar-value {
+        background-color: $fgAccent !important;
+    }
+
+    .p-progressbar-label {
+        color: $fgPrimary !important;
+    }
+}
+
+.p-progressbar-determinate .p-progressbar-value-animate {
+    transition: width .1s ease-in-out !important;
+}

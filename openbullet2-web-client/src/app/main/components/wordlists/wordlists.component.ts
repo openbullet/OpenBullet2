@@ -6,6 +6,7 @@ import { WordlistService } from '../../services/wordlist.service';
 import { SettingsService } from '../../services/settings.service';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
+import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
 
 @Component({
   selector: 'app-wordlists',
@@ -96,6 +97,19 @@ export class WordlistsComponent implements OnInit {
   openUpdateWordlistInfoModal(wordlist: WordlistDto) {
     this.selectedWordlist = wordlist;
     this.updateWordlistInfoModalVisible = true;
+  }
+
+  createWordlist(wordlist: CreateWordlistDto) {
+    this.wordlistService.createWordlist(wordlist)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Added',
+          detail: `Wordlist ${resp.name} was added`
+        });
+        this.uploadWordlistModalVisible = false;
+        this.refreshWordlists();
+      });
   }
 
   updateWordlistInfo(updated: UpdateWordlistInfoDto){

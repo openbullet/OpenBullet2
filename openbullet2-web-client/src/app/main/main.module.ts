@@ -23,6 +23,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { PickListModule } from 'primeng/picklist';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
 import { MarkdownModule } from 'ngx-markdown';
@@ -61,6 +62,7 @@ import { HitsComponent } from './components/hits/hits.component';
 import { UpdateHitComponent } from './components/hits/update-hit/update-hit.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordlist/update-wordlist-info.component';
+import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/upload-wordlist.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +102,8 @@ import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordl
     HitsComponent,
     UpdateHitComponent,
     WordlistsComponent,
-    UpdateWordlistInfoComponent
+    UpdateWordlistInfoComponent,
+    UploadWordlistComponent
   ],
   imports: [
     CommonModule,
@@ -113,6 +116,7 @@ import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordl
     AvatarModule,
     TooltipModule,
     InputTextModule,
+    ProgressBarModule,
     DropdownModule,
     MenubarModule,
     PickListModule,
