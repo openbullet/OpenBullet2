@@ -25,6 +25,8 @@ export class WordlistsComponent implements OnInit {
   uploadWordlistModalVisible = false;
   updateWordlistInfoModalVisible = false;
 
+  wordlistTypes: string[] = [];
+
   wordlistMenuItems: MenuItem[] = [
     {
       id: 'add',
@@ -71,6 +73,7 @@ export class WordlistsComponent implements OnInit {
     this.settingsService.getEnvironmentSettings()
       .subscribe(envSettings => {
         this.envSettings = envSettings;
+        this.wordlistTypes = envSettings.wordlistTypes.map(t => t.name);
         this.refreshWordlists();
       });
   }

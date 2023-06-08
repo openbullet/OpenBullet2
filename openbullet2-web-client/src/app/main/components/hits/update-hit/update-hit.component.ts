@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { HitDto } from 'src/app/main/dtos/hit/hit.dto';
 import { UpdateHitDto } from 'src/app/main/dtos/hit/update-hit.dto';
@@ -8,7 +8,7 @@ import { UpdateHitDto } from 'src/app/main/dtos/hit/update-hit.dto';
   templateUrl: './update-hit.component.html',
   styleUrls: ['./update-hit.component.scss']
 })
-export class UpdateHitComponent {
+export class UpdateHitComponent implements OnChanges {
   @Input() hit: HitDto | null = null;
   @Input() hitTypes: string[] = ['SUCCESS', 'NONE'];
   @Output() confirm = new EventEmitter<UpdateHitDto>();

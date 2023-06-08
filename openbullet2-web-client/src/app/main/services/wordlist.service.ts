@@ -48,7 +48,7 @@ export class WordlistService {
 
     updateWordlistInfo(updated: UpdateWordlistInfoDto) {
         return this.http.patch<WordlistDto>(
-            getBaseUrl() + '/wordlist', updated
+            getBaseUrl() + '/wordlist/info', updated
         );
     }
 
