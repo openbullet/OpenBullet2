@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
-using OpenBullet2.Web.Dtos.Config;
-using OpenBullet2.Web.Dtos.Debug;
+using OpenBullet2.Web.Dtos.Debugging;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -28,7 +26,7 @@ public class DebugController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult GarbageCollect(GarbageCollectRequestDto dto)
     {
-        GC.Collect(dto.Generation is -1 ? GC.MaxGeneration : dto.Generation, 
+        GC.Collect(dto.Generations is -1 ? GC.MaxGeneration : dto.Generations, 
             dto.Mode, dto.Blocking, dto.Compacting);
         return Ok();
     }
