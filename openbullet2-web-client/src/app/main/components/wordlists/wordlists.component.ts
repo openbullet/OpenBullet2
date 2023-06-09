@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WordlistDto } from '../../dtos/wordlist/wordlist.dto';
 import { faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -7,6 +7,7 @@ import { SettingsService } from '../../services/settings.service';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
 import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
+import { AddWordlistComponent } from './add-wordlist/add-wordlist.component';
 
 @Component({
   selector: 'app-wordlists',
@@ -16,6 +17,9 @@ import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
 export class WordlistsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
   wordlists: WordlistDto[] | null = null;
+
+  @ViewChild('addWordlistComponent')
+  addWordlistComponent: AddWordlistComponent | undefined = undefined;
 
   faPen = faPen;
   faX = faX;
@@ -87,6 +91,7 @@ export class WordlistsComponent implements OnInit {
   }
 
   openAddWordlistModal() {
+    this.addWordlistComponent?.reset();
     this.addWordlistModalVisible = true;
   }
 
@@ -108,6 +113,7 @@ export class WordlistsComponent implements OnInit {
           detail: `Wordlist ${resp.name} was added`
         });
         this.uploadWordlistModalVisible = false;
+        this.addWordlistModalVisible = false;
         this.refreshWordlists();
       });
   }

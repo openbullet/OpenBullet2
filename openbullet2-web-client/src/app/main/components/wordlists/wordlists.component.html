@@ -150,3 +150,19 @@
         [wordlistTypes]="wordlistTypes"
         (confirm)="createWordlist($event)" />
 </p-dialog>
+
+<p-dialog 
+    #addWordlistModal
+    header="Add a wordlist"
+    [(visible)]="addWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-wordlist
+        #addWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>

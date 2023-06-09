@@ -61,8 +61,9 @@ import { ImportProxiesFromFileComponent } from './components/proxies/import-prox
 import { HitsComponent } from './components/hits/hits.component';
 import { UpdateHitComponent } from './components/hits/update-hit/update-hit.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
-import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordlist/update-wordlist-info.component';
+import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordlist-info/update-wordlist-info.component';
 import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/upload-wordlist.component';
+import { AddWordlistComponent } from './components/wordlists/add-wordlist/add-wordlist.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/
     UpdateHitComponent,
     WordlistsComponent,
     UpdateWordlistInfoComponent,
-    UploadWordlistComponent
+    UploadWordlistComponent,
+    AddWordlistComponent
   ],
   imports: [
     CommonModule,
