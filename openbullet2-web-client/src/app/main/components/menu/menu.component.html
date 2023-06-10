@@ -1,6 +1,6 @@
 <div *ngFor="let section of menu">
     <div class="menu-section">
-        <span>{{section.label}}</span>
+        <span>{{section.label | truncate : 20}}</span>
     </div>
     <app-menu-item *ngFor="let item of section.items"
         [icon]="item.icon"
