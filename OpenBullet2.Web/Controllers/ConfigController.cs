@@ -243,7 +243,7 @@ public class ConfigController : ApiController
     /// Download all available configs as .opk files in a zip archive.
     /// </summary>
     [Admin]
-    [HttpGet("download-all")]
+    [HttpGet("download/all")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DownloadAllConfigs()
     {
@@ -259,7 +259,7 @@ public class ConfigController : ApiController
     /// accepted and they will be automatically packed into a .opk archive.
     /// </summary>
     [Admin]
-    [HttpPost("upload")]
+    [HttpPost("upload/many")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Upload(
         IFormFileCollection files)
@@ -285,7 +285,7 @@ public class ConfigController : ApiController
     /// Convert a LoliCode script to C# script.
     /// </summary>
     [Admin]
-    [HttpPost("convert/lolicode-csharp")]
+    [HttpPost("convert/lolicode/csharp")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConvertedCSharpDto>> ConvertLoliCodeToCSharp(
         ConvertLoliCodeToCSharpDto dto)
@@ -304,7 +304,7 @@ public class ConfigController : ApiController
     /// Convert a LoliCode script to a Stack of blocks.
     /// </summary>
     [Admin]
-    [HttpPost("convert/lolicode-stack")]
+    [HttpPost("convert/lolicode/stack")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConvertedStackDto> ConvertLoliCodeToStack(
         ConvertLoliCodeToStackDto dto)
@@ -324,7 +324,7 @@ public class ConfigController : ApiController
     /// Convert a Stack of blocks to a LoliCode script.
     /// </summary>
     [Admin]
-    [HttpPost("convert/stack-lolicode")]
+    [HttpPost("convert/stack/lolicode")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
         ConvertStackToLoliCodeDto dto)
@@ -342,7 +342,7 @@ public class ConfigController : ApiController
     /// Convert a Stack of blocks to a C# script.
     /// </summary>
     [Admin]
-    [HttpPost("convert/stack-csharp")]
+    [HttpPost("convert/stack/csharp")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConvertedCSharpDto>> ConvertStackToCSharp(
         ConvertStackToCSharpDto dto)
