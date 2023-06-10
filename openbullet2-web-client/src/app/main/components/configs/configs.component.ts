@@ -5,6 +5,7 @@ import { ConfigService } from '../../services/config.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { saveFile } from 'src/app/shared/utils/files';
 import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-configs',
@@ -23,6 +24,8 @@ export class ConfigsComponent implements OnInit {
   faX = faX;
   faFilterCircleXmark = faFilterCircleXmark;
   faTriangleExclamation = faTriangleExclamation;
+
+  moment: any = moment;
 
   displayAsTable: boolean = true;
   uploadConfigsModalVisible: boolean = false;

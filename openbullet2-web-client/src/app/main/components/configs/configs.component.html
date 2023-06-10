@@ -9,7 +9,7 @@
     </h5>
     <span class="text-small">
         Configs can contain C# code that is executed without any automatic checks for malicious behaviors.
-        If you use configs made by 3rd parties, it is <b class="color-bad">YOUR RESPONSIBILITY</b> 
+        If you use configs made by 3rd parties, it is <b class="color-bad">your responsibility</b> 
         to make sure that configs do exactly what they are supposed to do and that nothing shady is going on.
         <b class="color-bad">Always check</b> the LoliCode / C# code yourself before running them if you don't completely trust the origin.
     </span>
@@ -68,7 +68,7 @@
                 <ng-template pTemplate="header" let-columns>
                     <tr *ngIf="configs.length > 0">
                         <th></th>
-                        <th style="min-width:10rem" pResizableColumn pSortableColumn="name">
+                        <th style="min-width:15rem" pResizableColumn pSortableColumn="name">
                             <div class="d-flex align-items-center">
                                 Name <p-sortIcon field="name" />
                                 <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
@@ -104,13 +104,13 @@
                                 <p-columnFilter type="text" field="allowedWordlistTypes" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th style="min-width:10rem" pSortableColumn="creationDate">
+                        <th style="min-width:8rem" pSortableColumn="creationDate">
                             <div class="d-flex align-items-center">
                                 Creation date <p-sortIcon field="creationDate" />
                                 <p-columnFilter type="date" field="creationDate" display="menu"></p-columnFilter>
                             </div>
                         </th>
-                        <th style="min-width:10rem" pSortableColumn="lastModified">
+                        <th style="min-width:8rem" pSortableColumn="lastModified">
                             <div class="d-flex align-items-center">
                                 Last modified <p-sortIcon field="lastModified" />
                                 <p-columnFilter type="date" field="lastModified" display="menu"></p-columnFilter>
@@ -149,8 +149,19 @@
                                 {{ wordlistType }}
                             </p-chip>
                         </td>
-                        <td>{{ config.creationDate | date : 'medium' }}</td>
-                        <td>{{ config.lastModified | date : 'medium' }}</td>
+                        <td>
+                            <span
+                                tooltipPosition="bottom"
+                                [pTooltip]="(config.creationDate | date : 'medium') ?? ''">
+                                {{ moment(config.creationDate).fromNow() }}
+                            </span>
+                        </td>
+                        <td>
+                            <span tooltipPosition="bottom"
+                                [pTooltip]="(config.lastModified | date : 'medium') ?? ''">
+                                {{ moment(config.lastModified).fromNow() }}
+                            </span>
+                        </td>
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
                             <button class="button button-transparent"
                                 pTooltip="Clone" tooltipPosition="bottom"
