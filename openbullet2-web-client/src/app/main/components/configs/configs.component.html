@@ -174,3 +174,18 @@
         </div>
     </div>
 </div>
+
+<p-dialog 
+    #uploadConfigsModal
+    header="Upload configs"
+    [(visible)]="uploadConfigsModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-upload-configs
+        #uploadConfigsComponent
+        (confirm)="uploadConfigs($event)" />
+</p-dialog>

@@ -8,6 +8,7 @@ import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings
 import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
 import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
 import { AddWordlistComponent } from './add-wordlist/add-wordlist.component';
+import { UploadWordlistComponent } from './upload-wordlist/upload-wordlist.component';
 
 @Component({
   selector: 'app-wordlists',
@@ -20,6 +21,9 @@ export class WordlistsComponent implements OnInit {
 
   @ViewChild('addWordlistComponent')
   addWordlistComponent: AddWordlistComponent | undefined = undefined;
+
+  @ViewChild('uploadWordlistComponent')
+  uploadWordlistComponent: UploadWordlistComponent | undefined = undefined;
 
   faPen = faPen;
   faX = faX;
@@ -96,6 +100,7 @@ export class WordlistsComponent implements OnInit {
   }
 
   openUploadWordlistModal() {
+    this.uploadWordlistComponent?.reset();
     this.uploadWordlistModalVisible = true;
   }
 

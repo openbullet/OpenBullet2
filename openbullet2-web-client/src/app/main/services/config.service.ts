@@ -104,13 +104,10 @@ export class ConfigService {
     uploadConfigs(files: File[]) {
         const formData: FormData = new FormData();
         for (let file of files) {
-            formData.append('file', file, file.name);
+            formData.append('files', file, file.name);
         }
         return this.http.post<AffectedEntriesDto>(
-            getBaseUrl() + '/config/upload/many', formData, {
-                reportProgress: true,
-                observe: 'events'
-            }
+            getBaseUrl() + '/config/upload/many', formData
         );
     }
 }

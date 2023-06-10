@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
 import { faClone, faDownload, faFilterCircleXmark, faPen, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfigService } from '../../services/config.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { saveFile } from 'src/app/shared/utils/files';
+import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
 
 @Component({
   selector: 'app-configs',
@@ -13,6 +14,9 @@ import { saveFile } from 'src/app/shared/utils/files';
 export class ConfigsComponent implements OnInit {
   configs: ConfigInfoDto[] | null = null;
 
+  @ViewChild('uploadConfigsComponent')
+  uploadConfigsComponent: UploadConfigsComponent | undefined = undefined;
+
   faPen = faPen;
   faClone = faClone;
   faDownload = faDownload;
@@ -21,6 +25,7 @@ export class ConfigsComponent implements OnInit {
   faTriangleExclamation = faTriangleExclamation;
 
   displayAsTable: boolean = true;
+  uploadConfigsModalVisible: boolean = false;
 
   configMenuItems: MenuItem[] = [
     {
@@ -32,13 +37,13 @@ export class ConfigsComponent implements OnInit {
           id: 'create-new',
           label: 'Create new',
           icon: 'pi pi-fw pi-plus color-good',
-          command: e => console.log('create-new')
+          command: e => this.createConfig()
         },
         {
           id: 'upload-files',
           label: 'Upload',
           icon: 'pi pi-fw pi-upload color-good',
-          command: e => console.log('upload-files')
+          command: e => this.openUploadConfigsModal()
         },
         {
           id: 'download-all',
@@ -100,21 +105,53 @@ export class ConfigsComponent implements OnInit {
       });
   }
 
+  openUploadConfigsModal() {
+    this.uploadConfigsComponent?.reset();
+    this.uploadConfigsModalVisible = true;
+  }
+
   editConfig(config: ConfigInfoDto) {
     console.log('Edit config');
     // TODO: Implement
   }
 
+  createConfig() {
+    this.configService.createConfig()
+      .subscribe(newConfig => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Created',
+          detail: 'Created a new config'
+        });
+        this.refreshConfigs(false);
+        // TODO: Immediately edit the new config, do not refresh
+      });
+  }
+
   cloneConfig(config: ConfigInfoDto) {
     this.configService.cloneConfig(config.id)
-      .subscribe(cloned => {
+      .subscribe(newConfig => {
         this.messageService.add({
           severity: 'success',
           summary: 'Cloned',
           detail: `Created a clone of ${config.name}`
         });
         this.refreshConfigs(false);
+        // TODO: Immediately edit the new config, do not refresh
       })
+  }
+
+  uploadConfigs(files: File[]) {
+    this.configService.uploadConfigs(files)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Uploaded',
+          detail: `Uploaded ${resp.count} configs`
+        });
+        this.uploadConfigsModalVisible = false;
+        this.refreshConfigs(false);
+      });
   }
 
   downloadConfig(config: ConfigInfoDto) {

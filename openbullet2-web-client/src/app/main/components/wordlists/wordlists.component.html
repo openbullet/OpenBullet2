@@ -145,6 +145,7 @@
     [draggable]="false" 
     [resizable]="false">
     <app-upload-wordlist
+        #uploadWordlistComponent
         [wordlistTypes]="wordlistTypes"
         (confirm)="createWordlist($event)" />
 </p-dialog>

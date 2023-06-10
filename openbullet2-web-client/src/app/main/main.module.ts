@@ -65,6 +65,7 @@ import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordl
 import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/upload-wordlist.component';
 import { AddWordlistComponent } from './components/wordlists/add-wordlist/add-wordlist.component';
 import { ConfigsComponent } from './components/configs/configs.component';
+import { UploadConfigsComponent } from './components/configs/upload-configs/upload-configs.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { ConfigsComponent } from './components/configs/configs.component';
     UpdateWordlistInfoComponent,
     UploadWordlistComponent,
     AddWordlistComponent,
-    ConfigsComponent
+    ConfigsComponent,
+    UploadConfigsComponent
   ],
   imports: [
     CommonModule,

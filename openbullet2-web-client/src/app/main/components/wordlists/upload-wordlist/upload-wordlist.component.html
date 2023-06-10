@@ -44,14 +44,12 @@
     <div class="row">
         <div class="col-12">
             <!-- TODO: Add drag and drop area -->
-            <!-- TODO: Add progress reporting via SignalR -->
             <p-fileUpload 
                 #fileUpload
                 name="Upload wordlist file"
                 [customUpload]="true"
                 [auto]="true"
                 (uploadHandler)="selectedFile = $event.files[0]"
-                (onRemove)="selectedFile = null"
                 [multiple]="false"
                 (onError)="uploadError($event)"
                 (onClear)="clearUpload()"
