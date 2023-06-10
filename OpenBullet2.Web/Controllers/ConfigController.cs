@@ -251,7 +251,7 @@ public class ConfigController : ApiController
         var configsToPack = _configService.Configs.Where(c => !c.IsRemote);
         var bytes = await ConfigPacker.Pack(configsToPack);
 
-        return File(bytes, "application/zip", "config.zip");
+        return File(bytes, "application/zip", "configs.zip");
     }
 
     /// <summary>

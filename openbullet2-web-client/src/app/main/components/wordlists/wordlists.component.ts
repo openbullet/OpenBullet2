@@ -150,7 +150,7 @@ export class WordlistsComponent implements OnInit {
     .subscribe(resp => {
       this.messageService.add({
         severity: 'success',
-        summary: 'Delete',
+        summary: 'Deleted',
         detail: `Wordlist ${wordlist.name} was deleted` +
           alsoDeleteFile ? ', along with its file' : ''
       });

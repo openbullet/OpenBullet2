@@ -60,7 +60,7 @@ export class SharingComponent implements OnInit {
   }
 
   refreshConfigs() {
-    this.configService.getAllConfigs()
+    this.configService.getAllConfigs(false)
       .subscribe(configs => {
         this.configs = configs;
         this.refreshEndpoints();

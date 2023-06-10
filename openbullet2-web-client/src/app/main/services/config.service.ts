@@ -15,9 +15,13 @@ export class ConfigService {
         private http: HttpClient
     ) { }
 
-    getAllConfigs() {
+    getAllConfigs(reload: boolean) {
         return this.http.get<ConfigInfoDto[]>(
-            getBaseUrl() + '/config/all'
+            getBaseUrl() + '/config/all', {
+                params: {
+                    reload
+                }
+            }
         );
     }
 

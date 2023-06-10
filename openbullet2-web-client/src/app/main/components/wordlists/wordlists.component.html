@@ -54,8 +54,6 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
                     <tr *ngIf="wordlists.length > 0">
-                        <!-- TODO: Send sorting info to backend
-                        to implement sorting! -->
                         <th style="min-width:10rem" pResizableColumn pSortableColumn="name">
                             <div class="d-flex align-items-center">
                                 Name <p-sortIcon field="name" />

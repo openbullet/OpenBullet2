@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { registerLoliCode } from './languages/lolicode';
 import { InputListComponent } from './components/input-list/input-list.component';
 import { PascalCasePipe } from './pipes/pascalcase.pipe';
+import { BooleanIconComponent } from './components/boolean-icon/boolean-icon.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 declare const monaco: any;
 
@@ -36,13 +38,15 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputNumberComponent,
     InputDropdownComponent,
     LolicodeEditorComponent,
-    InputListComponent
+    InputListComponent,
+    BooleanIconComponent
   ],
   imports: [
     CommonModule,
     DropdownModule,
     MonacoEditorModule.forRoot(monacoConfig),
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   exports: [
     SpinnerComponent,
@@ -53,7 +57,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputNumberComponent,
     InputDropdownComponent,
     InputListComponent,
-    LolicodeEditorComponent
+    LolicodeEditorComponent,
+    BooleanIconComponent
   ]
 })
 export class SharedModule { }
