@@ -134,6 +134,7 @@ export class ConfigsComponent implements OnInit {
           summary: 'Created',
           detail: 'Created a new config'
         });
+        this.configService.selectConfig(newConfig);
         this.refreshConfigs(false);
         // TODO: Immediately edit the new config, do not refresh
       });
