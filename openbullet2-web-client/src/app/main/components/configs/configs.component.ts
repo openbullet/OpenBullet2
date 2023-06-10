@@ -114,8 +114,16 @@ export class ConfigsComponent implements OnInit {
   }
 
   editConfig(config: ConfigInfoDto) {
-    console.log('Edit config');
-    // TODO: Implement
+    this.configService.getConfig(config.id)
+      .subscribe(resp => {
+        this.configService.selectConfig(resp);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Selected',
+          detail: `Selected config ${resp.metadata.name}`
+        });
+        // TODO: Navigate to the config's default page (defined in settings)
+      });
   }
 
   createConfig() {

@@ -6,14 +6,22 @@ import { ConfigReadmeDto } from "../dtos/config/config-readme.dto";
 import { ConfigDto } from "../dtos/config/config.dto";
 import { UpdateConfigDto } from "../dtos/config/update-config.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigService {
+    private selectedConfigSource = new BehaviorSubject<ConfigDto | null>(null);
+    selectedConfig$ = this.selectedConfigSource.asObservable();
+
     constructor(
         private http: HttpClient
     ) { }
+
+    selectConfig(config: ConfigDto | null) {
+        this.selectedConfigSource.next(config);
+    }
 
     getAllConfigs(reload: boolean) {
         return this.http.get<ConfigInfoDto[]>(
