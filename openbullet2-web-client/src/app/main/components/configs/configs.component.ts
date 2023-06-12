@@ -27,7 +27,7 @@ export class ConfigsComponent implements OnInit {
 
   moment: any = moment;
 
-  displayAsTable: boolean = true;
+  displayAsTable: boolean = false;
   uploadConfigsModalVisible: boolean = false;
 
   configMenuItems: MenuItem[] = [

@@ -186,6 +186,35 @@
             </p-table>
         </div>
     </div>
+    <div [class]="displayAsTable ? 'row my-3 d-none' : 'row my-3'">
+        <div class="configs-grid">
+            <div *ngFor="let config of configs"
+                class="config-item" role="button" (mousedown)="editConfig(config)">
+                <img class="config-grid-icon mb-2" 
+                    [src]="'data:image/png;base64,' + config.base64Image" />
+                <span class="color-accent-light d-block">{{config.name}}</span>
+                <span class="d-block">by {{config.author}}</span>
+                <span class="d-block">{{config.lastModified | date}}</span>
+                <div class="config-grid-buttons mt-2">
+                    <button class="button button-transparent"
+                        pTooltip="Clone" tooltipPosition="bottom"
+                        (click)="cloneConfig(config)">
+                        <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <button class="button button-transparent"
+                        pTooltip="Download" tooltipPosition="bottom"
+                        (click)="downloadConfig(config)">
+                        <fa-icon [icon]="faDownload" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <button class="button button-transparent"
+                        pTooltip="Delete" tooltipPosition="bottom"
+                        (click)="confirmDeleteConfig(config)">
+                        <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <p-dialog 
