@@ -65,6 +65,16 @@ code {
     transition: .5s;
 }
 
+.button-accent-outline {
+    background-color: transparent;
+    border: 1px solid $fgAccent;
+}
+
+.button-accent-outline:hover {
+    background-color: $fgAccent;
+    transition: .5s;
+}
+
 .button-secondary {
     background-color: $bgSecondary;
 }

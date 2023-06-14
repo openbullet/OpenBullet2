@@ -10,9 +10,8 @@
 
     </app-menu-item>
 
-    <div *ngIf="section.saveButton" class="mx-auto" style="width: 70%; text-align: center;">
-        <button class="button button-accent w-100"
-            pTooltip="Save this config" tooltipPosition="bottom"
+    <div *ngIf="section.saveButton" class="mx-auto" style="width: 60%; text-align: center;">
+        <button class="button button-accent-outline w-100"
             (click)="saveConfig()">
             Save Config
             <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
