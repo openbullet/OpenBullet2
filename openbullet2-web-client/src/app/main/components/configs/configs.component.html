@@ -1,7 +1,5 @@
 <h1>Configs</h1>
 
-<app-spinner *ngIf="configs === null" [fullWidth]="true" />
-
 <div class="mt-3">
     <p-card>
         <h5 class="color-bad">
@@ -16,6 +14,8 @@
         </span>
     </p-card>
 </div>
+
+<app-spinner *ngIf="configs === null" [fullWidth]="true" />
 
 <div class="container-fluid" *ngIf="configs !== null">
     <div class="row my-3">
