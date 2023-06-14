@@ -1,13 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconDefinition, faBolt, faCode, faDatabase, faEye, faFileLines, faFileShield, faGears, faGripLines, faHouse, faInfo, faPuzzlePiece, faRetweet, faTags, faUsers, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faBolt, faCode, faDatabase, faEye, faFileLines, faFileShield, faGears, faGripLines, faHouse, faInfo, faPuzzlePiece, faRetweet, faSave, faTags, faUsers, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { ConfigService } from '../../services/config.service';
 import { Subscription } from 'rxjs';
 import { ConfigDto } from '../../dtos/config/config.dto';
+import { MessageService } from 'primeng/api';
 
 interface MenuSection {
   label: string,
-  items: MenuItem[]
+  items: MenuItem[],
+  saveButton: boolean
 }
 
 interface MenuItem {
@@ -23,6 +25,8 @@ interface MenuItem {
 })
 export class MenuComponent implements OnDestroy {
   selectedConfigSubscription: Subscription | null = null;
+  faSave = faSave;
+  selectedConfig: ConfigDto | null = null;
 
   standardMenu: MenuSection[] = [
     {
@@ -63,7 +67,8 @@ export class MenuComponent implements OnDestroy {
           label: 'Configs',
           link: '/configs'
         }
-      ]
+      ],
+      saveButton: false
     },
     {
       label: 'Configuration',
@@ -78,7 +83,8 @@ export class MenuComponent implements OnDestroy {
           label: 'RL Settings',
           link: '/rl-settings'
         }
-      ]
+      ],
+      saveButton: false
     },
     {
       label: 'More',
@@ -103,18 +109,21 @@ export class MenuComponent implements OnDestroy {
           label: 'Info',
           link: '/info'
         }
-      ]
+      ],
+      saveButton: false
     }
   ];
 
   menu: MenuSection[] = [];
 
   constructor(private router: Router,
+    private messageService: MessageService,
     private configService: ConfigService) {
       this.buildMenu(null);
       this.selectedConfigSubscription = this.configService.selectedConfig$
         .subscribe(config => {
           this.buildMenu(config);
+          this.selectedConfig = config;
         });
   }
 
@@ -189,7 +198,8 @@ export class MenuComponent implements OnDestroy {
       this.standardMenu[0],
       {
         label: 'Config - ' + config.metadata.name,
-        items: menuItems
+        items: menuItems,
+        saveButton: true
       },
       ...this.standardMenu.slice(1)
     ]
@@ -197,5 +207,18 @@ export class MenuComponent implements OnDestroy {
 
   isItemActive(item: MenuItem): boolean {
     return this.router.url.split('?')[0].startsWith(item.link);
+  }
+
+  saveConfig() {
+    if (this.selectedConfig !== null) {
+      this.configService.saveConfig(this.selectedConfig)
+        .subscribe(c => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Saved',
+            detail: `${c.metadata.name} was saved`
+          });
+        });
+    }
   }
 }

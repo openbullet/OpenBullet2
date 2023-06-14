@@ -17,10 +17,38 @@ export class ConfigService {
 
     constructor(
         private http: HttpClient
-    ) { }
+    ) {
+        // If there is a config saved in the localstorage, load it back in
+        if (window.localStorage.getItem('config') !== null) {
+            this.loadLocalConfig();
+        }
+    }
+
+    resetLocalConfig() {
+        window.localStorage.removeItem('config');
+    }
+
+    saveLocalConfig(config: ConfigDto) {
+        window.localStorage.setItem('config', JSON.stringify(config));
+    }
+
+    loadLocalConfig() {
+        const json = window.localStorage.getItem('config');
+
+        if (json !== null) {
+            const config: ConfigDto = JSON.parse(json);
+            this.selectConfig(config);
+        }
+    }
 
     selectConfig(config: ConfigDto | null) {
         this.selectedConfigSource.next(config);
+
+        if (config !== null) {
+            this.saveLocalConfig(config);
+        } else {
+            this.resetLocalConfig();
+        }
     }
 
     getAllConfigs(reload: boolean) {
@@ -53,6 +81,28 @@ export class ConfigService {
                 }
             }
         );
+    }
+
+    saveConfig(config: ConfigDto) {
+        const updated: UpdateConfigDto = {
+            id: config.id,
+            mode: config.mode,
+            metadata: {
+                name: config.metadata.name,
+                category: config.metadata.category,
+                author: config.metadata.author,
+                base64Image: config.metadata.base64Image
+            },
+            settings: config.settings,
+            readme: config.readme,
+            loliCodeScript: config.loliCodeScript,
+            startupLoliCodeScript: config.startupLoliCodeScript,
+            loliScript: config.loliScript,
+            cSharpScript: config.cSharpScript,
+            startupCSharpScript: config.startupCSharpScript
+        };
+
+        return this.updateConfig(updated);
     }
 
     updateConfig(updated: UpdateConfigDto) {

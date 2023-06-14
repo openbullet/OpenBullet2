@@ -6,6 +6,7 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { saveFile } from 'src/app/shared/utils/files';
 import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
 import * as moment from 'moment';
+import { VolatileSettingsService } from '../../services/volatile-settings.service';
 
 @Component({
   selector: 'app-configs',
@@ -27,7 +28,7 @@ export class ConfigsComponent implements OnInit {
 
   moment: any = moment;
 
-  displayAsTable: boolean = false;
+  displayMode: string = 'grid';
   uploadConfigsModalVisible: boolean = false;
 
   configMenuItems: MenuItem[] = [
@@ -71,13 +72,13 @@ export class ConfigsComponent implements OnInit {
           id: 'display-as-table',
           label: 'Display as table',
           icon: 'pi pi-fw pi-bars',
-          command: e => this.displayAsTable = true
+          command: e => this.changeDisplayMode('table')
         },
         {
           id: 'display-as-grid',
           label: 'Display as grid',
           icon: 'pi pi-fw pi-th-large',
-          command: e => this.displayAsTable = false
+          command: e => this.changeDisplayMode('grid')
         }
       ]
     }
@@ -85,12 +86,14 @@ export class ConfigsComponent implements OnInit {
 
   constructor(private configService: ConfigService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private volatileSettings: VolatileSettingsService) {
 
   }
 
   ngOnInit(): void {
     this.refreshConfigs(false);
+    this.displayMode = this.volatileSettings.configsDisplayMode;
   }
 
   refreshConfigs(reload: boolean) {
@@ -106,6 +109,11 @@ export class ConfigsComponent implements OnInit {
           });
         }
       });
+  }
+
+  changeDisplayMode(mode: string) {
+    this.displayMode = mode;
+    this.volatileSettings.configsDisplayMode = mode;
   }
 
   openUploadConfigsModal() {

@@ -9,4 +9,13 @@
         [active]="isItemActive(item)">
 
     </app-menu-item>
+
+    <div *ngIf="section.saveButton" class="mx-auto" style="width: 70%; text-align: center;">
+        <button class="button button-accent w-100"
+            pTooltip="Save this config" tooltipPosition="bottom"
+            (click)="saveConfig()">
+            Save Config
+            <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+        </button>
+    </div>
 </div>
