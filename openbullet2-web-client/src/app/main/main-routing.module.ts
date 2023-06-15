@@ -13,6 +13,7 @@ import { ProxiesComponent } from './components/proxies/proxies.component';
 import { HitsComponent } from './components/hits/hits.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { ConfigsComponent } from './components/configs/configs.component';
+import { ConfigMetadataComponent } from './components/config/config-metadata/config-metadata.component';
 
 const routes: Routes = [
   // Main component layout
@@ -39,6 +40,10 @@ const routes: Routes = [
       {
         component: ConfigsComponent,
         path: 'configs'
+      },
+      {
+        component: ConfigMetadataComponent,
+        path: 'config/metadata'
       },
       {
         component: OBSettingsComponent,

@@ -66,6 +66,8 @@ import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/
 import { AddWordlistComponent } from './components/wordlists/add-wordlist/add-wordlist.component';
 import { ConfigsComponent } from './components/configs/configs.component';
 import { UploadConfigsComponent } from './components/configs/upload-configs/upload-configs.component';
+import { ConfigMetadataComponent } from './components/config/config-metadata/config-metadata.component';
+import { EditConfigImageComponent } from './components/config/edit-config-image/edit-config-image.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,9 @@ import { UploadConfigsComponent } from './components/configs/upload-configs/uplo
     UploadWordlistComponent,
     AddWordlistComponent,
     ConfigsComponent,
-    UploadConfigsComponent
+    UploadConfigsComponent,
+    ConfigMetadataComponent,
+    EditConfigImageComponent
   ],
   imports: [
     CommonModule,
