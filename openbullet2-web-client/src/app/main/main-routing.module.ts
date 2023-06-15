@@ -14,6 +14,7 @@ import { HitsComponent } from './components/hits/hits.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { ConfigsComponent } from './components/configs/configs.component';
 import { ConfigMetadataComponent } from './components/config/config-metadata/config-metadata.component';
+import { ConfigReadmeComponent } from './components/config/config-readme/config-readme.component';
 
 const routes: Routes = [
   // Main component layout
@@ -44,6 +45,10 @@ const routes: Routes = [
       {
         component: ConfigMetadataComponent,
         path: 'config/metadata'
+      },
+      {
+        component: ConfigReadmeComponent,
+        path: 'config/readme'
       },
       {
         component: OBSettingsComponent,

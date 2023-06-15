@@ -24,7 +24,14 @@ body {
 
 code {
     color: $fgAccentLight !important;
-    margin: 0rem .2rem;
+    margin: 0rem;
+    font-family: Chivo Mono !important;
+    font-size: 14px !important;
+}
+
+code * {
+    font-family: Chivo Mono !important;
+    font-size: 14px !important;
 }
 
 .button {
