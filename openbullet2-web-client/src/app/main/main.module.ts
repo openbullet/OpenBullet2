@@ -69,6 +69,7 @@ import { UploadConfigsComponent } from './components/configs/upload-configs/uplo
 import { ConfigMetadataComponent } from './components/config/config-metadata/config-metadata.component';
 import { EditConfigImageComponent } from './components/config/edit-config-image/edit-config-image.component';
 import { ConfigReadmeComponent } from './components/config/config-readme/config-readme.component';
+import { ConfigSettingsComponent } from './components/config/config-settings/config-settings.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { ConfigReadmeComponent } from './components/config/config-readme/config-
     UploadConfigsComponent,
     ConfigMetadataComponent,
     EditConfigImageComponent,
-    ConfigReadmeComponent
+    ConfigReadmeComponent,
+    ConfigSettingsComponent
   ],
   imports: [
     CommonModule,

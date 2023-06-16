@@ -4,19 +4,31 @@ import { getBaseUrl } from "src/app/shared/utils/host";
 import { OBSettingsDto } from "../dtos/settings/ob-settings.dto";
 import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
 import { EnvironmentSettingsDto } from "../dtos/settings/environment-settings.dto";
+import { Observable, shareReplay } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SettingsService {
+    // Cached
+    private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
+
     constructor(
         private http: HttpClient
     ) { }
 
     getEnvironmentSettings() {
-        return this.http.get<EnvironmentSettingsDto>(
+        if (this.envSettings$ !== null) {
+            return this.envSettings$;
+        }
+
+        this.envSettings$ = this.http.get<EnvironmentSettingsDto>(
             getBaseUrl() + '/settings/environment'
+        ).pipe(
+            shareReplay(1)
         );
+
+        return this.envSettings$;
     }
 
     getSettings() {

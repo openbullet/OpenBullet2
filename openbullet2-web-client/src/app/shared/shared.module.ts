@@ -15,6 +15,7 @@ import { InputListComponent } from './components/input-list/input-list.component
 import { PascalCasePipe } from './pipes/pascalcase.pipe';
 import { BooleanIconComponent } from './components/boolean-icon/boolean-icon.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
 
 declare const monaco: any;
 
@@ -39,7 +40,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputDropdownComponent,
     LolicodeEditorComponent,
     InputListComponent,
-    BooleanIconComponent
+    BooleanIconComponent,
+    MultipleSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +60,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputDropdownComponent,
     InputListComponent,
     LolicodeEditorComponent,
-    BooleanIconComponent
+    BooleanIconComponent,
+    MultipleSelectorComponent
   ]
 })
 export class SharedModule { }

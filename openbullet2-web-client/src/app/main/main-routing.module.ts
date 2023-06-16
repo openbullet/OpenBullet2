@@ -15,6 +15,7 @@ import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { ConfigsComponent } from './components/configs/configs.component';
 import { ConfigMetadataComponent } from './components/config/config-metadata/config-metadata.component';
 import { ConfigReadmeComponent } from './components/config/config-readme/config-readme.component';
+import { ConfigSettingsComponent } from './components/config/config-settings/config-settings.component';
 
 const routes: Routes = [
   // Main component layout
@@ -49,6 +50,10 @@ const routes: Routes = [
       {
         component: ConfigReadmeComponent,
         path: 'config/readme'
+      },
+      {
+        component: ConfigSettingsComponent,
+        path: 'config/settings'
       },
       {
         component: OBSettingsComponent,
