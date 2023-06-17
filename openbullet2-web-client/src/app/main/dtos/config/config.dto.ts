@@ -61,7 +61,7 @@ export interface ConfigDataSettingsDto {
     allowedWordlistTypes: string[],
     urlEncodeDataAfterSlicing: boolean,
     dataRules: DataRulesDto,
-    resources: ResourcesDto[]
+    resources: ResourcesDto
 }
 
 export interface DataRulesDto {

@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService]
 })
 export class AppComponent {
   title = 'OpenBullet 2';

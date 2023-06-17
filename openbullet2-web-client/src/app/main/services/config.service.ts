@@ -36,8 +36,12 @@ export class ConfigService {
         const json = window.localStorage.getItem('config');
 
         if (json !== null) {
-            const config: ConfigDto = JSON.parse(json);
-            this.selectConfig(config);
+            try {
+                const config: ConfigDto = JSON.parse(json);
+                this.selectConfig(config);
+            } catch (err: any) {
+                console.log('Could not restore config from localStorage, maybe the interface changed?', err);
+            }
         }
     }
 

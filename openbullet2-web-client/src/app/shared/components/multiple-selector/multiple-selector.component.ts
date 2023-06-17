@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -12,6 +12,12 @@ export class MultipleSelectorComponent implements OnChanges {
   deselectedItems: string[] = [];
   @Output() selectedItemsChange = new EventEmitter<string[]>();
   @Output() onChange = new EventEmitter<string[]>();
+  
+  @ContentChild(TemplateRef) itemTemplate
+  : TemplateRef<any> | null = null;
+
+  @ViewChild('defaultItemTemplate', { static: true })
+  defaultItemTemplate: TemplateRef<any> | null = null;
 
   faArrowRight = faArrowRight;
   faArrowLeft = faArrowLeft;

@@ -35,7 +35,7 @@
                 ngDefaultControl
                 (validityChange)="localSave()"
                 [(ngModel)]="config.settings.generalSettings.maximumCPM"
-                placeholder="1" [min]="0" />
+                placeholder="0" [min]="0" />
         </div>
     </div>
     <div class="row my-3">
@@ -64,6 +64,299 @@
                 [(selectedItems)]="config.settings.generalSettings.continueStatuses"
                 [allItems]="botStatuses"
                 />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Proxies</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.proxySettings.useProxies"
+                [binary]="true" inputId="useProxies"
+                label="Use proxies" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Maximum uses per proxy (0 is infinite)</span>
+            <app-input-number key="maxUsesPerProxy" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.proxySettings.maxUsesPerProxy"
+                placeholder="0" [min]="0" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mr-2">Ban loop evasion a.k.a. after how many BAN statuses the data line should be marked as TOCHECK and the proxy should be banned (0 to disable)</span>
+            <app-input-number key="banLoopEvasion" class="input-small"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.proxySettings.banLoopEvasion"
+                placeholder="0" [min]="0" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Ban the proxy when the bot ends with one of these statuses</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.proxySettings.banProxyStatuses"
+                [allItems]="botStatuses"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Allowed proxy types</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.proxySettings.allowedProxyTypes"
+                [allItems]="proxyTypes">
+                <ng-template #itemTemplate let-item>
+                    {{ item | titlecase }}
+                </ng-template>
+            </app-multiple-selector>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Data</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Allowed wordlist types</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.dataSettings.allowedWordlistTypes"
+                [allItems]="wordlistTypes"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.dataSettings.urlEncodeDataAfterSlicing"
+                [binary]="true" inputId="urlEncodeDataAfterSlicing"
+                label="URL Encode data after slicing" />
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Data Rules - Simple</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New simple data rule" tooltipPosition="bottom"
+                (click)="createSimpleDataRule()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let rule of config.settings.dataSettings.dataRules.simple" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleSliceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.sliceName"
+                placeholder="DATA" />
+            <span class="d-block mt-1 text-small color-inactive">Slice name</span>
+        </div>
+        <div class="col-auto">
+            <app-input-dropdown key="simpleDataRuleComparison"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="stringRules"
+                [(ngModel)]="rule.comparison" />
+        </div>
+        <div class="col align-self-stretch px-2">
+            <app-input-text key="simpleDataRuleStringToCompare" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.stringToCompare"
+                placeholder="" />
+            <span class="d-block mt-1 text-small color-inactive">Compared value</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.caseSensitive"
+                [binary]="true" inputId="simpleDataRuleCaseSensitive"
+                label="Case sensitive" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.invert"
+                [binary]="true" inputId="simpleDataRuleInvert"
+                label="Invert" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeSimpleDataRule(rule)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Data Rules - Regex</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New regex data rule" tooltipPosition="bottom"
+                (click)="createRegexDataRule()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let rule of config.settings.dataSettings.dataRules.regex" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleSliceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.sliceName"
+                placeholder="DATA" />
+            <span class="d-block mt-1 text-small color-inactive">Slice name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="simpleDataRuleRegexToMatch"
+                class="input-small w-100 monospace"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="rule.regexToMatch"
+                placeholder="^.*$" />
+            <span class="d-block mt-1 text-small color-inactive">Regular Expression to match</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="rule.invert"
+                [binary]="true" inputId="simpleDataRuleInvert"
+                label="Invert" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeRegexDataRule(rule)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Resources - Lines from file</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New lines from file resource" tooltipPosition="bottom"
+                (click)="createLinesFromFileResource()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let resource of config.settings.dataSettings.resources.linesFromFile" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="linesFromFileResourceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.name"
+                placeholder="resource" />
+            <span class="d-block mt-1 text-small color-inactive">Resource name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="linesFromFileResourceLocation"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.location"
+                placeholder="resource.txt" />
+            <span class="d-block mt-1 text-small color-inactive">Location</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.loopsAround"
+                [binary]="true" inputId="linesFromFileResourceLoopsAround"
+                label="Loops around" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.ignoreEmptyLines"
+                [binary]="true" inputId="linesFromFileResourceIgnoreEmptyLines"
+                label="Ignore empty lines" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeLinesFromFileResource(resource)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Resources - Random lines from file</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New random lines from file resource" tooltipPosition="bottom"
+                (click)="createRandomLinesFromFileResource()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngFor="let resource of config.settings.dataSettings.resources.randomLinesFromFile" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="randomLinesFromFileResourceName" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.name"
+                placeholder="resource" />
+            <span class="d-block mt-1 text-small color-inactive">Resource name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="randomLinesFromFileResourceLocation"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="resource.location"
+                placeholder="resource.txt" />
+            <span class="d-block mt-1 text-small color-inactive">Location</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.unique"
+                [binary]="true" inputId="randomLinesFromFileResourceUnique"
+                label="Only unique lines" />
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="resource.ignoreEmptyLines"
+                [binary]="true" inputId="randomLinesFromFileResourceIgnoreEmptyLines"
+                label="Ignore empty lines" />
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeRandomLinesFromFileResource(resource)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
         </div>
     </div>
 </div>
