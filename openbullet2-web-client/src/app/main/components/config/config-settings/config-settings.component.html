@@ -149,12 +149,18 @@
     </div>
     <div class="row mt-5 justify-content-between">
         <div class="col-4">
-            <h6 class="font-weight-bold">Data Rules - Simple</h6>
+            <h6 class="font-weight-bold">Data Rules</h6>
         </div>
         <div class="col-4 text-right">
             <button class="button button-accent"
                 pTooltip="New simple data rule" tooltipPosition="bottom"
                 (click)="createSimpleDataRule()">
+                Simple
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent ml-2"
+                pTooltip="New regex data rule" tooltipPosition="bottom"
+                (click)="createRegexDataRule()">
                 New
                 <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
             </button>
@@ -207,19 +213,6 @@
             </button>
         </div>
     </div>
-    <div class="row mt-5 justify-content-between">
-        <div class="col-4">
-            <h6 class="font-weight-bold">Data Rules - Regex</h6>
-        </div>
-        <div class="col-4 text-right">
-            <button class="button button-accent"
-                pTooltip="New regex data rule" tooltipPosition="bottom"
-                (click)="createRegexDataRule()">
-                New
-                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
-            </button>
-        </div>
-    </div>
     <div *ngFor="let rule of config.settings.dataSettings.dataRules.regex" class="row my-3 justify-content-between">
         <div class="col align-self-stretch pr-2">
             <app-input-text key="simpleDataRuleSliceName" class="input-small w-100"
@@ -255,13 +248,19 @@
     </div>
     <div class="row mt-5 justify-content-between">
         <div class="col-4">
-            <h6 class="font-weight-bold">Resources - Lines from file</h6>
+            <h6 class="font-weight-bold">Resources</h6>
         </div>
         <div class="col-4 text-right">
             <button class="button button-accent"
                 pTooltip="New lines from file resource" tooltipPosition="bottom"
                 (click)="createLinesFromFileResource()">
-                New
+                Lines from file
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-accent ml-2"
+                pTooltip="New random lines from file resource" tooltipPosition="bottom"
+                (click)="createRandomLinesFromFileResource()">
+                Random lines from file
                 <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
             </button>
         </div>
@@ -303,19 +302,6 @@
                 pTooltip="Delete" tooltipPosition="bottom"
                 (click)="removeLinesFromFileResource(resource)">
                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
-            </button>
-        </div>
-    </div>
-    <div class="row mt-5 justify-content-between">
-        <div class="col-4">
-            <h6 class="font-weight-bold">Resources - Random lines from file</h6>
-        </div>
-        <div class="col-4 text-right">
-            <button class="button button-accent"
-                pTooltip="New random lines from file resource" tooltipPosition="bottom"
-                (click)="createRandomLinesFromFileResource()">
-                New
-                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
             </button>
         </div>
     </div>
