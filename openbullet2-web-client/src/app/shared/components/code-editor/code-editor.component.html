@@ -1,7 +1,9 @@
 <ngx-monaco-editor
+    #editor
     *ngIf="editorOptions !== null"
     class="code-editor h-100 w-100"
+    (onInit)="loaded.emit()"
     [id]="id"
     [options]="editorOptions"
-    [ngModel]="ngModel"
+    [ngModel]="model"
     (ngModelChange)="valueChanged($event)" />

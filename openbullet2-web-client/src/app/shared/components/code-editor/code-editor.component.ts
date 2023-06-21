@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { EditorComponent } from 'ngx-monaco-editor-v2';
 
 @Component({
   selector: 'app-code-editor',
@@ -9,12 +10,16 @@ export class LolicodeEditorComponent implements OnInit {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() language: string = 'lolicode';
-  @Input() ngModel: string | null = null;
   editorOptions: any = {};
   isTouched = false;
+  model: string = '';
 
   @Output() touched = new EventEmitter();
-  @Output() ngModelChange = new EventEmitter<string>();
+  @Output() codeChanged = new EventEmitter<string>();
+  @Output() loaded = new EventEmitter();
+
+  @ViewChild('editor')
+  editor: EditorComponent | undefined = undefined;
   
   ngOnInit(): void {
     this.editorOptions = {
@@ -29,8 +34,20 @@ export class LolicodeEditorComponent implements OnInit {
     this.isTouched = true;
   }
 
+  set code(value: string) {
+    this.model = value;
+
+    // Had to add this or it wouldn't work
+    this.editor?.writeValue(value);
+  }
+
+  get code(): string {
+    return this.model;
+  }
+
   valueChanged(newValue: string) {
     this.notifyTouched();
-    this.ngModelChange.emit(newValue);
+    this.model = newValue;
+    this.codeChanged.emit(newValue);
   }
 }

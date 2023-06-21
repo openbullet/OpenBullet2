@@ -23,6 +23,7 @@
                 </span>
             </div>
             <textarea class="w-100"
+                spellcheck="false"
                 [ngStyle]="{ minHeight: '150px' }"
                 [(ngModel)]="description" ngDefaultControl 
                 placeholder="This snippet can be used for...">
@@ -38,9 +39,9 @@
                 </span>
             </div>
             <div style="height: 300px; width: 100%">
-                <app-code-editor
-                    language="lolicode" ngDefaultControl 
-                    [(ngModel)]="body" />
+                <app-code-editor #editor
+                    (codeChanged)="body = $event"
+                    language="lolicode" ngDefaultControl />
             </div>
         </div>
     </div>

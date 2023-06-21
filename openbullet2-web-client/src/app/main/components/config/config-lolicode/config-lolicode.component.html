@@ -1,0 +1,51 @@
+<h1>LoliCode</h1>
+
+<div class="mt-3" *ngIf="config === null">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            No config selected
+        </h5>
+        <span class="text-small">
+            No config was selected, please select a config first.
+        </span>
+    </p-card>
+</div>
+
+<div *ngIf="config !== null && envSettings !== null" class="container-fluid no-paddings">
+    <div class="row mb-3">
+        <div class="col-12">
+            <button class="button button-secondary"
+                pTooltip="Show/Hide the using statements" tooltipPosition="bottom"
+                (click)="toggleUsings()">
+                <fa-icon [icon]="faGear" [fixedWidth]="true"></fa-icon>
+                Toggle Usings
+            </button>
+        </div>
+    </div>
+    <div class="row mb-3" *ngIf="showUsings">
+        <div class="col-12">
+            <span>You can type namespaces that you would like to import in the generated C# script, one per line</span>
+            <app-input-list key="customUsings"
+                class="d-block w-100 mt-2 monospace"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.scriptSettings.customUsings"
+                placeholder="System.Text.RegularExpressions" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div style="height: 800px; width: 100%">
+                <app-code-editor #editor
+                    language="lolicode" ngDefaultControl 
+                    (loaded)="editorLoaded()"
+                    (codeChanged)="codeChanged($event)" />
+            </div>
+            <span class="d-block mt-1 text-small color-inactive">You can write C# code inside LoliCode!</span>
+        </div>
+        <div class="col-6">
+            
+        </div>
+    </div>
+</div>

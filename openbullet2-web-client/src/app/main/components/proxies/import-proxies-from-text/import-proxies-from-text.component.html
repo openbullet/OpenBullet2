@@ -7,6 +7,7 @@
                 </span>
                 <br />
                 <textarea class="w-100 monospace mt-2"
+                    spellcheck="false"
                     [ngStyle]="{ minHeight: '150px' }"
                     [(ngModel)]="proxies"
                     [placeholder]="'127.0.0.1:8080\nmyproxy.com:1234\n127.0.0.1:8080:myusername:mypassword\n(http)127.0.0.1:8080\n(socks5)myproxy.com:5134:myusername:mypassword'">

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { CustomSnippet } from 'src/app/main/dtos/settings/ob-settings.dto';
+import { LolicodeEditorComponent } from 'src/app/shared/components/code-editor/code-editor.component';
 
 @Component({
   selector: 'app-update-custom-snippet',
@@ -10,6 +11,8 @@ import { CustomSnippet } from 'src/app/main/dtos/settings/ob-settings.dto';
 export class UpdateCustomSnippetComponent implements OnChanges {
   @Input() snippet: CustomSnippet | null = null;
   @Output() confirm = new EventEmitter<CustomSnippet>();
+  @ViewChild('editor')
+  editor: LolicodeEditorComponent | undefined = undefined;
 
   faCircleQuestion = faCircleQuestion;
   name: string = '';
@@ -21,6 +24,10 @@ export class UpdateCustomSnippetComponent implements OnChanges {
     this.name = this.snippet.name;
     this.description = this.snippet.description;
     this.body = this.snippet.body;
+
+    if (this.editor !== undefined) {
+      this.editor.code = this.body;
+    }
   }
 
   submitForm() {
