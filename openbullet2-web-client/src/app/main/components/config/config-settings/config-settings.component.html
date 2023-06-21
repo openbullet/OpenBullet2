@@ -359,4 +359,136 @@
             </button>
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Inputs</h3>
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h6 class="font-weight-bold">Custom Inputs</h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent"
+                pTooltip="New custom input" tooltipPosition="bottom"
+                (click)="createCustomInput()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <span class="text-small color-inactive">
+                Custom inputs are a way to define some values directly at runtime. The users of the config will receive some popups when they start a job and their answer will be inserted as a variable of type string that you can use as you please.
+            </span>
+        </div>
+    </div>
+    <div *ngFor="let input of config.settings.inputSettings.customInputs" class="row my-3 justify-content-between">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputDescription" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.description"
+                placeholder="What is your country?" />
+            <span class="d-block mt-1 text-small color-inactive">Description (question for the user)</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputVariableName"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.variableName"
+                placeholder="COUNTRY" />
+            <span class="d-block mt-1 text-small color-inactive">Variable Name</span>
+        </div>
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="customInputDefaultAnswer"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="input.defaultAnswer"
+                placeholder="England" />
+            <span class="d-block mt-1 text-small color-inactive">Default Answer</span>
+        </div>
+        <div class="col-auto text-right">
+            <button class="button button-transparent ml-2"
+                pTooltip="Delete" tooltipPosition="bottom"
+                (click)="removeCustomInput(input)">
+                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <h3>Browser</h3>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="mb-2 d-block">Quit the browser when the bot ends with one of these statuses</span>
+            <app-multiple-selector
+                (onChange)="localSave()"
+                [(selectedItems)]="config.settings.browserSettings.quitBrowserStatuses"
+                [allItems]="botStatuses"
+                />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.headless"
+                [binary]="true" inputId="headless"
+                label="Headless" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.loadOnlyDocumentAndScript"
+                [binary]="true" inputId="loadOnlyDocumentAndScript"
+                label=" Load only document and script" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.dismissDialogs"
+                [binary]="true" inputId="dismissDialogs"
+                label="Dismiss dialogs" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span class="d-block mb-2">Command line arguments (e.g. <code>--disable-notifications --incognito</code>)</span>
+            <app-input-text key="maximumCPM" class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.commandLineArgs"
+                placeholder="--disable-notifications --incognito" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="config.settings.browserSettings.ignoreHttpsErrors"
+                [binary]="true" inputId="ignoreHttpsErrors"
+                label="Ignore HTTPS errors" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <span>Blocked URLs: if the URL of the resource contains any of the given texts it will not be loaded (case insensitive)</span>
+            <app-input-list key="userAgents"
+                class="d-block w-100 mt-2"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="config.settings.browserSettings.blockedUrls"
+                placeholder="example.com" />
+        </div>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faPlus, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
-import { ConfigDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto } from 'src/app/main/dtos/config/config.dto';
+import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
@@ -126,6 +126,20 @@ export class ConfigSettingsComponent implements OnInit {
     }
   }
 
+  createCustomInput() {
+    if (this.config !== null) {
+      this.config.settings.inputSettings.customInputs = [
+        ...this.config.settings.inputSettings.customInputs,
+        {
+          description: '',
+          variableName: '',
+          defaultAnswer: ''
+        }
+      ];
+      this.localSave();
+    }
+  }
+
   removeSimpleDataRule(rule: SimpleDataRuleDto) {
     if (this.config !== null) {
       const index = this.config.settings.dataSettings.dataRules.simple.indexOf(rule);
@@ -172,6 +186,19 @@ export class ConfigSettingsComponent implements OnInit {
         this.config.settings.dataSettings.resources.randomLinesFromFile.splice(index, 1);
         this.config.settings.dataSettings.resources.randomLinesFromFile = [
           ...this.config.settings.dataSettings.resources.randomLinesFromFile
+        ];
+        this.localSave();
+      }
+    }
+  }
+
+  removeCustomInput(input: CustomInputDto) {
+    if (this.config !== null) {
+      const index = this.config.settings.inputSettings.customInputs.indexOf(input);
+      if (index !== -1) {
+        this.config.settings.inputSettings.customInputs.splice(index, 1);
+        this.config.settings.inputSettings.customInputs = [
+          ...this.config.settings.inputSettings.customInputs
         ];
         this.localSave();
       }
