@@ -10,6 +10,7 @@ export class LolicodeEditorComponent implements OnInit {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() language: string = 'lolicode';
+  @Input() readOnly: boolean = false;
   editorOptions: any = {};
   isTouched = false;
   model: string = '';
@@ -24,8 +25,13 @@ export class LolicodeEditorComponent implements OnInit {
   ngOnInit(): void {
     this.editorOptions = {
       theme: 'vs-lolicode',
-      language: this.language
+      language: this.language,
+      readOnly: this.readOnly
     };
+  }
+
+  editorLoaded() {
+    this.loaded.emit();
   }
 
   // Notifies the subscribers that this input was touched

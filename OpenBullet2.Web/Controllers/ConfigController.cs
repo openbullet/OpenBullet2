@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -287,12 +287,11 @@ public class ConfigController : ApiController
     [Admin]
     [HttpPost("convert/lolicode/csharp")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConvertedCSharpDto>> ConvertLoliCodeToCSharp(
+    public ActionResult<ConvertedCSharpDto> ConvertLoliCodeToCSharp(
         ConvertLoliCodeToCSharpDto dto)
     {
-        var config = await _configRepo.Get(dto.ConfigId);
         var converted = Loli2CSharpTranspiler
-            .Transpile(dto.LoliCode, config.Settings);
+            .Transpile(dto.LoliCode, _mapper.Map<ConfigSettings>(dto.Settings));
 
         return new ConvertedCSharpDto
         {
@@ -335,26 +334,6 @@ public class ConfigController : ApiController
         return new ConvertedLoliCodeDto
         {
             LoliCode = converted
-        };
-    }
-
-    /// <summary>
-    /// Convert a Stack of blocks to a C# script.
-    /// </summary>
-    [Admin]
-    [HttpPost("convert/stack/csharp")]
-    [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConvertedCSharpDto>> ConvertStackToCSharp(
-        ConvertStackToCSharpDto dto)
-    {
-        var config = await _configRepo.Get(dto.ConfigId);
-        var mapped = BlockMapper.MapStack(dto.Stack, _mapper);
-        var converted = Stack2CSharpTranspiler
-            .Transpile(mapped, config.Settings);
-
-        return new ConvertedCSharpDto
-        {
-            CSharpScript = converted
         };
     }
 

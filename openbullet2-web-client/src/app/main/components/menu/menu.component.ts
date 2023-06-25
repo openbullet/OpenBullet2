@@ -71,7 +71,7 @@ export class MenuComponent implements OnDestroy {
       saveButton: false
     },
     {
-      label: 'Configuration',
+      label: 'System',
       items: [
         {
           icon: faWrench,

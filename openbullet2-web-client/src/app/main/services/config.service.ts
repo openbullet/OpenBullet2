@@ -3,10 +3,11 @@ import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
 import { ConfigInfoDto } from "../dtos/config/config-info.dto";
 import { ConfigReadmeDto } from "../dtos/config/config-readme.dto";
-import { ConfigDto } from "../dtos/config/config.dto";
+import { ConfigDto, ConfigSettingsDto } from "../dtos/config/config.dto";
 import { UpdateConfigDto } from "../dtos/config/update-config.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { BehaviorSubject } from "rxjs";
+import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from "../dtos/config/conversion.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ import { BehaviorSubject } from "rxjs";
 export class ConfigService {
     private selectedConfigSource = new BehaviorSubject<ConfigDto | null>(null);
     selectedConfig$ = this.selectedConfigSource.asObservable();
+    selectedConfig: ConfigDto | null = null;
 
     constructor(
         private http: HttpClient
@@ -47,6 +49,7 @@ export class ConfigService {
 
     selectConfig(config: ConfigDto | null) {
         this.selectedConfigSource.next(config);
+        this.selectedConfig = config;
 
         if (config !== null) {
             this.saveLocalConfig(config);
@@ -170,6 +173,34 @@ export class ConfigService {
         }
         return this.http.post<AffectedEntriesDto>(
             getBaseUrl() + '/config/upload/many', formData
+        );
+    }
+
+    convertLoliCodeToCSharp(settings: ConfigSettingsDto, loliCode: string) {
+        return this.http.post<ConvertedCSharpDto>(
+            getBaseUrl() + '/config/convert/lolicode/csharp',
+            {
+                settings,
+                loliCode
+            }
+        );
+    }
+
+    convertStackToLoliCode(stack: any[]) {
+        return this.http.post<ConvertedLoliCodeDto>(
+            getBaseUrl() + '/config/convert/stack/lolicode',
+            {
+                stack
+            }
+        );
+    }
+
+    convertLoliCodeToStack(loliCode: string) {
+        return this.http.post<ConvertedStackDto>(
+            getBaseUrl() + '/config/convert/lolicode/stack',
+            {
+                loliCode
+            }
         );
     }
 }

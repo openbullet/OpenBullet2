@@ -8,11 +8,10 @@ namespace OpenBullet2.Web.Dtos.Config.Convert;
 public class ConvertLoliCodeToCSharpDto
 {
     /// <summary>
-    /// The id of the config (used to get the settings that
-    /// influence the code generation process).
+    /// The config settings, required during the code generation process.
     /// </summary>
     [Required]
-    public string ConfigId { get; set; } = string.Empty;
+    public ConfigSettingsDto Settings { get; set; } = default!;
 
     /// <summary>
     /// The LoliCode script to convert.

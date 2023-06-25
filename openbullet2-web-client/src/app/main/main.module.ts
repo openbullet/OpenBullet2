@@ -69,6 +69,7 @@ import { EditConfigImageComponent } from './components/config/edit-config-image/
 import { ConfigReadmeComponent } from './components/config/config-readme/config-readme.component';
 import { ConfigSettingsComponent } from './components/config/config-settings/config-settings.component';
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
+import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,8 @@ import { ConfigLolicodeComponent } from './components/config/config-lolicode/con
     EditConfigImageComponent,
     ConfigReadmeComponent,
     ConfigSettingsComponent,
-    ConfigLolicodeComponent
+    ConfigLolicodeComponent,
+    ConfigCsharpComponent
   ],
   imports: [
     CommonModule,

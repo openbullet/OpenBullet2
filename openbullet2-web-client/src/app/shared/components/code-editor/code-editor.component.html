@@ -2,7 +2,7 @@
     #editor
     *ngIf="editorOptions !== null"
     class="code-editor h-100 w-100"
-    (onInit)="loaded.emit()"
+    (onInit)="editorLoaded()"
     [id]="id"
     [options]="editorOptions"
     [ngModel]="model"

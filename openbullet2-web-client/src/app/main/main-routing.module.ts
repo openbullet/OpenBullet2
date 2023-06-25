@@ -17,6 +17,8 @@ import { ConfigMetadataComponent } from './components/config/config-metadata/con
 import { ConfigReadmeComponent } from './components/config/config-readme/config-readme.component';
 import { ConfigSettingsComponent } from './components/config/config-settings/config-settings.component';
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
+import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
+import { updateCSharpScript } from './utils/config-conversion';
 
 const routes: Routes = [
   // Main component layout
@@ -59,6 +61,11 @@ const routes: Routes = [
       {
         component: ConfigSettingsComponent,
         path: 'config/settings'
+      },
+      {
+        component: ConfigCsharpComponent,
+        path: 'config/csharp',
+        resolve: { data: updateCSharpScript }
       },
       {
         component: OBSettingsComponent,

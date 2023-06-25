@@ -15,7 +15,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             catchError(error => {
                 if (error instanceof HttpErrorResponse) {
                     let summary = 'Request Error';
-                    let detail = 'See details in the browser console';
+                    let detail = error.error?.message ?? 'See details in the browser console';
 
                     // Status 0 or -1 means connection refused
                     if (error.status <= 0) {
