@@ -70,6 +70,7 @@ import { ConfigReadmeComponent } from './components/config/config-readme/config-
 import { ConfigSettingsComponent } from './components/config/config-settings/config-settings.component';
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
+import { ConfigDebuggerComponent } from './components/config/config-debugger/config-debugger.component';
 
 @NgModule({
   declarations: [
@@ -119,7 +120,8 @@ import { ConfigCsharpComponent } from './components/config/config-csharp/config-
     ConfigReadmeComponent,
     ConfigSettingsComponent,
     ConfigLolicodeComponent,
-    ConfigCsharpComponent
+    ConfigCsharpComponent,
+    ConfigDebuggerComponent
   ],
   imports: [
     CommonModule,

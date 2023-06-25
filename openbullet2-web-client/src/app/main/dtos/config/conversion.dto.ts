@@ -1,11 +1,11 @@
 export interface ConvertedCSharpDto {
-    cSharpScript: string;
+    cSharpScript: string
 }
 
 export interface ConvertedLoliCodeDto {
-    loliCode: string;
+    loliCode: string
 }
 
 export interface ConvertedStackDto {
-    stack: any[];
+    stack: any[]
 }

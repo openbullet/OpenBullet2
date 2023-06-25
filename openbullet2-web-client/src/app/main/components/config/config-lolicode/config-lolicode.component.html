@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-6 pr-1">
             <div style="height: 800px; width: 100%">
                 <app-code-editor #editor
                     language="lolicode" ngDefaultControl 
@@ -44,8 +44,10 @@
             </div>
             <span class="d-block mt-1 text-small color-inactive">You can write C# code inside LoliCode!</span>
         </div>
-        <div class="col-6">
-            
+        <div class="col-6 pl-1">
+            <app-config-debugger
+                [config]="config"
+                [envSettings]="envSettings" />
         </div>
     </div>
 </div>

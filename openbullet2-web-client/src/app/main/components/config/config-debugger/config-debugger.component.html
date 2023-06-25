@@ -1,0 +1,76 @@
+<div *ngIf="settings !== null" class="container-fluid no-paddings">
+    <div class="row mb-3">
+        <div class="col align-self-stretch">
+            <h5>Debugger</h5>
+        </div>
+        <div class="col-auto text-right pr-0">
+            <button class="button button-accent"
+                pTooltip="Start the debugger" tooltipPosition="bottom"
+                (click)="start()">
+                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                Start
+            </button>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="testData"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="settings.testData" />
+            <span class="d-block mt-1 text-small color-inactive">Test data</span>
+        </div>
+        <div class="col-auto pr-0">
+            <app-input-dropdown key="wordlistType"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="wordlistTypes"
+                [(ngModel)]="settings.wordlistType" />
+            <span class="d-block mt-1 text-small color-inactive">Wordlist type</span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col align-self-stretch pr-2">
+            <app-input-text key="testProxy"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="localSave()"
+                [(ngModel)]="settings.testProxy" />
+            <span class="d-block mt-1 text-small color-inactive">Test proxy</span>
+        </div>
+        <div class="col-auto">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.useProxy"
+                [binary]="true" inputId="useProxy"
+                label="Use proxy" />
+        </div>
+        <div class="col-auto pr-0">
+            <app-input-dropdown key="proxyType"
+                itemClass="input-small" optionClass="input-small"
+                (validityChange)="localSave()"
+                ngDefaultControl
+                [options]="proxyTypes"
+                [(ngModel)]="settings.proxyType" />
+            <span class="d-block mt-1 text-small color-inactive">Proxy type</span>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-auto pl-0">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.stepByStep"
+                [binary]="true" inputId="stepByStep"
+                label="Step by step" />
+        </div>
+        <div class="col-auto pr-0">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.persistLog"
+                [binary]="true" inputId="persistLog"
+                label="Persist Log" />
+        </div>
+    </div>
+</div>
