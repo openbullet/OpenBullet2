@@ -7,6 +7,10 @@ import { saveFile } from 'src/app/shared/utils/files';
 import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
 import * as moment from 'moment';
 import { VolatileSettingsService } from '../../services/volatile-settings.service';
+import { Router } from '@angular/router';
+import { SettingsService } from '../../services/settings.service';
+import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
+import { ConfigDto } from '../../dtos/config/config.dto';
 
 @Component({
   selector: 'app-configs',
@@ -15,6 +19,7 @@ import { VolatileSettingsService } from '../../services/volatile-settings.servic
 })
 export class ConfigsComponent implements OnInit {
   configs: ConfigInfoDto[] | null = null;
+  obSettings: OBSettingsDto | null = null;
 
   @ViewChild('uploadConfigsComponent')
   uploadConfigsComponent: UploadConfigsComponent | undefined = undefined;
@@ -87,13 +92,18 @@ export class ConfigsComponent implements OnInit {
   constructor(private configService: ConfigService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private volatileSettings: VolatileSettingsService) {
+    private volatileSettings: VolatileSettingsService,
+    private settingsService: SettingsService,
+    private router: Router) {
 
   }
 
   ngOnInit(): void {
     this.refreshConfigs(false);
     this.displayMode = this.volatileSettings.configsDisplayMode;
+
+    this.settingsService.getSettings()
+      .subscribe(settings => this.obSettings = settings);
   }
 
   refreshConfigs(reload: boolean) {
@@ -130,8 +140,75 @@ export class ConfigsComponent implements OnInit {
           summary: 'Selected',
           detail: `Selected config ${resp.metadata.name}`
         });
-        // TODO: Navigate to the config's default page (defined in settings)
+        this.router.navigate([this.getRouteBySettings(resp)]);
       });
+  }
+
+  getRouteBySettings(config: ConfigDto): string {
+    if (this.obSettings === null) {
+      return '/config/metadata';
+    }
+
+    switch (this.obSettings.generalSettings.configSectionOnLoad) {
+      case 'metadata':
+        return 'config/metadata';
+
+      case 'readme':
+        return 'config/readme';
+
+      case 'stacker':
+        switch (config.mode) {
+          case 'loliCode':
+          case 'stack':
+            return 'config/stacker';
+          
+          case 'cSharp':
+            return 'config/csharp';
+
+          case 'legacy':
+            return 'config/loliscript';
+
+          default:
+            return 'config/metadata';
+        }
+
+      case 'loliCode':
+      case 'loliScript':
+        switch (config.mode) {
+          case 'loliCode':
+          case 'stack':
+            return 'config/lolicode';
+          
+          case 'cSharp':
+            return 'config/csharp';
+
+          case 'legacy':
+            return 'config/loliscript';
+
+          default:
+            return 'config/metadata';
+        }
+
+      case 'settings':
+        return 'config/settings';
+
+      case 'cSharpCode':
+        switch (config.mode) {
+          case 'loliCode':
+          case 'stack':
+          case 'cSharp':
+            return 'config/csharp';
+          
+          case 'legacy':
+            return 'config/loliscript';
+
+          default:
+            return 'config/metadata';
+        }
+
+      default:
+        return 'config/metadata';
+    }
   }
 
   createConfig() {
