@@ -26,7 +26,8 @@ export class LolicodeEditorComponent implements OnInit {
     this.editorOptions = {
       theme: 'vs-lolicode',
       language: this.language,
-      readOnly: this.readOnly
+      readOnly: this.readOnly,
+      // wordWrap: true
     };
   }
 
