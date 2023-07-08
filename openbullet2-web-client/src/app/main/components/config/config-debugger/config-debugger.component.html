@@ -109,8 +109,7 @@
             <div class="logs-container" *ngIf="!displayVariables">
                 <div *ngFor="let log of logs"
                     class="log-message"
-                    [ngStyle]="{ color: log.color }">
-                    {{ log.message }}
+                    [ngStyle]="{ color: log.color }">{{ log.message }}
                     <button class="button button-secondary mt-2 d-block"
                         *ngIf="log.canViewAsHtml"
                         pTooltip="View as HTML" tooltipPosition="bottom"
