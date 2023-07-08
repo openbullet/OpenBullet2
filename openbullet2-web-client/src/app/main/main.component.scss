@@ -22,6 +22,7 @@ $sidebarWidth: 230px;
     flex: 1 1 auto;
     padding: 30px 50px;
     width: calc(100vw - $sidebarWidth);
+    overflow-x: hidden;
 }
 
 .logo {
