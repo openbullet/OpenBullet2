@@ -13,13 +13,13 @@ export class SysPerfHubService {
     createHubConnection() {
         // TODO: Add jwt injector here
         this.hubConnection = new HubConnectionBuilder()
-            .withUrl(getBaseHubUrl() + '/system-performance')
-            .withAutomaticReconnect()
-            .build();
+        .withUrl(getBaseHubUrl() + '/system-performance')
+        .withAutomaticReconnect()
+        .build();
 
         this.hubConnection
-            .start()
-            .catch(err => console.error(err));
+        .start()
+        .catch(err => console.error(err));
 
         this.hubConnection.on('newMetrics', metrics => {
             this.metricsSource.next(metrics)
@@ -28,7 +28,7 @@ export class SysPerfHubService {
 
     stopHubConnection() {
         this.hubConnection
-            ?.stop()
-            .catch(err => console.error(err));
+        ?.stop()
+        .catch(err => console.error(err));
     }
 }

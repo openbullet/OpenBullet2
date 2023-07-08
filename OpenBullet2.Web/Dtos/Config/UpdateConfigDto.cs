@@ -58,4 +58,11 @@ public class UpdateConfigDto
     /// The C# script for configs that were converted to C#.
     /// </summary>
     public string CSharpScript { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Whether to persistently save the config to the repository.
+    /// Set to <see langword="false"/> if the config is only being saved to
+    /// memory, e.g. for debugging needs.
+    /// </summary>
+    public bool Persistent { get; set; } = true;
 }

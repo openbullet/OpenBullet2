@@ -90,7 +90,7 @@ export class ConfigService {
         );
     }
 
-    saveConfig(config: ConfigDto) {
+    saveConfig(config: ConfigDto, persistent: boolean) {
         const updated: UpdateConfigDto = {
             id: config.id,
             mode: config.mode,
@@ -106,7 +106,8 @@ export class ConfigService {
             startupLoliCodeScript: config.startupLoliCodeScript,
             loliScript: config.loliScript,
             cSharpScript: config.cSharpScript,
-            startupCSharpScript: config.startupCSharpScript
+            startupCSharpScript: config.startupCSharpScript,
+            persistent
         };
 
         return this.updateConfig(updated);

@@ -211,7 +211,7 @@ export class MenuComponent implements OnDestroy {
 
   saveConfig() {
     if (this.selectedConfig !== null) {
-      this.configService.saveConfig(this.selectedConfig)
+      this.configService.saveConfig(this.selectedConfig, true)
         .subscribe(c => {
           this.messageService.add({
             severity: 'success',

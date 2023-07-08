@@ -1,0 +1,16 @@
+@import "../../../../../styles/variables.scss";
+
+.logs-container {
+    background-color: $bgSecondary;
+    padding: 10px;
+    min-width: 100%;
+    height: 600px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.log-message {
+    display: block;
+    font-family: Chivo Mono;
+    margin-bottom: 5px;
+}

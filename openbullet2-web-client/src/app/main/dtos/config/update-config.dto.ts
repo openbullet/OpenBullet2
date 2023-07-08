@@ -10,7 +10,8 @@ export interface UpdateConfigDto {
     startupLoliCodeScript: string,
     loliScript: string,
     cSharpScript: string,
-    startupCSharpScript: string
+    startupCSharpScript: string,
+    persistent: boolean
 }
 
 export interface UpdateConfigMetadataDto {

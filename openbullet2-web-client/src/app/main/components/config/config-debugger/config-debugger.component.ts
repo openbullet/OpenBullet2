@@ -1,18 +1,29 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { faAlignLeft, faCaretRight, faPlay, faSliders, faStop, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
+import { VariableDto } from 'src/app/main/dtos/config-debugger/messages';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
-import { ConfigDebuggerSettings } from 'src/app/main/models/config-debugger-settings';
-import { ConfigDebuggerService } from 'src/app/main/services/config-debugger.service';
+import { BotLoggerEntry, ConfigDebuggerSettings } from 'src/app/main/models/config-debugger-settings';
+import { ConfigDebuggerSettingsService } from 'src/app/main/services/config-debugger-settings.service';
+import { ConfigDebuggerHubService } from 'src/app/main/services/config-debugger.hub.service';
+import { ConfigService } from 'src/app/main/services/config.service';
+import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
+import { ViewAsHtmlComponent } from './view-as-html/view-as-html.component';
 
 @Component({
   selector: 'app-config-debugger',
   templateUrl: './config-debugger.component.html',
-  styleUrls: ['./config-debugger.component.scss']
+  styleUrls: ['./config-debugger.component.scss'],
+  providers: [TruncatePipe]
 })
-export class ConfigDebuggerComponent implements OnInit {
+export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   @Input() config!: ConfigDto;
   @Input() envSettings!: EnvironmentSettingsDto;
+
+  @ViewChild('viewAsHtmlComponent')
+  htmlViewer: ViewAsHtmlComponent | undefined = undefined;
+
   settings: ConfigDebuggerSettings | null = null;
   wordlistTypes: string[] = [
     'Default'
@@ -25,23 +36,149 @@ export class ConfigDebuggerComponent implements OnInit {
   ];
 
   faPlay = faPlay;
+  faStop = faStop;
+  faCaretRight = faCaretRight;
+  faAlignLeft = faAlignLeft;
+  faSliders = faSliders;
+  faWindowMaximize = faWindowMaximize;
 
-  constructor (private debuggerSettingsService: ConfigDebuggerService) {
+  logs: BotLoggerEntry[] = [];
+  variables: VariableDto[] = [];
+  status: string = 'unknown';
+
+  displayVariables = false;
+  viewAsHtmlModalVisible = false;
+  html = '';
+
+  private debuggerHubService = new ConfigDebuggerHubService();
+
+  constructor (private debuggerSettingsService: ConfigDebuggerSettingsService,
+    private configService: ConfigService,
+    private messageService: MessageService,
+    private truncatePipe: TruncatePipe) {
 
   }
 
   ngOnInit() {
     this.wordlistTypes = this.envSettings.wordlistTypes.map(t => t.name);
     this.settings = this.debuggerSettingsService.loadLocalSettings();
+
+    this.debuggerHubService.createHubConnection(this.config.id).then(_ => {
+      // Request the current state
+      this.debuggerHubService.getState();
+    });
+
+    // When the state arrives, set current variables
+    this.debuggerHubService.state$.subscribe(msg => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+      
+      this.logs = msg.log;
+      this.variables = msg.variables;
+      this.status = msg.status;
+
+      console.log('Debugger state loaded');
+      this.onNewState();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.debuggerHubService.stopHubConnection();
+  }
+
+  onNewState() {
+    // When we get the debugger state, we can start listening to
+    // new messages
+    // TODO: Handle the case where other messages arrive before
+    // the state message
+    this.debuggerHubService.logs$.subscribe(msg => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+      
+      this.logs = [...this.logs, msg.newMessage];
+    });
+
+    this.debuggerHubService.variables$.subscribe(msg => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+
+      this.variables = msg.variables;
+    });
+
+    this.debuggerHubService.status$.subscribe(msg => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+      
+      this.status = msg.newStatus;
+    });
+
+    this.debuggerHubService.error$.subscribe(msg => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Debugger Error',
+        detail: this.truncatePipe.transform(msg.message, 100)
+      });
+    });
   }
 
   start() {
-    console.log('start');
+    if (!this.settings?.persistLog) {
+      this.logs = [];
+    }
+
+    // Save the config on the backend but without persisting the changes.
+    // We need this in order to properly debug any new changes
+    this.configService.saveConfig(this.config, false)
+    .subscribe(_ => {
+      // Then, send the start message to the debugger
+      this.debuggerHubService.start(this.settings!);
+    });
+  }
+
+  stop() {
+    this.debuggerHubService.stop();
+  }
+
+  takeStep() {
+    this.debuggerHubService.takeStep();
+  }
+
+  viewAsHtml(entry: BotLoggerEntry) {
+    this.html = entry.message;
+    this.viewAsHtmlModalVisible = true;
   }
 
   localSave() {
     if (this.settings !== null) {
       this.debuggerSettingsService.saveLocalSettings(this.settings);
+    }
+  }
+
+  formatVariable(variable: VariableDto): string {
+    switch (variable.type) {
+      case 'string':
+      case 'byteArray':
+        return variable.value;
+
+      case 'int':
+      case 'float':
+      case 'bool':
+        return variable.value.toString();
+
+      case 'listOfStrings':
+      case 'dictionaryOfStrings':
+        return JSON.stringify(variable.value);
+
+      default:
+        return '[UNKNOWN TYPE]';
     }
   }
 }

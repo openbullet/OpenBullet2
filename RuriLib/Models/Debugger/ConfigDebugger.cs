@@ -329,10 +329,10 @@ namespace RuriLib.Models.Debugger
                 }
 
                 data.AsyncLocker.Dispose();
-            }
 
-            Status = ConfigDebuggerStatus.Idle;
-            StatusChanged?.Invoke(this, ConfigDebuggerStatus.Idle);
+                Status = ConfigDebuggerStatus.Idle;
+                StatusChanged?.Invoke(this, ConfigDebuggerStatus.Idle);
+            }
         }
 
         /// <summary>

@@ -132,10 +132,13 @@ public class ConfigController : ApiController
         // Apply the new fields to the existing config
         _mapper.Map(dto, config);
 
-        // Save it
-        await _configRepo.Save(config);
+        if (dto.Persistent)
+        {
+            // Save it
+            await _configRepo.Save(config);
 
-        _logger.LogInformation($"Edited config with id {dto.Id}");
+            _logger.LogInformation($"Edited config with id {dto.Id}");
+        }
 
         return _mapper.Map<ConfigDto>(config);
     }

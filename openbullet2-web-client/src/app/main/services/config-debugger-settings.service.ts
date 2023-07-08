@@ -4,7 +4,7 @@ import { ConfigDebuggerSettings } from "../models/config-debugger-settings";
 @Injectable({
     providedIn: 'root'
 })
-export class ConfigDebuggerService {
+export class ConfigDebuggerSettingsService {
     resetLocalSettings() {
         window.localStorage.removeItem('config-debugger-settings');
     }
@@ -33,9 +33,7 @@ export class ConfigDebuggerService {
             testProxy: '',
             proxyType: 'http',
             persistLog: false,
-            stepByStep: false,
-            variables: [],
-            log: []
+            stepByStep: false
         };
     }
 }

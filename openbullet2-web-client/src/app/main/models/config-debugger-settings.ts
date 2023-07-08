@@ -5,9 +5,7 @@ export interface ConfigDebuggerSettings {
     testProxy: string,
     proxyType: string,
     persistLog: boolean,
-    stepByStep: boolean,
-    variables: any[],
-    log: BotLoggerEntry[]
+    stepByStep: boolean
 }
 
 export interface BotLoggerEntry {
