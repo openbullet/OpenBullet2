@@ -15,16 +15,23 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { HttpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
 import { MessageService } from 'primeng/api';
+import { LoginComponent } from './login/login.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
     HttpClientModule,
     NgxSpinnerModule.forRoot(<NgxSpinnerConfig>{ 
       type: 'cube-transition',

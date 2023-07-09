@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './main.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -19,6 +19,7 @@ import { ConfigSettingsComponent } from './components/config/config-settings/con
 import { ConfigLolicodeComponent } from './components/config/config-lolicode/config-lolicode.component';
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
 import { updateCSharpScript } from './utils/config-conversion';
+import { AdminGuard } from '../shared/guards/admin.guard';
 
 const routes: Routes = [
   // Main component layout
@@ -44,48 +45,59 @@ const routes: Routes = [
       },
       {
         component: ConfigsComponent,
-        path: 'configs'
+        path: 'configs',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: ConfigMetadataComponent,
-        path: 'config/metadata'
+        path: 'config/metadata',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: ConfigReadmeComponent,
-        path: 'config/readme'
+        path: 'config/readme',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: ConfigLolicodeComponent,
-        path: 'config/lolicode'
+        path: 'config/lolicode',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: ConfigSettingsComponent,
-        path: 'config/settings'
+        path: 'config/settings',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: ConfigCsharpComponent,
         path: 'config/csharp',
-        resolve: { data: updateCSharpScript }
+        resolve: { data: updateCSharpScript },
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: OBSettingsComponent,
-        path: 'settings'
+        path: 'settings',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: RlSettingsComponent,
-        path: 'rl-settings'
+        path: 'rl-settings',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: GuestsComponent,
-        path: 'guests'
+        path: 'guests',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: PluginsComponent,
-        path: 'plugins'
+        path: 'plugins',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: SharingComponent,
-        path: 'sharing'
+        path: 'sharing',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: InfoComponent,

@@ -4,7 +4,6 @@ using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.User;
-using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using System.Security.Claims;
 
@@ -38,7 +37,7 @@ public class UserController : ApiController
     public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto)
     {
         // Admin user
-        if (_obSettingsService.Settings.SecuritySettings.AdminUsername == dto.Username)
+        if (_obSettingsService.Settings.SecuritySettings.AdminUsername.ToLower() == dto.Username.ToLower())
         {
             return await LoginAdminUser(dto);
         }
@@ -78,7 +77,7 @@ public class UserController : ApiController
 
     private async Task<LoggedInUserDto> LoginGuestUser(UserLoginDto dto)
     {
-        var entity = await _guestRepo.GetAll().FirstOrDefaultAsync(g => g.Username == dto.Username);
+        var entity = await _guestRepo.GetAll().FirstOrDefaultAsync(g => g.Username.ToLower() == dto.Username.ToLower());
 
         if (entity == null)
         {

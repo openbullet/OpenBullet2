@@ -5,17 +5,20 @@ import { ConfigService } from '../../services/config.service';
 import { Subscription } from 'rxjs';
 import { ConfigDto } from '../../dtos/config/config.dto';
 import { MessageService } from 'primeng/api';
+import { UserService } from '../../services/user.service';
 
 interface MenuSection {
   label: string,
   items: MenuItem[],
-  saveButton: boolean
+  saveButton: boolean,
+  onlyAdmin: boolean
 }
 
 interface MenuItem {
   icon: IconDefinition,
   label: string,
-  link: string
+  link: string,
+  onlyAdmin: boolean
 }
 
 @Component({
@@ -28,6 +31,8 @@ export class MenuComponent implements OnDestroy {
   faSave = faSave;
   selectedConfig: ConfigDto | null = null;
 
+  userRole = 'guest';
+
   standardMenu: MenuSection[] = [
     {
       label: 'Menu',
@@ -35,40 +40,48 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faHouse,
           label: 'Home',
-          link: '/home'
+          link: '/home',
+          onlyAdmin: false
         },
         {
           icon: faBolt,
           label: 'Jobs',
-          link: '/jobs'
+          link: '/jobs',
+          onlyAdmin: false
         },
         {
           icon: faEye,
           label: 'Monitor',
-          link: '/monitor'
+          link: '/monitor',
+          onlyAdmin: false
         },
         {
           icon: faFileShield,
           label: 'Proxies',
-          link: '/proxies'
+          link: '/proxies',
+          onlyAdmin: false
         },
         {
           icon: faFileLines,
           label: 'Wordlists',
-          link: '/wordlists'
+          link: '/wordlists',
+          onlyAdmin: false
         },
         {
           icon: faDatabase,
           label: 'Hits',
-          link: '/hits'
+          link: '/hits',
+          onlyAdmin: false
         },
         {
           icon: faGears,
           label: 'Configs',
-          link: '/configs'
+          link: '/configs',
+          onlyAdmin: true
         }
       ],
-      saveButton: false
+      saveButton: false,
+      onlyAdmin: false
     },
     {
       label: 'System',
@@ -76,15 +89,18 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faWrench,
           label: 'Settings',
-          link: '/settings'
+          link: '/settings',
+          onlyAdmin: true
         },
         {
           icon: faWrench,
           label: 'RL Settings',
-          link: '/rl-settings'
+          link: '/rl-settings',
+          onlyAdmin: true
         }
       ],
-      saveButton: false
+      saveButton: false,
+      onlyAdmin: true
     },
     {
       label: 'More',
@@ -92,25 +108,30 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faUsers,
           label: 'Guests',
-          link: '/guests'
+          link: '/guests',
+          onlyAdmin: true
         },
         {
           icon: faPuzzlePiece,
           label: 'Plugins',
-          link: '/plugins'
+          link: '/plugins',
+          onlyAdmin: true
         },
         {
           icon: faRetweet,
           label: 'Sharing',
-          link: '/sharing'
+          link: '/sharing',
+          onlyAdmin: true
         },
         {
           icon: faInfo,
           label: 'Info',
-          link: '/info'
+          link: '/info',
+          onlyAdmin: false
         }
       ],
-      saveButton: false
+      saveButton: false,
+      onlyAdmin: false
     }
   ];
 
@@ -118,7 +139,9 @@ export class MenuComponent implements OnDestroy {
 
   constructor(private router: Router,
     private messageService: MessageService,
-    private configService: ConfigService) {
+    private configService: ConfigService,
+    private userService: UserService) {
+      this.userRole = this.userService.loadUserInfo().role.toLocaleLowerCase();
       this.buildMenu(null);
       this.selectedConfigSubscription = this.configService.selectedConfig$
         .subscribe(config => {
@@ -141,12 +164,14 @@ export class MenuComponent implements OnDestroy {
       {
         icon: faTags,
         label: 'Metadata',
-        link: '/config/metadata'
+        link: '/config/metadata',
+        onlyAdmin: true
       },
       {
         icon: faFileLines,
         label: 'Readme',
-        link: '/config/readme'
+        link: '/config/readme',
+        onlyAdmin: true
       }
     ];
 
@@ -155,12 +180,14 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faGripLines,
           label: 'Stacker',
-          link: '/config/stacker'
+          link: '/config/stacker',
+          onlyAdmin: true
         },
         {
           icon: faCode,
           label: 'LoliCode',
-          link: '/config/lolicode'
+          link: '/config/lolicode',
+          onlyAdmin: true
         }
       );
     }
@@ -170,7 +197,8 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faCode,
           label: 'LoliScript',
-          link: '/config/loliscript'
+          link: '/config/loliscript',
+          onlyAdmin: true
         }
       );
     }
@@ -179,7 +207,8 @@ export class MenuComponent implements OnDestroy {
       {
         icon: faWrench,
         label: 'Settings',
-        link: '/config/settings'
+        link: '/config/settings',
+        onlyAdmin: true
       }
     );
 
@@ -189,7 +218,8 @@ export class MenuComponent implements OnDestroy {
         {
           icon: faCode,
           label: 'C# Code',
-          link: '/config/csharp'
+          link: '/config/csharp',
+          onlyAdmin: true
         }
       );
     }
@@ -199,7 +229,8 @@ export class MenuComponent implements OnDestroy {
       {
         label: 'Config - ' + config.metadata.name,
         items: menuItems,
-        saveButton: true
+        saveButton: true,
+        onlyAdmin: true
       },
       ...this.standardMenu.slice(1)
     ]
@@ -220,5 +251,9 @@ export class MenuComponent implements OnDestroy {
           });
         });
     }
+  }
+
+  canView(item: MenuSection | MenuItem): boolean {
+    return !item.onlyAdmin || this.userRole === 'admin';
   }
 }

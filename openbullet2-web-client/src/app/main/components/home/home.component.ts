@@ -4,13 +4,14 @@ import { InfoService } from '../../services/info.service';
 import { AnnouncementDto } from '../../dtos/info/announcement.dto';
 import { ServerInfoDto } from '../../dtos/info/server-info.dto';
 import { 
-  faCopy
+  faCopy, faRightFromBracket
 } from '@fortawesome/free-solid-svg-icons';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { addTimeSpan, parseTimeSpan } from 'src/app/shared/utils/dates';
 import { CollectionInfoDto } from '../../dtos/info/collection-info.dto';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -27,8 +28,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   serverTime: Moment | null = null;
   buildDate: Moment | null = null;
   faCopy = faCopy;
+  faRightFromBracket = faRightFromBracket;
   timer: any;
   perfTimer: any;
+  username: string = 'admin';
 
   // Performance
   cpuUsage: string = '0.00%';
@@ -40,7 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private markdownService: MarkdownService,
-    private infoService: InfoService) {  
+    private infoService: InfoService,
+    private userService: UserService) {  
   }
 
   // Clear the timer when navigating off the page
@@ -50,6 +54,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.username = this.userService.loadUserInfo().username;
+
     this.infoService.getAnnouncement()
       .subscribe(ann => this.announcement = ann);
 
@@ -83,5 +89,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   copyCurrentWorkingDirectory() {
     if (this.serverInfo === null) return;
     navigator.clipboard.writeText(this.serverInfo.currentWorkingDirectory);
+  }
+
+  logout() {
+    this.userService.resetJwt();
+    window.location.reload();
   }
 }

@@ -189,6 +189,7 @@ export class OBSettingsComponent implements OnInit {
           summary: 'Changed',
           detail: 'The admin password was changed'
         });
+        this.changeAdminPasswordModalVisible = false;
       });
   }
 

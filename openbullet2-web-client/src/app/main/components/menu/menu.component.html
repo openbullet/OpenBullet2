@@ -1,20 +1,24 @@
-<div *ngFor="let section of menu">
-    <div class="menu-section">
-        <span>{{section.label | truncate : 20}}</span>
+<ng-container *ngFor="let section of menu">
+    <div *ngIf="canView(section)">
+        <div class="menu-section">
+            <span>{{section.label | truncate : 20}}</span>
+        </div>
+        <ng-container *ngFor="let item of section.items">
+            <app-menu-item *ngIf="canView(item)"
+                [icon]="item.icon"
+                [label]="item.label"
+                [link]="item.link"
+                [active]="isItemActive(item)">
+        
+            </app-menu-item>
+        </ng-container>
+    
+        <div *ngIf="section.saveButton" class="mx-auto" style="width: 60%; text-align: center;">
+            <button class="button button-accent-outline w-100"
+                (click)="saveConfig()">
+                Save Config
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+            </button>
+        </div>
     </div>
-    <app-menu-item *ngFor="let item of section.items"
-        [icon]="item.icon"
-        [label]="item.label"
-        [link]="item.link"
-        [active]="isItemActive(item)">
-
-    </app-menu-item>
-
-    <div *ngIf="section.saveButton" class="mx-auto" style="width: 60%; text-align: center;">
-        <button class="button button-accent-outline w-100"
-            (click)="saveConfig()">
-            Save Config
-            <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
-        </button>
-    </div>
-</div>
+</ng-container>

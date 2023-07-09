@@ -3,17 +3,39 @@ import { Router } from "@angular/router";
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import { Observable, catchError, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
+import { UserService } from "src/app/main/services/user.service";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-    constructor(private router: Router, private messageService: MessageService) {
+    constructor(private router: Router,
+        private messageService: MessageService,
+        private userService: UserService) {
         
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+        // Inject the jwt if present
+        const jwt = this.userService.getJwt();
+
+        if (jwt !== null) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            });
+        }
+
         return next.handle(request).pipe(
             catchError(error => {
                 if (error instanceof HttpErrorResponse) {
+                    let showMessage = true;
+
+                    // If unauthorized, redirect to login page
+                    if (error.error.errorType === 'UNAUTHORIZED') {
+                        this.router.navigate(['/login']);
+                        showMessage = false;
+                    }
+
                     let summary = 'Request Error';
                     let detail = error.error?.message ?? 'See details in the browser console';
 
@@ -23,11 +45,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         detail = 'Could not connect to the server';
                     }
 
-                    this.messageService.add({
-                        severity: 'error',
-                        summary,
-                        detail 
-                    });
+                    if (showMessage) {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary,
+                            detail 
+                        });
+                    }
                 }
 
                 return throwError(() => error);
