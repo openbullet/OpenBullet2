@@ -3,6 +3,7 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { BehaviorSubject } from "rxjs";
 import { PerformanceInfoDto } from "../dtos/info/performance-info.dto";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
+import { UserService } from "./user.service";
 
 @Injectable({providedIn: 'root'})
 export class SysPerfHubService {
@@ -10,10 +11,15 @@ export class SysPerfHubService {
     private metricsSource = new BehaviorSubject<PerformanceInfoDto | null>(null);
     public metrics$ = this.metricsSource.asObservable();
 
+    constructor(private userService: UserService) {
+
+    }
+
     createHubConnection() {
-        // TODO: Add jwt injector here
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(getBaseHubUrl() + '/system-performance')
+        .withUrl(getBaseHubUrl() + '/system-performance', {
+            accessTokenFactory: () => this.userService.getJwt() ?? ''
+        })
         .withAutomaticReconnect()
         .build();
 

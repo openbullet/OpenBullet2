@@ -10,6 +10,7 @@ import { ConfigDebuggerHubService } from 'src/app/main/services/config-debugger.
 import { ConfigService } from 'src/app/main/services/config.service';
 import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
 import { ViewAsHtmlComponent } from './view-as-html/view-as-html.component';
+import { UserService } from 'src/app/main/services/user.service';
 
 @Component({
   selector: 'app-config-debugger',
@@ -50,12 +51,13 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   viewAsHtmlModalVisible = false;
   html = '';
 
-  private debuggerHubService = new ConfigDebuggerHubService();
+  private debuggerHubService = new ConfigDebuggerHubService(this.userService);
 
   constructor (private debuggerSettingsService: ConfigDebuggerSettingsService,
     private configService: ConfigService,
     private messageService: MessageService,
-    private truncatePipe: TruncatePipe) {
+    private truncatePipe: TruncatePipe,
+    private userService: UserService) {
 
   }
 

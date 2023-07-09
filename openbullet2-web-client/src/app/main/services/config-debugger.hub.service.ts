@@ -5,6 +5,7 @@ import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { DbgNewLogMessage, DbgStateDto, DbgStatusChangedMessage, DbgVariablesChangedMessage } from "../dtos/config-debugger/messages";
 import { ErrorMessage } from "../dtos/common/messages.dto";
 import { ConfigDebuggerSettings } from "../models/config-debugger-settings";
+import { UserService } from "./user.service";
 
 @Injectable({providedIn: 'root'})
 export class ConfigDebuggerHubService {
@@ -25,10 +26,15 @@ export class ConfigDebuggerHubService {
     private errorSource = new BehaviorSubject<ErrorMessage | null>(null);
     public error$ = this.errorSource.asObservable();
 
+    constructor(private userService: UserService) {
+
+    }
+
     createHubConnection(configId: string) {
-        // TODO: Add jwt injector here
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${configId}`)
+        .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${configId}`, {
+            accessTokenFactory: () => this.userService.getJwt() ?? ''
+        })
         .withAutomaticReconnect()
         .build();
 

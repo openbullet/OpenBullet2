@@ -52,7 +52,7 @@ public abstract class AuthorizedHub : Hub
 
         // Make sure the user provided a valid auth token
         var request = Context.GetHttpContext()!.Request;
-        var authHeader = request.Headers["Authorization"].FirstOrDefault();
+        var authHeader = request.Query["access_token"].FirstOrDefault();
 
         if (authHeader is null)
         {
