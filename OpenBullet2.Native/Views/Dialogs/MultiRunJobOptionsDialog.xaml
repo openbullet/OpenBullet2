@@ -716,8 +716,8 @@
                                             Content="Chat ID"/>
                                                 <mah:NumericUpDown 
                                             Grid.Column="6"
-                                            Minimum="-2147483648"
-                                            Maximum="2147483647"
+                                            Minimum="-9223372036854775808"
+                                            Maximum="9223372036854775807"
                                             Interval="1"
                                             Value="{Binding ChatId}"/>
                                                 <CheckBox
