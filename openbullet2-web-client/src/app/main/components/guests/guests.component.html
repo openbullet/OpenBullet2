@@ -2,6 +2,10 @@
     <fa-icon [icon]="faUsers" [fixedWidth]="true"></fa-icon>
     Guests
 </h1>
+<h6 class="color-inactive">
+    Here you can create account for guest users of your server, in case
+    your OpenBullet instance is shared with other people
+</h6>
 
 <app-spinner *ngIf="guests === null" [fullWidth]="true" />
 
@@ -97,6 +101,23 @@
             </tr>
         </ng-template>
     </p-table>
+</div>
+
+<div class="mt-4">
+    <span class="color-inactive text-small">
+        Guest users <b>WILL</b> be able to:
+        <ul>
+            <li>Import and manage their own proxies</li>
+            <li>Import and manage their own wordlists</li>
+            <li>Create and start their own jobs</li>
+            <li>View and export their own hits</li>
+        </ul>
+        But they <b>WILL NOT</b> be able to
+        <ul>
+            <li>View or download configs</li>
+            <li>Change the application settings</li>
+        </ul>
+    </span>
 </div>
 
 <p-dialog 

@@ -2,6 +2,26 @@
     <fa-icon [icon]="faRetweet" [fixedWidth]="true"></fa-icon>
     Sharing
 </h1>
+<h6 class="color-inactive">
+    Manage authenticated endpoints that can be used to share configs
+    with other OpenBullet instances, if your OpenBullet instance is
+    exposed to the internet
+</h6>
+
+<div class="mt-3">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            Warning
+        </h5>
+        <span class="text-small">
+            Configs shared through this feature are <b>NOT SECURED</b> 
+            and can easily be downloaded by the clients. The safest way
+            to protect your configs is through the 
+            <a class="color-accent-light" routerLink="/guests">Guests</a> feature
+        </span>
+    </p-card>
+</div>
 
 <h3 class="my-3">Endpoints</h3>
 

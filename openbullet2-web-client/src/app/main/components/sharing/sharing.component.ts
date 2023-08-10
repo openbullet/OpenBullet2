@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EndpointDto } from '../../dtos/sharing/endpoint.dto';
-import { faCircleQuestion, faDiceFive, faPen, faPlus, faRetweet, faX } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faDiceFive, faPen, faPlus, faRetweet, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
 import { SharingService } from '../../services/sharing.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfigService } from '../../services/config.service';
@@ -20,6 +20,7 @@ export class SharingComponent implements OnInit {
   faDiceFive = faDiceFive;
   faCircleQuestion = faCircleQuestion;
   faRetweet = faRetweet;
+  faTriangleExclamation = faTriangleExclamation;
 
   selectedEndpoint: EndpointDto | null = null;
   availableConfigs: ConfigInfoDto[] | null = null;
