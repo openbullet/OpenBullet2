@@ -20,6 +20,7 @@ import { ConfigLolicodeComponent } from './components/config/config-lolicode/con
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
 import { updateCSharpScript } from './utils/config-conversion';
 import { AdminGuard } from '../shared/guards/admin.guard';
+import { JobsComponent } from './components/jobs/jobs.component';
 
 const routes: Routes = [
   // Main component layout
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         component: HomeComponent,
         path: 'home'
+      },
+      {
+        component: JobsComponent,
+        path: 'jobs'
       },
       {
         component: ProxiesComponent,

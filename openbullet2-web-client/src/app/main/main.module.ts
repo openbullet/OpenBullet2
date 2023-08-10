@@ -72,6 +72,7 @@ import { ConfigLolicodeComponent } from './components/config/config-lolicode/con
 import { ConfigCsharpComponent } from './components/config/config-csharp/config-csharp.component';
 import { ConfigDebuggerComponent } from './components/config/config-debugger/config-debugger.component';
 import { ViewAsHtmlComponent } from './components/config/config-debugger/view-as-html/view-as-html.component';
+import { JobsComponent } from './components/jobs/jobs.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { ViewAsHtmlComponent } from './components/config/config-debugger/view-as
     ConfigLolicodeComponent,
     ConfigCsharpComponent,
     ConfigDebuggerComponent,
-    ViewAsHtmlComponent
+    ViewAsHtmlComponent,
+    JobsComponent
   ],
   imports: [
     CommonModule,

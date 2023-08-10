@@ -1,0 +1,36 @@
+<div *ngIf="multiRunJobs === null || proxyCheckJobs == null">
+    <h1>
+        <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+        Jobs
+    </h1>
+    <h6 class="color-inactive">
+        Create and manage jobs that run configs or check proxies
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="multiRunJobs !== null && proxyCheckJobs !== null"
+    class="container-fluid no-paddings">
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>
+                <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+                Jobs
+            </h1>
+            <h6 class="color-inactive">
+                Create and manage jobs that run configs or check proxies
+            </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent ml-2" 
+                (click)="openCreateJobModal()">
+                New
+                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
+            <button class="button button-secondary ml-2"
+                (click)="confirmRemoveAllJobs()">
+                Remove all
+            </button>
+        </div>
+    </div>
+</div>
