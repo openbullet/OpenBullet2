@@ -15,7 +15,7 @@ public class ProxySourceOptionsDto : PolyDto
 /// <summary>
 /// Reads proxies from a proxy group in the database.
 /// </summary>
-[PolyType("groupProxySourceOptions")]
+[PolyType("groupProxySource")]
 [MapsFrom(typeof(GroupProxySourceOptions))]
 [MapsTo(typeof(GroupProxySourceOptions))]
 public class GroupProxySourceOptionsDto : ProxySourceOptionsDto
@@ -29,7 +29,7 @@ public class GroupProxySourceOptionsDto : ProxySourceOptionsDto
 /// <summary>
 /// Reads proxies from a file.
 /// </summary>
-[PolyType("fileProxySourceOptions")]
+[PolyType("fileProxySource")]
 [MapsFrom(typeof(FileProxySourceOptions))]
 [MapsTo(typeof(FileProxySourceOptions))]
 public class FileProxySourceOptionsDto : ProxySourceOptionsDto
@@ -49,7 +49,7 @@ public class FileProxySourceOptionsDto : ProxySourceOptionsDto
 /// <summary>
 /// Reads proxies from a remote endpoint.
 /// </summary>
-[PolyType("remoteProxySourceOptions")]
+[PolyType("remoteProxySource")]
 [MapsFrom(typeof(RemoteProxySourceOptions))]
 [MapsTo(typeof(RemoteProxySourceOptions))]
 public class RemoteProxySourceOptionsDto : ProxySourceOptionsDto

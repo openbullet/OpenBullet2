@@ -14,7 +14,7 @@ public class ProxyCheckOutputOptionsDto : PolyDto
 /// <summary>
 /// Saves proxy check results to the database.
 /// </summary>
-[PolyType("databaseProxyCheckOutputOptions")]
+[PolyType("databaseProxyCheckOutput")]
 [MapsFrom(typeof(DatabaseProxyCheckOutputOptions))]
 [MapsTo(typeof(DatabaseProxyCheckOutputOptions))]
 public class DatabaseProxyCheckOutputOptionsDto : ProxyCheckOutputOptionsDto

@@ -13,5 +13,5 @@ public class CustomInputsDto
     /// <summary>
     /// The custom inputs values.
     /// </summary>
-    public IEnumerable<CustomInputAnswerDto> Inputs { get; set; }
+    public required IEnumerable<CustomInputAnswerDto> Inputs { get; set; }
 }

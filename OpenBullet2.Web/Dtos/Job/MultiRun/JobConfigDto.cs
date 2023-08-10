@@ -6,6 +6,11 @@
 public class JobConfigDto
 {
     /// <summary>
+    /// The id of the config.
+    /// </summary>
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
     /// The icon of the config.
     /// </summary>
     public string Base64Image { get; set; } = string.Empty;

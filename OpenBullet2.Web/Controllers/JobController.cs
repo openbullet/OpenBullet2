@@ -456,7 +456,7 @@ public class JobController : ApiController
     /// Set the values of custom inputs in a multi run job for the
     /// currently selected config.
     /// </summary>
-    [HttpPost("multi-run/custom-inputs")]
+    [HttpPatch("multi-run/custom-inputs")]
     [MapToApiVersion("1.0")]
     public ActionResult SetCustomInputs(CustomInputsDto dto)
     {
@@ -684,6 +684,7 @@ public class JobController : ApiController
             Status = job.Status,
             Config = job.Config is not null ? new JobConfigDto
             {
+                Id = job.Config.Id,
                 Name = job.Config.Metadata.Name,
                 Author = job.Config.Metadata.Author,
                 Base64Image = job.Config.Metadata.Base64Image
