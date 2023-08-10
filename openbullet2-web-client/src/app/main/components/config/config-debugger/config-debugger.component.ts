@@ -100,6 +100,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }
       
       this.logs = [...this.logs, msg.newMessage];
+      this.scrollToBottom();
     });
 
     this.debuggerHubService.variables$.subscribe(msg => {
@@ -116,6 +117,13 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }
       
       this.status = msg.newStatus;
+
+      // Needed because otherwise the scroll is so fast that
+      // it happens before the new element is actually rendered
+      // to the page.
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 200);
     });
 
     this.debuggerHubService.error$.subscribe(msg => {
@@ -128,6 +136,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         summary: 'Debugger Error',
         detail: this.truncatePipe.transform(msg.message, 100)
       });
+
+      this.scrollToBottom();
     });
   }
 
@@ -156,6 +166,11 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   viewAsHtml(entry: BotLoggerEntry) {
     this.html = entry.message;
     this.viewAsHtmlModalVisible = true;
+  }
+
+  scrollToBottom() {
+    const elem = document.querySelector('.logs-container');
+    elem?.scrollTo(0, elem.scrollHeight);
   }
 
   localSave() {
