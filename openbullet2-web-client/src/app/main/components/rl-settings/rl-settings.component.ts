@@ -3,6 +3,7 @@ import { RLSettingsDto } from '../../dtos/settings/rl-settings.dto';
 import { SettingsService } from '../../services/settings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
+import { faWrench } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-rl-settings',
@@ -19,6 +20,7 @@ export class RlSettingsComponent implements OnInit {
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: RLSettingsDto | null = null;
   touched: boolean = false;
+  faWrench = faWrench;
   parallelizerTypes: string[] = [
     'taskBased',
     'threadBased',

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProxyGroupDto } from '../../dtos/proxy-group/proxy-group.dto';
 import { ProxyDto } from '../../dtos/proxy/proxy.dto';
-import { faEye, faEyeSlash, faFilterCircleXmark, faKey, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileShield, faFilterCircleXmark, faKey, faPen, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { ProxyGroupService } from '../../services/proxy-group.service';
 import { ProxyService } from '../../services/proxy.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -43,6 +43,7 @@ export class ProxiesComponent implements OnInit {
   faPlus = faPlus;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
+  faFileShield = faFileShield;
 
   defaultProxyGroup = {
     id: -1,

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { faGear, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faCode, faGear, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
@@ -16,6 +16,7 @@ export class ConfigLolicodeComponent {
   config: ConfigDto | null = null;
   faTriangleExclamation = faTriangleExclamation;
   faGear = faGear;
+  faCode = faCode;
   wordlistTypes: string[] = [];
   showUsings: boolean = false;
 

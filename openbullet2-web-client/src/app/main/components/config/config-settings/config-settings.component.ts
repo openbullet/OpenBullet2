@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faPlus, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
@@ -16,6 +16,7 @@ export class ConfigSettingsComponent implements OnInit {
   faTriangleExclamation = faTriangleExclamation;
   faPlus = faPlus;
   faX = faX;
+  faWrench = faWrench;
   editImageModalVisible = false;
 
   botStatuses: string[] = [];

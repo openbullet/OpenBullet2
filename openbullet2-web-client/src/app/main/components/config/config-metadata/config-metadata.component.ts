@@ -1,5 +1,5 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
-import { faPen, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTags, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { FieldValidity } from 'src/app/shared/utils/forms';
@@ -17,6 +17,7 @@ export class ConfigMetadataComponent {
   config: ConfigDto | null = null;
   faTriangleExclamation = faTriangleExclamation;
   faPen = faPen;
+  faTags = faTags;
   editImageModalVisible = false;
 
   constructor(private configService: ConfigService) {

@@ -1,12 +1,18 @@
 <div *ngIf="settings === null">
-    <h1>RuriLib Settings</h1>
+    <h1>
+        <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+        RuriLib Settings
+    </h1>
     <app-spinner [fullWidth]="true" />
 </div>
 
 <div *ngIf="settings !== null" class="container-fluid no-paddings">
     <div class="row justify-content-between">
         <div class="col-4">
-            <h1>Settings</h1>
+            <h1>
+                <fa-icon [icon]="faWrench" [fixedWidth]="true"></fa-icon>
+                RuriLib Settings
+            </h1>
         </div>
         <div class="col-4 text-right">
             <button class="button button-secondary ml-2" 

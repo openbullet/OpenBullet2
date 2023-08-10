@@ -3,7 +3,7 @@ import { SettingsService } from '../../services/settings.service';
 import { CustomSnippet, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
-import { faLink, faPen, faPlus, faUpRightFromSquare, faX } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ob-settings',
@@ -22,6 +22,7 @@ export class OBSettingsComponent implements OnInit {
   faPen = faPen;
   faLink = faLink;
   faUpRightFromSquare = faUpRightFromSquare;
+  faWrench = faWrench;
   
   // Modals
   createProxyCheckTargetModalVisible = false;

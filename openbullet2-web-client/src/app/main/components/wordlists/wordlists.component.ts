@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WordlistDto } from '../../dtos/wordlist/wordlist.dto';
-import { faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import { faFileLines, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { WordlistService } from '../../services/wordlist.service';
 import { SettingsService } from '../../services/settings.service';
@@ -28,6 +28,7 @@ export class WordlistsComponent implements OnInit {
   faPen = faPen;
   faX = faX;
   faFilterCircleXmark = faFilterCircleXmark;
+  faFileLines = faFileLines;
 
   selectedWordlist: WordlistDto | null = null;
   addWordlistModalVisible = false;

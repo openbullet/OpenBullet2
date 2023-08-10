@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
-import { faClone, faDownload, faFilterCircleXmark, faPen, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
+import { faClone, faDownload, faFilterCircleXmark, faGears, faPen, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfigService } from '../../services/config.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { saveFile } from 'src/app/shared/utils/files';
@@ -30,6 +30,7 @@ export class ConfigsComponent implements OnInit {
   faX = faX;
   faFilterCircleXmark = faFilterCircleXmark;
   faTriangleExclamation = faTriangleExclamation;
+  faGears = faGears;
 
   moment: any = moment;
 

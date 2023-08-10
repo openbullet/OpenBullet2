@@ -7,7 +7,7 @@ import { HitDto } from '../../dtos/hit/hit.dto';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import * as moment from 'moment';
 import { saveFile } from 'src/app/shared/utils/files';
-import { faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
 
 @Component({
@@ -22,6 +22,7 @@ export class HitsComponent implements OnInit {
 
   faPen = faPen;
   faX = faX;
+  faDatabase = faDatabase;
 
   searchTerm: string = '';
   hitType: string = 'Any Type';
