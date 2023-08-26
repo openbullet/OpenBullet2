@@ -1,0 +1,9 @@
+@import "../../../../styles/variables.scss";
+
+.job-row {
+    cursor: pointer;
+}
+
+.job-row:hover > td {
+    background-color: $bgTertiary;
+}
