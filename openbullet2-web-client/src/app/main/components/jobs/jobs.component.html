@@ -149,7 +149,8 @@
                         <td class="color-good">{{ mrj.dataHits }}</td>
                         <td class="color-custom">{{ mrj.dataCustom }}</td>
                         <td class="color-tocheck">{{ mrj.dataToCheck }}</td>
-                        <td>{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
+                        <td *ngIf="mrj.progress === -1">Unknown</td>
+                        <td *ngIf="mrj.progress !== -1">{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
                         <td>{{ mrj.cpm }}</td>
                         <!-- TODO: Rework to get the username -->
                         <td *ngIf="false">{{ mrj.ownerId }}</td>
@@ -183,8 +184,6 @@
                     </tr>
                 </ng-template>
             </p-table>
-
-            <!-- TODO: Show more button if list is too long -->
         </div>
     </div>
 </div>
@@ -279,7 +278,8 @@
                         <td>{{ pcj.bots }}</td>
                         <td class="color-good">{{ pcj.working }}</td>
                         <td class="color-bad">{{ pcj.notWorking }}</td>
-                        <td>{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
+                        <td *ngIf="pcj.progress === -1">Unknown</td>
+                        <td *ngIf="pcj.progress !== -1">{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
                         <td>{{ pcj.cpm }}</td>
                         <!-- TODO: Rework to get the username -->
                         <td *ngIf="false">{{ pcj.ownerId }}</td>
@@ -313,8 +313,6 @@
                     </tr>
                 </ng-template>
             </p-table>
-
-            <!-- TODO: Show more button if list is too long -->
         </div>
     </div>
 </div>

@@ -3,6 +3,8 @@ import { faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesom
 import { JobService } from '../../services/job.service';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
+import { SettingsService } from '../../services/settings.service';
+import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
 
 @Component({
   selector: 'app-jobs',
@@ -12,6 +14,7 @@ import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overvie
 export class JobsComponent implements OnInit, OnDestroy {
   multiRunJobs: MultiRunJobOverviewDto[] | null = null;
   proxyCheckJobs: ProxyCheckJobOverviewDto[] | null = null;
+  settings: OBSettingsDto | null = null;
 
   faBolt = faBolt;
   faPlus = faPlus;
@@ -22,17 +25,27 @@ export class JobsComponent implements OnInit, OnDestroy {
   faClone = faClone;
 
   intervalId: any;
+  refreshingMultiRunJobs: boolean = false;
+  refreshingProxyCheckJobs: boolean = false;
+  showMoreMultiRunJobs: boolean = false;
+  showMoreProxyCheckJobs: boolean = false;
 
-  constructor(private jobService: JobService) {
-
-  }
+  constructor(
+    private jobService: JobService,
+    private settingsService: SettingsService
+  ) { }
 
   ngOnInit(): void {
     this.refreshJobs();
 
-    this.intervalId = setInterval(() => {
-      this.refreshJobs();
-    }, 1000); // TODO: This number should be read from settings
+    this.settingsService.getSettings()
+      .subscribe(settings => {
+        this.settings = settings;
+
+        this.intervalId = setInterval(() => {
+          this.refreshJobs();
+        }, settings.generalSettings.jobManagerUpdateInterval);
+      });
   }
 
   ngOnDestroy(): void {
@@ -40,11 +53,33 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   refreshJobs() {
-    this.jobService.getAllMultiRunJobs()
-      .subscribe(jobs => this.multiRunJobs = jobs);
-
-    this.jobService.getAllProxyCheckJobs()
-      .subscribe(jobs => this.proxyCheckJobs = jobs);
+    if (!this.refreshingMultiRunJobs) {
+      this.refreshingMultiRunJobs = true;
+      this.jobService.getAllMultiRunJobs()
+        .subscribe({
+          next: jobs => {
+            this.multiRunJobs = jobs;
+            this.refreshingMultiRunJobs = false;
+          },
+          error: () => {
+            this.refreshingMultiRunJobs = false;
+          }
+        });
+    }
+    
+    if (!this.refreshingProxyCheckJobs) {
+      this.refreshingProxyCheckJobs = true;
+      this.jobService.getAllProxyCheckJobs()
+        .subscribe({
+          next: jobs => {
+            this.proxyCheckJobs = jobs;
+            this.refreshingProxyCheckJobs = false;
+          },
+          error: () => {
+            this.refreshingProxyCheckJobs = false;
+          }
+        });
+    }
   }
 
   openCreateJobModal() {
