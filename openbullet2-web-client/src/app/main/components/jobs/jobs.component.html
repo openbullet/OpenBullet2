@@ -141,16 +141,23 @@
                     <tr class="job-row">
                         <td>{{ mrj.id }}</td>
                         <td>{{ mrj.name }}</td>
-                        <td>{{ mrj.status | titlecase }}</td>
+                        <td>
+                            <div [class]="'job-chip bg-' + statusColor[mrj.status]">
+                                {{ mrj.status | uppercase }}
+                            </div>
+                        </td>
                         <td>{{ mrj.configName }}</td>
                         <td>{{ mrj.dataPoolInfo }}</td>
-                        <td>{{ mrj.proxyMode | titlecase }}</td>
+                        <td>
+                            <div [class]="'job-chip bg-' + proxyColor[mrj.proxyMode]">
+                                {{ mrj.proxyMode | uppercase }}
+                            </div>
+                        </td>
                         <td>{{ mrj.bots }}</td>
                         <td class="color-good">{{ mrj.dataHits }}</td>
                         <td class="color-custom">{{ mrj.dataCustom }}</td>
                         <td class="color-tocheck">{{ mrj.dataToCheck }}</td>
-                        <td *ngIf="mrj.progress === -1">Unknown</td>
-                        <td *ngIf="mrj.progress !== -1">{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
+                        <td>{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
                         <td>{{ mrj.cpm }}</td>
                         <!-- TODO: Rework to get the username -->
                         <td *ngIf="false">{{ mrj.ownerId }}</td>
@@ -177,7 +184,7 @@
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="removeJob(mrj)">
+                                (click)="confirmRemoveJob(mrj)">
                                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                             </button>
                         </td>
@@ -274,12 +281,17 @@
                     <tr class="job-row">
                         <td>{{ pcj.id }}</td>
                         <td>{{ pcj.name }}</td>
-                        <td>{{ pcj.status | titlecase }}</td>
+                        <td>
+                            <div [class]="'job-chip bg-' + statusColor[pcj.status]">
+                                <span class="px-auto">
+                                    {{ pcj.status | uppercase }}
+                                </span>
+                            </div>
+                        </td>
                         <td>{{ pcj.bots }}</td>
                         <td class="color-good">{{ pcj.working }}</td>
                         <td class="color-bad">{{ pcj.notWorking }}</td>
-                        <td *ngIf="pcj.progress === -1">Unknown</td>
-                        <td *ngIf="pcj.progress !== -1">{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
+                        <td>{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
                         <td>{{ pcj.cpm }}</td>
                         <!-- TODO: Rework to get the username -->
                         <td *ngIf="false">{{ pcj.ownerId }}</td>
@@ -306,7 +318,7 @@
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="removeJob(pcj)">
+                                (click)="confirmRemoveJob(pcj)">
                                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                             </button>
                         </td>

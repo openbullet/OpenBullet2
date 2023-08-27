@@ -5,6 +5,7 @@ import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dt
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
 import { SettingsService } from '../../services/settings.service';
 import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-jobs',
@@ -30,9 +31,28 @@ export class JobsComponent implements OnInit, OnDestroy {
   showMoreMultiRunJobs: boolean = false;
   showMoreProxyCheckJobs: boolean = false;
 
+  statusColor: Record<string, string> = {
+    idle: 'secondary',
+    waiting: 'accent',
+    starting: 'good',
+    running: 'good',
+    pausing: 'custom',
+    paused: 'custom',
+    stopping: 'bad',
+    resuming: 'good'
+  };
+
+  proxyColor: Record<string, string> = {
+    on: 'good',
+    off: 'bad',
+    default: 'secondary'
+  };
+
   constructor(
     private jobService: JobService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -95,7 +115,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
-
+    
   }
 
   editMultiRunJob(job: MultiRunJobOverviewDto) {
@@ -114,7 +134,34 @@ export class JobsComponent implements OnInit, OnDestroy {
 
   }
 
-  removeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+  confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+    if (job.status !== 'idle') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Not idle',
+        detail: 'The job you are trying to delete is not idle, please' +
+          'stop it or abort it first'
+      });
+      return;
+    }
 
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete job #${job.id}.`,
+      header: 'Are you sure?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => this.removeJob(job)
+    });
+  }
+
+  removeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+    this.jobService.deleteJob(job.id)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: `Job #${job.id} was deleted`
+        });
+        this.refreshJobs();
+      });
   }
 }
