@@ -6,6 +6,11 @@
 public class ProxyCheckJobOptionsDto
 {
     /// <summary>
+    /// The name of the job.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// The amount of bots that will check the proxies concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;

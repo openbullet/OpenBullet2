@@ -8,6 +8,11 @@ namespace OpenBullet2.Web.Dtos.Job;
 public class ProxyCheckJobDto : JobDto
 {
     /// <summary>
+    /// The name of the jobs.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// The amount of bots that will check the proxies concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;

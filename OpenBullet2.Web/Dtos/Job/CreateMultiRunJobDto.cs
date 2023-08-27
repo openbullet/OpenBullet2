@@ -15,6 +15,11 @@ public class CreateMultiRunJobDto
     public string ConfigId { get; set; } = string.Empty;
 
     /// <summary>
+    /// The name of the jobs.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// The amount of bots that will process the data lines concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;

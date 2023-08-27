@@ -14,6 +14,11 @@ public class CreateProxyCheckJobDto
     public int Bots { get; set; } = 1;
 
     /// <summary>
+    /// The name of the jobs.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// The ID of the proxy group to check.
     /// </summary>
     public int GroupId { get; set; } = -1;

@@ -100,6 +100,7 @@ public class JobFactoryService
             ConcurrentProxyMode = options.ConcurrentProxyMode,
             PeriodicReloadInterval = TimeSpan.FromSeconds(options.PeriodicReloadIntervalSeconds),
             StartCondition = options.StartCondition,
+            Name = options.Name,
             Bots = options.Bots,
             BotLimit = BotLimit,
             CurrentBotDatas = new BotData[BotLimit],
@@ -128,6 +129,7 @@ public class JobFactoryService
         {
             StartCondition = options.StartCondition,
             Bots = options.Bots,
+            Name = options.Name,
             BotLimit = BotLimit,
             CheckOnlyUntested = options.CheckOnlyUntested,
             Url = options.Target.Url,

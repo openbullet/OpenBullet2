@@ -9,6 +9,11 @@ namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 public class MultiRunJobOptionsDto
 {
     /// <summary>
+    /// The name of the job.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
     /// The ID of the config to use.
     /// </summary>
     public string ConfigId { get; set; } = string.Empty;

@@ -38,6 +38,7 @@ namespace RuriLib.Models.Jobs
     public class MultiRunJob : Job
     {
         // Options
+        public string Name { get; set; } = string.Empty;
         public int Bots { get; set; } = 1;
         public int BotLimit { get; init; } = 200;
         public int Skip { get; set; } = 0;

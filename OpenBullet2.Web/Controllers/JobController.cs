@@ -84,6 +84,7 @@ public class JobController : ApiController
                 Id = job.Id,
                 OwnerId = job.OwnerId,
                 Status = job.Status,
+                Name = job.Name,
                 ConfigName = job.Config?.Metadata.Name,
                 DataPoolInfo = dataPoolInfo,
                 DataHits = job.DataHits,
@@ -615,7 +616,7 @@ public class JobController : ApiController
     }
 
     private bool CanSee(ApiUser apiUser, Job job)
-        => apiUser.Role is UserRole.Admin || job.Id == apiUser.Id;
+        => apiUser.Role is UserRole.Admin || job.OwnerId == apiUser.Id;
 
     private void EnsureOwnership(Job job)
     {
