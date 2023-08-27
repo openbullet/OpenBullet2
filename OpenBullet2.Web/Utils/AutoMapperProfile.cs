@@ -148,7 +148,8 @@ internal class AutoMapperProfile : Profile
 
         // Multi run job is too complex for the mapper
 
-        CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>();
+        CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>()
+            .ForMember(dto => dto.Progress, e => e.MapFrom(job => job.Progress == -1 ? 0 : job.Progress));
         CreateMap<ProxyCheckJob, ProxyCheckJobDto>();
         
         CreateMap<ProxyCheckTarget, ProxyCheckTargetDto>().ReverseMap();
