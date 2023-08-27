@@ -4,6 +4,7 @@ import {
   faComments 
 } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
+import { getSwaggerUrl } from 'src/app/shared/utils/host';
 
 interface Currency {
   name: string;
@@ -49,6 +50,10 @@ export class InfoComponent {
 
   openForum() {
     window.open('https://discourse.openbullet.dev', '_blank');
+  }
+
+  openSwagger() {
+    window.open(getSwaggerUrl(), '_blank');
   }
 
   openBtcDonationModal() {
