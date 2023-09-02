@@ -40,13 +40,15 @@ namespace OpenBullet2.Shared
         {
             try
             {
-                debugger = new ConfigDebugger(Config, options, logger)
-                {
-                    PluginRepo = PluginRepo,
-                    RandomUAProvider = RandomUAProvider,
-                    RNGProvider = RNGProvider,
-                    RuriLibSettings = RuriLibSettings
-                };
+                if (debugger == null) {
+                    debugger = new ConfigDebugger(Config, options, logger)
+                    {
+                        PluginRepo = PluginRepo,
+                        RandomUAProvider = RandomUAProvider,
+                        RNGProvider = RNGProvider,
+                        RuriLibSettings = RuriLibSettings
+                    };
+                }
 
                 debugger.NewLogEntry += OnNewEntry;
                 debugger.StatusChanged += UpdateState;
