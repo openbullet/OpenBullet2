@@ -8,7 +8,7 @@ namespace OpenBullet2.Native.ViewModels
     public class PluginsViewModel : ViewModelBase
     {
         private ObservableCollection<PluginInfo> pluginsCollection;
-        private PluginRepository pluginRepo;
+        private readonly PluginRepository pluginRepo;
 
         public ObservableCollection<PluginInfo> PluginsCollection
         {

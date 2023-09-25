@@ -61,7 +61,7 @@ namespace RuriLib.Models.Jobs
         }
 
         #region Work Function
-        private Func<ProxyCheckInput, CancellationToken, Task<Proxy>> workFunction = 
+        private readonly Func<ProxyCheckInput, CancellationToken, Task<Proxy>> workFunction = 
             new(async (input, token) =>
         {
             var options = new HttpOptions

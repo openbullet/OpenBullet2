@@ -8,7 +8,7 @@ namespace OpenBullet2.Native.Helpers
 {
     public static class AutocompletionProvider
     {
-        private static List<Snippet> snippets = new();
+        private static readonly List<Snippet> snippets = new();
 
         public static void Init()
         {

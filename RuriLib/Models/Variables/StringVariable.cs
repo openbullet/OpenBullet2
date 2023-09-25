@@ -7,7 +7,7 @@ namespace RuriLib.Models.Variables
 {
     public class StringVariable : Variable
     {
-        private string value;
+        private readonly string value;
 
         public StringVariable(string value)
         {

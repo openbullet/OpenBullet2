@@ -26,7 +26,7 @@ namespace OpenBullet2.Pages
         private JobType jobType;
         private JobEntity jobEntity;
         private JobOptions jobOptions;
-        private JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        private readonly JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
         private int uid = -1;
 
         protected override async Task OnInitializedAsync()

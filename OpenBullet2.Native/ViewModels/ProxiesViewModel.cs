@@ -18,8 +18,8 @@ namespace OpenBullet2.Native.ViewModels
     {
         private ObservableCollection<ProxyGroupEntity> proxyGroupsCollection;
         private ObservableCollection<ProxyEntity> proxiesCollection;
-        private IProxyGroupRepository proxyGroupRepo;
-        private IProxyRepository proxyRepo;
+        private readonly IProxyGroupRepository proxyGroupRepo;
+        private readonly IProxyRepository proxyRepo;
         private readonly JobManagerService jobManager;
         private bool initialized;
         private ProxyGroupEntity selectedGroup;

@@ -23,7 +23,7 @@ namespace OpenBullet2.Shared
         [Inject] private BrowserConsoleLogger OBLogger { get; set; }
         
         private BlockInstance draggedItem;
-        private List<BlockInstance> selectedBlocks = new();
+        private readonly List<BlockInstance> selectedBlocks = new();
 
         public void RefreshView()
         {

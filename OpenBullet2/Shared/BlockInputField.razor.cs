@@ -22,7 +22,7 @@ namespace OpenBullet2.Shared
         [Parameter] public BlockSetting BlockSetting { get; set; }
         [Parameter] public bool DisplayName { get; set; } = true;
 
-        private ElementReference settingNameLabel;
+        private readonly ElementReference settingNameLabel;
 
         private Task<IEnumerable<string>> GetSuggestions(string partial)
         {

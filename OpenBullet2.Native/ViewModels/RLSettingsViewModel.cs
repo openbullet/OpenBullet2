@@ -11,7 +11,7 @@ namespace OpenBullet2.Native.ViewModels
 {
     public class RLSettingsViewModel : ViewModelBase
     {
-        private RuriLibSettingsService service;
+        private readonly RuriLibSettingsService service;
         private GeneralSettings General => service.RuriLibSettings.GeneralSettings;
         private ProxySettings Proxy => service.RuriLibSettings.ProxySettings;
         private CaptchaSettings Captcha => service.RuriLibSettings.CaptchaSettings;

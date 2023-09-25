@@ -9,8 +9,8 @@ namespace OpenBullet2.Helpers
 {
     public static class AutocompletionProvider
     {
-        private static Dictionary<string, string> blockSnippets = new();
-        private static Dictionary<string, string> customSnippets = new();
+        private static readonly Dictionary<string, string> blockSnippets = new();
+        private static readonly Dictionary<string, string> customSnippets = new();
 
         public static void Init(List<CustomSnippet> custom)
         {

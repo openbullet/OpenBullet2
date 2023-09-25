@@ -12,7 +12,7 @@ namespace OpenBullet2.Native.Views.Dialogs
     public partial class AddProxyGroupDialog : Page
     {
         private readonly object caller;
-        private ProxyGroupEntity entity;
+        private readonly ProxyGroupEntity entity;
 
         public AddProxyGroupDialog(object caller)
         {

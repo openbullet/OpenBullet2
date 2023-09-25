@@ -5,7 +5,7 @@ namespace RuriLib.Models.Variables
 {
     public class IntVariable : Variable
     {
-        private int value = 0;
+        private readonly int value = 0;
 
         public IntVariable(int value)
         {

@@ -8,7 +8,7 @@ namespace RuriLib.Http.Helpers
     internal class ChunkedDecoderOptimized : IDisposable
     {
         private long templength;
-        private static byte[] CRLF_Bytes = { 13, 10 };
+        private static readonly byte[] CRLF_Bytes = { 13, 10 };
         // private long remaningchunklength;
         private bool Isnewchunk = true;
         // private AutoResetEvent manualResetEvent = new AutoResetEvent(true);

@@ -21,7 +21,7 @@ namespace RuriLib.Http
         private PipeReader reader;
         private const string newLine = "\r\n";
         private readonly byte[] CRLF = Encoding.UTF8.GetBytes(newLine);
-        private static byte[] CRLFCRLF_Bytes = { 13, 10, 13, 10 };
+        private static readonly byte[] CRLFCRLF_Bytes = { 13, 10, 13, 10 };
         private HttpResponse response;
     
         private Dictionary<string, List<string>> contentHeaders;
