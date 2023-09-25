@@ -475,11 +475,11 @@ namespace RuriLib.Legacy.Functions.Crypto
         private static string EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV, CipherMode mode, PaddingMode padding)
         {
             if (plainText == null || plainText.Length <= 0)
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentNullException(nameof(plainText));
             if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(Key));
             if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(IV));
 
             using var aesAlg = Aes.Create();
 
@@ -510,9 +510,9 @@ namespace RuriLib.Legacy.Functions.Crypto
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException("cipherText");
             if (Key == null || Key.Length <= 0)
-                throw new ArgumentNullException("Key");
+                throw new ArgumentNullException(nameof(Key));
             if (IV == null || IV.Length <= 0)
-                throw new ArgumentNullException("IV");
+                throw new ArgumentNullException(nameof(IV));
 
             using var aesAlg = Aes.Create();
             aesAlg.KeySize = 256;

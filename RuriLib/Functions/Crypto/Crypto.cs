@@ -435,7 +435,7 @@ namespace RuriLib.Functions.Crypto
             // Check arguments.
             if (plainText == null || plainText.Length <= 0)
             {
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentNullException(nameof(plainText));
             }
 
             if (key == null || key.Length <= 0)
@@ -477,7 +477,7 @@ namespace RuriLib.Functions.Crypto
             // Check arguments.
             if (plainText == null || plainText.Length <= 0)
             {
-                throw new ArgumentNullException("plainText");
+                throw new ArgumentNullException(nameof(plainText));
             }
 
             if (key == null || key.Length <= 0)
@@ -532,7 +532,7 @@ namespace RuriLib.Functions.Crypto
             // Check arguments.
             if (cipherText == null || cipherText.Length <= 0)
             {
-                throw new ArgumentNullException("cipherText");
+                throw new ArgumentNullException(nameof(cipherText));
             }
                 
             if (key == null || key.Length <= 0)
@@ -574,7 +574,7 @@ namespace RuriLib.Functions.Crypto
             // Check arguments.
             if (cipherText == null || cipherText.Length <= 0)
             {
-                throw new ArgumentNullException("cipherText");
+                throw new ArgumentNullException(nameof(cipherText));
             }
 
             if (key == null || key.Length <= 0)
