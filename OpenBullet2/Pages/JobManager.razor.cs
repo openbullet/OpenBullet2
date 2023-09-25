@@ -30,7 +30,7 @@ namespace OpenBullet2.Pages
         private readonly object removeLock = new();
         private int uid = -1;
         private Timer uiRefreshTimer;
-        private Dictionary<int, string> guests = new();
+        private readonly Dictionary<int, string> guests = new();
 
         protected async override Task OnInitializedAsync()
         {

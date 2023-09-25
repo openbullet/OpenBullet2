@@ -26,7 +26,7 @@ namespace OpenBullet2.Native.Controls
     /// </summary>
     public partial class ImagePicker : UserControl
     {
-        private ImagePickerViewModel vm;
+        private readonly ImagePickerViewModel vm;
         public event EventHandler<byte[]> ImageChanged;
 
         public ImagePicker(byte[] imageBytes)

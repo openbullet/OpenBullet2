@@ -6,7 +6,7 @@ namespace RuriLib.Models.Variables
 {
     public class FloatVariable : Variable
     {
-        private float value = 0;
+        private readonly float value = 0;
 
         public FloatVariable(float value)
         {

@@ -99,10 +99,10 @@ namespace OpenBullet2.Native.Controls
 
         public event Action<HttpRequestMode> ModeChanged;
 
-        private StandardRequestParams cachedStandardParams = new();
-        private RawRequestParams cachedRawParams = new();
-        private BasicAuthRequestParams cachedBasicAuthParams = new();
-        private MultipartRequestParams cachedMultipartParams = new();
+        private readonly StandardRequestParams cachedStandardParams = new();
+        private readonly RawRequestParams cachedRawParams = new();
+        private readonly BasicAuthRequestParams cachedBasicAuthParams = new();
+        private readonly MultipartRequestParams cachedMultipartParams = new();
 
         public HttpRequestMode Mode
         {

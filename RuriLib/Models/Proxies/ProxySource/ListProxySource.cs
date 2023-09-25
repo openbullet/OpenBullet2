@@ -7,7 +7,7 @@ namespace RuriLib.Models.Proxies.ProxySources
 {
     public class ListProxySource : ProxySource
     {
-        private Proxy[] proxies;
+        private readonly Proxy[] proxies;
 
         public ListProxySource(IEnumerable<Proxy> proxies)
         {

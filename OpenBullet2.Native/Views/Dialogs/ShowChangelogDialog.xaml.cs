@@ -10,7 +10,7 @@ namespace OpenBullet2.Native.Views.Dialogs
     /// </summary>
     public partial class ShowChangelogDialog : Page
     {
-        private ChangelogViewModel vm;
+        private readonly ChangelogViewModel vm;
 
         public ShowChangelogDialog()
         {

@@ -18,7 +18,7 @@ namespace OpenBullet2.Shared.Forms
         [Inject] public IModalService ModalService { get; set; }
 
         private string pasteContent = "";
-        private string fileName = "";
+        private readonly string fileName = "";
         private string fileContent = "";
         private string url = "";
         private ProxyType defaultType = ProxyType.Http;

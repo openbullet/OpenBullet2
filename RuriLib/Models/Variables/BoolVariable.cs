@@ -5,7 +5,7 @@ namespace RuriLib.Models.Variables
 {
     public class BoolVariable : Variable
     {
-        private bool value = false;
+        private readonly bool value = false;
 
         public BoolVariable(bool value)
         {

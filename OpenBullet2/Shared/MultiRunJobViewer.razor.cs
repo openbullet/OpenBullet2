@@ -38,7 +38,7 @@ namespace OpenBullet2.Shared
 
         private bool changingBots = false;
         private string hitsFilter = "SUCCESS";
-        private List<Hit> selectedHits = new();
+        private readonly List<Hit> selectedHits = new();
         private Hit lastSelectedHit;
         private Timer uiRefreshTimer;
         private List<ProxyGroupEntity> proxyGroups;
