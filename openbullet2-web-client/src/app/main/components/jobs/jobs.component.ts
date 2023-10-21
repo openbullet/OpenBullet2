@@ -30,6 +30,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   refreshingProxyCheckJobs: boolean = false;
   showMoreMultiRunJobs: boolean = false;
   showMoreProxyCheckJobs: boolean = false;
+  createJobModalVisible = false;
 
   statusColor: Record<string, string> = {
     idle: 'secondary',
@@ -103,7 +104,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   openCreateJobModal() {
-
+    this.createJobModalVisible = true;
   }
 
   confirmRemoveAllJobs() {

@@ -21,6 +21,8 @@ import { ConfigCsharpComponent } from './components/config/config-csharp/config-
 import { updateCSharpScript } from './utils/config-conversion';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { JobsComponent } from './components/jobs/jobs.component';
+import { EditProxyCheckJobComponent } from './components/jobs/edit-proxy-check-job/edit-proxy-check-job.component';
+import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/edit-multi-run-job.component';
 
 const routes: Routes = [
   // Main component layout
@@ -35,6 +37,30 @@ const routes: Routes = [
       {
         component: JobsComponent,
         path: 'jobs'
+      },
+      {
+        component: EditMultiRunJobComponent,
+        path: 'jobs/multi-run/edit'
+      },
+      {
+        component: EditMultiRunJobComponent,
+        path: 'jobs/multi-run/create'
+      },
+      {
+        component: EditMultiRunJobComponent,
+        path: 'jobs/multi-run/clone'
+      },
+      {
+        component: EditProxyCheckJobComponent,
+        path: 'jobs/proxy-check/edit'
+      },
+      {
+        component: EditProxyCheckJobComponent,
+        path: 'jobs/proxy-check/create'
+      },
+      {
+        component: EditProxyCheckJobComponent,
+        path: 'jobs/proxy-check/clone'
       },
       {
         component: ProxiesComponent,

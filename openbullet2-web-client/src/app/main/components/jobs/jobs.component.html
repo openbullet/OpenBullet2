@@ -328,3 +328,15 @@
         </div>
     </div>
 </div>
+
+<p-dialog 
+    header="Create a job"
+    [(visible)]="createJobModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-job />
+</p-dialog>

@@ -73,6 +73,11 @@ import { ConfigCsharpComponent } from './components/config/config-csharp/config-
 import { ConfigDebuggerComponent } from './components/config/config-debugger/config-debugger.component';
 import { ViewAsHtmlComponent } from './components/config/config-debugger/view-as-html/view-as-html.component';
 import { JobsComponent } from './components/jobs/jobs.component';
+import { CreateJobComponent } from './components/jobs/create-job/create-job.component';
+import { EditProxyCheckJobComponent } from './components/jobs/edit-proxy-check-job/edit-proxy-check-job.component';
+import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-check-job.component';
+import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/edit-multi-run-job.component';
+import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
 
 @NgModule({
   declarations: [
@@ -125,7 +130,12 @@ import { JobsComponent } from './components/jobs/jobs.component';
     ConfigCsharpComponent,
     ConfigDebuggerComponent,
     ViewAsHtmlComponent,
-    JobsComponent
+    JobsComponent,
+    CreateJobComponent,
+    EditProxyCheckJobComponent,
+    ProxyCheckJobComponent,
+    EditMultiRunJobComponent,
+    MultiRunJobComponent
   ],
   imports: [
     CommonModule,

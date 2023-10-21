@@ -10,7 +10,6 @@ export class AdminGuard {
 
   canActivate(): boolean {
     const userInfo = this.userService.loadUserInfo();
-    console.log(userInfo);
     return userInfo.role.toLowerCase() === 'admin';
   }
 }
