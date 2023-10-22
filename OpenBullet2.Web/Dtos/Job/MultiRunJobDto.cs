@@ -14,6 +14,11 @@ public class MultiRunJobDto : JobDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public required object StartCondition { get; set; }
+
+    /// <summary>
     /// The config of the job.
     /// </summary>
     public JobConfigDto? Config { get; set; }

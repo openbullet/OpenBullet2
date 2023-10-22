@@ -11,6 +11,11 @@ public class ProxyCheckJobOptionsDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job should start.
+    /// </summary>
+    public object StartCondition { get; set; } = new RelativeTimeStartConditionDto();
+
+    /// <summary>
     /// The amount of bots that will check the proxies concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;
@@ -38,5 +43,5 @@ public class ProxyCheckJobOptionsDto
     /// <summary>
     /// The options for the output of a proxy check.
     /// </summary>
-    public object? CheckOutput { get; set; }
+    public object CheckOutput { get; set; } = new DatabaseProxyCheckOutputOptionsDto();
 }

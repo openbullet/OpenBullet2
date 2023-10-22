@@ -16,6 +16,16 @@ public class UpdateProxyCheckJobDto
     public int Id { get; set; }
 
     /// <summary>
+    /// The name of the job.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public object? StartCondition { get; set; }
+
+    /// <summary>
     /// The amount of bots that will check the proxies concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;

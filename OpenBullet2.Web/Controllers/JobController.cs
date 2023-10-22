@@ -20,6 +20,9 @@ using OpenBullet2.Core.Models.Proxies.Sources;
 using RuriLib.Models.Proxies.ProxySources;
 using OpenBullet2.Core.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
+using OpenBullet2.Core.Models.Proxies;
+using OpenBullet2.Web.Utils;
+using RuriLib.Models.Jobs.StartConditions;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -139,7 +142,7 @@ public class JobController : ApiController
     public ActionResult<ProxyCheckJobDto> GetProxyCheckJob(int id)
     {
         var job = GetJob<ProxyCheckJob>(id);
-        return _mapper.Map<ProxyCheckJobDto>(job);
+        return MapProxyCheckJobDto(job);
     }
 
     /// <summary>
@@ -305,7 +308,7 @@ public class JobController : ApiController
             var job = _jobFactory.FromOptions(entity.Id, apiUser.Id, jobOptions);
             _jobManager.AddJob(job);
 
-            return _mapper.Map<ProxyCheckJobDto>((ProxyCheckJob)job);
+            return MapProxyCheckJobDto((ProxyCheckJob)job);
         }
         catch
         {
@@ -397,7 +400,7 @@ public class JobController : ApiController
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
 
-        return _mapper.Map<ProxyCheckJobDto>((ProxyCheckJob)newJob);
+        return MapProxyCheckJobDto((ProxyCheckJob)newJob);
     }
 
     /// <summary>
@@ -648,6 +651,54 @@ public class JobController : ApiController
         }
     }
 
+    private ProxyCheckJobDto MapProxyCheckJobDto(ProxyCheckJob job)
+    {
+        var checkOutput = job.ProxyOutput switch
+        {
+            DatabaseProxyCheckOutput => "database",
+            _ => throw new NotImplementedException()
+        };
+
+        TimeStartConditionDto startCondition = job.StartCondition switch
+        {
+            RelativeTimeStartCondition r => new RelativeTimeStartConditionDto { 
+                PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType<RelativeTimeStartConditionDto>()!,
+                StartAfter = r.StartAfter 
+            },
+            AbsoluteTimeStartCondition a => new AbsoluteTimeStartConditionDto {
+                PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType<AbsoluteTimeStartConditionDto>()!,
+                StartAt = a.StartAt 
+            },
+            _ => throw new NotImplementedException()
+        };
+
+        return new ProxyCheckJobDto
+        {
+            Id = job.Id,
+            Name = job.Name,
+            StartCondition = startCondition,
+            OwnerId = job.OwnerId,
+            Status = job.Status,
+            Bots = job.Bots,
+            GroupId = -1, // TODO: Read this from the options!
+            CheckOnlyUntested = job.CheckOnlyUntested,
+            Target = new ProxyCheckTargetDto {
+                Url = job.Url,
+                SuccessKey = job.SuccessKey
+            },
+            CheckOutput = checkOutput,
+            Tested = job.Tested,
+            Working = job.Working,
+            NotWorking = job.NotWorking,
+            Total = job.Total,
+            TimeoutMilliseconds = (int)job.Timeout.TotalMilliseconds,
+            CPM = job.CPM,
+            Elapsed = job.Elapsed,
+            Remaining = job.Remaining,
+            Progress = job.Progress == -1 ? 0 : job.Progress,
+        };
+    }
+
     private MultiRunJobDto MapMultiRunJobDto(MultiRunJob job)
     {
         var dataPoolInfo = job.DataPool switch
@@ -678,9 +729,26 @@ public class JobController : ApiController
             _ => throw new NotImplementedException()
         }).ToList();
 
+        TimeStartConditionDto startCondition = job.StartCondition switch
+        {
+            RelativeTimeStartCondition r => new RelativeTimeStartConditionDto
+            {
+                PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType<RelativeTimeStartConditionDto>()!,
+                StartAfter = r.StartAfter
+            },
+            AbsoluteTimeStartCondition a => new AbsoluteTimeStartConditionDto
+            {
+                PolyTypeName = PolyDtoCache.GetPolyTypeNameFromType<AbsoluteTimeStartConditionDto>()!,
+                StartAt = a.StartAt
+            },
+            _ => throw new NotImplementedException()
+        };
+
         return new MultiRunJobDto
         {
             Id = job.Id,
+            Name = job.Name,
+            StartCondition = startCondition,
             OwnerId = job.OwnerId,
             Status = job.Status,
             Config = job.Config is not null ? new JobConfigDto

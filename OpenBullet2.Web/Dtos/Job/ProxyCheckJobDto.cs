@@ -13,6 +13,11 @@ public class ProxyCheckJobDto : JobDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public required object StartCondition { get; set; }
+
+    /// <summary>
     /// The amount of bots that will check the proxies concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;
@@ -40,7 +45,7 @@ public class ProxyCheckJobDto : JobDto
     /// <summary>
     /// The options for the output of a proxy check.
     /// </summary>
-    public object? CheckOutput { get; set; }
+    public string CheckOutput { get; set; } = string.Empty;
 
     /// <summary>
     /// The total number of proxies to test.

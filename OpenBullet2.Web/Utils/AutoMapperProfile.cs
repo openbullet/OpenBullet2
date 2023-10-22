@@ -46,6 +46,7 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
+using RuriLib.Models.Jobs.StartConditions;
 using System.Reflection;
 using System.Text.Json;
 
@@ -146,18 +147,18 @@ internal class AutoMapperProfile : Profile
         CreateMap<CreateProxyGroupDto, ProxyGroupEntity>();
         CreateMap<UpdateProxyGroupDto, ProxyGroupEntity>();
 
-        // Multi run job is too complex for the mapper
-
         CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>()
             .ForMember(dto => dto.Progress, e => e.MapFrom(job => job.Progress == -1 ? 0 : job.Progress));
-        CreateMap<ProxyCheckJob, ProxyCheckJobDto>();
-        
+
         CreateMap<ProxyCheckTarget, ProxyCheckTargetDto>().ReverseMap();
         
         CreateMap<CreateProxyCheckJobDto, ProxyCheckJobOptions>()
             .ForMember(o => o.CheckOutput, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
-                    (JsonElement)s.CheckOutput!, ctx.Mapper)));
+                    (JsonElement)s.CheckOutput!, ctx.Mapper)))
+            .ForMember(o => o.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<TimeStartConditionDto, StartCondition>(
+                    (JsonElement)s.StartCondition!, ctx.Mapper)));
 
         CreateMap<CreateMultiRunJobDto, MultiRunJobOptions>()
             .ForMember(o => o.DataPool, e => e.MapFrom(
@@ -168,12 +169,18 @@ internal class AutoMapperProfile : Profile
                     s.ProxySources, ctx.Mapper)))
             .ForMember(o => o.HitOutputs, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<HitOutputOptionsDto, HitOutputOptions>(
-                    s.HitOutputs, ctx.Mapper)));
+                    s.HitOutputs, ctx.Mapper)))
+            .ForMember(o => o.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<TimeStartConditionDto, StartCondition>(
+                    (JsonElement)s.StartCondition!, ctx.Mapper)));
 
         CreateMap<UpdateProxyCheckJobDto, ProxyCheckJobOptions>()
             .ForMember(o => o.CheckOutput, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
-                    (JsonElement)s.CheckOutput!, ctx.Mapper)));
+                    (JsonElement)s.CheckOutput!, ctx.Mapper)))
+            .ForMember(o => o.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<TimeStartConditionDto, StartCondition>(
+                    (JsonElement)s.StartCondition!, ctx.Mapper)));
 
         CreateMap<UpdateMultiRunJobDto, MultiRunJobOptions>()
             .ForMember(o => o.DataPool, e => e.MapFrom(
@@ -184,9 +191,14 @@ internal class AutoMapperProfile : Profile
                     s.ProxySources, ctx.Mapper)))
             .ForMember(o => o.HitOutputs, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<HitOutputOptionsDto, HitOutputOptions>(
-                    s.HitOutputs, ctx.Mapper)));
+                    s.HitOutputs, ctx.Mapper)))
+            .ForMember(o => o.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapBetween<TimeStartConditionDto, StartCondition>(
+                    (JsonElement)s.StartCondition!, ctx.Mapper)));
 
         CreateMap<MultiRunJobOptions, MultiRunJobOptionsDto>()
+            .ForMember(dto => dto.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.StartCondition, ctx.Mapper)))
             .ForMember(dto => dto.DataPool, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapFrom(s.DataPool, ctx.Mapper)))
             .ForMember(dto => dto.ProxySources, e => e.MapFrom(
@@ -195,6 +207,8 @@ internal class AutoMapperProfile : Profile
                 (s, d, i, ctx) => PolyMapper.MapAllFrom(s.HitOutputs, ctx.Mapper)));
 
         CreateMap<ProxyCheckJobOptions, ProxyCheckJobOptionsDto>()
+            .ForMember(dto => dto.StartCondition, e => e.MapFrom(
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.StartCondition, ctx.Mapper)))
             .ForMember(dto => dto.CheckOutput, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapFrom(s.CheckOutput, ctx.Mapper)));
 

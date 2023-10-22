@@ -1,5 +1,8 @@
+import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
+
 export interface ProxyCheckJobDto {
     bots: number,
+    startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto,
     groupId: number,
     checkOnlyUntested: boolean,
     target: ProxyCheckTargetDto | null,

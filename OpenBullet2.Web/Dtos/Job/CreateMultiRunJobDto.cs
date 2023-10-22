@@ -20,6 +20,11 @@ public class CreateMultiRunJobDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public object? StartCondition { get; set; }
+
+    /// <summary>
     /// The amount of bots that will process the data lines concurrently.
     /// </summary>
     public int Bots { get; set; } = 1;

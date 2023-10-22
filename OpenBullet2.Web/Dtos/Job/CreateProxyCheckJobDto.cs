@@ -19,6 +19,11 @@ public class CreateProxyCheckJobDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public object? StartCondition { get; set; }
+
+    /// <summary>
     /// The ID of the proxy group to check.
     /// </summary>
     public int GroupId { get; set; } = -1;

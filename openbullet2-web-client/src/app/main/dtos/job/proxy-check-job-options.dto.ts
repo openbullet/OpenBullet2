@@ -1,7 +1,9 @@
 import { ProxyCheckTargetDto } from "./proxy-check-job.dto";
+import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto";
 
 export interface ProxyCheckJobOptionsDto {
     name: string,
+    startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto,
     bots: number,
     groupId: number,
     checkOnlyUntested: boolean,

@@ -14,6 +14,11 @@ public class MultiRunJobOptionsDto
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
+    /// When the job should start.
+    /// </summary>
+    public object StartCondition { get; set; } = new RelativeTimeStartConditionDto();
+
+    /// <summary>
     /// The ID of the config to use.
     /// </summary>
     public string ConfigId { get; set; } = string.Empty;
@@ -75,15 +80,21 @@ public class MultiRunJobOptionsDto
     /// <summary>
     /// The options for the data pool that provides data lines to the job.
     /// </summary>
-    public object? DataPool { get; set; }
+    public object DataPool { get; set; } = new RangeDataPoolOptionsDto();
 
     /// <summary>
     /// The options for the proxy sources that will be used to fill the proxy pool whenever it requests a reload.
     /// </summary>
-    public List<object> ProxySources { get; set; } = new();
+    public List<object> ProxySources { get; set; } = new()
+    {
+        new GroupProxySourceOptionsDto { GroupId = -1 }
+    };
 
     /// <summary>
     /// The options for the outputs where hits will be stored.
     /// </summary>
-    public List<object> HitOutputs { get; set; } = new();
+    public List<object> HitOutputs { get; set; } = new()
+    {
+        new DatabaseHitOutputOptionsDto()
+    };
 }

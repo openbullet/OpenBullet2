@@ -92,6 +92,9 @@ static internal class PolyDtoCache
         => _polyTypeNames.TryGetValue(subType, out var polyType) 
             ? polyType : null;
 
+    static internal string? GetPolyTypeNameFromType<T>()
+        => GetPolyTypeNameFromType(typeof(T));
+
     static internal Type? GetPolyTypeFromName(string polyTypeName)
         => _polyTypes.TryGetValue(polyTypeName, out var type)
             ? type : null;

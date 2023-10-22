@@ -17,6 +17,16 @@ public class UpdateMultiRunJobDto
     public int Id { get; set; }
 
     /// <summary>
+    /// The name of the job.
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// When the job will start.
+    /// </summary>
+    public object? StartCondition { get; set; }
+
+    /// <summary>
     /// The ID of the config to use.
     /// </summary>
     public string ConfigId { get; set; } = string.Empty;
