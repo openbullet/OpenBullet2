@@ -1,4 +1,5 @@
 export interface MultiRunJobOptionsDto {
+    name: string,
     configId: string,
     bots: number,
     skip: number,
