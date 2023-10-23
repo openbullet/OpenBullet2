@@ -116,6 +116,7 @@ builder.Services.AddSingleton<HitStorageService>();
 builder.Services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
 builder.Services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));
 builder.Services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
+builder.Services.AddSingleton(_ => new ThemeService("UserData/Themes"));
 builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();

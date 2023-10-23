@@ -4,6 +4,7 @@ using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Settings;
+using OpenBullet2.Web.Services;
 using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
@@ -19,14 +20,17 @@ public class SettingsController : ApiController
     private readonly RuriLibSettingsService _ruriLibSettingsService;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly IMapper _mapper;
+    private readonly ThemeService _themeService;
 
     /// <summary></summary>
     public SettingsController(RuriLibSettingsService ruriLibSettingsService,
-        OpenBulletSettingsService obSettingsService, IMapper mapper)
+        OpenBulletSettingsService obSettingsService, IMapper mapper,
+        ThemeService themeService)
     {
         _ruriLibSettingsService = ruriLibSettingsService;
         _obSettingsService = obSettingsService;
         _mapper = mapper;
+        _themeService = themeService;
     }
 
     /// <summary>
@@ -132,5 +136,54 @@ public class SettingsController : ApiController
         await _obSettingsService.Save();
 
         return Ok();
+    }
+
+    /// <summary>
+    /// Add a CSS theme.
+    /// </summary>
+    [Admin]
+    [HttpPost("theme")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> AddTheme(IFormFile file)
+    {
+        await _themeService.SaveCssFile(file.FileName, file.OpenReadStream());
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Get all CSS themes.
+    /// </summary>
+    [Admin]
+    [HttpGet("theme/all")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<List<ThemeDto>> GetAllThemes() =>
+        _themeService.GetThemeNames()
+            .Select(n => new ThemeDto { Name = n })
+            .ToList();
+
+    /// <summary>
+    /// Get the file corresponding to a CSS theme.
+    /// </summary>
+    [HttpGet("theme")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> GetTheme(string? name = null)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            name = _obSettingsService.Settings.CustomizationSettings.Theme;
+        }
+
+        var bytes = Array.Empty<byte>();
+        
+        try
+        {
+            bytes = await _themeService.GetCssFile(name);
+        }
+        catch
+        {
+            // If anything happens, return an empty file
+        }
+        
+        return File(bytes, "text/css", "theme.css");
     }
 }

@@ -5,6 +5,7 @@ import { OBSettingsDto } from "../dtos/settings/ob-settings.dto";
 import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
 import { EnvironmentSettingsDto } from "../dtos/settings/environment-settings.dto";
 import { Observable, shareReplay } from "rxjs";
+import { ThemeDto } from "../dtos/settings/theme.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -74,5 +75,29 @@ export class SettingsService {
                 password
             }
         )
+    }
+
+    uploadTheme(file: File) {
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+
+        return this.http.post(
+            getBaseUrl() + '/settings/theme', formData
+        );
+    }
+
+    getAllThemes() {
+        return this.http.get<ThemeDto[]>(
+            getBaseUrl() + '/settings/theme/all'
+        );
+    }
+
+    getTheme(name: string | null) {
+        return this.http.get<string>(
+            getBaseUrl() + '/settings/theme',
+            {
+                params: name === null ? {} : { name }
+            }
+        );
     }
 }
