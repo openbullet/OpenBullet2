@@ -4,6 +4,8 @@ import { CustomSnippet, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint }
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
+import { ThemeDto } from '../../dtos/settings/theme.dto';
+import { applyAppTheme } from 'src/app/shared/utils/theme';
 
 @Component({
   selector: 'app-ob-settings',
@@ -35,6 +37,7 @@ export class OBSettingsComponent implements OnInit {
 
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
+  themes: string[] | null = null;
   touched: boolean = false;
   configSections: string[] = [
     'metadata',
@@ -59,11 +62,22 @@ export class OBSettingsComponent implements OnInit {
   
   ngOnInit(): void {
     this.getSettings();
+    this.getThemes();
   }
 
   getSettings() {
     this.settingsService.getSettings()
       .subscribe(settings => this.settings = settings);
+  }
+
+  getThemes() {
+    this.settingsService.getAllThemes()
+      .subscribe(themes => {
+        this.themes = [
+          'None',
+          ...themes.map(t => t.name)
+        ];
+      });
   }
 
   saveSettings() {
@@ -102,6 +116,7 @@ export class OBSettingsComponent implements OnInit {
               detail: 'Settings restored to the default values'
             });
             this.settings = settings;
+            applyAppTheme();
           })
       });
   }
@@ -223,5 +238,9 @@ export class OBSettingsComponent implements OnInit {
       this.settings!.remoteSettings.configsEndpoints.splice(index, 1);
       this.touched = true;
     }
+  }
+
+  onThemeChange(theme: string) {
+    applyAppTheme(theme === 'None' ? null : theme);
   }
 }

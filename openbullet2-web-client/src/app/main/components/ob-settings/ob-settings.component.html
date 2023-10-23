@@ -394,9 +394,15 @@
             <h3>Customization</h3>
         </div>
     </div>
-    <div class="row mt-3">
+    <div *ngIf="themes !== null" class="row my-3">
         <div class="col-12">
-            <span class="color-inactive">Coming soon &trade;</span>
+            <span class="mr-2">UI Theme</span>
+            <app-input-dropdown key="theme"
+                (ngModelChange)="onThemeChange($event)"
+                itemClass="input-small" optionClass="input-small"
+                (touched)="touched = true" ngDefaultControl
+                [options]="themes"
+                [(ngModel)]="settings.customizationSettings.theme" />
         </div>
     </div>
 </div>
