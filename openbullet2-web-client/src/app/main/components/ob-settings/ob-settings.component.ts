@@ -34,6 +34,7 @@ export class OBSettingsComponent implements OnInit {
   changeAdminPasswordModalVisible = false;
   createRemoteConfigsEndpointModalVisible = false;
   updateRemoteConfigsEndpointModalVisible = false;
+  addThemeModalVisible = false;
 
   fieldsValidity: { [key: string] : boolean; } = {};
   settings: OBSettingsDto | null = null;
@@ -139,6 +140,10 @@ export class OBSettingsComponent implements OnInit {
     this.updateProxyCheckTargetModalVisible = true;
   }
 
+  openAddThemeModal() {
+    this.addThemeModalVisible = true;
+  }
+
   createProxyCheckTarget(target: ProxyCheckTarget) {
     this.settings!.generalSettings.proxyCheckTargets.push(target);
     this.touched = true;
@@ -240,7 +245,20 @@ export class OBSettingsComponent implements OnInit {
     }
   }
 
+  uploadTheme(file: File) {
+    this.settingsService.uploadTheme(file)
+      .subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Added',
+          detail: `Added new theme ${file.name}`
+        });
+        this.addThemeModalVisible = false;
+        this.getThemes();
+      });
+  }
+
   onThemeChange(theme: string) {
-    applyAppTheme(theme === 'None' ? null : theme);
+    applyAppTheme(theme);
   }
 }

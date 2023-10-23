@@ -403,6 +403,12 @@
                 (touched)="touched = true" ngDefaultControl
                 [options]="themes"
                 [(ngModel)]="settings.customizationSettings.theme" />
+
+            <button class="button button-transparent ml-2"
+                pTooltip="Add new theme" tooltipPosition="right"
+                (click)="addThemeComponent.reset(); openAddThemeModal()">
+                <fa-icon class="color-good" [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+            </button>
         </div>
     </div>
 </div>
@@ -510,4 +516,19 @@
     <app-update-remote-configs-endpoint
         [endpoint]="selectedRemoteConfigsEndpoint!"
         (confirm)="updateRemoteConfigsEndpoint($event)" />
+</p-dialog>
+
+<p-dialog 
+    #addThemeModal
+    header="Add theme" 
+    [(visible)]="addThemeModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-theme
+        #addThemeComponent
+        (confirm)="uploadTheme($event)" />
 </p-dialog>
