@@ -7,21 +7,21 @@
 
     li {
         button {
-            border: 1px solid $fgInactive;
-            background-color: $bgSecondary;
+            border: 1px solid var(--fg-inactive);
+            background-color: var(--bg-secondary);
             padding: 10px;
             width: 100%;
             text-align: left;
         }
 
         button:hover {
-            background-color: $bgTertiary;
+            background-color: var(--bg-tertiary);
         }
 
         button.selected-endpoint {
-            background-color: $fgAccent;
-            border: 1px solid $fgAccent;
-            color: $fgLight;
+            background-color: var(--fg-accent);
+            border: 1px solid var(--fg-accent);
+            color: var(--fg-light);
         }
     }
 

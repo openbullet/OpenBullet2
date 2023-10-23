@@ -32,7 +32,7 @@
 }
 
 .config-item:hover {
-    background-color: $bgSecondary;
+    background-color: var(--bg-secondary);
 
     .config-grid-buttons {
         display: block;

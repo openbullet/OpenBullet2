@@ -1,7 +1,7 @@
 @import "../../styles/variables.scss";
 
 .login-container {
-    background-color: $bgSecondary;
+    background-color: var(--bg-secondary);
     border-radius: 20px;
 }
 

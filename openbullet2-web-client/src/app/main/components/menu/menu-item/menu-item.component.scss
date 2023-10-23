@@ -5,7 +5,7 @@
     height: 25px;
     margin: 15px 0px 15px 30px;
     padding: 0px 0px 0px 15px;
-    color: $fgPrimary;
+    color: var(--fg-primary);
     cursor: pointer;
 
     .menu-item-label {
@@ -16,16 +16,16 @@
 }
 
 .menu-item:not(.selected):hover {
-    color: $fgAccent;
-    /* background-color: $bgAccent; */
-    border-left: 1px solid $fgInactive;
+    color: var(--fg-accent);
+    /* background-color: var(--bg-accent); */
+    border-left: 1px solid var(--fg-inactive);
     opacity: 0.9;
     font-weight: bold;
     margin-left: 29px;
 }
 
 .menu-item.selected {
-    color: $fgLight;
-    border-left: 1px solid $fgAccent;
+    color: var(--fg-light);
+    border-left: 1px solid var(--fg-accent);
     margin-left: 29px;
 }

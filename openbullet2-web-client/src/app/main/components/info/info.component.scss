@@ -6,23 +6,23 @@
 
 .supporter {
     border-radius: 10px;
-    border: 1px solid $fgInactive;
-    background-color: $bgSecondary;
+    border: 1px solid var(--fg-inactive);
+    background-color: var(--bg-secondary);
     padding: 5px 10px;
     display: inline-block;
     margin: 10px 10px 0px 0px;
 }
 
 .gold {
-    color: $fgGold;
+    color: var(--fg-gold);
 }
 
 .silver {
-    color: $fgSilver;
+    color: var(--fg-silver);
 }
 
 .bronze {
-    color: $fgBronze;
+    color: var(--fg-bronze);
 }
 
 .button img {

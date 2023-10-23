@@ -1,21 +1,21 @@
 @import "../../../../../styles/variables.scss";
 
 .perf-timespan {
-    color: $fgInactive;
+    color: var(--fg-inactive);
     font-size: 12px;
     margin-left: 1rem;
 }
 
 .perf-bad {
-    color: $fgBad;
+    color: var(--fg-bad);
 }
 
 .perf-good {
-    color: $fgGood;
+    color: var(--fg-good);
 }
 
 .perf-flat {
-    color: $fgInactive;
+    color: var(--fg-inactive);
 }
 
 .perf-metric {
@@ -29,18 +29,18 @@
 }
 
 .perf-metric-label {
-    color: $fgInactive;
+    color: var(--fg-inactive);
     font-size: 10px;
 }
 
 .perf-network-down {
-    color: $fgAccent;
+    color: var(--fg-accent);
     line-height: 14px;
     height: 14px;
 }
 
 .perf-network-up {
-    color: $fgInactive;
+    color: var(--fg-inactive);
     line-height: 14px;
     height: 14px;
 }

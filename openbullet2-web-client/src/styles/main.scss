@@ -3,15 +3,15 @@
 @import "overrides";
 
 html {
-    background-color: $bgPrimary;
-    color: $fgPrimary;
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
 }
 
 body {
     margin: 0;
     font-family: Poppins;
-    background-color: $bgPrimary;
-    color: $fgPrimary;
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
 }
 
 * {
@@ -23,7 +23,7 @@ body {
 }
 
 code {
-    color: $fgAccentLight !important;
+    color: var(--fg-accent-light) !important;
     margin: 0rem;
     font-family: Chivo Mono !important;
     font-size: 14px !important;
@@ -36,20 +36,20 @@ code * {
 
 .button {
     border-radius: 5px;
-    border: 1px solid $fgInactive;
-    color: $fgLight;
+    border: 1px solid var(--fg-inactive);
+    color: var(--fg-light);
     padding: 5px 10px;
     font-size: 14px;
 }
 
 .button[disabled] {
-    background-color: $fgInactive;
-    color: $bgPrimary;
+    background-color: var(--fg-inactive);
+    color: var(--bg-primary);
 }
 
 .button[disabled]:hover {
-    background-color: $fgInactive;
-    color: $bgPrimary;
+    background-color: var(--fg-inactive);
+    color: var(--bg-primary);
 }
 
 .button-transparent {
@@ -63,50 +63,50 @@ code * {
 }
 
 .button-accent {
-    background-color: $fgAccent;
-    border: 1px solid $bgAccent;
+    background-color: var(--fg-accent);
+    border: 1px solid var(--bg-accent);
 }
 
 .button-accent:hover {
-    background-color: $fgAccentLight;
+    background-color: var(--fg-accent-light);
     transition: .5s;
 }
 
 .button-accent-outline {
     background-color: transparent;
-    border: 1px solid $fgAccent;
+    border: 1px solid var(--fg-accent);
 }
 
 .button-accent-outline:hover {
-    background-color: $fgAccent;
+    background-color: var(--fg-accent);
     transition: .5s;
 }
 
 .button-secondary {
-    background-color: $bgSecondary;
+    background-color: var(--bg-secondary);
 }
 
 .button-secondary:hover {
-    background-color: $bgPrimary;
+    background-color: var(--bg-primary);
     transition: .5s;
     /* box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.2); */
 }
 
 .button-bad {
-    background-color: $fgBad;
-    color: $fgLight;
-    border: 1px solid $bgBad;
+    background-color: var(--fg-bad);
+    color: var(--fg-light);
+    border: 1px solid var(--bg-bad);
 }
 
 .button-bad {
-    background-color: $bgBad;
+    background-color: var(--bg-bad);
 }
 
 input {
     background-color: transparent;
     padding: 5px;
     border-radius: 4px;
-    border: 1px solid $fgInactive;
+    border: 1px solid var(--fg-inactive);
     box-shadow: none;
     outline: none;
     height: 41px; // This is to match the primeng components
@@ -122,81 +122,81 @@ textarea {
     background-color: transparent;
     padding: 5px;
     border-radius: 4px;
-    border: 1px solid $fgInactive;
+    border: 1px solid var(--fg-inactive);
     box-shadow: none;
     outline: none;
 }
 
 .color-primary {
-    color: $fgPrimary !important;
+    color: var(--fg-primary) !important;
 }
 
 .color-good {
-    color: $fgGood !important;
+    color: var(--fg-good) !important;
 }
 
 .color-custom {
-    color: $fgCustom !important;
+    color: var(--fg-custom) !important;
 }
 
 .color-tocheck {
-    color: $fgToCheck !important;
+    color: var(--fg-tocheck) !important;
 }
 
 .color-bad {
-    color: $fgBad !important;
+    color: var(--fg-bad) !important;
 }
 
 .color-inactive {
-    color: $fgInactive !important;
+    color: var(--fg-inactive) !important;
 }
 
 .color-inactive {
-    color: $fgInactive !important;
+    color: var(--fg-inactive) !important;
 }
 
 .color-accent  {
-    color: $fgAccent !important;
+    color: var(--fg-accent) !important;
 }
 
 .color-accent-light {
-    color: $fgAccentLight !important;
+    color: var(--fg-accent-light) !important;
 }
 
 .bg-primary {
-    background-color: $fgPrimary !important;
+    background-color: var(--fg-primary) !important;
 }
 
 .bg-good {
-    background-color: $fgGood !important;
+    background-color: var(--fg-good) !important;
 }
 
 .bg-custom {
-    background-color: $fgCustom !important;
+    background-color: var(--fg-custom) !important;
 }
 
 .bg-tocheck {
-    background-color: $fgToCheck !important;
+    background-color: var(--fg-tocheck) !important;
 }
 
 .bg-bad {
-    background-color: $fgBad !important;
+    background-color: var(--fg-bad) !important;
 }
 
 .bg-inactive {
-    background-color: $fgInactive !important;
+    background-color: var(--fg-inactive) !important;
 }
 
 .bg-inactive {
-    background-color: $fgInactive !important;
+    background-color: var(--fg-inactive) !important;
 }
 
 .bg-accent  {
-    background-color: $fgAccent !important;
+    background-color: var(--fg-accent) !important;
 }
 
 .bg-accent-light {
-    background-color: $fgAccentLight !important;
+    background-color: var(--fg-accent-light) !important;
 }
 
 .text-small {
@@ -233,15 +233,15 @@ label {
 }
 
 .input-valid {
-    border-color: $fgAccentLight;
+    border-color: var(--fg-accent-light);
 }
 
 .input-invalid {
-    border-color: $fgBad;
+    border-color: var(--fg-bad);
 }
 
 .p-dropdown:has(span > span.input-valid) {
-    border-color: $fgAccentLight !important;
+    border-color: var(--fg-accent-light) !important;
 }
 
 p-table.no-header {

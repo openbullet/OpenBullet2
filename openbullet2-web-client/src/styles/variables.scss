@@ -3,22 +3,29 @@ $medium: 768px;
 $large: 992px;
 $xlarge: 1200px;
 
-$fgPrimary: #C2C4C6;
-$fgLight: #ffffff;
-$fgInactive: #6e6e6e;
-$bgPrimary: #161819;
-$fgAccent: #325AF5;
-$fgAccentLight: #5a76e9;
-$bgSecondary: #1F2123;
-$bgTertiary: #33373a;
-$bgAccent: #090e25;
-$fgGood: yellowgreen;
-$fgBad: tomato;
-$fgCustom: darkorange;
-$fgToCheck: #7FFFD4;
-$fgBanned: #DDA0DD;
-$fgRetry: #FFFF00;
-$bgBad: rgb(131, 36, 19);
-$fgGold: gold;
-$fgSilver: silver;
-$fgBronze: rgb(228, 151, 63);
+/*
+    These are CSS and not SCSS variables so they can
+    easily replaced by themes.
+*/
+
+:root {
+    --fg-primary: #C2C4C6;
+    --fg-light: #ffffff;
+    --fg-inactive: #6e6e6e;
+    --bg-primary: #161819;
+    --fg-accent: #325AF5;
+    --fg-accent-light: #5a76e9;
+    --bg-secondary: #1F2123;
+    --bg-tertiary: #33373a;
+    --bg-accent: #090e25;
+    --fg-good: yellowgreen;
+    --fg-bad: tomato;
+    --fg-custom: darkorange;
+    --fg-to-check: #7FFFD4;
+    --fg-banned: #DDA0DD;
+    --fg-retry: #FFFF00;
+    --bg-bad: rgb(131, 36, 19);
+    --fg-gold: gold;
+    --fg-silver: silver;
+    --fg-bronze: rgb(228, 151, 63);
+}

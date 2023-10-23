@@ -8,7 +8,7 @@ $sidebarWidth: 230px;
 }
 
 .sidebar {
-    background-color: $bgSecondary;
+    background-color: var(--bg-secondary);
     width: $sidebarWidth;
     min-width: $sidebarWidth;
     overflow-y: auto;
@@ -17,8 +17,8 @@ $sidebarWidth: 230px;
 }
 
 .content {
-    background-color: $bgPrimary;
-    color: $fgPrimary;
+    background-color: var(--bg-primary);
+    color: var(--fg-primary);
     flex: 1 1 auto;
     padding: 30px 50px;
     width: calc(100vw - $sidebarWidth);

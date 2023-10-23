@@ -2,7 +2,7 @@
 
 .announcement-label {
     font-size: 12px;
-    color: $fgInactive;
+    color: var(--fg-inactive);
 }
 
 .announcement {
@@ -11,7 +11,7 @@
 
 .info-label {
     font-size: 16px;
-    color: $fgInactive;
+    color: var(--fg-inactive);
 }
 
 .info {
@@ -25,5 +25,5 @@
 
 .collection-item-label {
     font-size: 16px;
-    color: $fgInactive;
+    color: var(--fg-inactive);
 }
