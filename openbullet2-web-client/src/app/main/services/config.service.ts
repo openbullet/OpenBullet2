@@ -56,7 +56,6 @@ export class ConfigService {
 
         if (config !== null) {
             this.saveLocalConfig(config);
-            this.nameChanged(config.metadata.name);
         } else {
             this.resetLocalConfig();
         }
