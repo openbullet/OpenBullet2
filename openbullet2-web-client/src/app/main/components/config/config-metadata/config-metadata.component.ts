@@ -31,6 +31,12 @@ export class ConfigMetadataComponent {
     }
   }
 
+  nameChanged() {
+    if (this.config !== null) {
+      this.configService.nameChanged(this.config?.metadata.name);
+    }
+  }
+
   openEditImageModal() {
     if (this.config !== null) {
       this.editConfigImageComponent?.setImage(this.config.metadata.base64Image);

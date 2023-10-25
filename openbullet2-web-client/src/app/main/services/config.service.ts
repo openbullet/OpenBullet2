@@ -17,6 +17,9 @@ export class ConfigService {
     selectedConfig$ = this.selectedConfigSource.asObservable();
     selectedConfig: ConfigDto | null = null;
 
+    private nameChangedSource = new BehaviorSubject<string | null>(null);
+    nameChanged$ = this.nameChangedSource.asObservable();
+
     constructor(
         private http: HttpClient
     ) {
@@ -53,9 +56,14 @@ export class ConfigService {
 
         if (config !== null) {
             this.saveLocalConfig(config);
+            this.nameChanged(config.metadata.name);
         } else {
             this.resetLocalConfig();
         }
+    }
+
+    nameChanged(label: string) {
+        this.nameChangedSource.next(label);
     }
 
     getAllConfigs(reload: boolean) {

@@ -24,7 +24,7 @@
             <span>Name</span>
             <app-input-text key="name" class="d-block mt-2"
                 ngDefaultControl
-                (validityChange)="localSave()"
+                (validityChange)="localSave(); nameChanged();"
                 [(ngModel)]="config.metadata.name"
                 placeholder="New Config" regex="^.+$" />
         </div>

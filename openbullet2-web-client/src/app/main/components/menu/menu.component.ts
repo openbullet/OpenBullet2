@@ -148,6 +148,11 @@ export class MenuComponent implements OnDestroy {
           this.buildMenu(config);
           this.selectedConfig = config;
         });
+
+      this.configService.nameChanged$
+        .subscribe(() => {
+          this.buildMenu(this.selectedConfig);
+        });
   }
 
   ngOnDestroy(): void {
