@@ -170,6 +170,9 @@ public class InfoController : ApiController
 
         var wordlistsCount = await _serviceProvider
             .GetRequiredService<IWordlistRepository>().GetAll().CountAsync();
+        
+        var wordlistsLines = await _serviceProvider
+            .GetRequiredService<IWordlistRepository>().GetAll().SumAsync(w => (long)w.Total);
 
         var hitsCount = await _serviceProvider
             .GetRequiredService<IHitRepository>().GetAll().CountAsync();
@@ -188,6 +191,7 @@ public class InfoController : ApiController
             JobsCount = jobsCount,
             ProxiesCount = proxiesCount,
             WordlistsCount = wordlistsCount,
+            WordlistsLines = wordlistsLines,
             HitsCount = hitsCount,
             ConfigsCount = configsCount,
             GuestsCount = guestsCount,
