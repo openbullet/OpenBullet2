@@ -39,17 +39,43 @@
     </div>
     <div class="row mt-4 mb-2">
         <div class="col-12">
-            <span class="input-small">
-                <!-- TODO: Toggle -->
+            <div class="mb-1">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Relative"
+                            [(ngModel)]="startConditionMode"
+                            inputId="relative"></p-radioButton>
+                        <label for="relative" class="ml-2">Start in...</label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Absolute"
+                            [(ngModel)]="startConditionMode"
+                            inputId="absolute"></p-radioButton>
+                        <label for="absolute" class="ml-2">Start at...</label>
+                    </div>
+                </div>
+            </div>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Relative">
                 <app-input-time-span
-                    *ngIf="startConditionMode === StartConditionMode.Relative"
                     key="startAfter"
                     (touched)="touched = true" ngDefaultControl
                     (validityChange)="onValidityChange($event)"
                     [timeSpan]="startAfter"
                     (timeSpanChange)="onStartAfterChange($event)"
                  />
-                 <!-- TODO: Absolute -->
+            </span>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Absolute">
+                <p-calendar
+                    [ngModel]="startAt"
+                    (ngModelChange)="onStartAtChange($event)"
+                    [showTime]="true"
+                    appendTo="body"
+                    [showSeconds]="true">
+                </p-calendar>
             </span>
         </div>
     </div>

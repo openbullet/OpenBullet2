@@ -148,6 +148,18 @@ export class EditProxyCheckJobComponent {
     }
   }
 
+  onStartAtChange(date: Date) {
+    // Convert to local time, otherwise it's UTC
+    this.startAt = moment(date).local().toDate();
+
+    if (this.startConditionMode === StartConditionMode.Absolute) {
+      this.options!.startCondition = {
+        _polyTypeName: 'absoluteTimeStartCondition',
+        startAt: this.startAt.toISOString()
+      };
+    }
+  }
+
   // Can accept if touched and every field is valid
   canAccept() {
     return this.touched && Object.values(this.fieldsValidity).every(v => v);

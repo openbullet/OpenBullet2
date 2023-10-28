@@ -24,6 +24,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -150,6 +152,8 @@ import { AddThemeComponent } from './components/ob-settings/add-theme/add-theme.
     AvatarModule,
     TooltipModule,
     InputTextModule,
+    ToggleButtonModule,
+    RadioButtonModule,
     ProgressBarModule,
     DropdownModule,
     MenubarModule,
