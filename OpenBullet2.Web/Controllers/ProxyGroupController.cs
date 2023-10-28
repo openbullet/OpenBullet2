@@ -81,7 +81,7 @@ public class ProxyGroupController : ApiController
 
         await _proxyGroupRepo.Add(entity);
 
-        _logger.LogInformation($"Created a new proxy group with name {dto.Name}");
+        _logger.LogInformation("Created a new proxy group with name {name}", dto.Name);
 
         return _mapper.Map<ProxyGroupDto>(entity);
     }
@@ -100,7 +100,7 @@ public class ProxyGroupController : ApiController
         _mapper.Map(dto, entity);
         await _proxyGroupRepo.Update(entity);
 
-        _logger.LogInformation($"Updated the information of the proxy group with id {entity.Id}");
+        _logger.LogInformation("Updated the information of the proxy group with id {id}", entity.Id);
 
         return _mapper.Map<ProxyGroupDto>(entity);
     }

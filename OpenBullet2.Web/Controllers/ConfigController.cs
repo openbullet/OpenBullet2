@@ -137,7 +137,7 @@ public class ConfigController : ApiController
             // Save it
             await _configRepo.Save(config);
 
-            _logger.LogInformation($"Edited config with id {dto.Id}");
+            _logger.LogInformation("Edited config with id {id}", dto.Id);
         }
 
         return _mapper.Map<ConfigDto>(config);
@@ -156,7 +156,7 @@ public class ConfigController : ApiController
         await _configRepo.Save(config);
         _configService.Configs.Add(config);
 
-        _logger.LogInformation($"Created config with id {config.Id}");
+        _logger.LogInformation("Created config with id {id}", config.Id);
 
         return _mapper.Map<ConfigDto>(config);
     }
@@ -173,7 +173,7 @@ public class ConfigController : ApiController
         _configRepo.Delete(config);
         _configService.Configs.Remove(config);
 
-        _logger.LogInformation($"Deleted config with id {id}");
+        _logger.LogInformation("Deleted config with id {id}", id);
 
         return Ok();
     }
@@ -210,7 +210,8 @@ public class ConfigController : ApiController
 
         _configService.Configs.Add(cloned);
 
-        _logger.LogInformation($"Created config with id {cloned.Id} by cloning {original.Id}");
+        _logger.LogInformation("Created config with id {clonedId} by cloning {originalId}",
+            cloned.Id, original.Id);
 
         return _mapper.Map<ConfigDto>(cloned);
     }
@@ -276,7 +277,7 @@ public class ConfigController : ApiController
         // Reload from disk to get the new configs
         await _configService.ReloadConfigs();
 
-        _logger.LogInformation($"Uploaded {files.Count} configs");
+        _logger.LogInformation("Uploaded {fileCount} configs", files.Count);
 
         return new AffectedEntriesDto
         {

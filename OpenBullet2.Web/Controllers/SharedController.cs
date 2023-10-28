@@ -61,7 +61,7 @@ public class SharedController : ApiController
 
         _configSharingService.Save();
 
-        _logger.LogInformation($"Created shared endpoint at route {dto.Route}");
+        _logger.LogInformation("Created shared endpoint at route {route}", dto.Route);
 
         return _mapper.Map<EndpointDto>(endpoint);
     }
@@ -86,7 +86,7 @@ public class SharedController : ApiController
         _mapper.Map(dto, endpoint);
         _configSharingService.Save();
 
-        _logger.LogInformation($"Updated shared endpoint at route {dto.Route}");
+        _logger.LogInformation("Updated shared endpoint at route {route}", dto.Route);
 
         return _mapper.Map<EndpointDto>(endpoint);
     }

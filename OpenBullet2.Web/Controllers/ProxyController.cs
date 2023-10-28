@@ -76,7 +76,8 @@ public class ProxyController : ApiController
 
         var duplicatesCount = await _proxyRepo.RemoveDuplicates(dto.ProxyGroupId);
 
-        _logger.LogInformation($"Added {entities.Count - duplicatesCount} unique new proxies to proxy group {groupEntity.Name}");
+        _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
+            entities.Count - duplicatesCount, groupEntity.Name);
 
         return new AffectedEntriesDto
         {
@@ -128,7 +129,8 @@ public class ProxyController : ApiController
 
         var duplicatesCount = await _proxyRepo.RemoveDuplicates(dto.ProxyGroupId);
 
-        _logger.LogInformation($"Added {entities.Count - duplicatesCount} unique new proxies to proxy group {groupEntity.Name}");
+        _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
+            entities.Count - duplicatesCount, groupEntity.Name);
 
         return new AffectedEntriesDto
         {
@@ -157,7 +159,7 @@ public class ProxyController : ApiController
         await _proxyRepo.Update(toMove);
         await _proxyRepo.RemoveDuplicates(dto.DestinationGroupId);
 
-        _logger.LogInformation($"Moved {toMove.Count} proxies");
+        _logger.LogInformation("Moved {proxyCount} proxies", toMove.Count);
 
         return new AffectedEntriesDto
         {
@@ -196,7 +198,7 @@ public class ProxyController : ApiController
 
         await _proxyRepo.Delete(toDelete);
 
-        _logger.LogInformation($"Deleted {toDelete.Count} proxies");
+        _logger.LogInformation("Deleted {proxyCount} proxies", toDelete.Count);
 
         return new AffectedEntriesDto
         {
@@ -225,7 +227,8 @@ public class ProxyController : ApiController
 
         await _proxyRepo.Delete(toDelete);
 
-        _logger.LogInformation($"Deleted {toDelete.Count} proxies from proxy group {groupEntity.Name}");
+        _logger.LogInformation("Deleted {hitCount} proxies from proxy group {name}",
+            toDelete.Count, groupEntity.Name);
 
         return new AffectedEntriesDto
         {

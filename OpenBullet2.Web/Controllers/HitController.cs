@@ -124,7 +124,7 @@ public class HitController : ApiController
         _mapper.Map(dto, entity);
         await _hitRepo.Update(entity);
 
-        _logger.LogInformation($"Updated the information of hit with id {dto.Id}");
+        _logger.LogInformation("Updated the information of hit with id {id}", dto.Id);
 
         return _mapper.Map<HitDto>(entity);
     }
@@ -141,7 +141,7 @@ public class HitController : ApiController
 
         await _hitRepo.Delete(entity);
 
-        _logger.LogInformation($"Deleted the hit with id {id}");
+        _logger.LogInformation("Deleted the hit with id {id}", id);
 
         return Ok();
     }
@@ -161,7 +161,7 @@ public class HitController : ApiController
 
         await _hitRepo.Delete(toDelete);
 
-        _logger.LogInformation($"Deleted {toDelete.Count} hits");
+        _logger.LogInformation("Deleted {hitCount} hits", toDelete.Count);
 
         return new AffectedEntriesDto
         {
@@ -192,7 +192,7 @@ public class HitController : ApiController
 
         await _hitRepo.Delete(duplicates);
 
-        _logger.LogInformation($"Deleted {duplicates.Count} duplicate hits");
+        _logger.LogInformation("Deleted {hitCount} duplicate hits", duplicates.Count);
 
         return new AffectedEntriesDto
         {

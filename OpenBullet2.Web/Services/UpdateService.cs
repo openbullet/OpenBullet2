@@ -104,7 +104,7 @@ public class UpdateService : BackgroundService, IUpdateService
 
                 if (IsUpdateAvailable)
                 {
-                    _logger.LogInformation($"There is a new update! Version {RemoteVersion}");
+                    _logger.LogInformation("There is a new update! Version {version}", RemoteVersion);
                 }
             }
             catch

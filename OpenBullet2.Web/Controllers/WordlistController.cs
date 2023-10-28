@@ -27,7 +27,7 @@ public class WordlistController : ApiController
     private readonly IGuestRepository _guestRepo;
     private readonly IMapper _mapper;
     private readonly ILogger<WordlistController> _logger;
-    private readonly string _baseDir = "UserData";
+    private const string _baseDir = "UserData";
 
     /// <summary></summary>
     public WordlistController(IWordlistRepository wordlistRepo,
@@ -118,7 +118,8 @@ public class WordlistController : ApiController
         // Make sure the file exists
         if (!System.IO.File.Exists(dto.FilePath))
         {
-            _logger.LogWarning($"Tried to create a wordlist for the file {dto.FilePath} which does not exist");
+            _logger.LogWarning("Tried to create a wordlist for the file {filePath} which does not exist",
+                dto.FilePath);
 
             throw new ResourceNotFoundException(
                 ErrorCode.FILE_NOT_FOUND,
@@ -136,7 +137,8 @@ public class WordlistController : ApiController
 
         await _wordlistRepo.Add(entity);
 
-        _logger.LogInformation($"Created a new wordlist with id {entity.Id} for file {entity.FileName}");
+        _logger.LogInformation("Created a new wordlist with id {id} for file {fileName}",
+            entity.Id, entity.FileName);
 
         return _mapper.Map<WordlistDto>(entity);
     }
@@ -157,7 +159,7 @@ public class WordlistController : ApiController
         using var fileStream = System.IO.File.OpenWrite(path);
         await file.CopyToAsync(fileStream);
 
-        _logger.LogInformation($"Uploaded a wordlist file at {path}");
+        _logger.LogInformation("Uploaded a wordlist file at {path}", path);
 
         return new WordlistFileDto { FilePath = path };
     }
@@ -229,7 +231,8 @@ public class WordlistController : ApiController
         _mapper.Map(dto, entity);
         await _wordlistRepo.Update(entity);
 
-        _logger.LogInformation($"Updated the information of the wordlist with id {entity.Id}");
+        _logger.LogInformation("Updated the information of the wordlist with id {id}",
+            entity.Id);
 
         return _mapper.Map<WordlistDto>(entity);
     }
@@ -255,7 +258,8 @@ public class WordlistController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a wordlist not owned by them");
+            _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
+                apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
                 entity.Id, nameof(IWordlistRepository));
