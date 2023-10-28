@@ -39,8 +39,17 @@
     </div>
     <div class="row mt-4 mb-2">
         <div class="col-12">
-            <span class="input-small" style="background-color: red">
-                TODO: Start in / start at...
+            <span class="input-small">
+                <!-- TODO: Toggle -->
+                <app-input-time-span
+                    *ngIf="startConditionMode === StartConditionMode.Relative"
+                    key="startAfter"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="startAfter"
+                    (timeSpanChange)="onStartAfterChange($event)"
+                 />
+                 <!-- TODO: Absolute -->
             </span>
         </div>
     </div>

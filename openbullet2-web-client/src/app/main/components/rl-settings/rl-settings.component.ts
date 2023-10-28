@@ -104,7 +104,10 @@ export class RlSettingsComponent implements OnInit {
   }
 
   onValidityChange(validity: FieldValidity) {
-    this.fieldsValidity[validity.key] = validity.valid;
+    this.fieldsValidity = {
+      ...this.fieldsValidity,
+      [validity.key]: validity.valid
+    };
   }
 
   // Can save if touched and every field is valid

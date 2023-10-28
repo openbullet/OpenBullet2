@@ -2,14 +2,27 @@ import { Moment } from "moment";
 import { TimeSpan } from "./timespan";
 
 export function parseTimeSpan(input: string): TimeSpan {
-    // We assume the format is [d:]HH:mm:ss
+    // We assume the format is [d.]HH:mm:ss[.millis] e.g. 5.04:01:02.0030010
+    // means 5 days, 4 hours, 1 minute, 2 seconds, 3 milliseconds and 1 microsecond
+    let days = 0;
+    let millis = 0;
+    const bigChunks = input.split('.');
+
+    if (bigChunks.length > 2) {
+        days = parseInt(bigChunks[0])
+        input = bigChunks[1];
+    }
+
+    if (bigChunks.length === 3) {
+        millis = parseInt(bigChunks[2].substring(0, 3));
+    }
+
     const chunks = input.split(':');
-    const days = chunks.length > 3 ? parseInt(chunks[0]) : 0;
-    const hours = parseInt(chunks[1]);
-    const minutes = parseInt(chunks[2]);
-    const seconds = parseInt(chunks[3]);
-    const milliSeconds = 0;
-    return TimeSpan.fromTime(days, hours, minutes, seconds, milliSeconds);
+    const hours = parseInt(chunks[0]);
+    const minutes = parseInt(chunks[1]);
+    const seconds = parseInt(chunks[2]);
+
+    return TimeSpan.fromTime(days, hours, minutes, seconds, millis);
 }
 
 export function addTimeSpan(momentDate: Moment, ts: TimeSpan): Moment {

@@ -116,16 +116,36 @@ export class TimeSpan {
         return TimeSpan.round(this._millis / MILLIS_PER_DAY);
     }
 
+    public set days(value: number) {
+        // Subtract the current days from the total millis and add the new days
+        this._millis = this._millis - (this.days * MILLIS_PER_DAY) + (value * MILLIS_PER_DAY);
+    }
+
     public get hours(): number {
         return TimeSpan.round((this._millis / MILLIS_PER_HOUR) % 24);
+    }
+
+    public set hours(value: number) {
+        // Subtract the current hours from the total millis and add the new hours
+        this._millis = this._millis - (this.hours * MILLIS_PER_HOUR) + (value * MILLIS_PER_HOUR);
     }
 
     public get minutes(): number {
         return TimeSpan.round((this._millis / MILLIS_PER_MINUTE) % 60);
     }
 
+    public set minutes(value: number) {
+        // Subtract the current minutes from the total millis and add the new minutes
+        this._millis = this._millis - (this.minutes * MILLIS_PER_MINUTE) + (value * MILLIS_PER_MINUTE);
+    }
+
     public get seconds(): number {
         return TimeSpan.round((this._millis / MILLIS_PER_SECOND) % 60);
+    }
+
+    public set seconds(value: number) {
+        // Subtract the current seconds from the total millis and add the new seconds
+        this._millis = this._millis - (this.seconds * MILLIS_PER_SECOND) + (value * MILLIS_PER_SECOND);
     }
 
     public get milliseconds(): number {
@@ -164,9 +184,10 @@ export class TimeSpan {
 }
 
 TimeSpan.prototype.toString = function() {
-    const daysPrefix = this.days > 0 ? `${this.days} days, ` : '';
+    const daysPrefix = this.days > 0 ? `${this.days}.` : '';
     const hours = String(this.hours).padStart(2, '0');
     const minutes = String(this.minutes).padStart(2, '0');
     const seconds = String(this.seconds).padStart(2, '0');
-    return `${daysPrefix}${hours}:${minutes}:${seconds}`;
+    const milliSecondsSuffix = this.milliseconds > 0 ? `.${this.milliseconds}0000` : '';
+    return `${daysPrefix}${hours}:${minutes}:${seconds}${milliSecondsSuffix}`;
 }

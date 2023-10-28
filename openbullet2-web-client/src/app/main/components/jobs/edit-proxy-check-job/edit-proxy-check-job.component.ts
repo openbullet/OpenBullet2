@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import * as moment from 'moment';
 import { combineLatest, map } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
@@ -8,12 +9,19 @@ import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-s
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyGroupService } from 'src/app/main/services/proxy-group.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
+import { TimeSpan } from 'src/app/shared/utils/timespan';
 
 enum EditMode {
   Create = 'create',
   Update = 'update',
   Clone = 'clone'
+}
+
+enum StartConditionMode {
+  Absolute = 'absolute',
+  Relative = 'relative'
 }
 
 @Component({
@@ -30,6 +38,8 @@ export class EditProxyCheckJobComponent {
 
   faBolt = faBolt;
 
+  StartConditionMode = StartConditionMode;
+
   mode: EditMode = EditMode.Update;
   jobId: number | null = null;
   options: ProxyCheckJobOptionsDto | null = null;
@@ -37,6 +47,10 @@ export class EditProxyCheckJobComponent {
   settings: OBSettingsDto | null = null;
   targetSiteUrl: string = 'https://example.com';
   targetSiteSuccessKey: string = 'Example Domain';
+
+  startConditionMode: StartConditionMode = StartConditionMode.Absolute;
+  startAfter: TimeSpan = new TimeSpan(0);
+  startAt: Date = moment().add(1, 'days').toDate();
 
   defaultProxyGroup = {
     id: -1,
@@ -100,16 +114,38 @@ export class EditProxyCheckJobComponent {
     this.jobService.getProxyCheckJobOptions(this.jobId ?? -1)
       .subscribe(options => {
         this.options = options;
+
+        if (options.startCondition._polyTypeName === 'relativeTimeStartCondition') {
+          this.startAfter = parseTimeSpan(options.startCondition.startAfter);
+          this.startConditionMode = StartConditionMode.Relative;
+        } else if (options.startCondition._polyTypeName === 'absoluteTimeStartCondition') {
+          this.startAt = moment(options.startCondition.startAt).toDate();
+          this.startConditionMode = StartConditionMode.Absolute;
+        }
       });
   }
 
   onValidityChange(validity: FieldValidity) {
-    this.fieldsValidity[validity.key] = validity.valid;
+    this.fieldsValidity = {
+      ...this.fieldsValidity,
+      [validity.key]: validity.valid
+    };
   }
 
   targetSiteSelected(target: ProxyCheckTarget) {
     this.targetSiteUrl = target.url;
     this.targetSiteSuccessKey = target.successKey;
+  }
+
+  onStartAfterChange(timeSpan: TimeSpan) {
+    this.startAfter = timeSpan;
+    
+    if (this.startConditionMode === StartConditionMode.Relative) {
+      this.options!.startCondition = {
+        _polyTypeName: 'relativeTimeStartCondition',
+        startAfter: this.startAfter.toString()
+      };
+    }
   }
 
   // Can accept if touched and every field is valid
