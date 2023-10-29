@@ -23,6 +23,8 @@ import { AdminGuard } from '../shared/guards/admin.guard';
 import { JobsComponent } from './components/jobs/jobs.component';
 import { EditProxyCheckJobComponent } from './components/jobs/edit-proxy-check-job/edit-proxy-check-job.component';
 import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/edit-multi-run-job.component';
+import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
+import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-check-job.component';
 
 const routes: Routes = [
   // Main component layout
@@ -40,27 +42,39 @@ const routes: Routes = [
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'jobs/multi-run/edit'
+        path: 'job/multi-run/edit'
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'jobs/multi-run/create'
+        path: 'job/multi-run/create'
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'jobs/multi-run/clone'
+        path: 'job/multi-run/clone'
+      },
+      // The route with generic id must go last because otherwise
+      // it will match the other ones as well
+      {
+        component: MultiRunJobComponent,
+        path: 'job/multi-run/:id'
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'jobs/proxy-check/edit'
+        path: 'job/proxy-check/edit'
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'jobs/proxy-check/create'
+        path: 'job/proxy-check/create'
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'jobs/proxy-check/clone'
+        path: 'job/proxy-check/clone'
+      },
+      // The route with generic id must go last because otherwise
+      // it will match the other ones as well
+      {
+        component: ProxyCheckJobComponent,
+        path: 'job/proxy-check/:id'
       },
       {
         component: ProxiesComponent,

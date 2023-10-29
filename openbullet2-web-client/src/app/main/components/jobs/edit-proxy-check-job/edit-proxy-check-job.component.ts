@@ -1,9 +1,11 @@
 import { Component, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
+import { MessageService } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
+import { ProxyCheckTargetDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
 import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { JobService } from 'src/app/main/services/job.service';
@@ -15,7 +17,7 @@ import { TimeSpan } from 'src/app/shared/utils/timespan';
 
 enum EditMode {
   Create = 'create',
-  Update = 'update',
+  Edit = 'edit',
   Clone = 'clone'
 }
 
@@ -40,7 +42,7 @@ export class EditProxyCheckJobComponent {
 
   StartConditionMode = StartConditionMode;
 
-  mode: EditMode = EditMode.Update;
+  mode: EditMode = EditMode.Edit;
   jobId: number | null = null;
   options: ProxyCheckJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
@@ -67,7 +69,9 @@ export class EditProxyCheckJobComponent {
     activatedRoute: ActivatedRoute,
     private proxyGroupService: ProxyGroupService,
     private settingsService: SettingsService,
-    private jobService: JobService
+    private jobService: JobService,
+    private messageService: MessageService,
+    private router: Router
   ) {
     combineLatest([activatedRoute.url, activatedRoute.queryParams])
       .subscribe(results => {
@@ -113,7 +117,10 @@ export class EditProxyCheckJobComponent {
 
     this.jobService.getProxyCheckJobOptions(this.jobId ?? -1)
       .subscribe(options => {
-        this.options = options;
+        if (options.target !== null) {
+          this.targetSiteUrl = options.target.url;
+          this.targetSiteSuccessKey = options.target.successKey;
+        }
 
         if (options.startCondition._polyTypeName === 'relativeTimeStartCondition') {
           this.startAfter = parseTimeSpan(options.startCondition.startAfter);
@@ -122,6 +129,8 @@ export class EditProxyCheckJobComponent {
           this.startAt = moment(options.startCondition.startAt).toDate();
           this.startConditionMode = StartConditionMode.Absolute;
         }
+
+        this.options = options;
       });
   }
 
@@ -166,7 +175,48 @@ export class EditProxyCheckJobComponent {
   }
 
   accept() {
-    // TODO: Perform the API calls and redirect to viewer page!
-    console.log(this.options);
+    if (this.options === null) {
+      return;
+    }
+
+    this.options.target = <ProxyCheckTargetDto>{
+      url: this.targetSiteUrl,
+      successKey: this.targetSiteSuccessKey
+    };
+
+    if (this.mode === EditMode.Create) {
+      this.jobService.createProxyCheckJob(this.options)
+        .subscribe(resp => {
+          this.touched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Created',
+            detail: `Proxy check job ${resp.id} was created`
+          });
+          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+        });
+    } else if (this.mode === EditMode.Edit) {
+      this.jobService.updateProxyCheckJob(this.jobId!, this.options)
+        .subscribe(resp => {
+          this.touched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Updated',
+            detail: `Proxy check job ${resp.id} was updated`
+          });
+          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+        });
+    } else if (this.mode === EditMode.Clone) {
+      this.jobService.createProxyCheckJob(this.options)
+        .subscribe(resp => {
+          this.touched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Cloned',
+            detail: `Proxy check job ${resp.id} was cloned from ${this.jobId}`
+          });
+          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+        });
+    }
   }
 }

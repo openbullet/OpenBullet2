@@ -6,6 +6,7 @@ import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overvie
 import { SettingsService } from '../../services/settings.service';
 import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-jobs',
@@ -53,7 +54,8 @@ export class JobsComponent implements OnInit, OnDestroy {
     private jobService: JobService,
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -124,7 +126,10 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   editProxyCheckJob(job: ProxyCheckJobOverviewDto) {
-
+    this.router.navigate(
+      [`/job/proxy-check/edit`], 
+      { queryParams: { jobId: job.id } }
+    );
   }
 
   cloneMultiRunJob(job: MultiRunJobOverviewDto) {
@@ -132,7 +137,10 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   cloneProxyCheckJob(job: ProxyCheckJobOverviewDto) {
-
+    this.router.navigate(
+      [`/job/proxy-check/clone` ], 
+      { queryParams: { jobId: job.id } }
+    );
   }
 
   confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
