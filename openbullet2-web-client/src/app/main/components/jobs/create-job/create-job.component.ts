@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-job',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./create-job.component.scss']
 })
 export class CreateJobComponent {
+  constructor (
+    private router: Router
+  ) {}
 
+  createMultiRunJob() {
+    this.router.navigate(['/job/multi-run/create']);
+  }
+
+  createProxyCheckJob() {
+    this.router.navigate(['/job/proxy-check/create']);
+  }
 }

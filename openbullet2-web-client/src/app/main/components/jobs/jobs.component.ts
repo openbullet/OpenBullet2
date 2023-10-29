@@ -173,4 +173,12 @@ export class JobsComponent implements OnInit, OnDestroy {
         this.refreshJobs();
       });
   }
+
+  viewProxyCheckJob(pcj: ProxyCheckJobOverviewDto) {
+    this.router.navigate([`/job/proxy-check/${pcj.id}`]);
+  }
+
+  viewMultiRunJob(mrj: MultiRunJobOverviewDto) {
+    this.router.navigate([`/job/multi-run/${mrj.id}`]);
+  }
 }

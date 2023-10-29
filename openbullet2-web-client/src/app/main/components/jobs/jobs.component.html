@@ -138,7 +138,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-mrj>
-                    <tr class="job-row">
+                    <tr class="job-row" (click)="viewMultiRunJob(mrj)">
                         <td>{{ mrj.id }}</td>
                         <td>{{ mrj.name }}</td>
                         <td>
@@ -278,7 +278,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-pcj>
-                    <tr class="job-row">
+                    <tr class="job-row" (click)="viewProxyCheckJob(pcj)">
                         <td>{{ pcj.id }}</td>
                         <td>{{ pcj.name }}</td>
                         <td>

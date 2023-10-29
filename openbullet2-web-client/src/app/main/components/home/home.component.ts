@@ -42,7 +42,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   networkUsageData: number[] = [];
 
   constructor(
-    private markdownService: MarkdownService,
     private infoService: InfoService,
     private userService: UserService) {  
   }

@@ -13,6 +13,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { MessageService } from 'primeng/api';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
+import { getMockedSysPerfMetrics } from 'src/app/main/mock/messages.mock';
 import { DebugService } from 'src/app/main/services/debug.service';
 import { SysPerfHubService } from 'src/app/main/services/sysperf.hub.service';
 import { formatBytes } from 'src/app/shared/utils/bytes';
@@ -174,12 +175,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     // Mocked metrics, to use when debugging
     /*
     setInterval(() => {
-      this.onNewMetrics({
-        memoryUsage: Math.floor(Math.random() * 20),
-        cpuUsage: Math.random() * 100,
-        networkDownload: Math.floor(Math.random() * 20),
-        networkUpload: Math.floor(Math.random() * 20)
-      })
+      this.onNewMetrics(getMockedSysPerfMetrics())
     }, 1000);
     */
 
