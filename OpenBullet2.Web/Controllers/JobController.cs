@@ -66,7 +66,8 @@ public class JobController : ApiController
         // Only get the jobs of the user!
         var jobs = _jobManager.Jobs
             .Where(j => CanSee(apiUser, j) && j is MultiRunJob)
-            .Cast<MultiRunJob>();
+            .Cast<MultiRunJob>()
+            .OrderBy(j => j.Id);
 
         var dtos = new List<MultiRunJobOverviewDto>();
 
@@ -118,7 +119,8 @@ public class JobController : ApiController
         // Only get the jobs of the user!
         var jobs = _jobManager.Jobs
             .Where(j => CanSee(apiUser, j) && j is ProxyCheckJob)
-            .Cast<ProxyCheckJob>();
+            .Cast<ProxyCheckJob>()
+            .OrderBy(j => j.Id);
 
         return Ok(_mapper.Map<IEnumerable<ProxyCheckJobOverviewDto>>(jobs));
     }
