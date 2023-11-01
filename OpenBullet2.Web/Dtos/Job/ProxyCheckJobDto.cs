@@ -28,6 +28,11 @@ public class ProxyCheckJobDto : JobDto
     public int GroupId { get; set; } = -1;
 
     /// <summary>
+    /// The name of the proxy group to check.
+    /// </summary>
+    public string GroupName { get; set; } = "All";
+
+    /// <summary>
     /// Whether to only check the proxies that were never been tested.
     /// </summary>
     public bool CheckOnlyUntested { get; set; } = true;

@@ -17,6 +17,7 @@ import { BooleanIconComponent } from './components/boolean-icon/boolean-icon.com
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
 import { InputTimeSpanComponent } from './components/input-time-span/input-time-span.component';
+import { TimeSpanPipe } from './pipes/timespan.pipe';
 
 declare const monaco: any;
 
@@ -36,6 +37,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     TruncatePipe,
     BytesPipe,
     PascalCasePipe,
+    TimeSpanPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
@@ -57,6 +59,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     TruncatePipe,
     BytesPipe,
     PascalCasePipe,
+    TimeSpanPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,

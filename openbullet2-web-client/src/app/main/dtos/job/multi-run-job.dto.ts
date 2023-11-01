@@ -1,9 +1,11 @@
+import { JobStatus } from "./job-status"
 import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
 
 export interface MultiRunJobDto {
     id: number,
     ownerId: number,
-    status: string,
+    status: JobStatus,
+    name: string,
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto,
     config: JobConfigDto,
     dataPoolInfo: string,

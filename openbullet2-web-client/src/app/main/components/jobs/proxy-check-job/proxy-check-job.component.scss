@@ -1,0 +1,60 @@
+.ball {
+    background-color: var(--bg-secondary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    align-self: center;
+}
+
+.job-name {
+    line-height: 30px;
+    align-self: center;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.edit-button {
+    align-self: center;
+    margin-left: auto;
+}
+
+.back-to-jobs {
+    /* TODO: Add cute bounce animation to angle bracket on hover */
+    cursor: pointer;
+}
+
+.proxy-stats {
+    .proxy-stat {
+        display: block;
+    }
+}
+
+.job-option {
+    .job-option-name {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    .job-option-value {
+        background-color: var(--bg-secondary);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+        padding: 5px 10px;
+    }
+}
+
+.job-chip {
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--bg-primary);
+    display: inline-block;
+    height: 30px;
+    align-self: center;
+}

@@ -111,6 +111,7 @@
             <p-dropdown
                 optionLabel="name"
                 optionValue="id"
+                (onChange)="touched = true"
                 [options]="proxyGroups"
                 [(ngModel)]="options.groupId">
                 <ng-template let-item pTemplate="selectedItem">

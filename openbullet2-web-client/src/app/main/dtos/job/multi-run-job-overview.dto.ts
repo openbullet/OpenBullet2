@@ -1,7 +1,9 @@
+import { JobStatus } from "./job-status";
+
 export interface MultiRunJobOverviewDto {
     id: number,
     ownerId: number,
-    status: string,
+    status: JobStatus,
     configName: string,
     dataPoolInfo: string,
     bots: number,

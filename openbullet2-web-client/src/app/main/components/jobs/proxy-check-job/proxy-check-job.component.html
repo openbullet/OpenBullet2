@@ -1,1 +1,192 @@
-<p>proxy-check-job works!</p>
+<div class="back-to-jobs" (click)="backToJobs()">
+    <fa-icon [icon]="faAngleLeft" [fixedWidth]="true"></fa-icon>
+    <span class="ml-2">Back to Jobs</span>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job === null">
+    <div class="ball"></div>
+    <h2 class="job-name">
+        <span>Proxy Check Job</span>
+    </h2>
+</div>
+
+<div class="container-fluid d-flex flex-row px-0" *ngIf="job !== null">
+    <div [class]="'job-chip bg-' + statusColor[status]">
+        {{ status | uppercase }}
+    </div>
+    <h2 class="job-name">
+        <span>{{job.name}}</span>
+        <span class="text-small ml-2 color-inactive">PROXY CHECK JOB</span>
+    </h2>
+    <button class="button button-secondary edit-button"
+        [disabled]="!canEdit()"
+        (click)="editSettings()">
+        <fa-icon [icon]="faPencil" [fixedWidth]="true"></fa-icon>
+        Edit Settings
+    </button>
+</div>
+
+<app-spinner *ngIf="job === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-3" *ngIf="job !== null">
+    <div class="row">
+        <div class="col-4 pl-0 pr-3">
+            <p-card class="proxy-stats">
+                <h4 class="mb-2">Proxy stats</h4>
+                <div class="proxy-stat">
+                    <span>
+                        Total:
+                    </span>
+                    <span class="ml-1">
+                        {{job.total}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span>
+                        Tested:
+                    </span>
+                    <span class="ml-1">
+                        {{tested}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-good">
+                        Working:
+                    </span>
+                    <span class="ml-1 color-good">
+                        {{working}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-bad">
+                        Not working:
+                    </span>
+                    <span class="ml-1 color-bad">
+                        {{notWorking}}
+                    </span>
+                </div>
+            </p-card>
+        </div>
+        <div class="col-4 px-3">
+            <p-card class="proxy-stats">
+                <h4 class="mb-2">Other stats</h4>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        CPM:
+                    </span>
+                    <span class="ml-1">
+                        {{cpm}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Elapsed:
+                    </span>
+                    <span class="ml-1">
+                        {{elapsed | timespan}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Remaining:
+                    </span>
+                    <span class="ml-1">
+                        {{remaining | timespan}}
+                    </span>
+                </div>
+                <div class="proxy-stat">
+                    <span class="color-inactive">
+                        Progress:
+                    </span>
+                    <span class="ml-1">
+                        {{tested}} / {{job.total}} ({{progress | percent : '1.2-2'}})
+                    </span>
+                </div>
+            </p-card>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job options</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 pl-0">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Target
+                </div>
+                <div class="job-option-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.target !== null && job.target.url.length <= 20"
+                    [pTooltip]="job.target?.url ?? 'Unknown'">
+                    {{job.target?.url ?? 'Unknown' | truncate : 20}}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Success key
+                </div>
+                <div class="job-option-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.target !== null && job.target.successKey.length <= 20"
+                    [pTooltip]="job.target?.successKey ?? 'Unknown'">
+                    {{job.target?.successKey ?? 'Unknown' | truncate : 20}}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Bots
+                </div>
+                <div class="job-option-value">
+                    <!-- TODO: Allow edit -->
+                    {{job.bots}}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Timeout (ms)
+                </div>
+                <div class="job-option-value">
+                    {{job.timeoutMilliseconds | number : '1.'}} ms
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Check only untested
+                </div>
+                <div class="job-option-value">
+                    <app-boolean-icon 
+                        [useColors]="false"
+                        [value]="job.checkOnlyUntested" />
+                </div>
+            </div>
+        </div>
+        <div class="col-2 pr-0">
+            <div class="job-option">
+                <div class="job-option-name">
+                    Proxy group
+                </div>
+                <div class="job-option-value"
+                    tooltipPosition="bottom"
+                    [tooltipDisabled]="job.groupName.length <= 20"
+                    [pTooltip]="job.groupName">
+                    {{job.groupName | truncate : 20}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 pl-2">
+            <h5>Job controls</h5>
+        </div>
+    </div>
+</div>

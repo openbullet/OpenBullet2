@@ -144,6 +144,7 @@ export class EditProxyCheckJobComponent {
   targetSiteSelected(target: ProxyCheckTarget) {
     this.targetSiteUrl = target.url;
     this.targetSiteSuccessKey = target.successKey;
+    this.touched = true;
   }
 
   onStartAfterChange(timeSpan: TimeSpan) {

@@ -7,6 +7,7 @@ import { SettingsService } from '../../services/settings.service';
 import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { JobStatus } from '../../dtos/job/job-status';
 
 @Component({
   selector: 'app-jobs',
@@ -122,10 +123,35 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   editMultiRunJob(job: MultiRunJobOverviewDto) {
+    // If the job is not idle, we can't edit it
+    if (job.status !== JobStatus.IDLE) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Not idle',
+        detail: 'The job you are trying to edit is not idle, please' +
+          'stop it or abort it first'
+      });
+      return;
+    }
 
+    this.router.navigate(
+      [`/job/multi-run/edit`], 
+      { queryParams: { jobId: job.id } }
+    );
   }
 
   editProxyCheckJob(job: ProxyCheckJobOverviewDto) {
+    // If the job is not idle, we can't edit it
+    if (job.status !== JobStatus.IDLE) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Not idle',
+        detail: 'The job you are trying to edit is not idle, please' +
+          'stop it or abort it first'
+      });
+      return;
+    }
+
     this.router.navigate(
       [`/job/proxy-check/edit`], 
       { queryParams: { jobId: job.id } }
@@ -133,7 +159,10 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   cloneMultiRunJob(job: MultiRunJobOverviewDto) {
-
+    this.router.navigate(
+      [`/job/multi-run/clone` ], 
+      { queryParams: { jobId: job.id } }
+    );
   }
 
   cloneProxyCheckJob(job: ProxyCheckJobOverviewDto) {

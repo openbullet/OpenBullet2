@@ -2,8 +2,13 @@ import { Moment } from "moment";
 import { TimeSpan } from "./timespan";
 
 export function parseTimeSpan(input: string): TimeSpan {
-    // We assume the format is [d.]HH:mm:ss[.millis] e.g. 5.04:01:02.0030010
+    // We assume the format is [-][d.]HH:mm:ss[.millis] e.g. 5.04:01:02.0030010
     // means 5 days, 4 hours, 1 minute, 2 seconds, 3 milliseconds and 1 microsecond
+
+    if (input.startsWith('-')) {
+        input = input.substring(1);
+    }
+
     let days = 0;
     let millis = 0;
     const bigChunks = input.split('.');

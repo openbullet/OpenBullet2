@@ -39,11 +39,12 @@ public class JobController : ApiController
     private readonly IMapper _mapper;
     private readonly JobManagerService _jobManager;
     private readonly JobFactoryService _jobFactory;
+    private readonly IProxyGroupRepository _proxyGroupRepo;
 
     /// <summary></summary>
     public JobController(IJobRepository jobRepo, ILogger<JobController> logger,
         IGuestRepository guestRepo, IMapper mapper, JobManagerService jobManager,
-        JobFactoryService jobFactory)
+        JobFactoryService jobFactory, IProxyGroupRepository proxyGroupRepo)
     {
         _jobRepo = jobRepo;
         _logger = logger;
@@ -51,6 +52,7 @@ public class JobController : ApiController
         _mapper = mapper;
         _jobManager = jobManager;
         _jobFactory = jobFactory;
+        _proxyGroupRepo = proxyGroupRepo;
     }
 
     /// <summary>
@@ -141,10 +143,10 @@ public class JobController : ApiController
     /// </summary>
     [HttpGet("proxy-check")]
     [MapToApiVersion("1.0")]
-    public ActionResult<ProxyCheckJobDto> GetProxyCheckJob(int id)
+    public async Task<ActionResult<ProxyCheckJobDto>> GetProxyCheckJob(int id)
     {
         var job = GetJob<ProxyCheckJob>(id);
-        return MapProxyCheckJobDto(job);
+        return await MapProxyCheckJobDto(job);
     }
 
     /// <summary>
@@ -310,7 +312,7 @@ public class JobController : ApiController
             var job = _jobFactory.FromOptions(entity.Id, apiUser.Id, jobOptions);
             _jobManager.AddJob(job);
 
-            return MapProxyCheckJobDto((ProxyCheckJob)job);
+            return await MapProxyCheckJobDto((ProxyCheckJob)job);
         }
         catch
         {
@@ -402,7 +404,7 @@ public class JobController : ApiController
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
 
-        return MapProxyCheckJobDto((ProxyCheckJob)newJob);
+        return await MapProxyCheckJobDto((ProxyCheckJob)newJob);
     }
 
     /// <summary>
@@ -653,7 +655,7 @@ public class JobController : ApiController
         }
     }
 
-    private ProxyCheckJobDto MapProxyCheckJobDto(ProxyCheckJob job)
+    private async Task<ProxyCheckJobDto> MapProxyCheckJobDto(ProxyCheckJob job)
     {
         var checkOutput = job.ProxyOutput switch
         {
@@ -673,6 +675,39 @@ public class JobController : ApiController
             },
             _ => throw new NotImplementedException()
         };
+        
+        var entity = await GetEntityAsync(job.Id);
+        EnsureOwnership(entity);
+
+        var jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
+        var jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(
+            entity.JobOptions, jsonSettings)?.Options;
+
+        if (jobOptions is null)
+        {
+            throw new Exception("The job options are null");
+        }
+
+        if (jobOptions is not ProxyCheckJobOptions pcjJobOptions)
+        {
+            throw new Exception("Invalid job options type");
+        }
+
+        var groupName = "All";
+
+        if (pcjJobOptions.GroupId != -1)
+        {
+            var proxyGroup = await _proxyGroupRepo.Get(pcjJobOptions.GroupId);
+
+            if (proxyGroup is not null)
+            {
+                groupName = proxyGroup.Name;
+            }
+        }
 
         return new ProxyCheckJobDto
         {
@@ -682,7 +717,8 @@ public class JobController : ApiController
             OwnerId = job.OwnerId,
             Status = job.Status,
             Bots = job.Bots,
-            GroupId = -1, // TODO: Read this from the options!
+            GroupId = pcjJobOptions.GroupId,
+            GroupName = groupName,
             CheckOnlyUntested = job.CheckOnlyUntested,
             Target = new ProxyCheckTargetDto {
                 Url = job.Url,
