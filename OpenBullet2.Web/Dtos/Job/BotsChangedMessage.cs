@@ -3,7 +3,7 @@
 /// <summary>
 /// The number of bots has changed.
 /// </summary>
-public class MRJBotsChangedMessage
+public class BotsChangedMessage
 {
     /// <summary>
     /// The new amount of bots.

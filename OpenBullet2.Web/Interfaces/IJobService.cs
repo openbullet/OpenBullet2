@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Interfaces;
+﻿using OpenBullet2.Web.Dtos.Job;
+
+namespace OpenBullet2.Web.Interfaces;
 
 /// <summary>
 /// A service that can control jobs.
@@ -34,6 +36,11 @@ public interface IJobService
     /// Skip the waiting period of a job.
     /// </summary>
     void SkipWait(int jobId);
+
+    /// <summary>
+    /// Change the number of bots of a job.
+    /// </summary>
+    void ChangeBots(int jobId, ChangeBotsMessage message);
 
     /// <summary>
     /// Registers a new connection, a.k.a. an interactive job session started

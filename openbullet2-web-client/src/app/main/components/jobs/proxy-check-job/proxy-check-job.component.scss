@@ -30,16 +30,17 @@
     }
 }
 
-.job-option {
-    .job-option-name {
+.named-card {
+    .named-card-key {
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
         padding: 5px 10px;
         font-weight: 500;
+        color: var(--fg-inactive);
     }
 
-    .job-option-value {
+    .named-card-value {
         background-color: var(--bg-secondary);
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
@@ -57,4 +58,67 @@
     display: inline-block;
     height: 30px;
     align-self: center;
+}
+
+.job-controls {
+    .col {
+        padding: 0px 5px;
+    }
+
+    .col:first-child {
+        padding-left: 0px;
+    }
+
+    .col:last-child {
+        padding-right: 0px;
+    }
+}
+
+.progress-label {
+    position: absolute;
+    z-index: 1;
+    width: 100px;
+    top: 5px;
+    left: calc(50% - 50px);
+    display: flex;
+
+    span {
+        margin: auto;
+        font-weight: 600;
+        color: var(--fg-light);
+    }
+}
+
+.job-progress {
+    background-color: var(--bg-primary);
+    box-shadow: 0px 0px 1px 1px rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.logs {
+    height: 350px;
+    overflow-y: auto;
+
+    .log-line {
+        .log-line-time {
+            color: var(--fg-inactive);
+            font-size: 14px;
+        }
+    
+        .log-line-message {
+            font-size: 14px;
+            margin-left: 5px;
+        }
+    }
+}
+
+.change-bots-button {
+    height: 24px;
+    margin-top: -3px;
+}
+
+.change-bots-input-wrapper {
+    display: flex;
+    margin-bottom: -6px;
 }

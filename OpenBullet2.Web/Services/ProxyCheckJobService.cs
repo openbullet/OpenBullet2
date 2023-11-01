@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Dtos.Job.MultiRun;
 using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
@@ -33,6 +34,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
     private readonly EventHandler<ErrorDetails<ProxyCheckInput>> _onTaskError;
     private readonly EventHandler<ResultDetails<ProxyCheckInput, Proxy>> _onResult;
     private readonly EventHandler _onTimerTick;
+    private readonly EventHandler _onBotsChanged;
 
     /// <summary></summary>
     public ProxyCheckJobService(JobManagerService jobManager,
@@ -71,6 +73,11 @@ public class ProxyCheckJobService : IJobService, IDisposable
             OnTimerTick,
             SendError
         );
+        
+        _onBotsChanged = EventHandlers.TryAsync(
+            OnBotsChanged,
+            SendError
+        );
     }
 
     /// <inheritdoc/>
@@ -101,6 +108,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
             pcJob.OnTaskError += _onTaskError;
             pcJob.OnResult += _onResult;
             pcJob.OnTimerTick += _onTimerTick;
+            pcJob.OnBotsChanged += _onBotsChanged;
         }
 
         // Add the connection to the list
@@ -196,6 +204,18 @@ public class ProxyCheckJobService : IJobService, IDisposable
         job.SkipWait();
     }
 
+    /// <inheritdoc/>
+    public void ChangeBots(int jobId, ChangeBotsMessage message)
+    {
+        var job = GetJob(jobId);
+        job.ChangeBots(message.Desired).Forget(
+            async ex =>
+            {
+                _logger.LogError(ex, $"Could not change bots for job {jobId}");
+                await SendError(ex);
+            });
+    }
+
     // The job exists and is of the correct type, otherwise
     // we wouldn't have been able to register the connection
     private ProxyCheckJob GetJob(int jobId)
@@ -273,6 +293,18 @@ public class ProxyCheckJobService : IJobService, IDisposable
 
         await NotifyClients(sender, message, JobMethods.TimerTick);
     }
+    
+    private async Task OnBotsChanged(object? sender, EventArgs e)
+    {
+        var job = (sender as ProxyCheckJob)!;
+
+        var message = new BotsChangedMessage
+        {
+            NewValue = job.Bots
+        };
+
+        await NotifyClients(sender, message, JobMethods.BotsChanged);
+    }
 
     private async Task NotifyClients(object? sender, object message,
         string method)
@@ -299,6 +331,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
             job.OnError -= _onError;
             job.OnTaskError -= _onTaskError;
             job.OnResult -= _onResult;
+            job.OnBotsChanged -= _onBotsChanged;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
+using OpenBullet2.Web.Dtos.Job;
 using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.SignalR;
@@ -87,6 +88,13 @@ public abstract class JobHub : AuthorizedHub
     /// </summary>
     [HubMethodName("skipWait")]
     public void SkipWait() => _jobService.SkipWait((int)GetJobId()!);
+
+    /// <summary>
+    /// Change the number of bots.
+    /// </summary>
+    [HubMethodName("changeBots")]
+    public void ChangeBots(ChangeBotsMessage message) =>
+        _jobService.ChangeBots((int)GetJobId()!, message);
 
     /// <summary>
     /// Gets the job id provided by the user at connection setup.

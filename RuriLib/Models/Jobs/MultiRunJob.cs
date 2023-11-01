@@ -746,9 +746,11 @@ namespace RuriLib.Models.Jobs
             if (parallelizer is not null)
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
-                logger?.LogInfo(Id, $"Changed bots to {amount}");
-                OnBotsChanged?.Invoke(this, EventArgs.Empty);
             }
+
+            Bots = amount;
+            logger?.LogInfo(Id, $"Changed bots to {amount}");
+            OnBotsChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 

@@ -114,6 +114,7 @@ public class MultiRunJobService : IJobService, IDisposable
             mrJob.OnResult += _onResult;
             mrJob.OnTimerTick += _onTimerTick;
             mrJob.OnHit += _onHit;
+            mrJob.OnBotsChanged += _onBotsChanged;
         }
 
         // Add the connection to the list
@@ -207,6 +208,18 @@ public class MultiRunJobService : IJobService, IDisposable
     {
         var job = GetJob(jobId);
         job.SkipWait();
+    }
+    
+    /// <inheritdoc/>
+    public void ChangeBots(int jobId, ChangeBotsMessage message)
+    {
+        var job = GetJob(jobId);
+        job.ChangeBots(message.Desired).Forget(
+            async ex =>
+            {
+                _logger.LogError(ex, $"Could not change bots for job {jobId}");
+                await SendError(ex);
+            });
     }
 
     // The job exists and is of the correct type, otherwise
@@ -333,12 +346,12 @@ public class MultiRunJobService : IJobService, IDisposable
     {
         var job = (sender as MultiRunJob)!;
 
-        var message = new MRJBotsChangedMessage
+        var message = new BotsChangedMessage
         {
             NewValue = job.Bots
         };
 
-        await NotifyClients(sender, message, MultiRunJobMethods.BotsChanged);
+        await NotifyClients(sender, message, JobMethods.BotsChanged);
     }
 
     private async Task NotifyClients(object? sender, object message,

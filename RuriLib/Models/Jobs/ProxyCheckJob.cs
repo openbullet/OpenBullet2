@@ -52,6 +52,7 @@ namespace RuriLib.Models.Jobs
         public event EventHandler<Exception> OnError;
         public event EventHandler<float> OnProgress;
         public event EventHandler<JobStatus> OnStatusChanged;
+        public event EventHandler OnBotsChanged;
         public event EventHandler OnCompleted;
         public event EventHandler OnTimerTick;
 
@@ -271,8 +272,11 @@ namespace RuriLib.Models.Jobs
             if (parallelizer is not null)
             {
                 await parallelizer.ChangeDegreeOfParallelism(amount).ConfigureAwait(false);
-                logger?.LogInfo(Id, $"Changed bots to {amount}");
             }
+
+            Bots = amount;
+            logger?.LogInfo(Id, $"Changed bots to {amount}");
+            OnBotsChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
