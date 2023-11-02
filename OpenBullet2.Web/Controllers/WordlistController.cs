@@ -73,7 +73,8 @@ public class WordlistController : ApiController
 
         if (!System.IO.File.Exists(entity.FileName))
         {
-            _logger.LogWarning($"The wordlist with id {id} references a file that was moved or deleted from {entity.FileName}");
+            _logger.LogWarning("The wordlist with id {id} references a file that was moved or deleted from {fileName}",
+                id, entity.FileName);
 
             throw new ResourceNotFoundException(
                 ErrorCode.FILE_NOT_FOUND,
@@ -108,7 +109,8 @@ public class WordlistController : ApiController
         {
             if (!dto.FilePath.IsSubPathOf(_baseDir))
             {
-                _logger.LogWarning($"Guest user {apiUser.Username} tried to access a file outside of the allowed directory while creating a wordlist at {dto.FilePath}");
+                _logger.LogWarning("Guest user {username} tried to access a file outside of the allowed directory while creating a wordlist at {filePath}",
+                    apiUser.Username, dto.FilePath);
 
                 throw new UnauthorizedAccessException(
                     $"Guest users cannot access files outside of the {_baseDir} folder");

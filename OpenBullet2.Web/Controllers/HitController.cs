@@ -215,7 +215,7 @@ public class HitController : ApiController
         var count = await _hitRepo.Count();
         await _hitRepo.Purge();
 
-        _logger.LogWarning($"Purged {count} hits from the database!");
+        _logger.LogWarning("Purged {count} hits from the database!", count);
 
         return new AffectedEntriesDto
         {
@@ -281,7 +281,8 @@ public class HitController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.OwnerId)
         {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a hit not owned by them");
+            _logger.LogWarning("Guest user {username} tried to access a hit not owned by them",
+                apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.HIT_NOT_FOUND,
                 entity.Id, nameof(IHitRepository));

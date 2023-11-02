@@ -794,7 +794,8 @@ public class JobController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != job.OwnerId)
         {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a job not owned by them");
+            _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
+                apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
                 job.Id, nameof(JobManagerService));
@@ -809,7 +810,8 @@ public class JobController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a job not owned by them");
+            _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
+                apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
                 entity.Id, nameof(IJobRepository));

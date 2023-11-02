@@ -250,7 +250,7 @@ public class ProxyController : ApiController
             }
             else
             {
-                _logger.LogWarning($"Failed to parse proxy {line}");
+                _logger.LogWarning("Failed to parse proxy {line}", line);
             }
         }
 
@@ -317,7 +317,8 @@ public class ProxyController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning($"Guest user {apiUser.Username} tried to access a proxy group not owned by them");
+            _logger.LogWarning("Guest user {username} tried to access a proxy group not owned by them",
+                apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.PROXY_GROUP_NOT_FOUND,
                 entity.Id, nameof(IProxyGroupRepository));

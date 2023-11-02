@@ -28,21 +28,21 @@ internal class ExceptionMiddleware
         }
         catch (UnauthorizedAccessException ex)
         {
-            _logger.LogWarning($"Unauthorized request: {ex.Message}");
+            _logger.LogWarning("Unauthorized request: {message}", ex.Message);
             await Respond(context,
                 new ApiError(ErrorCode.UNAUTHORIZED, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
         catch (ApiException ex)
         {
-            _logger.LogWarning($"Request failed with managed exception: {ex}");
+            _logger.LogWarning("Request failed with managed exception: {message}", ex.Message);
             await Respond(context,
                 new ApiError(ex.ErrorCode, ex.ToString()),
                 HttpStatusCode.NotFound);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            _logger.LogError(ex, "Generic exception");
             await Respond(context,
                 new ApiError(ErrorCode.INTERNAL_SERVER_ERROR, ex.Message,
                 ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
