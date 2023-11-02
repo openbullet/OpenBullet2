@@ -85,7 +85,8 @@ public class ConfigDebuggerService : IDisposable
         // Add the connection to the list
         _connections[debugger].Add(connectionId);
 
-        _logger.LogDebug($"Registered new connection {connectionId} for debugger of config {configId}");
+        _logger.LogDebug("Registered new connection {connectionId} for debugger of config {configId}",
+            connectionId, configId);
     }
 
     /// <summary>
@@ -98,7 +99,8 @@ public class ConfigDebuggerService : IDisposable
             _connections[debugger].Remove(connectionId);
         }
 
-        _logger.LogDebug($"Unregistered connection {connectionId} for debugger of config {configId}");
+        _logger.LogDebug("Unregistered connection {connectionId} for debugger of config {configId}",
+            connectionId, configId);
     }
 
     private async Task OnNewLogEntry(object? sender, BotLoggerEntry e)

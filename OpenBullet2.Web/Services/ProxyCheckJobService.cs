@@ -114,7 +114,8 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // Add the connection to the list
         _connections[pcJob].Add(connectionId);
 
-        _logger.LogDebug($"Registered new connection {connectionId} for proxy check job {jobId}");
+        _logger.LogDebug("Registered new connection {connectionId} for proxy check job {jobId}",
+            connectionId, jobId);
     }
 
     /// <inheritdoc/>
@@ -124,7 +125,8 @@ public class ProxyCheckJobService : IJobService, IDisposable
 
         _connections[job].Remove(connectionId);
 
-        _logger.LogDebug($"Unregistered connection {connectionId} for proxy check job {jobId}");
+        _logger.LogDebug("Unregistered connection {connectionId} for proxy check job {jobId}",
+            connectionId, jobId);
     }
 
     /// <inheritdoc/>
@@ -136,7 +138,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Start().Forget(
             async ex => {
-                _logger.LogError(ex, $"Could not start job {jobId}");
+                _logger.LogError(ex, "Could not start job {jobId}", jobId);
                 await SendError(ex);
             });
     }
@@ -150,7 +152,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Stop().Forget(
             async ex => {
-                _logger.LogError(ex, $"Could not stop job {jobId}");
+                _logger.LogError(ex, "Could not stop job {jobId}", jobId);
                 await SendError(ex);
             });
     }
@@ -164,7 +166,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Abort().Forget(
             async ex => {
-                _logger.LogError(ex, $"Could not abort job {jobId}");
+                _logger.LogError(ex, "Could not abort job {jobId}", jobId);
                 await SendError(ex);
             });
     }
@@ -178,7 +180,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Pause().Forget(
             async ex => {
-                _logger.LogError(ex, $"Could not pause job {jobId}");
+                _logger.LogError(ex, "Could not pause job {jobId}", jobId);
                 await SendError(ex);
             });
     }
@@ -192,7 +194,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Resume().Forget(
             async ex => {
-                _logger.LogError(ex, $"Could not resume job {jobId}");
+                _logger.LogError(ex, "Could not resume job {jobId}", jobId);
                 await SendError(ex);
             });
     }
@@ -211,7 +213,7 @@ public class ProxyCheckJobService : IJobService, IDisposable
         job.ChangeBots(message.Desired).Forget(
             async ex =>
             {
-                _logger.LogError(ex, $"Could not change bots for job {jobId}");
+                _logger.LogError(ex, "Could not change bots for job {jobId}", jobId);
                 await SendError(ex);
             });
     }
