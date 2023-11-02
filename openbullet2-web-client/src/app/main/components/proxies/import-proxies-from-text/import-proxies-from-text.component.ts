@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 export interface ProxiesToImport {
-  defaultType: string,
-  defaultUsername: string,
-  defaultPassword: string,
+  defaultType: string;
+  defaultUsername: string;
+  defaultPassword: string;
   proxies: string[]
 }
 

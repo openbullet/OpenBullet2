@@ -9,9 +9,9 @@ export interface DbgStatusChangedMessage {
 }
 
 export interface VariableDto {
-    name: string,
-    markedForCapture: boolean,
-    type: string,
+    name: string;
+    markedForCapture: boolean;
+    type: string;
     value: any
 }
 
@@ -20,7 +20,7 @@ export interface DbgVariablesChangedMessage {
 }
 
 export interface DbgStateDto {
-    status: string,
-    log: BotLoggerEntry[],
+    status: string;
+    log: BotLoggerEntry[];
     variables: VariableDto[]
 }

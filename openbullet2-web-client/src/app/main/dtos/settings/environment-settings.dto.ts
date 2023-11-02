@@ -1,20 +1,20 @@
 export interface EnvironmentSettingsDto {
-    wordlistTypes: WordlistType[],
-    customStatuses: CustomStatus[],
+    wordlistTypes: WordlistType[];
+    customStatuses: CustomStatus[];
     exportFormats: ExportFormat[]
 }
 
 export interface WordlistType {
-    name: string,
-    regex: string,
-    verify: boolean,
-    separator: string,
-    slices: string[],
+    name: string;
+    regex: string;
+    verify: boolean;
+    separator: string;
+    slices: string[];
     slicesAlias: string[]
 }
 
 export interface CustomStatus {
-    name: string,
+    name: string;
     color: string
 }
 

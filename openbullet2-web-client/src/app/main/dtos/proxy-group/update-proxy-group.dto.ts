@@ -1,4 +1,4 @@
 export interface UpdateProxyGroupDto {
-    id: number,
+    id: number;
     name: string
 }

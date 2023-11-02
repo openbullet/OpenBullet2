@@ -1,4 +1,4 @@
 export interface OwnerDto {
-    id: number,
+    id: number;
     username: string
 }

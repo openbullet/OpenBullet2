@@ -1,4 +1,4 @@
 export interface FieldValidity {
-    key: string,
+    key: string;
     valid: boolean
 }

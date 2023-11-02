@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
 
 export interface DeleteSlowProxiesParams {
-  proxyGroupId: number,
+  proxyGroupId: number;
   maxPing: number
 }
 

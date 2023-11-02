@@ -1,6 +1,6 @@
 export interface UpdateHitDto {
-    id: number,
-    data: string,
-    capturedData: string,
+    id: number;
+    data: string;
+    capturedData: string;
     type: string
 }

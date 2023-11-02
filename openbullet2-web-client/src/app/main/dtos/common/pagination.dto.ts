@@ -1,4 +1,4 @@
 export interface PaginationDto {
-    pageNumber: number,
+    pageNumber: number;
     pageSize: number
 }

@@ -1,5 +1,5 @@
 export interface EndpointDto {
-    route: string,
-    apiKeys: string[],
+    route: string;
+    apiKeys: string[];
     configIds: string[]
 }

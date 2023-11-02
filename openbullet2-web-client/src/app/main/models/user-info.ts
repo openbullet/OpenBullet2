@@ -1,4 +1,4 @@
 export interface UserInfo {
-    username: string,
+    username: string;
     role: string
 }
