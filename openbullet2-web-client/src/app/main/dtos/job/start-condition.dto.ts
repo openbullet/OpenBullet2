@@ -1,9 +1,14 @@
+export enum StartConditionType {
+    Relative = 'relativeTimeStartCondition',
+    Absolute = 'absoluteTimeStartCondition'
+}
+
 export interface RelativeTimeStartConditionDto {
-    _polyTypeName: 'relativeTimeStartCondition',
+    _polyTypeName: StartConditionType.Relative,
     startAfter: string
 }
 
 export interface AbsoluteTimeStartConditionDto { 
-    _polyTypeName: 'absoluteTimeStartCondition',
+    _polyTypeName: StartConditionType.Absolute,
     startAt: string
 }

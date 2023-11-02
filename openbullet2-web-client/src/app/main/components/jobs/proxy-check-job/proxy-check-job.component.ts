@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleLeft, faCheck, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { ChangeBotsMessage } from 'src/app/main/dtos/job/messages/change-bots.dto';
 import { PCJNewResultMessage } from 'src/app/main/dtos/job/messages/proxy-check/new-result.dto';
 import { ProxyCheckJobDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
+import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyWorkingStatus } from 'src/app/main/enums/proxy-working-status';
 import { getMockedProxyCheckJobNewResultMessage } from 'src/app/main/mock/messages.mock';
 import { JobService } from 'src/app/main/services/job.service';
@@ -35,6 +37,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   faCheck = faCheck;
   Math = Math;
   JobStatus = JobStatus;
+  StartConditionType = StartConditionType;
 
   statusColor: Record<JobStatus, string> = {
     idle: 'secondary',
@@ -62,6 +65,15 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   isChangingBots: boolean = false;
   desiredBots: number = 1;
 
+  // Subscriptions
+  resultSubscription: Subscription | null = null;
+  tickSubscription: Subscription | null = null;
+  statusSubscription: Subscription | null = null;
+  botsSubscription: Subscription | null = null;
+  taskErrorSubscription: Subscription | null = null;
+  errorSubscription: Subscription | null = null;
+  completedSubscription: Subscription | null = null;
+
   constructor(
     activatedRoute: ActivatedRoute,
     private router: Router,
@@ -88,13 +100,15 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     */
 
     this.proxyCheckJobHubService.createHubConnection(this.jobId);
-    this.proxyCheckJobHubService.result$.subscribe(result => {
+    this.resultSubscription = this.proxyCheckJobHubService.result$
+    .subscribe(result => {
       if (result !== null) {
         this.onNewResult(result);
       }
     });
 
-    this.proxyCheckJobHubService.tick$.subscribe(tick => {
+    this.tickSubscription = this.proxyCheckJobHubService.tick$
+    .subscribe(tick => {
       if (tick !== null) {
         this.tested = tick.tested;
         this.working = tick.working;
@@ -106,15 +120,52 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.proxyCheckJobHubService.status$.subscribe(status => {
+    this.statusSubscription = this.proxyCheckJobHubService.status$
+    .subscribe(status => {
       if (status !== null) {
         this.onStatusChanged(status.newStatus);
       }
     });
 
-    this.proxyCheckJobHubService.bots$.subscribe(bots => {
+    this.botsSubscription = this.proxyCheckJobHubService.bots$
+    .subscribe(bots => {
       if (bots !== null) {
         this.onBotsChanged(bots.newValue);
+      }
+    });
+
+    this.taskErrorSubscription = this.proxyCheckJobHubService.taskError$
+    .subscribe(error => {
+      if (error !== null) {
+        const logMessage = `Task error for proxy ${error.proxyHost}:${error.proxyPort}: ${error.errorMessage}`;
+
+        this.logs.unshift({
+          timestamp: new Date(),
+          message: logMessage,
+          color: 'var(--fg-bad)'
+        });
+      }
+    });
+
+    this.errorSubscription = this.proxyCheckJobHubService.error$
+    .subscribe(error => {
+      if (error !== null) {
+        this.messageService.add({
+          severity: 'error',
+          summary: `Error - ${error.type}`,
+          detail: error.message
+        });
+      }
+    });
+
+    this.completedSubscription = this.proxyCheckJobHubService.completed$
+    .subscribe(completed => {
+      if (completed) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Completed',
+          detail: 'Job completed'
+        });
       }
     });
 
@@ -136,6 +187,14 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.proxyCheckJobHubService.stopHubConnection();
+
+    this.resultSubscription?.unsubscribe();
+    this.tickSubscription?.unsubscribe();
+    this.statusSubscription?.unsubscribe();
+    this.botsSubscription?.unsubscribe();
+    this.taskErrorSubscription?.unsubscribe();
+    this.errorSubscription?.unsubscribe();
+    this.completedSubscription?.unsubscribe();
   }
 
   onNewResult(result: PCJNewResultMessage) {

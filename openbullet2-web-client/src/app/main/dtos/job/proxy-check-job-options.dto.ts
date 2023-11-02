@@ -12,6 +12,10 @@ export interface ProxyCheckJobOptionsDto {
     checkOutput: DatabaseProxyCheckOutput
 }
 
+export enum ProxyCheckOutputType {
+    Database = 'databaseProxyCheckOutput'
+}
+
 export interface DatabaseProxyCheckOutput {
-    _polyTypeName: 'databaseProxyCheckOutput',
+    _polyTypeName: ProxyCheckOutputType.Database,
 }

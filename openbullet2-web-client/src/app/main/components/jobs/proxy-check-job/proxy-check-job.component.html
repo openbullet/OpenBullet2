@@ -217,8 +217,15 @@
                     [showValue]="false"></p-progressBar>
                 <div class="progress-label">
                     <span *ngIf="status === JobStatus.WAITING">
-                        Waiting...
-                        <!-- TODO: Display time left to wait -->
+                        Waiting
+                    </span>
+                    <span class="ml-1"
+                        *ngIf="status === JobStatus.WAITING && job.startCondition._polyTypeName === StartConditionType.Relative">
+                        {{job.startCondition.startAfter | timespan}}
+                    </span>
+                    <span class="ml-1"
+                        *ngIf="status === JobStatus.WAITING && job.startCondition._polyTypeName === StartConditionType.Absolute">
+                        until {{job.startCondition.startAt | date : 'dd/MM/yyyy HH:mm:ss Z'}}
                     </span>
                     <span *ngIf="status !== JobStatus.WAITING">
                         {{progress | percent : '1.2-2'}}
@@ -249,6 +256,8 @@
         </div>
         <div class="col col-auto" *ngIf="canPause()">
             <button class="button button-secondary color-custom"
+                tooltipPosition="bottom"
+                pTooltip="Waits for all jobs to finish processing the current data, and then pauses the job"
                 (click)="pause()">
                 <fa-icon [icon]="faPause" [fixedWidth]="true"></fa-icon>
                 Pause
@@ -256,6 +265,8 @@
         </div>
         <div class="col col-auto" *ngIf="canStop()">
             <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Gracefully stops the job, waiting for all bots to finish"
                 (click)="stop()">
                 <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
                 Stop
@@ -263,6 +274,8 @@
         </div>
         <div class="col col-auto" *ngIf="canAbort()">
             <button class="button button-secondary color-bad"
+                tooltipPosition="bottom"
+                pTooltip="Aggressively stops the job, killing all bots"
                 (click)="abort()">
                 <fa-icon [icon]="faX" [fixedWidth]="true"></fa-icon>
                 Abort
@@ -293,5 +306,7 @@
 </div>
 
 <div class="my-2 text-right">
-    <a target="_blank" href='https://db-ip.com'>IP Geolocation by DB-IP</a>
+    <a class="color-accent-light" target="_blank" href='https://db-ip.com'>
+        IP Geolocation by DB-IP
+    </a>
 </div>

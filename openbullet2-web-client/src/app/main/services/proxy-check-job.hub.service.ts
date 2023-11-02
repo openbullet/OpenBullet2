@@ -1,6 +1,5 @@
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { BehaviorSubject } from "rxjs";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { UserService } from "./user.service";
 import { PCJNewResultMessage } from "../dtos/job/messages/proxy-check/new-result.dto";
@@ -8,22 +7,33 @@ import { PCJStatsMessage } from "../dtos/job/messages/proxy-check/stats.dto";
 import { JobStatusChangedMessage } from "../dtos/job/messages/status-changed.dto";
 import { ChangeBotsMessage } from "../dtos/job/messages/change-bots.dto";
 import { BotsChangedMessage } from "../dtos/job/messages/bots-changed.dto";
+import { PCJTaskErrorMessage } from "../dtos/job/messages/task-error.dto";
+import { ErrorMessage } from "../dtos/common/messages.dto";
 
 @Injectable({providedIn: 'root'})
 export class ProxyCheckJobHubService {
     private hubConnection: HubConnection | null = null;
 
-    private resultSource = new BehaviorSubject<PCJNewResultMessage | null>(null);
-    public result$ = this.resultSource.asObservable();
+    private resultEmitter = new EventEmitter<PCJNewResultMessage | null>();
+    public result$ = this.resultEmitter.asObservable();
 
-    private tickSource = new BehaviorSubject<PCJStatsMessage | null>(null);
-    public tick$ = this.tickSource.asObservable();
+    private tickEmitter = new EventEmitter<PCJStatsMessage | null>();
+    public tick$ = this.tickEmitter.asObservable();
 
-    private statusSource = new BehaviorSubject<JobStatusChangedMessage | null>(null);
-    public status$ = this.statusSource.asObservable();
+    private statusEmitter = new EventEmitter<JobStatusChangedMessage | null>();
+    public status$ = this.statusEmitter.asObservable();
 
-    private botsSource = new BehaviorSubject<BotsChangedMessage | null>(null);
-    public bots$ = this.botsSource.asObservable();
+    private botsEmitter = new EventEmitter<BotsChangedMessage | null>();
+    public bots$ = this.botsEmitter.asObservable();
+
+    private taskErrorEmitter = new EventEmitter<PCJTaskErrorMessage | null>();
+    public taskError$ = this.taskErrorEmitter.asObservable();
+
+    private errorEmitter = new EventEmitter<ErrorMessage | null>();
+    public error$ = this.errorEmitter.asObservable();
+
+    private completedEmitter = new EventEmitter<boolean | null>();
+    public completed$ = this.completedEmitter.asObservable();
 
     constructor(private userService: UserService) {
 
@@ -42,19 +52,31 @@ export class ProxyCheckJobHubService {
         .catch(err => console.error(err));
 
         this.hubConnection.on('newResult', result => {
-            this.resultSource.next(result);
+            this.resultEmitter.emit(result);
         });
 
         this.hubConnection.on('timerTick', tick => {
-            this.tickSource.next(tick);
+            this.tickEmitter.emit(tick);
         });
 
         this.hubConnection.on('statusChanged', status => {
-            this.statusSource.next(status);
+            this.statusEmitter.emit(status);
         });
 
         this.hubConnection.on('botsChanged', bots => {
-            this.botsSource.next(bots);
+            this.botsEmitter.emit(bots);
+        });
+
+        this.hubConnection.on('taskError', error => {
+            this.taskErrorEmitter.emit(error);
+        });
+
+        this.hubConnection.on('error', error => {
+            this.errorEmitter.emit(error);
+        });
+
+        this.hubConnection.on('completed', () => {
+            this.completedEmitter.emit(true);
         });
     }
 

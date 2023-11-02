@@ -1,6 +1,5 @@
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { BehaviorSubject } from "rxjs";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { DbgNewLogMessage, DbgStateDto, DbgStatusChangedMessage, DbgVariablesChangedMessage } from "../dtos/config-debugger/messages";
 import { ErrorMessage } from "../dtos/common/messages.dto";
@@ -11,20 +10,20 @@ import { UserService } from "./user.service";
 export class ConfigDebuggerHubService {
     private hubConnection: HubConnection | null = null;
     
-    private logsSource = new BehaviorSubject<DbgNewLogMessage | null>(null);
-    public logs$ = this.logsSource.asObservable();
+    private logsEmitter = new EventEmitter<DbgNewLogMessage | null>();
+    public logs$ = this.logsEmitter.asObservable();
 
-    private statusSource = new BehaviorSubject<DbgStatusChangedMessage | null>(null);
-    public status$ = this.statusSource.asObservable();
+    private statusEmitter = new EventEmitter<DbgStatusChangedMessage | null>();
+    public status$ = this.statusEmitter.asObservable();
 
-    private variablesSource = new BehaviorSubject<DbgVariablesChangedMessage | null>(null);
-    public variables$ = this.variablesSource.asObservable();
+    private variablesEmitter = new EventEmitter<DbgVariablesChangedMessage | null>();
+    public variables$ = this.variablesEmitter.asObservable();
 
-    private stateSource = new BehaviorSubject<DbgStateDto | null>(null);
-    public state$ = this.stateSource.asObservable();
+    private stateEmitter = new EventEmitter<DbgStateDto | null>();
+    public state$ = this.stateEmitter.asObservable();
 
-    private errorSource = new BehaviorSubject<ErrorMessage | null>(null);
-    public error$ = this.errorSource.asObservable();
+    private errorEmitter = new EventEmitter<ErrorMessage | null>();
+    public error$ = this.errorEmitter.asObservable();
 
     constructor(private userService: UserService) {
 
@@ -39,23 +38,23 @@ export class ConfigDebuggerHubService {
         .build();
 
         this.hubConnection.on('newLogEntry', msg => {
-            this.logsSource.next(msg)
+            this.logsEmitter.emit(msg)
         });
 
         this.hubConnection.on('statusChanged', msg => {
-            this.statusSource.next(msg)
+            this.statusEmitter.emit(msg)
         });
 
         this.hubConnection.on('variablesChanged', msg => {
-            this.variablesSource.next(msg)
+            this.variablesEmitter.emit(msg)
         });
 
         this.hubConnection.on('debuggerState', msg => {
-            this.stateSource.next(msg)
+            this.stateEmitter.emit(msg)
         });
 
         this.hubConnection.on('error', msg => {
-            this.errorSource.next(msg)
+            this.errorEmitter.emit(msg)
         });
 
         return this.hubConnection

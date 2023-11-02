@@ -11,6 +11,7 @@ import { ConfigService } from 'src/app/main/services/config.service';
 import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
 import { ViewAsHtmlComponent } from './view-as-html/view-as-html.component';
 import { UserService } from 'src/app/main/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-config-debugger',
@@ -51,6 +52,12 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   viewAsHtmlModalVisible = false;
   html = '';
 
+  stateSubscription: Subscription | null = null;
+  logsSubscription: Subscription | null = null;
+  variablesSubscription: Subscription | null = null;
+  statusSubscription: Subscription | null = null;
+  errorSubscription: Subscription | null = null;
+
   private debuggerHubService = new ConfigDebuggerHubService(this.userService);
 
   constructor (private debuggerSettingsService: ConfigDebuggerSettingsService,
@@ -71,7 +78,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     });
 
     // When the state arrives, set current variables
-    this.debuggerHubService.state$.subscribe(msg => {
+    this.stateSubscription = this.debuggerHubService.state$
+    .subscribe(msg => {
       if (msg === null || msg === undefined) {
         return;
       }
@@ -87,6 +95,12 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.debuggerHubService.stopHubConnection();
+
+    this.stateSubscription?.unsubscribe();
+    this.logsSubscription?.unsubscribe();
+    this.variablesSubscription?.unsubscribe();
+    this.statusSubscription?.unsubscribe();
+    this.errorSubscription?.unsubscribe();
   }
 
   onNewState() {
@@ -94,7 +108,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     // new messages
     // TODO: Handle the case where other messages arrive before
     // the state message
-    this.debuggerHubService.logs$.subscribe(msg => {
+    this.logsSubscription = this.debuggerHubService.logs$
+    .subscribe(msg => {
       if (msg === null || msg === undefined) {
         return;
       }
@@ -103,7 +118,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       this.scrollToBottom();
     });
 
-    this.debuggerHubService.variables$.subscribe(msg => {
+    this.variablesSubscription = this.debuggerHubService.variables$
+    .subscribe(msg => {
       if (msg === null || msg === undefined) {
         return;
       }
@@ -111,7 +127,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       this.variables = msg.variables;
     });
 
-    this.debuggerHubService.status$.subscribe(msg => {
+    this.statusSubscription = this.debuggerHubService.status$
+    .subscribe(msg => {
       if (msg === null || msg === undefined) {
         return;
       }
@@ -126,7 +143,8 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }, 200);
     });
 
-    this.debuggerHubService.error$.subscribe(msg => {
+    this.errorSubscription = this.debuggerHubService.error$
+    .subscribe(msg => {
       if (msg === null || msg === undefined) {
         return;
       }

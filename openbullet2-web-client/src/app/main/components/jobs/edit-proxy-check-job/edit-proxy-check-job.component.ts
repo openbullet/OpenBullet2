@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
 import { ProxyCheckTargetDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
+import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
 import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { JobService } from 'src/app/main/services/job.service';
@@ -122,10 +123,10 @@ export class EditProxyCheckJobComponent {
           this.targetSiteSuccessKey = options.target.successKey;
         }
 
-        if (options.startCondition._polyTypeName === 'relativeTimeStartCondition') {
+        if (options.startCondition._polyTypeName === StartConditionType.Relative) {
           this.startAfter = parseTimeSpan(options.startCondition.startAfter);
           this.startConditionMode = StartConditionMode.Relative;
-        } else if (options.startCondition._polyTypeName === 'absoluteTimeStartCondition') {
+        } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
           this.startAt = moment(options.startCondition.startAt).toDate();
           this.startConditionMode = StartConditionMode.Absolute;
         }
@@ -152,7 +153,7 @@ export class EditProxyCheckJobComponent {
     
     if (this.startConditionMode === StartConditionMode.Relative) {
       this.options!.startCondition = {
-        _polyTypeName: 'relativeTimeStartCondition',
+        _polyTypeName: StartConditionType.Relative,
         startAfter: this.startAfter.toString()
       };
     }
@@ -164,7 +165,7 @@ export class EditProxyCheckJobComponent {
 
     if (this.startConditionMode === StartConditionMode.Absolute) {
       this.options!.startCondition = {
-        _polyTypeName: 'absoluteTimeStartCondition',
+        _polyTypeName: StartConditionType.Absolute,
         startAt: this.startAt.toISOString()
       };
     }

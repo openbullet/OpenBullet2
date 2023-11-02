@@ -1,6 +1,5 @@
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
-import { BehaviorSubject } from "rxjs";
 import { PerformanceInfoDto } from "../dtos/info/performance-info.dto";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { UserService } from "./user.service";
@@ -8,8 +7,9 @@ import { UserService } from "./user.service";
 @Injectable({providedIn: 'root'})
 export class SysPerfHubService {
     private hubConnection: HubConnection | null = null;
-    private metricsSource = new BehaviorSubject<PerformanceInfoDto | null>(null);
-    public metrics$ = this.metricsSource.asObservable();
+    
+    private metricsEmitter = new EventEmitter<PerformanceInfoDto | null>();
+    public metrics$ = this.metricsEmitter.asObservable();
 
     constructor(private userService: UserService) {
 
@@ -28,7 +28,7 @@ export class SysPerfHubService {
         .catch(err => console.error(err));
 
         this.hubConnection.on('newMetrics', metrics => {
-            this.metricsSource.next(metrics)
+            this.metricsEmitter.emit(metrics)
         });
     }
 

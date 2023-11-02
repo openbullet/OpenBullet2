@@ -12,6 +12,7 @@ import {
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
 import { getMockedSysPerfMetrics } from 'src/app/main/mock/messages.mock';
 import { DebugService } from 'src/app/main/services/debug.service';
@@ -164,6 +165,8 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     }
   };
 
+  metricsSubscription: Subscription | null = null;
+
   @ViewChildren(BaseChartDirective) charts?: QueryList<BaseChartDirective>;
 
   constructor(
@@ -180,7 +183,8 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     */
 
     this.sysPerfHubService.createHubConnection();
-    this.sysPerfHubService.metrics$.subscribe(metrics => {
+    this.metricsSubscription = this.sysPerfHubService.metrics$
+    .subscribe(metrics => {
       if (metrics !== null) {
         this.onNewMetrics(metrics);
       }
@@ -189,6 +193,8 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sysPerfHubService.stopHubConnection();
+
+    this.metricsSubscription?.unsubscribe();
   }
 
   garbageCollect() {
