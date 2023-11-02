@@ -148,6 +148,11 @@ export class EditProxyCheckJobComponent {
     this.touched = true;
   }
 
+  onStartConditionModeChange(mode: StartConditionMode) {
+    this.startConditionMode = mode;
+    this.touched = true;
+  }
+
   onStartAfterChange(timeSpan: TimeSpan) {
     this.startAfter = timeSpan;
     
@@ -162,6 +167,7 @@ export class EditProxyCheckJobComponent {
   onStartAtChange(date: Date) {
     // Convert to local time, otherwise it's UTC
     this.startAt = moment(date).local().toDate();
+    this.touched = true;
 
     if (this.startConditionMode === StartConditionMode.Absolute) {
       this.options!.startCondition = {

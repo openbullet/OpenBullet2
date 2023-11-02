@@ -90,8 +90,11 @@
                     <span class="color-inactive">
                         Remaining:
                     </span>
-                    <span class="ml-1">
+                    <span *ngIf="status === JobStatus.RUNNING" class="ml-1">
                         {{remaining | timespan}}
+                    </span>
+                    <span *ngIf="status !== JobStatus.RUNNING" class="ml-1">
+                        -
                     </span>
                 </div>
                 <div class="proxy-stat">
@@ -216,20 +219,14 @@
                     [value]="Math.round(progress * 100 * 100) / 100"
                     [showValue]="false"></p-progressBar>
                 <div class="progress-label">
-                    <span *ngIf="status === JobStatus.WAITING">
-                        Waiting
-                    </span>
-                    <span class="ml-1"
-                        *ngIf="status === JobStatus.WAITING && job.startCondition._polyTypeName === StartConditionType.Relative">
-                        {{job.startCondition.startAfter | timespan}}
-                    </span>
-                    <span class="ml-1"
-                        *ngIf="status === JobStatus.WAITING && job.startCondition._polyTypeName === StartConditionType.Absolute">
-                        until {{job.startCondition.startAt | date : 'dd/MM/yyyy HH:mm:ss Z'}}
-                    </span>
-                    <span *ngIf="status !== JobStatus.WAITING">
-                        {{progress | percent : '1.2-2'}}
-                    </span>
+                    <div class="progress-label-text">
+                        <span *ngIf="status === JobStatus.WAITING">
+                            Waiting... {{waitLeft | timespan}} left
+                        </span>
+                        <span *ngIf="status !== JobStatus.WAITING">
+                            {{progress | percent : '1.2-2'}}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -77,15 +77,18 @@
 .progress-label {
     position: absolute;
     z-index: 1;
-    width: 100px;
+    width: 400px;
     top: 5px;
-    left: calc(50% - 50px);
+    left: calc(50% - 200px);
     display: flex;
 
-    span {
+    .progress-label-text {
         margin: auto;
-        font-weight: 600;
-        color: var(--fg-light);
+        
+        span {
+            font-weight: 600;
+            color: var(--fg-light);
+        }
     }
 }
 

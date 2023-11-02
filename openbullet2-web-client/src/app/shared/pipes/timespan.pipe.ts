@@ -1,13 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { parseTimeSpan } from '../utils/dates';
+import { TimeSpan } from '../utils/timespan';
 
 @Pipe({
  name: 'timespan'
 })
 
 export class TimeSpanPipe implements PipeTransform {
-    transform(value: string): string {
-        const timeSpan = parseTimeSpan(value);
+    transform(value: string | TimeSpan | null): string {
+        if (value === null) {
+            return 'unknown time';
+        }
+
+        const timeSpan = typeof value === 'string' ? parseTimeSpan(value) : value;
         let output = '';
 
         // Return [d day[s]]HH:mm:ss

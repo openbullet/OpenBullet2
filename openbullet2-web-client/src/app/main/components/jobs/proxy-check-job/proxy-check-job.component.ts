@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faAngleLeft, faCheck, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
+import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
@@ -12,6 +13,8 @@ import { ProxyWorkingStatus } from 'src/app/main/enums/proxy-working-status';
 import { getMockedProxyCheckJobNewResultMessage } from 'src/app/main/mock/messages.mock';
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyCheckJobHubService } from 'src/app/main/services/proxy-check-job.hub.service';
+import { parseTimeSpan } from 'src/app/shared/utils/dates';
+import { TimeSpan } from 'src/app/shared/utils/timespan';
 
 interface LogMessage {
   timestamp: Date;
@@ -65,6 +68,10 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   isChangingBots: boolean = false;
   desiredBots: number = 1;
+
+  startTime: moment.Moment | null = null;
+  waitLeft: TimeSpan | null = null;
+  getWaitLeftTimer: ReturnType<typeof setInterval> | null = null;
 
   // Subscriptions
   resultSubscription: Subscription | null = null;
@@ -180,8 +187,16 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
         this.remaining = job.remaining;
         this.progress = job.progress;
 
+        if (job.startTime !== null) {
+          this.startTime = moment(job.startTime);
+        }
+
         this.job = job;
       });
+
+    this.getWaitLeftTimer = setInterval(() => {
+      this.waitLeft = this.getWaitLeft();
+    }, 1000);
   }
 
   ngOnDestroy(): void {
@@ -194,6 +209,10 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     this.taskErrorSubscription?.unsubscribe();
     this.errorSubscription?.unsubscribe();
     this.completedSubscription?.unsubscribe();
+
+    if (this.getWaitLeftTimer !== null) {
+      clearInterval(this.getWaitLeftTimer);
+    }
   }
 
   onNewResult(result: PCJNewResultMessage) {
@@ -210,6 +229,10 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   onStatusChanged(status: JobStatus) {
     this.status = status;
+
+    if (status === JobStatus.WAITING) {
+      this.startTime = moment();
+    }
 
     const logMessage = `Status changed to ${status}`;
 
@@ -339,5 +362,37 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     }
 
     this.logs.unshift(message);
+  }
+
+  getWaitLeft(): TimeSpan | null {
+    if (this.job === null || this.startTime === null) {
+      return null;
+    }
+
+    let startAt = moment();
+
+    if (this.job.startCondition._polyTypeName === StartConditionType.Absolute) {
+      // If the wait is absolute, we already know when it will start
+      startAt = moment(this.job.startCondition.startAt);
+    } else if (this.job.startCondition._polyTypeName === StartConditionType.Relative) {
+      // If the wait is relative, we need to add the startAfter to the startTime
+      const startAfter = parseTimeSpan(this.job.startCondition.startAfter);
+      startAt = moment(this.startTime)
+        .add(startAfter.days, 'days')
+        .add(startAfter.hours, 'hours')
+        .add(startAfter.minutes, 'minutes')
+        .add(startAfter.seconds, 'seconds');
+    }
+
+    const diff = moment(startAt).diff(moment());
+    const duration = moment.duration(diff);
+
+    return TimeSpan.fromTime(
+      duration.days(),
+      duration.hours(),
+      duration.minutes(),
+      duration.seconds(),
+      0
+    );
   }
 }

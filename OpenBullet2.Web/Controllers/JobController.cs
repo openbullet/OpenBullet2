@@ -581,6 +581,167 @@ public class JobController : ApiController
         };
     }
 
+    /// <summary>
+    /// Start a job.
+    /// </summary>
+    [HttpPost("start")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> StartJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        if (dto.Wait)
+        {
+            await job.Start();    
+        }
+        else
+        {
+            job.Start().Forget(
+                e => _logger.LogError(
+                    "Error while starting job {jobId}: {message}", dto.JobId, e.Message));
+        }
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Stop a job.
+    /// </summary>
+    [HttpPost("stop")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> StopJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        if (dto.Wait)
+        {
+            await job.Stop();
+        }
+        else
+        {
+            job.Stop().Forget(
+                e => _logger.LogError(
+                    "Error while stopping job {jobId}: {message}", dto.JobId, e.Message));
+        }
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Pause a job.
+    /// </summary>
+    [HttpPost("pause")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> PauseJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        if (dto.Wait)
+        {
+            await job.Pause();
+        }
+        else
+        {
+            job.Pause().Forget(
+                e => _logger.LogError(
+                    "Error while pausing job {jobId}: {message}", dto.JobId, e.Message));
+        }
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Resume a paused job.
+    /// </summary>
+    [HttpPost("resume")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> ResumeJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        if (dto.Wait)
+        {
+            await job.Resume();
+        }
+        else
+        {
+            job.Resume().Forget(
+                e => _logger.LogError(
+                    "Error while resuming job {jobId}: {message}", dto.JobId, e.Message));
+        }
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Abort a job.
+    /// </summary>
+    [HttpPost("abort")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> AbortJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        if (dto.Wait)
+        {
+            await job.Abort();
+        }
+        else
+        {
+            job.Abort().Forget(
+                e => _logger.LogError(
+                    "Error while aborting job {jobId}: {message}", dto.JobId, e.Message));
+        }
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Skip a job's waiting time.
+    /// </summary>
+    [HttpPost("skip-wait")]
+    [MapToApiVersion("1.0")]
+    public ActionResult SkipWaitJob(JobCommandDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+
+        job.SkipWait();
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Change the number of bots in a job.
+    /// </summary>
+    [HttpPost("change-bots")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> ChangeBots(ChangeBotsDto dto)
+    {
+        var job = GetJob(dto.JobId);
+        EnsureOwnership(job);
+        
+        switch (job)
+        {
+            case MultiRunJob mrj:
+                await mrj.ChangeBots(dto.Bots);
+                break;
+
+            case ProxyCheckJob pcj:
+                await pcj.ChangeBots(dto.Bots);
+                break;
+
+            default:
+                throw new NotSupportedException();
+        }
+
+        return Ok();
+    }
+
     private Job GetJob(int id)
     {
         var job = _jobManager.Jobs.FirstOrDefault(j => j.Id == id);
@@ -714,6 +875,7 @@ public class JobController : ApiController
             Id = job.Id,
             Name = job.Name,
             StartCondition = startCondition,
+            StartTime = job.StartTime,
             OwnerId = job.OwnerId,
             Status = job.Status,
             Bots = job.Bots,
@@ -787,6 +949,7 @@ public class JobController : ApiController
             Id = job.Id,
             Name = job.Name,
             StartCondition = startCondition,
+            StartTime = job.StartTime,
             OwnerId = job.OwnerId,
             Status = job.Status,
             Config = job.Config is not null ? new JobConfigDto

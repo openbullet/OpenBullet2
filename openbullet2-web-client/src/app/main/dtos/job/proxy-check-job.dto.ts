@@ -7,6 +7,7 @@ export interface ProxyCheckJobDto {
     status: JobStatus;
     name: string;
     bots: number;
+    startTime: string | null;
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
     groupId: number;
     groupName: string;

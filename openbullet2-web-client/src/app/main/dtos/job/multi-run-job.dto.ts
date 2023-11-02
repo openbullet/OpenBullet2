@@ -6,6 +6,7 @@ export interface MultiRunJobDto {
     ownerId: number;
     status: JobStatus;
     name: string;
+    startTime: string | null;
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
     config: JobConfigDto;
     dataPoolInfo: string;
