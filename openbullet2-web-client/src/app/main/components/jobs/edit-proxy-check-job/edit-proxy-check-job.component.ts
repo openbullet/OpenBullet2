@@ -2,8 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
-import { MessageService } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable, combineLatest, map } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
 import { ProxyCheckTargetDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
@@ -12,6 +12,7 @@ import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-s
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyGroupService } from 'src/app/main/services/proxy-group.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
@@ -32,9 +33,7 @@ enum StartConditionMode {
   templateUrl: './edit-proxy-check-job.component.html',
   styleUrls: ['./edit-proxy-check-job.component.scss']
 })
-export class EditProxyCheckJobComponent {
-  // TODO: Add a guard as well so if the user navigates away
-  // from the page using the router it will also prompt the warning!
+export class EditProxyCheckJobComponent implements DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
     return !this.touched;
   }
@@ -72,6 +71,7 @@ export class EditProxyCheckJobComponent {
     private settingsService: SettingsService,
     private jobService: JobService,
     private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     private router: Router
   ) {
     combineLatest([activatedRoute.url, activatedRoute.queryParams])
@@ -103,6 +103,29 @@ export class EditProxyCheckJobComponent {
           ...proxyGroups
         ];
       });
+  }
+
+  canDeactivate() {
+    if (!this.touched) {
+      return true;
+    }
+
+    // Ask for confirmation and return the observable
+    return new Observable<boolean>(observer => {
+      this.confirmationService.confirm({
+        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          observer.next(true);
+          observer.complete();
+        },
+        reject: () => {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
 
   initJobOptions() {

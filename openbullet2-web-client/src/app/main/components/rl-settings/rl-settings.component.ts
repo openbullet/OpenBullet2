@@ -4,15 +4,15 @@ import { SettingsService } from '../../services/settings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { faWrench } from '@fortawesome/free-solid-svg-icons';
+import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-rl-settings',
   templateUrl: './rl-settings.component.html',
   styleUrls: ['./rl-settings.component.scss']
 })
-export class RlSettingsComponent implements OnInit {
-  // TODO: Add a guard as well so if the user navigates away
-  // from the page using the router it will also prompt the warning!
+export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
     return !this.touched;
   }
@@ -53,6 +53,29 @@ export class RlSettingsComponent implements OnInit {
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService) {}
+
+  canDeactivate() {
+    if (!this.touched) {
+      return true;
+    }
+
+    // Ask for confirmation and return the observable
+    return new Observable<boolean>(observer => {
+      this.confirmationService.confirm({
+        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          observer.next(true);
+          observer.complete();
+        },
+        reject: () => {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.getSettings();

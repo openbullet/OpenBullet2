@@ -10,6 +10,8 @@ import { getBaseUrl } from "src/app/shared/utils/host";
     providedIn: 'root'
 })
 export class UserService {
+    private unsavedChanges: boolean = false;
+
     constructor(
         private http: HttpClient
     ) { }
@@ -62,5 +64,13 @@ export class UserService {
         return this.http.post<LoggedInUserDto>(
             getBaseUrl() + '/user/login', user
         );
+    }
+
+    setUnsavedChanges(hasUnsavedChanges: boolean) {
+        this.unsavedChanges = hasUnsavedChanges;
+    }
+
+    hasUnsavedChanges(): boolean {
+        return this.unsavedChanges;
     }
 }

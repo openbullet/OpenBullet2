@@ -4,17 +4,16 @@ import { CustomSnippet, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint }
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
-import { ThemeDto } from '../../dtos/settings/theme.dto';
 import { applyAppTheme } from 'src/app/shared/utils/theme';
+import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-ob-settings',
   templateUrl: './ob-settings.component.html',
   styleUrls: ['./ob-settings.component.scss']
 })
-export class OBSettingsComponent implements OnInit {
-  // TODO: Add a guard as well so if the user navigates away
-  // from the page using the router it will also prompt the warning!
+export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
     return !this.touched;
   }
@@ -60,6 +59,29 @@ export class OBSettingsComponent implements OnInit {
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService) {}
+
+  canDeactivate() {
+    if (!this.touched) {
+      return true;
+    }
+
+    // Ask for confirmation and return the observable
+    return new Observable<boolean>(observer => {
+      this.confirmationService.confirm({
+        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          observer.next(true);
+          observer.complete();
+        },
+        reject: () => {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
+  }
   
   ngOnInit(): void {
     this.getSettings();

@@ -25,6 +25,7 @@ import { EditProxyCheckJobComponent } from './components/jobs/edit-proxy-check-j
 import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/edit-multi-run-job.component';
 import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
 import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-check-job.component';
+import { canDeactivateFormComponent } from '../shared/guards/can-deactivate-form.guard';
 
 const routes: Routes = [
   // Main component layout
@@ -42,15 +43,18 @@ const routes: Routes = [
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'job/multi-run/edit'
+        path: 'job/multi-run/edit',
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'job/multi-run/create'
+        path: 'job/multi-run/create',
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: EditMultiRunJobComponent,
-        path: 'job/multi-run/clone'
+        path: 'job/multi-run/clone',
+        canDeactivate: [canDeactivateFormComponent]
       },
       // The route with generic id must go last because otherwise
       // it will match the other ones as well
@@ -60,15 +64,18 @@ const routes: Routes = [
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'job/proxy-check/edit'
+        path: 'job/proxy-check/edit',
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'job/proxy-check/create'
+        path: 'job/proxy-check/create',
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: EditProxyCheckJobComponent,
-        path: 'job/proxy-check/clone'
+        path: 'job/proxy-check/clone',
+        canDeactivate: [canDeactivateFormComponent]
       },
       // The route with generic id must go last because otherwise
       // it will match the other ones as well
@@ -122,12 +129,14 @@ const routes: Routes = [
       {
         component: OBSettingsComponent,
         path: 'settings',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: RlSettingsComponent,
         path: 'rl-settings',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: GuestsComponent,
