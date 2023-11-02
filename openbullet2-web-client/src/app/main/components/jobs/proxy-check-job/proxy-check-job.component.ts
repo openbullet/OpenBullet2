@@ -60,6 +60,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   remaining: string = '00:00:00';
   progress: number = 0;
 
+  logsBufferSize: number = 10_000;
   logs: LogMessage[] = [];
 
   isChangingBots: boolean = false;
@@ -93,11 +94,9 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     }
 
     // Mocked results, to use when debugging
-    /*
-    setInterval(() => {
-      this.onNewResult(getMockedProxyCheckJobNewResultMessage())
-    }, 1000);
-    */
+    // setInterval(() => {
+    //   this.onNewResult(getMockedProxyCheckJobNewResultMessage())
+    // }, 50);
 
     this.proxyCheckJobHubService.createHubConnection(this.jobId);
     this.resultSubscription = this.proxyCheckJobHubService.result$
@@ -139,7 +138,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
       if (error !== null) {
         const logMessage = `Task error for proxy ${error.proxyHost}:${error.proxyPort}: ${error.errorMessage}`;
 
-        this.logs.unshift({
+        this.writeLog({
           timestamp: new Date(),
           message: logMessage,
           color: 'var(--fg-bad)'
@@ -202,7 +201,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
       ? `Proxy ${result.proxyHost}:${result.proxyPort} is working with ping ${result.ping} ms and country ${result.country}`
       : `Proxy ${result.proxyHost}:${result.proxyPort} is not working`;
 
-    this.logs.unshift({
+    this.writeLog({
       timestamp: new Date(),
       message: logMessage,
       color: result.workingStatus === ProxyWorkingStatus.Working ? 'var(--fg-good)' : 'var(--fg-bad)'
@@ -214,7 +213,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     const logMessage = `Status changed to ${status}`;
 
-    this.logs.unshift({
+    this.writeLog({
       timestamp: new Date(),
       message: logMessage,
       color: 'var(--fg-primary)'
@@ -226,7 +225,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     const logMessage = `Bots changed to ${bots}`;
 
-    this.logs.unshift({
+    this.writeLog({
       timestamp: new Date(),
       message: logMessage,
       color: 'var(--fg-primary)'
@@ -311,7 +310,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     const logMessage = `Requested to change bots to ${bots}`;
 
-    this.logs.unshift({
+    this.writeLog({
       timestamp: new Date(),
       message: logMessage,
       color: 'var(--fg-primary)'
@@ -330,5 +329,15 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     this.isChangingBots = false;
     this.bots = bots;
+  }
+
+  writeLog(message: LogMessage) {
+    // If there are more than N logs, shift the array
+    // to always keep up to N logs
+    if (this.logs.length > this.logsBufferSize) {
+      this.logs.pop();
+    }
+
+    this.logs.unshift(message);
   }
 }
