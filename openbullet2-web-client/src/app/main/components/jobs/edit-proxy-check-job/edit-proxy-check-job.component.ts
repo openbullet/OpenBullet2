@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest, map } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
 import { ProxyCheckTargetDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
+import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
 import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-settings.dto';
@@ -21,11 +22,6 @@ enum EditMode {
   Create = 'create',
   Edit = 'edit',
   Clone = 'clone'
-}
-
-enum StartConditionMode {
-  Absolute = 'absolute',
-  Relative = 'relative'
 }
 
 @Component({

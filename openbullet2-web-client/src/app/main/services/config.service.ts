@@ -86,6 +86,28 @@ export class ConfigService {
         );
     }
 
+    getMetadata(id: string) {
+        return this.http.get<ConfigDto>(
+            getBaseUrl() + '/config/metadata',
+            {
+                params: {
+                    id
+                }
+            }
+        );
+    }
+
+    getInfo(id: string) {
+        return this.http.get<ConfigInfoDto>(
+            getBaseUrl() + '/config/info',
+            {
+                params: {
+                    id
+                }
+            }
+        );
+    }
+
     getConfig(id: string) {
         return this.http.get<ConfigDto>(
             getBaseUrl() + '/config',

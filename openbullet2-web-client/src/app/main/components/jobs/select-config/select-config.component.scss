@@ -1,0 +1,22 @@
+.config-table-icon {
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.config-search-box {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .config-search-input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .config-search-button {
+        width: 100px;
+        align-self: center;
+        height: 41px;
+    }
+}

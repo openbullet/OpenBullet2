@@ -81,6 +81,7 @@ import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-
 import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/edit-multi-run-job.component';
 import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
 import { AddThemeComponent } from './components/ob-settings/add-theme/add-theme.component';
+import { SelectConfigComponent } from './components/jobs/select-config/select-config.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +140,8 @@ import { AddThemeComponent } from './components/ob-settings/add-theme/add-theme.
     ProxyCheckJobComponent,
     EditMultiRunJobComponent,
     MultiRunJobComponent,
-    AddThemeComponent
+    AddThemeComponent,
+    SelectConfigComponent
   ],
   imports: [
     CommonModule,

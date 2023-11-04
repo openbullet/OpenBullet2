@@ -1,1 +1,140 @@
-<p>edit-multi-run-job works!</p>
+<div *ngIf="options === null || proxyGroups === null">
+    <h1>
+        <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+        {{ mode | titlecase }} Multi Run Job
+    </h1>
+    <h6 class="color-inactive">
+        A <b>Multi Run Job</b> will let you run a config using input data
+        such as wordlists or combinations of letters.
+    </h6>
+    <app-spinner [fullWidth]="true" />
+</div>
+
+<div *ngIf="options !== null && proxyGroups !== null"
+    class="container-fluid no-paddings">
+    <div class="row">
+        <div class="col-12">
+            <h1>
+                <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Multi Run Job
+            </h1>
+            <h6 class="color-inactive">
+                A <b>Multi Run Job</b> will let you run a config using input data
+                such as wordlists or combinations of letters.
+            </h6>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <app-input-text key="jobName" class="input-small"
+                [style]="{ 'min-width': '300px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.name" regex="^.+$"
+                placeholder="My multi run job" />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-6">
+            <div class="mb-1">
+                <div class="d-flex flex-row">
+                    <div class="d-flex align-items-center mr-2">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Relative"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="relative"></p-radioButton>
+                        <label for="relative" class="ml-2">Start in...</label>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <p-radioButton name="startCondition"
+                            [value]="StartConditionMode.Absolute"
+                            [ngModel]="startConditionMode"
+                            (ngModelChange)="onStartConditionModeChange($event)"
+                            inputId="absolute"></p-radioButton>
+                        <label for="absolute" class="ml-2">Start at...</label>
+                    </div>
+                </div>
+            </div>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Relative">
+                <app-input-time-span
+                    key="startAfter"
+                    (touched)="touched = true" ngDefaultControl
+                    (validityChange)="onValidityChange($event)"
+                    [timeSpan]="startAfter"
+                    (timeSpanChange)="onStartAfterChange($event)"
+                 />
+            </span>
+            <span class="input-small"
+                *ngIf="startConditionMode === StartConditionMode.Absolute">
+                <p-calendar
+                    [ngModel]="startAt"
+                    (ngModelChange)="onStartAtChange($event)"
+                    [showTime]="true"
+                    appendTo="body"
+                    [showSeconds]="true">
+                </p-calendar>
+            </span>
+            <div class="mt-3 mb-1">
+                <span class="title-small">CONFIG</span>
+            </div>
+            <div class="mb-1">
+                <span class="text-small"
+                    *ngIf="selectedConfigInfo === null">
+                    Config
+                </span>
+                <div class="config-info" *ngIf="selectedConfigInfo !== null">
+                    <img class="config-icon d-block my-2" 
+                        [src]="'data:image/png;base64,' + selectedConfigInfo.base64Image" />
+                    <div class="config-info-text-wrapper">
+                        <span class="config-info-name">
+                            {{ selectedConfigInfo.name }}
+                        </span>
+                        <span class="config-info-author">
+                            by {{ selectedConfigInfo.author }}
+                        </span>
+                    </div>
+                </div>
+                <button class="button button-secondary mt-2"
+                    (click)="openSelectConfigModal()">
+                    <fa-icon [icon]="faGears" [fixedWidth]="true"></fa-icon>
+                    Select Config
+                </button>
+            </div>
+            <div class="mb-1">
+                <span class="text-small">Bots</span>
+            </div>
+            <app-input-number key="bots" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.bots" [min]="0"
+                placeholder="10" />
+        </div>
+    </div>
+    
+    <div class="row my-2">
+        <div class="col-12">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">{{ mode | titlecase }}</button>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    header="Select config" 
+    [(visible)]="selectConfigModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-select-config
+        #selectConfigComponent
+        (confirm)="selectConfig($event)" />
+</p-dialog>

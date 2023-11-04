@@ -64,6 +64,28 @@ public class ConfigController : ApiController
 
         return Ok(_mapper.Map<IEnumerable<ConfigInfoDto>>(configs));
     }
+    
+    /// <summary>
+    /// Get a config's metadata.
+    /// </summary>
+    [HttpGet("metadata")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<ConfigMetadataDto> GetMetadata(string id)
+    {
+        var config = GetConfigFromService(id);
+        return _mapper.Map<ConfigMetadataDto>(config.Metadata);
+    }
+    
+    /// <summary>
+    /// Get a config's info.
+    /// </summary>
+    [HttpGet("info")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<ConfigInfoDto> GetInfo(string id)
+    {
+        var config = GetConfigFromService(id);
+        return _mapper.Map<ConfigInfoDto>(config);
+    }
 
     /// <summary>
     /// Get the readme of a config.
