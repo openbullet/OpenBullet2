@@ -220,7 +220,7 @@
             </div>
             <div *ngFor="let proxySource of options.proxySources">
                 <div *ngIf="proxySource._polyTypeName === ProxySourceType.Group">
-                    <span class="text-small text-bold">Group</span>
+                    <span class="text-small font-weight-bold">Group</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <p-dropdown
                             class="w-100"
@@ -243,7 +243,7 @@
                     </div>
                 </div>
                 <div *ngIf="proxySource._polyTypeName === ProxySourceType.File">
-                    <span class="text-small text-bold">File</span>
+                    <span class="text-small font-weight-bold">File</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <app-input-text key="proxySourceFileName"
                             class="input-small w-100 mr-2"
@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <div *ngIf="proxySource._polyTypeName === ProxySourceType.Remote">
-                    <span class="text-small text-bold">Remote</span>
+                    <span class="text-small font-weight-bold">Remote</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <app-input-text key="proxySourceUrl"
                             class="input-small w-100 mr-2"
@@ -337,7 +337,7 @@
             </div>
             <div *ngFor="let hitOutput of options.hitOutputs">
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.Database">
-                    <span class="text-small text-bold">Database</span>
+                    <span class="text-small font-weight-bold">Database</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <span class="text-small w-100 align-self-center">
                             Nothing to configure
@@ -349,7 +349,7 @@
                     </div>
                 </div>
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.FileSystem">
-                    <span class="text-small text-bold">File system</span>
+                    <span class="text-small font-weight-bold">File system</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <span class="text-small mr-1 align-self-center">
                             Folder
@@ -368,7 +368,7 @@
                     </div>
                 </div>
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.DiscordWebhook">
-                    <span class="text-small text-bold">Discord</span>
+                    <span class="text-small font-weight-bold">Discord</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <button class="button button-secondary mr-auto"
                             (click)="openEditDiscordWebhookHitOutputModal(hitOutput)">
@@ -381,7 +381,7 @@
                     </div>
                 </div>
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.TelegramBot">
-                    <span class="text-small text-bold">Telegram</span>
+                    <span class="text-small font-weight-bold">Telegram</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <button class="button button-secondary mr-auto"
                             (click)="openEditTelegramBotHitOutputModal(hitOutput)">
@@ -394,7 +394,7 @@
                     </div>
                 </div>
                 <div *ngIf="hitOutput._polyTypeName === HitOutputType.CustomWebhook">
-                    <span class="text-small text-bold">Custom webhook</span>
+                    <span class="text-small font-weight-bold">Custom webhook</span>
                     <div class="d-flex flex-row mt-1 mb-2">
                         <button class="button button-secondary mr-auto"
                             (click)="openEditCustomWebhookHitOutputModal(hitOutput)">
