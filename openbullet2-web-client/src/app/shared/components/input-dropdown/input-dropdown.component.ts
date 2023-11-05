@@ -6,17 +6,18 @@ import { FieldValidity } from '../../utils/forms';
   templateUrl: './input-dropdown.component.html',
   styleUrls: ['./input-dropdown.component.scss']
 })
-export class InputDropdownComponent {
+export class InputDropdownComponent<T> {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() itemClass: string | null = null;
   @Input() optionClass: string | null = null;
-  @Input() options: string[] = [];
-  @Input() ngModel: string | null = null;
+  @Input() options: T[] = [];
+  @Input() ngModel: T | null = null;
+  @Input() displayFunction: ((item: T) => string) | null = null;
 
   @Output() touched = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();
-  @Output() ngModelChange = new EventEmitter<string>();
+  @Output() ngModelChange = new EventEmitter<T>();
 
   isTouched = false;
 

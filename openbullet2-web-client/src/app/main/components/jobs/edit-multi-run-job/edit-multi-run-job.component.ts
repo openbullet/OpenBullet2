@@ -1,11 +1,11 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faBolt, faGears } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faGears, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
 import { ConfigInfoDto } from 'src/app/main/dtos/config/config-info.dto';
-import { MultiRunJobOptionsDto } from 'src/app/main/dtos/job/multi-run-job-options.dto';
+import { CustomWebhookHitOutput, DataPoolType, DiscordWebhookHitOutput, HitOutputType, HitOutputTypes, JobProxyMode, MultiRunJobOptionsDto, NoValidProxyBehaviour, ProxySourceType, ProxySourceTypes, TelegramBotHitOutput } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
@@ -18,6 +18,7 @@ import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { SelectConfigComponent } from '../select-config/select-config.component';
+import { ProxyType } from 'src/app/main/enums/proxy-type';
 
 enum EditMode {
   Create = 'create',
@@ -40,8 +41,31 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   faBolt = faBolt;
   faGears = faGears;
+  faPlus = faPlus;
+  faX = faX;
 
+  Object = Object;
   StartConditionMode = StartConditionMode;
+  JobProxyMode = JobProxyMode;
+  jobProxyModes = [
+    JobProxyMode.Default,
+    JobProxyMode.On,
+    JobProxyMode.Off
+  ];
+  noValidProxyBehaviours = [
+    NoValidProxyBehaviour.DoNothing,
+    NoValidProxyBehaviour.Unban,
+    NoValidProxyBehaviour.Reload
+  ];
+  DataPoolType = DataPoolType;
+  ProxySourceType = ProxySourceType;
+  HitOutputType = HitOutputType;
+  proxyTypes = [
+    ProxyType.Http,
+    ProxyType.Socks4,
+    ProxyType.Socks5,
+    ProxyType.Socks4a
+  ];
 
   mode: EditMode = EditMode.Edit;
   jobId: number | null = null;
@@ -247,5 +271,126 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.options!.configId = config.id;
     this.selectConfigModalVisible = false;
     this.touched = true;
+  }
+
+  jobProxyModeDisplayFunction(mode: JobProxyMode) {
+    switch (mode) {
+      case JobProxyMode.Default:
+        return this.selectedConfigInfo === null || this.selectedConfigInfo === undefined
+          ? 'Default'
+          : `Default (${this.selectedConfigInfo.needsProxies})`;
+      case JobProxyMode.On:
+        return 'On';
+      case JobProxyMode.Off:
+        return 'Off';
+    }
+  }
+
+  noValidProxyBehaviourDisplayFunction(mode: NoValidProxyBehaviour) {
+    switch (mode) {
+      case NoValidProxyBehaviour.DoNothing:
+        return 'Do nothing';
+      case NoValidProxyBehaviour.Unban:
+        return 'Unban the existing proxies';
+      case NoValidProxyBehaviour.Reload:
+        return 'Reload the proxies from the sources';
+    }
+  }
+
+  addGroupProxySource() {
+    this.options!.proxySources.push({
+      _polyTypeName: ProxySourceType.Group,
+      groupId: -1
+    });
+    this.touched = true;
+  }
+
+  addFileProxySource() {
+    this.options!.proxySources.push({
+      _polyTypeName: ProxySourceType.File,
+      fileName: '',
+      defaultType: ProxyType.Http
+    });
+    this.touched = true;
+  }
+
+  addRemoteProxySource() {
+    this.options!.proxySources.push({
+      _polyTypeName: ProxySourceType.Remote,
+      url: '',
+      defaultType: ProxyType.Http
+    });
+    this.touched = true;
+  }
+
+  removeProxySource(proxySource: ProxySourceTypes) {
+    this.options!.proxySources = this.options!.proxySources
+      .filter(ps => ps !== proxySource);
+    this.touched = true;
+  }
+
+  addDatabaseHitOutput() {
+    this.options!.hitOutputs.push({
+      _polyTypeName: HitOutputType.Database
+    });
+    this.touched = true;
+  }
+
+  addFileSystemHitOutput() {
+    this.options!.hitOutputs.push({
+      _polyTypeName: HitOutputType.FileSystem,
+      baseDir: ''
+    });
+    this.touched = true;
+  }
+
+  addDiscordWebhookHitOutput() {
+    this.options!.hitOutputs.push({
+      _polyTypeName: HitOutputType.DiscordWebhook,
+      webhook: 'https://discord.com/api/webhooks/...',
+      username: '',
+      avatarUrl: '',
+      onlyHits: true
+    });
+    this.touched = true;
+  }
+
+  addTelegramBotHitOutput() {
+    this.options!.hitOutputs.push({
+      _polyTypeName: HitOutputType.TelegramBot,
+      apiServer: 'https://api.telegram.org/',
+      token: '',
+      chatId: 0,
+      onlyHits: true
+    });
+    this.touched = true;
+  }
+
+  addCustomWebhookHitOutput() {
+    this.options!.hitOutputs.push({
+      _polyTypeName: HitOutputType.CustomWebhook,
+      url: 'http://mycustomwebhook.com',
+      user: 'Anonymous',
+      onlyHits: true
+    });
+    this.touched = true;
+  }
+
+  removeHitOutput(hitOutput: HitOutputTypes) {
+    this.options!.hitOutputs = this.options!.hitOutputs
+      .filter(ho => ho !== hitOutput);
+    this.touched = true;
+  }
+
+  openEditDiscordWebhookHitOutputModal(hitOutput: DiscordWebhookHitOutput) {
+    // TODO
+  }
+
+  openEditTelegramBotHitOutputModal(hitOutput: TelegramBotHitOutput) {
+    // TODO
+  }
+
+  openEditCustomWebhookHitOutputModal(hitOutput: CustomWebhookHitOutput) {
+    // TODO
   }
 }

@@ -5,6 +5,13 @@
         <span [class]="computeItemClass()">{{item | pascalcase : true}}</span>
     </ng-template>
     <ng-template let-item pTemplate="item">
-        <span [class]="optionClass">{{item | pascalcase : true}}</span>
+        <span [class]="optionClass"
+            *ngIf="displayFunction === null">
+            {{item | pascalcase : true}}
+        </span>
+        <span [class]="optionClass"
+            *ngIf="displayFunction !== null">
+            {{displayFunction(item)}}
+        </span>
     </ng-template>
 </p-dropdown>

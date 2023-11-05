@@ -42,6 +42,10 @@ code * {
     font-size: 14px;
 }
 
+.button-small {
+    height: 25px;
+}
+
 .button[disabled] {
     background-color: var(--fg-inactive);
     color: var(--bg-primary);

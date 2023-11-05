@@ -168,6 +168,10 @@ p-chip.mt-2 > .p-chip {
     border: 1px solid var(--fg-inactive) !important;
 }
 
+.w-100 > .p-dropdown {
+    width: 100% !important;
+}
+
 .p-dropdown:not(:has(.input-small)) {
     border-radius: 5px !important;
     height: 41px !important;

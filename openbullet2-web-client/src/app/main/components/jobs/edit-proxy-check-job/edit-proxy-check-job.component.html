@@ -47,7 +47,7 @@
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
                             inputId="relative"></p-radioButton>
-                        <label for="relative" class="ml-2">Start in...</label>
+                        <label for="relative" class="ml-2 text-small">Start in...</label>
                     </div>
                     <div class="d-flex align-items-center">
                         <p-radioButton name="startCondition"
@@ -55,7 +55,7 @@
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
                             inputId="absolute"></p-radioButton>
-                        <label for="absolute" class="ml-2">Start at...</label>
+                        <label for="absolute" class="ml-2 text-small">Start at...</label>
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
     </div>
     <div class="row my-3">
         <div class="col-12">
-            <p-checkbox
+            <p-checkbox class="text-small"
                 (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="options.checkOnlyUntested"
                 [binary]="true" inputId="checkOnlyUntested"

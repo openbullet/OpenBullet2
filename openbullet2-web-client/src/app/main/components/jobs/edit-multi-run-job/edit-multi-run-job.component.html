@@ -24,8 +24,8 @@
             </h6>
         </div>
     </div>
-    <div class="row my-3">
-        <div class="col-12">
+    <div class="row mt-4 mb-2">
+        <div class="col-6">
             <div class="mb-1">
                 <span class="text-small">Name</span>
             </div>
@@ -35,11 +35,7 @@
                 (validityChange)="onValidityChange($event)"
                 [(ngModel)]="options.name" regex="^.+$"
                 placeholder="My multi run job" />
-        </div>
-    </div>
-    <div class="row mt-4 mb-2">
-        <div class="col-6">
-            <div class="mb-1">
+            <div class="mt-3 mb-1">
                 <div class="d-flex flex-row">
                     <div class="d-flex align-items-center mr-2">
                         <p-radioButton name="startCondition"
@@ -47,7 +43,7 @@
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
                             inputId="relative"></p-radioButton>
-                        <label for="relative" class="ml-2">Start in...</label>
+                        <label for="relative" class="ml-2 text-small">Start in...</label>
                     </div>
                     <div class="d-flex align-items-center">
                         <p-radioButton name="startCondition"
@@ -55,7 +51,7 @@
                             [ngModel]="startConditionMode"
                             (ngModelChange)="onStartConditionModeChange($event)"
                             inputId="absolute"></p-radioButton>
-                        <label for="absolute" class="ml-2">Start at...</label>
+                        <label for="absolute" class="ml-2 text-small">Start at...</label>
                     </div>
                 </div>
             </div>
@@ -79,6 +75,14 @@
                     [showSeconds]="true">
                 </p-calendar>
             </span>
+            <div class="mt-2 mb-1">
+                <span class="text-small">Bots</span>
+            </div>
+            <app-input-number key="bots" class="input-small"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="options.bots" [min]="0"
+                placeholder="10" />
             <div class="mt-3 mb-1">
                 <span class="title-small">CONFIG</span>
             </div>
@@ -105,14 +109,304 @@
                     Select Config
                 </button>
             </div>
-            <div class="mb-1">
-                <span class="text-small">Bots</span>
+            <div class="mt-3 mb-1">
+                <span class="title-small">PROXY SETTINGS</span>
             </div>
-            <app-input-number key="bots" class="input-small"
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-6 pr-1">
+                        <div class="mb-1">
+                            <span class="text-small">Proxy mode</span>
+                            <span class="text-small" *ngIf="selectedConfigInfo !== null">
+                                (config's default is {{selectedConfigInfo.needsProxies ? 'On' : 'Off'}})
+                            </span>
+                        </div>
+                        <app-input-dropdown key="proxyMode"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [displayFunction]="jobProxyModeDisplayFunction"
+                            [options]="jobProxyModes"
+                            [(ngModel)]="options.proxyMode" />
+                    </div>
+                    <div class="col-6 pl-1">
+                        <div class="mb-1">
+                            <span class="text-small">When there are no more valid proxies...</span>
+                        </div>
+                        <app-input-dropdown key="noValidProxyBehaviour"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [displayFunction]="noValidProxyBehaviourDisplayFunction"
+                            [options]="noValidProxyBehaviours"
+                            [(ngModel)]="options.noValidProxyBehaviour" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            [(ngModel)]="options.shuffleProxies"
+                            [binary]="true" inputId="shuffleProxies"
+                            label="Shuffle proxies" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            pTooltip="When enabled, proxies are never banned. Use this for rotating proxies"
+                            [(ngModel)]="options.neverBanProxies"
+                            [binary]="true" inputId="neverBanProxies"
+                            label="Never ban proxies" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-12">
+                        <p-checkbox class="text-small"
+                            (onChange)="touched = true" ngDefaultControl 
+                            pTooltip="When enabled, proxies can be used by multiple bots at the same time. Use this for rotating proxies"
+                            [(ngModel)]="options.concurrentProxyMode"
+                            [binary]="true" inputId="concurrentProxyMode"
+                            label="Concurrent proxy mode" />
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-6 pr-1">
+                        <div class="mb-1">
+                            <span class="text-small">
+                                Reload proxies from sources every...
+                            </span>
+                        </div>
+                        <app-input-number key="periodicReloadIntervalSeconds" class="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            pTooltip="In seconds, 0 to disable"
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="options.periodicReloadIntervalSeconds" [min]="0"
+                            placeholder="0" />
+                    </div>
+                    <div class="col-6 pl-1">
+                        <div class="mb-1">
+                            <span class="text-small">
+                                Proxies will be banned for...
+                            </span>
+                        </div>
+                        <app-input-number key="proxyBanTimeSeconds" class="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            pTooltip="In seconds, 0 to ban proxies until reloaded"
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="options.proxyBanTimeSeconds" [min]="0"
+                            placeholder="0" />
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 mb-1">
+                <span class="title-small">PROXY SOURCES</span>
+            </div>
+            <div class="mt-2 mb-1">
+                <button class="button button-secondary"
+                    (click)="addGroupProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Group
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addFileProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    File
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addRemoteProxySource()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Remote
+                </button>
+            </div>
+            <div *ngFor="let proxySource of options.proxySources">
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.Group">
+                    <span class="text-small text-bold">Group</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <p-dropdown
+                            class="w-100"
+                            optionLabel="name"
+                            optionValue="id"
+                            (onChange)="touched = true"
+                            [options]="proxyGroups"
+                            [(ngModel)]="proxySource.groupId">
+                            <ng-template let-item pTemplate="selectedItem">
+                                <span class="input-small">{{item.name}}</span>
+                            </ng-template>
+                            <ng-template let-item pTemplate="item">
+                                <span class="input-small">{{item.name}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.File">
+                    <span class="text-small text-bold">File</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <app-input-text key="proxySourceFileName"
+                            class="input-small w-100 mr-2"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="proxySource.fileName" regex="^.+$"
+                            placeholder="proxies.txt" />
+                        <app-input-dropdown key="proxySourceDefaultType"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [options]="proxyTypes"
+                            [(ngModel)]="proxySource.defaultType" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="proxySource._polyTypeName === ProxySourceType.Remote">
+                    <span class="text-small text-bold">Remote</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <app-input-text key="proxySourceUrl"
+                            class="input-small w-100 mr-2"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="proxySource.url" regex="^.+$"
+                            placeholder="https://example.com/proxies" />
+                        <app-input-dropdown key="proxySourceDefaultType"
+                            itemClass="input-small" optionClass="input-small"
+                            (touched)="touched = true" ngDefaultControl
+                            [options]="proxyTypes"
+                            [(ngModel)]="proxySource.defaultType" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeProxySource(proxySource)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="mt-3 mb-1">
+                <span class="title-small">DATA POOL</span>
+            </div>
+            <div class="mb-1">
+                <span class="text-small">Skip this many lines from the beginning</span>
+            </div>
+            <app-input-number key="skip" class="input-small"
                 (touched)="touched = true" ngDefaultControl
                 (validityChange)="onValidityChange($event)"
-                [(ngModel)]="options.bots" [min]="0"
-                placeholder="10" />
+                [(ngModel)]="options.skip" [min]="0"
+                placeholder="0" />
+            <div class="mt-3 mb-1">
+                <p-checkbox class="text-small"
+                    (onChange)="touched = true" ngDefaultControl 
+                    [(ngModel)]="options.markAsToCheckOnAbort"
+                    [binary]="true" inputId="markAsToCheckOnAbort"
+                    label="Mark data as 'TO CHECK' on job abort" />
+            </div>
+            <div class="mt-3 mb-1">
+                <span class="title-small">HIT OUTPUTS</span>
+            </div>
+            <div class="mt-2 mb-1">
+                <button class="button button-secondary"
+                    (click)="addDatabaseHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Database
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addFileSystemHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    File system
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addDiscordWebhookHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Discord
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addTelegramBotHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Telegram
+                </button>
+                <button class="button button-secondary ml-2"
+                    (click)="addCustomWebhookHitOutput()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                    Custom webhook
+                </button>
+            </div>
+            <div *ngFor="let hitOutput of options.hitOutputs">
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.Database">
+                    <span class="text-small text-bold">Database</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <span class="text-small w-100 align-self-center">
+                            Nothing to configure
+                        </span>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.FileSystem">
+                    <span class="text-small text-bold">File system</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <span class="text-small mr-1 align-self-center">
+                            Folder
+                        </span>
+                        <app-input-text key="hitOutputBaseDir"
+                            class="input-small w-100"
+                            [style]="{ 'min-width': '300px' }"
+                            (touched)="touched = true" ngDefaultControl
+                            (validityChange)="onValidityChange($event)"
+                            [(ngModel)]="hitOutput.baseDir" regex="^.+$"
+                            placeholder="proxies.txt" />
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.DiscordWebhook">
+                    <span class="text-small text-bold">Discord</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditDiscordWebhookHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.TelegramBot">
+                    <span class="text-small text-bold">Telegram</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditTelegramBotHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="hitOutput._polyTypeName === HitOutputType.CustomWebhook">
+                    <span class="text-small text-bold">Custom webhook</span>
+                    <div class="d-flex flex-row mt-1 mb-2">
+                        <button class="button button-secondary mr-auto"
+                            (click)="openEditCustomWebhookHitOutputModal(hitOutput)">
+                            Configure
+                        </button>
+                        <button class="button button-small button-transparent ml-2"
+                            (click)="removeHitOutput(hitOutput)">
+                            <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
