@@ -13,7 +13,7 @@
 <div *ngIf="options !== null && proxyGroups !== null"
     class="container-fluid no-paddings">
     <div class="row">
-        <div class="col-12">
+        <div class="col-8">
             <h1>
                 <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
                 {{ mode | titlecase }} Multi Run Job
@@ -22,6 +22,14 @@
                 A <b>Multi Run Job</b> will let you run a config using input data
                 such as wordlists or combinations of letters.
             </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Job
+            </button>
         </div>
     </div>
     <div class="row mt-4 mb-2">
@@ -431,4 +439,46 @@
     <app-select-config
         #selectConfigComponent
         (confirm)="selectConfig($event)" />
+</p-dialog>
+
+<p-dialog 
+    header="Configure discord hit output" 
+    [(visible)]="configureDiscordWebhookHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-discord
+        #configureDiscordComponent
+        (confirm)="updateDiscordWebhookHitOutput()" />
+</p-dialog>
+
+<p-dialog 
+    header="Configure telegram hit output" 
+    [(visible)]="configureTelegramBotHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-telegram
+        #configureTelegramComponent
+        (confirm)="updateTelegramBotHitOutput()" />
+</p-dialog>
+
+<p-dialog 
+    header="Configure custom hit output" 
+    [(visible)]="configureCustomWebhookHitOutputModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-configure-custom-webhook
+        #configureCustomWebhookComponent
+        (confirm)="updateCustomWebhookHitOutput()" />
 </p-dialog>

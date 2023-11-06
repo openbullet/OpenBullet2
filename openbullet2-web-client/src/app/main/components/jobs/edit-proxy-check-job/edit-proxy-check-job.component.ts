@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faBolt } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faSave } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest, map } from 'rxjs';
@@ -35,6 +35,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   }
 
   faBolt = faBolt;
+  faSave = faSave;
 
   StartConditionMode = StartConditionMode;
 

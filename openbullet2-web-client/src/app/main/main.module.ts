@@ -82,6 +82,9 @@ import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/e
 import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
 import { AddThemeComponent } from './components/ob-settings/add-theme/add-theme.component';
 import { SelectConfigComponent } from './components/jobs/select-config/select-config.component';
+import { ConfigureDiscordComponent } from './components/jobs/edit-multi-run-job/configure-discord/configure-discord.component';
+import { ConfigureTelegramComponent } from './components/jobs/edit-multi-run-job/configure-telegram/configure-telegram.component';
+import { ConfigureCustomWebhookComponent } from './components/jobs/edit-multi-run-job/configure-custom-webhook/configure-custom-webhook.component';
 
 @NgModule({
   declarations: [
@@ -141,7 +144,10 @@ import { SelectConfigComponent } from './components/jobs/select-config/select-co
     EditMultiRunJobComponent,
     MultiRunJobComponent,
     AddThemeComponent,
-    SelectConfigComponent
+    SelectConfigComponent,
+    ConfigureDiscordComponent,
+    ConfigureTelegramComponent,
+    ConfigureCustomWebhookComponent
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faBolt, faGears, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faGears, faPlus, faSave, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
@@ -19,6 +19,9 @@ import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { SelectConfigComponent } from '../select-config/select-config.component';
 import { ProxyType } from 'src/app/main/enums/proxy-type';
+import { ConfigureDiscordComponent } from './configure-discord/configure-discord.component';
+import { ConfigureTelegramComponent } from './configure-telegram/configure-telegram.component';
+import { ConfigureCustomWebhookComponent } from './configure-custom-webhook/configure-custom-webhook.component';
 
 enum EditMode {
   Create = 'create',
@@ -39,10 +42,20 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   @ViewChild('selectConfigComponent') 
   selectConfigComponent: SelectConfigComponent | undefined;
 
+  @ViewChild('configureDiscordComponent')
+  configureDiscordComponent: ConfigureDiscordComponent | undefined;
+
+  @ViewChild('configureTelegramComponent')
+  configureTelegramComponent: ConfigureTelegramComponent | undefined;
+
+  @ViewChild('configureCustomWebhookComponent')
+  configureCustomWebhookComponent: ConfigureCustomWebhookComponent | undefined;
+
   faBolt = faBolt;
   faGears = faGears;
   faPlus = faPlus;
   faX = faX;
+  faSave = faSave;
 
   Object = Object;
   StartConditionMode = StartConditionMode;
@@ -90,6 +103,9 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   touched: boolean = false;
 
   selectConfigModalVisible: boolean = false;
+  configureDiscordWebhookHitOutputModalVisible: boolean = false;
+  configureTelegramBotHitOutputModalVisible: boolean = false;
+  configureCustomWebhookHitOutputModalVisible: boolean = false;
 
   constructor(
     activatedRoute: ActivatedRoute,
@@ -383,14 +399,32 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   openEditDiscordWebhookHitOutputModal(hitOutput: DiscordWebhookHitOutput) {
-    // TODO
+    this.configureDiscordComponent!.setHitOutput(hitOutput);
+    this.configureDiscordWebhookHitOutputModalVisible = true;
+  }
+
+  updateDiscordWebhookHitOutput() {
+    this.touched = true;
+    this.configureDiscordWebhookHitOutputModalVisible = false;
   }
 
   openEditTelegramBotHitOutputModal(hitOutput: TelegramBotHitOutput) {
-    // TODO
+    this.configureTelegramComponent!.setHitOutput(hitOutput);
+    this.configureTelegramBotHitOutputModalVisible = true;
+  }
+
+  updateTelegramBotHitOutput() {
+    this.touched = true;
+    this.configureTelegramBotHitOutputModalVisible = false;
   }
 
   openEditCustomWebhookHitOutputModal(hitOutput: CustomWebhookHitOutput) {
-    // TODO
+    this.configureCustomWebhookComponent!.setHitOutput(hitOutput);
+    this.configureCustomWebhookHitOutputModalVisible = true;
+  }
+
+  updateCustomWebhookHitOutput() {
+    this.touched = true;
+    this.configureCustomWebhookHitOutputModalVisible = false;
   }
 }

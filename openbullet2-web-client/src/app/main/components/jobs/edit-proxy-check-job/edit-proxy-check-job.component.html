@@ -13,7 +13,7 @@
 <div *ngIf="options !== null && proxyGroups !== null && settings !== null"
     class="container-fluid no-paddings">
     <div class="row">
-        <div class="col-12">
+        <div class="col-8">
             <h1>
                 <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
                 {{ mode | titlecase }} Proxy Check Job
@@ -22,6 +22,14 @@
                 A <b>Proxy Check Job</b> will let you test your proxies against
                 a given target site to check their latency, country etc.
             </h6>
+        </div>
+        <div class="col-4 text-right">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }} Job
+            </button>
         </div>
     </div>
     <div class="row my-3">
@@ -179,13 +187,6 @@
                 The results will be saved to the database, you will be able to
                 check them from the <b>Proxies</b> page.
             </span>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col-12">
-            <button class="button button-accent mt-2"
-                [disabled]="!canAccept()"
-                (click)="accept()">{{ mode | titlecase }}</button>
         </div>
     </div>
 </div>
