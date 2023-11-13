@@ -15,6 +15,8 @@ export class SelectConfigComponent {
   configs: ConfigInfoDto[] | null = null;
   filteredConfigs: ConfigInfoDto[] | null = null;
   searchTerm: string = '';
+  selectedConfig: ConfigInfoDto | null = null;
+  readme: string | null = null;
 
   constructor(
     private configService: ConfigService
@@ -29,6 +31,18 @@ export class SelectConfigComponent {
   }
 
   selectConfig(config: ConfigInfoDto) {
+    if (config === this.selectedConfig) {
+      return;
+    }
+    
+    this.readme = null;
+    this.selectedConfig = config;
+    this.configService.getReadme(config.id).subscribe(readme => {
+      this.readme = readme.markdownText;
+    });
+  }
+
+  chooseConfig(config: ConfigInfoDto) {
     this.confirm.emit(config);
   }
 

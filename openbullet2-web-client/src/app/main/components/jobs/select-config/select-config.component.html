@@ -92,17 +92,18 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-config>
-            <tr>
+            <tr [ngClass]="{ 
+                'selected-config': selectedConfig === config,
+                'config-table-row': true,
+             }" 
+             (click)="selectConfig(config)"
+             (dblclick)="chooseConfig(config)">
                 <td>
                     <img class="config-table-icon" 
                         [src]="'data:image/png;base64,' + config.base64Image" />
                 </td>
-                <td>
-                    <a class="color-accent-light"
-                        role="button"
-                        (click)="selectConfig(config)" >
-                        {{ config.name }}
-                    </a>
+                <td class="font-weight-bold">
+                    {{ config.name }}
                 </td>
                 <td>{{ config.author }}</td>
                 <td>{{ config.category }}</td>
@@ -137,4 +138,23 @@
             </tr>
         </ng-template>
     </p-table>
+    <div *ngIf="readme !== null && selectedConfig !== null">
+        <div class="d-flex">
+            <h5 class="color-accent-light">
+                Readme of {{selectedConfig.name}}
+            </h5>
+            <button class="button button-accent ml-auto" 
+                pTooltip="Select this config"
+                tooltipPosition="left"
+                (click)="chooseConfig(selectedConfig)">
+                Select
+            </button>
+        </div>
+        <p class="readme mt-3" 
+            [innerHTML]="readme | markdown"></p>
+    </div>
+    <div *ngIf="readme === null || selectedConfig === null"
+        class="readme-skeleton">
+
+    </div>
 </div>
