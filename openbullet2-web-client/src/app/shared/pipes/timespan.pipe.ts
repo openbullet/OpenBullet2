@@ -18,7 +18,7 @@ export class TimeSpanPipe implements PipeTransform {
         // Return [d day[s]]HH:mm:ss
 
         if (timeSpan.days > 0) {
-            output += timeSpan.days + timeSpan.days === 1 ? ' day ' : ' days ';
+            output += timeSpan.days + (timeSpan.days === 1 ? ' day ' : ' days ');
         }
 
         output += timeSpan.hours.toString().padStart(2, '0') + ':';

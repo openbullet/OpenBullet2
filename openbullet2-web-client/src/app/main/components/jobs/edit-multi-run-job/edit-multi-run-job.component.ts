@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
 import { ConfigInfoDto } from 'src/app/main/dtos/config/config-info.dto';
-import { CustomWebhookHitOutput, DataPoolType, DiscordWebhookHitOutput, HitOutputType, HitOutputTypes, JobProxyMode, MultiRunJobOptionsDto, NoValidProxyBehaviour, ProxySourceType, ProxySourceTypes, TelegramBotHitOutput } from 'src/app/main/dtos/job/multi-run-job-options.dto';
+import { CombinationsDataPool, CustomWebhookHitOutput, DataPoolType, DiscordWebhookHitOutput, HitOutputType, HitOutputTypes, JobProxyMode, MultiRunJobOptionsDto, NoValidProxyBehaviour, ProxySourceType, ProxySourceTypes, TelegramBotHitOutput, WordlistDataPool } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
@@ -22,6 +22,7 @@ import { ProxyType } from 'src/app/main/enums/proxy-type';
 import { ConfigureDiscordComponent } from './configure-discord/configure-discord.component';
 import { ConfigureTelegramComponent } from './configure-telegram/configure-telegram.component';
 import { ConfigureCustomWebhookComponent } from './configure-custom-webhook/configure-custom-webhook.component';
+import { WordlistType } from 'src/app/main/dtos/settings/environment-settings.dto';
 
 enum EditMode {
   Create = 'create',
@@ -58,6 +59,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   faSave = faSave;
 
   Object = Object;
+  Math = Math;
   StartConditionMode = StartConditionMode;
   JobProxyMode = JobProxyMode;
   jobProxyModes = [
@@ -84,10 +86,25 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   jobId: number | null = null;
   options: MultiRunJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
+  wordlistTypes: string[] | null = null;
   
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
   startAt: Date = moment().add(1, 'days').toDate();
+
+  dataPoolType: DataPoolType = DataPoolType.Wordlist;
+
+  // We save info about data pools here so when the user switches between them
+  // using the radio buttons we don't lose the data
+  dataPoolWordlistType: string = 'Default';
+  dataPoolWordlistId: number = -1; // -1 if not present
+  dataPoolFileName: string = '';
+  dataPoolRangeStart: number = 0;
+  dataPoolRangeAmount: number = 0;
+  dataPoolRangeStep: number = 1;
+  dataPoolRangePad: boolean = false;
+  dataPoolCombinationsCharSet: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  dataPoolCombinationsLength: number = 4;
 
   selectedConfigInfo: ConfigInfoDto | null = null;
 
@@ -141,6 +158,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           ...proxyGroups
         ];
       });
+
+    this.settingsService.getEnvironmentSettings()
+      .subscribe(settings => {
+        this.wordlistTypes = settings.wordlistTypes.map(wt => wt.name);
+        this.dataPoolWordlistType = settings.wordlistTypes[0].name;
+      });
   }
 
   canDeactivate() {
@@ -187,6 +210,29 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           this.startConditionMode = StartConditionMode.Absolute;
         }
 
+        if (options.dataPool._polyTypeName === DataPoolType.Wordlist) {
+          this.dataPoolType = DataPoolType.Wordlist;
+          this.dataPoolWordlistId = options.dataPool.wordlistId;
+        } else if (options.dataPool._polyTypeName === DataPoolType.File) {
+          this.dataPoolType = DataPoolType.File;
+          this.dataPoolWordlistType = options.dataPool.wordlistType;
+          this.dataPoolFileName = options.dataPool.fileName;
+        } else if (options.dataPool._polyTypeName === DataPoolType.Range) {
+          this.dataPoolType = DataPoolType.Range;
+          this.dataPoolWordlistType = options.dataPool.wordlistType;
+          this.dataPoolRangeStart = options.dataPool.start;
+          this.dataPoolRangeAmount = options.dataPool.amount;
+          this.dataPoolRangeStep = options.dataPool.step;
+          this.dataPoolRangePad = options.dataPool.pad;
+        } else if (options.dataPool._polyTypeName === DataPoolType.Combinations) {
+          this.dataPoolType = DataPoolType.Combinations;
+          this.dataPoolWordlistType = options.dataPool.wordlistType;
+          this.dataPoolCombinationsCharSet = options.dataPool.charSet;
+          this.dataPoolCombinationsLength = options.dataPool.length;
+        } else if (options.dataPool._polyTypeName === DataPoolType.Infinite) {
+          this.dataPoolType = DataPoolType.Infinite;
+        }
+
         this.configService.getInfo(options.configId).subscribe(configInfo => {
           this.selectedConfigInfo = configInfo;
         });
@@ -200,6 +246,11 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       ...this.fieldsValidity,
       [validity.key]: validity.valid
     };
+  }
+
+  onDataPoolTypeChange(type: DataPoolType) {
+    this.dataPoolType = type;
+    this.touched = true;
   }
 
   onStartConditionModeChange(mode: StartConditionMode) {
@@ -231,6 +282,51 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     }
   }
 
+  configureDataPool() {
+    if (this.options === null) {
+      return;
+    }
+
+    switch (this.dataPoolType) {
+      case DataPoolType.Wordlist:
+        this.options.dataPool = {
+          _polyTypeName: DataPoolType.Wordlist,
+          wordlistId: this.dataPoolWordlistId
+        };
+        break;
+      case DataPoolType.File:
+        this.options.dataPool = {
+          _polyTypeName: DataPoolType.File,
+          wordlistType: this.dataPoolWordlistType,
+          fileName: this.dataPoolFileName
+        };
+        break;
+      case DataPoolType.Range:
+        this.options.dataPool = {
+          _polyTypeName: DataPoolType.Range,
+          wordlistType: this.dataPoolWordlistType,
+          start: this.dataPoolRangeStart,
+          amount: this.dataPoolRangeAmount,
+          step: this.dataPoolRangeStep,
+          pad: this.dataPoolRangePad
+        };
+        break;
+      case DataPoolType.Combinations:
+        this.options.dataPool = {
+          _polyTypeName: DataPoolType.Combinations,
+          wordlistType: this.dataPoolWordlistType,
+          charSet: this.dataPoolCombinationsCharSet,
+          length: this.dataPoolCombinationsLength
+        };
+        break;
+      case DataPoolType.Infinite:
+        this.options.dataPool = {
+          _polyTypeName: DataPoolType.Infinite
+        };
+        break;
+    }
+  }
+
   // Can accept if touched and every field is valid
   canAccept() {
     return this.touched && Object.values(this.fieldsValidity).every(v => v);
@@ -240,6 +336,8 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     if (this.options === null) {
       return;
     }
+
+    this.configureDataPool();
 
     if (this.mode === EditMode.Create) {
       this.jobService.createMultiRunJob(this.options)
@@ -346,6 +444,17 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   addDatabaseHitOutput() {
+    // If there is already a database hit output, don't add another one
+    if (this.options!.hitOutputs.some(
+      ho => ho._polyTypeName === HitOutputType.Database)) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Already exists',
+        detail: 'You can only have a single database hit output'
+      });
+      return;
+    }
+
     this.options!.hitOutputs.push({
       _polyTypeName: HitOutputType.Database
     });
@@ -426,5 +535,56 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   updateCustomWebhookHitOutput() {
     this.touched = true;
     this.configureCustomWebhookHitOutputModalVisible = false;
+  }
+
+  calcCombinations() {
+    return Math.pow(
+      this.dataPoolCombinationsCharSet.length,
+      this.dataPoolCombinationsLength
+    );
+  }
+
+  calcCombinationsTime(cpm: number): TimeSpan {
+    const combinations = this.calcCombinations();
+    const seconds = combinations / cpm * 60;
+    return new TimeSpan(seconds * 1000);
+  }
+
+  calcRange(): string {
+    // Output (e.g. start = 1, step = 2):
+    // amount = 0: Nothing
+    // amount = 1: start
+    // amount > 1: [start, start + step, start + 2 * step, ...] (up to 5)
+
+    if (this.dataPoolRangeAmount === 0) {
+      return 'Nothing';
+    } else if (this.dataPoolRangeAmount === 1) {
+      return this.dataPoolRangeStart.toString();
+    }
+
+    const range = [];
+    for (let i = 0; i < Math.min(this.dataPoolRangeAmount - 1, 5); i++) {
+      range.push(this.dataPoolRangeStart + i * this.dataPoolRangeStep);
+    }
+
+    const useEllipsis = this.dataPoolRangeAmount > 6;
+
+    const lastNumber = this.dataPoolRangeStart + 
+      (this.dataPoolRangeAmount - 1) * this.dataPoolRangeStep;
+
+    const lastNumberDigits = lastNumber.toString().length;
+
+    if (this.dataPoolRangePad) {
+      const padLength = Math.max(
+        this.dataPoolRangeStart.toString().length,
+        lastNumberDigits
+      );
+
+      return range
+        .map(n => n.toString().padStart(padLength, '0'))
+        .join(', ') + (useEllipsis ? ', ... ' : ', ') + lastNumber.toString().padStart(padLength, '0');
+    }
+
+    return range.join(', ') + (useEllipsis ? ', ... ' : ', ') + lastNumber;
   }
 }

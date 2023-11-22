@@ -46,7 +46,7 @@ export enum DataPoolType {
 
 export interface WordlistDataPool {
     _polyTypeName: DataPoolType.Wordlist;
-    wordlistId: string;
+    wordlistId: number;
 }
 
 export interface FileDataPool {
