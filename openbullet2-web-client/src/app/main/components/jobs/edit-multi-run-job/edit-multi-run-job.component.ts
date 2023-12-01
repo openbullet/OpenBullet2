@@ -23,6 +23,9 @@ import { ConfigureDiscordComponent } from './configure-discord/configure-discord
 import { ConfigureTelegramComponent } from './configure-telegram/configure-telegram.component';
 import { ConfigureCustomWebhookComponent } from './configure-custom-webhook/configure-custom-webhook.component';
 import { WordlistType } from 'src/app/main/dtos/settings/environment-settings.dto';
+import { SelectWordlistComponent } from '../select-wordlist/select-wordlist.component';
+import { WordlistDto } from 'src/app/main/dtos/wordlist/wordlist.dto';
+import { WordlistService } from 'src/app/main/services/wordlist.service';
 
 enum EditMode {
   Create = 'create',
@@ -42,6 +45,9 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   @ViewChild('selectConfigComponent') 
   selectConfigComponent: SelectConfigComponent | undefined;
+
+  @ViewChild('selectWordlistComponent')
+  selectWordlistComponent: SelectWordlistComponent | undefined;
 
   @ViewChild('configureDiscordComponent')
   configureDiscordComponent: ConfigureDiscordComponent | undefined;
@@ -107,6 +113,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   dataPoolCombinationsLength: number = 4;
 
   selectedConfigInfo: ConfigInfoDto | null = null;
+  selectedWordlist: WordlistDto | null = null;
 
   defaultProxyGroup = {
     id: -1,
@@ -120,6 +127,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   touched: boolean = false;
 
   selectConfigModalVisible: boolean = false;
+  selectWordlistModalVisible: boolean = false;
   configureDiscordWebhookHitOutputModalVisible: boolean = false;
   configureTelegramBotHitOutputModalVisible: boolean = false;
   configureCustomWebhookHitOutputModalVisible: boolean = false;
@@ -130,6 +138,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     private settingsService: SettingsService,
     private jobService: JobService,
     private configService: ConfigService,
+    private wordlistService: WordlistService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private router: Router
@@ -236,6 +245,13 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
         this.configService.getInfo(options.configId).subscribe(configInfo => {
           this.selectedConfigInfo = configInfo;
         });
+        
+        // If the data pool is a wordlist, we need to fetch it
+        if (this.dataPoolType === DataPoolType.Wordlist) {
+          this.wordlistService.getWordlist(this.dataPoolWordlistId).subscribe(wordlist => {
+            this.selectedWordlist = wordlist;
+          });
+        }
 
         this.options = options;
       });
@@ -380,10 +396,22 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.selectConfigComponent?.refresh();
   }
 
+  openSelectWordlistModal() {
+    this.selectWordlistModalVisible = true;
+    this.selectWordlistComponent?.refresh();
+  }
+
   selectConfig(config: ConfigInfoDto) {
     this.selectedConfigInfo = config;
     this.options!.configId = config.id;
     this.selectConfigModalVisible = false;
+    this.touched = true;
+  }
+
+  selectWordlist(wordlist: WordlistDto) {
+    this.selectedWordlist = wordlist;
+    this.dataPoolWordlistId = wordlist.id;
+    this.selectWordlistModalVisible = false;
     this.touched = true;
   }
 

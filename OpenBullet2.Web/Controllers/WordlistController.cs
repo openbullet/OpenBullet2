@@ -41,6 +41,29 @@ public class WordlistController : ApiController
     }
 
     /// <summary>
+    /// Get a wordlist by id.
+    /// </summary>
+    [HttpGet]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<WordlistDto>> Get(int id)
+    {
+        var apiUser = HttpContext.GetApiUser();
+
+        var wordlist = await _wordlistRepo.Get(id);
+
+        if (apiUser.Role is UserRole.Guest && wordlist.Owner.Id != apiUser.Id)
+        {
+            _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
+                apiUser.Username);
+            
+            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
+                id, nameof(IWordlistRepository));
+        }
+
+        return _mapper.Map<WordlistDto>(wordlist);
+    }
+
+    /// <summary>
     /// List all of the available wordlists.
     /// </summary>
     [HttpGet("all")]

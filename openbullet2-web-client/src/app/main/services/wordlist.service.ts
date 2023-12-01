@@ -16,6 +16,16 @@ export class WordlistService {
         private http: HttpClient
     ) { }
 
+    getWordlist(id: number) {
+        return this.http.get<WordlistDto>(
+            getBaseUrl() + '/wordlist', {
+                params: {
+                    id
+                }
+            }
+        );
+    }
+
     getAllWordlists() {
         return this.http.get<WordlistDto[]>(
             getBaseUrl() + '/wordlist/all'
@@ -23,8 +33,8 @@ export class WordlistService {
     }
 
     getWordlistPreview(id: number, lineCount: number) {
-        return this.http.get<WordlistPreviewDto[]>(
-            getBaseUrl() + '/wordlist/all', {
+        return this.http.get<WordlistPreviewDto>(
+            getBaseUrl() + '/wordlist/preview', {
                 params: {
                     id,
                     lineCount
