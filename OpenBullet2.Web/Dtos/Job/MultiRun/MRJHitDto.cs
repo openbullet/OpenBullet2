@@ -26,6 +26,11 @@ public class MRJHitDto
     public string Data { get; set; } = string.Empty;
 
     /// <summary>
+    /// The proxy that was used to obtain the hit, if any.
+    /// </summary>
+    public MRJProxy? Proxy { get; set; } = null;
+
+    /// <summary>
     /// The data captured by the config's script.
     /// </summary>
     public string CapturedData { get; set; } = string.Empty;

@@ -1,4 +1,5 @@
 import { PerformanceInfoDto } from "../dtos/info/performance-info.dto";
+import { MRJNewResultMessage } from "../dtos/job/messages/multi-run/new-result.dto";
 import { PCJNewResultMessage } from "../dtos/job/messages/proxy-check/new-result.dto";
 import { ProxyWorkingStatus } from "../enums/proxy-working-status";
 
@@ -28,4 +29,15 @@ export function getMockedProxyCheckJobNewResultMessage(): PCJNewResultMessage {
       ping: Math.floor(Math.random() * 1000),
       country: countries[Math.floor(Math.random() * countries.length)]
     }
+}
+
+export function getMockedMultiRunJobNewResultMessage(): MRJNewResultMessage {
+  return {
+    dataLine: 'test',
+    proxy: {
+      host: '1.1.1.1',
+      port: 8080
+    },
+    status: 'FAIL'
+  };
 }

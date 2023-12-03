@@ -2,22 +2,26 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { UserService } from "./user.service";
-import { PCJNewResultMessage } from "../dtos/job/messages/proxy-check/new-result.dto";
-import { PCJStatsMessage } from "../dtos/job/messages/proxy-check/stats.dto";
 import { JobStatusChangedMessage } from "../dtos/job/messages/status-changed.dto";
 import { ChangeBotsMessage } from "../dtos/job/messages/change-bots.dto";
 import { BotsChangedMessage } from "../dtos/job/messages/bots-changed.dto";
 import { PCJTaskErrorMessage } from "../dtos/job/messages/proxy-check/task-error.dto";
 import { ErrorMessage } from "../dtos/common/messages.dto";
+import { MRJNewResultMessage } from "../dtos/job/messages/multi-run/new-result.dto";
+import { MRJStatsMessage } from "../dtos/job/messages/multi-run/stats.dto";
+import { MRJNewHitMessage } from "../dtos/job/messages/multi-run/hit.dto";
 
 @Injectable({providedIn: 'root'})
-export class ProxyCheckJobHubService {
+export class MultiRunJobHubService {
     private hubConnection: HubConnection | null = null;
 
-    private resultEmitter = new EventEmitter<PCJNewResultMessage | null>();
+    private resultEmitter = new EventEmitter<MRJNewResultMessage | null>();
     public result$ = this.resultEmitter.asObservable();
 
-    private tickEmitter = new EventEmitter<PCJStatsMessage | null>();
+    private hitEmitter = new EventEmitter<MRJNewHitMessage | null>();
+    public hit$ = this.hitEmitter.asObservable();
+
+    private tickEmitter = new EventEmitter<MRJStatsMessage | null>();
     public tick$ = this.tickEmitter.asObservable();
 
     private statusEmitter = new EventEmitter<JobStatusChangedMessage | null>();
@@ -41,7 +45,7 @@ export class ProxyCheckJobHubService {
 
     createHubConnection(jobId: number) {
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(getBaseHubUrl() + `/proxy-check-job?jobId=${jobId}`, {
+        .withUrl(getBaseHubUrl() + `/multi-run-job?jobId=${jobId}`, {
             accessTokenFactory: () => this.userService.getJwt() ?? ''
         })
         .withAutomaticReconnect()
@@ -53,6 +57,10 @@ export class ProxyCheckJobHubService {
 
         this.hubConnection.on('newResult', result => {
             this.resultEmitter.emit(result);
+        });
+
+        this.hubConnection.on('newHit', hit => {
+            this.hitEmitter.emit(hit);
         });
 
         this.hubConnection.on('timerTick', tick => {

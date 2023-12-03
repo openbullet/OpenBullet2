@@ -125,6 +125,7 @@ builder.Services.AddSingleton<IJobLogger>(service =>
     "UserData/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
+builder.Services.AddSingleton<MultiRunJobService>();
 
 // Hosted Services
 builder.Services.AddHostedService(
@@ -174,6 +175,15 @@ app.MapHub<ConfigDebuggerHub>("hubs/config-debugger", options =>
 });
 
 app.MapHub<ProxyCheckJobHub>("hubs/proxy-check-job", options =>
+{
+    // Incoming messages <= 1 MB
+    options.ApplicationMaxBufferSize = 1_000_000;
+
+    // Outgoing messages <= 10 MB
+    options.TransportMaxBufferSize = 10_000_000;
+});
+
+app.MapHub<MultiRunJobHub>("hubs/multi-run-job", options =>
 {
     // Incoming messages <= 1 MB
     options.ApplicationMaxBufferSize = 1_000_000;

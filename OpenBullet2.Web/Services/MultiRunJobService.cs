@@ -330,15 +330,18 @@ public class MultiRunJobService : IJobService, IDisposable
     {
         var message = new MRJNewHitMessage
         {
-            DataLine = e.DataString,
-            Proxy = e.Proxy is null ? null : new MRJProxy
+            Hit = new MRJHitDto
             {
-                Host = e.Proxy.Host,
-                Port = e.Proxy.Port
-            },
-            Date = e.Date,
-            Type = e.Type,
-            CaptureString = e.CapturedDataString
+                Id = e.Id,
+                Date = e.Date,
+                Type = e.Type,
+                Data = e.DataString,
+                Proxy = new MRJProxy {
+                    Host = e.Proxy?.Host,
+                    Port = e.Proxy?.Port
+                },
+                CapturedData = e.CapturedDataString
+            }
         };
 
         await NotifyClients(sender, message, MultiRunJobMethods.NewHit);

@@ -998,6 +998,10 @@ public class JobController : ApiController
                 Date = h.Date,
                 Type = h.Type,
                 Data = h.DataString,
+                Proxy = new MRJProxy {
+                    Host = h.Proxy?.Host,
+                    Port = h.Proxy?.Port
+                },
                 CapturedData = h.CapturedDataString
             }).ToList()
         };
