@@ -13,7 +13,7 @@
 <div *ngIf="options !== null && proxyGroups !== null && settings !== null"
     class="container-fluid no-paddings">
     <div class="row">
-        <div class="col-8">
+        <div class="col-8 pl-0">
             <h1>
                 <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
                 {{ mode | titlecase }} Proxy Check Job
@@ -23,7 +23,7 @@
                 a given target site to check their latency, country etc.
             </h6>
         </div>
-        <div class="col-4 text-right">
+        <div class="col-4 pr-0 text-right">
             <button class="button button-accent mt-2"
                 [disabled]="!canAccept()"
                 (click)="accept()">

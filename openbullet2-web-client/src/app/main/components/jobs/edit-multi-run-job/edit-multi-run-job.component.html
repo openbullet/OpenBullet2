@@ -13,7 +13,7 @@
 <div *ngIf="options !== null && proxyGroups !== null && wordlistTypes.length > 0"
     class="container-fluid no-paddings">
     <div class="row">
-        <div class="col-8">
+        <div class="col-8 pl-0">
             <h1>
                 <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
                 {{ mode | titlecase }} Multi Run Job
@@ -646,14 +646,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="row my-2">
-        <div class="col-12">
-            <button class="button button-accent mt-2"
-                [disabled]="!canAccept()"
-                (click)="accept()">{{ mode | titlecase }}</button>
         </div>
     </div>
 </div>
