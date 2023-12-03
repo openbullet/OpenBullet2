@@ -35,7 +35,9 @@
                 <h4 class="mb-2">Data stats</h4>
                 <div class="row">
                     <div class="col-6">
-                        <div class="job-stat">
+                        <div class="job-stat"
+                            pTooltip="Tested data lines + skipped data lines"
+                            tooltipPosition="bottom">
                             <span>
                                 Tested:
                             </span>
@@ -107,14 +109,6 @@
                             </span>
                             <span class="ml-1 color-error">
                                 {{dataStats.errors}}
-                            </span>
-                        </div>
-                        <div class="job-stat">
-                            <span class="color-inactive">
-                                Skipped:
-                            </span>
-                            <span class="ml-1 color-inactive">
-                                {{job.skip}}
                             </span>
                         </div>
                     </div>
@@ -201,7 +195,7 @@
                         Progress:
                     </span>
                     <span class="ml-1">
-                        {{dataStats.tested}} / {{dataStats.total}} ({{progress | percent : '1.2-2'}})
+                        {{getTestedCount()}} / {{dataStats.total}} ({{progress | percent : '1.2-2'}})
                     </span>
                 </div>
             </p-card>
@@ -238,9 +232,16 @@
                     Data pool
                 </div>
                 <div class="named-card-value">
-                    <span>
-                        {{job.dataPoolInfo}}
-                    </span>
+                    <div>
+                        <span>
+                            {{job.dataPoolInfo}}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-small color-inactive">
+                            Skip {{job.skip}}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

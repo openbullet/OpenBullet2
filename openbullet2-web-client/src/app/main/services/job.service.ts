@@ -166,4 +166,74 @@ export class JobService {
             }
         );
     }
+
+    start(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/start',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    stop(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/stop',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    pause(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/pause',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    resume(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/resume',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    abort(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/abort',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    skipWait(jobId: number, wait: boolean = false) {
+        return this.http.post(
+            getBaseUrl() + '/job/skip-wait',
+            {
+                jobId,
+                wait
+            }
+        );
+    }
+
+    changeBots(jobId: number, bots: number) {
+        return this.http.post(
+            getBaseUrl() + '/job/change-bots',
+            {
+                jobId,
+                bots
+            }
+        );
+    }
 }

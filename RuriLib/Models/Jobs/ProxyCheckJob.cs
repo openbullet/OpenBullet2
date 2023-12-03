@@ -195,6 +195,11 @@ namespace RuriLib.Models.Jobs
                 logger?.LogInfo(Id, "All set, starting the execution");
                 await parallelizer.Start().ConfigureAwait(false);
             }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
+            }
             finally
             {
                 // Reset the status
@@ -215,6 +220,11 @@ namespace RuriLib.Models.Jobs
                     await parallelizer.Stop().ConfigureAwait(false);
                 }
             }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
+            }
             finally
             {
                 StopTimer();
@@ -230,6 +240,11 @@ namespace RuriLib.Models.Jobs
                 {
                     await parallelizer.Abort().ConfigureAwait(false);
                 }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
             }
             finally
             {
@@ -247,6 +262,11 @@ namespace RuriLib.Models.Jobs
                     await parallelizer.Pause().ConfigureAwait(false);
                 }
             }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
+            }
             finally
             {
                 StopTimer();
@@ -256,9 +276,17 @@ namespace RuriLib.Models.Jobs
 
         public override async Task Resume()
         {
-            if (parallelizer is not null)
+            try
             {
-                await parallelizer.Resume().ConfigureAwait(false);
+                if (parallelizer is not null)
+                {
+                    await parallelizer.Resume().ConfigureAwait(false);
+                }   
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, ex);
+                throw;
             }
 
             StartTimer();

@@ -174,12 +174,18 @@ export class MultiRunJobComponent {
     this.taskErrorSubscription = this.multiRunJobHubService.taskError$
     .subscribe(error => {
       if (error !== null) {
-        const logMessage = `Task error for proxy ${error.proxyHost}:${error.proxyPort}: ${error.errorMessage}`;
+        let logMessage = `Task error (${error.dataLine})`;
+
+        if (error.proxy !== null) {
+          logMessage += ` (${error.proxy.host}:${error.proxy.port})`;
+        }
+
+        logMessage += `: ${error.errorMessage}`;
 
         this.writeLog({
           timestamp: new Date(),
           message: logMessage,
-          color: 'var(--fg-bad)'
+          color: 'var(--fg-error)'
         });
       }
     });
@@ -203,27 +209,12 @@ export class MultiRunJobComponent {
           summary: 'Completed',
           detail: 'Job completed'
         });
+
+        this.getJobData();
       }
     });
 
-    this.jobService.getMultiRunJob(this.jobId)
-      .subscribe(job => {
-        this.status = job.status;
-        this.bots = job.bots;
-        this.dataStats = job.dataStats;
-        this.proxyStats = job.proxyStats;
-        this.cpm = job.cpm;
-        this.captchaCredit = job.captchaCredit;
-        this.elapsed = job.elapsed;
-        this.remaining = job.remaining;
-        this.progress = job.progress;
-
-        if (job.startTime !== null) {
-          this.startTime = moment(job.startTime);
-        }
-
-        this.job = job;
-      });
+    this.getJobData();
 
     this.getWaitLeftTimer = setInterval(() => {
       this.waitLeft = this.getWaitLeft();
@@ -245,6 +236,27 @@ export class MultiRunJobComponent {
     if (this.getWaitLeftTimer !== null) {
       clearInterval(this.getWaitLeftTimer);
     }
+  }
+
+  getJobData() {
+    this.jobService.getMultiRunJob(this.jobId!)
+      .subscribe(job => {
+        this.status = job.status;
+        this.bots = job.bots;
+        this.dataStats = job.dataStats;
+        this.proxyStats = job.proxyStats;
+        this.cpm = job.cpm;
+        this.captchaCredit = job.captchaCredit;
+        this.elapsed = job.elapsed;
+        this.remaining = job.remaining;
+        this.progress = job.progress;
+
+        if (job.startTime !== null) {
+          this.startTime = moment(job.startTime);
+        }
+
+        this.job = job;
+      });
   }
 
   onNewResult(result: MRJNewResultMessage) {
@@ -279,7 +291,7 @@ export class MultiRunJobComponent {
     let logMessage = `Line checked (${result.dataLine})`;
 
     if (result.proxy !== null) {
-      logMessage += ` with proxy ${result.proxy.host}:${result.proxy.port}`;
+      logMessage += ` (${result.proxy.host}:${result.proxy.port})`;
     }
 
     logMessage += ` - ${result.status}`;
@@ -343,7 +355,7 @@ export class MultiRunJobComponent {
   }
 
   pause() {
-    this.multiRunJobHubService.pause();
+    this.jobService.pause(this.jobId!).subscribe();
   }
 
   canStart() {
@@ -351,7 +363,8 @@ export class MultiRunJobComponent {
   }
 
   start() {
-    this.multiRunJobHubService.start();
+    console.log('START');
+    this.jobService.start(this.jobId!).subscribe();
   }
 
   canStop() {
@@ -359,7 +372,7 @@ export class MultiRunJobComponent {
   }
 
   stop() {
-    this.multiRunJobHubService.stop();
+    this.jobService.stop(this.jobId!).subscribe();
   }
 
   canResume() {
@@ -367,7 +380,7 @@ export class MultiRunJobComponent {
   }
 
   resume() {
-    this.multiRunJobHubService.resume();
+    this.jobService.resume(this.jobId!).subscribe();
   }
 
   canAbort() {
@@ -378,7 +391,7 @@ export class MultiRunJobComponent {
   }
 
   abort() {
-    this.multiRunJobHubService.abort();
+    this.jobService.abort(this.jobId!).subscribe();
   }
 
   canSkipWait() {
@@ -386,7 +399,7 @@ export class MultiRunJobComponent {
   }
 
   skipWait() {
-    this.multiRunJobHubService.skipWait();
+    this.jobService.start(this.jobId!, true).subscribe();
   }
 
   showEditBotsInput() {
@@ -395,9 +408,7 @@ export class MultiRunJobComponent {
   }
 
   changeBots(bots: number) {
-    this.multiRunJobHubService.changeBots(
-      <ChangeBotsMessage>{ desired: bots }
-    );
+    this.jobService.changeBots(this.jobId!, bots).subscribe();
 
     const logMessage = `Requested to change bots to ${bots}`;
 
@@ -477,5 +488,12 @@ export class MultiRunJobComponent {
       case JobProxyMode.Default:
         return this.job.config.needsProxies;
     }
+  }
+
+  getTestedCount() {
+    return this.Math.min(
+      this.dataStats.tested + this.job!.skip,
+      this.dataStats.total
+    );
   }
 }

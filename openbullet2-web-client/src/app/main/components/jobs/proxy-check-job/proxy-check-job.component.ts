@@ -172,27 +172,12 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
           summary: 'Completed',
           detail: 'Job completed'
         });
+
+        this.getJobData();
       }
     });
 
-    this.jobService.getProxyCheckJob(this.jobId)
-      .subscribe(job => {
-        this.status = job.status;
-        this.bots = job.bots;
-        this.tested = job.tested;
-        this.working = job.working;
-        this.notWorking = job.notWorking;
-        this.cpm = job.cpm;
-        this.elapsed = job.elapsed;
-        this.remaining = job.remaining;
-        this.progress = job.progress;
-
-        if (job.startTime !== null) {
-          this.startTime = moment(job.startTime);
-        }
-
-        this.job = job;
-      });
+    this.getJobData();
 
     this.getWaitLeftTimer = setInterval(() => {
       this.waitLeft = this.getWaitLeft();
@@ -213,6 +198,27 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     if (this.getWaitLeftTimer !== null) {
       clearInterval(this.getWaitLeftTimer);
     }
+  }
+
+  getJobData() {
+    this.jobService.getProxyCheckJob(this.jobId!)
+      .subscribe(job => {
+        this.status = job.status;
+        this.bots = job.bots;
+        this.tested = job.tested;
+        this.working = job.working;
+        this.notWorking = job.notWorking;
+        this.cpm = job.cpm;
+        this.elapsed = job.elapsed;
+        this.remaining = job.remaining;
+        this.progress = job.progress;
+
+        if (job.startTime !== null) {
+          this.startTime = moment(job.startTime);
+        }
+
+        this.job = job;
+      });
   }
 
   onNewResult(result: PCJNewResultMessage) {
@@ -275,7 +281,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   pause() {
-    this.proxyCheckJobHubService.pause();
+    this.jobService.pause(this.jobId!).subscribe();
   }
 
   canStart() {
@@ -283,7 +289,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   start() {
-    this.proxyCheckJobHubService.start();
+    this.jobService.start(this.jobId!).subscribe();
   }
 
   canStop() {
@@ -291,7 +297,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   stop() {
-    this.proxyCheckJobHubService.stop();
+    this.jobService.stop(this.jobId!).subscribe();
   }
 
   canResume() {
@@ -299,7 +305,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   resume() {
-    this.proxyCheckJobHubService.resume();
+    this.jobService.resume(this.jobId!).subscribe();
   }
 
   canAbort() {
@@ -310,7 +316,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   abort() {
-    this.proxyCheckJobHubService.abort();
+    this.jobService.abort(this.jobId!).subscribe();
   }
 
   canSkipWait() {
@@ -318,7 +324,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   skipWait() {
-    this.proxyCheckJobHubService.skipWait();
+    this.jobService.skipWait(this.jobId!).subscribe();
   }
 
   showEditBotsInput() {
@@ -327,9 +333,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   changeBots(bots: number) {
-    this.proxyCheckJobHubService.changeBots(
-      <ChangeBotsMessage>{ desired: bots }
-    );
+    this.jobService.changeBots(this.jobId!, bots).subscribe();
 
     const logMessage = `Requested to change bots to ${bots}`;
 

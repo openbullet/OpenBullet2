@@ -5,11 +5,11 @@ import { UserService } from "./user.service";
 import { JobStatusChangedMessage } from "../dtos/job/messages/status-changed.dto";
 import { ChangeBotsMessage } from "../dtos/job/messages/change-bots.dto";
 import { BotsChangedMessage } from "../dtos/job/messages/bots-changed.dto";
-import { PCJTaskErrorMessage } from "../dtos/job/messages/proxy-check/task-error.dto";
 import { ErrorMessage } from "../dtos/common/messages.dto";
 import { MRJNewResultMessage } from "../dtos/job/messages/multi-run/new-result.dto";
 import { MRJStatsMessage } from "../dtos/job/messages/multi-run/stats.dto";
 import { MRJNewHitMessage } from "../dtos/job/messages/multi-run/hit.dto";
+import { MRJTaskErrorMessage } from "../dtos/job/messages/multi-run/task-error.dto";
 
 @Injectable({providedIn: 'root'})
 export class MultiRunJobHubService {
@@ -30,7 +30,7 @@ export class MultiRunJobHubService {
     private botsEmitter = new EventEmitter<BotsChangedMessage | null>();
     public bots$ = this.botsEmitter.asObservable();
 
-    private taskErrorEmitter = new EventEmitter<PCJTaskErrorMessage | null>();
+    private taskErrorEmitter = new EventEmitter<MRJTaskErrorMessage | null>();
     public taskError$ = this.taskErrorEmitter.asObservable();
 
     private errorEmitter = new EventEmitter<ErrorMessage | null>();

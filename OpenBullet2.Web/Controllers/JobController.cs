@@ -979,7 +979,7 @@ public class JobController : ApiController
                 Errors = job.DataErrors,
                 ToCheck = job.DataToCheck,
                 Total = job.DataPool.Size,
-                Tested = job.Status is JobStatus.Idle ? job.Skip : job.DataTested + job.Skip
+                Tested = job.DataTested
             },
             ProxyStats = new MRJProxyStatsDto
             {
