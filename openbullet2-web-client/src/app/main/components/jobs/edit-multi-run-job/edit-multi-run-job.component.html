@@ -1,4 +1,4 @@
-<div *ngIf="options === null || proxyGroups === null || wordlistTypes === null">
+<div *ngIf="options === null || proxyGroups === null || wordlistTypes.length == 0">
     <h1>
         <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
         {{ mode | titlecase }} Multi Run Job
@@ -10,7 +10,7 @@
     <app-spinner [fullWidth]="true" />
 </div>
 
-<div *ngIf="options !== null && proxyGroups !== null && wordlistTypes !== null"
+<div *ngIf="options !== null && proxyGroups !== null && wordlistTypes.length > 0"
     class="container-fluid no-paddings">
     <div class="row">
         <div class="col-8">
@@ -344,18 +344,37 @@
             </div>
             <div *ngIf="dataPoolType === DataPoolType.Wordlist">
                 <div class="mb-1">
-                    <div class="mt-2" *ngIf="selectedWordlist !== null">
-                        <span class="font-weight-bold d-block">
-                            {{ selectedWordlist.name }}
-                        </span>
-                        <span class="text-small d-block">
-                            {{ selectedWordlist.lineCount }} lines
-                        </span>
+                    <div class="d-flex flex-row">
+                        <div class="wordlist-icon">
+                            <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
+                        </div>
+                        <div class="mt-2" *ngIf="selectedWordlist !== null">
+                            <span class="font-weight-bold d-block">
+                                {{ selectedWordlist.name }}
+                            </span>
+                            <span class="text-small d-block">
+                                {{ selectedWordlist.lineCount }} lines
+                            </span>
+                        </div>
                     </div>
                     <button class="button button-secondary mt-2"
                         (click)="openSelectWordlistModal()">
-                        <fa-icon [icon]="faGears" [fixedWidth]="true"></fa-icon>
+                        <fa-icon [icon]="faFileLines" [fixedWidth]="true"></fa-icon>
                         Select Wordlist
+                    </button>
+                    <button class="button button-secondary mt-2 ml-2"
+                        pTooltip="Add a wordlist from local disk (use this option if the file is on the same machine as OpenBullet)"
+                        tooltipPosition="bottom"
+                        (click)="openAddWordlistModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Add from local file
+                    </button>
+                    <button class="button button-secondary mt-2 ml-2"
+                        pTooltip="Upload a wordlist (use this options if you're hosting OpenBullet on a remote server but your file is on your local machine)"
+                        tooltipPosition="bottom"
+                        (click)="openUploadWordlistModal()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Upload
                     </button>
                 </div>
             </div>
@@ -666,6 +685,39 @@
         #selectWordlistComponent
         (confirm)="selectWordlist($event)" />
 </p-dialog>
+
+<p-dialog 
+    #uploadWordlistModal
+    header="Upload a wordlist"
+    [(visible)]="uploadWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-upload-wordlist
+        #uploadWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>
+
+<p-dialog 
+    #addWordlistModal
+    header="Add a wordlist"
+    [(visible)]="addWordlistModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-wordlist
+        #addWordlistComponent
+        [wordlistTypes]="wordlistTypes"
+        (confirm)="createWordlist($event)" />
+</p-dialog>
+
 
 <p-dialog 
     header="Configure discord hit output" 

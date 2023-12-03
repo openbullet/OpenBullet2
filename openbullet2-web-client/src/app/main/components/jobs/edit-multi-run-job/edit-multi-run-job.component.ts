@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faBolt, faGears, faPlus, faSave, faX } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faFileLines, faGears, faPlus, faSave, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
@@ -26,6 +26,9 @@ import { WordlistType } from 'src/app/main/dtos/settings/environment-settings.dt
 import { SelectWordlistComponent } from '../select-wordlist/select-wordlist.component';
 import { WordlistDto } from 'src/app/main/dtos/wordlist/wordlist.dto';
 import { WordlistService } from 'src/app/main/services/wordlist.service';
+import { AddWordlistComponent } from '../../wordlists/add-wordlist/add-wordlist.component';
+import { UploadWordlistComponent } from '../../wordlists/upload-wordlist/upload-wordlist.component';
+import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dto';
 
 enum EditMode {
   Create = 'create',
@@ -49,6 +52,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   @ViewChild('selectWordlistComponent')
   selectWordlistComponent: SelectWordlistComponent | undefined;
 
+  @ViewChild('addWordlistComponent')
+  addWordlistComponent: AddWordlistComponent | undefined = undefined;
+
+  @ViewChild('uploadWordlistComponent')
+  uploadWordlistComponent: UploadWordlistComponent | undefined = undefined;
+
   @ViewChild('configureDiscordComponent')
   configureDiscordComponent: ConfigureDiscordComponent | undefined;
 
@@ -63,6 +72,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   faPlus = faPlus;
   faX = faX;
   faSave = faSave;
+  faFileLines = faFileLines;
 
   Object = Object;
   Math = Math;
@@ -92,7 +102,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   jobId: number | null = null;
   options: MultiRunJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
-  wordlistTypes: string[] | null = null;
+  wordlistTypes: string[] = [];
   
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
@@ -128,6 +138,8 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   selectConfigModalVisible: boolean = false;
   selectWordlistModalVisible: boolean = false;
+  addWordlistModalVisible: boolean = false;
+  uploadWordlistModalVisible: boolean = false;
   configureDiscordWebhookHitOutputModalVisible: boolean = false;
   configureTelegramBotHitOutputModalVisible: boolean = false;
   configureCustomWebhookHitOutputModalVisible: boolean = false;
@@ -401,6 +413,16 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.selectWordlistComponent?.refresh();
   }
 
+  openAddWordlistModal() {
+    this.addWordlistComponent?.reset();
+    this.addWordlistModalVisible = true;
+  }
+
+  openUploadWordlistModal() {
+    this.uploadWordlistComponent?.reset();
+    this.uploadWordlistModalVisible = true;
+  }
+
   selectConfig(config: ConfigInfoDto) {
     this.selectedConfigInfo = config;
     this.options!.configId = config.id;
@@ -614,5 +636,19 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     }
 
     return range.join(', ') + (useEllipsis ? ', ... ' : ', ') + lastNumber;
+  }
+
+  createWordlist(wordlist: CreateWordlistDto) {
+    this.wordlistService.createWordlist(wordlist)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Added',
+          detail: `Wordlist ${resp.name} was added`
+        });
+        this.uploadWordlistModalVisible = false;
+        this.addWordlistModalVisible = false;
+        this.selectWordlist(resp);
+      });
   }
 }
