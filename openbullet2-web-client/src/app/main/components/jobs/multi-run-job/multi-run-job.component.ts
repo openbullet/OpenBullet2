@@ -8,6 +8,7 @@ import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { ChangeBotsMessage } from 'src/app/main/dtos/job/messages/change-bots.dto';
 import { MRJNewHitMessage } from 'src/app/main/dtos/job/messages/multi-run/hit.dto';
 import { MRJNewResultMessage } from 'src/app/main/dtos/job/messages/multi-run/new-result.dto';
+import { JobProxyMode } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { MRJDataStatsDto, MRJHitDto, MultiRunJobDto } from 'src/app/main/dtos/job/multi-run-job.dto';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { getMockedMultiRunJobNewResultMessage } from 'src/app/main/mock/messages.mock';
@@ -41,6 +42,7 @@ export class MultiRunJobComponent {
   Math = Math;
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
+  JobProxyMode = JobProxyMode;
 
   statusColor: Record<JobStatus, string> = {
     idle: 'secondary',
@@ -266,11 +268,11 @@ export class MultiRunJobComponent {
         break;
 
       case 'NONE':
-        color = 'var(--fg-to-check)';
+        color = 'var(--fg-tocheck)';
         break;
 
       case 'ERROR':
-        color = 'var(--fg-bad)';
+        color = 'var(--fg-error)';
         break;
     }
 
@@ -460,5 +462,20 @@ export class MultiRunJobComponent {
       duration.seconds(),
       0
     );
+  }
+
+  shouldUseProxies(): boolean {
+    if (this.job === null) {
+      return false;
+    }
+
+    switch (this.job.proxyMode) {
+      case JobProxyMode.Off:
+        return false;
+      case JobProxyMode.On:
+        return true;
+      case JobProxyMode.Default:
+        return this.job.config.needsProxies;
+    }
   }
 }

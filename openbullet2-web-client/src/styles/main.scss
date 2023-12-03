@@ -151,6 +151,18 @@ textarea {
     color: var(--fg-bad) !important;
 }
 
+.color-banned {
+    color: var(--fg-banned) !important;
+}
+
+.color-retry {
+    color: var(--fg-retry) !important;
+}
+
+.color-error {
+    color: var(--fg-error) !important;
+}
+
 .color-inactive {
     color: var(--fg-inactive) !important;
 }

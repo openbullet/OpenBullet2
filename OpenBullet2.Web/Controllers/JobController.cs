@@ -132,10 +132,10 @@ public class JobController : ApiController
     /// </summary>
     [HttpGet("multi-run")]
     [MapToApiVersion("1.0")]
-    public ActionResult<MultiRunJobDto> GetMultiRunJob(int id)
+    public async Task<ActionResult<MultiRunJobDto>> GetMultiRunJob(int id)
     {
         var job = GetJob<MultiRunJob>(id);
-        return MapMultiRunJobDto(job);
+        return await MapMultiRunJobDto(job);
     }
 
     /// <summary>
@@ -265,7 +265,7 @@ public class JobController : ApiController
             var job = _jobFactory.FromOptions(entity.Id, apiUser.Id, jobOptions);
             _jobManager.AddJob(job);
 
-            return MapMultiRunJobDto((MultiRunJob)job);
+            return await MapMultiRunJobDto((MultiRunJob)job);
         }
         catch
         {
@@ -361,7 +361,7 @@ public class JobController : ApiController
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
 
-        return MapMultiRunJobDto((MultiRunJob)newJob);
+        return await MapMultiRunJobDto((MultiRunJob)newJob);
     }
 
     /// <summary>
@@ -901,7 +901,7 @@ public class JobController : ApiController
         };
     }
 
-    private MultiRunJobDto MapMultiRunJobDto(MultiRunJob job)
+    private async Task<MultiRunJobDto> MapMultiRunJobDto(MultiRunJob job)
     {
         var dataPoolInfo = job.DataPool switch
         {
@@ -912,14 +912,14 @@ public class JobController : ApiController
             FileDataPool f => $"{f.FileName} (File)",
             _ => throw new NotImplementedException()
         };
-
-        var proxySources = job.ProxySources.Select(s => s switch
+        
+        var proxySources = await Task.WhenAll(job.ProxySources.Select(async s => s switch
         {
-            GroupProxySource g => $"{g.GroupId} (Group)",
+            GroupProxySource g => $"{await GetProxyGroupName(g.GroupId)} (Group)",
             FileProxySource f => $"{f.FileName} (File)",
             RemoteProxySource r => $"{r.Url} (Remote)",
             _ => throw new NotImplementedException()
-        }).ToList();
+        }));
 
         var hitOutputs = job.HitOutputs.Select(o => o switch
         {
@@ -959,13 +959,14 @@ public class JobController : ApiController
                 Id = job.Config.Id,
                 Name = job.Config.Metadata.Name,
                 Author = job.Config.Metadata.Author,
-                Base64Image = job.Config.Metadata.Base64Image
+                Base64Image = job.Config.Metadata.Base64Image,
+                NeedsProxies = job.Config.Settings.ProxySettings.UseProxies
             } : null,
             DataPoolInfo = dataPoolInfo,
             Bots = job.Bots,
             Skip = job.Skip,
             ProxyMode = job.ProxyMode,
-            ProxySources = proxySources,
+            ProxySources = proxySources.ToList(),
             HitOutputs = hitOutputs,
             DataStats = new MRJDataStatsDto
             {
@@ -1005,5 +1006,16 @@ public class JobController : ApiController
                 CapturedData = h.CapturedDataString
             }).ToList()
         };
+    }
+
+    private async Task<string> GetProxyGroupName(int id)
+    {
+        if (id == -1)
+        {
+            return "All";
+        }
+
+        var proxyGroup = await _proxyGroupRepo.Get(id);
+        return proxyGroup is null ? "Invalid" : proxyGroup.Name;
     }
 }

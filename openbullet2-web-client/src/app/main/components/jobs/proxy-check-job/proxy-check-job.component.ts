@@ -148,7 +148,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
         this.writeLog({
           timestamp: new Date(),
           message: logMessage,
-          color: 'var(--fg-bad)'
+          color: 'var(--fg-error)'
         });
       }
     });

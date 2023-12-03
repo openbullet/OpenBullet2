@@ -1,4 +1,5 @@
 import { JobStatus } from "./job-status"
+import { JobProxyMode } from "./multi-run-job-options.dto";
 import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
 
 export interface MultiRunJobDto {
@@ -12,7 +13,7 @@ export interface MultiRunJobDto {
     dataPoolInfo: string;
     bots: number;
     skip: number;
-    proxyMode: number;
+    proxyMode: JobProxyMode;
     proxySources: string[];
     hitOutputs: string[];
     dataStats: MRJDataStatsDto;
@@ -29,7 +30,8 @@ export interface JobConfigDto {
     id: string;
     base64Image: string;
     name: string;
-    author: string
+    author: string;
+    needsProxies: boolean;
 }
 
 export interface MRJDataStatsDto {
