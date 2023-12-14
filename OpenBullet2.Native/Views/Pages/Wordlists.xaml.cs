@@ -135,7 +135,7 @@ namespace OpenBullet2.Native.Views.Pages
                         var entity = new WordlistEntity
                         {
                             Name = Path.GetFileNameWithoutExtension(file),
-                            FileName = path,
+                            FileName = path.Replace("\\", "/"),
                             Type = env.RecognizeWordlistType(firstLine),
                             Purpose = string.Empty,
                             Total = File.ReadLines(path).Count()
