@@ -40,13 +40,7 @@
                     <TextBlock VerticalAlignment="Center" Margin="5 0">Delete Not Found</TextBlock>
                 </StackPanel>
             </Button>
-            <TextBox x:Name="filterTextbox" Text="{Binding SearchString}" Margin="10 5 5 5" Width="150" KeyDown="UpdateSearch"/>
-            <Button Style="{StaticResource StyledButton}" x:Name="searchButton" Click="Search" Margin="0 5 5 5" >
-                <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterialDesign Kind="Search" />
-                    <TextBlock VerticalAlignment="Center" Margin="5 0">Search</TextBlock>
-                </StackPanel>
-            </Button>
+            <TextBox x:Name="filterTextbox" Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}" Margin="10 5 5 5" Width="150" KeyDown="UpdateSearch"/>
         </StackPanel>
 
         <ListView x:Name="wordlistListView" Grid.Row="1" Foreground="{DynamicResource ForegroundMain}" Background="Transparent" ItemsSource="{Binding Path=WordlistsCollection}" SelectionMode="Extended" BorderThickness="1" AllowDrop="True" Drop="HandleDrop">

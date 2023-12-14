@@ -73,7 +73,6 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        private void Search(object sender, RoutedEventArgs e) => vm.SearchString = filterTextbox.Text;
 
         public async void AddWordlist(WordlistEntity wordlist)
         {
@@ -135,7 +134,7 @@ namespace OpenBullet2.Native.Views.Pages
                         var entity = new WordlistEntity
                         {
                             Name = Path.GetFileNameWithoutExtension(file),
-                            FileName = path,
+                            FileName = path.Replace("\\", "/"),
                             Type = env.RecognizeWordlistType(firstLine),
                             Purpose = string.Empty,
                             Total = File.ReadLines(path).Count()
