@@ -37,6 +37,11 @@ public class TriggeredActionDto
     public int JobId { get; set; }
 
     /// <summary>
+    /// The name of the job this triggered action refers to.
+    /// </summary>
+    public string JobName { get; set; } = "Invalid job";
+
+    /// <summary>
     /// All triggers that must be verified at the same time in order
     /// to start the execution of the action.
     /// </summary>

@@ -18,7 +18,6 @@ namespace RuriLib.Models.Jobs
     public class ProxyCheckJob : Job
     {
         // Options
-        public string Name { get; set; } = string.Empty;
         public int Bots { get; set; } = 1;
         public int BotLimit { get; init; } = 200;
         public bool CheckOnlyUntested { get; set; } = true;

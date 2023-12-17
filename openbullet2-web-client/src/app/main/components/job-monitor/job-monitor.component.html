@@ -1,0 +1,17 @@
+<h1>
+    <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
+    Monitor
+</h1>
+<h6 class="color-inactive">
+    Configure the monitor to execute actions when a job meets certain conditions.
+</h6>
+
+<app-spinner *ngIf="triggeredActions === null" [fullWidth]="true" />
+
+<div class="container-fluid" *ngIf="triggeredActions !== null">
+    <div class="row" *ngFor="let action of triggeredActions">
+        <div class="col-12">
+            {{action.jobName}}
+        </div>
+    </div>
+</div>

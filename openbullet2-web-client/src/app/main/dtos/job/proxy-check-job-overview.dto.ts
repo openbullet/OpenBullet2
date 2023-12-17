@@ -1,9 +1,6 @@
-import { JobStatus } from "./job-status";
+import { JobOverviewDto } from "./job.dto";
 
-export interface ProxyCheckJobOverviewDto {
-    id: number;
-    ownerId: number;
-    status: JobStatus;
+export interface ProxyCheckJobOverviewDto extends JobOverviewDto {
     bots: number;
     total: number;
     tested: number;

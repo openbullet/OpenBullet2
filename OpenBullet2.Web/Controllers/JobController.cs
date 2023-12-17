@@ -56,6 +56,29 @@ public class JobController : ApiController
     }
 
     /// <summary>
+    /// Get overview information about all jobs.
+    /// </summary>
+    [HttpGet("all")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<IEnumerable<JobOverviewDto>> GetAll()
+    {
+        var apiUser = HttpContext.GetApiUser();
+        
+        // Only get the jobs of the user!
+        var jobs = _jobManager.Jobs
+            .Where(j => CanSee(apiUser, j) && j is MultiRunJob)
+            .Cast<MultiRunJob>()
+            .OrderBy(j => j.Id);
+        
+        var mapped = jobs.Select(job => new JobOverviewDto {
+                Id = job.Id, OwnerId = job.OwnerId, Status = job.Status, Name = job.Name,
+            })
+            .ToList();
+
+        return Ok(mapped);
+    }
+
+    /// <summary>
     /// Get overview information about all multi run jobs.
     /// </summary>
     [HttpGet("multi-run/all")]

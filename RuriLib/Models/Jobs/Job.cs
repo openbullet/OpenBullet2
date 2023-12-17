@@ -15,6 +15,7 @@ namespace RuriLib.Models.Jobs
     {
         // Public properties
         public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int OwnerId { get; set; } = 0;
         public JobStatus Status { get; protected set; } = JobStatus.Idle;
         public DateTime CreationTime { get; set; } = DateTime.Now;

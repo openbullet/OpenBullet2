@@ -1,13 +1,8 @@
-import { JobStatus } from "./job-status"
+import { JobDto } from "./job.dto";
 import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
 
-export interface ProxyCheckJobDto {
-    id: number;
-    ownerId: number;
-    status: JobStatus;
-    name: string;
+export interface ProxyCheckJobDto extends JobDto {
     bots: number;
-    startTime: string | null;
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
     groupId: number;
     groupName: string;

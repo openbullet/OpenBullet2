@@ -9,6 +9,7 @@ import { MultiRunJobOptionsDto } from "../dtos/job/multi-run-job-options.dto";
 import { ProxyCheckJobOptionsDto } from "../dtos/job/proxy-check-job-options.dto";
 import { CustomInputQuestionDto, CustomInputsDto } from "../dtos/job/custom-inputs.dto";
 import { MRJHitLogDto } from "../dtos/job/hit-log.dto";
+import { JobOverviewDto } from "../dtos/job/job.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,12 @@ export class JobService {
     constructor(
         private http: HttpClient
     ) { }
+
+    getAllJobs() {
+        return this.http.get<JobOverviewDto[]>(
+            getBaseUrl() + '/job/all'
+        );
+    }
 
     getAllMultiRunJobs() {
         return this.http.get<MultiRunJobOverviewDto[]>(

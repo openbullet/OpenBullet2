@@ -1,9 +1,6 @@
-import { JobStatus } from "./job-status";
+import { JobOverviewDto } from "./job.dto";
 
-export interface MultiRunJobOverviewDto {
-    id: number;
-    ownerId: number;
-    status: JobStatus;
+export interface MultiRunJobOverviewDto extends JobOverviewDto {
     configName: string;
     dataPoolInfo: string;
     bots: number;

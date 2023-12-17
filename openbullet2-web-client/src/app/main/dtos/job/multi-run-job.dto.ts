@@ -1,13 +1,8 @@
-import { JobStatus } from "./job-status"
+import { JobDto } from "./job.dto";
 import { JobProxyMode } from "./multi-run-job-options.dto";
 import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
 
-export interface MultiRunJobDto {
-    id: number;
-    ownerId: number;
-    status: JobStatus;
-    name: string;
-    startTime: string | null;
+export interface MultiRunJobDto extends JobDto {
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
     config: JobConfigDto;
     dataPoolInfo: string;

@@ -86,6 +86,8 @@ import { ConfigureDiscordComponent } from './components/jobs/edit-multi-run-job/
 import { ConfigureTelegramComponent } from './components/jobs/edit-multi-run-job/configure-telegram/configure-telegram.component';
 import { ConfigureCustomWebhookComponent } from './components/jobs/edit-multi-run-job/configure-custom-webhook/configure-custom-webhook.component';
 import { SelectWordlistComponent } from './components/jobs/select-wordlist/select-wordlist.component';
+import { JobMonitorComponent } from './components/job-monitor/job-monitor.component';
+import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
 
 @NgModule({
   declarations: [
@@ -149,7 +151,9 @@ import { SelectWordlistComponent } from './components/jobs/select-wordlist/selec
     ConfigureDiscordComponent,
     ConfigureTelegramComponent,
     ConfigureCustomWebhookComponent,
-    SelectWordlistComponent
+    SelectWordlistComponent,
+    JobMonitorComponent,
+    EditTriggeredActionComponent
   ],
   imports: [
     CommonModule,

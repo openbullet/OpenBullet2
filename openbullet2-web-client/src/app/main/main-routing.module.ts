@@ -26,6 +26,8 @@ import { EditMultiRunJobComponent } from './components/jobs/edit-multi-run-job/e
 import { MultiRunJobComponent } from './components/jobs/multi-run-job/multi-run-job.component';
 import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-check-job.component';
 import { canDeactivateFormComponent } from '../shared/guards/can-deactivate-form.guard';
+import { JobMonitorComponent } from './components/job-monitor/job-monitor.component';
+import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
 
 const routes: Routes = [
   // Main component layout
@@ -82,6 +84,14 @@ const routes: Routes = [
       {
         component: ProxyCheckJobComponent,
         path: 'job/proxy-check/:id'
+      },
+      {
+        component: JobMonitorComponent,
+        path: 'monitor'
+      },
+      {
+        component: EditTriggeredActionComponent,
+        path: 'monitor/triggered-action/edit',
       },
       {
         component: ProxiesComponent,

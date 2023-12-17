@@ -24,11 +24,6 @@ public class CreateTriggeredActionDto
     public bool IsRepeatable { get; set; } = false;
 
     /// <summary>
-    /// The number of times the action was executed so far.
-    /// </summary>
-    public int Executions { get; private set; } = 0;
-
-    /// <summary>
     /// The job this triggered action refers to.
     /// </summary>
     public int JobId { get; set; }

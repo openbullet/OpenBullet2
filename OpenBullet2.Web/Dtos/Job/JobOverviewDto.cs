@@ -11,18 +11,24 @@ public class JobOverviewDto
     /// <summary>
     /// The job id.
     /// </summary>
-    [JsonPropertyOrder(-3)]
+    [JsonPropertyOrder(-4)]
     public int Id { get; set; }
 
     /// <summary>
     /// The id of the owner of this job.
     /// </summary>
-    [JsonPropertyOrder(-2)]
+    [JsonPropertyOrder(-3)]
     public int OwnerId { get; set; }
 
     /// <summary>
     /// The job status.
     /// </summary>
-    [JsonPropertyOrder(-1)]
+    [JsonPropertyOrder(-2)]
     public JobStatus Status { get; set; }
+
+    /// <summary>
+    /// The name of the job.
+    /// </summary>
+    [JsonPropertyOrder(-1)]
+    public string Name { get; set; } = string.Empty;
 }

@@ -9,11 +9,6 @@ namespace OpenBullet2.Web.Dtos.Job;
 public class MultiRunJobDto : JobDto
 {
     /// <summary>
-    /// The name of the jobs.
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
-
-    /// <summary>
     /// When the job will start.
     /// </summary>
     public required object StartCondition { get; set; }
