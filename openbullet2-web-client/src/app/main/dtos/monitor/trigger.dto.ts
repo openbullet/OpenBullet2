@@ -1,4 +1,6 @@
+import { TimeSpanPipe } from "src/app/shared/pipes/timespan.pipe";
 import { JobStatus } from "../job/job-status";
+import { parseTimeSpan } from "src/app/shared/utils/dates";
 
 export enum NumComparison {
     EqualTo = 'equalTo',
@@ -41,7 +43,7 @@ export enum TriggerType {
 
 export interface JobStatusTriggerDto {
     _polyTypeName: TriggerType.JobStatus;
-    jobStatus: JobStatus;
+    status: JobStatus;
 }
 
 export interface JobFinishedTriggerDto {
@@ -126,3 +128,63 @@ export type TriggerDto =
     ProgressTriggerDto |
     TimeElapsedTriggerDto |
     TimeRemainingTriggerDto;
+
+function getComparisonText(comparison: NumComparison): string {
+    switch (comparison) {
+        case NumComparison.EqualTo:
+            return '=';
+        case NumComparison.NotEqualTo:
+            return '!=';
+        case NumComparison.LessThan:
+            return '<';
+        case NumComparison.LessThanOrEqualTo:
+            return '<=';
+        case NumComparison.GreaterThan:
+            return '>';
+        case NumComparison.GreaterThanOrEqualTo:
+            return '>=';
+    }
+}
+
+export function getTriggerText(trigger: TriggerDto): string {
+    const timeSpanPipe = new TimeSpanPipe();
+
+    switch (trigger._polyTypeName) {
+        case TriggerType.JobStatus:
+            return `Job status is ${trigger.status}`;
+        case TriggerType.JobFinished:
+            return `Job finished`;
+        case TriggerType.TestedCount:
+            return `Tested count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.HitCount:
+            return `Hit count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.CustomCount:
+            return `Custom count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.ToCheckCount:
+            return `To check count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.FailCount:
+            return `Fail count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.RetryCount:
+            return `Retry count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.BanCount:
+            return `Ban count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.ErrorCount:
+            return `Error count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.AliveProxiesCount:
+            return `Alive proxies count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.BannedProxiesCount:
+            return `Banned proxies count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.CpmCount:
+            return `CPM ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.CaptchaCredit:
+            return `Captcha credit ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
+        case TriggerType.Progress:
+            return `Progress ${getComparisonText(trigger.comparison)} ${trigger.amount}%`;
+        case TriggerType.TimeElapsed:
+            return `Time elapsed ${getComparisonText(trigger.comparison)} ${timeSpanPipe.transform(parseTimeSpan(trigger.timeSpan))}`;
+        case TriggerType.TimeRemaining:
+            return `Time remaining ${getComparisonText(trigger.comparison)} ${timeSpanPipe.transform(parseTimeSpan(trigger.timeSpan))}`;
+        default:
+            return 'Unknown trigger';
+    }
+}

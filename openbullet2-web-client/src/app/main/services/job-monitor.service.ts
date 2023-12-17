@@ -53,6 +53,19 @@ export class JobMonitorService {
         );
     }
 
+    setTriggeredActionActive(id: string, isActive: boolean) {
+        return this.http.post<void>(
+            getBaseUrl() + '/job-monitor/triggered-action/set-active',
+            null,
+            {
+                params: {
+                    id,
+                    active: isActive.toString()
+                }
+            }
+        );
+    }
+
     resetTriggeredAction(id: string) {
         return this.http.post<void>(
             getBaseUrl() + '/job-monitor/triggered-action/reset',

@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Dtos.JobMonitor;
+﻿using OpenBullet2.Core.Models.Jobs;
+
+namespace OpenBullet2.Web.Dtos.JobMonitor;
 
 /// <summary>
 /// DTO for a triggered action in the job monitor.
@@ -40,6 +42,11 @@ public class TriggeredActionDto
     /// The name of the job this triggered action refers to.
     /// </summary>
     public string JobName { get; set; } = "Invalid job";
+
+    /// <summary>
+    /// The type of job this triggered action refers to.
+    /// </summary>
+    public JobType JobType { get; set; } = JobType.MultiRun;
 
     /// <summary>
     /// All triggers that must be verified at the same time in order

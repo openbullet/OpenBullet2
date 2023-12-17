@@ -1,3 +1,6 @@
+import { TimeSpanPipe } from "src/app/shared/pipes/timespan.pipe";
+import { parseTimeSpan } from "src/app/shared/utils/dates";
+
 export enum ActionType {
     Wait = 'waitAction',
     SetRelativeStartCondition = 'setRelativeStartConditionAction',
@@ -6,6 +9,8 @@ export enum ActionType {
     StartJob = 'startJobAction',
     DiscordWebhook = 'discordWebhookAction',
     TelegramBot = 'telegramBotAction',
+    SetBots = 'setBotsAction',
+    ReloadProxies = 'reloadProxiesAction'
 }
 
 export interface WaitActionDto {
@@ -48,6 +53,15 @@ export interface TelegramBotActionDto {
     message: string;
 }
 
+export interface SetBotsActionDto {
+    _polyTypeName: ActionType.SetBots;
+    amount: number;
+}
+
+export interface ReloadProxiesActionDto {
+    _polyTypeName: ActionType.ReloadProxies;
+}
+
 export type ActionDto =
     WaitActionDto |
     SetRelativeStartConditionActionDto |
@@ -55,4 +69,33 @@ export type ActionDto =
     AbortJobActionDto |
     StartJobActionDto |
     DiscordWebhookActionDto |
-    TelegramBotActionDto;
+    TelegramBotActionDto |
+    SetBotsActionDto |
+    ReloadProxiesActionDto;
+
+export function getActionText(action: ActionDto): string {
+    const timeSpanPipe = new TimeSpanPipe();
+
+    switch (action._polyTypeName) {
+        case ActionType.Wait:
+            return `Wait ${timeSpanPipe.transform(parseTimeSpan(action.timeSpan))}`;
+        case ActionType.SetRelativeStartCondition:
+            return `Set relative start condition to ${action.jobId} after ${timeSpanPipe.transform(parseTimeSpan(action.timeSpan))}`;
+        case ActionType.StopJob:
+            return `Stop job ${action.jobId}`;
+        case ActionType.AbortJob:
+            return `Abort job ${action.jobId}`;
+        case ActionType.StartJob:
+            return `Start job ${action.jobId}`;
+        case ActionType.DiscordWebhook:
+            return `Send message via Discord webhook`;
+        case ActionType.TelegramBot:
+            return `Send message via Telegram bot`;
+        case ActionType.SetBots:
+            return `Set bots to ${action.amount}`;
+        case ActionType.ReloadProxies:
+            return `Reload proxies`;
+        default:
+            return 'Unknown action';
+    }
+}

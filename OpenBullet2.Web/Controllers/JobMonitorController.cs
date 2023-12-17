@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
@@ -50,20 +51,8 @@ public class JobMonitorController : ApiController
     /// </summary>
     [HttpGet("triggered-action")]
     [MapToApiVersion("1.0")]
-    public ActionResult<TriggeredActionDto> Get(string id)
-    {
-        var actions = _jobMonitorService.TriggeredActions;
-        var targetAction = actions.FirstOrDefault(a => a.Id == id);
-        
-        if (targetAction is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.TRIGGERED_ACTION_NOT_FOUND,
-                id, nameof(IGuestRepository));
-        }
-        
-        return MapTriggeredAction(targetAction);
-    }
+    public ActionResult<TriggeredActionDto> Get(string id) =>
+        MapTriggeredAction(GetTriggeredAction(id));
 
     /// <summary>
     /// Update a triggered action.
@@ -73,15 +62,7 @@ public class JobMonitorController : ApiController
     public ActionResult<TriggeredActionDto> Update(
         UpdateTriggeredActionDto dto)
     {
-        var actions = _jobMonitorService.TriggeredActions;
-        var targetAction = actions.FirstOrDefault(a => a.Id == dto.Id);
-        
-        if (targetAction is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.TRIGGERED_ACTION_NOT_FOUND,
-                dto.Id, nameof(IGuestRepository));
-        }
+        var targetAction = GetTriggeredAction(dto.Id);
 
         var newAction = _mapper.Map(dto, targetAction);
         _jobMonitorService.SaveStateIfChanged();
@@ -114,22 +95,32 @@ public class JobMonitorController : ApiController
     /// Resets a triggered action's execution counter.
     /// </summary>
     [HttpPost("triggered-action/reset")]
+    [MapToApiVersion("1.0")]
     public ActionResult Reset(string id)
     {
-        var actions = _jobMonitorService.TriggeredActions;
-        var targetAction = actions.FirstOrDefault(a => a.Id == id);
-
-        if (targetAction is null)
-        {
-            throw new EntryNotFoundException(
-                ErrorCode.TRIGGERED_ACTION_NOT_FOUND,
-                id, nameof(IGuestRepository));
-        }
+        var targetAction = GetTriggeredAction(id);
 
         targetAction.Reset();
         _jobMonitorService.SaveStateIfChanged();
         
         _logger.LogInformation("Reset triggered action {Id}", id);
+
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Sets a triggered action as active or inactive.
+    /// </summary>
+    [HttpPost("triggered-action/set-active")]
+    [MapToApiVersion("1.0")]
+    public ActionResult SetActive(string id, bool active)
+    {
+        var targetAction = GetTriggeredAction(id);
+
+        targetAction.IsActive = active;
+        _jobMonitorService.SaveStateIfChanged();
+        
+        _logger.LogInformation("Set triggered action {Id} as {Active}", id, active ? "active" : "inactive");
 
         return Ok();
     }
@@ -141,6 +132,18 @@ public class JobMonitorController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult Delete(string id)
     {
+        var targetAction = GetTriggeredAction(id);
+
+        _jobMonitorService.TriggeredActions.Remove(targetAction);
+        _jobMonitorService.SaveStateIfChanged();
+        
+        _logger.LogInformation("Deleted triggered action {Id}", id);
+
+        return Ok();
+    }
+    
+    private TriggeredAction GetTriggeredAction(string id)
+    {
         var actions = _jobMonitorService.TriggeredActions;
         var targetAction = actions.FirstOrDefault(a => a.Id == id);
 
@@ -151,12 +154,7 @@ public class JobMonitorController : ApiController
                 id, nameof(IGuestRepository));
         }
 
-        actions.Remove(targetAction);
-        _jobMonitorService.SaveStateIfChanged();
-        
-        _logger.LogInformation("Deleted triggered action {Id}", id);
-
-        return Ok();
+        return targetAction;
     }
     
     private TriggeredActionDto MapTriggeredAction(TriggeredAction action)
@@ -169,8 +167,17 @@ public class JobMonitorController : ApiController
         if (job is not null)
         {
             mapped.JobName = job.Name;
+            mapped.JobType = GetJobType(job);
         }
         
         return mapped;
     }
+    
+    private static JobType GetJobType(Job job) =>
+        job switch
+        {
+            MultiRunJob => JobType.MultiRun,
+            ProxyCheckJob => JobType.ProxyCheck,
+            _ => throw new NotImplementedException()
+        };
 }

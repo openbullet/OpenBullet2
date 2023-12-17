@@ -1,4 +1,5 @@
-﻿using RuriLib.Models.Jobs;
+﻿using OpenBullet2.Core.Models.Jobs;
+using RuriLib.Models.Jobs;
 using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web.Dtos.Job;
@@ -11,15 +12,21 @@ public class JobOverviewDto
     /// <summary>
     /// The job id.
     /// </summary>
-    [JsonPropertyOrder(-4)]
+    [JsonPropertyOrder(-5)]
     public int Id { get; set; }
 
     /// <summary>
     /// The id of the owner of this job.
     /// </summary>
-    [JsonPropertyOrder(-3)]
+    [JsonPropertyOrder(-4)]
     public int OwnerId { get; set; }
 
+    /// <summary>
+    /// The job type.
+    /// </summary>
+    [JsonPropertyOrder(-3)]
+    public JobType Type { get; set; }
+    
     /// <summary>
     /// The job status.
     /// </summary>

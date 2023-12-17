@@ -1,3 +1,4 @@
+import { JobType } from "../job/job.dto";
 import { ActionDto } from "./action.dto";
 import { TriggerDto } from "./trigger.dto";
 
@@ -9,6 +10,7 @@ export interface TriggeredActionDto {
     executions: number;
     jobId: number;
     jobName: string;
+    jobType: JobType;
     triggers: TriggerDto[];
     actions: ActionDto[];
 }

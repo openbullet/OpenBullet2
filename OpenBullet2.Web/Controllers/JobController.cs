@@ -71,7 +71,10 @@ public class JobController : ApiController
             .OrderBy(j => j.Id);
         
         var mapped = jobs.Select(job => new JobOverviewDto {
-                Id = job.Id, OwnerId = job.OwnerId, Status = job.Status, Name = job.Name,
+                Id = job.Id,
+                OwnerId = job.OwnerId,
+                Type = GetJobType(job),
+                Status = job.Status, Name = job.Name,
             })
             .ToList();
 
@@ -112,6 +115,7 @@ public class JobController : ApiController
             {
                 Id = job.Id,
                 OwnerId = job.OwnerId,
+                Type = GetJobType(job),
                 Status = job.Status,
                 Name = job.Name,
                 ConfigName = job.Config?.Metadata.Name,
@@ -902,6 +906,7 @@ public class JobController : ApiController
             StartCondition = startCondition,
             StartTime = job.StartTime,
             OwnerId = job.OwnerId,
+            Type = GetJobType(job),
             Status = job.Status,
             Bots = job.Bots,
             GroupId = pcjJobOptions.GroupId,
@@ -976,6 +981,7 @@ public class JobController : ApiController
             StartCondition = startCondition,
             StartTime = job.StartTime,
             OwnerId = job.OwnerId,
+            Type = GetJobType(job),
             Status = job.Status,
             Config = job.Config is not null ? new JobConfigDto
             {
@@ -1041,4 +1047,12 @@ public class JobController : ApiController
         var proxyGroup = await _proxyGroupRepo.Get(id);
         return proxyGroup is null ? "Invalid" : proxyGroup.Name;
     }
+    
+    private static JobType GetJobType(Job job) =>
+        job switch
+        {
+            MultiRunJob => JobType.MultiRun,
+            ProxyCheckJob => JobType.ProxyCheck,
+            _ => throw new NotImplementedException()
+        };
 }
