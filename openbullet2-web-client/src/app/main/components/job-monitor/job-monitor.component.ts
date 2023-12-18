@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { faClone, faEye, faPen, faPowerOff, faRotate, faTrashCan, faX } from '@fortawesome/free-solid-svg-icons';
+import { faClone, faEye, faPen, faPlus, faPowerOff, faRotate, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { TriggeredActionDto } from '../../dtos/monitor/triggered-action.dto';
 import { JobMonitorService } from '../../services/job-monitor.service';
-import { JobService } from '../../services/job.service';
-import { JobOverviewDto, JobType } from '../../dtos/job/job.dto';
+import { JobType } from '../../dtos/job/job.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { getTriggerText } from '../../dtos/monitor/trigger.dto';
 import { getActionText } from '../../dtos/monitor/action.dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-monitor',
@@ -20,6 +20,7 @@ export class JobMonitorComponent implements OnInit {
   faPen = faPen;
   faTrashCan = faTrashCan;
   faClone = faClone;
+  faPlus = faPlus;
   triggeredActions: TriggeredActionDto[] | null = null;
   getTriggerText = getTriggerText;
   getActionText = getActionText;
@@ -27,7 +28,8 @@ export class JobMonitorComponent implements OnInit {
   constructor(
     private jobMonitorService: JobMonitorService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -80,12 +82,24 @@ export class JobMonitorComponent implements OnInit {
     }
   }
 
+  createAction() {
+    this.router.navigate(['/monitor/triggered-action/create']);
+  }
+
   editAction(triggeredAction: TriggeredActionDto) {
-    // TODO
+    this.router.navigate(['/monitor/triggered-action/edit'], {
+      queryParams: {
+        id: triggeredAction.id
+      }
+    });
   }
 
   cloneAction(triggeredAction: TriggeredActionDto) {
-    // TODO
+    this.router.navigate(['/monitor/triggered-action/clone'], {
+      queryParams: {
+        id: triggeredAction.id
+      }
+    });
   }
 
   confirmDeleteAction(triggeredAction: TriggeredActionDto) {

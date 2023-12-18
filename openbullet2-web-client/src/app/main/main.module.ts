@@ -88,6 +88,8 @@ import { ConfigureCustomWebhookComponent } from './components/jobs/edit-multi-ru
 import { SelectWordlistComponent } from './components/jobs/select-wordlist/select-wordlist.component';
 import { JobMonitorComponent } from './components/job-monitor/job-monitor.component';
 import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
+import { AddTriggerComponent } from './components/job-monitor/edit-triggered-action/add-trigger/add-trigger.component';
+import { AddActionComponent } from './components/job-monitor/edit-triggered-action/add-action/add-action.component';
 
 @NgModule({
   declarations: [
@@ -153,7 +155,9 @@ import { EditTriggeredActionComponent } from './components/job-monitor/edit-trig
     ConfigureCustomWebhookComponent,
     SelectWordlistComponent,
     JobMonitorComponent,
-    EditTriggeredActionComponent
+    EditTriggeredActionComponent,
+    AddTriggerComponent,
+    AddActionComponent
   ],
   imports: [
     CommonModule,

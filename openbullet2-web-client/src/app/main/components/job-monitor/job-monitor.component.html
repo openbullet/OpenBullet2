@@ -1,10 +1,29 @@
-<h1>
-    <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
-    Monitor
-</h1>
-<h6 class="color-inactive">
-    Configure the monitor to execute actions when a job meets certain conditions.
-</h6>
+<div class="container-fluid">
+    <div class="row">
+        <div [class]="triggeredActions === null ? 'col-12 px-0' : 'col-8 pl-0'">
+            <h1>
+                <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
+                Monitor
+            </h1>
+            <h6 class="color-inactive">
+                Configure the monitor to execute actions when a job meets certain conditions.
+            </h6>
+        </div>
+        <div class="col-4 pr-0" *ngIf="triggeredActions !== null">
+            <div class="d-flex h-100 flex-row justify-content-end">
+                <div class="d-flex flex-column justify-content-end">
+                    <button class="button button-accent align-self-end"
+                        pTooltip="Create a new triggered action"
+                        tooltipPosition="left"
+                        (click)="createAction()">
+                        <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <app-spinner *ngIf="triggeredActions === null" [fullWidth]="true" />
 

@@ -13,21 +13,10 @@ public class MultiRunJobTriggerDto : TriggerDto
 }
 
 /// <summary>
-/// Triggers when a job finishes.
-/// </summary>
-[PolyType("jobFinishedTrigger")]
-[MapsFrom(typeof(JobFinishedTrigger))]
-[MapsTo(typeof(JobFinishedTrigger))]
-public class JobFinishedTriggerDto : MultiRunJobTriggerDto
-{
-
-}
-
-/// <summary>
 /// Generic trigger for a multi run job that compares a given
 /// stat to a given number.
 /// </summary>
-public class NumComparisonTrigger : MultiRunJobTriggerDto
+public class MrjNumComparisonTrigger : MultiRunJobTriggerDto
 {
     /// <summary>
     /// The comparison method.
@@ -41,30 +30,13 @@ public class NumComparisonTrigger : MultiRunJobTriggerDto
 }
 
 /// <summary>
-/// Generic trigger for a multi run job that compares a given
-/// stat to a given amount of time.
-/// </summary>
-public class TimeComparisonTrigger : MultiRunJobTriggerDto
-{
-    /// <summary>
-    /// The comparison method.
-    /// </summary>
-    public NumComparison Comparison { get; set; }
-
-    /// <summary>
-    /// The amount of time to compare to.
-    /// </summary>
-    public TimeSpan TimeSpan { get; set; }
-}
-
-/// <summary>
 /// Triggers when the number of tested data lines reaches a given
 /// threshold.
 /// </summary>
 [PolyType("testedCountTrigger")]
 [MapsFrom(typeof(TestedCountTrigger))]
 [MapsTo(typeof(TestedCountTrigger))]
-public class TestedCountTriggerDto : NumComparisonTrigger
+public class TestedCountTriggerDto : MrjNumComparisonTrigger
 {
 
 }
@@ -75,7 +47,7 @@ public class TestedCountTriggerDto : NumComparisonTrigger
 [PolyType("hitCountTrigger")]
 [MapsFrom(typeof(HitCountTrigger))]
 [MapsTo(typeof(HitCountTrigger))]
-public class HitCountTriggerDto : NumComparisonTrigger
+public class HitCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -86,7 +58,7 @@ public class HitCountTriggerDto : NumComparisonTrigger
 [PolyType("customCountTrigger")]
 [MapsFrom(typeof(CustomCountTrigger))]
 [MapsTo(typeof(CustomCountTrigger))]
-public class CustomCountTriggerDto : NumComparisonTrigger
+public class CustomCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -97,7 +69,7 @@ public class CustomCountTriggerDto : NumComparisonTrigger
 [PolyType("toCheckCountTrigger")]
 [MapsFrom(typeof(ToCheckCountTrigger))]
 [MapsTo(typeof(ToCheckCountTrigger))]
-public class ToCheckCountTriggerDto : NumComparisonTrigger
+public class ToCheckCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -108,7 +80,7 @@ public class ToCheckCountTriggerDto : NumComparisonTrigger
 [PolyType("failCountTrigger")]
 [MapsFrom(typeof(FailCountTrigger))]
 [MapsTo(typeof(FailCountTrigger))]
-public class FailCountTriggerDto : NumComparisonTrigger
+public class FailCountTriggerDto : MrjNumComparisonTrigger
 {
 
 }
@@ -119,7 +91,7 @@ public class FailCountTriggerDto : NumComparisonTrigger
 [PolyType("retryCountTrigger")]
 [MapsFrom(typeof(RetryCountTrigger))]
 [MapsTo(typeof(RetryCountTrigger))]
-public class RetryCountTriggerDto : NumComparisonTrigger
+public class RetryCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -130,7 +102,7 @@ public class RetryCountTriggerDto : NumComparisonTrigger
 [PolyType("banCountTrigger")]
 [MapsFrom(typeof(BanCountTrigger))]
 [MapsTo(typeof(BanCountTrigger))]
-public class BanCountTriggerDto : NumComparisonTrigger
+public class BanCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -141,7 +113,7 @@ public class BanCountTriggerDto : NumComparisonTrigger
 [PolyType("errorCountTrigger")]
 [MapsFrom(typeof(ErrorCountTrigger))]
 [MapsTo(typeof(ErrorCountTrigger))]
-public class ErrorCountTriggerDto : NumComparisonTrigger
+public class ErrorCountTriggerDto : MrjNumComparisonTrigger
 {
 
 }
@@ -152,7 +124,7 @@ public class ErrorCountTriggerDto : NumComparisonTrigger
 [PolyType("aliveProxiesCountTrigger")]
 [MapsFrom(typeof(AliveProxiesCountTrigger))]
 [MapsTo(typeof(AliveProxiesCountTrigger))]
-public class AliveProxiesCountTriggerDto : NumComparisonTrigger
+public class AliveProxiesCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -163,7 +135,7 @@ public class AliveProxiesCountTriggerDto : NumComparisonTrigger
 [PolyType("bannedProxiesCountTrigger")]
 [MapsFrom(typeof(BannedProxiesCountTrigger))]
 [MapsTo(typeof(BannedProxiesCountTrigger))]
-public class BannedProxiesCountTriggerDto : NumComparisonTrigger
+public class BannedProxiesCountTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -174,7 +146,7 @@ public class BannedProxiesCountTriggerDto : NumComparisonTrigger
 [PolyType("cpmCountTrigger")]
 [MapsFrom(typeof(CPMTrigger))]
 [MapsTo(typeof(CPMTrigger))]
-public class CPMTriggerDto : NumComparisonTrigger
+public class CPMTriggerDto : MrjNumComparisonTrigger
 {
     
 }
@@ -185,40 +157,7 @@ public class CPMTriggerDto : NumComparisonTrigger
 [PolyType("captchaCreditTrigger")]
 [MapsFrom(typeof(CaptchaCreditTrigger))]
 [MapsTo(typeof(CaptchaCreditTrigger))]
-public class CaptchaCreditTriggerDto : NumComparisonTrigger
-{
-    
-}
-
-/// <summary>
-/// Triggers when the progress reaches a given threshold.
-/// </summary>
-[PolyType("progressTrigger")]
-[MapsFrom(typeof(ProgressTrigger))]
-[MapsTo(typeof(ProgressTrigger))]
-public class ProgressTriggerDto : NumComparisonTrigger
-{
-    
-}
-
-/// <summary>
-/// Triggers when the elapsed time reaches a given threshold.
-/// </summary>
-[PolyType("timeElapsedTrigger")]
-[MapsFrom(typeof(TimeElapsedTrigger), autoMap: false)]
-[MapsTo(typeof(TimeElapsedTrigger), autoMap: false)]
-public class TimeElapsedTriggerDto : TimeComparisonTrigger
-{
-
-}
-
-/// <summary>
-/// Triggers when the remaining time reaches a given threshold.
-/// </summary>
-[PolyType("timeRemainingTrigger")]
-[MapsFrom(typeof(TimeRemainingTrigger), autoMap: false)]
-[MapsTo(typeof(TimeRemainingTrigger), autoMap: false)]
-public class TimeRemainingTriggerDto : TimeComparisonTrigger
+public class CaptchaCreditTriggerDto : MrjNumComparisonTrigger
 {
     
 }

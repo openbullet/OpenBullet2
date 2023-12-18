@@ -92,6 +92,17 @@ const routes: Routes = [
       {
         component: EditTriggeredActionComponent,
         path: 'monitor/triggered-action/edit',
+        canDeactivate: [canDeactivateFormComponent]
+      },
+      {
+        component: EditTriggeredActionComponent,
+        path: 'monitor/triggered-action/create',
+        canDeactivate: [canDeactivateFormComponent]
+      },
+      {
+        component: EditTriggeredActionComponent,
+        path: 'monitor/triggered-action/clone',
+        canDeactivate: [canDeactivateFormComponent]
       },
       {
         component: ProxiesComponent,

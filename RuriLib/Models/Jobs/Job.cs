@@ -21,6 +21,8 @@ namespace RuriLib.Models.Jobs
         public DateTime CreationTime { get; set; } = DateTime.Now;
         public DateTime StartTime { get; set; } = DateTime.Now;
         public StartCondition StartCondition { get; set; } = new RelativeTimeStartCondition();
+        public virtual TimeSpan Elapsed => DateTime.Now - StartTime;
+        public virtual TimeSpan Remaining => throw new NotImplementedException();
 
         // Virtual properties
         public virtual float Progress => throw new NotImplementedException();

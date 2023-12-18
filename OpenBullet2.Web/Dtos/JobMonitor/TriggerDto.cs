@@ -1,4 +1,5 @@
 ﻿using OpenBullet2.Web.Attributes;
+using RuriLib.Models.Conditions.Comparisons;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor.Triggers;
 
@@ -24,4 +25,82 @@ public class JobStatusTriggerDto : TriggerDto
     /// The required status.
     /// </summary>
     public JobStatus Status { get; set; } = JobStatus.Idle;
+}
+
+/// <summary>
+/// Triggers when a job finishes.
+/// </summary>
+[PolyType("jobFinishedTrigger")]
+[MapsFrom(typeof(JobFinishedTrigger))]
+[MapsTo(typeof(JobFinishedTrigger))]
+public class JobFinishedTriggerDto : TriggerDto
+{
+
+}
+
+/// <summary>
+/// Generic trigger for a job that compares a given
+/// stat to a given number.
+/// </summary>
+public class NumComparisonTrigger : TriggerDto
+{
+    /// <summary>
+    /// The comparison method.
+    /// </summary>
+    public NumComparison Comparison { get; set; }
+
+    /// <summary>
+    /// The amount to compare to.
+    /// </summary>
+    public int Amount { get; set; }
+}
+
+/// <summary>
+/// Triggers when the progress reaches a given threshold.
+/// </summary>
+[PolyType("progressTrigger")]
+[MapsFrom(typeof(ProgressTrigger))]
+[MapsTo(typeof(ProgressTrigger))]
+public class ProgressTriggerDto : NumComparisonTrigger
+{
+    
+}
+
+/// <summary>
+/// Generic trigger for a job that compares a given
+/// stat to a given amount of time.
+/// </summary>
+public class TimeComparisonTrigger : TriggerDto
+{
+    /// <summary>
+    /// The comparison method.
+    /// </summary>
+    public NumComparison Comparison { get; set; }
+
+    /// <summary>
+    /// The amount of time to compare to.
+    /// </summary>
+    public TimeSpan TimeSpan { get; set; }
+}
+
+/// <summary>
+/// Triggers when the elapsed time reaches a given threshold.
+/// </summary>
+[PolyType("timeElapsedTrigger")]
+[MapsFrom(typeof(TimeElapsedTrigger), autoMap: false)]
+[MapsTo(typeof(TimeElapsedTrigger), autoMap: false)]
+public class TimeElapsedTriggerDto : TimeComparisonTrigger
+{
+
+}
+
+/// <summary>
+/// Triggers when the remaining time reaches a given threshold.
+/// </summary>
+[PolyType("timeRemainingTrigger")]
+[MapsFrom(typeof(TimeRemainingTrigger), autoMap: false)]
+[MapsTo(typeof(TimeRemainingTrigger), autoMap: false)]
+public class TimeRemainingTriggerDto : TimeComparisonTrigger
+{
+    
 }

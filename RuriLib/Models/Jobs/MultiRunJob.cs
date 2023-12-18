@@ -60,8 +60,8 @@ namespace RuriLib.Models.Jobs
 
         // Getters
         public override float Progress => parallelizer?.Progress ?? -1;
-        public TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
-        public TimeSpan Remaining => parallelizer?.Remaining ?? Timeout.InfiniteTimeSpan;
+        public override TimeSpan Elapsed => parallelizer?.Elapsed ?? TimeSpan.Zero;
+        public override TimeSpan Remaining => parallelizer?.Remaining ?? Timeout.InfiniteTimeSpan;
         public int CPM => parallelizer?.CPM ?? 0;
 
         // Private fields

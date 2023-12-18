@@ -1,1 +1,135 @@
-<p>edit-triggered-action works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8 pl-0">
+            <h1>
+                <fa-icon [icon]="faEye" [fixedWidth]="true"></fa-icon>
+                {{mode | titlecase}} Triggered Action
+            </h1>
+            <h6 class="color-inactive">
+                A triggered action is executed when a job meets certain conditions.
+            </h6>
+        </div>
+        <div class="col-4 pr-0 text-right">
+            <button class="button button-accent mt-2"
+                [disabled]="!canAccept()"
+                (click)="accept()">
+                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
+                {{ mode | titlecase }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<app-spinner *ngIf="!loaded || jobs === null" [fullWidth]="true" />
+
+<div class="container-fluid mt-4" *ngIf="loaded && jobs !== null">
+    <!-- TODO: Not all actions are valid for all job types -->
+    <div class="row mb-3">
+        <div class="col-12 px-0">
+            <div class="mb-1">
+                <span class="text-small">Name</span>
+            </div>
+            <app-input-text key="name"
+                [style]="{ 'min-width': '400px' }"
+                (touched)="touched = true" ngDefaultControl
+                (validityChange)="onValidityChange($event)"
+                [(ngModel)]="name" regex="^.+$"
+                placeholder="My triggered action" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 px-0">
+            <div class="mb-1">
+                <span class="text-small">Monitor the following job</span>
+            </div>
+            <app-input-dropdown key="monitoredJob"
+                (touched)="touched = true" ngDefaultControl
+                [displayFunction]="getJobString"
+                [options]="jobs"
+                [ngModel]="getMonitoredJob()"
+                (ngModelChange)="setMonitoredJob($event)" />
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 px-0">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="isRepeatable"
+                [binary]="true" inputId="isRepeatable"
+                label="Can be repeated multiple times" />
+        </div>
+    </div>
+    <div class="row mt-5 mb-3">
+        <div class="col-12 px-0">
+            <h5>
+                When all the following conditions are met
+                <button class="button button-accent ml-2"
+                    pTooltip="Add trigger" tooltipPosition="bottom"
+                    (click)="openAddTriggerModal()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+            </h5>
+        </div>
+    </div>
+    <div *ngFor="let trigger of triggers; let i=index" class="row my-3 justify-content-between">
+        <ng-container *ngIf="trigger._polyTypeName === TriggerType.JobStatus">
+            <div class="col align-self-stretch pr-2 pl-0">
+                <span>The status of the job is</span>
+                <app-input-dropdown [key]="'jobStatus' + i"
+                    class="ml-2"
+                    (touched)="touched = true"
+                    ngDefaultControl
+                    [displayFunction]="displayEnumValue"
+                    [options]="jobStatuses"
+                    [(ngModel)]="trigger.status" />
+            </div>
+            <div class="col-auto text-right">
+                <button class="button button-transparent ml-2 pr-0"
+                    pTooltip="Delete" tooltipPosition="bottom"
+                    (click)="removeTrigger(i)">
+                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row mt-5 mb-3">
+        <div class="col-12 px-0">
+            <h5>
+                Execute these actions in sequence
+                <button class="button button-accent ml-2"
+                    pTooltip="Add action" tooltipPosition="bottom"
+                    (click)="openAddActionModal()">
+                    <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                </button>
+            </h5>
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    header="Add Trigger" 
+    [(visible)]="addTriggerModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-add-trigger
+        [jobType]="getJobType()"
+        (selected)="createTrigger($event)" />
+</p-dialog>
+
+<p-dialog 
+    header="Add Action" 
+    [(visible)]="addActionModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false"
+    [resizable]="false">
+    <app-add-action
+        [jobType]="getJobType()"
+        (selected)="createAction($event)" />
+</p-dialog>
