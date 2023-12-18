@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faClone, faEye, faPen, faPlus, faPowerOff, faRotate, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { TriggeredActionDto } from '../../dtos/monitor/triggered-action.dto';
 import { JobMonitorService } from '../../services/job-monitor.service';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './job-monitor.component.html',
   styleUrls: ['./job-monitor.component.scss']
 })
-export class JobMonitorComponent implements OnInit {
+export class JobMonitorComponent implements OnInit, OnDestroy {
   faEye = faEye;
   faRotate = faRotate;
   faPowerOff = faPowerOff;
@@ -24,6 +24,7 @@ export class JobMonitorComponent implements OnInit {
   triggeredActions: TriggeredActionDto[] | null = null;
   getTriggerText = getTriggerText;
   getActionText = getActionText;
+  interval: any;
 
   constructor(
     private jobMonitorService: JobMonitorService,
@@ -32,8 +33,17 @@ export class JobMonitorComponent implements OnInit {
     private router: Router
   ) { }
 
+  ngOnDestroy(): void {
+    clearInterval(this.interval);
+  }
+
   ngOnInit(): void {
     this.reloadTriggeredActions();
+
+    // Reload triggered actions every 30 seconds
+    this.interval = setInterval(() => {
+      this.reloadTriggeredActions();
+    }, 30000);
   }
 
   reloadTriggeredActions() {

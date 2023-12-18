@@ -71,7 +71,7 @@
             </h5>
         </div>
     </div>
-    <div *ngFor="let trigger of triggers; let i=index" class="row my-3 justify-content-between">
+    <div *ngFor="let trigger of triggers; let i=index" class="row my-3 justify-content-between trigger">
         <ng-container *ngIf="trigger._polyTypeName === TriggerType.JobStatus">
             <div class="col align-self-stretch pr-2 pl-0">
                 <span>The status of the job is</span>
@@ -84,7 +84,7 @@
                     [(ngModel)]="trigger.status" />
             </div>
             <div class="col-auto text-right">
-                <button class="button button-transparent ml-2 pr-0"
+                <button class="button button-transparent h-100 ml-2 pr-0"
                     pTooltip="Delete" tooltipPosition="bottom"
                     (click)="removeTrigger(i)">
                     <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
@@ -103,6 +103,8 @@
                 </button>
             </h5>
         </div>
+    </div>
+    <div *ngFor="let trigger of triggers; let i=index" class="row my-3 justify-content-between actions">
     </div>
 </div>
 
