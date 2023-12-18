@@ -4,7 +4,7 @@ import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./
 
 export interface MultiRunJobDto extends JobDto {
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
-    config: JobConfigDto;
+    config: JobConfigDto | null;
     dataPoolInfo: string;
     bots: number;
     skip: number;

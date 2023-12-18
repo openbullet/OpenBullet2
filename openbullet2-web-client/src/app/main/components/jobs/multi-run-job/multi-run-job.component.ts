@@ -486,7 +486,7 @@ export class MultiRunJobComponent {
       case JobProxyMode.On:
         return true;
       case JobProxyMode.Default:
-        return this.job.config.needsProxies;
+        return this.job.config?.needsProxies ?? false;
     }
   }
 

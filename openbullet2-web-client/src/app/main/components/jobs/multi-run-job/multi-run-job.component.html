@@ -212,7 +212,8 @@
                 <div class="named-card-key">
                     Config
                 </div>
-                <div class="named-card-value config-info">
+                <div *ngIf="job.config !== null"
+                    class="named-card-value config-info">
                     <img class="config-icon mr-2"
                         [src]="'data:image/png;base64,' + job.config.base64Image" />
                     <div class="config-info-text-wrapper">
@@ -223,6 +224,12 @@
                             by {{ job.config.author }}
                         </span>
                     </div>
+                </div>
+                <div *ngIf="job.config === null"
+                    class="named-card-value config-info">
+                    <span class="config-info-name">
+                        No config
+                    </span>
                 </div>
             </div>
         </div>
