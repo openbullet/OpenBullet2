@@ -61,9 +61,17 @@ public class NumComparisonTrigger : TriggerDto
 [PolyType("progressTrigger")]
 [MapsFrom(typeof(ProgressTrigger))]
 [MapsTo(typeof(ProgressTrigger))]
-public class ProgressTriggerDto : NumComparisonTrigger
+public class ProgressTriggerDto : TriggerDto
 {
-    
+    /// <summary>
+    /// The comparison method.
+    /// </summary>
+    public NumComparison Comparison { get; set; }
+
+    /// <summary>
+    /// The amount to compare to.
+    /// </summary>
+    public float Amount { get; set; }
 }
 
 /// <summary>

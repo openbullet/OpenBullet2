@@ -6,12 +6,13 @@ import { Observable, combineLatest } from 'rxjs';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { JobOverviewDto, JobType } from 'src/app/main/dtos/job/job.dto';
 import { ActionDto, ActionType } from 'src/app/main/dtos/monitor/action.dto';
-import { NumComparison, TriggerDto, TriggerType } from 'src/app/main/dtos/monitor/trigger.dto';
+import { NumComparison, TriggerDto, TriggerType, getComparisonSubject } from 'src/app/main/dtos/monitor/trigger.dto';
 import { CreateTriggeredActionDto, UpdateTriggeredActionDto } from 'src/app/main/dtos/monitor/triggered-action.dto';
 import { JobMonitorService } from 'src/app/main/services/job-monitor.service';
 import { JobService } from 'src/app/main/services/job.service';
 import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
 import { PascalCasePipe } from 'src/app/shared/pipes/pascalcase.pipe';
+import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 
@@ -39,6 +40,9 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   TriggerType = TriggerType;
   ActionType = ActionType;
   jobStatuses = Object.values(JobStatus);
+  numComparisons = Object.values(NumComparison);
+  getComparisonSubject = getComparisonSubject;
+  parseTimeSpan = parseTimeSpan;
 
   loaded: boolean = false;
   triggeredActionId: string | null = null;
@@ -244,12 +248,12 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     );
   }
 
-  getMonitoredJob() {
+  getJob(jobId: number | null) {
     if (this.jobId === null || this.jobs === null) {
       return null;
     }
 
-    return this.jobs.find(j => j.id === this.jobId) ?? null;
+    return this.jobs.find(j => j.id === jobId) ?? null;
   }
 
   setMonitoredJob(job: JobOverviewDto | undefined) {
@@ -293,7 +297,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   }
 
   getJobType(): JobType {
-    const job = this.getMonitoredJob();
+    const job = this.getJob(this.jobId);
     return job === null ? JobType.MultiRun : job.type;
   }
 
@@ -354,6 +358,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     }
 
     this.triggers.push(trigger);
+    this.touched = true;
   }
 
   createAction(type: ActionType) {
@@ -415,5 +420,6 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     }
 
     this.actions.push(action);
+    this.touched = true;
   }
 }

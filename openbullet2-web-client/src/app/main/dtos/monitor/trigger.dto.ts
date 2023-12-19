@@ -188,3 +188,40 @@ export function getTriggerText(trigger: TriggerDto): string {
             return 'Unknown trigger';
     }
 }
+
+export function getComparisonSubject(type: TriggerType): string {
+    switch (type) {
+        case TriggerType.TestedCount:
+            return 'number of tested data lines';
+        case TriggerType.HitCount:
+            return 'number of hits';
+        case TriggerType.CustomCount:
+            return 'number of custom results';
+        case TriggerType.ToCheckCount:
+            return 'number of results to check';
+        case TriggerType.FailCount:
+            return 'number of fails';
+        case TriggerType.RetryCount:
+            return 'number of retries';
+        case TriggerType.BanCount:
+            return 'number of bans';
+        case TriggerType.ErrorCount:
+            return 'number of errors';
+        case TriggerType.AliveProxiesCount:
+            return 'number of alive proxies';
+        case TriggerType.BannedProxiesCount:
+            return 'number of banned proxies';
+        case TriggerType.CpmCount:
+            return 'number of Checks Per Minute';
+        case TriggerType.CaptchaCredit:
+            return 'captcha credit';
+        case TriggerType.Progress:
+            return 'progress';
+        case TriggerType.TimeElapsed:
+            return 'elapsed time';
+        case TriggerType.TimeRemaining:
+            return 'remaining time';
+        default:
+            return '???';
+    }
+}

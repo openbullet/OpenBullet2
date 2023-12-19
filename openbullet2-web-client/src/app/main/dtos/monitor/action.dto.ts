@@ -80,7 +80,7 @@ export function getActionText(action: ActionDto): string {
         case ActionType.Wait:
             return `Wait ${timeSpanPipe.transform(parseTimeSpan(action.timeSpan))}`;
         case ActionType.SetRelativeStartCondition:
-            return `Set relative start condition to ${action.jobId} after ${timeSpanPipe.transform(parseTimeSpan(action.timeSpan))}`;
+            return `Set relative start condition of job ${action.jobId} to ${timeSpanPipe.transform(parseTimeSpan(action.timeSpan))}`;
         case ActionType.StopJob:
             return `Stop job ${action.jobId}`;
         case ActionType.AbortJob:

@@ -157,7 +157,15 @@ public class CPMTriggerDto : MrjNumComparisonTrigger
 [PolyType("captchaCreditTrigger")]
 [MapsFrom(typeof(CaptchaCreditTrigger))]
 [MapsTo(typeof(CaptchaCreditTrigger))]
-public class CaptchaCreditTriggerDto : MrjNumComparisonTrigger
+public class CaptchaCreditTriggerDto : MultiRunJobTriggerDto
 {
-    
+    /// <summary>
+    /// The comparison method.
+    /// </summary>
+    public NumComparison Comparison { get; set; }
+
+    /// <summary>
+    /// The amount to compare to.
+    /// </summary>
+    public float Amount { get; set; }
 }

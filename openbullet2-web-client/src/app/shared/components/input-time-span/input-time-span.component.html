@@ -1,25 +1,25 @@
-<app-input-number key="days" class="input-small"
+<app-input-number key="days" [ngClass]="{'input-small': small}"
     ngDefaultControl
     (validityChange)="validityChanged($event)"
     [ngModel]="timeSpan.days"
     (ngModelChange)="daysChanging($event)"
     placeholder="0" [min]="0" />
 <span class="mx-2">days, </span>
-<app-input-number key="hours" class="input-small"
+<app-input-number key="hours" [ngClass]="{'input-small': small}"
     ngDefaultControl
     (validityChange)="validityChanged($event)"
     [ngModel]="timeSpan.hours"
     (ngModelChange)="hoursChanging($event)"
     placeholder="0" [min]="0" [max]="23" />
 <span class="mx-2">hours, </span>
-<app-input-number key="minutes" class="input-small"
+<app-input-number key="minutes" [ngClass]="{'input-small': small}"
     ngDefaultControl
     (validityChange)="validityChanged($event)"
     [ngModel]="timeSpan.minutes"
     (ngModelChange)="minutesChanging($event)"
     placeholder="0" [min]="0" [max]="59" />
 <span class="mx-2">minutes, </span>
-<app-input-number key="seconds" class="input-small"
+<app-input-number key="seconds" [ngClass]="{'input-small': small}"
     ngDefaultControl
     (validityChange)="validityChanged($event)"
     [ngModel]="timeSpan.seconds"
