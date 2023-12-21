@@ -1,4 +1,5 @@
 import { JobDto } from "./job.dto";
+import { MRJProxy } from "./messages/multi-run/proxy.dto";
 import { JobProxyMode } from "./multi-run-job-options.dto";
 import { AbsoluteTimeStartConditionDto, RelativeTimeStartConditionDto } from "./start-condition.dto"
 
@@ -54,5 +55,6 @@ export interface MRJHitDto {
     date: string;
     type: string;
     data: string;
-    capturedData: string
+    capturedData: string,
+    proxy: MRJProxy | null;
 }

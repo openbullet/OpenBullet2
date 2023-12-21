@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faAngleLeft, faCheck, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
+import { faAlignLeft, faAngleLeft, faBug, faCaretRight, faCheck, faCircleDot, faCopy, faDatabase, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -23,6 +23,12 @@ interface LogMessage {
   color: string;
 }
 
+enum HitType {
+  Success = 'SUCCESS',
+  Custom = 'CUSTOM',
+  ToCheck = 'NONE',
+}
+
 @Component({
   selector: 'app-multi-run-job',
   templateUrl: './multi-run-job.component.html',
@@ -39,6 +45,10 @@ export class MultiRunJobComponent {
   faForward = faForward;
   faX = faX;
   faCheck = faCheck;
+  faCopy = faCopy;
+  faCircleDot = faCircleDot;
+  faAlignLeft = faAlignLeft;
+  faBug = faBug;
   Math = Math;
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
@@ -85,6 +95,15 @@ export class MultiRunJobComponent {
   progress: number = 0;
 
   hits: MRJHitDto[] = [];
+  filteredHits: MRJHitDto[] = [];
+  selectedHits: MRJHitDto[] = [];
+  lastSelectedHit: MRJHitDto | null = null;
+  hitTypes: HitType[] = [
+    HitType.Success,
+    HitType.Custom,
+    HitType.ToCheck
+  ];
+  selectedHitType: HitType = HitType.Success;
 
   logsBufferSize: number = 10_000;
   logs: LogMessage[] = [];
@@ -255,6 +274,11 @@ export class MultiRunJobComponent {
           this.startTime = moment(job.startTime);
         }
 
+        this.selectedHits = [];
+        this.lastSelectedHit = null;
+        this.hits = job.hits;
+        this.chooseHitType(this.selectedHitType);
+
         this.job = job;
       });
   }
@@ -305,6 +329,10 @@ export class MultiRunJobComponent {
 
   onNewHit(hitMessage: MRJNewHitMessage) {
     this.hits.push(hitMessage.hit);
+
+    if (hitMessage.hit.type === this.selectedHitType) {
+      this.filteredHits.push(hitMessage.hit);
+    }
   }
 
   onStatusChanged(status: JobStatus) {
@@ -365,6 +393,12 @@ export class MultiRunJobComponent {
   start() {
     console.log('START');
     this.jobService.start(this.jobId!).subscribe();
+
+    // Clear the hits
+    this.hits = [];
+    this.filteredHits = [];
+    this.selectedHits = [];
+    this.lastSelectedHit = null;
   }
 
   canStop() {
@@ -495,5 +529,129 @@ export class MultiRunJobComponent {
       this.dataStats.tested + this.job!.skip,
       this.dataStats.total
     );
+  }
+
+  chooseHitType(type: HitType) {
+    this.selectedHitType = type;
+
+    switch (type) {
+      case HitType.Success:
+        this.filteredHits = this.hits.filter(h => h.type === 'SUCCESS');
+        break;
+
+      case HitType.Custom:
+        this.filteredHits = this.hits.filter(h => h.type === 'CUSTOM');
+        break;
+
+      case HitType.ToCheck:
+        this.filteredHits = this.hits.filter(h => h.type === 'NONE');
+        break;
+    }
+
+    this.selectedHits = [];
+    this.lastSelectedHit = null;
+  }
+
+  isHitSelected(hit: MRJHitDto): boolean {
+    return this.selectedHits.includes(hit);
+  }
+
+  onHitClicked(hit: MRJHitDto, event: MouseEvent) {
+    // If the user is holding shift, select all hits between the last
+    // selected hit and the current one
+    if (event.shiftKey && this.lastSelectedHit !== null) {
+      const lastSelectedHitIndex = this.filteredHits.indexOf(this.lastSelectedHit);
+      const currentHitIndex = this.filteredHits.indexOf(hit);
+
+      const min = this.Math.min(lastSelectedHitIndex, currentHitIndex);
+      const max = this.Math.max(lastSelectedHitIndex, currentHitIndex);
+
+      this.selectedHits = this.filteredHits.slice(min, max + 1);
+      return;
+    }
+
+    // If the user is holding ctrl, toggle the hit selection
+    if (event.ctrlKey) {
+      if (this.isHitSelected(hit)) {
+        this.selectedHits = this.selectedHits.filter(h => h !== hit);
+      } else {
+        this.selectedHits.push(hit);
+      }
+
+      return;
+    }
+
+    // Otherwise, just select the hit
+    if (this.isHitSelected(hit)) {
+      this.selectedHits = [];
+    } else {
+      this.selectedHits = [hit];
+    }
+
+    this.lastSelectedHit = hit;
+  }
+
+  copyHitData(withCapture: boolean) {
+    // If no hit selected, show error
+    if (this.selectedHits.length === 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid',
+        detail: 'Please select at least one hit to copy data'
+      });
+      return;
+    }
+
+    // Copy the data of the selected hits to the clipboard
+    const data = this.selectedHits
+      .map(h => {
+        let result = h.data;
+
+        if (withCapture) {
+          result += ` | ${h.capturedData}`;
+        }
+
+        return result;
+      })
+      .join('\n');
+
+    navigator.clipboard.writeText(data);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Copied',
+      detail: 'Copied hits data to clipboard'
+    });
+  }
+
+  sendToDebugger() {
+    // If no hit selected or more than 1 hit selected, show error
+    if (this.selectedHits.length !== 1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid',
+        detail: 'Please select one hit to send to the debugger'
+      });
+      return;
+    }
+
+    // TODO: Implement
+  }
+
+  showFullLog() {
+    // If no hit selected or more than 1 hit selected, show error
+    if (this.selectedHits.length !== 1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid',
+        detail: 'Please select one hit to show the full log'
+      });
+      return;
+    }
+
+    // TODO: Implement
+  }
+
+  hitTypeDisplayFunction(hitType: HitType): string {
+    return hitType.toString();
   }
 }

@@ -336,10 +336,10 @@ public class MultiRunJobService : IJobService, IDisposable
                 Date = e.Date,
                 Type = e.Type,
                 Data = e.DataString,
-                Proxy = new MRJProxy {
-                    Host = e.Proxy?.Host,
-                    Port = e.Proxy?.Port
-                },
+                Proxy = e.Proxy is not null ? new MRJProxy {
+                    Host = e.Proxy.Host,
+                    Port = e.Proxy.Port
+                } : null,
                 CapturedData = e.CapturedDataString
             }
         };

@@ -401,7 +401,7 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-12 px-0">
+        <div class="col-6 pl-0">
             <div class="named-card">
                 <div class="named-card-key">
                     Log
@@ -417,6 +417,89 @@
                             {{log.message}}
                         </span>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 pr-0">
+            <div class="named-card">
+                <div class="named-card-key">
+                    Hits
+                </div>
+                <div class="named-card-value hits">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Data</th>
+                                <th>Proxy</th>
+                                <th>Captured Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let hit of filteredHits" class="hit"
+                                [class.selected]="isHitSelected(hit)"
+                                (click)="onHitClicked(hit, $event)">
+                                <td class="monospace hit-time">
+                                    {{hit.date | date : 'medium'}}
+                                </td>
+                                <td class="monospace">
+                                    {{hit.data}}
+                                </td>
+                                <td class="monospace">
+                                    {{hit.proxy === null ? '-' : hit.proxy.host + ':' + hit.proxy.port}}
+                                </td>
+                                <td class="monospace">
+                                    {{hit.capturedData}}
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="d-flex align-items-center" style="margin-top: 10px;">
+                <div class="mr-auto">
+                    <span class="text-small color-inactive">
+                        {{selectedHits.length}} / {{filteredHits.length}} hits selected
+                    </span>
+                </div>
+                <app-input-dropdown key="hitType"
+                    itemClass="input-small" optionClass="input-small"
+                    ngDefaultControl
+                    [displayFunction]="hitTypeDisplayFunction"
+                    [options]="hitTypes"
+                    [ngModel]="selectedHitType"
+                    (ngModelChange)="chooseHitType($event)" />
+                <button class="button button-secondary ml-2"
+                    pTooltip="Copy data of selected hits to clipboard"
+                    tooltipPosition="bottom"
+                    (click)="copyHitData(false)">
+                    <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    pTooltip="Copy data and capture of selected hits to clipboard"
+                    tooltipPosition="bottom"
+                    (click)="copyHitData(true)">
+                    <fa-icon [icon]="faCopy" [fixedWidth]="true"></fa-icon>
+                    <fa-icon [icon]="faCircleDot" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    pTooltip="Send selected hit to debugger"
+                    tooltipPosition="bottom"
+                    (click)="sendToDebugger()">
+                    <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
+                </button>
+                <button class="button button-secondary ml-2"
+                    pTooltip="Show full log of selected hit"
+                    tooltipPosition="bottom"
+                    (click)="showFullLog()">
+                    <fa-icon [icon]="faAlignLeft" [fixedWidth]="true"></fa-icon>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-8 ml-auto mt-3 text-right">
+                    <span class="text-small color-inactive">
+                        To select multiple hits, hold CTRL and click on the hits, or
+                        hold SHIFT and click on the first and last hit you want to select.
+                    </span>
                 </div>
             </div>
         </div>
