@@ -164,27 +164,27 @@
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
                             <button class="button button-transparent"
                                 pTooltip="Start" tooltipPosition="bottom"
-                                (click)="startJob(mrj)">
+                                (click)="startJob(mrj, $event)">
                                 <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Abort" tooltipPosition="bottom"
-                                (click)="abortJob(mrj)">
+                                (click)="abortJob(mrj, $event)">
                                 <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Edit" tooltipPosition="bottom"
-                                (click)="editMultiRunJob(mrj)">
+                                (click)="editMultiRunJob(mrj, $event)">
                                 <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Clone" tooltipPosition="bottom"
-                                (click)="cloneMultiRunJob(mrj)">
+                                (click)="cloneMultiRunJob(mrj, $event)">
                                 <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="confirmRemoveJob(mrj)">
+                                (click)="confirmRemoveJob(mrj, $event)">
                                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                             </button>
                         </td>
@@ -298,27 +298,27 @@
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
                             <button class="button button-transparent"
                                 pTooltip="Start" tooltipPosition="bottom"
-                                (click)="startJob(pcj)">
+                                (click)="startJob(pcj, $event)">
                                 <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Abort" tooltipPosition="bottom"
-                                (click)="abortJob(pcj)">
+                                (click)="abortJob(pcj, $event)">
                                 <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Edit" tooltipPosition="bottom"
-                                (click)="editProxyCheckJob(pcj)">
+                                (click)="editProxyCheckJob(pcj, $event)">
                                 <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Clone" tooltipPosition="bottom"
-                                (click)="cloneProxyCheckJob(pcj)">
+                                (click)="cloneProxyCheckJob(pcj, $event)">
                                 <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-transparent"
                                 pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="confirmRemoveJob(pcj)">
+                                (click)="confirmRemoveJob(pcj, $event)">
                                 <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
                             </button>
                         </td>

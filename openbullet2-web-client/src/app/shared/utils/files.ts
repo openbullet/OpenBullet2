@@ -27,7 +27,7 @@ function getFileName(response: HttpResponse<Blob>) {
       throw new Error('Could not find content-disposition header');
     }
 
-    return /filename="?(.+)(?:;"?)/.exec(contentDisposition)![1];
+    return /filename="?([^"]+)/.exec(contentDisposition)![1];
   }
   catch (e) {
     return 'file';

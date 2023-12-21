@@ -119,6 +119,8 @@ public class JobController : ApiController
                 Status = job.Status,
                 Name = job.Name,
                 ConfigName = job.Config?.Metadata.Name,
+                ProxyMode = job.ProxyMode,
+                Bots = job.Bots,
                 DataPoolInfo = dataPoolInfo,
                 DataHits = job.DataHits,
                 DataCustom = job.DataCustom,

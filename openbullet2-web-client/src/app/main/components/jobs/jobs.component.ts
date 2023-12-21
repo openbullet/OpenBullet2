@@ -111,18 +111,67 @@ export class JobsComponent implements OnInit, OnDestroy {
   }
 
   confirmRemoveAllJobs() {
-
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete all jobs?',
+      header: 'Are you sure?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => this.removeAllJobs()
+    });
   }
 
-  abortJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+  abortJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
+    event: MouseEvent) {
+    // If the status is idle, we can't abort it
+    if (job.status === JobStatus.IDLE) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Idle',
+        detail: 'The job you are trying to abort is idle, please' +
+          'start it first'
+      });
+      return;
+    }
 
+    this.jobService.abort(job.id)
+    .subscribe(resp => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Aborted',
+        detail: `Job #${job.id} was aborted`
+      });
+      this.refreshJobs();
+    });
+
+    event.stopPropagation();
   }
 
-  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
-    
+  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
+    event: MouseEvent) {
+    // If the status is not idle, we can't start it
+    if (job.status !== JobStatus.IDLE) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Not idle',
+        detail: 'The job you are trying to start is not idle, please' +
+          'stop it or abort it first'
+      });
+      return;
+    }
+
+    this.jobService.start(job.id)
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Started',
+          detail: `Job #${job.id} was started`
+        });
+        this.refreshJobs();
+      });
+
+    event.stopPropagation();
   }
 
-  editMultiRunJob(job: MultiRunJobOverviewDto) {
+  editMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
     // If the job is not idle, we can't edit it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
@@ -138,9 +187,11 @@ export class JobsComponent implements OnInit, OnDestroy {
       [`/job/multi-run/edit`], 
       { queryParams: { jobId: job.id } }
     );
+
+    event.stopPropagation();
   }
 
-  editProxyCheckJob(job: ProxyCheckJobOverviewDto) {
+  editProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
     // If the job is not idle, we can't edit it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
@@ -156,23 +207,30 @@ export class JobsComponent implements OnInit, OnDestroy {
       [`/job/proxy-check/edit`], 
       { queryParams: { jobId: job.id } }
     );
+
+    event.stopPropagation();
   }
 
-  cloneMultiRunJob(job: MultiRunJobOverviewDto) {
+  cloneMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
     this.router.navigate(
       [`/job/multi-run/clone` ], 
       { queryParams: { jobId: job.id } }
     );
+
+    event.stopPropagation();
   }
 
-  cloneProxyCheckJob(job: ProxyCheckJobOverviewDto) {
+  cloneProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
     this.router.navigate(
       [`/job/proxy-check/clone` ], 
       { queryParams: { jobId: job.id } }
     );
+
+    event.stopPropagation();
   }
 
-  confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
+  confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
+    event: MouseEvent) {
     if (job.status !== 'idle') {
       this.messageService.add({
         severity: 'error',
@@ -189,6 +247,8 @@ export class JobsComponent implements OnInit, OnDestroy {
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.removeJob(job)
     });
+
+    event.stopPropagation();
   }
 
   removeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
@@ -198,6 +258,18 @@ export class JobsComponent implements OnInit, OnDestroy {
           severity: 'success',
           summary: 'Deleted',
           detail: `Job #${job.id} was deleted`
+        });
+        this.refreshJobs();
+      });
+  }
+
+  removeAllJobs() {
+    this.jobService.deleteAllJobs()
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: 'All jobs were deleted'
         });
         this.refreshJobs();
       });
