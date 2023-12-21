@@ -121,6 +121,8 @@ export class JobsComponent implements OnInit, OnDestroy {
 
   abortJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
     event: MouseEvent) {
+    event.stopPropagation();
+
     // If the status is idle, we can't abort it
     if (job.status === JobStatus.IDLE) {
       this.messageService.add({
@@ -141,12 +143,12 @@ export class JobsComponent implements OnInit, OnDestroy {
       });
       this.refreshJobs();
     });
-
-    event.stopPropagation();
   }
 
   startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
     event: MouseEvent) {
+    event.stopPropagation();
+
     // If the status is not idle, we can't start it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
@@ -167,11 +169,11 @@ export class JobsComponent implements OnInit, OnDestroy {
         });
         this.refreshJobs();
       });
-
-    event.stopPropagation();
   }
 
   editMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
+    event.stopPropagation();
+
     // If the job is not idle, we can't edit it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
@@ -187,11 +189,11 @@ export class JobsComponent implements OnInit, OnDestroy {
       [`/job/multi-run/edit`], 
       { queryParams: { jobId: job.id } }
     );
-
-    event.stopPropagation();
   }
 
   editProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
+    event.stopPropagation();
+
     // If the job is not idle, we can't edit it
     if (job.status !== JobStatus.IDLE) {
       this.messageService.add({
@@ -207,30 +209,30 @@ export class JobsComponent implements OnInit, OnDestroy {
       [`/job/proxy-check/edit`], 
       { queryParams: { jobId: job.id } }
     );
-
-    event.stopPropagation();
   }
 
   cloneMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
+    event.stopPropagation();
+
     this.router.navigate(
       [`/job/multi-run/clone` ], 
       { queryParams: { jobId: job.id } }
     );
-
-    event.stopPropagation();
   }
 
   cloneProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
+    event.stopPropagation();
+
     this.router.navigate(
       [`/job/proxy-check/clone` ], 
       { queryParams: { jobId: job.id } }
     );
-
-    event.stopPropagation();
   }
 
   confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
     event: MouseEvent) {
+    event.stopPropagation();
+
     if (job.status !== 'idle') {
       this.messageService.add({
         severity: 'error',
@@ -247,8 +249,6 @@ export class JobsComponent implements OnInit, OnDestroy {
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.removeJob(job)
     });
-
-    event.stopPropagation();
   }
 
   removeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {

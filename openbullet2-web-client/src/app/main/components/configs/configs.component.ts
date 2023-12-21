@@ -227,6 +227,8 @@ export class ConfigsComponent implements OnInit {
   }
 
   cloneConfig(config: ConfigInfoDto, event: MouseEvent) {
+    event.stopPropagation();
+
     this.configService.cloneConfig(config.id)
       .subscribe(newConfig => {
         this.messageService.add({
@@ -237,8 +239,6 @@ export class ConfigsComponent implements OnInit {
         this.refreshConfigs(false);
         // TODO: Immediately edit the new config, do not refresh
       })
-
-    event.stopPropagation();
   }
 
   uploadConfigs(files: File[]) {
@@ -255,10 +255,10 @@ export class ConfigsComponent implements OnInit {
   }
 
   downloadConfig(config: ConfigInfoDto, event: MouseEvent) {
+    event.stopPropagation();
+
     this.configService.downloadConfig(config.id)
       .subscribe(resp => saveFile(resp));
-
-    event.stopPropagation();
   }
 
   downloadAllConfigs() {
@@ -267,6 +267,8 @@ export class ConfigsComponent implements OnInit {
   }
 
   confirmDeleteConfig(config: ConfigInfoDto, event: MouseEvent) {
+    event.stopPropagation();
+
     this.confirmationService.confirm({
       message: `Are you really sure you want to delete the config ${config.name}?
       This is an irreversible operation, you will not be able to recover the config.`,
@@ -274,8 +276,6 @@ export class ConfigsComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.deleteConfig(config)
     });
-
-    event.stopPropagation();
   }
 
   deleteConfig(config: ConfigInfoDto) {
