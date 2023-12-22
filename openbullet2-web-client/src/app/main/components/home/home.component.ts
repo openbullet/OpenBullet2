@@ -3,7 +3,7 @@ import { MarkdownService } from 'ngx-markdown';
 import { InfoService } from '../../services/info.service';
 import { AnnouncementDto } from '../../dtos/info/announcement.dto';
 import { ServerInfoDto } from '../../dtos/info/server-info.dto';
-import { 
+import {
   faCopy, faRightFromBracket
 } from '@fortawesome/free-solid-svg-icons';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   serverStartTime: Moment | null = null;
   serverUptime: TimeSpan | null = null;
   serverTime: Moment | null = null;
-  buildDate: Moment | null = null;
+  buildDate: Date | null = null;
   faCopy = faCopy;
   faRightFromBracket = faRightFromBracket;
   timer: any;
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private infoService: InfoService,
-    private userService: UserService) {  
+    private userService: UserService) {
   }
 
   // Clear the timer when navigating off the page
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(info => {
         this.serverStartTime = moment(info.startTime);
         this.serverOffset = parseTimeSpan(info.localUtcOffset);
-        this.buildDate = moment(info.buildDate);
+        this.buildDate = info.buildDate;
         this.serverInfo = info;
 
         this.updateTimes();
@@ -80,7 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.serverStartTime === null) return;
     if (this.serverOffset === null) return;
 
-    this.serverTime = addTimeSpan(moment(), this.serverOffset);
+    this.serverTime = addTimeSpan(moment().utc(), this.serverOffset);
     const uptimeDiff = this.serverTime.diff(this.serverStartTime);
     this.serverUptime = new TimeSpan(uptimeDiff);
   }

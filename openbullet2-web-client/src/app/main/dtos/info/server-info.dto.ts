@@ -4,6 +4,6 @@ export interface ServerInfoDto {
     operatingSystem: string;
     currentWorkingDirectory: string;
     buildNumber: string;
-    buildDate: string;
+    buildDate: Date;
     clientIpAddress: string
 }

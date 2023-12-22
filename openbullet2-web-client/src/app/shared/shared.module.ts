@@ -18,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
 import { InputTimeSpanComponent } from './components/input-time-span/input-time-span.component';
 import { TimeSpanPipe } from './pipes/timespan.pipe';
+import { MomentPipe } from './pipes/moment.pipe';
 
 declare const monaco: any;
 
@@ -38,6 +39,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     BytesPipe,
     PascalCasePipe,
     TimeSpanPipe,
+    MomentPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
@@ -60,6 +62,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     BytesPipe,
     PascalCasePipe,
     TimeSpanPipe,
+    MomentPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,

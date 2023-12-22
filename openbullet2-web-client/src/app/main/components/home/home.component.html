@@ -14,7 +14,9 @@
         </div>
         <div class="col-4 text-right">
             <span class="info-label">Server Time</span><br />
-            <span *ngIf="serverTime !== null" class="info">{{serverTime}}</span>
+            <span *ngIf="serverTime !== null" class="info">
+                {{serverTime | dateFormat : 'llll'}}
+            </span>
         </div>
     </div>
 </div>
@@ -124,7 +126,7 @@ div if you want to display it only inside that div-->
         <div class="col-4">
             <span class="info-label">Webserver Uptime</span><br />
             <span *ngIf="serverUptime !== null" 
-            class="info">{{serverUptime}}</span>
+            class="info">{{serverUptime | timespan}}</span>
             <span *ngIf="serverUptime === null">Unknown</span>
         </div>
         <div class="col-4">
@@ -153,7 +155,7 @@ div if you want to display it only inside that div-->
         <div class="col-4">
             <span class="info-label">Build Date</span><br />
             <span *ngIf="buildDate !== null" 
-            class="info">{{buildDate}}</span>
+            class="info">{{buildDate | date : 'medium'}}</span>
         </div>
     </div>
 </div>
