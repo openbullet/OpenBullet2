@@ -162,7 +162,7 @@ export class JobService {
         );
     }
 
-    getHitLog(jobId: number, hitId: number) {
+    getHitLog(jobId: number, hitId: string) {
         return this.http.get<MRJHitLogDto>(
             getBaseUrl() + '/job/multi-run/hit-log',
             {

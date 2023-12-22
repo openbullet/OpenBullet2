@@ -22,6 +22,7 @@ using OpenBullet2.Core.Models.Hits;
 using RuriLib.Models.Hits.HitOutputs;
 using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Web.Utils;
+using RuriLib.Logging;
 using RuriLib.Models.Jobs.StartConditions;
 
 namespace OpenBullet2.Web.Controllers;
@@ -603,10 +604,10 @@ public class JobController : ApiController
             throw new EntryNotFoundException(ErrorCode.HIT_NOT_FOUND,
                 hitId, nameof(MultiRunJob.Hits));
         }
-
+        
         return new MRJHitLogDto
         {
-            Log = hit.BotLogger.Entries.ToList()
+            Log = hit.BotLogger?.Entries.ToList()
         };
     }
 

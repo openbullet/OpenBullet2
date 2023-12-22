@@ -90,6 +90,7 @@ import { JobMonitorComponent } from './components/job-monitor/job-monitor.compon
 import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
 import { AddTriggerComponent } from './components/job-monitor/edit-triggered-action/add-trigger/add-trigger.component';
 import { AddActionComponent } from './components/job-monitor/edit-triggered-action/add-action/add-action.component';
+import { HitLogComponent } from './components/jobs/multi-run-job/hit-log/hit-log.component';
 
 @NgModule({
   declarations: [
@@ -157,7 +158,8 @@ import { AddActionComponent } from './components/job-monitor/edit-triggered-acti
     JobMonitorComponent,
     EditTriggeredActionComponent,
     AddTriggerComponent,
-    AddActionComponent
+    AddActionComponent,
+    HitLogComponent
   ],
   imports: [
     CommonModule,

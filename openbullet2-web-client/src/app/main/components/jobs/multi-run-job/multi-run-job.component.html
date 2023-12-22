@@ -482,6 +482,7 @@
                     <fa-icon [icon]="faCircleDot" [fixedWidth]="true"></fa-icon>
                 </button>
                 <button class="button button-secondary ml-2"
+                    *ngIf="userRole === 'admin'"
                     pTooltip="Send selected hit to debugger"
                     tooltipPosition="bottom"
                     (click)="sendToDebugger()">
@@ -505,3 +506,18 @@
         </div>
     </div>
 </div>
+
+<p-dialog 
+    #hitLogModal
+    header="Hit Log" 
+    [(visible)]="hitLogModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-hit-log
+        #hitLogComponent
+        [jobId]="jobId" />
+</p-dialog>

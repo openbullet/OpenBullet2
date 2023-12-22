@@ -1,0 +1,38 @@
+<app-spinner *ngIf="hitLog === null" [fullWidth]="true" />
+
+<div class="logs-container" *ngIf="hitLog !== null">
+    <ng-container *ngIf="hitLog.log !== null">
+        <div *ngFor="let log of hitLog.log"
+            class="log-message"
+            [ngStyle]="{ color: log.color }">{{ log.message }}
+            <button class="button button-secondary mt-2 d-block"
+                *ngIf="log.canViewAsHtml"
+                pTooltip="View as HTML" tooltipPosition="bottom"
+                (click)="viewAsHtml(log)">
+                <fa-icon [icon]="faWindowMaximize" [fixedWidth]="true"></fa-icon>
+                HTML
+            </button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="hitLog.log === null">
+        <div class="log-message">
+            The bot logger was not enabled when this hit was obtained,
+            please turn it on if you want to be able to see the debug log of new hits.
+        </div>
+    </ng-container>
+</div>
+
+<p-dialog 
+    #viewAsHtmlModal
+    header="HTML Viewer" 
+    [(visible)]="viewAsHtmlModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '80vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-view-as-html
+        #viewAsHtmlComponent
+        [html]="html" />
+</p-dialog>

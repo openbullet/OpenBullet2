@@ -1,21 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faAlignLeft, faAngleLeft, faBug, faCaretRight, faCheck, faCircleDot, faCopy, faDatabase, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
+import { faAlignLeft, faAngleLeft, faBug, faCheck, faCircleDot, faCopy, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
-import { ChangeBotsMessage } from 'src/app/main/dtos/job/messages/change-bots.dto';
 import { MRJNewHitMessage } from 'src/app/main/dtos/job/messages/multi-run/hit.dto';
 import { MRJNewResultMessage } from 'src/app/main/dtos/job/messages/multi-run/new-result.dto';
 import { JobProxyMode } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { MRJDataStatsDto, MRJHitDto, MultiRunJobDto } from 'src/app/main/dtos/job/multi-run-job.dto';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { getMockedMultiRunJobNewResultMessage } from 'src/app/main/mock/messages.mock';
+import { ConfigDebuggerSettingsService } from 'src/app/main/services/config-debugger-settings.service';
+import { ConfigService } from 'src/app/main/services/config.service';
 import { JobService } from 'src/app/main/services/job.service';
 import { MultiRunJobHubService } from 'src/app/main/services/multi-run-job.hub.service';
+import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
+import { HitLogComponent } from './hit-log/hit-log.component';
 
 interface LogMessage {
   timestamp: Date;
@@ -93,6 +96,12 @@ export class MultiRunJobComponent {
   elapsed: string = '00:00:00';
   remaining: string = '00:00:00';
   progress: number = 0;
+  userRole: string = 'guest';
+
+  hitLogModalVisible = false;
+
+  @ViewChild('hitLogComponent')
+  hitLogComponent: HitLogComponent | undefined = undefined;
 
   hits: MRJHitDto[] = [];
   filteredHits: MRJHitDto[] = [];
@@ -131,10 +140,15 @@ export class MultiRunJobComponent {
     private jobService: JobService,
     private messageService: MessageService,
     private multiRunJobHubService: MultiRunJobHubService,
+    private debuggerSettingsService: ConfigDebuggerSettingsService,
+    private configService: ConfigService,
+    userService: UserService,
   ) {
     activatedRoute.url.subscribe(url => {
       this.jobId = parseInt(url[2].path);
     });
+
+    this.userRole = userService.loadUserInfo().role.toLocaleLowerCase();
   }
 
   ngOnInit(): void {
@@ -634,7 +648,43 @@ export class MultiRunJobComponent {
       return;
     }
 
-    // TODO: Implement
+    const debuggerSettings = this.debuggerSettingsService.loadLocalSettings();
+    debuggerSettings.testData = this.selectedHits[0].data;
+    this.debuggerSettingsService.saveLocalSettings(debuggerSettings);
+
+    // If there is a selected config, redirect to the correct page
+    // basing on the config's mode
+    const config = this.configService.selectedConfig;
+
+    if (config === null) {
+      return;
+    }
+
+    let route = '';
+
+    switch (config.mode) {
+      case 'loliCode':
+        route = 'config/lolicode';
+        break;
+
+      case 'stack':
+        route = 'config/stacker';
+        break;
+
+      case 'cSharp':
+        route = 'config/csharp';
+        break;
+
+      case 'legacy':
+        route = 'config/loliscript';
+        break;
+    }
+
+    if (route === '') {
+      return;
+    }
+    
+    this.router.navigate([route]);
   }
 
   showFullLog() {
@@ -648,7 +698,12 @@ export class MultiRunJobComponent {
       return;
     }
 
-    // TODO: Implement
+    if (this.hitLogComponent === undefined) {
+      return;
+    }
+
+    this.hitLogComponent.getHitLog(this.selectedHits[0].id);
+    this.hitLogModalVisible = true;
   }
 
   hitTypeDisplayFunction(hitType: HitType): string {

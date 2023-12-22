@@ -8,7 +8,7 @@ namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 public class MRJHitLogDto
 {
     /// <summary>
-    /// List of log entries.
+    /// List of log entries. If null, the bot logger is not enabled.
     /// </summary>
-    public List<BotLoggerEntry> Log { get; set; } = new();
+    public List<BotLoggerEntry>? Log { get; set; } = null;
 }
