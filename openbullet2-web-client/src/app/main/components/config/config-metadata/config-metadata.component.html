@@ -21,6 +21,12 @@
 <div *ngIf="config !== null" class="container-fluid no-paddings">
     <div class="row my-3">
         <div class="col-12">
+            <span>ID: </span>
+            <span class="color-inactive">{{ config.id }}</span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12">
             <span>Name</span>
             <app-input-text key="name" class="d-block mt-2"
                 ngDefaultControl
