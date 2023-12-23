@@ -6,8 +6,9 @@ import { ConfigReadmeDto } from "../dtos/config/config-readme.dto";
 import { ConfigDto, ConfigSettingsDto } from "../dtos/config/config.dto";
 import { UpdateConfigDto } from "../dtos/config/update-config.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from "../dtos/config/conversion.dto";
+import { BlockDescriptors } from "../dtos/config/block-descriptor.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -68,10 +69,10 @@ export class ConfigService {
     getAllConfigs(reload: boolean) {
         return this.http.get<ConfigInfoDto[]>(
             getBaseUrl() + '/config/all', {
-                params: {
-                    reload
-                }
+            params: {
+                reload
             }
+        }
         );
     }
 
@@ -168,31 +169,31 @@ export class ConfigService {
     cloneConfig(id: string) {
         return this.http.post<ConfigDto>(
             getBaseUrl() + '/config/clone', {}, {
-                params: {
-                    id
-                }
+            params: {
+                id
             }
+        }
         );
     }
 
     downloadConfig(id: string) {
         return this.http.get<Blob>(
             getBaseUrl() + '/config/download', {
-                params: {
-                    id
-                },
-                responseType: 'blob' as 'json',
-                observe: 'response'
-            }
+            params: {
+                id
+            },
+            responseType: 'blob' as 'json',
+            observe: 'response'
+        }
         );
     }
 
     downloadAllConfigs() {
         return this.http.get<Blob>(
             getBaseUrl() + '/config/download/all', {
-                responseType: 'blob' as 'json',
-                observe: 'response'
-            }
+            responseType: 'blob' as 'json',
+            observe: 'response'
+        }
         );
     }
 
@@ -231,6 +232,12 @@ export class ConfigService {
             {
                 loliCode
             }
+        );
+    }
+
+    getBlockDescriptors(): Observable<BlockDescriptors> {
+        return this.http.get<BlockDescriptors>(
+            getBaseUrl() + '/config/block-descriptors'
         );
     }
 }

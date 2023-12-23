@@ -1,1 +1,29 @@
-<p>config-stacker works!</p>
+<h1>
+    <fa-icon [icon]="faGripLines" [fixedWidth]="true"></fa-icon>
+    Stacker
+</h1>
+<h6 class="color-inactive">
+    Build your configs visually by stacking blocks together
+</h6>
+
+<div class="mt-3" *ngIf="config === null">
+    <p-card>
+        <h5 class="color-bad">
+            <fa-icon [icon]="faTriangleExclamation" [fixedWidth]="true"></fa-icon>
+            No config selected
+        </h5>
+        <span class="text-small">
+            No config was selected, please select a config first.
+        </span>
+    </p-card>
+</div>
+
+<ng-container *ngIf="config !== null">
+    <app-spinner *ngIf="stack === null || descriptors === null" [fullWidth]="true" />
+
+    <div *ngIf="stack !== null && descriptors !== null">
+        <div *ngFor="let block of stack">
+            <span>Block</span>
+        </div>
+    </div>
+</ng-container>

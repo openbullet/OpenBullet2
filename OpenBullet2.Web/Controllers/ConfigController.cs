@@ -368,7 +368,7 @@ public class ConfigController : ApiController
     /// </summary>
     /// <returns></returns>
     [Admin]
-    [HttpGet("block/descriptors")]
+    [HttpGet("block-descriptors")]
     [MapToApiVersion("1.0")]
     public ActionResult<Dictionary<string, BlockDescriptorDto>> GetBlockDescriptors()
         => RuriLib.Globals.DescriptorsRepository.Descriptors.ToDictionary(
