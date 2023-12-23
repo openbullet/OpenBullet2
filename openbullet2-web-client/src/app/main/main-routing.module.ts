@@ -28,6 +28,7 @@ import { ProxyCheckJobComponent } from './components/jobs/proxy-check-job/proxy-
 import { canDeactivateFormComponent } from '../shared/guards/can-deactivate-form.guard';
 import { JobMonitorComponent } from './components/job-monitor/job-monitor.component';
 import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
+import { ConfigStackerComponent } from './components/config/config-stacker/config-stacker.component';
 
 const routes: Routes = [
   // Main component layout
@@ -129,6 +130,11 @@ const routes: Routes = [
       {
         component: ConfigReadmeComponent,
         path: 'config/readme',
+        canActivate: [() => inject(AdminGuard).canActivate()]
+      },
+      {
+        component: ConfigStackerComponent,
+        path: 'config/stacker',
         canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
