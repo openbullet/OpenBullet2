@@ -9,6 +9,7 @@ import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from "../dtos/config/conversion.dto";
 import { BlockDescriptors } from "../dtos/config/block-descriptor.dto";
+import { BlockInstanceTypes } from "../dtos/config/block-instance.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -217,7 +218,7 @@ export class ConfigService {
         );
     }
 
-    convertStackToLoliCode(stack: any[]) {
+    convertStackToLoliCode(stack: BlockInstanceTypes[]) {
         return this.http.post<ConvertedLoliCodeDto>(
             getBaseUrl() + '/config/convert/stack/lolicode',
             {

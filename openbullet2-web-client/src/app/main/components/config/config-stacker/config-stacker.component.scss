@@ -1,0 +1,53 @@
+.stacker-container {
+    .stack-container {
+        margin-top: 1rem;
+
+        .stack {
+            max-height: 800px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin-top: 1rem;
+
+            .block {
+                width: 100%;
+                padding: 10px;
+                text-align: center;
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 0.25rem;
+                margin-bottom: 3px;
+
+                /* Prevents colors from being too bright */
+                opacity: 0.9;
+
+                /* Disable text selection */
+                -webkit-user-select: none; /* Safari */
+                -ms-user-select: none; /* IE 10 and IE 11 */
+                user-select: none; /* Standard syntax */
+
+                transition: font-weight 0.1s ease-in-out;
+                transition: border 0.1s ease-in-out;
+
+                &.disabled {
+                    background-image: repeating-linear-gradient(
+                        45deg,
+                        #444,
+                        #444 20px,
+                        #666 20px,
+                        #666 40px
+                    );
+                    border: 3px solid #444 !important;
+                    
+                    span {
+                        color: #bbb !important;
+                    }
+                }
+
+                &.selected {
+                    font-weight: 600;
+                    border: 3px solid white !important;
+                }
+            }
+        }
+    }
+}

@@ -21,9 +21,73 @@
 <ng-container *ngIf="config !== null">
     <app-spinner *ngIf="stack === null || descriptors === null" [fullWidth]="true" />
 
-    <div *ngIf="stack !== null && descriptors !== null">
-        <div *ngFor="let block of stack">
-            <span>Block</span>
+    <div *ngIf="stack !== null && descriptors !== null" class="stacker-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2 pl-0 stack-container">
+                    <div class="stack-buttons">
+                        <div class="d-flex">
+                            <button class="button button-secondary"
+                                pTooltip="Delete the selected block(s)"
+                                tooltipPosition="bottom"
+                                (click)="deleteBlocks()">
+                                <fa-icon [icon]="faTrashCan" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-secondary ml-1"
+                                pTooltip="Move the selected block(s) up"
+                                tooltipPosition="bottom"
+                                (click)="moveBlocksUp()">
+                                <fa-icon [icon]="faArrowUp" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-secondary ml-1"
+                                pTooltip="Move the selected block(s) down"
+                                tooltipPosition="bottom"
+                                (click)="moveBlocksDown()">
+                                <fa-icon [icon]="faArrowDown" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-accent ml-auto"
+                                pTooltip="Add a block"
+                                tooltipPosition="bottom"
+                                (click)="openAddBlockModal()">
+                                <fa-icon [icon]="faPlus" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </div>
+                        <div class="d-flex mt-1">
+                            <button class="button button-secondary"
+                                pTooltip="Clone the selected block(s)"
+                                tooltipPosition="bottom"
+                                (click)="cloneBlocks()">
+                                <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-secondary ml-1"
+                                pTooltip="Enable/Disable the selected block(s)"
+                                tooltipPosition="bottom"
+                                (click)="toggleDisabled()">
+                                <fa-icon [icon]="faBan" [fixedWidth]="true"></fa-icon>
+                            </button>
+                            <button class="button button-secondary ml-1"
+                                pTooltip="Restore the last deleted block(s)"
+                                tooltipPosition="bottom"
+                                (click)="restoreDeletedBlocks()">
+                                <fa-icon [icon]="faRotateLeft" [fixedWidth]="true"></fa-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="stack">
+                        <div *ngFor="let block of stack" class="block"
+                            (click)="selectBlock(block, $event)"
+                            [ngClass]="{'selected': isSelected(block), 'disabled': block.disabled}"
+                            [ngStyle]="{
+                                backgroundColor: getBackgroundColor(block),
+                                border: isSelected(block) ? '3px solid white' : '3px solid ' + getBackgroundColor(block)
+                            }">
+                            <span [ngStyle]="{color: getForegroundColor(block)}">
+                                {{block.label}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </ng-container>
