@@ -316,3 +316,33 @@ p-accordiontab {
 .p-progressbar-determinate .p-progressbar-value-animate {
     transition: width .1s ease-in-out !important;
 }
+
+.p-dialog {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-dialog .p-dialog-header {
+    background-color: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--fg-inactive) !important;
+}
+
+.p-radiobutton .p-radiobutton-box {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+    background-color: var(--fg-accent) !important;
+    border: 1px solid var(--fg-accent) !important;
+}
+
+.p-checkbox .p-checkbox-box {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+    background-color: var(--fg-accent) !important;
+    border: 1px solid var(--fg-accent) !important;
+}
