@@ -46,6 +46,7 @@
                                 <fa-icon [icon]="faArrowDown" [fixedWidth]="true"></fa-icon>
                             </button>
                             <button class="button button-accent ml-auto"
+                                *ngIf="categoryTree !== null"
                                 pTooltip="Add a block"
                                 tooltipPosition="bottom"
                                 (click)="openAddBlockModal()">
@@ -91,3 +92,20 @@
         </div>
     </div>
 </ng-container>
+
+<p-dialog 
+    #addBlockModal
+    header="Add a block" 
+    [(visible)]="addBlockModalVisible"
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-add-block
+        #addBlockComponent
+        [tree]="categoryTree"
+        [descriptorsRepo]="descriptors"
+        (blockSelected)="addBlock($event)" />
+</p-dialog>

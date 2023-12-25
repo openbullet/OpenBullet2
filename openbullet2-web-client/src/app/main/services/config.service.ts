@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from "../dtos/config/conversion.dto";
 import { BlockDescriptors } from "../dtos/config/block-descriptor.dto";
 import { BlockInstanceTypes } from "../dtos/config/block-instance.dto";
+import { CategoryTreeNodeDto } from "../dtos/config/category-tree.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -239,6 +240,23 @@ export class ConfigService {
     getBlockDescriptors(): Observable<BlockDescriptors> {
         return this.http.get<BlockDescriptors>(
             getBaseUrl() + '/config/block-descriptors'
+        );
+    }
+
+    getCategoryTree(): Observable<CategoryTreeNodeDto> {
+        return this.http.get<CategoryTreeNodeDto>(
+            getBaseUrl() + '/config/category-tree'
+        );
+    }
+
+    getBlockInstance(id: string): Observable<BlockInstanceTypes> {
+        return this.http.get<BlockInstanceTypes>(
+            getBaseUrl() + '/config/block-instance',
+            {
+                params: {
+                    id
+                }
+            }
         );
     }
 }

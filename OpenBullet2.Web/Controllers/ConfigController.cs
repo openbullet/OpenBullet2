@@ -11,8 +11,11 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
+using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.Transpilers;
+using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Trees;
 using RuriLib.Services;
 
 namespace OpenBullet2.Web.Controllers;
@@ -336,6 +339,8 @@ public class ConfigController : ApiController
     {
         var converted = Loli2StackTranspiler.Transpile(dto.LoliCode);
 
+        // We cast to object to avoid the serializer from
+        // serializing the wrong type (base class instead of derived)
         var stack = _mapper.Map<IEnumerable<BlockInstanceDto>>(converted)
             .Cast<object>().ToList();
 
@@ -387,4 +392,51 @@ public class ConfigController : ApiController
 
         return config;
     }
+    
+    /// <summary>
+    /// Get the category tree of all the available blocks.
+    /// </summary>
+    [Admin]
+    [HttpGet("category-tree")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<CategoryTreeNodeDto> GetCategoryTree()
+    {
+        var tree = RuriLib.Globals.DescriptorsRepository.AsTree();
+        return MapCategoryTreeNode(tree);
+    }
+    
+    /// <summary>
+    /// Gets a block instance by id.
+    /// </summary>
+    [Admin]
+    [HttpGet("block-instance")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<object> GetBlockInstance(string id)
+    {
+        BlockInstance block;
+        
+        try
+        {
+            block = BlockFactory.GetBlock<BlockInstance>(id);   
+        }
+        catch (Exception ex)
+        {
+            throw new EntryNotFoundException(ErrorCode.INVALID_BLOCK_ID,
+                id, nameof(RuriLib.Globals.DescriptorsRepository));
+        }
+        
+        // We cast to object to avoid the serializer from
+        // serializing the wrong type (base class instead of derived)
+        var dto = _mapper.Map<BlockInstanceDto>(block) as object;
+        
+        return dto;
+    }
+    
+    private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
+        => new() 
+        {
+            Name = node.Name,
+            SubCategories = node.SubCategories.Select(MapCategoryTreeNode).ToList(),
+            DescriptorIds = node.Descriptors.Select(d => d.Id).ToList()
+        };
 }

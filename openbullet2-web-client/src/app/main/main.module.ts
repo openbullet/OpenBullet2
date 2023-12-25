@@ -92,6 +92,7 @@ import { AddTriggerComponent } from './components/job-monitor/edit-triggered-act
 import { AddActionComponent } from './components/job-monitor/edit-triggered-action/add-action/add-action.component';
 import { HitLogComponent } from './components/jobs/multi-run-job/hit-log/hit-log.component';
 import { ConfigStackerComponent } from './components/config/config-stacker/config-stacker.component';
+import { AddBlockComponent } from './components/config/config-stacker/add-block/add-block.component';
 
 @NgModule({
   declarations: [
@@ -161,7 +162,8 @@ import { ConfigStackerComponent } from './components/config/config-stacker/confi
     AddTriggerComponent,
     AddActionComponent,
     HitLogComponent,
-    ConfigStackerComponent
+    ConfigStackerComponent,
+    AddBlockComponent
   ],
   imports: [
     CommonModule,

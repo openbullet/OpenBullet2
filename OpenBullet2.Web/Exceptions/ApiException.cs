@@ -133,5 +133,10 @@ public enum ErrorCode
     /// <summary>
     /// Action not allowed for a remote config.
     /// </summary>
-    REMOTE_CONFIG = 5000
+    REMOTE_CONFIG = 5000,
+    
+    /// <summary>
+    /// Invalid block id.
+    /// </summary>
+    INVALID_BLOCK_ID = 6000,
 }

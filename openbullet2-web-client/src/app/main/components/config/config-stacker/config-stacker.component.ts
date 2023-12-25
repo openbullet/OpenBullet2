@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { faArrowDown, faArrowUp, faBan, faClone, faGripLines, faPlus, faRotateLeft, faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { faArrowDown, faArrowUp, faBan, faClone, faGripLines, faPlus, faRotateLeft, faSearch, faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
+import { CategoryTreeNode } from 'src/app/main/dtos/config/category-tree.dto';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
+import { AddBlockComponent } from './add-block/add-block.component';
 
 interface DeletedBlock {
   block: BlockInstanceTypes;
@@ -19,6 +21,7 @@ export class ConfigStackerComponent implements OnInit {
   config: ConfigDto | null = null;
   stack: BlockInstanceTypes[] | null = null;
   descriptors: BlockDescriptors | null = null;
+  categoryTree: CategoryTreeNode | null = null;
   selectedBlocks: BlockInstanceTypes[] = [];
   lastSelectedBlock: BlockInstanceTypes | null = null;
   lastDeletedBlocks: DeletedBlock[] = [];
@@ -30,6 +33,11 @@ export class ConfigStackerComponent implements OnInit {
   faBan = faBan;
   faClone = faClone;
   faRotateLeft = faRotateLeft;
+
+  addBlockModalVisible = false;
+
+  @ViewChild('addBlockComponent')
+  addBlockComponent: AddBlockComponent | undefined = undefined;
 
   // This is not present in the descriptors returned from the API
   // but we need it to display the LoliCode script block
@@ -44,8 +52,6 @@ export class ConfigStackerComponent implements OnInit {
       backgroundColor: '#303030',
       foregroundColor: '#fff',
       name: 'LoliCode',
-      namespace: 'LoliCode',
-      path: ''
     },
     parameters: {}
   }
@@ -65,12 +71,16 @@ export class ConfigStackerComponent implements OnInit {
 
     this.configService.convertLoliCodeToStack(this.config.loliCodeScript)
       .subscribe(resp => {
-        console.log(resp);
         this.stack = resp.stack;
       });
 
     this.configService.getBlockDescriptors()
-      .subscribe(descriptors => this.descriptors = descriptors);
+      .subscribe(descriptors => {
+        this.descriptors = descriptors;
+
+        this.configService.getCategoryTree()
+          .subscribe(tree => this.categoryTree = new CategoryTreeNode(tree, null, descriptors));
+      });
   }
 
   getDescriptor(block: BlockInstanceTypes): BlockDescriptorDto {
@@ -141,7 +151,24 @@ export class ConfigStackerComponent implements OnInit {
   }
 
   openAddBlockModal() {
-    // TODO: Implement
+    this.addBlockComponent?.resetCategory();
+    this.addBlockModalVisible = true;
+  }
+
+  addBlock(block: BlockInstanceTypes) {
+    if (this.stack === null) {
+      return;
+    }
+
+    // Add the block to the end of the stack
+    this.stack.push(block);
+
+    // Select the block
+    this.selectedBlocks = [block];
+    this.lastSelectedBlock = block;
+
+    // Close the modal
+    this.addBlockModalVisible = false;
   }
 
   deleteBlocks() {

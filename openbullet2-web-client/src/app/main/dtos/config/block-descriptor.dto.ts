@@ -27,8 +27,6 @@ export enum SettingInputMode {
 
 export interface BlockCategoryDto {
     name: string;
-    path: string;
-    namespace: string;
     description: string;
     backgroundColor: string;
     foregroundColor: string;
