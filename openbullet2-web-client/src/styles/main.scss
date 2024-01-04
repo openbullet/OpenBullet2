@@ -290,3 +290,26 @@ p-accordiontab.accordion-tab-header-small {
 ul.p-submenu-list:has(> .long-menu-item) {
     min-width: 500px !important;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--fg-inactive);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--fg-inactive);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--fg-inactive) var(--bg-secondary);
+}
