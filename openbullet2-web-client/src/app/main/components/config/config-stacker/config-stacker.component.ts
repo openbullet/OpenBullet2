@@ -72,6 +72,7 @@ export class ConfigStackerComponent implements OnInit {
     this.configService.convertLoliCodeToStack(this.config.loliCodeScript)
       .subscribe(resp => {
         this.stack = resp.stack;
+        this.checkStackScrollStatus();
       });
 
     this.configService.getBlockDescriptors()
@@ -169,6 +170,8 @@ export class ConfigStackerComponent implements OnInit {
 
     // Close the modal
     this.addBlockModalVisible = false;
+
+    this.checkStackScrollStatus();
   }
 
   deleteBlocks() {
@@ -189,6 +192,8 @@ export class ConfigStackerComponent implements OnInit {
     // Clear the selection
     this.selectedBlocks = [];
     this.lastSelectedBlock = null;
+
+    this.checkStackScrollStatus();
   }
 
   moveBlocksUp() {
@@ -264,6 +269,8 @@ export class ConfigStackerComponent implements OnInit {
       const clone = JSON.parse(JSON.stringify(block));
       this.stack.splice(index + 1, 0, clone);
     }
+
+    this.checkStackScrollStatus();
   }
 
   toggleDisabled() {
@@ -291,5 +298,36 @@ export class ConfigStackerComponent implements OnInit {
 
     // Clear the deleted blocks list
     this.lastDeletedBlocks = [];
+
+    this.checkStackScrollStatus();
+  }
+
+  checkStackScrollStatus() {
+    setTimeout(() => this.stackScrolled(), 100);
+  }
+
+  // Credits to https://stackoverflow.com/questions/70970529/css-div-fade-scroll-styling
+  stackScrolled() {
+    const el = document.querySelector('.stack');
+
+    if (el === null) {
+      return;
+    }
+
+    const isScrollable = el.scrollHeight > el.clientHeight;
+
+    // GUARD: If element is not scrollable, remove all classes
+    if (!isScrollable) {
+      el.classList.remove('is-bottom-overflowing', 'is-top-overflowing');
+      return;
+    }
+
+    // Otherwise, the element is overflowing!
+    // Now we just need to find out which direction it is overflowing to (can be both).
+    // One pixel is added to the height to account for non-integer heights.
+    const isScrolledToBottom = el.scrollHeight < el.clientHeight + el.scrollTop + 1;
+    const isScrolledToTop = isScrolledToBottom ? false : el.scrollTop === 0;
+    el.classList.toggle('is-bottom-overflowing', !isScrolledToBottom);
+    el.classList.toggle('is-top-overflowing', !isScrolledToTop);
   }
 }

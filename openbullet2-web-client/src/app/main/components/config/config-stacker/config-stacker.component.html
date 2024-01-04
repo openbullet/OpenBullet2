@@ -74,7 +74,8 @@
                             </button>
                         </div>
                     </div>
-                    <div class="stack">
+                    <div class="stack"
+                        (scroll)="stackScrolled()">
                         <div *ngFor="let block of stack" class="block"
                             (click)="selectBlock(block, $event)"
                             [ngClass]="{'selected': isSelected(block), 'disabled': block.disabled}"

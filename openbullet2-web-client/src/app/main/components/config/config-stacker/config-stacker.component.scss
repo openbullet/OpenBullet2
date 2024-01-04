@@ -3,10 +3,32 @@
         margin-top: 1rem;
 
         .stack {
-            max-height: 800px;
+            margin-top: 1rem;
+            max-height: 630px;
             overflow-y: auto;
             overflow-x: hidden;
-            margin-top: 1rem;
+            position: relative;
+
+            /* Hide scrollbars */
+            &::-webkit-scrollbar {
+                display: none;  /* Safari and Chrome */
+            }
+            
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0, var(--bg-primary) var(--top-mask-size, 0), var(--bg-primary) calc(100% - var(--bottom-mask-size, 0)), transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, var(--bg-primary) var(--top-mask-size, 0), var(--bg-primary) calc(100% - var(--bottom-mask-size, 0)), transparent 100%);
+            --top-mask-size: 0px;
+            --bottom-mask-size: 0px;
+
+            &.is-top-overflowing {
+                --top-mask-size: 48px !important;
+            }
+            
+            &.is-bottom-overflowing {
+                --bottom-mask-size: 48px !important;
+            }
 
             .block {
                 width: 100%;
