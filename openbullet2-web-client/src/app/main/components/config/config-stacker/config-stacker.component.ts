@@ -172,6 +172,7 @@ export class ConfigStackerComponent implements OnInit {
     this.addBlockModalVisible = false;
 
     this.checkStackScrollStatus();
+    this.stackChanged();
   }
 
   deleteBlocks() {
@@ -194,6 +195,7 @@ export class ConfigStackerComponent implements OnInit {
     this.lastSelectedBlock = null;
 
     this.checkStackScrollStatus();
+    this.stackChanged();
   }
 
   moveBlocksUp() {
@@ -225,6 +227,8 @@ export class ConfigStackerComponent implements OnInit {
       this.stack.splice(index, 1);
       this.stack.splice(index - 1, 0, block);
     }
+
+    this.stackChanged();
   }
 
   moveBlocksDown() {
@@ -256,6 +260,8 @@ export class ConfigStackerComponent implements OnInit {
       this.stack.splice(index, 1);
       this.stack.splice(index + 1, 0, block);
     }
+
+    this.stackChanged();
   }
 
   cloneBlocks() {
@@ -271,6 +277,7 @@ export class ConfigStackerComponent implements OnInit {
     }
 
     this.checkStackScrollStatus();
+    this.stackChanged();
   }
 
   toggleDisabled() {
@@ -278,6 +285,8 @@ export class ConfigStackerComponent implements OnInit {
     for (const block of this.selectedBlocks) {
       block.disabled = !block.disabled;
     }
+
+    this.stackChanged();
   }
 
   restoreDeletedBlocks() {
@@ -300,6 +309,7 @@ export class ConfigStackerComponent implements OnInit {
     this.lastDeletedBlocks = [];
 
     this.checkStackScrollStatus();
+    this.stackChanged();
   }
 
   checkStackScrollStatus() {
@@ -329,5 +339,19 @@ export class ConfigStackerComponent implements OnInit {
     const isScrolledToTop = isScrolledToBottom ? false : el.scrollTop === 0;
     el.classList.toggle('is-bottom-overflowing', !isScrolledToBottom);
     el.classList.toggle('is-top-overflowing', !isScrolledToTop);
+  }
+
+  stackChanged() {
+    if (this.stack === null) {
+      return;
+    }
+
+    this.configService.convertStackToLoliCode(this.stack)
+      .subscribe(resp => {
+        if (this.config !== null) {
+          this.config.loliCodeScript = resp.loliCode;
+          this.configService.saveLocalConfig(this.config)
+        }
+      });
   }
 }
