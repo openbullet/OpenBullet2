@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { faAlignLeft, faCaretRight, faPlay, faSliders, faStop, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
+import { faAlignLeft, faBug, faCaretRight, faPlay, faSliders, faStop, faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { VariableDto } from 'src/app/main/dtos/config-debugger/messages';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
@@ -38,6 +38,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   ];
 
   faPlay = faPlay;
+  faBug = faBug;
   faStop = faStop;
   faCaretRight = faCaretRight;
   faAlignLeft = faAlignLeft;

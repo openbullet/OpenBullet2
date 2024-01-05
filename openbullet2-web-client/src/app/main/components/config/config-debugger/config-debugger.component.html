@@ -8,8 +8,8 @@
                 *ngIf="status === 'idle'"
                 pTooltip="Start the debugger" tooltipPosition="bottom"
                 (click)="start()">
-                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
-                Start
+                <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
+                Debug
             </button>
             <button class="button button-accent ml-2"
                 *ngIf="status === 'waitingForStep'"
