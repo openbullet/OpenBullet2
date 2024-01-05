@@ -93,6 +93,7 @@ import { AddActionComponent } from './components/job-monitor/edit-triggered-acti
 import { HitLogComponent } from './components/jobs/multi-run-job/hit-log/hit-log.component';
 import { ConfigStackerComponent } from './components/config/config-stacker/config-stacker.component';
 import { AddBlockComponent } from './components/config/config-stacker/add-block/add-block.component';
+import { BlockInfoComponent } from './components/config/config-stacker/block-info/block-info.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +164,8 @@ import { AddBlockComponent } from './components/config/config-stacker/add-block/
     AddActionComponent,
     HitLogComponent,
     ConfigStackerComponent,
-    AddBlockComponent
+    AddBlockComponent,
+    BlockInfoComponent
   ],
   imports: [
     CommonModule,

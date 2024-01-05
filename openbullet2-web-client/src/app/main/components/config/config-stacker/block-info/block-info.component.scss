@@ -1,0 +1,17 @@
+.block-info {
+    .block-name {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--fg-accent-light);
+    }
+
+    .block-description {
+        font-size: 14px;
+        color: var(--fg-accent-light);
+    }
+
+    .block-extra-info {
+        font-size: 12px;
+        color: var(--fg-inactive);
+    }
+}

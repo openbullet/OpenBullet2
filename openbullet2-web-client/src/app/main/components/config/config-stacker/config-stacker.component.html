@@ -23,8 +23,8 @@
 
     <div *ngIf="stack !== null && descriptors !== null" class="stacker-container">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-2 pl-0 stack-container">
+            <div class="row mt-3">
+                <div class="col-2 pl-0 mt-2 stack-container">
                     <div class="stack-buttons">
                         <div class="d-flex">
                             <button class="button button-secondary"
@@ -85,10 +85,32 @@
                                 border: isSelected(block) ? '3px solid white' : '3px solid ' + getBackgroundColor(block)
                             }">
                             <span [ngStyle]="{color: getForegroundColor(block)}">
-                                {{block.label}}
+                                {{block.label.trim() === '' ? '&nbsp;' : block.label}}
                             </span>
                         </div>
                     </div>
+                </div>
+                <div class="col-5">
+                    <app-block-info *ngIf="selectedBlocks.length === 1"
+                        (onChange)="stackChanged()"
+                        [block]="selectedBlocks[0]"
+                        [descriptor]="getDescriptor(selectedBlocks[0])" />
+                    <div class="block-info-notice" *ngIf="selectedBlocks.length === 0">
+                        <span class="color-inactive">
+                            Select a block from the stack to display its settings
+                        </span>
+                    </div>
+                    <div class="block-info-notice" *ngIf="selectedBlocks.length > 1">
+                        <span class="color-inactive">
+                            Multiple blocks selected, please select a single block to display
+                            its settings
+                        </span>
+                    </div>
+                </div>
+                <div class="col-5 pl-1 pr-0" *ngIf="envSettings !== null">
+                    <app-config-debugger
+                        [config]="config"
+                        [envSettings]="envSettings" />
                 </div>
             </div>
         </div>

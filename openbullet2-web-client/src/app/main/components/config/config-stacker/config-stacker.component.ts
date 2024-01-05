@@ -6,6 +6,8 @@ import { CategoryTreeNode } from 'src/app/main/dtos/config/category-tree.dto';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { AddBlockComponent } from './add-block/add-block.component';
+import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
+import { SettingsService } from 'src/app/main/services/settings.service';
 
 interface DeletedBlock {
   block: BlockInstanceTypes;
@@ -18,6 +20,7 @@ interface DeletedBlock {
   styleUrls: ['./config-stacker.component.scss']
 })
 export class ConfigStackerComponent implements OnInit {
+  envSettings: EnvironmentSettingsDto | null = null;
   config: ConfigDto | null = null;
   stack: BlockInstanceTypes[] | null = null;
   descriptors: BlockDescriptors | null = null;
@@ -59,7 +62,8 @@ export class ConfigStackerComponent implements OnInit {
   faGripLines = faGripLines;
   faTriangleExclamation = faTriangleExclamation;
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService,
+    private settingsService: SettingsService) {
     this.configService.selectedConfig$
       .subscribe(config => this.config = config);
   }
@@ -81,6 +85,11 @@ export class ConfigStackerComponent implements OnInit {
 
         this.configService.getCategoryTree()
           .subscribe(tree => this.categoryTree = new CategoryTreeNode(tree, null, descriptors));
+      });
+
+    this.settingsService.getEnvironmentSettings()
+      .subscribe(envSettings => {
+        this.envSettings = envSettings;
       });
   }
 
