@@ -69,6 +69,7 @@
                             <button class="button button-secondary ml-1"
                                 pTooltip="Restore the last deleted block(s)"
                                 tooltipPosition="bottom"
+                                [disabled]="lastDeletedBlocks.length === 0"
                                 (click)="restoreDeletedBlocks()">
                                 <fa-icon [icon]="faRotateLeft" [fixedWidth]="true"></fa-icon>
                             </button>

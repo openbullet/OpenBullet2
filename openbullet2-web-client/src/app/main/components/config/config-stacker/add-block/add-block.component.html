@@ -44,6 +44,7 @@
                         color: descriptor.category?.foregroundColor
                     }"
                     [pTooltip]="descriptor.description"
+                    [tooltipDisabled]="tooltipDisabled"
                     (click)="selectBlock(descriptor.id)"
                     *ngFor="let descriptor of descriptors">
                     {{descriptor.name}}
@@ -66,6 +67,7 @@
                         color: descriptorsRepo![blockId].category?.foregroundColor
                     }"
                     [pTooltip]="descriptorsRepo![blockId].description"
+                    [tooltipDisabled]="tooltipDisabled"
                     (click)="selectBlock(blockId)">
                     {{descriptorsRepo![blockId].name}}
                 </div>

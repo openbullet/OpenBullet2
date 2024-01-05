@@ -24,6 +24,9 @@ export class AddBlockComponent {
   faArrowUp = faArrowUp;
   faSearch = faSearch;
 
+  // Prevents the tooltip from staying open when the modal is closed
+  tooltipDisabled = false;
+
   constructor(
     private configService: ConfigService,
     private volatileSettingsService: VolatileSettingsService
@@ -37,8 +40,11 @@ export class AddBlockComponent {
         .find(c => c.name === 'RuriLib')!.subCategories
         .find(c => c.name === 'Blocks')!;
 
+      this.searchFilter = '';
       this.setcurrentCategory(mainNode);
     }
+
+    this.tooltipDisabled = false;
   }
 
   selectBlock(blockId: string) {
@@ -50,6 +56,7 @@ export class AddBlockComponent {
 
       this.volatileSettingsService.recentlyUsedBlockIds = this.recentlyUsedBlockIds;
 
+      this.tooltipDisabled = true;
       this.blockSelected.emit(block);
     });
   }
