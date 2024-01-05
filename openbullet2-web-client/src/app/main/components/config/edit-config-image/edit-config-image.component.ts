@@ -15,7 +15,7 @@ export class EditConfigImageComponent {
   remoteUrl: string = '';
 
   constructor(private http: HttpClient) {
-    
+
   }
 
   setImage(base64Image: string) {
@@ -26,8 +26,8 @@ export class EditConfigImageComponent {
 
   downloadImage() {
     this.http.get<Blob>(this.remoteUrl, {
-        responseType: 'blob' as 'json'
-      }
+      responseType: 'blob' as 'json'
+    }
     ).subscribe(blob => this.setImageFromBlob(blob));
   }
 

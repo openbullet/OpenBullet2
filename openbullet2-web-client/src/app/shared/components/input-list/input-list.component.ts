@@ -10,7 +10,7 @@ export class InputListComponent implements OnChanges {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() class: string | null = null;
-  @Input() style: { [id: string] : any; } = {};
+  @Input() style: { [id: string]: any; } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder: string = '';
   @Input() ngModel: string[] | null = null;
@@ -45,7 +45,7 @@ export class InputListComponent implements OnChanges {
 
   // Notifies the subscribers that the validity of this input changed
   notifyValidity(valid: boolean) {
-    this.validityChange.emit({key: this.key, valid});
+    this.validityChange.emit({ key: this.key, valid });
     this.isValid = valid;
   }
 

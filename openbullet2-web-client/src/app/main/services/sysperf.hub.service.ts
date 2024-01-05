@@ -4,10 +4,10 @@ import { PerformanceInfoDto } from "../dtos/info/performance-info.dto";
 import { getBaseHubUrl } from "src/app/shared/utils/host";
 import { UserService } from "./user.service";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SysPerfHubService {
     private hubConnection: HubConnection | null = null;
-    
+
     private metricsEmitter = new EventEmitter<PerformanceInfoDto | null>();
     public metrics$ = this.metricsEmitter.asObservable();
 
@@ -17,15 +17,15 @@ export class SysPerfHubService {
 
     createHubConnection() {
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(getBaseHubUrl() + '/system-performance', {
-            accessTokenFactory: () => this.userService.getJwt() ?? ''
-        })
-        .withAutomaticReconnect()
-        .build();
+            .withUrl(getBaseHubUrl() + '/system-performance', {
+                accessTokenFactory: () => this.userService.getJwt() ?? ''
+            })
+            .withAutomaticReconnect()
+            .build();
 
         this.hubConnection
-        .start()
-        .catch(err => console.error(err));
+            .start()
+            .catch(err => console.error(err));
 
         this.hubConnection.on('newMetrics', metrics => {
             this.metricsEmitter.emit(metrics)
@@ -34,7 +34,7 @@ export class SysPerfHubService {
 
     stopHubConnection() {
         this.hubConnection
-        ?.stop()
-        .catch(err => console.error(err));
+            ?.stop()
+            .catch(err => console.error(err));
     }
 }

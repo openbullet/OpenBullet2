@@ -3,7 +3,7 @@ import { parseTimeSpan } from '../utils/dates';
 import { TimeSpan } from '../utils/timespan';
 
 @Pipe({
- name: 'timespan'
+    name: 'timespan'
 })
 
 export class TimeSpanPipe implements PipeTransform {

@@ -35,7 +35,7 @@ export class SelectWordlistComponent {
     if (wordlist === this.selectedWordlist) {
       return;
     }
-    
+
     this.preview = null;
     this.selectedWordlist = wordlist;
     this.wordlistService.getWordlistPreview(wordlist.id, 10).subscribe(preview => {

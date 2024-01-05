@@ -46,7 +46,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     return !this.touched;
   }
 
-  @ViewChild('selectConfigComponent') 
+  @ViewChild('selectConfigComponent')
   selectConfigComponent: SelectConfigComponent | undefined;
 
   @ViewChild('selectWordlistComponent')
@@ -103,7 +103,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   options: MultiRunJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
   wordlistTypes: string[] = [];
-  
+
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
   startAt: Date = moment().add(1, 'days').toDate();
@@ -133,7 +133,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
-  fieldsValidity: { [key: string] : boolean; } = {};
+  fieldsValidity: { [key: string]: boolean; } = {};
   touched: boolean = false;
 
   selectConfigModalVisible: boolean = false;
@@ -257,7 +257,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
         this.configService.getInfo(options.configId).subscribe(configInfo => {
           this.selectedConfigInfo = configInfo;
         });
-        
+
         // If the data pool is a wordlist, we need to fetch it
         if (this.dataPoolType === DataPoolType.Wordlist) {
           this.wordlistService.getWordlist(this.dataPoolWordlistId).subscribe(wordlist => {
@@ -288,7 +288,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   onStartAfterChange(timeSpan: TimeSpan) {
     this.startAfter = timeSpan;
-    
+
     if (this.startConditionMode === StartConditionMode.Relative) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Relative,
@@ -619,7 +619,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
     const useEllipsis = this.dataPoolRangeAmount > 6;
 
-    const lastNumber = this.dataPoolRangeStart + 
+    const lastNumber = this.dataPoolRangeStart +
       (this.dataPoolRangeAmount - 1) * this.dataPoolRangeStep;
 
     const lastNumberDigits = lastNumber.toString().length;

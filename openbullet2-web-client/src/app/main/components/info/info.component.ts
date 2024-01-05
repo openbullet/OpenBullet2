@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { 
+import {
   faTriangleExclamation,
-  faComments 
+  faComments
 } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { getSwaggerUrl } from 'src/app/shared/utils/host';

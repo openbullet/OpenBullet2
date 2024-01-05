@@ -1,10 +1,10 @@
 import { formatNumber } from '@angular/common';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { 
-  IconDefinition, 
-  faCircleArrowDown, 
-  faCircleArrowUp, 
-  faCircleMinus ,
+import {
+  IconDefinition,
+  faCircleArrowDown,
+  faCircleArrowUp,
+  faCircleMinus,
   faCaretDown,
   faCaretUp,
   faTrashCan
@@ -14,7 +14,6 @@ import { BaseChartDirective } from 'ng2-charts';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
-import { getMockedSysPerfMetrics } from 'src/app/main/mock/messages.mock';
 import { DebugService } from 'src/app/main/services/debug.service';
 import { SysPerfHubService } from 'src/app/main/services/sysperf.hub.service';
 import { formatBytes } from 'src/app/shared/utils/bytes';
@@ -184,11 +183,11 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
 
     this.sysPerfHubService.createHubConnection();
     this.metricsSubscription = this.sysPerfHubService.metrics$
-    .subscribe(metrics => {
-      if (metrics !== null) {
-        this.onNewMetrics(metrics);
-      }
-    });
+      .subscribe(metrics => {
+        if (metrics !== null) {
+          this.onNewMetrics(metrics);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -217,7 +216,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     this.memoryValue = perf.memoryUsage;
     this.networkDownloadValue = perf.networkDownload;
     this.networkUploadValue = perf.networkUpload;
-    
+
     // CPU
     const cpuData = this.cpuLineChartData.datasets[0].data as number[];
 
@@ -225,7 +224,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
       cpuData.shift();
     }
     cpuData.push(perf.cpuUsage);
-    
+
     const cpuChip = this.getChipInfo(cpuData);
     this.cpuChipClass = cpuChip[0];
     this.cpuChipIcon = cpuChip[1];
@@ -240,7 +239,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
       memoryData.shift();
     }
     memoryData.push(perf.memoryUsage);
-    
+
     const memoryChip = this.getChipInfo(memoryData);
     this.memoryChipClass = memoryChip[0];
     this.memoryChipIcon = memoryChip[1];

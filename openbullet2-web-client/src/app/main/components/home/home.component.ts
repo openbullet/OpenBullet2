@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MarkdownService } from 'ngx-markdown';
 import { InfoService } from '../../services/info.service';
 import { AnnouncementDto } from '../../dtos/info/announcement.dto';
 import { ServerInfoDto } from '../../dtos/info/server-info.dto';

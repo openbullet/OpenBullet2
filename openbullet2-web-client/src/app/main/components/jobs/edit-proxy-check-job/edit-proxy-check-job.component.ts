@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { faBolt, faSave } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Observable, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { ProxyCheckJobOptionsDto } from 'src/app/main/dtos/job/proxy-check-job-options.dto';
 import { ProxyCheckTargetDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
@@ -59,7 +59,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
-  fieldsValidity: { [key: string] : boolean; } = {};
+  fieldsValidity: { [key: string]: boolean; } = {};
   touched: boolean = false;
 
   constructor(
@@ -175,7 +175,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
   onStartAfterChange(timeSpan: TimeSpan) {
     this.startAfter = timeSpan;
-    
+
     if (this.startConditionMode === StartConditionMode.Relative) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Relative,

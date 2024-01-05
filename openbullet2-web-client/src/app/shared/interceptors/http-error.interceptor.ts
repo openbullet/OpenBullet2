@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable, catchError, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
 import { UserService } from "src/app/main/services/user.service";
@@ -10,7 +10,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     constructor(private router: Router,
         private messageService: MessageService,
         private userService: UserService) {
-        
+
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -49,7 +49,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                         this.messageService.add({
                             severity: 'error',
                             summary,
-                            detail 
+                            detail
                         });
                     }
                 }

@@ -25,8 +25,8 @@ export class ConfigLolicodeComponent {
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService) {
-      this.configService.selectedConfig$
-        .subscribe(config => this.config = config);
+    this.configService.selectedConfig$
+      .subscribe(config => this.config = config);
   }
 
   editorLoaded() {

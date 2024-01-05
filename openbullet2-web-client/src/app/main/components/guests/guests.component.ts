@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { GuestService } from '../../services/guest.service';
 import { GuestDto } from '../../dtos/guest/guest.dto';
-import { faFilter, faFilterCircleXmark, faKey, faPen, faPlus, faUsers, faX } from '@fortawesome/free-solid-svg-icons';
+import { faFilterCircleXmark, faKey, faPen, faPlus, faUsers, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UpdateGuestInfoDto } from '../../dtos/guest/update-guest-info.dto';
 import { UpdateGuestPasswordDto } from '../../dtos/guest/update-guest-password.dto';
 import { CreateGuestDto } from '../../dtos/guest/create-guest.dto';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-guests',
@@ -23,7 +22,7 @@ export class GuestsComponent implements OnInit {
   faUsers = faUsers;
 
   selectedGuest: GuestDto | null = null;
-  
+
   createGuestModalVisible = false;
   updateGuestInfoModalVisible = false;
   updateGuestPasswordModalVisible = false;

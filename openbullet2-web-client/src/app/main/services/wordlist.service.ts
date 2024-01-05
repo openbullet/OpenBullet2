@@ -19,10 +19,10 @@ export class WordlistService {
     getWordlist(id: number) {
         return this.http.get<WordlistDto>(
             getBaseUrl() + '/wordlist', {
-                params: {
-                    id
-                }
+            params: {
+                id
             }
+        }
         );
     }
 
@@ -35,11 +35,11 @@ export class WordlistService {
     getWordlistPreview(id: number, lineCount: number) {
         return this.http.get<WordlistPreviewDto>(
             getBaseUrl() + '/wordlist/preview', {
-                params: {
-                    id,
-                    lineCount
-                }
+            params: {
+                id,
+                lineCount
             }
+        }
         );
     }
 
@@ -48,9 +48,9 @@ export class WordlistService {
         formData.append('file', file, file.name);
         return this.http.post<WordlistFileDto>(
             getBaseUrl() + '/wordlist/upload', formData, {
-                reportProgress: true,
-                observe: 'events'
-            }
+            reportProgress: true,
+            observe: 'events'
+        }
         );
     }
 

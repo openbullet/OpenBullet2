@@ -33,7 +33,7 @@ export class InputTimeSpanComponent {
 
   validityChanged(validity: FieldValidity) {
     this.isValid = validity.valid;
-    this.validityChange.emit({key: this.key, valid: this.isValid});
+    this.validityChange.emit({ key: this.key, valid: this.isValid });
   }
 
   secondsChanging(value: number) {

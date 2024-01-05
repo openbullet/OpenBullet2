@@ -141,18 +141,18 @@ export class MenuComponent implements OnDestroy {
     private messageService: MessageService,
     private configService: ConfigService,
     private userService: UserService) {
-      this.userRole = this.userService.loadUserInfo().role.toLocaleLowerCase();
-      this.buildMenu(null);
-      this.selectedConfigSubscription = this.configService.selectedConfig$
-        .subscribe(config => {
-          this.buildMenu(config);
-          this.selectedConfig = config;
-        });
+    this.userRole = this.userService.loadUserInfo().role.toLocaleLowerCase();
+    this.buildMenu(null);
+    this.selectedConfigSubscription = this.configService.selectedConfig$
+      .subscribe(config => {
+        this.buildMenu(config);
+        this.selectedConfig = config;
+      });
 
-      this.configService.nameChanged$
-        .subscribe(() => {
-          this.buildMenu(this.selectedConfig);
-        });
+    this.configService.nameChanged$
+      .subscribe(() => {
+        this.buildMenu(this.selectedConfig);
+      });
   }
 
   ngOnDestroy(): void {
@@ -217,8 +217,8 @@ export class MenuComponent implements OnDestroy {
       }
     );
 
-    if (config.mode === 'stack' || config.mode === 'loliCode' 
-    || config.mode === 'cSharp') {
+    if (config.mode === 'stack' || config.mode === 'loliCode'
+      || config.mode === 'cSharp') {
       menuItems.push(
         {
           icon: faCode,

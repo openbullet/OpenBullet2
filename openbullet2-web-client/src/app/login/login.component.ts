@@ -13,8 +13,8 @@ export class LoginComponent {
   failedLoginMessage: string | null = null;
 
   constructor(private userService: UserService,
-    private router: Router) { 
-    
+    private router: Router) {
+
   }
 
   isFormValid(): boolean {

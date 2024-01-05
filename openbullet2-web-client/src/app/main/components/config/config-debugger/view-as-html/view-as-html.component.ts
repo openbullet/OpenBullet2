@@ -11,11 +11,11 @@ export class ViewAsHtmlComponent implements OnChanges {
 
   sanitizedHtml: string = '';
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private domSanitizer: DomSanitizer) { }
 
   ngOnChanges(changes: SimpleChanges) {
     // If I bind the SafeHtml directly the modal breaks for some reason
     this.sanitizedHtml = (this.domSanitizer.bypassSecurityTrustHtml(this.html) as any)
-    .changingThisBreaksApplicationSecurity;
+      .changingThisBreaksApplicationSecurity;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { faCode, faGear, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
@@ -25,8 +25,8 @@ export class ConfigCsharpComponent {
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService) {
-      this.configService.selectedConfig$
-        .subscribe(config => this.config = config);
+    this.configService.selectedConfig$
+      .subscribe(config => this.config = config);
   }
 
   editorLoaded() {

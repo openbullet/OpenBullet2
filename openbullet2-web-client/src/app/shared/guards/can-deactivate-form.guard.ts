@@ -6,8 +6,8 @@ export interface DeactivatableComponent {
 }
 
 export const canDeactivateFormComponent: CanDeactivateFn<DeactivatableComponent> = (component: DeactivatableComponent) => {
-    if (component.canDeactivate) {
-        return component.canDeactivate()
-    }
-    return true
+  if (component.canDeactivate) {
+    return component.canDeactivate()
+  }
+  return true
 }

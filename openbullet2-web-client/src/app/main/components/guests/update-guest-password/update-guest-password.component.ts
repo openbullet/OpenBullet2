@@ -32,7 +32,7 @@ export class UpdateGuestPasswordComponent implements OnChanges {
   }
 
   isFormValid() {
-    return this.password.length >= 8 && 
+    return this.password.length >= 8 &&
       this.password === this.confirmPassword;
   }
 }

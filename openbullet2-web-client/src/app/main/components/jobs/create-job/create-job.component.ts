@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./create-job.component.scss']
 })
 export class CreateJobComponent {
-  constructor (
+  constructor(
     private router: Router
-  ) {}
+  ) { }
 
   createMultiRunJob() {
     this.router.navigate(['/job/multi-run/create']);

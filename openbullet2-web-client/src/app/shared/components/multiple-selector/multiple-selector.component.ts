@@ -12,9 +12,9 @@ export class MultipleSelectorComponent implements OnChanges {
   deselectedItems: string[] = [];
   @Output() selectedItemsChange = new EventEmitter<string[]>();
   @Output() onChange = new EventEmitter<string[]>();
-  
+
   @ContentChild(TemplateRef) itemTemplate
-  : TemplateRef<any> | null = null;
+    : TemplateRef<any> | null = null;
 
   @ViewChild('defaultItemTemplate', { static: true })
   defaultItemTemplate: TemplateRef<any> | null = null;

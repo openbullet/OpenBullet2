@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
- name: 'pascalcase'
+    name: 'pascalcase'
 })
 
 export class PascalCasePipe implements PipeTransform {
@@ -10,6 +10,6 @@ export class PascalCasePipe implements PipeTransform {
             value = value.replace(/([A-Z])/g, ' $1');
         }
 
-        return value.replace(/^./, function(str){ return str.toUpperCase(); });
+        return value.replace(/^./, function (str) { return str.toUpperCase(); });
     }
 }

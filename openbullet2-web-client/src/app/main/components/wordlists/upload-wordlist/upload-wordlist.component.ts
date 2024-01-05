@@ -24,7 +24,7 @@ export class UploadWordlistComponent {
   isUploading: boolean = false;
   uploadProgress: number | null = null;
 
-  constructor (private wordlistService: WordlistService,
+  constructor(private wordlistService: WordlistService,
     private messageService: MessageService) {
 
   }
@@ -53,26 +53,26 @@ export class UploadWordlistComponent {
 
     this.wordlistService.uploadWordlistFile(this.selectedFile)
       .pipe(
-          map((event: any) => {
-              if (event.type == HttpEventType.UploadProgress) {
-                  this.uploadProgress = Math.round((100 / event.total) * event.loaded);
-              } else if (event.type == HttpEventType.Response) {
-                  const resp: WordlistFileDto = event.body;
-                  this.uploadProgress = 100;
-                  this.messageService.add({
-                    severity: 'success',
-                    summary: 'Uploaded',
-                    detail: `Wordlist file uploaded to ${resp.filePath}`
-                  });
-                  this.filePath = resp.filePath;
-                  this.isUploading = false;
-              }
-          }),
-          catchError((err: any) => {
-              this.uploadProgress = null;
-              console.log(err.message);
-              return throwError(() => err.message);
-          })
+        map((event: any) => {
+          if (event.type == HttpEventType.UploadProgress) {
+            this.uploadProgress = Math.round((100 / event.total) * event.loaded);
+          } else if (event.type == HttpEventType.Response) {
+            const resp: WordlistFileDto = event.body;
+            this.uploadProgress = 100;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Uploaded',
+              detail: `Wordlist file uploaded to ${resp.filePath}`
+            });
+            this.filePath = resp.filePath;
+            this.isUploading = false;
+          }
+        }),
+        catchError((err: any) => {
+          this.uploadProgress = null;
+          console.log(err.message);
+          return throwError(() => err.message);
+        })
       ).subscribe();
   }
 
@@ -85,7 +85,7 @@ export class UploadWordlistComponent {
     this.selectedFile = null;
     this.uploadProgress = null;
   }
-  
+
   submitForm() {
     if (this.filePath === null) {
       console.log('File path is null, this should not happen!');

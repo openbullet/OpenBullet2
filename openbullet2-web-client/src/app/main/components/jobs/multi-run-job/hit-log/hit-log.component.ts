@@ -22,7 +22,7 @@ export class HitLogComponent {
   viewAsHtmlModalVisible = false;
   html = '';
 
-  constructor (private jobService: JobService) { }
+  constructor(private jobService: JobService) { }
 
   public getHitLog(hitId: string) {
     if (this.jobId === null) {

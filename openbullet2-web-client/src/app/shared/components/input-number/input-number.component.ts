@@ -13,7 +13,7 @@ export class InputNumberComponent {
   @Input() max: number | null = null;
   @Input() integer: boolean = true;
   @Input() class: string | null = null;
-  @Input() style: { [id: string] : any; } = {};
+  @Input() style: { [id: string]: any; } = {};
   @Input() placeholder: number | string = '';
   @Input() ngModel: number | null = null;
 
@@ -41,7 +41,7 @@ export class InputNumberComponent {
 
   // Notifies the subscribers that the validity of this input changed
   notifyValidity(valid: boolean) {
-    this.validityChange.emit({key: this.key, valid});
+    this.validityChange.emit({ key: this.key, valid });
     this.isValid = valid;
   }
 

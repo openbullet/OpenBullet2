@@ -56,7 +56,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   triggers: TriggerDto[] = [];
   actions: ActionDto[] = [];
 
-  fieldsValidity: { [key: string] : boolean; } = {};
+  fieldsValidity: { [key: string]: boolean; } = {};
   touched: boolean = false;
 
   addTriggerModalVisible = false;
@@ -123,7 +123,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
         );
       });
   }
-  
+
   canDeactivate() {
     if (!this.touched) {
       return true;

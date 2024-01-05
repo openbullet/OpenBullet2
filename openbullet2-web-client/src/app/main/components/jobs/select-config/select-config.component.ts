@@ -34,7 +34,7 @@ export class SelectConfigComponent {
     if (config === this.selectedConfig) {
       return;
     }
-    
+
     this.readme = null;
     this.selectedConfig = config;
     this.configService.getReadme(config.id).subscribe(readme => {

@@ -27,7 +27,7 @@ export class UploadConfigsComponent {
   canUpload() {
     return this.selectedFiles.length > 0 && !this.isUploading;
   }
-  
+
   upload() {
     this.isUploading = true;
     this.confirm.emit(this.selectedFiles);

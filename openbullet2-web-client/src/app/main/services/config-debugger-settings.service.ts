@@ -11,7 +11,7 @@ export class ConfigDebuggerSettingsService {
 
     saveLocalSettings(settings: ConfigDebuggerSettings) {
         window.localStorage.setItem('config-debugger-settings',
-        JSON.stringify(settings));
+            JSON.stringify(settings));
     }
 
     loadLocalSettings(): ConfigDebuggerSettings {
@@ -21,7 +21,7 @@ export class ConfigDebuggerSettingsService {
         if (json !== null) {
             try {
                 settings = JSON.parse(json);
-            } catch { 
+            } catch {
 
             }
         }

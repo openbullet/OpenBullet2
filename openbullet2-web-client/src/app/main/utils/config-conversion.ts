@@ -2,8 +2,6 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { ConfigService } from "../services/config.service";
 import { lastValueFrom } from "rxjs";
-import { MessageService } from "primeng/api";
-import { HttpErrorResponse } from "@angular/common/http";
 
 export const updateCSharpScript: ResolveFn<any> =
     async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
@@ -25,4 +23,3 @@ export const updateCSharpScript: ResolveFn<any> =
             config.cSharpScript = dto.cSharpScript;
         }
     };
-    

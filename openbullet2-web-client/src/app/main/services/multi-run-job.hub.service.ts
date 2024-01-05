@@ -11,7 +11,7 @@ import { MRJStatsMessage } from "../dtos/job/messages/multi-run/stats.dto";
 import { MRJNewHitMessage } from "../dtos/job/messages/multi-run/hit.dto";
 import { MRJTaskErrorMessage } from "../dtos/job/messages/multi-run/task-error.dto";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class MultiRunJobHubService {
     private hubConnection: HubConnection | null = null;
 
@@ -45,15 +45,15 @@ export class MultiRunJobHubService {
 
     createHubConnection(jobId: number) {
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(getBaseHubUrl() + `/multi-run-job?jobId=${jobId}`, {
-            accessTokenFactory: () => this.userService.getJwt() ?? ''
-        })
-        .withAutomaticReconnect()
-        .build();
+            .withUrl(getBaseHubUrl() + `/multi-run-job?jobId=${jobId}`, {
+                accessTokenFactory: () => this.userService.getJwt() ?? ''
+            })
+            .withAutomaticReconnect()
+            .build();
 
         this.hubConnection
-        .start()
-        .catch(err => console.error(err));
+            .start()
+            .catch(err => console.error(err));
 
         this.hubConnection.on('newResult', result => {
             this.resultEmitter.emit(result);

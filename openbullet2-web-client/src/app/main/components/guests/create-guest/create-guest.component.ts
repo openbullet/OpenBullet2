@@ -13,7 +13,7 @@ export class CreateGuestComponent {
 
   username: string = '';
   accessExpiration: Date = new Date();
-  allowedAddresses: string = '';  
+  allowedAddresses: string = '';
   faCircleQuestion = faCircleQuestion;
   password: string = '';
   confirmPassword: string = '';
@@ -39,8 +39,8 @@ export class CreateGuestComponent {
     if (this.username.length < 3 || this.username.length > 32) {
       return false;
     }
-    
-    return this.password.length >= 8 && 
+
+    return this.password.length >= 8 &&
       this.password === this.confirmPassword;
   }
 }

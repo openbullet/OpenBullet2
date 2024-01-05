@@ -19,9 +19,9 @@ export class HitService {
     getHits(filter: HitFiltersDto) {
         return this.http.get<PagedList<HitDto>>(
             getBaseUrl() + '/hit/all', {
-                params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null))
-            }
+            params: <any>Object.fromEntries(
+                Object.entries(filter).filter(([_, v]) => v != null))
+        }
         );
     }
 
@@ -51,23 +51,23 @@ export class HitService {
     downloadHits(filter: HitFiltersDto, format: string) {
         return this.http.get<Blob>(
             getBaseUrl() + '/hit/download/many', {
-                params: {
-                    format,
-                    ...<any>Object.fromEntries(
-                        Object.entries(filter).filter(([_, v]) => v != null))
-                },
-                responseType: 'blob' as 'json',
-                observe: 'response'
-            }
+            params: {
+                format,
+                ...<any>Object.fromEntries(
+                    Object.entries(filter).filter(([_, v]) => v != null))
+            },
+            responseType: 'blob' as 'json',
+            observe: 'response'
+        }
         );
     }
 
     deleteHits(filter: HitFiltersDto) {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/hit/many', {
-                params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null))
-            }
+            params: <any>Object.fromEntries(
+                Object.entries(filter).filter(([_, v]) => v != null))
+        }
         );
     }
 

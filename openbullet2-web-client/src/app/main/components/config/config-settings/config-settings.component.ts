@@ -36,7 +36,7 @@ export class ConfigSettingsComponent implements OnInit {
     'containsAny',
     'startsWith',
     'endsWith',
-];
+  ];
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService) {

@@ -52,7 +52,7 @@ export class ImportProxiesFromFileComponent {
         });
         return;
       }
-      
+
       const lines = fileReader.result.toString().split(/[\r\n]+/);
 
       this.confirm.emit({
@@ -62,7 +62,7 @@ export class ImportProxiesFromFileComponent {
         proxies: lines
       });
     }
-    
+
     fileReader.readAsText(this.selectedFile);
   }
 

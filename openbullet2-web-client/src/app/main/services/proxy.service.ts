@@ -24,9 +24,9 @@ export class ProxyService {
     getProxies(filter: ProxyFiltersDto) {
         return this.http.get<PagedList<ProxyDto>>(
             getBaseUrl() + '/proxy/all', {
-                params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null))
-            }
+            params: <any>Object.fromEntries(
+                Object.entries(filter).filter(([_, v]) => v != null))
+        }
         );
     }
 
@@ -53,31 +53,31 @@ export class ProxyService {
     downloadProxies(filter: ProxyFiltersDto) {
         return this.http.get<Blob>(
             getBaseUrl() + '/proxy/download/many', {
-                params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null)),
-                responseType: 'blob' as 'json',
-                observe: 'response'
-            }
+            params: <any>Object.fromEntries(
+                Object.entries(filter).filter(([_, v]) => v != null)),
+            responseType: 'blob' as 'json',
+            observe: 'response'
+        }
         );
     }
 
     deleteProxies(filter: ProxyFiltersDto) {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/proxy/many', {
-                params: <any>Object.fromEntries(
-                    Object.entries(filter).filter(([_, v]) => v != null))
-            }
+            params: <any>Object.fromEntries(
+                Object.entries(filter).filter(([_, v]) => v != null))
+        }
         );
     }
 
     deleteSlowProxies(proxyGroupId: number, maxPing: number) {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/proxy/slow', {
-                params: {
-                    proxyGroupId,
-                    maxPing
-                }
+            params: {
+                proxyGroupId,
+                maxPing
             }
+        }
         );
     }
 }

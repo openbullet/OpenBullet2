@@ -124,7 +124,7 @@ export class WordlistsComponent implements OnInit {
       });
   }
 
-  updateWordlistInfo(updated: UpdateWordlistInfoDto){
+  updateWordlistInfo(updated: UpdateWordlistInfoDto) {
     this.wordlistService.updateWordlistInfo(updated)
       .subscribe(resp => {
         this.messageService.add({
@@ -153,15 +153,15 @@ export class WordlistsComponent implements OnInit {
 
   deleteWordlist(wordlist: WordlistDto, alsoDeleteFile: boolean) {
     this.wordlistService.deleteWordlist(wordlist.id, alsoDeleteFile)
-    .subscribe(resp => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted',
-        detail: `Wordlist ${wordlist.name} was deleted` +
-          alsoDeleteFile ? ', along with its file' : ''
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: `Wordlist ${wordlist.name} was deleted` +
+            alsoDeleteFile ? ', along with its file' : ''
+        });
+        this.refreshWordlists();
       });
-      this.refreshWordlists();
-    });
   }
 
   confirmDeleteNotFound() {

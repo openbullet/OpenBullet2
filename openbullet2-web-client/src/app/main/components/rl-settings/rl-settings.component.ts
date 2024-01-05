@@ -17,7 +17,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     return !this.touched;
   }
 
-  fieldsValidity: { [key: string] : boolean; } = {};
+  fieldsValidity: { [key: string]: boolean; } = {};
   settings: RLSettingsDto | null = null;
   touched: boolean = false;
   faWrench = faWrench;
@@ -52,7 +52,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {}
+    private messageService: MessageService) { }
 
   canDeactivate() {
     if (!this.touched) {

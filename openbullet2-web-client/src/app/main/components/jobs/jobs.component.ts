@@ -90,7 +90,7 @@ export class JobsComponent implements OnInit, OnDestroy {
           }
         });
     }
-    
+
     if (!this.refreshingProxyCheckJobs) {
       this.refreshingProxyCheckJobs = true;
       this.jobService.getAllProxyCheckJobs()
@@ -135,14 +135,14 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
 
     this.jobService.abort(job.id)
-    .subscribe(resp => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Aborted',
-        detail: `Job #${job.id} was aborted`
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Aborted',
+          detail: `Job #${job.id} was aborted`
+        });
+        this.refreshJobs();
       });
-      this.refreshJobs();
-    });
   }
 
   startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
@@ -186,7 +186,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
 
     this.router.navigate(
-      [`/job/multi-run/edit`], 
+      [`/job/multi-run/edit`],
       { queryParams: { jobId: job.id } }
     );
   }
@@ -206,7 +206,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     }
 
     this.router.navigate(
-      [`/job/proxy-check/edit`], 
+      [`/job/proxy-check/edit`],
       { queryParams: { jobId: job.id } }
     );
   }
@@ -215,7 +215,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
 
     this.router.navigate(
-      [`/job/multi-run/clone` ], 
+      [`/job/multi-run/clone`],
       { queryParams: { jobId: job.id } }
     );
   }
@@ -224,7 +224,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
 
     this.router.navigate(
-      [`/job/proxy-check/clone` ], 
+      [`/job/proxy-check/clone`],
       { queryParams: { jobId: job.id } }
     );
   }

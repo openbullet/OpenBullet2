@@ -101,7 +101,7 @@ export class HitsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService) {
 
-    }
+  }
 
   ngOnInit(): void {
     this.settingsService.getEnvironmentSettings()
@@ -180,14 +180,14 @@ export class HitsComponent implements OnInit {
 
   deleteDuplicateHits() {
     this.hitService.deleteDuplicateHits()
-    .subscribe(resp => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted',
-        detail: `${resp.count} hits were deleted from the database`
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: `${resp.count} hits were deleted from the database`
+        });
+        this.refreshHits();
       });
-      this.refreshHits();
-    });
   }
 
   confirmPurgeHits() {
@@ -203,14 +203,14 @@ export class HitsComponent implements OnInit {
 
   purgeHits() {
     this.hitService.purgeHits()
-    .subscribe(resp => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted',
-        detail: `All ${resp.count} hits were deleted from the database`
+      .subscribe(resp => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted',
+          detail: `All ${resp.count} hits were deleted from the database`
+        });
+        this.refreshHits();
       });
-      this.refreshHits();
-    });
   }
 
   downloadHits(format: string) {
@@ -230,7 +230,7 @@ export class HitsComponent implements OnInit {
     } else if (type === 'NONE') {
       return '#7FFFD4';
     }
-    
+
     // Check if there is a custom status
     if (this.envSettings !== null) {
       const customStatus = this.envSettings.customStatuses
@@ -240,7 +240,7 @@ export class HitsComponent implements OnInit {
         return customStatus.color;
       }
     }
-    
+
     return 'darkorange';
   }
 

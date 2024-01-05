@@ -162,7 +162,7 @@ export class ConfigsComponent implements OnInit {
           case 'loliCode':
           case 'stack':
             return 'config/stacker';
-          
+
           case 'cSharp':
             return 'config/csharp';
 
@@ -179,7 +179,7 @@ export class ConfigsComponent implements OnInit {
           case 'loliCode':
           case 'stack':
             return 'config/lolicode';
-          
+
           case 'cSharp':
             return 'config/csharp';
 
@@ -199,7 +199,7 @@ export class ConfigsComponent implements OnInit {
           case 'stack':
           case 'cSharp':
             return 'config/csharp';
-          
+
           case 'legacy':
             return 'config/loliscript';
 

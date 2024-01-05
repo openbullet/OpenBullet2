@@ -10,7 +10,7 @@ import { BotsChangedMessage } from "../dtos/job/messages/bots-changed.dto";
 import { PCJTaskErrorMessage } from "../dtos/job/messages/proxy-check/task-error.dto";
 import { ErrorMessage } from "../dtos/common/messages.dto";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ProxyCheckJobHubService {
     private hubConnection: HubConnection | null = null;
 
@@ -41,15 +41,15 @@ export class ProxyCheckJobHubService {
 
     createHubConnection(jobId: number) {
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(getBaseHubUrl() + `/proxy-check-job?jobId=${jobId}`, {
-            accessTokenFactory: () => this.userService.getJwt() ?? ''
-        })
-        .withAutomaticReconnect()
-        .build();
+            .withUrl(getBaseHubUrl() + `/proxy-check-job?jobId=${jobId}`, {
+                accessTokenFactory: () => this.userService.getJwt() ?? ''
+            })
+            .withAutomaticReconnect()
+            .build();
 
         this.hubConnection
-        .start()
-        .catch(err => console.error(err));
+            .start()
+            .catch(err => console.error(err));
 
         this.hubConnection.on('newResult', result => {
             this.resultEmitter.emit(result);

@@ -88,7 +88,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     private jobService: JobService,
     private messageService: MessageService,
     private proxyCheckJobHubService: ProxyCheckJobHubService
-  ) { 
+  ) {
     activatedRoute.url.subscribe(url => {
       this.jobId = parseInt(url[2].path);
     });
@@ -107,75 +107,75 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
     this.proxyCheckJobHubService.createHubConnection(this.jobId);
     this.resultSubscription = this.proxyCheckJobHubService.result$
-    .subscribe(result => {
-      if (result !== null) {
-        this.onNewResult(result);
-      }
-    });
+      .subscribe(result => {
+        if (result !== null) {
+          this.onNewResult(result);
+        }
+      });
 
     this.tickSubscription = this.proxyCheckJobHubService.tick$
-    .subscribe(tick => {
-      if (tick !== null) {
-        this.tested = tick.tested;
-        this.working = tick.working;
-        this.notWorking = tick.notWorking;
-        this.cpm = tick.cpm;
-        this.elapsed = tick.elapsed;
-        this.remaining = tick.remaining;
-        this.progress = tick.progress;
-      }
-    });
+      .subscribe(tick => {
+        if (tick !== null) {
+          this.tested = tick.tested;
+          this.working = tick.working;
+          this.notWorking = tick.notWorking;
+          this.cpm = tick.cpm;
+          this.elapsed = tick.elapsed;
+          this.remaining = tick.remaining;
+          this.progress = tick.progress;
+        }
+      });
 
     this.statusSubscription = this.proxyCheckJobHubService.status$
-    .subscribe(status => {
-      if (status !== null) {
-        this.onStatusChanged(status.newStatus);
-      }
-    });
+      .subscribe(status => {
+        if (status !== null) {
+          this.onStatusChanged(status.newStatus);
+        }
+      });
 
     this.botsSubscription = this.proxyCheckJobHubService.bots$
-    .subscribe(bots => {
-      if (bots !== null) {
-        this.onBotsChanged(bots.newValue);
-      }
-    });
+      .subscribe(bots => {
+        if (bots !== null) {
+          this.onBotsChanged(bots.newValue);
+        }
+      });
 
     this.taskErrorSubscription = this.proxyCheckJobHubService.taskError$
-    .subscribe(error => {
-      if (error !== null) {
-        const logMessage = `Task error for proxy ${error.proxyHost}:${error.proxyPort}: ${error.errorMessage}`;
+      .subscribe(error => {
+        if (error !== null) {
+          const logMessage = `Task error for proxy ${error.proxyHost}:${error.proxyPort}: ${error.errorMessage}`;
 
-        this.writeLog({
-          timestamp: new Date(),
-          message: logMessage,
-          color: 'var(--fg-error)'
-        });
-      }
-    });
+          this.writeLog({
+            timestamp: new Date(),
+            message: logMessage,
+            color: 'var(--fg-error)'
+          });
+        }
+      });
 
     this.errorSubscription = this.proxyCheckJobHubService.error$
-    .subscribe(error => {
-      if (error !== null) {
-        this.messageService.add({
-          severity: 'error',
-          summary: `Error - ${error.type}`,
-          detail: error.message
-        });
-      }
-    });
+      .subscribe(error => {
+        if (error !== null) {
+          this.messageService.add({
+            severity: 'error',
+            summary: `Error - ${error.type}`,
+            detail: error.message
+          });
+        }
+      });
 
     this.completedSubscription = this.proxyCheckJobHubService.completed$
-    .subscribe(completed => {
-      if (completed) {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Completed',
-          detail: 'Job completed'
-        });
+      .subscribe(completed => {
+        if (completed) {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Completed',
+            detail: 'Job completed'
+          });
 
-        this.getJobData();
-      }
-    });
+          this.getJobData();
+        }
+      });
 
     this.getJobData();
 
@@ -267,7 +267,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   editSettings() {
     this.router.navigate(
-      [`/job/proxy-check/edit`], 
+      [`/job/proxy-check/edit`],
       { queryParams: { jobId: this.jobId } }
     );
   }

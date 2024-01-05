@@ -60,7 +60,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   private debuggerHubService = new ConfigDebuggerHubService(this.userService);
 
-  constructor (private debuggerSettingsService: ConfigDebuggerSettingsService,
+  constructor(private debuggerSettingsService: ConfigDebuggerSettingsService,
     private configService: ConfigService,
     private messageService: MessageService,
     private truncatePipe: TruncatePipe,
@@ -79,18 +79,18 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
     // When the state arrives, set current variables
     this.stateSubscription = this.debuggerHubService.state$
-    .subscribe(msg => {
-      if (msg === null || msg === undefined) {
-        return;
-      }
-      
-      this.logs = msg.log;
-      this.variables = msg.variables;
-      this.status = msg.status;
+      .subscribe(msg => {
+        if (msg === null || msg === undefined) {
+          return;
+        }
 
-      console.log('Debugger state loaded');
-      this.onNewState();
-    });
+        this.logs = msg.log;
+        this.variables = msg.variables;
+        this.status = msg.status;
+
+        console.log('Debugger state loaded');
+        this.onNewState();
+      });
   }
 
   ngOnDestroy(): void {
@@ -109,54 +109,54 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     // TODO: Handle the case where other messages arrive before
     // the state message
     this.logsSubscription = this.debuggerHubService.logs$
-    .subscribe(msg => {
-      if (msg === null || msg === undefined) {
-        return;
-      }
-      
-      this.logs = [...this.logs, msg.newMessage];
-      this.scrollToBottom();
-    });
+      .subscribe(msg => {
+        if (msg === null || msg === undefined) {
+          return;
+        }
 
-    this.variablesSubscription = this.debuggerHubService.variables$
-    .subscribe(msg => {
-      if (msg === null || msg === undefined) {
-        return;
-      }
-
-      this.variables = msg.variables;
-    });
-
-    this.statusSubscription = this.debuggerHubService.status$
-    .subscribe(msg => {
-      if (msg === null || msg === undefined) {
-        return;
-      }
-      
-      this.status = msg.newStatus;
-
-      // Needed because otherwise the scroll is so fast that
-      // it happens before the new element is actually rendered
-      // to the page.
-      setTimeout(() => {
+        this.logs = [...this.logs, msg.newMessage];
         this.scrollToBottom();
-      }, 200);
-    });
-
-    this.errorSubscription = this.debuggerHubService.error$
-    .subscribe(msg => {
-      if (msg === null || msg === undefined) {
-        return;
-      }
-
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Debugger Error',
-        detail: this.truncatePipe.transform(msg.message, 100)
       });
 
-      this.scrollToBottom();
-    });
+    this.variablesSubscription = this.debuggerHubService.variables$
+      .subscribe(msg => {
+        if (msg === null || msg === undefined) {
+          return;
+        }
+
+        this.variables = msg.variables;
+      });
+
+    this.statusSubscription = this.debuggerHubService.status$
+      .subscribe(msg => {
+        if (msg === null || msg === undefined) {
+          return;
+        }
+
+        this.status = msg.newStatus;
+
+        // Needed because otherwise the scroll is so fast that
+        // it happens before the new element is actually rendered
+        // to the page.
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 200);
+      });
+
+    this.errorSubscription = this.debuggerHubService.error$
+      .subscribe(msg => {
+        if (msg === null || msg === undefined) {
+          return;
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Debugger Error',
+          detail: this.truncatePipe.transform(msg.message, 100)
+        });
+
+        this.scrollToBottom();
+      });
   }
 
   start() {
@@ -167,10 +167,10 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     // Save the config on the backend but without persisting the changes.
     // We need this in order to properly debug any new changes
     this.configService.saveConfig(this.config, false)
-    .subscribe(_ => {
-      // Then, send the start message to the debugger
-      this.debuggerHubService.start(this.settings!);
-    });
+      .subscribe(_ => {
+        // Then, send the start message to the debugger
+        this.debuggerHubService.start(this.settings!);
+      });
   }
 
   stop() {

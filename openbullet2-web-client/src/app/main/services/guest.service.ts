@@ -35,7 +35,7 @@ export class GuestService {
     updateGuestPassword(updated: UpdateGuestPasswordDto) {
         return this.http.patch<GuestDto>(
             getBaseUrl() + '/guest/password', updated
-        );   
+        );
     }
 
     deleteGuest(id: number) {

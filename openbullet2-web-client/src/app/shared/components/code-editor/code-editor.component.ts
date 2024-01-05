@@ -21,7 +21,7 @@ export class LolicodeEditorComponent implements OnInit {
 
   @ViewChild('editor')
   editor: EditorComponent | undefined = undefined;
-  
+
   ngOnInit(): void {
     this.editorOptions = {
       theme: 'vs-lolicode',

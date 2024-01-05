@@ -183,7 +183,7 @@ export class TimeSpan {
     }
 }
 
-TimeSpan.prototype.toString = function() {
+TimeSpan.prototype.toString = function () {
     const daysPrefix = this.days > 0 ? `${this.days}.` : '';
     const hours = String(this.hours).padStart(2, '0');
     const minutes = String(this.minutes).padStart(2, '0');

@@ -6,10 +6,10 @@ import { ErrorMessage } from "../dtos/common/messages.dto";
 import { ConfigDebuggerSettings } from "../models/config-debugger-settings";
 import { UserService } from "./user.service";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ConfigDebuggerHubService {
     private hubConnection: HubConnection | null = null;
-    
+
     private logsEmitter = new EventEmitter<DbgNewLogMessage | null>();
     public logs$ = this.logsEmitter.asObservable();
 
@@ -31,11 +31,11 @@ export class ConfigDebuggerHubService {
 
     createHubConnection(configId: string) {
         this.hubConnection = new HubConnectionBuilder()
-        .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${configId}`, {
-            accessTokenFactory: () => this.userService.getJwt() ?? ''
-        })
-        .withAutomaticReconnect()
-        .build();
+            .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${configId}`, {
+                accessTokenFactory: () => this.userService.getJwt() ?? ''
+            })
+            .withAutomaticReconnect()
+            .build();
 
         this.hubConnection.on('newLogEntry', msg => {
             this.logsEmitter.emit(msg)
@@ -58,18 +58,18 @@ export class ConfigDebuggerHubService {
         });
 
         return this.hubConnection
-        .start()
-        .catch(err => console.error(err));
+            .start()
+            .catch(err => console.error(err));
     }
 
     stopHubConnection() {
         this.hubConnection
-        ?.stop()
-        .catch(err => console.error(err));
+            ?.stop()
+            .catch(err => console.error(err));
     }
 
     async start(settings: ConfigDebuggerSettings) {
-        return this.hubConnection?.invoke('start', { 
+        return this.hubConnection?.invoke('start', {
             testData: settings.testData,
             wordlistType: settings.wordlistType,
             useProxy: settings.useProxy,
@@ -78,21 +78,21 @@ export class ConfigDebuggerHubService {
             persistLog: settings.persistLog,
             stepByStep: settings.stepByStep
         })
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
     }
 
     async stop() {
         return this.hubConnection?.invoke('stop')
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
     }
 
     async takeStep() {
         return this.hubConnection?.invoke('takeStep')
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
     }
 
     async getState() {
         return this.hubConnection?.invoke('getState')
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
     }
 }

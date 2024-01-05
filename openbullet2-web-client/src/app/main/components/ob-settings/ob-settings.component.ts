@@ -24,7 +24,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   faLink = faLink;
   faUpRightFromSquare = faUpRightFromSquare;
   faWrench = faWrench;
-  
+
   // Modals
   createProxyCheckTargetModalVisible = false;
   updateProxyCheckTargetModalVisible = false;
@@ -35,7 +35,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   updateRemoteConfigsEndpointModalVisible = false;
   addThemeModalVisible = false;
 
-  fieldsValidity: { [key: string] : boolean; } = {};
+  fieldsValidity: { [key: string]: boolean; } = {};
   settings: OBSettingsDto | null = null;
   themes: string[] | null = null;
   touched: boolean = false;
@@ -58,7 +58,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {}
+    private messageService: MessageService) { }
 
   canDeactivate() {
     if (!this.touched) {
@@ -82,7 +82,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
       });
     });
   }
-  
+
   ngOnInit(): void {
     this.getSettings();
     this.getThemes();

@@ -14,7 +14,6 @@ import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxi
 import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxies-from-text/import-proxies-from-text.component';
 import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './import-proxies-from-remote/import-proxies-from-remote.component';
 import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
-import { HttpResponse } from '@angular/common/http';
 import { saveFile } from 'src/app/shared/utils/files';
 
 @Component({
@@ -23,7 +22,7 @@ import { saveFile } from 'src/app/shared/utils/files';
   styleUrls: ['./proxies.component.scss']
 })
 export class ProxiesComponent implements OnInit {
-  @ViewChild('importProxiesFromTextComponent') 
+  @ViewChild('importProxiesFromTextComponent')
   importProxiesFromTextComponent: ImportProxiesFromTextComponent | undefined;
 
   @ViewChild('importProxiesFromFileComponent')
@@ -335,13 +334,13 @@ export class ProxiesComponent implements OnInit {
 
   deleteProxies(proxyGroup: ProxyGroupDto, filters: ProxyFiltersDto) {
     this.proxyService.deleteProxies(filters).subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `${resp.count} proxies were deleted from proxy group ${proxyGroup.name}`
-        });
-        this.refreshProxies();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `${resp.count} proxies were deleted from proxy group ${proxyGroup.name}`
       });
+      this.refreshProxies();
+    });
   }
 
   deleteFilteredProxies() {

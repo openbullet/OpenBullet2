@@ -20,8 +20,8 @@ export class ChangeAdminPasswordComponent {
     this.confirm.emit(this.password);
   }
 
-  isFormValid() {    
-    return this.password.length >= 8 && 
+  isFormValid() {
+    return this.password.length >= 8 &&
       this.password === this.confirmPassword;
   }
 }
