@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { faPen, faTags, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { EditConfigImageComponent } from '../edit-config-image/edit-config-image.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-config-metadata',
@@ -13,13 +14,31 @@ export class ConfigMetadataComponent {
   @ViewChild('editConfigImageComponent')
   editConfigImageComponent: EditConfigImageComponent | undefined = undefined;
 
+  // Listen for CTRL+S on the page
+  @HostListener('document:keydown.control.s', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    event.preventDefault();
+
+    if (this.config !== null) {
+      this.configService.saveConfig(this.config, true)
+        .subscribe(c => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Saved',
+            detail: `${c.metadata.name} was saved`
+          });
+        });
+    }
+  }
+
   config: ConfigDto | null = null;
   faTriangleExclamation = faTriangleExclamation;
   faPen = faPen;
   faTags = faTags;
   editImageModalVisible = false;
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService,
+    private messageService: MessageService) {
     this.configService.selectedConfig$
       .subscribe(config => this.config = config);
   }

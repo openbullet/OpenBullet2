@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { faArrowDown, faArrowUp, faBan, faClone, faGripLines, faPlus, faRotateLeft, faSearch, faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
@@ -8,6 +8,7 @@ import { ConfigService } from 'src/app/main/services/config.service';
 import { AddBlockComponent } from './add-block/add-block.component';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { MessageService } from 'primeng/api';
 
 interface DeletedBlock {
   block: BlockInstanceTypes;
@@ -20,6 +21,23 @@ interface DeletedBlock {
   styleUrls: ['./config-stacker.component.scss']
 })
 export class ConfigStackerComponent implements OnInit {
+  // Listen for CTRL+S on the page
+  @HostListener('document:keydown.control.s', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    event.preventDefault();
+
+    if (this.config !== null) {
+      this.configService.saveConfig(this.config, true)
+        .subscribe(c => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Saved',
+            detail: `${c.metadata.name} was saved`
+          });
+        });
+    }
+  }
+
   envSettings: EnvironmentSettingsDto | null = null;
   config: ConfigDto | null = null;
   stack: BlockInstanceTypes[] | null = null;
@@ -63,7 +81,8 @@ export class ConfigStackerComponent implements OnInit {
   faTriangleExclamation = faTriangleExclamation;
 
   constructor(private configService: ConfigService,
-    private settingsService: SettingsService) {
+    private settingsService: SettingsService,
+    private messageService: MessageService) {
     this.configService.selectedConfig$
       .subscribe(config => this.config = config);
   }

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
@@ -11,6 +12,23 @@ import { SettingsService } from 'src/app/main/services/settings.service';
   styleUrls: ['./config-settings.component.scss']
 })
 export class ConfigSettingsComponent implements OnInit {
+  // Listen for CTRL+S on the page
+  @HostListener('document:keydown.control.s', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    event.preventDefault();
+
+    if (this.config !== null) {
+      this.configService.saveConfig(this.config, true)
+        .subscribe(c => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Saved',
+            detail: `${c.metadata.name} was saved`
+          });
+        });
+    }
+  }
+
   envSettings: EnvironmentSettingsDto | null = null;
   config: ConfigDto | null = null;
   faTriangleExclamation = faTriangleExclamation;
@@ -39,7 +57,8 @@ export class ConfigSettingsComponent implements OnInit {
   ];
 
   constructor(private configService: ConfigService,
-    private settingsService: SettingsService) {
+    private settingsService: SettingsService,
+    private messageService: MessageService) {
     this.configService.selectedConfig$
       .subscribe(config => this.config = config);
   }
