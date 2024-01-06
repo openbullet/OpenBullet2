@@ -94,6 +94,9 @@ import { HitLogComponent } from './components/jobs/multi-run-job/hit-log/hit-log
 import { ConfigStackerComponent } from './components/config/config-stacker/config-stacker.component';
 import { AddBlockComponent } from './components/config/config-stacker/add-block/add-block.component';
 import { BlockInfoComponent } from './components/config/config-stacker/block-info/block-info.component';
+import { BoolSettingComponent } from './components/config/config-stacker/block-info/bool-setting/bool-setting.component';
+import { SettingInputModeComponent } from './components/config/config-stacker/block-info/setting-input-mode/setting-input-mode.component';
+import { SettingInputVariableComponent } from './components/config/config-stacker/block-info/setting-input-variable/setting-input-variable.component';
 
 @NgModule({
   declarations: [
@@ -165,7 +168,10 @@ import { BlockInfoComponent } from './components/config/config-stacker/block-inf
     HitLogComponent,
     ConfigStackerComponent,
     AddBlockComponent,
-    BlockInfoComponent
+    BlockInfoComponent,
+    BoolSettingComponent,
+    SettingInputModeComponent,
+    SettingInputVariableComponent
   ],
   imports: [
     CommonModule,

@@ -3,6 +3,7 @@
 <div *ngIf="filteredConfigs != null">
     <div class="config-search-box">
         <input id="searchTerm" type="text" pInputText
+            spellcheck="false"
             class="config-search-input"
             [(ngModel)]="searchTerm"
             (keydown)="searchBoxKeyDown($event)"

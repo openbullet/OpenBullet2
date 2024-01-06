@@ -1,0 +1,5 @@
+<app-input-text [key]="setting.name + '-variable'"
+    class="input-small w-100 input-variable"
+    ngDefaultControl
+    (validityChange)="valueChanged()"
+    [(ngModel)]="setting.inputVariableName" />

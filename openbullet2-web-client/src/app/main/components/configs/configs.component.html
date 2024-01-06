@@ -39,6 +39,7 @@
                     </button>
                     <span class="p-input-icon-left ml-auto" *ngIf="displayMode === 'table'">
                         <input pInputText type="text"
+                            spellcheck="false"
                             class="ml-2"
                             [style]="{ height: '33px' }"
                             (input)="configDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />

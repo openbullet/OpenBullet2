@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BlockDescriptorDto } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
+import { BlockInstanceType, BlockInstanceTypes, BlockSettingType } from 'src/app/main/dtos/config/block-instance.dto';
 
 @Component({
   selector: 'app-block-info',
@@ -12,8 +12,13 @@ export class BlockInfoComponent {
   @Input() descriptor!: BlockDescriptorDto;
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 
+  Object = Object;
+  BlockSettingType = BlockSettingType;
+  BlockInstanceType = BlockInstanceType;
+
   valueChanged() {
     this.onChange.emit();
-    console.log('changed');
   }
+
+
 }

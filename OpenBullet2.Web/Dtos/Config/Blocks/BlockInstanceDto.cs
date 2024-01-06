@@ -24,4 +24,9 @@ public class BlockInstanceDto
     /// The values of the settings of the block.
     /// </summary>
     public Dictionary<string, BlockSettingDto> Settings { get; set; } = new();
+
+    /// <summary>
+    /// The type of block instance.
+    /// </summary>
+    public BlockInstanceType Type { get; set; } = BlockInstanceType.Auto;
 }

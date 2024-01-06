@@ -4,7 +4,7 @@ import { FieldValidity } from '../../utils/forms';
 @Component({
   selector: 'app-input-text',
   templateUrl: './input-text.component.html',
-  styleUrls: ['./input-text.component.scss']
+  styleUrls: ['./input-text.component.scss'],
 })
 export class InputTextComponent {
   @Input() id: string | null = null;

@@ -45,7 +45,9 @@
                     <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
                 </button>
                 <span class="p-input-icon-left ml-auto">
-                    <input pInputText type="text" (input)="guestsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    <input pInputText type="text"
+                        spellcheck="false"
+                        (input)="guestsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
                 </span>
             </div>
         </ng-template>

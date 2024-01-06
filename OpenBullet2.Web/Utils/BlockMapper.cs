@@ -279,12 +279,9 @@ static internal class BlockMapper
             return setting;
         }
 
+        setting.InputMode = dto.InputMode;
+        setting.InputVariableName = dto.InputVariableName;
         var value = (JsonElement)dto.Value!;
-
-        if (dto.InputMode is SettingInputMode.Variable)
-        {
-            setting.InputVariableName = value.GetString();
-        }
 
         switch (dto.Type)
         {

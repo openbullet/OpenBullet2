@@ -12,8 +12,18 @@ export enum BlockSettingType {
     Enum = 'enum',
 }
 
+export enum BlockInstanceType {
+    Auto = 'auto',
+    HttpRequest = 'httpRequest',
+    Keycheck = 'keycheck',
+    Script = 'script',
+    Parse = 'parse',
+    LoliCode = 'loliCode',
+}
+
 export interface BlockSettingDto {
     name: string;
+    inputVariableName: string | null;
     value: any;
     inputMode: SettingInputMode;
     type: BlockSettingType;
@@ -24,6 +34,7 @@ export interface BlockInstanceDto {
     disabled: boolean;
     label: string;
     settings: { [key: string]: BlockSettingDto };
+    type: BlockInstanceType;
 }
 
 export interface AutoBlockInstanceDto extends BlockInstanceDto {

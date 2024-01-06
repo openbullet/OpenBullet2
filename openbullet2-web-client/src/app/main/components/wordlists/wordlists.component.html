@@ -24,6 +24,7 @@
                 </button>
                 <span class="p-input-icon-left ml-auto">
                     <input pInputText type="text"
+                        spellcheck="false"
                         class="ml-2"
                         [style]="{ height: '33px' }"
                         (input)="wordlistsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />

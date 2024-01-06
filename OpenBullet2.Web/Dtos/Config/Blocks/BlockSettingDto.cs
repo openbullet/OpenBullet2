@@ -19,6 +19,12 @@ public class BlockSettingDto
     public object? Value { get; set; }
 
     /// <summary>
+    /// The input variable name, only used if the input mode
+    /// is <see cref="SettingInputMode.Variable"/>.
+    /// </summary>
+    public string? InputVariableName { get; set; }
+
+    /// <summary>
     /// The input mode of this setting.
     /// </summary>
     public SettingInputMode InputMode { get; set; }

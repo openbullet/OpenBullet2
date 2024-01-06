@@ -27,7 +27,7 @@
     </div>
 
     <!-- From now on, other settings depend on the type of block -->
-    <ng-container *ngIf="block instanceof AutoBlockInstanceDto">
+    <ng-container *ngIf="block.type === BlockInstanceType.Auto">
         <div class="row mt-2">
             <p-checkbox inputId="safeMode"
                 class="text-small"
@@ -40,7 +40,7 @@
         </div>
         <div class="row mt-2" *ngIf="descriptor.returnType !== null">
             <div class="mb-1">
-                <span class="text-small">Output variable name</span>
+                <span class="text-small">Output variable ({{descriptor.returnType | pascalcase}})</span>
             </div>
             <app-input-text key="outputVariableName"
                 class="input-small w-100"
@@ -58,6 +58,26 @@
                 [binary]="true"
                 pTooltip="If checked, the output variable will be marked for capture"
                 label="Is Capture" />
+        </div>
+        <div class="row mt-3" *ngIf="Object.keys(block.settings).length > 0">
+            <div class="color-accent-light text-small">
+                PARAMETERS
+            </div>
+        </div>
+        <div class="row mt-2" *ngFor="let setting of Object.values(block.settings)">
+            <div class="col-12 px-0">
+                <div class="mb-1">
+                    <span class="text-small">
+                        {{setting.name | pascalcase}}
+                    </span>
+                    <app-bool-setting
+                        *ngIf="setting.type === BlockSettingType.Bool"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()">
+                    </app-bool-setting>
+                </div>
+            </div>
         </div>
     </ng-container>
 </div>

@@ -335,6 +335,7 @@ internal class AutoMapperProfile : Profile
 
         // Blocks
         CreateMap<BlockInstance, BlockInstanceDto>()
+            .ForMember(dto => dto.Type, e => e.MapFrom(s => GetBlockInstanceType(s)))
             .IncludeAllDerived();
 
         CreateMap<AutoBlockInstance, AutoBlockInstanceDto>();
@@ -386,12 +387,7 @@ internal class AutoMapperProfile : Profile
 
     private static object MapBlockSettingValue(BlockSetting setting)
     {
-        if (setting.InputMode is SettingInputMode.Variable)
-        {
-            return setting.InputVariableName;
-        }
-
-        else if (setting.InputMode is SettingInputMode.Interpolated)
+        if (setting.InputMode is SettingInputMode.Interpolated)
         {
             return setting.InterpolatedSetting switch
             {
@@ -418,12 +414,7 @@ internal class AutoMapperProfile : Profile
 
     private static BlockSettingType MapBlockSettingType(BlockSetting setting)
     {
-        if (setting.InputMode is SettingInputMode.Variable)
-        {
-            return BlockSettingType.None;
-        }
-
-        else if (setting.InputMode is SettingInputMode.Interpolated)
+        if (setting.InputMode is SettingInputMode.Interpolated)
         {
             return setting.InterpolatedSetting switch
             {
@@ -467,4 +458,16 @@ internal class AutoMapperProfile : Profile
             dto.RandomLinesFromFile));
         return resources;
     }
+    
+    private static BlockInstanceType GetBlockInstanceType(BlockInstance instance) =>
+        instance switch
+        {
+            AutoBlockInstance => BlockInstanceType.Auto,
+            ParseBlockInstance => BlockInstanceType.Parse,
+            ScriptBlockInstance => BlockInstanceType.Script,
+            KeycheckBlockInstance => BlockInstanceType.Keycheck,
+            LoliCodeBlockInstance => BlockInstanceType.LoliCode,
+            HttpRequestBlockInstance => BlockInstanceType.HttpRequest,
+            _ => throw new NotImplementedException()
+        };
 }

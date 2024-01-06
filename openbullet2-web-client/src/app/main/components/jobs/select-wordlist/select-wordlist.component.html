@@ -3,6 +3,7 @@
 <div *ngIf="filteredWordlists != null">
     <div class="wordlist-search-box">
         <input id="searchTerm" type="text" pInputText
+            spellcheck="false"
             class="wordlist-search-input"
             [(ngModel)]="searchTerm"
             (keydown)="searchBoxKeyDown($event)"

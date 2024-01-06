@@ -57,6 +57,7 @@
     <div class="row my-3">
         <div class="col-8 pl-0">
             <input id="searchTerm" type="text" pInputText
+                spellcheck="false"
                 class="mr-2"
                 [(ngModel)]="searchTerm"
                 (keydown)="searchBoxKeyDown($event)"
