@@ -74,8 +74,22 @@
                         *ngIf="setting.type === BlockSettingType.Bool"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
-                        (onChange)="valueChanged()">
-                    </app-bool-setting>
+                        (onChange)="valueChanged()" />
+                    <app-int-setting
+                        *ngIf="setting.type === BlockSettingType.Int"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()" />
+                    <app-float-setting
+                        *ngIf="setting.type === BlockSettingType.Float"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()" />
+                    <app-string-setting
+                        *ngIf="setting.type === BlockSettingType.String"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()" />
                 </div>
             </div>
         </div>

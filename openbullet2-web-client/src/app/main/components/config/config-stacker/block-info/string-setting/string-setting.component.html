@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-between w-100">
+    <app-input-text [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        class="input-small w-100"
+        ngDefaultControl
+        (ngModelChange)="valueChanged()"
+        [(ngModel)]="setting.value"
+        pTooltip="{{parameter.description}}" />
+    <app-input-text [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Interpolated"
+        class="input-small w-100 interpolated"
+        ngDefaultControl
+        (ngModelChange)="valueChanged()"
+        [(ngModel)]="setting.value"
+        pTooltip="{{parameter.description}}" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[
+            SettingInputMode.Fixed,
+            SettingInputMode.Interpolated,
+            SettingInputMode.Variable
+        ]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>

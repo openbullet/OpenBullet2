@@ -97,6 +97,13 @@ import { BlockInfoComponent } from './components/config/config-stacker/block-inf
 import { BoolSettingComponent } from './components/config/config-stacker/block-info/bool-setting/bool-setting.component';
 import { SettingInputModeComponent } from './components/config/config-stacker/block-info/setting-input-mode/setting-input-mode.component';
 import { SettingInputVariableComponent } from './components/config/config-stacker/block-info/setting-input-variable/setting-input-variable.component';
+import { StringSettingComponent } from './components/config/config-stacker/block-info/string-setting/string-setting.component';
+import { IntSettingComponent } from './components/config/config-stacker/block-info/int-setting/int-setting.component';
+import { FloatSettingComponent } from './components/config/config-stacker/block-info/float-setting/float-setting.component';
+import { EnumSettingComponent } from './components/config/config-stacker/block-info/enum-setting/enum-setting.component';
+import { ByteArraySettingComponent } from './components/config/config-stacker/block-info/byte-array-setting/byte-array-setting.component';
+import { ListOfStringsSettingComponent } from './components/config/config-stacker/block-info/list-of-strings-setting/list-of-strings-setting.component';
+import { DictionaryOfStringsSettingComponent } from './components/config/config-stacker/block-info/dictionary-of-strings-setting/dictionary-of-strings-setting.component';
 
 @NgModule({
   declarations: [
@@ -171,7 +178,14 @@ import { SettingInputVariableComponent } from './components/config/config-stacke
     BlockInfoComponent,
     BoolSettingComponent,
     SettingInputModeComponent,
-    SettingInputVariableComponent
+    SettingInputVariableComponent,
+    StringSettingComponent,
+    IntSettingComponent,
+    FloatSettingComponent,
+    EnumSettingComponent,
+    ByteArraySettingComponent,
+    ListOfStringsSettingComponent,
+    DictionaryOfStringsSettingComponent
   ],
   imports: [
     CommonModule,
