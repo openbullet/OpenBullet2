@@ -68,7 +68,7 @@
             <div class="col-12 px-0">
                 <div class="mb-1">
                     <span class="text-small">
-                        {{setting.name | pascalcase}}
+                        {{setting.name | pascalcase}} {{setting.type === BlockSettingType.ByteArray ? '(Base 64)' : ''}}
                     </span>
                     <app-bool-setting
                         *ngIf="setting.type === BlockSettingType.Bool"
@@ -92,6 +92,11 @@
                         (onChange)="valueChanged()" />
                     <app-enum-setting
                         *ngIf="setting.type === BlockSettingType.Enum"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()" />
+                    <app-byte-array-setting
+                        *ngIf="setting.type === BlockSettingType.ByteArray"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
                         (onChange)="valueChanged()" />

@@ -400,14 +400,14 @@ internal class AutoMapperProfile : Profile
 
         return setting.FixedSetting switch
         {
-            StringSetting x => x.Value,
+            StringSetting x => x.Value ?? string.Empty,
             IntSetting x => x.Value,
             FloatSetting x => x.Value,
             BoolSetting x => x.Value,
-            ByteArraySetting x => x.Value,
+            ByteArraySetting x => x.Value ?? Array.Empty<byte>(),
             EnumSetting x => x.Value,
-            ListOfStringsSetting x => x.Value,
-            DictionaryOfStringsSetting x => x.Value,
+            ListOfStringsSetting x => x.Value ?? new List<string>(),
+            DictionaryOfStringsSetting x => x.Value ?? new Dictionary<string, string>(),
             _ => throw new NotImplementedException()
         };
     }
