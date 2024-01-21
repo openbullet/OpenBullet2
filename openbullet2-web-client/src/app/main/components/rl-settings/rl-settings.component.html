@@ -96,7 +96,7 @@
                 (touched)="touched = true" ngDefaultControl
                 (validityChange)="onValidityChange($event)"
                 [disabled]="!settings.generalSettings.useCustomUserAgentsList"
-                [(ngModel)]="settings.generalSettings.userAgents"
+                [(list)]="settings.generalSettings.userAgents"
                 placeholder="Mozilla/5.0 ..." />
         </div>
     </div>
@@ -134,7 +134,7 @@
                 class="d-block w-100 mt-2"
                 (touched)="touched = true" ngDefaultControl
                 (validityChange)="onValidityChange($event)"
-                [(ngModel)]="settings.proxySettings.globalBanKeys" />
+                [(list)]="settings.proxySettings.globalBanKeys" />
         </div>
     </div>
     <div class="row my-3">
@@ -144,7 +144,7 @@
                 class="d-block w-100 mt-2"
                 (touched)="touched = true" ngDefaultControl
                 (validityChange)="onValidityChange($event)"
-                [(ngModel)]="settings.proxySettings.globalRetryKeys" />
+                [(list)]="settings.proxySettings.globalRetryKeys" />
         </div>
     </div>
     <div class="row mt-5">

@@ -6,8 +6,8 @@ export enum BlockSettingType {
     Int = 'int',
     Float = 'float',
     String = 'string',
-    ListOfString = 'listOfString',
-    DictionaryOfString = 'dictionaryOfString',
+    ListOfStrings = 'listOfStrings',
+    DictionaryOfStrings = 'dictionaryOfStrings',
     ByteArray = 'byteArray',
     Enum = 'enum',
 }

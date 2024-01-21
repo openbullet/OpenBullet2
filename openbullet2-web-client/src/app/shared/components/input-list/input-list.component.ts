@@ -13,19 +13,24 @@ export class InputListComponent implements OnChanges {
   @Input() style: { [id: string]: any; } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder: string = '';
-  @Input() ngModel: string[] | null = null;
+
+  // IMPORTANT: I could not call this ngModel since it's using other
+  // ngModels inside it and THEY CONFLICT! Otherwise if the inner
+  // ngModel changes, its value would be set here too, effectively
+  // setting this value to a string instead of a string[]!
+  @Input() list: string[] | null = null;
   @Input() disabled: boolean = false;
 
   @Output() touched = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();
-  @Output() ngModelChange = new EventEmitter<string[]>();
+  @Output() listChange = new EventEmitter<string[]>();
 
   isValid = true;
   isTouched = false;
   value = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.value = this.ngModel === null ? '' : this.ngModel.join('\n');
+    this.value = this.list === null ? '' : this.list.join('\n');
   }
 
   // Notifies the subscribers that this input was touched
@@ -66,7 +71,7 @@ export class InputListComponent implements OnChanges {
     const valid = this.checkValidity(newValue);
 
     if (valid) {
-      this.ngModelChange.emit(
+      this.listChange.emit(
         newValue.split('\n').filter(v => v.trim() !== '')
       );
     }

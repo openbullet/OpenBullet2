@@ -19,6 +19,4 @@ export class BlockInfoComponent {
   valueChanged() {
     this.onChange.emit();
   }
-
-
 }

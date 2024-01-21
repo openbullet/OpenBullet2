@@ -100,6 +100,11 @@
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
                         (onChange)="valueChanged()" />
+                    <app-list-of-strings-setting
+                        *ngIf="setting.type === BlockSettingType.ListOfStrings"
+                        [parameter]="descriptor.parameters[setting.name]"
+                        [setting]="setting"
+                        (onChange)="valueChanged()" />
                 </div>
             </div>
         </div>

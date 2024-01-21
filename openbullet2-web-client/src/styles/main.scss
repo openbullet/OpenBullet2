@@ -236,10 +236,16 @@ label {
     margin-bottom: 0px !important;
 }
 
-.input-small {
+.input-small:not(textarea) {
     font-size: 14px;
     height: 25px;
     line-height: 10px;
+}
+
+textarea.input-small {
+    font-size: 14px;
+    height: 80px;
+    line-height: 20px;
 }
 
 .p-inputtext:has(.input-small) {

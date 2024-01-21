@@ -1,1 +1,31 @@
-<p>list-of-strings-setting works!</p>
+<div class="d-flex justify-content-between w-100">
+    <app-input-list [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        class="d-block w-100 input-small"
+        ngDefaultControl
+        (listChange)="setValue($event)"
+        [list]="setting.value"
+        pTooltip="{{parameter.description}}" />
+    <app-input-list [key]="setting.name"
+        *ngIf="setting.inputMode === SettingInputMode.Interpolated"
+        class="d-block w-100 interpolated"
+        ngDefaultControl
+        (listChange)="setValue($event)"
+        [list]="setting.value"
+        pTooltip="{{parameter.description}}" />
+    <app-setting-input-variable
+        *ngIf="setting.inputMode === SettingInputMode.Variable"
+        class="w-100"
+        [setting]="setting"
+        (onChange)="valueChanged()" />
+    <app-setting-input-mode
+        class="ml-1"
+        [mode]="setting.inputMode"
+        [allowedModes]="[
+            SettingInputMode.Fixed,
+            SettingInputMode.Interpolated,
+            SettingInputMode.Variable
+        ]"
+        (onChange)="changeMode($event)">
+    </app-setting-input-mode>
+</div>
