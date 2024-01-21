@@ -8,7 +8,7 @@
         pTooltip="{{parameter.description}}" />
     <app-input-list [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
-        class="d-block w-100 interpolated"
+        class="d-block w-100 input-small interpolated"
         ngDefaultControl
         (listChange)="setValue($event)"
         [list]="setting.value"

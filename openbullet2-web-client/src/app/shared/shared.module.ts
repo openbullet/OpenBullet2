@@ -19,6 +19,7 @@ import { MultipleSelectorComponent } from './components/multiple-selector/multip
 import { InputTimeSpanComponent } from './components/input-time-span/input-time-span.component';
 import { TimeSpanPipe } from './pipes/timespan.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
+import { InputDictionaryComponent } from './components/input-dictionary/input-dictionary.component';
 
 declare const monaco: any;
 
@@ -47,7 +48,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputListComponent,
     BooleanIconComponent,
     MultipleSelectorComponent,
-    InputTimeSpanComponent
+    InputTimeSpanComponent,
+    InputDictionaryComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +72,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
     LolicodeEditorComponent,
     BooleanIconComponent,
     MultipleSelectorComponent,
-    InputTimeSpanComponent
+    InputTimeSpanComponent,
+    InputDictionaryComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,12 @@
+<textarea 
+    type="text"
+    [id]="id"
+    [class]="computeClass()"
+    [style]="style"
+    (input)="valueChanging($event)"
+    [value]="value"
+    (change)="valueChanged($event)"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+    spellcheck="false"
+></textarea>
