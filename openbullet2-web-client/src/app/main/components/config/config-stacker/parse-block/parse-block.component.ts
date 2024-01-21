@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BlockDescriptorDto } from 'src/app/main/dtos/config/block-descriptor.dto';
+import { BlockDescriptorDto, VariableType } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { ParseBlockInstanceDto, ParseMode } from 'src/app/main/dtos/config/block-instance.dto';
 
 @Component({
@@ -14,6 +14,7 @@ export class ParseBlockComponent {
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 
   ParseMode = ParseMode;
+  VariableType = VariableType;
 
   valueChanged() {
     this.onChange.emit();

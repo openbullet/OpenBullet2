@@ -3,8 +3,8 @@ export enum VariableType {
     Int = 'int',
     Float = 'float',
     Bool = 'bool',
-    ListOfString = 'listOfStrings',
-    DictionaryOfString = 'dictionaryOfStrings',
+    ListOfStrings = 'listOfStrings',
+    DictionaryOfStrings = 'dictionaryOfStrings',
     ByteArray = 'byteArray',
 }
 
@@ -13,8 +13,8 @@ export enum ParamType {
     Int = 'intParam',
     Float = 'floatParam',
     String = 'stringParam',
-    ListOfString = 'listOfStringParam',
-    DictionaryOfString = 'dictionaryOfStringParam',
+    ListOfStrings = 'listOfStringsParam',
+    DictionaryOfStrings = 'dictionaryOfStringsParam',
     ByteArray = 'byteArrayParam',
     Enum = 'enumParam',
 }
@@ -61,13 +61,13 @@ export interface StringBlockParameterDto extends BlockParameterDto {
     defaultValue: string;
 }
 
-export interface ListOfStringBlockParameterDto extends BlockParameterDto {
-    _polyTypeName: ParamType.ListOfString;
+export interface ListOfStringsBlockParameterDto extends BlockParameterDto {
+    _polyTypeName: ParamType.ListOfStrings;
     defaultValue: string[];
 }
 
-export interface DictionaryOfStringBlockParameterDto extends BlockParameterDto {
-    _polyTypeName: ParamType.DictionaryOfString;
+export interface DictionaryOfStringsBlockParameterDto extends BlockParameterDto {
+    _polyTypeName: ParamType.DictionaryOfStrings;
     defaultValue: { [key: string]: string };
 }
 
@@ -88,8 +88,8 @@ export type BlockParameterTypes =
     IntBlockParameterDto |
     FloatBlockParameterDto |
     StringBlockParameterDto |
-    ListOfStringBlockParameterDto |
-    DictionaryOfStringBlockParameterDto |
+    ListOfStringsBlockParameterDto |
+    DictionaryOfStringsBlockParameterDto |
     ByteArrayBlockParameterDto |
     EnumBlockParameterDto;
 
