@@ -21,6 +21,14 @@ export enum BlockInstanceType {
     LoliCode = 'loliCode',
 }
 
+export enum ParseMode {
+    LR = 'lr',
+    CSS = 'css',
+    XPath = 'xPath',
+    Json = 'json',
+    Regex = 'regex',
+}
+
 export interface BlockSettingDto {
     name: string;
     inputVariableName: string | null;
@@ -34,14 +42,24 @@ export interface BlockInstanceDto {
     disabled: boolean;
     label: string;
     settings: { [key: string]: BlockSettingDto };
-    type: BlockInstanceType;
 }
 
 export interface AutoBlockInstanceDto extends BlockInstanceDto {
     outputVariable: string;
     isCapture: boolean;
     safe: boolean;
+    type: BlockInstanceType.Auto;
+}
+
+export interface ParseBlockInstanceDto extends BlockInstanceDto {
+    outputVariable: string;
+    recursive: boolean;
+    isCapture: boolean;
+    safe: boolean;
+    mode: ParseMode;
+    type: BlockInstanceType.Parse;
 }
 
 export type BlockInstanceTypes =
-    AutoBlockInstanceDto;
+    AutoBlockInstanceDto |
+    ParseBlockInstanceDto;

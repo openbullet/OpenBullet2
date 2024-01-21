@@ -104,6 +104,7 @@ import { EnumSettingComponent } from './components/config/config-stacker/block-i
 import { ByteArraySettingComponent } from './components/config/config-stacker/block-info/byte-array-setting/byte-array-setting.component';
 import { ListOfStringsSettingComponent } from './components/config/config-stacker/block-info/list-of-strings-setting/list-of-strings-setting.component';
 import { DictionaryOfStringsSettingComponent } from './components/config/config-stacker/block-info/dictionary-of-strings-setting/dictionary-of-strings-setting.component';
+import { ParseBlockComponent } from './components/config/config-stacker/parse-block/parse-block.component';
 
 @NgModule({
   declarations: [
@@ -185,7 +186,8 @@ import { DictionaryOfStringsSettingComponent } from './components/config/config-
     EnumSettingComponent,
     ByteArraySettingComponent,
     ListOfStringsSettingComponent,
-    DictionaryOfStringsSettingComponent
+    DictionaryOfStringsSettingComponent,
+    ParseBlockComponent
   ],
   imports: [
     CommonModule,

@@ -114,4 +114,10 @@
             </div>
         </div>
     </ng-container>
+    <ng-container *ngIf="block.type === BlockInstanceType.Parse">
+        <app-parse-block
+            [block]="block"
+            [descriptor]="descriptor"
+            (onChange)="valueChanged()" />
+    </ng-container>
 </div>
