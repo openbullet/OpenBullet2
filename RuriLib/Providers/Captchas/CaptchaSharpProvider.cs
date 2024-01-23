@@ -54,7 +54,7 @@ namespace RuriLib.Providers.Captchas
 
         public Task<StringResponse> SolveRecaptchaV2Async(string siteKey, string siteUrl, string sData = "",
             bool enterprise = false, bool invisible = false, Proxy proxy = null, CancellationToken cancellationToken = default)
-            => service.SolveRecaptchaV2Async(siteKey, siteUrl, invisible, proxy, cancellationToken);
+            => service.SolveRecaptchaV2Async(siteKey, siteUrl, sData, enterprise, invisible, proxy, cancellationToken);
 
         public Task<StringResponse> SolveRecaptchaV3Async(string siteKey, string siteUrl, string action, float minScore,
             bool enterprise = false, Proxy proxy = null, CancellationToken cancellationToken = default)

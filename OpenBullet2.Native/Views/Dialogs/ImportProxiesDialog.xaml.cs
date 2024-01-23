@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using OpenBullet2.Native.Extensions;
 using OpenBullet2.Native.Helpers;
 using OpenBullet2.Native.Views.Pages;
@@ -49,12 +49,12 @@ namespace OpenBullet2.Native.Views.Dialogs
                 {
                     // File
                     case 0:
-                        ReturnLines(await File.ReadAllTextAsync(locationTextbox.Text).ConfigureAwait(false));
+                        await ReturnLinesAsync(await File.ReadAllTextAsync(locationTextbox.Text).ConfigureAwait(false));
                         break;
 
                     // Paste
                     case 1:
-                        ReturnLines(proxiesBox.Text);
+                        await ReturnLinesAsync(proxiesBox.Text);
                         break;
 
                     // Remote
@@ -79,25 +79,27 @@ namespace OpenBullet2.Native.Views.Dialogs
 
             using var response = await client.SendAsync(request);
             var text = await response.Content.ReadAsStringAsync();
-            ReturnLines(text);
+            await ReturnLinesAsync(text);
         }
 
-        private void ReturnLines(string text)
+        private async Task ReturnLinesAsync(string text)
         {
             var lines = text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var dto = new DTOs.ProxiesForImportDto
-            {
+
+            var dto = await Dispatcher.InvokeAsync(() => new DTOs.ProxiesForImportDto {
                 Lines = lines,
                 DefaultType = proxyTypeCombobox.SelectedItem.AsEnum<ProxyType>(),
                 DefaultUsername = usernameTextbox.Text,
                 DefaultPassword = passwordTextbox.Text
-            };
+            });
+
 
             if (caller is Proxies page)
             {
                 page.AddProxies(dto);
             }
-            ((MainDialog)Parent).Close();
+
+            await Dispatcher.InvokeAsync(() => ((MainDialog)Parent).Close());
         }
 
         private void SelectFileMode(object sender, MouseButtonEventArgs e)
