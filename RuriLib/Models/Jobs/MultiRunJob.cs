@@ -74,7 +74,6 @@ namespace RuriLib.Models.Jobs
         private Dictionary<string, string> legacyGlobalCookies;
         private Dictionary<string, ConfigResource> resources;
         private HttpClient httpClient;
-        private AsyncLocker asyncLocker;
         private Timer proxyReloadTimer;
 
         // Instance properties and stats
@@ -136,7 +135,7 @@ namespace RuriLib.Models.Jobs
         public MultiRunJob(RuriLibSettingsService settings, PluginRepository pluginRepo, IJobLogger logger = null)
             : base(settings, pluginRepo, logger)
         {
-            
+
         }
 
         #region Work Function
@@ -227,28 +226,22 @@ namespace RuriLib.Models.Jobs
                         {
                             if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Reload)
                             {
-                                try
+                                using (await AsyncLocker.LockAsync(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
+                                        input.BotData.CancellationToken).ConfigureAwait(false))
                                 {
-                                    await input.BotData.AsyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync),
-                                        input.BotData.CancellationToken).ConfigureAwait(false);
-                                    
                                     botData.Proxy = input.ProxyPool.GetProxy(input.Job.ConcurrentProxyMode, input.BotData.ConfigSettings.ProxySettings.MaxUsesPerProxy);
-                                    
+
                                     if (botData.Proxy == null)
                                     {
                                         await input.ProxyPool.ReloadAllAsync(true, token).ConfigureAwait(false);
                                     }
-                                }
-                                finally
-                                {
-                                    input.BotData.AsyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                                 }
                             }
                             else if (input.Job.NoValidProxyBehaviour == NoValidProxyBehaviour.Unban)
                             {
                                 input.ProxyPool.UnbanAll(input.Job.ProxyBanTime);
                             }
-                            
+
                             goto GETPROXY;
                         }
                     }
@@ -274,7 +267,7 @@ namespace RuriLib.Models.Jobs
                         });
 
                         await task.ConfigureAwait(false);
-                        
+
                     }
                     // If it's a legacy config, run the LoliScript engine
                     else if (input.IsLegacy)
@@ -437,7 +430,7 @@ namespace RuriLib.Models.Jobs
                 }
 
                 // RETURN THE RESULT
-                return new CheckResult 
+                return new CheckResult
                 {
                     BotData = botData,
                     OutputVariables = outputVariables
@@ -457,8 +450,6 @@ namespace RuriLib.Models.Jobs
             {
                 Status = JobStatus.Starting;
                 OnStatusChanged?.Invoke(this, Status);
-
-                asyncLocker = new();
 
                 if (Config == null)
                     throw new NullReferenceException("The Config cannot be null");
@@ -482,14 +473,9 @@ namespace RuriLib.Models.Jobs
 
                     var proxyPoolOptions = new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
-                    try
+                    using (await AsyncLocker.LockAsync(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false))
                     {
-                        await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
                         await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
-                    }
-                    finally
-                    {
-                        asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                     }
 
                     if (!proxyPool.Proxies.Any())
@@ -621,7 +607,6 @@ namespace RuriLib.Models.Jobs
                     input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL;
                     input.BotData.SetObject("httpClient", httpClient); // Add the default HTTP client
                     input.BotData.SetObject("ironPyEngine", pyengine); // Add the IronPython engine
-                    input.BotData.AsyncLocker = asyncLocker;
 
                     return input;
                 });
@@ -725,16 +710,10 @@ namespace RuriLib.Models.Jobs
         #region Public Methods
         public async Task FetchProxiesFromSources(CancellationToken cancellationToken = default)
         {
-            try
+            using (await AsyncLocker.LockAsync(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false))
             {
-                await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken).ConfigureAwait(false);
                 await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
             }
-            finally
-            {
-                asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
-            }
-
         }
 
         #endregion
@@ -769,7 +748,7 @@ namespace RuriLib.Models.Jobs
             OnResult?.Invoke(this, result);
 
             if (!settings.RuriLibSettings.GeneralSettings.LogAllResults) return;
-            
+
             var data = result.Result.BotData;
             logger?.LogInfo(Id, $"[{data.STATUS}] {data.Line.Data} ({data.Proxy})");
         }
@@ -800,19 +779,10 @@ namespace RuriLib.Models.Jobs
                     // Unhandled exceptions will crash the process
                     if (proxyPool is not null)
                     {
-                        try
+                        using (await AsyncLocker.LockAsync(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
+                                .ConfigureAwait(false))
                         {
-                            await asyncLocker.Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), CancellationToken.None)
-                                .ConfigureAwait(false);
                             await proxyPool.ReloadAllAsync(ShuffleProxies).ConfigureAwait(false);
-                        }
-                        catch
-                        {
-                            // ignored
-                        }
-                        finally
-                        {
-                            asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                         }
                     }
                 }), null, (int)PeriodicReloadInterval.TotalMilliseconds, (int)PeriodicReloadInterval.TotalMilliseconds);
@@ -890,8 +860,8 @@ namespace RuriLib.Models.Jobs
             var hit = new Hit()
             {
                 Data = botData.Line,
-                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL 
-                    ? botData.Logger 
+                BotLogger = settings.RuriLibSettings.GeneralSettings.EnableBotLogging && Config.Mode != ConfigMode.DLL
+                    ? botData.Logger
                     : null,
                 Type = botData.STATUS,
                 DataPool = DataPool,
@@ -968,20 +938,6 @@ namespace RuriLib.Models.Jobs
 
                 }
             }
-
-            if (asyncLocker is not null)
-            {
-                try
-                {
-                    asyncLocker.Dispose();
-                }
-                catch
-                {
-
-                }
-            }
-
-            proxyPool?.Dispose();
 
             if (ProxySources is not null)
             {

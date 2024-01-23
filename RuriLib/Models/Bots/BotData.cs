@@ -23,7 +23,6 @@ namespace RuriLib.Models.Bots
         public IBotLogger Logger { get; set; }
         public Random Random { get; }
         public CancellationToken CancellationToken { get; set; }
-        public AsyncLocker AsyncLocker { get; set; }
         public Stepper Stepper { get; set; }
         public decimal CaptchaCredit { get; set; } = 0;
         public string ExecutionInfo { get; set; } = "IDLE";

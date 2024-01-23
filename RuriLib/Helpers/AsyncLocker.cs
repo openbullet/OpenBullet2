@@ -1,46 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AsyncKeyedLock;
+using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RuriLib.Helpers
 {
-    public class AsyncLocker : IDisposable
+    public static class AsyncLocker
     {
-        private readonly Dictionary<string, SemaphoreSlim> semaphores = new();
-
-        public Task Acquire(string key, CancellationToken cancellationToken = default)
+        private static readonly AsyncKeyedLocker<string> semaphores = new(o =>
         {
-            if (!semaphores.ContainsKey(key))
-            {
-                semaphores[key] = new SemaphoreSlim(1, 1);
-            }
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
 
-            return semaphores[key].WaitAsync(cancellationToken);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<IDisposable> LockAsync(string key, CancellationToken cancellationToken) => semaphores.LockAsync(key, cancellationToken);
 
-        public Task Acquire(Type classType, string methodName, CancellationToken cancellationToken = default)
-            => Acquire(CombineTypes(classType, methodName), cancellationToken);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<IDisposable> LockAsync(string key) => semaphores.LockAsync(key);
 
-        public void Release(string key) => semaphores[key].Release();
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<IDisposable> LockAsync(Type classType, string methodName, CancellationToken cancellationToken) => semaphores.LockAsync(CombineTypes(classType, methodName), cancellationToken);
 
-        public void Release(Type classType, string methodName) => Release(CombineTypes(classType, methodName));
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTask<IDisposable> LockAsync(Type classType, string methodName) => semaphores.LockAsync(CombineTypes(classType, methodName));
 
-        private string CombineTypes(Type classType, string methodName) => $"{classType.FullName}.{methodName}";
-
-        public void Dispose()
-        {
-            foreach (var semaphore in semaphores.Values)
-            {
-                try
-                {
-                    semaphore.Dispose();
-                }
-                catch
-                {
-
-                }
-            }
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string CombineTypes(Type classType, string methodName) => $"{classType.FullName}.{methodName}";
     }
 }
