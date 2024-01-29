@@ -6,7 +6,7 @@ import { EditorComponent } from 'ngx-monaco-editor-v2';
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.scss']
 })
-export class LolicodeEditorComponent implements OnInit {
+export class CodeEditorComponent implements OnInit {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() language: string = 'lolicode';
@@ -56,5 +56,9 @@ export class LolicodeEditorComponent implements OnInit {
     this.notifyTouched();
     this.model = newValue;
     this.codeChanged.emit(newValue);
+  }
+
+  public resetLanguage() {
+    this.editorOptions = { ...this.editorOptions, language: this.language };
   }
 }

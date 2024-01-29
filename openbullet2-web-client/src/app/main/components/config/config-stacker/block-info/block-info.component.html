@@ -126,4 +126,10 @@
             [descriptor]="descriptor"
             (onChange)="valueChanged()" />
     </ng-container>
+    <ng-container *ngIf="block.type === BlockInstanceType.Script">
+        <app-script-block
+            [block]="block"
+            [descriptor]="descriptor"
+            (onChange)="valueChanged()" />
+    </ng-container>
 </div>

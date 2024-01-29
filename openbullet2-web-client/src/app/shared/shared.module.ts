@@ -7,7 +7,7 @@ import { InputTextComponent } from './components/input-text/input-text.component
 import { InputNumberComponent } from './components/input-number/input-number.component';
 import { InputDropdownComponent } from './components/input-dropdown/input-dropdown.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { LolicodeEditorComponent } from './components/code-editor/code-editor.component';
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { registerLoliCode } from './languages/lolicode';
@@ -44,7 +44,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
-    LolicodeEditorComponent,
+    CodeEditorComponent,
     InputListComponent,
     BooleanIconComponent,
     MultipleSelectorComponent,
@@ -69,7 +69,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputNumberComponent,
     InputDropdownComponent,
     InputListComponent,
-    LolicodeEditorComponent,
+    CodeEditorComponent,
     BooleanIconComponent,
     MultipleSelectorComponent,
     InputTimeSpanComponent,

@@ -115,12 +115,18 @@ namespace RuriLib.Models.Blocks.Custom
             {
                 lineNumber++;
                 var match = Regex.Match(line, "OUTPUT ([^ ]+) @([^ ]+)$");
-                OutputVariables.Add(
-                    new OutputVariable
-                    {
-                        Type = Enum.Parse<VariableType>(match.Groups[1].Value),
-                        Name = match.Groups[2].Value
-                    });
+
+                try
+                {
+                    OutputVariables.Add(
+                        new OutputVariable {
+                            Type = Enum.Parse<VariableType>(match.Groups[1].Value), Name = match.Groups[2].Value
+                        });
+                }
+                catch
+                {
+                    // TODO: Warn the user that the output variable is invalid
+                }
             }
         }
 

@@ -5,7 +5,7 @@ import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
-import { LolicodeEditorComponent } from 'src/app/shared/components/code-editor/code-editor.component';
+import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-editor.component';
 
 @Component({
   selector: 'app-config-csharp',
@@ -39,7 +39,7 @@ export class ConfigCsharpComponent {
   showUsings: boolean = false;
 
   @ViewChild('editor')
-  editor: LolicodeEditorComponent | undefined = undefined;
+  editor: CodeEditorComponent | undefined = undefined;
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService,

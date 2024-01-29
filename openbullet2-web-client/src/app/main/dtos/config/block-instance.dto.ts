@@ -1,4 +1,4 @@
-import { SettingInputMode } from "./block-descriptor.dto";
+import { SettingInputMode, VariableType } from "./block-descriptor.dto";
 
 export enum BlockSettingType {
     None = 'none',
@@ -27,6 +27,17 @@ export enum ParseMode {
     XPath = 'xPath',
     Json = 'json',
     Regex = 'regex',
+}
+
+export enum Interpreter {
+    Jint = 'jint',
+    NodeJS = 'nodeJS',
+    IronPython = 'ironPython',
+}
+
+export interface OutputVariable {
+    type: VariableType;
+    name: string;
 }
 
 export interface BlockSettingDto {
@@ -65,7 +76,16 @@ export interface LoliCodeBlockInstanceDto extends BlockInstanceDto {
     type: BlockInstanceType.LoliCode;
 }
 
+export interface ScriptBlockInstanceDto extends BlockInstanceDto {
+    script: string;
+    inputVariables: string; // Comma separated list of input variables
+    interpreter: Interpreter;
+    outputVariables: OutputVariable[];
+    type: BlockInstanceType.Script;
+}
+
 export type BlockInstanceTypes =
     AutoBlockInstanceDto |
     ParseBlockInstanceDto |
-    LoliCodeBlockInstanceDto;
+    LoliCodeBlockInstanceDto |
+    ScriptBlockInstanceDto;
