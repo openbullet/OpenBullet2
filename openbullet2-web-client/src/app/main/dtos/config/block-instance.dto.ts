@@ -60,6 +60,12 @@ export interface ParseBlockInstanceDto extends BlockInstanceDto {
     type: BlockInstanceType.Parse;
 }
 
+export interface LoliCodeBlockInstanceDto extends BlockInstanceDto {
+    script: string;
+    type: BlockInstanceType.LoliCode;
+}
+
 export type BlockInstanceTypes =
     AutoBlockInstanceDto |
-    ParseBlockInstanceDto;
+    ParseBlockInstanceDto |
+    LoliCodeBlockInstanceDto;

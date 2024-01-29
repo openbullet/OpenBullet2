@@ -1,3 +1,14 @@
+<div class="row mt-1">
+    <div class="mb-1">
+        <span class="text-small">Label</span>
+    </div>
+    <app-input-text key="blockLabel"
+        class="input-small w-100"
+        ngDefaultControl
+        (validityChange)="valueChanged()"
+        [(ngModel)]="block.label"
+        [placeholder]="descriptor.name" />
+</div>
 <div class="row mt-2">
     <p-checkbox inputId="safeMode"
         class="text-small"

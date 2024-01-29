@@ -105,6 +105,10 @@ import { ByteArraySettingComponent } from './components/config/config-stacker/bl
 import { ListOfStringsSettingComponent } from './components/config/config-stacker/block-info/list-of-strings-setting/list-of-strings-setting.component';
 import { DictionaryOfStringsSettingComponent } from './components/config/config-stacker/block-info/dictionary-of-strings-setting/dictionary-of-strings-setting.component';
 import { ParseBlockComponent } from './components/config/config-stacker/parse-block/parse-block.component';
+import { LolicodeBlockComponent } from './components/config/config-stacker/lolicode-block/lolicode-block.component';
+import { ScriptBlockComponent } from './components/config/config-stacker/script-block/script-block.component';
+import { KeycheckBlockComponent } from './components/config/config-stacker/keycheck-block/keycheck-block.component';
+import { HttpRequestBlockComponent } from './components/config/config-stacker/http-request-block/http-request-block.component';
 
 @NgModule({
   declarations: [
@@ -187,7 +191,11 @@ import { ParseBlockComponent } from './components/config/config-stacker/parse-bl
     ByteArraySettingComponent,
     ListOfStringsSettingComponent,
     DictionaryOfStringsSettingComponent,
-    ParseBlockComponent
+    ParseBlockComponent,
+    LolicodeBlockComponent,
+    ScriptBlockComponent,
+    KeycheckBlockComponent,
+    HttpRequestBlockComponent
   ],
   imports: [
     CommonModule,

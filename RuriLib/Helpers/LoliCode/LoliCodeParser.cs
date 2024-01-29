@@ -56,7 +56,7 @@ namespace RuriLib.Helpers.LoliCode
             // @myVariable
             // $"interp"
             // "fixedValue"
-            if (input[0] == '@') // VARIABLE
+            if (input.Length > 0 && input[0] == '@') // VARIABLE
             {
                 input = input[1..];
                 var variableName = LineParser.ParseToken(ref input);
@@ -83,7 +83,7 @@ namespace RuriLib.Helpers.LoliCode
                     _ => throw new NotSupportedException()
                 };
             }
-            else if (input[0] == '$') // INTERPOLATED
+            else if (input.Length > 0 && input[0] == '$') // INTERPOLATED
             {
                 input = input[1..];
                 setting.InputMode = SettingInputMode.Interpolated;

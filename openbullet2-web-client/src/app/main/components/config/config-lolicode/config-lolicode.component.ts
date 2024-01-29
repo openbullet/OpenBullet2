@@ -35,7 +35,6 @@ export class ConfigLolicodeComponent {
   faTriangleExclamation = faTriangleExclamation;
   faGear = faGear;
   faCode = faCode;
-  wordlistTypes: string[] = [];
   showUsings: boolean = false;
 
   @ViewChild('editor')
@@ -65,7 +64,6 @@ export class ConfigLolicodeComponent {
     this.settingsService.getEnvironmentSettings()
       .subscribe(envSettings => {
         this.envSettings = envSettings;
-        this.wordlistTypes = envSettings.wordlistTypes.map(w => w.name);
       });
   }
 

@@ -14,20 +14,20 @@
             {{descriptor.extraInfo}}
         </div>
     </div>
-    <div class="row mt-1">
-        <div class="mb-1">
-            <span class="text-small">Label</span>
-        </div>
-        <app-input-text key="blockLabel"
-            class="input-small w-100"
-            ngDefaultControl
-            (validityChange)="valueChanged()"
-            [(ngModel)]="block.label"
-            [placeholder]="descriptor.name" />
-    </div>
 
     <!-- From now on, other settings depend on the type of block -->
     <ng-container *ngIf="block.type === BlockInstanceType.Auto">
+        <div class="row mt-1">
+            <div class="mb-1">
+                <span class="text-small">Label</span>
+            </div>
+            <app-input-text key="blockLabel"
+                class="input-small w-100"
+                ngDefaultControl
+                (validityChange)="valueChanged()"
+                [(ngModel)]="block.label"
+                [placeholder]="descriptor.name" />
+        </div>
         <div class="row mt-2">
             <p-checkbox inputId="safeMode"
                 class="text-small"
@@ -116,6 +116,12 @@
     </ng-container>
     <ng-container *ngIf="block.type === BlockInstanceType.Parse">
         <app-parse-block
+            [block]="block"
+            [descriptor]="descriptor"
+            (onChange)="valueChanged()" />
+    </ng-container>
+    <ng-container *ngIf="block.type === BlockInstanceType.LoliCode">
+        <app-lolicode-block
             [block]="block"
             [descriptor]="descriptor"
             (onChange)="valueChanged()" />

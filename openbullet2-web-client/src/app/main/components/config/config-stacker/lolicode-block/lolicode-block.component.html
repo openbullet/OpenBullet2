@@ -1,0 +1,10 @@
+<div class="row mt-1">
+    <div class="col-12 px-0">
+        <div style="height: 600px; width: 100%">
+            <app-code-editor #editor
+                language="lolicode" ngDefaultControl 
+                (loaded)="editorLoaded()"
+                (codeChanged)="codeChanged($event)" />
+        </div>
+    </div>
+</div>
