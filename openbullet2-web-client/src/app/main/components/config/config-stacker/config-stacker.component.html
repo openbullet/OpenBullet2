@@ -21,7 +21,7 @@
 <ng-container *ngIf="config !== null">
     <app-spinner *ngIf="stack === null || descriptors === null" [fullWidth]="true" />
 
-    <div *ngIf="stack !== null && descriptors !== null" class="stacker-container">
+    <div *ngIf="stack !== null && descriptors !== null && envSettings !== null" class="stacker-container">
         <div class="container-fluid">
             <div class="row mt-3">
                 <div class="col-2 pl-0 mt-2 stack-container">
@@ -93,6 +93,7 @@
                 <div class="col-5">
                     <app-block-info *ngIf="selectedBlocks.length === 1"
                         (onChange)="stackChanged()"
+                        [envSettings]="envSettings"
                         [block]="selectedBlocks[0]"
                         [descriptor]="getDescriptor(selectedBlocks[0])" />
                     <div class="block-info-notice" *ngIf="selectedBlocks.length === 0">

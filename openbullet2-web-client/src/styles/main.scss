@@ -252,6 +252,11 @@ textarea.input-small {
     font-size: 14px !important;
     height: 25px !important;
     line-height: 10px !important;
+
+    &.p-dropdown-label {
+        border-top-right-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+    }
 }
 
 .input-valid {
