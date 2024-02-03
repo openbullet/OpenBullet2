@@ -6,7 +6,7 @@
         (ngModelChange)="setValue($event)"
         [ngModel]="setting.value"
         [regex]="'^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$'"
-        pTooltip="{{parameter.description}}" />
+        pTooltip="{{parameter?.description}}" />
     <app-setting-input-variable
         *ngIf="setting.inputMode === SettingInputMode.Variable"
         class="w-100"

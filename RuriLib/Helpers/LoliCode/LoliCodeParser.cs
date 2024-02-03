@@ -59,7 +59,13 @@ namespace RuriLib.Helpers.LoliCode
             if (input.Length > 0 && input[0] == '@') // VARIABLE
             {
                 input = input[1..];
-                var variableName = LineParser.ParseToken(ref input);
+                
+                // If there is just @ without anything after it,
+                // the variable name is empty. Do not throw an exception here
+                // or it will prevent saving the config (even if invalid)
+                var variableName = input.Length == 0 || input[0] == ' ' || input[0] == '\t'
+                    ? string.Empty
+                    : LineParser.ParseToken(ref input);
 
                 setting.InputMode = SettingInputMode.Variable;
                 setting.InputVariableName = variableName;

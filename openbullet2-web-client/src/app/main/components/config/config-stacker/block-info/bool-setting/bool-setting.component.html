@@ -6,8 +6,8 @@
         ngDefaultControl 
         [(ngModel)]="setting.value"
         [binary]="true"
-        pTooltip="{{parameter.description}}"
-        [label]="parameter.prettyName" />
+        pTooltip="{{parameter?.description}}"
+        [label]="parameter?.prettyName ?? ''" />
     <app-setting-input-variable
         *ngIf="setting.inputMode === SettingInputMode.Variable"
         class="w-100"

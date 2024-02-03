@@ -8,7 +8,7 @@
         [integer]="false"
         [min]="-3.40282347E+38"
         [max]="3.40282347E+38"
-        pTooltip="{{parameter.description}}"
+        pTooltip="{{parameter?.description}}"
         placeholder="0" />
     <app-setting-input-variable
         *ngIf="setting.inputMode === SettingInputMode.Variable"

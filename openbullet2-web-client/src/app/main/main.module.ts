@@ -26,6 +26,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { MenuModule } from 'primeng/menu';
 import { MarkdownModule } from 'ngx-markdown';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -109,6 +110,7 @@ import { LolicodeBlockComponent } from './components/config/config-stacker/lolic
 import { ScriptBlockComponent } from './components/config/config-stacker/script-block/script-block.component';
 import { KeycheckBlockComponent } from './components/config/config-stacker/keycheck-block/keycheck-block.component';
 import { HttpRequestBlockComponent } from './components/config/config-stacker/http-request-block/http-request-block.component';
+import { CreateKeycheckKeyComponent } from './components/config/config-stacker/keycheck-block/create-keycheck-key/create-keycheck-key.component';
 
 @NgModule({
   declarations: [
@@ -195,7 +197,8 @@ import { HttpRequestBlockComponent } from './components/config/config-stacker/ht
     LolicodeBlockComponent,
     ScriptBlockComponent,
     KeycheckBlockComponent,
-    HttpRequestBlockComponent
+    HttpRequestBlockComponent,
+    CreateKeycheckKeyComponent
   ],
   imports: [
     CommonModule,
@@ -210,6 +213,7 @@ import { HttpRequestBlockComponent } from './components/config/config-stacker/ht
     InputTextModule,
     ToggleButtonModule,
     RadioButtonModule,
+    MenuModule,
     ProgressBarModule,
     DropdownModule,
     MenubarModule,

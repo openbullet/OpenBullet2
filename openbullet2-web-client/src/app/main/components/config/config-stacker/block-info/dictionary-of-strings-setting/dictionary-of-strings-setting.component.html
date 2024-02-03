@@ -5,14 +5,14 @@
         ngDefaultControl
         (dictionaryChange)="setValue($event)"
         [dictionary]="setting.value"
-        pTooltip="{{parameter.description}}" />
+        pTooltip="{{parameter?.description}}" />
     <app-input-dictionary [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
         class="d-block w-100 input-small interpolated"
         ngDefaultControl
         (dictionaryChange)="setValue($event)"
         [dictionary]="setting.value"
-        pTooltip="{{parameter.description}}" />
+        pTooltip="{{parameter?.description}}" />
     <app-setting-input-variable
         *ngIf="setting.inputMode === SettingInputMode.Variable"
         class="w-100"

@@ -8,7 +8,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   styleUrls: ['./float-setting.component.scss']
 })
 export class FloatSettingComponent {
-  @Input() parameter!: BlockParameterDto;
+  @Input() parameter: BlockParameterDto | null = null;
   @Input() setting!: BlockSettingDto;
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 

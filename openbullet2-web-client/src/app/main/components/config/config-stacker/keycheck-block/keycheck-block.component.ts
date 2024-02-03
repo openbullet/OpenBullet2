@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faArrowDown, faArrowUp, faPlus, faTimes, faX } from '@fortawesome/free-solid-svg-icons';
-import { BlockDescriptorDto, SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BlockSettingType, KeyType, KeychainDto, KeychainMode, KeycheckBlockInstanceDto, StrComparison } from 'src/app/main/dtos/config/block-instance.dto';
+import { BlockDescriptorDto } from 'src/app/main/dtos/config/block-descriptor.dto';
+import { BlockSettingType, BoolComparison, DictComparison, KeyTypes, KeychainDto, KeychainMode, KeycheckBlockInstanceDto, ListComparison, NumComparison, StrComparison } from 'src/app/main/dtos/config/block-instance.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 
 @Component({
@@ -32,6 +32,47 @@ export class KeycheckBlockComponent implements OnInit {
     KeychainMode.Or,
     KeychainMode.And
   ];
+  strComparisons: StrComparison[] = [
+    StrComparison.EqualTo,
+    StrComparison.NotEqualTo,
+    StrComparison.Contains,
+    StrComparison.DoesNotContain,
+    StrComparison.MatchesRegex,
+    StrComparison.DoesNotMatchRegex,
+    StrComparison.Exists,
+    StrComparison.DoesNotExist
+  ];
+  numComparisons: NumComparison[] = [
+    NumComparison.EqualTo,
+    NumComparison.NotEqualTo,
+    NumComparison.GreaterThan,
+    NumComparison.GreaterThanOrEqualTo,
+    NumComparison.LessThan,
+    NumComparison.LessThanOrEqualTo
+  ];
+  boolComparisons: BoolComparison[] = [
+    BoolComparison.Is,
+    BoolComparison.IsNot
+  ];
+  listComparisons: ListComparison[] = [
+    ListComparison.Contains,
+    ListComparison.DoesNotContain,
+    ListComparison.Exists,
+    ListComparison.DoesNotExist
+  ];
+  dictComparisons: DictComparison[] = [
+    DictComparison.HasKey,
+    DictComparison.DoesNotHaveKey,
+    DictComparison.HasValue,
+    DictComparison.DoesNotHaveValue,
+    DictComparison.Exists,
+    DictComparison.DoesNotExist
+  ];
+
+  selectedKeychain: KeychainDto | null = null;
+  addKeyModalVisible = false;
+
+  BlockSettingType = BlockSettingType;
 
   ngOnInit(): void {
     this.keychainStatuses = [
@@ -42,6 +83,11 @@ export class KeycheckBlockComponent implements OnInit {
 
   valueChanged() {
     this.onChange.emit();
+  }
+
+  openAddKeyModal(keychain: KeychainDto) {
+    this.selectedKeychain = keychain;
+    this.addKeyModalVisible = true;
   }
 
   keychainStatusChanged(keychain: KeychainDto, status: string) {
@@ -68,6 +114,11 @@ export class KeycheckBlockComponent implements OnInit {
 
   removeKeychain(index: number) {
     this.block.keychains = this.block.keychains.filter((_, i) => i !== index);
+    this.valueChanged();
+  }
+
+  removeKey(keychain: KeychainDto, index: number) {
+    keychain.keys = keychain.keys.filter((_, i) => i !== index);
     this.valueChanged();
   }
 
@@ -101,28 +152,16 @@ export class KeycheckBlockComponent implements OnInit {
     this.valueChanged();
   }
 
-  addKey(keychain: KeychainDto) {
-    // FIXME: This doesn't work
-    keychain.keys = [
-      ...keychain.keys,
-      {
-        type: KeyType.String,
-        left: {
-          name: "left",
-          value: "",
-          inputVariableName: "data.SOURCE",
-          inputMode: SettingInputMode.Variable,
-          type: BlockSettingType.String
-        },
-        right: {
-          name: "right",
-          value: "",
-          inputVariableName: "",
-          inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
-        },
-        comparison: StrComparison.EqualTo
-      }
+  addKey(key: KeyTypes) {
+    this.addKeyModalVisible = false;
+
+    if (this.selectedKeychain === null) {
+      return;
+    }
+
+    this.selectedKeychain.keys = [
+      ...this.selectedKeychain.keys,
+      key
     ];
     this.valueChanged();
   }

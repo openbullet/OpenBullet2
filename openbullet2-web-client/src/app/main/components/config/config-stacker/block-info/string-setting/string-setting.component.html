@@ -5,14 +5,14 @@
         ngDefaultControl
         (ngModelChange)="valueChanged()"
         [(ngModel)]="setting.value"
-        pTooltip="{{parameter.description}}" />
+        pTooltip="{{parameter?.description}}" />
     <app-input-text [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
         class="input-small w-100 interpolated"
         ngDefaultControl
         (ngModelChange)="valueChanged()"
         [(ngModel)]="setting.value"
-        pTooltip="{{parameter.description}}" />
+        pTooltip="{{parameter?.description}}" />
     <app-setting-input-variable
         *ngIf="setting.inputMode === SettingInputMode.Variable"
         class="w-100"

@@ -66,7 +66,7 @@
                     <div class="d-flex flex-row">
                         <button class="button button-transparent" 
                             pTooltip="Add a key"
-                            (click)="addKey(keychain)">
+                            (click)="openAddKeyModal(keychain)">
                             <fa-icon class="color-primary" [icon]="faPlus" [fixedWidth]="true"></fa-icon>
                         </button>
                         <button class="button button-transparent" 
@@ -86,7 +86,125 @@
                         </button>
                     </div>
                 </div>
+                <div class="keys-container" *ngIf="keychain.keys.length > 0">
+                    <div *ngFor="let key of keychain.keys; let j = index" class="key">
+                        <div class="key-left">
+                            <app-bool-setting
+                                *ngIf="key.left.type === BlockSettingType.Bool"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                            <app-int-setting
+                                *ngIf="key.left.type === BlockSettingType.Int"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                            <app-float-setting
+                                *ngIf="key.left.type === BlockSettingType.Float"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                            <app-string-setting
+                                *ngIf="key.left.type === BlockSettingType.String"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                            <app-list-of-strings-setting
+                                *ngIf="key.left.type === BlockSettingType.ListOfStrings"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                            <app-dictionary-of-strings-setting
+                                *ngIf="key.left.type === BlockSettingType.DictionaryOfStrings"
+                                [setting]="key.left"
+                                (onChange)="valueChanged()" />
+                        </div>
+                        <div class="key-comparison">
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.Bool"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="boolComparisons"
+                                [ngModel]="key.comparison" />
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.Int"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="numComparisons"
+                                [ngModel]="key.comparison" />
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.Float"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="numComparisons"
+                                [ngModel]="key.comparison" />
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.String"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="strComparisons"
+                                [ngModel]="key.comparison" />
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.ListOfStrings"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="listComparisons"
+                                [ngModel]="key.comparison" />
+                            <app-input-dropdown [key]="'comparison' + j"
+                                *ngIf="key.left.type === BlockSettingType.DictionaryOfStrings"
+                                itemClass="input-small" optionClass="input-small"
+                                ngDefaultControl
+                                (ngModelChange)="key.comparison = $event; valueChanged()"
+                                [options]="dictComparisons"
+                                [ngModel]="key.comparison" />
+                        </div>
+                        <div class="key-right" *ngIf="key.right !== null && key.right !== undefined">
+                            <app-bool-setting
+                                *ngIf="key.right.type === BlockSettingType.Bool"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                            <app-int-setting
+                                *ngIf="key.right.type === BlockSettingType.Int"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                            <app-float-setting
+                                *ngIf="key.right.type === BlockSettingType.Float"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                            <app-string-setting
+                                *ngIf="key.right.type === BlockSettingType.String"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                            <app-list-of-strings-setting
+                                *ngIf="key.right.type === BlockSettingType.ListOfStrings"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                            <app-dictionary-of-strings-setting
+                                *ngIf="key.right.type === BlockSettingType.DictionaryOfStrings"
+                                [setting]="key.right"
+                                (onChange)="valueChanged()" />
+                        </div>
+                        <button class="button button-transparent" 
+                            pTooltip="Remove key"
+                            (click)="removeKey(keychain, j)">
+                            <fa-icon class="color-bad" [icon]="faTimes" [fixedWidth]="true"></fa-icon>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<p-dialog 
+    header="Create a key"
+    [(visible)]="addKeyModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-create-keycheck-key
+        (onSelect)="addKey($event)" />
+</p-dialog>

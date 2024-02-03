@@ -8,7 +8,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   styleUrls: ['./int-setting.component.scss']
 })
 export class IntSettingComponent {
-  @Input() parameter!: BlockParameterDto;
+  @Input() parameter: BlockParameterDto | null = null;
   @Input() setting!: BlockSettingDto;
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 

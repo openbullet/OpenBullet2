@@ -9,7 +9,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   encapsulation: ViewEncapsulation.None
 })
 export class ListOfStringsSettingComponent {
-  @Input() parameter!: BlockParameterDto;
+  @Input() parameter: BlockParameterDto | null = null;
   @Input() setting!: BlockSettingDto;
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 

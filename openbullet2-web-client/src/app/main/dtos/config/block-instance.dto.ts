@@ -140,37 +140,37 @@ export interface ScriptBlockInstanceDto extends BlockInstanceDto {
 }
 
 export interface KeyDto {
-    left?: BlockSettingDto;
+    left: BlockSettingDto;
     right?: BlockSettingDto;
 }
 
 export interface BoolKeyDto extends KeyDto {
-    type: KeyType.Bool;
+    _polyTypeName: KeyType.Bool;
     comparison: BoolComparison;
 }
 
 export interface DictionaryKeyDto extends KeyDto {
-    type: KeyType.Dictionary;
+    _polyTypeName: KeyType.Dictionary;
     comparison: DictComparison;
 }
 
 export interface ListKeyDto extends KeyDto {
-    type: KeyType.List;
+    _polyTypeName: KeyType.List;
     comparison: ListComparison;
 }
 
 export interface IntKeyDto extends KeyDto {
-    type: KeyType.Int;
+    _polyTypeName: KeyType.Int;
     comparison: NumComparison;
 }
 
 export interface FloatKeyDto extends KeyDto {
-    type: KeyType.Float;
+    _polyTypeName: KeyType.Float;
     comparison: NumComparison;
 }
 
 export interface StringKeyDto extends KeyDto {
-    type: KeyType.String;
+    _polyTypeName: KeyType.String;
     comparison: StrComparison;
 }
 
