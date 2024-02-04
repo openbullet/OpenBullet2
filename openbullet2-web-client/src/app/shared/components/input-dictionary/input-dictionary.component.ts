@@ -81,6 +81,7 @@ export class InputDictionaryComponent implements OnChanges {
       this.dictionaryChange.emit(
         newValue.split('\n').reduce((acc: { [key: string]: string }, line: string) => {
           const [key, ...value] = line.split(':');
+          if (key.length === 0) return acc;
           acc[key.trim()] = value.join(':').trim();
           return acc;
         }, {})

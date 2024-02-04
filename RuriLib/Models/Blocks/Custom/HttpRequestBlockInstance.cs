@@ -5,6 +5,7 @@ using RuriLib.Helpers.LoliCode;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
 using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Blocks.Parameters;
+using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Configs;
 using System;
 using System.Collections.Generic;
@@ -274,7 +275,24 @@ namespace RuriLib.Models.Blocks.Custom
                             case "RAW":
                                 var rawContent = new RawHttpContentSettingsGroup();
                                 LoliCodeParser.ParseSettingValue(ref line, rawContent.Name, new StringParameter());
-                                LoliCodeParser.ParseSettingValue(ref line, rawContent.Data, new ByteArrayParameter());
+
+                                // HACK: Cache the line to prevent it from being modified by the parser
+                                // if the parse fails, we can still use the original line to parse the content-type
+                                var lineCopyCache = line;
+                                
+                                // Since an empty byte array is serialized as an empty string
+                                // (this needs to change in the future) if this parse fails it
+                                // means we actually parsed the content-type string instead
+                                try
+                                {
+                                    LoliCodeParser.ParseSettingValue(ref line, rawContent.Data,
+                                        new ByteArrayParameter());
+                                }
+                                catch
+                                {
+                                    line = lineCopyCache;
+                                }
+                                
                                 LoliCodeParser.ParseSettingValue(ref line, rawContent.ContentType, new StringParameter());
                                 multipart.Contents.Add(rawContent);
                                 break;

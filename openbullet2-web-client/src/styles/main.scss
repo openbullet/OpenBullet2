@@ -236,7 +236,7 @@ label {
     margin-bottom: 0px !important;
 }
 
-.input-small:not(textarea) {
+.input-small:not(textarea, app-input-dictionary, app-input-list) {
     font-size: 14px;
     height: 27px;
     line-height: 10px;

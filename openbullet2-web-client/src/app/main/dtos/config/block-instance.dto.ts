@@ -90,6 +90,19 @@ export enum StrComparison {
     DoesNotMatchRegex = 'doesNotMatchRegex',
 }
 
+export enum RequestParamsType {
+    Standard = 'standardRequestParams',
+    Raw = 'rawRequestParams',
+    BasicAuth = 'basicAuthRequestParams',
+    Multipart = 'multipartRequestParams',
+}
+
+export enum MultipartContentType {
+    String = 'multipartString',
+    Raw = 'multipartRaw',
+    File = 'multipartFile',
+}
+
 export interface OutputVariable {
     type: VariableType;
     name: string;
@@ -193,9 +206,71 @@ export interface KeycheckBlockInstanceDto extends BlockInstanceDto {
     type: BlockInstanceType.Keycheck;
 }
 
+export interface StandardRequestParamsDto {
+    _polyTypeName: RequestParamsType.Standard;
+    content: BlockSettingDto;
+    contentType: BlockSettingDto;
+}
+
+export interface RawRequestParamsDto {
+    _polyTypeName: RequestParamsType.Raw;
+    content: BlockSettingDto;
+    contentType: BlockSettingDto;
+}
+
+export interface BasicAuthRequestParamsDto {
+    _polyTypeName: RequestParamsType.BasicAuth;
+    username: BlockSettingDto;
+    password: BlockSettingDto;
+}
+
+export interface HttpContentSettingsGroupDto {
+    name: BlockSettingDto;
+    contentType: BlockSettingDto;
+}
+
+export interface StringHttpContentSettingsGroupDto extends HttpContentSettingsGroupDto {
+    _polyTypeName: MultipartContentType.String;
+    data: BlockSettingDto;
+}
+
+export interface RawHttpContentSettingsGroupDto extends HttpContentSettingsGroupDto {
+    _polyTypeName: MultipartContentType.Raw;
+    data: BlockSettingDto;
+}
+
+export interface FileHttpContentSettingsGroupDto extends HttpContentSettingsGroupDto {
+    _polyTypeName: MultipartContentType.File;
+    fileName: BlockSettingDto;
+}
+
+export type MultipartContentSettingsGroupTypes =
+    StringHttpContentSettingsGroupDto |
+    RawHttpContentSettingsGroupDto |
+    FileHttpContentSettingsGroupDto;
+
+export interface MultipartRequestParamsDto {
+    _polyTypeName: RequestParamsType.Multipart;
+    contents: MultipartContentSettingsGroupTypes[];
+    boundary: BlockSettingDto;
+}
+
+export type RequestParamsTypes =
+    StandardRequestParamsDto |
+    RawRequestParamsDto |
+    BasicAuthRequestParamsDto |
+    MultipartRequestParamsDto;
+
+export interface HttpRequestBlockInstanceDto extends BlockInstanceDto {
+    type: BlockInstanceType.HttpRequest;
+    safe: boolean;
+    requestParams: RequestParamsTypes;
+}
+
 export type BlockInstanceTypes =
     AutoBlockInstanceDto |
     ParseBlockInstanceDto |
     LoliCodeBlockInstanceDto |
     ScriptBlockInstanceDto |
-    KeycheckBlockInstanceDto;
+    KeycheckBlockInstanceDto |
+    HttpRequestBlockInstanceDto;
