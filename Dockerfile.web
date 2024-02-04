@@ -1,5 +1,5 @@
 # BACKEND
-FROM mcr.microsoft.com/dotnet/sdk:7.0-bookwork-slim AS backend
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookwork-slim AS backend
 
 WORKDIR /code
 
@@ -23,7 +23,7 @@ RUN npm run build
 RUN mkdir /build && mv dist/* /build
 
 # RUN
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-bookwork-slim
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookwork-slim
 
 WORKDIR /app
 
