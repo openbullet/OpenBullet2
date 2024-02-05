@@ -1,0 +1,79 @@
+name: Build Web + Release | Staging
+
+on:
+  push:
+    branches:
+    - 'staging'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Only run if the commit message contains the string [build]
+    if: contains(github.event.head_commit.message, '[build]')
+    steps:
+
+    # Checkout the repository
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Get the commit number
+    - name: Get commit number
+      run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+
+    # Append the commit number to version.txt
+    - name: Append commit number to version.txt
+      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Web/version.txt
+
+    # Get the commit description
+    - name: Get commit description
+      run: |
+        echo 'COMMIT_DESCRIPTION<<EOF' >> $GITHUB_ENV
+        git log -1 --pretty=%b >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+    # Read the version
+    - name: Read version
+      run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
+
+    # Build using docker
+    - name: Build using docker
+      run: docker build -t openbullet2 -f OpenBullet2.Web/Dockerfile .
+
+    # Extract files from the /app folder of the image into a zip
+    - name: Extract files from the image
+      run: |
+        docker run --name openbullet2-extract openbullet2 echo "Extracting files"
+        docker cp openbullet2-extract:/app/ ./.publish
+        docker rm openbullet2-extract
+        zip -r .publish/OpenBullet2.Web.zip .publish/*
+
+    # Using this to quickly test the build process without docker
+    - name: Remove me
+      run: mkdir .publish && touch .publish/OpenBullet2.Web.zip
+
+    # Upload the zip to the release
+    - name: Upload OpenBullet2.Web
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: '.publish/OpenBullet2.Web.zip'
+        tag: ${{ env.VERSION }}
+        overwrite: true
+        prerelease: true
+        make_latest: true
+        # Show ONLY the commit description in the release (without)
+        body: |
+          This is a **STAGING** build. It might be unstable. Use at your own discretion.
+
+          Changelog:
+
+          ${{ env.COMMIT_DESCRIPTION }}
+
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+      if: ${{ failure() }}
+      with:
+        ## If no one connects after 5 minutes, shut down server.
+        wait-timeout-minutes: 5

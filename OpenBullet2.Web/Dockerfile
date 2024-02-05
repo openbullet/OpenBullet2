@@ -1,13 +1,10 @@
 # BACKEND
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bookwork-slim AS backend
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS backend
 
 WORKDIR /code
 
-COPY OpenBullet2.Web/OpenBullet2.Web.csproj .
-RUN dotnet restore
-
-COPY OpenBullet2.Web .
-RUN dotnet publish -c Release -o /build --no-restore
+COPY . .
+RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build
 
 # FRONTEND
 FROM node:20.3.0 AS frontend
@@ -23,7 +20,7 @@ RUN npm run build
 RUN mkdir /build && mv dist/* /build
 
 # RUN
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookwork-slim
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim
 
 WORKDIR /app
 
