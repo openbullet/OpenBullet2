@@ -49,10 +49,6 @@ jobs:
         docker rm openbullet2-extract
         zip -r .publish/OpenBullet2.Web.zip .publish/*
 
-    # Using this to quickly test the build process without docker
-    - name: Remove me
-      run: mkdir .publish && touch .publish/OpenBullet2.Web.zip
-
     # Upload the zip to the release
     - name: Upload OpenBullet2.Web
       uses: svenstaro/upload-release-action@v2
