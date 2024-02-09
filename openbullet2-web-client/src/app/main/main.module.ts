@@ -111,6 +111,7 @@ import { ScriptBlockComponent } from './components/config/config-stacker/script-
 import { KeycheckBlockComponent } from './components/config/config-stacker/keycheck-block/keycheck-block.component';
 import { HttpRequestBlockComponent } from './components/config/config-stacker/http-request-block/http-request-block.component';
 import { CreateKeycheckKeyComponent } from './components/config/config-stacker/keycheck-block/create-keycheck-key/create-keycheck-key.component';
+import { RecentHitsChartComponent } from './components/home/recent-hits-chart/recent-hits-chart.component';
 
 @NgModule({
   declarations: [
@@ -198,7 +199,8 @@ import { CreateKeycheckKeyComponent } from './components/config/config-stacker/k
     ScriptBlockComponent,
     KeycheckBlockComponent,
     HttpRequestBlockComponent,
-    CreateKeycheckKeyComponent
+    CreateKeycheckKeyComponent,
+    RecentHitsChartComponent
   ],
   imports: [
     CommonModule,

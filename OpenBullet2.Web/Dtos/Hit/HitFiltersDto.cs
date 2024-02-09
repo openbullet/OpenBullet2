@@ -29,4 +29,15 @@ public class HitFiltersDto : PaginationDto
     /// Optional.
     /// </summary>
     public DateTime? MaxDate { get; set; } = null;
+
+    /// <summary>
+    /// The field to sort the hits by. Optional.
+    /// </summary>
+    public HitSortField? SortBy { get; set; } = null;
+    
+    /// <summary>
+    /// Whether to sort the hits in descending order.
+    /// Only used if <see cref="SortBy"/> is set.
+    /// </summary>
+    public bool SortDescending { get; set; } = true;
 }

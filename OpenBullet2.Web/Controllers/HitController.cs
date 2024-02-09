@@ -222,6 +222,67 @@ public class HitController : ApiController
             Count = count
         };
     }
+    
+    /// <summary>
+    /// Get stats about recent hits.
+    /// </summary>
+    [HttpGet("recent")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<RecentHitsDto>> GetRecent(int days)
+    {
+        var apiUser = HttpContext.GetApiUser();
+
+        var query = apiUser.Role is UserRole.Admin
+            ? _hitRepo.GetAll()
+                .Where(h => h.Type == "SUCCESS")
+            : _hitRepo.GetAll()
+                .Where(h => h.OwnerId == apiUser.Id)
+                .Where(h => h.Type == "SUCCESS");
+        
+        var dates = Enumerable.Range(0, days)
+            .Select(i => DateTime.Now.Date.AddDays(-i))
+            .Reverse()
+            .ToList();
+        
+        // First of all, get the distinct names of the configs
+        // that have hits in the last N days
+        var configNames = await query
+            .Where(h => h.Date >= DateTime.Now.Date.AddDays(-days))
+            .Select(h => h.ConfigName)
+            .Distinct()
+            .ToListAsync();
+
+        // For each config, get the number of hits for each day
+        var hits = new Dictionary<string, IEnumerable<int>>();
+        
+        foreach (var configName in configNames)
+        {
+            var configHits = new List<int>();
+            
+            foreach (var date in dates)
+            {
+                var dailyHits = await query
+                    .Where(h => h.ConfigName == configName && h.Date.Date == date)
+                    .CountAsync();
+                
+                configHits.Add(dailyHits);
+            }
+
+            hits.Add(configName, configHits);
+        }
+        
+        // If there are no hits, return an empty response
+        if (hits.Count == 0)
+        {
+            return new RecentHitsDto();
+        }
+
+        return new RecentHitsDto
+        {
+            Dates = dates,
+            Hits = hits
+        };
+    }
 
     private IQueryable<HitEntity> FilteredQuery(HitFiltersDto dto)
     {
@@ -255,6 +316,18 @@ public class HitController : ApiController
         if (dto.MaxDate is not null)
         {
             query = query.Where(h => h.Date <= dto.MaxDate);
+        }
+
+        if (dto.SortBy is not null)
+        {
+            switch (dto.SortBy)
+            {
+                case HitSortField.Date:
+                    query = dto.SortDescending
+                        ? query.OrderByDescending(h => h.Date)
+                        : query.OrderBy(h => h.Date);
+                    break;
+            }
         }
 
         return query;

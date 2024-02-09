@@ -112,7 +112,9 @@
     <div class="row justify-content-between">
         <div class="col-12">
             <p-card>
-                
+                <app-recent-hits-chart
+                    *ngIf="recentHits !== null"
+                    [recentHits]="recentHits" />
             </p-card>
         </div>
     </div>

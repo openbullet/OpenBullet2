@@ -11,6 +11,8 @@ import { Moment } from 'moment';
 import { addTimeSpan, parseTimeSpan } from 'src/app/shared/utils/dates';
 import { CollectionInfoDto } from '../../dtos/info/collection-info.dto';
 import { UserService } from '../../services/user.service';
+import { HitService } from '../../services/hit.service';
+import { RecentHitsDto } from '../../dtos/hit/recent-hits.dto';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   timer: any;
   perfTimer: any;
   username: string = 'admin';
+  recentHits: RecentHitsDto | null = null;
 
   // Performance
   cpuUsage: string = '0.00%';
@@ -42,6 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private infoService: InfoService,
+    private hitService: HitService,
     private userService: UserService) {
   }
 
@@ -72,6 +76,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.updateTimes();
         }, 1000);
       });
+
+    this.hitService.getRecentHits(7)
+      .subscribe(hits => this.recentHits = hits);
   }
 
   updateTimes() {

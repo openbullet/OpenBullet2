@@ -5,8 +5,9 @@ import { CreateHitDto } from "../dtos/hit/create-hit.dto";
 import { HitDto } from "../dtos/hit/hit.dto";
 import { UpdateHitDto } from "../dtos/hit/update-hit.dto";
 import { PagedList } from "../dtos/common/paged-list.dto";
-import { HitFiltersDto } from "../dtos/hit/hit-filters.dto";
+import { HitFiltersDto, ListHitFiltersDto } from "../dtos/hit/hit-filters.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
+import { RecentHitsDto } from "../dtos/hit/recent-hits.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +17,7 @@ export class HitService {
         private http: HttpClient
     ) { }
 
-    getHits(filter: HitFiltersDto) {
+    getHits(filter: ListHitFiltersDto) {
         return this.http.get<PagedList<HitDto>>(
             getBaseUrl() + '/hit/all', {
             params: <any>Object.fromEntries(
@@ -81,5 +82,14 @@ export class HitService {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/hit/purge'
         );
+    }
+
+    getRecentHits(days: number) {
+        return this.http.get<RecentHitsDto>(
+            getBaseUrl() + '/hit/recent', {
+            params: {
+                days
+            }
+        });
     }
 }

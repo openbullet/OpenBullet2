@@ -143,7 +143,9 @@ export class HitsComponent implements OnInit {
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString()
+      maxDate: this.rangeDates[1].toISOString(),
+      sortBy: null, // TODO: Implement sorting
+      sortDescending: false
     }).subscribe(hits => this.hits = hits);
   }
 
