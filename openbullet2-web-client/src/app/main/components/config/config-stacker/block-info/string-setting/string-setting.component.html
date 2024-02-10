@@ -1,14 +1,14 @@
 <div class="d-flex justify-content-between w-100">
     <app-input-text [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Fixed"
-        class="input-small w-100"
+        class="input-small w-100 monospace"
         ngDefaultControl
         (ngModelChange)="valueChanged()"
         [(ngModel)]="setting.value"
         pTooltip="{{parameter?.description}}" />
     <app-input-text [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
-        class="input-small w-100 interpolated"
+        class="input-small w-100 interpolated monospace"
         ngDefaultControl
         (ngModelChange)="valueChanged()"
         [(ngModel)]="setting.value"

@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between w-100">
     <app-input-text [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Fixed"
-        class="input-small w-100"
+        class="input-small w-100 monospace"
         ngDefaultControl
         (ngModelChange)="setValue($event)"
         [ngModel]="setting.value"

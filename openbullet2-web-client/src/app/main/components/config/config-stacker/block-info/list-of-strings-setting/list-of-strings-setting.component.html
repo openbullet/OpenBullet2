@@ -1,14 +1,14 @@
 <div class="d-flex justify-content-between w-100">
     <app-input-list [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Fixed"
-        class="d-block w-100 input-small"
+        class="d-block w-100 input-small monospace"
         ngDefaultControl
         (listChange)="setValue($event)"
         [list]="setting.value"
         pTooltip="{{parameter?.description}}" />
     <app-input-list [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
-        class="d-block w-100 input-small interpolated"
+        class="d-block w-100 input-small interpolated monospace"
         ngDefaultControl
         (listChange)="setValue($event)"
         [list]="setting.value"
