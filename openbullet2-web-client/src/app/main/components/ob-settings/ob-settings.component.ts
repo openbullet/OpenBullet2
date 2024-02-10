@@ -18,6 +18,26 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     return !this.touched;
   }
 
+  // Listen for CTRL+S on the page
+  @HostListener('document:keydown.control.s', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    event.preventDefault();
+
+    if (!this.touched) {
+      return;
+    }
+
+    if (this.canSave()) {
+      this.saveSettings();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Some fields are invalid, please fix them before saving'
+      });
+    }
+  }
+
   faPlus = faPlus;
   faX = faX;
   faPen = faPen;

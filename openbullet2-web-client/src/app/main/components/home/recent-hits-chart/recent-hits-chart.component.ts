@@ -44,7 +44,7 @@ export class RecentHitsChartComponent implements OnInit {
 
   ngOnInit(): void {
     // Sort the top 5 keys by the sum of their values
-    const topK = Object.entries(this.mock.hits)
+    const topK = Object.entries(this.recentHits.hits)
       .sort((a, b) => b[1].reduce((acc, val) => acc + val, 0) - a[1].reduce((acc, val) => acc + val, 0))
       .slice(0, 5);
 
@@ -54,7 +54,7 @@ export class RecentHitsChartComponent implements OnInit {
         .getPropertyValue(`--chart-series-${i}`));
 
     this.barChartData = {
-      labels: this.mock.dates.map(date => new Date(date).toDateString()),
+      labels: this.recentHits.dates.map(date => new Date(date).toDateString()),
       datasets: topK.map(([configName, values], i) => {
         return {
           label: configName,
