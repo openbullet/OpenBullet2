@@ -5,31 +5,44 @@ $sidebarWidth: 230px;
 .wrapper {
     display: flex;
     min-height: 100vh;
-}
 
-.sidebar {
-    background-color: var(--bg-secondary);
-    width: $sidebarWidth;
-    min-width: $sidebarWidth;
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex: 0 1 $sidebarWidth;
-}
+    .sidebar {
+        background-color: var(--bg-secondary);
+        width: $sidebarWidth;
+        min-width: $sidebarWidth;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 0 1 $sidebarWidth;
+    
+        .sidebar-logo {
+            padding: 40px 50px 0px 50px;
+        
+            img {
+                width: 100%;
+            }
+        }
+    
+        .sidebar-version {
+            padding: 20px 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
 
-.content {
-    background-color: var(--bg-primary);
-    color: var(--fg-primary);
-    flex: 1 1 auto;
-    padding: 30px 50px;
-    width: calc(100vw - $sidebarWidth);
-    overflow-x: hidden;
-}
+            a {
+                color: var(--fg-inactive);
+                text-decoration: none;
+                font-weight: bold;
+            }
+        }
+    }
 
-.logo {
-    width: 100%;
-    padding: 20px 25px 0px 25px;
-}
-
-.logo img {
-    width: 100%;
+    .content {
+        background-color: var(--bg-primary);
+        color: var(--fg-primary);
+        flex: 1 1 auto;
+        padding: 30px 50px;
+        width: calc(100vw - $sidebarWidth);
+        overflow-x: hidden;
+    }
 }

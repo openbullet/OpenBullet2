@@ -1,7 +1,9 @@
 <ng-container *ngFor="let section of menu">
-    <div *ngIf="canView(section)">
-        <div class="menu-section">
-            <span>{{section.label | truncate : 20}}</span>
+    <div class="menu-section" *ngIf="canView(section)">
+        <div class="menu-section-header">
+            <span
+                [pTooltip]="section.label.length > 20 ? section.label : ''"
+            >{{section.label | truncate : 20}}</span>
         </div>
         <ng-container *ngFor="let item of section.items">
             <app-menu-item *ngIf="canView(item)"

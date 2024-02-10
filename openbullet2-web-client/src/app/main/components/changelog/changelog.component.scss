@@ -1,0 +1,18 @@
+.update-alert {
+    padding: 10px 20px;
+    border: 2px solid var(--fg-custom);
+    border-radius: 15px;
+    margin-bottom: 20px;
+
+    a {
+        color: var(--fg-accent-light);
+    }
+}
+
+.separator {
+    margin: 20px 0;
+    width: 100%;
+    display: flex;
+    height: 1px;
+    background-color: var(--fg-inactive);
+}
