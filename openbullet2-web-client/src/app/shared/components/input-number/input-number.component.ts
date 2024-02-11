@@ -36,6 +36,14 @@ export class InputNumberComponent {
       return false;
     }
 
+    if (this.min !== null && value < this.min) {
+      return false;
+    }
+
+    if (this.max !== null && value > this.max) {
+      return false;
+    }
+
     return true;
   }
 
