@@ -142,6 +142,17 @@ namespace Updater
                 if (remoteVersion > currentVersion)
                 {
                     AnsiConsole.MarkupLine("[yellow]Update available![/]");
+                    
+                    // Ask the user if they want to proceed and update to the latest version
+                    var update = AnsiConsole.Prompt(
+                        new ConfirmationPrompt("Do you want to proceed and update to the latest version?"));
+                    
+                    // If the user said no, exit
+                    if (!update)
+                    {
+                        AnsiConsole.MarkupLine("[yellow]Exiting...[/]");
+                        Environment.Exit(0);
+                    }
                 }
                 else
                 {
@@ -152,8 +163,8 @@ namespace Updater
                 }
             }
             
-            // Check if openbullet is running
-            if (Process.GetProcessesByName("OpenBullet2.Web").Length != 0)
+            // Check if OpenBullet2 is running
+            if (Process.GetProcessesByName("OpenBullet2.Web").Length > 0)
             {
                 ExitWithError("OpenBullet 2 is currently running, please close it before updating!");
                 return;
