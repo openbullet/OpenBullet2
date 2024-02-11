@@ -47,7 +47,8 @@ jobs:
         docker run --name openbullet2-extract openbullet2 echo "Extracting files"
         docker cp openbullet2-extract:/app/ ./.publish
         docker rm openbullet2-extract
-        zip -r .publish/OpenBullet2.Web.zip .publish/*
+        cd .publish
+        zip -r OpenBullet2.Web.zip ./*
 
     # Upload the zip to the release
     - name: Upload OpenBullet2.Web
