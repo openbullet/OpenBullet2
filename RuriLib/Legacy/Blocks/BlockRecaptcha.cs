@@ -97,7 +97,7 @@ namespace RuriLib.Legacy.Blocks
                 throw;
             }
 
-            data.Logger.Log($"Succesfully got the response: {recapResponse}", LogColors.GreenYellow);
+            data.Logger.Log($"Successfully got the response: {recapResponse}", LogColors.GreenYellow);
 
             if (VariableName != string.Empty)
             {

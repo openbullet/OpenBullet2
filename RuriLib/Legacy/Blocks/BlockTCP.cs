@@ -210,7 +210,7 @@ namespace RuriLib.Legacy.Blocks
                         data.SetObject("SSLStream", ssl);
                         data.SetObject("TCPSSL", UseSSL);
 
-                        data.Logger.Log($"Succesfully connected to host {h} on port {p}. The server says:", LogColors.Green);
+                        data.Logger.Log($"Successfully connected to host {h} on port {p}. The server says:", LogColors.Green);
                         data.Logger.Log(response, LogColors.GreenYellow);
                     }
 
@@ -231,7 +231,7 @@ namespace RuriLib.Legacy.Blocks
                     tcp = null;
                     net?.Close();
                     ssl?.Close();
-                    data.Logger.Log($"Succesfully closed the stream", LogColors.GreenYellow);
+                    data.Logger.Log($"Successfully closed the stream", LogColors.GreenYellow);
                     break;
 
                 case TCPCommand.Send:
