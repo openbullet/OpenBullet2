@@ -1,198 +1,335 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CommandLine;
+using Newtonsoft.Json.Linq;
+using Spectre.Console;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Updater
 {
-    internal class Program
+    public class Program
     {
-        private static Version remoteVersion = new(0, 1, 0);
-        private static Version currentVersion = new(0, 1, 0);
-        private static JToken release = null;
-        private static Stream stream;
+        private static async Task Main(string[] args) =>
+            // Parse the Options
+            await new Parser(with =>
+                {
+                    with.CaseInsensitiveEnumValues = true;
+                }).ParseArguments<CliOptions>(args)
+                .WithParsedAsync(async opts => await UpdateAsync(opts));
 
-        private static void Main(string[] args)
+        private static async Task UpdateAsync(CliOptions options)
         {
+            // Make sure the repository is in the right format
+            if (!Regex.IsMatch(options.Repository, @"^[\w-]+/[\w-]+$"))
+            {
+                ExitWithError("The repository must be in the format owner/repo (e.g. openbullet/OpenBullet2)");
+                return;
+            }
+            
+            // If the channel was not specified, ask the user
+            if (options.Channel is null)
+            {
+                var response = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Please select the channel")
+                        .PageSize(3)
+                        .AddChoices(["Staging (early builds)", "Release (stable builds)"]));
+                
+                options.Channel = response switch
+                {
+                    "Staging (early builds)" => BuildChannel.Staging,
+                    "Release (stable builds)" => BuildChannel.Release,
+                    _ => BuildChannel.Release
+                };
+            }
+            
             using HttpClient client = new();
-            client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            client.BaseAddress = new Uri($"https://api.github.com/repos/{options.Repository}/");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36");
+            
+            AnsiConsole.MarkupLine($"[yellow]Checking for updates for {options.Repository} on the {options.Channel} channel...[/]");
+            
+            if (!string.IsNullOrWhiteSpace(options.Username) && !string.IsNullOrWhiteSpace(options.Token))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{options.Username}:{options.Token}")));
+                AnsiConsole.MarkupLine("[yellow]Using authentication...[/]");
+            }
 
+            var release = JToken.Parse("{}");
+            var remoteVersion = new Version();
+            
             // Fetch info from remote
-            Console.Write("[1/6] Fetching version info from remote... ");
-            try
-            {
-                // Query the github api to get a list of the latest releases
-                var response = client.GetAsync("releases").Result;
+            await AnsiConsole.Status()
+                .StartAsync("[yellow]Fetching version info from remote...[/]", async ctx => 
+                {
+                    try
+                    {
+                        // Query the github api to get a list of the latest releases
+                        var response = await client.GetAsync("releases");
 
-                // Take the first and get its name
-                var json = response.Content.ReadAsStringAsync().Result;
-                release = JToken.Parse(json)[0];
-                var releaseName = release["name"].ToString();
+                        // Parse all the releases and versions
+                        var json = await response.Content.ReadAsStringAsync();
+                        var releases = JArray.Parse(json)
+                            .ToDictionary(r => Version.Parse(r["tag_name"]!.ToString()), r => r);
 
-                // Try to parse that name to a Version object
-                remoteVersion = Version.Parse(releaseName);
-                Console.WriteLine($"Found version {remoteVersion}");
-            }
-            catch (Exception ex)
-            {
-                ExitWithError(ex);
-            }
+                        // If the channel is staging, get the latest version,
+                        // while if the channel is release, get the latest stable version
+                        var latest = options.Channel == BuildChannel.Staging
+                            ? releases.MaxBy(r => r.Key)
+                            : releases.Where(r => r.Key.Revision == -1).MaxBy(r => r.Key);
+                        
+                        remoteVersion = latest.Key;
+                        release = latest.Value;
+                        
+                        AnsiConsole.MarkupLine($"[green]Remote version: {remoteVersion}[/]");
+                    }
+                    catch (Exception ex)
+                    {
+                        ExitWithError(ex);
+                    }
+                });
+            
+            Version? currentVersion = null;
 
-            // Read version.txt to get the current version
-            Console.Write("[2/6] Reading the current version... ");
-            try
-            {
-                var content = File.ReadLines("version.txt").First();
-                currentVersion = Version.Parse(content);
-                Console.WriteLine($"Found version {currentVersion}");
-            }
-            catch
-            {
-                Console.WriteLine($"Failed! Assuming version is {currentVersion}");
-            }
+            await AnsiConsole.Status()
+                .StartAsync("[yellow]Reading the current version...[/]", async ctx => 
+                {
+                    try
+                    {
+                        // Check if version.txt exists
+                        if (!File.Exists("version.txt"))
+                        {
+                            return;
+                        }
+                        
+                        var content = await File.ReadAllLinesAsync("version.txt");
+                        currentVersion = Version.Parse(content.First());
+                        
+                        AnsiConsole.MarkupLine($"[green]Current version: {currentVersion}[/]");
+                    }
+                    catch (Exception ex)
+                    {
+                        ExitWithError(ex);
+                    }
+                });
 
-            // Compare versions
-            Console.Write("[3/6] Comparing versions... ");
-            if (remoteVersion > currentVersion)
+            if (currentVersion is null)
             {
-                Console.WriteLine("Update available!");
+                // If the current version is null, assume it's a clean install
+                AnsiConsole.MarkupLine("[yellow]version.txt not found, assuming this is a clean install[/]");
+                            
+                // Ask the user if they want to proceed and download the latest version
+                var cleanInstall = AnsiConsole.Prompt(
+                    new ConfirmationPrompt("Do you want to proceed and download the latest version?"));
+                            
+                // If the user said no, exit
+                if (!cleanInstall)
+                {
+                    AnsiConsole.MarkupLine("[yellow]Exiting...[/]");
+                    Environment.Exit(0);
+                }
             }
             else
             {
-                Console.WriteLine("Already up to date!");
-                Console.ReadKey();
-                Environment.Exit(0);
+                if (remoteVersion > currentVersion)
+                {
+                    AnsiConsole.MarkupLine("[yellow]Update available![/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[green]Already up to date![/]");
+                    AnsiConsole.MarkupLine("[green]Press any key to exit...[/]");
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
             }
-
-            // Download the remote patch (not the entire build)
-            var patch = release["assets"].First(t => t["name"].ToObject<string>().Contains("patch", StringComparison.OrdinalIgnoreCase));
-            var size = patch["size"].ToObject<double>();
-            var megaBytes = size / (1 * 1000 * 1000);
-            Console.Write($"[4/6] Downloading the updated build ({megaBytes:0.00} MB)... ");
+            
+            // Check if openbullet is running
+            if (Process.GetProcessesByName("OpenBullet2.Web").Length != 0)
+            {
+                ExitWithError("OpenBullet 2 is currently running, please close it before updating!");
+                return;
+            }
+            
+            // Download the OpenBullet2.Web.zip file
+            MemoryStream stream = null!;
             try
             {
-                var downloadUrl = patch["browser_download_url"].ToString();
-                var response = client.GetAsync(downloadUrl).Result;
-                stream = response.Content.ReadAsStream();
-                stream.Seek(0, SeekOrigin.Begin);
+                var build = release["assets"]!.First(t => t["name"]!.ToObject<string>()! == "OpenBullet2.Web.zip");
+                var size = build["size"]!.ToObject<double>();
+                var megaBytes = size / (1 * 1000 * 1000);
+                AnsiConsole.MarkupLine($"[yellow]Downloading the updated build ({megaBytes:0.00} MB)...[/]");
                 
-                Console.WriteLine("Done!");
-            }
-            catch (Exception ex)
-            {
-                ExitWithError(ex);
-            }
-
-            // Extract it
-            Console.Write("[5/6] Extracting the archive... ");
-            try
-            {
-                // Back up the themes folder
-                var themesFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/css/themes");
-                var hasThemes = Directory.Exists(themesFolder);
-                var tempFolder = Path.Combine(Path.GetTempPath(), "ob2themes");
-
-                if (hasThemes)
-                {
-                    Directory.CreateDirectory(tempFolder);
-                    DirectoryCopy(themesFolder, tempFolder, true);
-                }
-
-                // Extract the archive
-                using var archive = new ZipArchive(stream);
-                foreach (var entry in archive.Entries)
-                {
-                    // Some entries may fail to extract, for example the Updater because
-                    // it's currently being executed, so it's better to just ignore them
-                    try
+                var downloadUrl = build["url"]!.ToString();
+                await AnsiConsole.Progress()
+                    .Columns([
+                        new TaskDescriptionColumn(),
+                        new ProgressBarColumn(),
+                        new PercentageColumn()
+                    ])
+                    .StartAsync(async ctx => 
                     {
-                        var folder = Path.Combine(Directory.GetCurrentDirectory(), Path.GetDirectoryName(entry.FullName));
-                        Directory.CreateDirectory(folder);
-                        entry.ExtractToFile(Path.Combine(Directory.GetCurrentDirectory(), entry.FullName), true);
-                    }
-                    catch
-                    {
+                        var downloadTask = ctx.AddTask("[green]Downloading[/]");
 
-                    }
-                }
+                        var progress = new Progress<double>(p =>
+                        {
+                            downloadTask.Value = p;
+                        });
 
-                // Restore the themes folder
-                if (hasThemes)
+                        stream = await DownloadAsync(client, downloadUrl, progress); 
+                    });
+                
+                AnsiConsole.MarkupLine("[green]Download complete![/]");
+            }
+            catch (Exception ex)
+            {
+                ExitWithError(ex);
+            }
+            
+            AnsiConsole.MarkupLine("[yellow]Cleaning up the OB2 folder...[/]");
+
+            // Delete all files except Updater.exe and Updater.dll
+            AnsiConsole.Status()
+                .Start("[yellow]Deleting...[/]", ctx =>
                 {
-                    Directory.CreateDirectory(themesFolder);
-                    DirectoryCopy(tempFolder, themesFolder, true);
-                }
+                    foreach (var file in Directory.EnumerateFiles(Directory.GetCurrentDirectory()))
+                    {
+                        if (file.EndsWith("Updater.exe") || file.EndsWith("Updater.dll"))
+                        {
+                            continue;
+                        }
+                        
+                        ctx.Status($"Deleting {file}...");
+                    
+                        File.Delete(file);
+                    }
+                });
+            
+            // Delete all directories except UserData
+            AnsiConsole.Status()
+                .Start("[yellow]Deleting...[/]", ctx =>
+                {
+                    foreach (var dir in Directory.EnumerateDirectories(Directory.GetCurrentDirectory()))
+                    {
+                        if (dir.EndsWith("UserData"))
+                        {
+                            continue;
+                        }
+                        
+                        ctx.Status($"Deleting {dir}...");
+                    
+                        Directory.Delete(dir, true);
+                    }
+                });
+            
+            AnsiConsole.MarkupLine("[yellow]Extracting the archive...[/]");
+            
+            await AnsiConsole.Status()
+                .StartAsync("[yellow]Extracting...[/]", async ctx => 
+                {
+                    using var archive = new ZipArchive(stream);
+                    foreach (var entry in archive.Entries)
+                    {
+                        // Do not extract Updater.exe or Updater.dll
+                        if (entry.FullName.EndsWith("Updater.exe") || entry.FullName.EndsWith("Updater.dll"))
+                        {
+                            continue;
+                        }
+                
+                        // Do not extract UserData folder
+                        if (entry.FullName.StartsWith("UserData"))
+                        {
+                            continue;
+                        }
+                        
+                        // If the entry is a directory, disregard it
+                        if (entry.FullName.EndsWith('/'))
+                        {
+                            continue;
+                        }
+                        
+                        ctx.Status($"Extracting {entry.FullName}...");
+                
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), entry.FullName);
+                        var dir = Path.GetDirectoryName(path);
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir!);
+                        }
 
-                Console.WriteLine("Done!");
-            }
-            catch (Exception ex)
-            {
-                ExitWithError(ex);
-            }
-
-            // Write the new version
-            Console.Write("[6/6] Changing the current version number... ");
-            try
-            {
-                File.WriteAllText("version.txt", remoteVersion.ToString());
-                Console.WriteLine("Done!");
-            }
-            catch (Exception ex)
-            {
-                ExitWithError(ex);
-            }
-
-            Console.WriteLine("The update was completed successfully. You may now restart your OpenBullet 2 instance!");
-            Console.WriteLine("Press any key to exit...");
+                        await using var fileStream = new FileStream(path, FileMode.Create);
+                        await using var entryStream = entry.Open();
+                        await entryStream.CopyToAsync(fileStream);
+                    }
+            
+                    await stream.DisposeAsync();
+                });
+            
+            AnsiConsole.MarkupLine("[green]The update was completed successfully. " +
+                                   "You may now restart your OpenBullet 2 instance![/]");
+            AnsiConsole.MarkupLine("[green]Press any key to exit...[/]");
             Console.ReadKey();
             Environment.Exit(0);
         }
 
-        private static void ExitWithError(Exception ex)
+        private static void ExitWithError(string message)
         {
-            Console.WriteLine($"Failed! {ex.Message}");
-            Console.WriteLine("Press any key to exit...");
+            AnsiConsole.MarkupLine($"[red]Failed! {message}[/]");
+            AnsiConsole.MarkupLine("[red]Press any key to exit...[/]");
             Console.ReadKey();
             Environment.Exit(1);
         }
+        
+        private static void ExitWithError(Exception ex)
+            => ExitWithError(ex.Message);
 
-        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        private static async Task<MemoryStream> DownloadAsync(HttpClient client, string url,
+            IProgress<double> progress)
         {
-            // Get the subdirectories for the specified directory.
-            var dir = new DirectoryInfo(sourceDirName);
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            
+            // We need to specify the Accept header as application/octet-stream
+            // to get the raw file instead of the json response
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
+            
+            using var response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
 
-            if (!dir.Exists)
+            var content = response.Content;
+            var total = response.Content.Headers.ContentLength!;
+            var downloaded = 0.0;
+
+            var memoryStream = new MemoryStream();
+            await using var stream = await content.ReadAsStreamAsync();
+
+            var buffer = new byte[81920];
+            var isMoreToRead = true;
+
+            do
             {
-                throw new DirectoryNotFoundException(
-                    "Source directory does not exist or could not be found: "
-                    + sourceDirName);
-            }
-
-            var dirs = dir.GetDirectories();
-
-            // If the destination directory doesn't exist, create it.       
-            Directory.CreateDirectory(destDirName);
-
-            // Get the files in the directory and copy them to the new location.
-            var files = dir.GetFiles();
-            foreach (var file in files)
-            {
-                var tempPath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(tempPath, true);
-            }
-
-            // If copying subdirectories, copy them and their contents to new location.
-            if (copySubDirs)
-            {
-                foreach (var subdir in dirs)
+                var read = await stream.ReadAsync(buffer);
+                if (read == 0)
                 {
-                    var tempPath = Path.Combine(destDirName, subdir.Name);
-                    DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
+                    isMoreToRead = false;
                 }
-            }
+                else
+                {
+                    await memoryStream.WriteAsync(buffer.AsMemory(0, read));
+                    downloaded += read;
+                    progress.Report(downloaded / total.Value * 100);
+                }
+            } while (isMoreToRead);
+            
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            return memoryStream;
         }
     }
 }
