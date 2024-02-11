@@ -20,17 +20,35 @@ export class ChangelogComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.updateInfo?.isUpdateAvailable) {
-      this.infoService.getChangelog(this.updateInfo!.remoteVersion).subscribe(
+      if (this.isStagingBuild(this.updateInfo!.remoteVersion)) {
+        this.newChangelog = {
+          version: this.updateInfo!.remoteVersion,
+          markdownText: "Staging build, no changelog available."
+        };
+      } else {
+        this.infoService.getChangelog(this.updateInfo!.remoteVersion).subscribe(
+          (changelog) => {
+            this.newChangelog = changelog;
+          }
+        );
+      }
+    }
+
+    if (this.isStagingBuild(this.updateInfo!.currentVersion)) {
+      this.changelog = {
+        version: this.updateInfo!.currentVersion,
+        markdownText: "Staging build, no changelog available."
+      };
+    } else {
+      this.infoService.getChangelog(this.updateInfo?.currentVersion ?? null).subscribe(
         (changelog) => {
-          this.newChangelog = changelog;
+          this.changelog = changelog;
         }
       );
     }
+  }
 
-    this.infoService.getChangelog(this.updateInfo?.currentVersion ?? null).subscribe(
-      (changelog) => {
-        this.changelog = changelog;
-      }
-    );
+  isStagingBuild(version: string): boolean {
+    return version.split('.').length === 4;
   }
 }

@@ -16,6 +16,7 @@ $sidebarWidth: 230px;
     
         .sidebar-logo {
             padding: 40px 50px 0px 50px;
+            margin-bottom: 10px;
         
             img {
                 width: 100%;
@@ -23,7 +24,8 @@ $sidebarWidth: 230px;
         }
     
         .sidebar-version {
-            padding: 20px 0px;
+            padding: 10px 0px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
