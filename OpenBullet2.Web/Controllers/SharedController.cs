@@ -52,7 +52,7 @@ public class SharedController : ApiController
 
         if (existing is not null)
         {
-            throw new EntryAlreadyExistsException(ErrorCode.ENDPOINT_ALREADY_EXISTS,
+            throw new EntryAlreadyExistsException(ErrorCode.EndpointAlreadyExists,
                 $"There is already an endpoint with route {dto.Route}");
         }
 
@@ -79,7 +79,7 @@ public class SharedController : ApiController
 
         if (endpoint is null)
         {
-            throw new EntryNotFoundException(ErrorCode.ENDPOINT_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.EndpointNotFound,
                 $"Invalid endpoint with route {dto.Route}");
         }
 
@@ -104,7 +104,7 @@ public class SharedController : ApiController
 
         if (endpoint is null)
         {
-            throw new EntryNotFoundException(ErrorCode.ENDPOINT_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.EndpointNotFound,
                 $"Invalid endpoint with route {route}");
         }
 
@@ -134,7 +134,7 @@ public class SharedController : ApiController
             }
 
             return File(await _configSharingService.GetArchive(endpointName),
-                "application/zip", $"configs.zip");
+                "application/zip", "configs.zip");
         }
         catch (UnauthorizedAccessException)
         {

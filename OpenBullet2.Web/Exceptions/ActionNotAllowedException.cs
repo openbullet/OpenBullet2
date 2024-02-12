@@ -10,7 +10,7 @@ public class ActionNotAllowedException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public ActionNotAllowedException(ErrorCode errorCode, string message)
+    public ActionNotAllowedException(string errorCode, string message)
         : base(errorCode, message)
     {
 

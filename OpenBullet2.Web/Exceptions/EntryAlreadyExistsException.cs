@@ -10,7 +10,7 @@ public class EntryAlreadyExistsException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public EntryAlreadyExistsException(ErrorCode errorCode, string message)
+    public EntryAlreadyExistsException(string errorCode, string message)
         : base(errorCode, message)
     {
 

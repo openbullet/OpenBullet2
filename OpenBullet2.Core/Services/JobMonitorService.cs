@@ -23,7 +23,7 @@ public class JobMonitorService : IDisposable
     private readonly Timer timer;
     private readonly Timer saveTimer;
     private readonly JobManagerService jobManager;
-    private readonly string fileName = "UserData/triggeredActions.json";
+    private readonly string fileName;
     private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
     {
         TypeNameHandling = TypeNameHandling.Auto,
@@ -31,9 +31,11 @@ public class JobMonitorService : IDisposable
     };
     private byte[] lastSavedHash = Array.Empty<byte>();
 
-    public JobMonitorService(JobManagerService jobManager, bool autoSave = true)
+    public JobMonitorService(JobManagerService jobManager,
+        string fileName = "UserData/triggeredActions.json", bool autoSave = true)
     {
         this.jobManager = jobManager;
+        this.fileName = fileName;
         RestoreTriggeredActions();
 
         timer = new Timer(new TimerCallback(_ => CheckAndExecute()), null, 1000, 1000);

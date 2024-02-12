@@ -118,7 +118,7 @@ public class InfoController : ApiController
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 throw new ResourceNotFoundException(
-                    ErrorCode.REMOTE_RESOURCE_NOT_FOUND,
+                    ErrorCode.RemoteResourceNotFound,
                     $"Changelog for version {v}", url);
             }
 

@@ -10,7 +10,7 @@ public class ResourceNotFoundException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public ResourceNotFoundException(ErrorCode errorCode, string message) 
+    public ResourceNotFoundException(string errorCode, string message) 
         : base(errorCode, message)
     {
 
@@ -22,7 +22,7 @@ public class ResourceNotFoundException : ApiException
     /// <param name="errorCode">The error code</param>
     /// <param name="resource">The resource that was not found</param>
     /// <param name="path">The path from which the resource was being read</param>
-    public ResourceNotFoundException(ErrorCode errorCode,
+    public ResourceNotFoundException(string errorCode,
         string resource, string path) :
         base(errorCode, $"Could not find the resource '{resource}' at {path}")
     {

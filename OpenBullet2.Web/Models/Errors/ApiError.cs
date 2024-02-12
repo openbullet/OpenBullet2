@@ -10,12 +10,7 @@ public class ApiError
     /// <summary>
     /// The error code.
     /// </summary>
-    public int ErrorCode { get; set; }
-
-    /// <summary>
-    /// The error type.
-    /// </summary>
-    public string ErrorType { get; }
+    public string ErrorCode { get; }
 
     /// <summary>
     /// The error message.
@@ -27,13 +22,12 @@ public class ApiError
     /// case of internal server errors.
     /// </summary>
     public string? Details { get; set; }
-
+    
     /// <summary></summary>
-    public ApiError(ErrorCode errorCode,
+    public ApiError(string errorCode,
         string message, string? details = null)
     {
-        ErrorCode = (int)errorCode;
-        ErrorType = errorCode.ToString();
+        ErrorCode = errorCode;
         Message = message;
         Details = details;
     }

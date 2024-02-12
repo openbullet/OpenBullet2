@@ -364,7 +364,7 @@ public class JobController : ApiController
         
         if (job.Status is not JobStatus.Idle)
         {
-            throw new ResourceInUseException(ErrorCode.JOB_NOT_IDLE,
+            throw new ResourceInUseException(ErrorCode.JobNotIdle,
                 $"Job {dto.Id} is not idle");
         }
 
@@ -407,7 +407,7 @@ public class JobController : ApiController
 
         if (job.Status is not JobStatus.Idle)
         {
-            throw new ResourceInUseException(ErrorCode.JOB_NOT_IDLE,
+            throw new ResourceInUseException(ErrorCode.JobNotIdle,
                 $"Job {dto.Id} is not idle");
         }
 
@@ -477,7 +477,7 @@ public class JobController : ApiController
         if (job.Config is null)
         {
             throw new BadRequestException(
-                ErrorCode.INVALID_JOB_CONFIGURATION,
+                ErrorCode.InvalidJobConfiguration,
                 $"The job with id {id} is missing a config");
         }
 
@@ -544,7 +544,7 @@ public class JobController : ApiController
 
         if (notIdleJobs.Any())
         {
-            throw new ResourceInUseException(ErrorCode.JOB_NOT_IDLE,
+            throw new ResourceInUseException(ErrorCode.JobNotIdle,
                 "There are non-idle jobs, please stop them first");
         }
 
@@ -593,7 +593,7 @@ public class JobController : ApiController
         if (job is not MultiRunJob mrJob)
         {
             throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
+                ErrorCode.InvalidJobType,
                 $"The job with id {jobId} is not a multi run job");
         }
 
@@ -601,7 +601,7 @@ public class JobController : ApiController
 
         if (hit is null)
         {
-            throw new EntryNotFoundException(ErrorCode.HIT_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.HitNotFound,
                 hitId, nameof(MultiRunJob.Hits));
         }
         
@@ -778,7 +778,7 @@ public class JobController : ApiController
 
         if (job is null)
         {
-            throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 id, nameof(JobManagerService));
         }
 
@@ -793,7 +793,7 @@ public class JobController : ApiController
         if (job is not T typedJob)
         {
             throw new BadRequestException(
-                ErrorCode.INVALID_JOB_TYPE,
+                ErrorCode.InvalidJobType,
                 $"The job with id {id} is not of type {typeof(T).Name}");
         }
 
@@ -806,7 +806,7 @@ public class JobController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 id, nameof(IJobRepository));
         }
 
@@ -827,7 +827,7 @@ public class JobController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 job.Id, nameof(JobManagerService));
         }
     }
@@ -843,7 +843,7 @@ public class JobController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 entity.Id, nameof(IJobRepository));
         }
     }

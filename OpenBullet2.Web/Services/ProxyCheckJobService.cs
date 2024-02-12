@@ -87,13 +87,13 @@ public class ProxyCheckJobService : IJobService, IDisposable
 
         if (job is null)
         {
-            throw new EntryNotFoundException(ErrorCode.JOB_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.JobNotFound,
                 $"Job with id {jobId} not found");
         }
 
         if (job is not ProxyCheckJob pcJob)
         {
-            throw new BadRequestException(ErrorCode.INVALID_JOB_TYPE,
+            throw new BadRequestException(ErrorCode.InvalidJobType,
                 $"Job with id {jobId} is not a proxy check job");
         }
 

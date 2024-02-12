@@ -116,7 +116,7 @@ public class ProxyController : ApiController
         catch (Exception ex)
         {
             throw new RemoteFetchFailedException(
-                ErrorCode.REMOTE_RESOURCE_FETCH_FAILED,
+                ErrorCode.RemoteResourceFetchFailed,
                 $"Failed to fetch proxies from {dto.Url}. Reason: {ex.Message}");
         }
 
@@ -302,7 +302,7 @@ public class ProxyController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(ErrorCode.PROXY_GROUP_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,
                 id, nameof(IProxyGroupRepository));
         }
 
@@ -320,7 +320,7 @@ public class ProxyController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a proxy group not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.PROXY_GROUP_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,
                 entity.Id, nameof(IProxyGroupRepository));
         }
     }

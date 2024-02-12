@@ -24,6 +24,9 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var userDataFolder = builder.Configuration.GetSection("Settings")
+    .GetValue<string>("UserDataFolder") ?? "UserData";
+
 // Configuration tweaks
 var workerThreads = builder.Configuration.GetSection("Resources").GetValue("WorkerThreads", 1000);
 var ioThreads = builder.Configuration.GetSection("Resources").GetValue("IOThreads", 1000);
@@ -89,7 +92,7 @@ builder.Services.AddScoped<IGuestRepository, DbGuestRepository>();
 builder.Services.AddScoped<IRecordRepository, DbRecordRepository>();
 builder.Services.AddScoped<IWordlistRepository>(service =>
     new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
-    "UserData/Wordlists"));
+    $"{userDataFolder}/Wordlists"));
 
 builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
@@ -102,27 +105,28 @@ builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
-    "UserData/Configs"));
+    $"{userDataFolder}/Configs"));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
-    "UserData"));
+        userDataFolder));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<JobManagerService>();
 builder.Services.AddSingleton(service =>
-    new JobMonitorService(service.GetService<JobManagerService>(), autoSave: false));
+    new JobMonitorService(service.GetService<JobManagerService>(),
+        fileName: $"{userDataFolder}/triggeredActions.json", autoSave: false));
 builder.Services.AddSingleton<HitStorageService>();
-builder.Services.AddSingleton(_ => new RuriLibSettingsService("UserData"));
-builder.Services.AddSingleton(_ => new OpenBulletSettingsService("UserData"));
-builder.Services.AddSingleton(_ => new PluginRepository("UserData/Plugins"));
-builder.Services.AddSingleton(_ => new ThemeService("UserData/Themes"));
+builder.Services.AddSingleton(_ => new RuriLibSettingsService(userDataFolder));
+builder.Services.AddSingleton(_ => new OpenBulletSettingsService(userDataFolder));
+builder.Services.AddSingleton(_ => new PluginRepository($"{userDataFolder}/Plugins"));
+builder.Services.AddSingleton(_ => new ThemeService($"{userDataFolder}/Themes"));
 builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
-    "UserData/Logs/Jobs"));
+    $"{userDataFolder}/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();
@@ -238,3 +242,11 @@ _ = app.Services.GetRequiredService<JobMonitorService>();
 Globals.StartTime = DateTime.UtcNow;
 
 app.Run();
+
+// This makes Program visible for integration tests
+#pragma warning disable S1118
+public partial class Program
+{
+    
+}
+#pragma warning restore S1118

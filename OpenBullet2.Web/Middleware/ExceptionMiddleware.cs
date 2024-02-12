@@ -30,7 +30,7 @@ internal class ExceptionMiddleware
         {
             _logger.LogWarning("Unauthorized request: {message}", ex.Message);
             await Respond(context,
-                new ApiError(ErrorCode.UNAUTHORIZED, ex.Message),
+                new ApiError(ErrorCode.Unauthorized, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
         catch (ApiException ex)
@@ -44,7 +44,7 @@ internal class ExceptionMiddleware
         {
             _logger.LogError(ex, "Generic exception");
             await Respond(context,
-                new ApiError(ErrorCode.INTERNAL_SERVER_ERROR, ex.Message,
+                new ApiError(ErrorCode.InternalServerError, ex.Message,
                 ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
         }
     }

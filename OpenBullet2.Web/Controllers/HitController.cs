@@ -13,6 +13,7 @@ using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Extensions;
+using System.Globalization;
 using System.Text;
 
 namespace OpenBullet2.Web.Controllers;
@@ -339,7 +340,7 @@ public class HitController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(ErrorCode.HIT_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.HitNotFound,
                 id, nameof(IHitRepository));
         }
 
@@ -357,7 +358,7 @@ public class HitController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a hit not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.HIT_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.HitNotFound,
                 entity.Id, nameof(IHitRepository));
         }
     }
@@ -365,7 +366,7 @@ public class HitController : ApiController
     private static string FormatHit(HitEntity hit, string format = "<DATA> | <CAPTURE>")
         => new StringBuilder(format.Unescape())
             .Replace("<DATA>", hit.Data)
-            .Replace("<DATE>", hit.Date.ToString())
+            .Replace("<DATE>", hit.Date.ToString(CultureInfo.InvariantCulture))
             .Replace("<CATEGORY>", hit.ConfigCategory)
             .Replace("<CONFIG>", hit.ConfigName)
             .Replace("<PROXY>", hit.Proxy)

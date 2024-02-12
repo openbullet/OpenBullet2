@@ -10,7 +10,7 @@ public class ResourceAlreadyExistsException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public ResourceAlreadyExistsException(ErrorCode errorCode, string message)
+    public ResourceAlreadyExistsException(string errorCode, string message)
         : base(errorCode, message)
     {
 
@@ -22,7 +22,7 @@ public class ResourceAlreadyExistsException : ApiException
     /// <param name="errorCode">The error code</param>
     /// <param name="resource">The resource that already exists</param>
     /// <param name="path">The path where the resource was being saved</param>
-    public ResourceAlreadyExistsException(ErrorCode errorCode,
+    public ResourceAlreadyExistsException(string errorCode,
         string resource, string path) :
         base(errorCode, $"The resource '{resource}' already exists at {path}")
     {

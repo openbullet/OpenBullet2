@@ -45,7 +45,7 @@ public class PluginController : ApiController
         if (!pluginNames.Contains(name))
         {
             throw new EntryNotFoundException(
-                ErrorCode.PLUGIN_NOT_FOUND, name, nameof(PluginRepository));
+                ErrorCode.PluginNotFound, name, nameof(PluginRepository));
         }
 
         _pluginRepository.DeletePlugin(name);

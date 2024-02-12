@@ -1,0 +1,95 @@
+﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.User;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using Xunit.Abstractions;
+
+namespace OpenBullet2.Web.Tests.Integration;
+
+public class UserIntegrationTests(
+    WebApplicationFactory<Program> factory,
+    ITestOutputHelper testOutputHelper) : IntegrationTests(factory, testOutputHelper)
+{
+    private readonly Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<Program> _webApplicationFactory;
+    
+    [Fact]
+    public async Task Login_AdminUser_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var obSettings = Factory.Services.GetRequiredService<OpenBulletSettingsService>();
+        obSettings.Settings.SecuritySettings.RequireAdminLogin = true;
+        obSettings.Settings.SecuritySettings.AdminUsername = "admin_user";
+        
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword("admin_pass");
+        obSettings.Settings.SecuritySettings.AdminPasswordHash = passwordHash;
+        
+        var dto = new UserLoginDto
+        {
+            Username = "admin_user",
+            Password = "admin_pass"
+        };
+        
+        // Act
+        var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotEmpty(result.Value.Token);
+        
+        // Read the token and make sure the claims are correct
+        var token = result.Value.Token;
+        var claims = GetClaimsFromToken(token).ToList();
+        
+        // Make sure there is a claim of type ClaimTypes.NameIdentifier with value 0
+        var nameIdentifierClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        Assert.NotNull(nameIdentifierClaim);
+        Assert.Equal("0", nameIdentifierClaim.Value);
+        
+        // Make sure there is a claim of type ClaimTypes.Name with value admin_user
+        var nameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+        Assert.NotNull(nameClaim);
+        Assert.Equal("admin_user", nameClaim.Value);
+        
+        // Make sure there is a claim of type ClaimTypes.Role with value Admin
+        var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+        Assert.NotNull(roleClaim);
+        Assert.Equal("Admin", roleClaim.Value);
+    }
+
+    private static IEnumerable<Claim> GetClaimsFromToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+        return jsonToken?.Claims ?? throw new Exception("Invalid token");
+    }
+
+    [Fact]
+    public async Task Login_AdminUser_Fail()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var obSettings = Factory.Services.GetRequiredService<OpenBulletSettingsService>();
+        obSettings.Settings.SecuritySettings.RequireAdminLogin = true;
+        obSettings.Settings.SecuritySettings.AdminUsername = "admin_user";
+        
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword("admin_pass");
+        obSettings.Settings.SecuritySettings.AdminPasswordHash = passwordHash;
+        
+        var dto = new UserLoginDto
+        {
+            Username = "admin_user",
+            Password = "wrong_pass"
+        };
+        
+        // Act
+        var result = await PostJsonAsync<LoggedInUserDto>(client, "/api/v1/user/login", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
+    }
+}

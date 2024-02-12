@@ -37,15 +37,13 @@ public class UserController : ApiController
     public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto)
     {
         // Admin user
-        if (_obSettingsService.Settings.SecuritySettings.AdminUsername.ToLower() == dto.Username.ToLower())
+        if (string.Equals(_obSettingsService.Settings.SecuritySettings.AdminUsername, dto.Username, StringComparison.CurrentCultureIgnoreCase))
         {
             return await LoginAdminUser(dto);
         }
+        
         // Guest
-        else
-        {
-            return await LoginGuestUser(dto);
-        }
+        return await LoginGuestUser(dto);
     }
 
     private Task<LoggedInUserDto> LoginAdminUser(UserLoginDto dto)

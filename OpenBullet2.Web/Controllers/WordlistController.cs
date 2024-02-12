@@ -27,10 +27,11 @@ public class WordlistController : ApiController
     private readonly IGuestRepository _guestRepo;
     private readonly IMapper _mapper;
     private readonly ILogger<WordlistController> _logger;
-    private const string _baseDir = "UserData";
+    private readonly string _baseDir;
 
     /// <summary></summary>
     public WordlistController(IWordlistRepository wordlistRepo,
+        IConfiguration config,
         IGuestRepository guestRepo, IMapper mapper,
         ILogger<WordlistController> logger)
     {
@@ -38,6 +39,9 @@ public class WordlistController : ApiController
         _guestRepo = guestRepo;
         _mapper = mapper;
         _logger = logger;
+        
+        _baseDir = config.GetSection("Settings")
+            .GetValue<string>("UserDataFolder") ?? "UserData";
     }
 
     /// <summary>
@@ -56,7 +60,7 @@ public class WordlistController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
                 apiUser.Username);
             
-            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.WordlistNotFound,
                 id, nameof(IWordlistRepository));
         }
 
@@ -100,7 +104,7 @@ public class WordlistController : ApiController
                 id, entity.FileName);
 
             throw new ResourceNotFoundException(
-                ErrorCode.FILE_NOT_FOUND,
+                ErrorCode.FileNotFound,
                 Path.GetFileName(entity.FileName), entity.FileName);
         }
 
@@ -147,7 +151,7 @@ public class WordlistController : ApiController
                 dto.FilePath);
 
             throw new ResourceNotFoundException(
-                ErrorCode.FILE_NOT_FOUND,
+                ErrorCode.FileNotFound,
                 Path.GetFileName(dto.FilePath), dto.FilePath);
         }
 
@@ -268,7 +272,7 @@ public class WordlistController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.WordlistNotFound,
                 id, nameof(IWordlistRepository));
         }
 
@@ -286,7 +290,7 @@ public class WordlistController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.WORDLIST_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.WordlistNotFound,
                 entity.Id, nameof(IWordlistRepository));
         }
     }

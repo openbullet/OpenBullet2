@@ -11,7 +11,7 @@ public class RemoteFetchFailedException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public RemoteFetchFailedException(ErrorCode errorCode, string message)
+    public RemoteFetchFailedException(string errorCode, string message)
         : base(errorCode, message)
     {
 

@@ -11,7 +11,7 @@ public class ResourceInUseException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public ResourceInUseException(ErrorCode errorCode, string message)
+    public ResourceInUseException(string errorCode, string message)
         : base(errorCode, message)
     {
 

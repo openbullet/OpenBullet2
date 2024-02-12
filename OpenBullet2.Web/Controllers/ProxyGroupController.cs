@@ -132,7 +132,7 @@ public class ProxyGroupController : ApiController
                 if (pcJob.Proxies.Any(p => p.Id == proxies.FirstOrDefault()?.Id))
                 {
                     throw new ResourceInUseException(
-                        ErrorCode.PROXY_GROUP_IN_USE,
+                        ErrorCode.ProxyGroupInUse,
                         $"The proxy group with id {id} is being used in job {job.Id} and cannot be deleted");
                 }
             }
@@ -145,7 +145,7 @@ public class ProxyGroupController : ApiController
                 if (sources.Any(s => s.GroupId == id))
                 {
                     throw new ResourceInUseException(
-                        ErrorCode.PROXY_GROUP_IN_USE,
+                        ErrorCode.ProxyGroupInUse,
                         $"The proxy group with id {id} is being used in job {job.Id} and cannot be deleted");
                 }
             }
@@ -169,7 +169,7 @@ public class ProxyGroupController : ApiController
 
         if (entity is null)
         {
-            throw new EntryNotFoundException(ErrorCode.PROXY_GROUP_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,
                 id, nameof(IProxyGroupRepository));
         }
 
@@ -187,7 +187,7 @@ public class ProxyGroupController : ApiController
             _logger.LogWarning("Guest user {username} tried to access a proxy group not owned by them",
                 apiUser.Username);
 
-            throw new EntryNotFoundException(ErrorCode.PROXY_GROUP_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,
                 entity.Id, nameof(IProxyGroupRepository));
         }
     }

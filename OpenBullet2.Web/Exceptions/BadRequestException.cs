@@ -10,7 +10,7 @@ public class BadRequestException : ApiException
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public BadRequestException(ErrorCode errorCode, string message) 
+    public BadRequestException(string errorCode, string message) 
         : base(errorCode, message)
     {
     }

@@ -135,7 +135,7 @@ public class ConfigController : ApiController
                 $"Attempted to edit a remote config with id {dto.Id}");
 
             throw new ActionNotAllowedException(
-                ErrorCode.REMOTE_CONFIG,
+                ErrorCode.ActionNotAllowedForRemoteConfig,
                 $"Attempted to edit a remote config with id {dto.Id}");
         }
 
@@ -220,7 +220,7 @@ public class ConfigController : ApiController
                 $"Attempted to edit a remote config with id {id}");
 
             throw new ActionNotAllowedException(
-                ErrorCode.REMOTE_CONFIG,
+                ErrorCode.ActionNotAllowedForRemoteConfig,
                 $"Attempted to edit a remote config with id {id}");
         }
 
@@ -258,7 +258,7 @@ public class ConfigController : ApiController
                 $"Attempted to download a remote config with id {id}");
 
             throw new ActionNotAllowedException(
-                ErrorCode.REMOTE_CONFIG,
+                ErrorCode.ActionNotAllowedForRemoteConfig,
                 $"Attempted to download a remote config with id {id}");
         }
 
@@ -386,7 +386,7 @@ public class ConfigController : ApiController
 
         if (config is null)
         {
-            throw new EntryNotFoundException(ErrorCode.CONFIG_NOT_FOUND,
+            throw new EntryNotFoundException(ErrorCode.ConfigNotFound,
                 id, nameof(ConfigService));
         }
 
@@ -421,7 +421,7 @@ public class ConfigController : ApiController
         }
         catch (Exception ex)
         {
-            throw new EntryNotFoundException(ErrorCode.INVALID_BLOCK_ID,
+            throw new EntryNotFoundException(ErrorCode.InvalidBlockId,
                 id, nameof(RuriLib.Globals.DescriptorsRepository));
         }
         

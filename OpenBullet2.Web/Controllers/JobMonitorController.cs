@@ -150,7 +150,7 @@ public class JobMonitorController : ApiController
         if (targetAction is null)
         {
             throw new EntryNotFoundException(
-                ErrorCode.TRIGGERED_ACTION_NOT_FOUND,
+                ErrorCode.TriggeredActionNotFound,
                 id, nameof(IGuestRepository));
         }
 

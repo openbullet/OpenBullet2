@@ -137,7 +137,7 @@ public class GuestController : ApiController
         if (entity is null)
         {
             throw new EntryNotFoundException(
-                ErrorCode.GUEST_NOT_FOUND,
+                ErrorCode.GuestUserNotFound,
                 id, nameof(IGuestRepository));
         }
 
