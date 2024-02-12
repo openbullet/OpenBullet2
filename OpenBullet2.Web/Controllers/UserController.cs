@@ -5,6 +5,7 @@ using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Interfaces;
+using System.Net;
 using System.Security.Claims;
 
 namespace OpenBullet2.Web.Controllers;
@@ -93,12 +94,7 @@ public class UserController : ApiController
             throw new UnauthorizedAccessException("Access to this guest account has expired");
         }
 
-        var ip = HttpContext.Connection.RemoteIpAddress;
-
-        if (ip is null)
-        {
-            throw new UnauthorizedAccessException("Failed to read the IP of the calling client");
-        }
+        var ip = HttpContext.Connection.RemoteIpAddress ?? IPAddress.None;
 
         if (ip.IsIPv4MappedToIPv6)
         {
@@ -123,8 +119,13 @@ public class UserController : ApiController
             new Claim("IPAtLogin", ip.ToString())
         };
 
+        // Expire the token at the earliest of the two:
+        // the expiration of the access or the configured lifetime of the guest token
         var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.GuestSessionLifetimeHours, 0, 9999);
-        var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
+        var lifetimeSpan = TimeSpan.FromHours(lifetimeHours);
+        var accessExpiration = entity.AccessExpiration - DateTime.UtcNow;
+        var token = _authService.GenerateToken(claims,
+            accessExpiration < lifetimeSpan ? accessExpiration : lifetimeSpan);
 
         return new LoggedInUserDto
         {
