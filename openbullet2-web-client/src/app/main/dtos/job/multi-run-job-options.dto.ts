@@ -16,7 +16,7 @@ export enum NoValidProxyBehaviour {
 export interface MultiRunJobOptionsDto {
     name: string;
     startCondition: RelativeTimeStartConditionDto | AbsoluteTimeStartConditionDto;
-    configId: string;
+    configId: string | null;
     bots: number;
     skip: number;
     proxyMode: JobProxyMode;

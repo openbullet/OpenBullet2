@@ -254,9 +254,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           this.dataPoolType = DataPoolType.Infinite;
         }
 
-        this.configService.getInfo(options.configId).subscribe(configInfo => {
-          this.selectedConfigInfo = configInfo;
-        });
+        // If there is a config, we need to fetch it
+        if (options.configId !== null) {
+          this.configService.getInfo(options.configId).subscribe(configInfo => {
+            this.selectedConfigInfo = configInfo;
+          });
+        }
 
         // If the data pool is a wordlist, we need to fetch it
         if (this.dataPoolType === DataPoolType.Wordlist) {

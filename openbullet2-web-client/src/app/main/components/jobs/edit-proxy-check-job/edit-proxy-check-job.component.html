@@ -69,7 +69,7 @@
             </div>
             <span class="input-small"
                 *ngIf="startConditionMode === StartConditionMode.Relative">
-                <app-input-time-span
+                <app-input-time-span [small]="true"
                     key="startAfter"
                     (touched)="touched = true" ngDefaultControl
                     (validityChange)="onValidityChange($event)"

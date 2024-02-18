@@ -10,6 +10,5 @@ public class ConvertLoliCodeToStackDto
     /// <summary>
     /// The LoliCode script to convert.
     /// </summary>
-    [Required]
     public string LoliCode { get; set; } = string.Empty;
 }

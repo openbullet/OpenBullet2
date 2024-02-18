@@ -19,14 +19,18 @@ export class ChangelogComponent implements OnChanges {
   constructor(private infoService: InfoService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.updateInfo?.isUpdateAvailable) {
-      if (this.isStagingBuild(this.updateInfo!.remoteVersion)) {
+    if (this.updateInfo === null) {
+      return;
+    }
+
+    if (this.updateInfo.isUpdateAvailable) {
+      if (this.isStagingBuild(this.updateInfo.remoteVersion)) {
         this.newChangelog = {
-          version: this.updateInfo!.remoteVersion,
+          version: this.updateInfo.remoteVersion,
           markdownText: "Staging build, no changelog available."
         };
       } else {
-        this.infoService.getChangelog(this.updateInfo!.remoteVersion).subscribe(
+        this.infoService.getChangelog(this.updateInfo.remoteVersion).subscribe(
           (changelog) => {
             this.newChangelog = changelog;
           }
@@ -34,13 +38,13 @@ export class ChangelogComponent implements OnChanges {
       }
     }
 
-    if (this.isStagingBuild(this.updateInfo!.currentVersion)) {
+    if (this.isStagingBuild(this.updateInfo.currentVersion)) {
       this.changelog = {
-        version: this.updateInfo!.currentVersion,
+        version: this.updateInfo.currentVersion,
         markdownText: "Staging build, no changelog available."
       };
     } else {
-      this.infoService.getChangelog(this.updateInfo?.currentVersion ?? null).subscribe(
+      this.infoService.getChangelog(this.updateInfo.currentVersion ?? null).subscribe(
         (changelog) => {
           this.changelog = changelog;
         }

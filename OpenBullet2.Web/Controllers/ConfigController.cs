@@ -156,6 +156,14 @@ public class ConfigController : ApiController
 
         // Apply the new fields to the existing config
         _mapper.Map(dto, config);
+        
+        // If the mode is Stack or LoliCode we also have to make sure to
+        // update the Stack according to the new LoliCode
+        if (config.Mode is ConfigMode.Stack or ConfigMode.LoliCode)
+        {
+            var stack = Loli2StackTranspiler.Transpile(config.LoliCodeScript);
+            config.Stack = stack;
+        }
 
         if (dto.Persistent)
         {

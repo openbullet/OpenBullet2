@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BasicAuthRequestParamsDto, BlockSettingType, HttpRequestBlockInstanceDto, MultipartContentType, MultipartRequestParamsDto, RawRequestParamsDto, RequestParamsType, StandardRequestParamsDto } from 'src/app/main/dtos/config/block-instance.dto';
@@ -8,7 +8,7 @@ import { BasicAuthRequestParamsDto, BlockSettingType, HttpRequestBlockInstanceDt
   templateUrl: './http-request-block.component.html',
   styleUrls: ['./http-request-block.component.scss']
 })
-export class HttpRequestBlockComponent implements OnInit {
+export class HttpRequestBlockComponent implements OnChanges {
   @Input() block!: HttpRequestBlockInstanceDto;
   @Input() descriptor!: BlockDescriptorDto;
 
@@ -87,7 +87,7 @@ export class HttpRequestBlockComponent implements OnInit {
     }
   };
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     // Set the correct request params type
     if (this.block.requestParams._polyTypeName === RequestParamsType.Standard) {
       this.standardRequestParams = this.block.requestParams;
