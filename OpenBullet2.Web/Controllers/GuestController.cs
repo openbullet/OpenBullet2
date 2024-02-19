@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
+using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Exceptions;
@@ -18,14 +19,17 @@ public class GuestController : ApiController
 {
     private readonly IGuestRepository _guestRepo;
     private readonly IMapper _mapper;
+    private readonly OpenBulletSettingsService _obSettingsService;
     private readonly ILogger<GuestController> _logger;
 
     /// <summary></summary>
     public GuestController(IGuestRepository guestRepo, IMapper mapper,
+        OpenBulletSettingsService obSettingsService,
         ILogger<GuestController> logger)
     {
         _guestRepo = guestRepo;
         _mapper = mapper;
+        _obSettingsService = obSettingsService;
         _logger = logger;
     }
 
@@ -36,11 +40,20 @@ public class GuestController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GuestDto>> Create(CreateGuestDto dto)
     {
-        var existing = await _guestRepo.GetAll().FirstOrDefaultAsync(g => g.Username == dto.Username);
+        var existing = await _guestRepo.GetAll()
+            .FirstOrDefaultAsync(g => g.Username == dto.Username);
 
         if (existing is not null)
         {
-            return BadRequest("There is already a guest user with this username");
+            throw new BadRequestException(ErrorCode.UsernameTaken,
+                $"A guest user with the username {dto.Username} already exists");
+        }
+        
+        // Also make sure the admin is not using the same username
+        if (_obSettingsService.Settings.SecuritySettings.AdminUsername == dto.Username)
+        {
+            throw new BadRequestException(ErrorCode.UsernameTaken,
+                "The admin user is already using this username");
         }
 
         var entity = _mapper.Map<GuestEntity>(dto);
@@ -60,6 +73,26 @@ public class GuestController : ApiController
     public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto)
     {
         var entity = await GetEntityAsync(dto.Id);
+        
+        // If the username was changed, make sure it's not taken
+        if (entity.Username != dto.Username)
+        {
+            var existing = await _guestRepo.GetAll()
+                .FirstOrDefaultAsync(g => g.Username == dto.Username);
+
+            if (existing is not null)
+            {
+                throw new BadRequestException(ErrorCode.UsernameTaken,
+                    $"A guest user with the username {dto.Username} already exists");
+            }
+            
+            // Also make sure the admin is not using the same username
+            if (_obSettingsService.Settings.SecuritySettings.AdminUsername == dto.Username)
+            {
+                throw new BadRequestException(ErrorCode.UsernameTaken,
+                    "The admin user is already using this username");
+            }
+        }
 
         _mapper.Map(dto, entity);
         await _guestRepo.Update(entity);

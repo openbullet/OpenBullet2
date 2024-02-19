@@ -33,12 +33,18 @@ internal class ExceptionMiddleware
                 new ApiError(ErrorCode.Unauthorized, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
+        catch (ResourceNotFoundException ex)
+        {
+            await Respond(context,
+                new ApiError(ex.ErrorCode, ex.Message),
+                HttpStatusCode.NotFound);
+        }
         catch (ApiException ex)
         {
             _logger.LogWarning("Request failed with managed exception: {message}", ex.Message);
             await Respond(context,
                 new ApiError(ex.ErrorCode, ex.ToString()),
-                HttpStatusCode.NotFound);
+                HttpStatusCode.BadRequest);
         }
         catch (Exception ex)
         {

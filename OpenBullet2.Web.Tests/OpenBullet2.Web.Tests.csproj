@@ -27,4 +27,11 @@
       <ProjectReference Include="..\OpenBullet2.Web\OpenBullet2.Web.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\OB2TestPlugin.zip" />
+      <Content Include="Resources\OB2TestPlugin.zip">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

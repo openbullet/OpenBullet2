@@ -63,6 +63,11 @@ public static class ErrorCode
     /// Guest user not found.
     /// </summary>
     public const string GuestUserNotFound = "GUEST_USER_NOT_FOUND";
+    
+    /// <summary>
+    /// A user with the same username already exists.
+    /// </summary>
+    public const string UsernameTaken = "USERNAME_TAKEN";
 
     /// <summary>
     /// Plugin not found.

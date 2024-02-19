@@ -109,46 +109,20 @@ public class IntegrationTests : IDisposable
     }
  
     protected async Task<Result<T, ApiErrorResponse>> PostJsonAsync<T>(HttpClient client, string url, object dto)
-        => await PostJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto);
- 
-    protected async Task<Result<T, ApiErrorResponse>> PostJsonAsync<T>(HttpClient client, Uri url, object dto)
-    {
-        var json = JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), _jsonSerializerOptions);
-        var response = await client.PostAsync(url, json);
-        var jsonResponse = await response.Content.ReadAsStringAsync();
- 
-        if (!response.IsSuccessStatusCode)
-        {
-            _testOutputHelper.WriteLine($"API status code: {response.StatusCode}");
-            _testOutputHelper.WriteLine($"API response: {jsonResponse}");
- 
-            try
-            {
-                return new ApiErrorResponse
-                {
-                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, _jsonSerializerOptions)!,
-                    Response = response
-                }!;
-            }
-            catch (JsonException)
-            {
-                return new ApiErrorResponse
-                {
-                    Response = response
-                }!;
-            }
-        }
- 
-        return JsonSerializer.Deserialize<T>(jsonResponse, _jsonSerializerOptions)!;
-    }
+        => await SendJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Post);
  
     protected async Task<Result<T, ApiErrorResponse>> PutJsonAsync<T>(HttpClient client, string url, object dto)
-        => await PutJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto);
- 
-    protected async Task<Result<T, ApiErrorResponse>> PutJsonAsync<T>(HttpClient client, Uri url, object dto)
+        => await SendJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Put);
+    
+    protected async Task<Result<T, ApiErrorResponse>> PatchJsonAsync<T>(HttpClient client, string url, object dto)
+        => await SendJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Patch);
+    
+    protected async Task<Result<T, ApiErrorResponse>> SendJsonAsync<T>(HttpClient client, Uri url, object dto,
+        HttpMethod method)
     {
         var json = JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), _jsonSerializerOptions);
-        var response = await client.PutAsync(url, json);
+        var request = new HttpRequestMessage(method, url) { Content = json };
+        var response = await client.SendAsync(request);
         var jsonResponse = await response.Content.ReadAsStringAsync();
  
         if (!response.IsSuccessStatusCode)
@@ -175,7 +149,7 @@ public class IntegrationTests : IDisposable
  
         return JsonSerializer.Deserialize<T>(jsonResponse, _jsonSerializerOptions)!;
     }
- 
+
     protected async Task<ApiErrorResponse?> DeleteAsync(HttpClient client, string url)
         => await DeleteAsync(client, new Uri(url, UriKind.Relative));
  

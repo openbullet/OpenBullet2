@@ -33,5 +33,5 @@ public class CreateGuestDto
     /// domain names like example.dyndns.org,
     /// IPv6 addresses like ::1
     /// </summary>
-    public List<string> AllowedAddresses { get; set; } = new();
+    public IEnumerable<string> AllowedAddresses { get; set; } = Array.Empty<string>();
 }
