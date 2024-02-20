@@ -43,7 +43,7 @@ internal class ExceptionMiddleware
         {
             _logger.LogWarning("Request failed with managed exception: {message}", ex.Message);
             await Respond(context,
-                new ApiError(ex.ErrorCode, ex.ToString()),
+                new ApiError(ex.ErrorCode, ex.Message, ex.StackTrace?.Trim()),
                 HttpStatusCode.BadRequest);
         }
         catch (Exception ex)

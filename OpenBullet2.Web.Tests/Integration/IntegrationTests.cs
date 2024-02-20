@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Errors;
 using OpenBullet2.Web.Tests.Utils;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit.Abstractions;
@@ -36,6 +40,32 @@ public class IntegrationTests : IDisposable
             $"Data Source={userDataFolder}/OpenBullet.db;");
         
         _serviceScope = Factory.Services.CreateScope();
+    }
+
+    protected void RequireLogin()
+    {
+        var obSettingsService = GetRequiredService<OpenBulletSettingsService>();
+        obSettingsService.Settings.SecuritySettings.RequireAdminLogin = true;
+    }
+
+    /// <summary>
+    /// Sets the Authorization header of the given HttpClient to a JWT
+    /// with the claims of the given guest user.
+    /// </summary>
+    protected void ImpersonateGuest(HttpClient client, GuestEntity guest)
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, guest.Id.ToString(), ClaimValueTypes.Integer),
+            new Claim(ClaimTypes.Name, guest.Username),
+            new Claim(ClaimTypes.Role, "Guest"),
+            new Claim("IPAtLogin", "::1")
+        };
+
+        var authService = GetRequiredService<IAuthTokenService>();
+        var token = authService.GenerateToken(claims, TimeSpan.FromHours(6));
+        
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
     
     protected T GetRequiredService<T>() where T : notnull =>

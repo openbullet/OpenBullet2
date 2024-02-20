@@ -21,4 +21,19 @@ public class ApplicationDbContext : DbContext
     public DbSet<RecordEntity> Records { get; set; }
     public DbSet<HitEntity> Hits { get; set; }
     public DbSet<GuestEntity> Guests { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ProxyGroupEntity>()
+            .HasMany(g => g.Proxies)
+            .WithOne(u => u.Group)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<ProxyGroupEntity>()
+            .HasOne(g => g.Owner)
+            .WithMany(u => u.ProxyGroups)
+            .OnDelete(DeleteBehavior.SetNull);
+        
+        base.OnModelCreating(modelBuilder);
+    }
 }

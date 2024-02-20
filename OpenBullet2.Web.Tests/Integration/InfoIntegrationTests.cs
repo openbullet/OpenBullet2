@@ -6,7 +6,6 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Interfaces;
 using RuriLib.Models.Configs;
-using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Services;
 using Xunit.Abstractions;
 

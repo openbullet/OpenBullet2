@@ -207,14 +207,12 @@ namespace OpenBullet2.Pages
 
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {groupToDelete.Name}?"))
             {
-                // Delete the group from the DB
+                // Delete the group from the DB, this
+                // will cascade delete all the proxies in the group
                 await ProxyGroupsRepo.Delete(groupToDelete);
 
                 // Delete the group from the local list
                 groups.Remove(groupToDelete);
-
-                // Delete the proxies related to that group from the DB
-                await ProxyRepo.Delete(proxies);
 
                 // Change to All and refresh
                 currentGroupId = -1;

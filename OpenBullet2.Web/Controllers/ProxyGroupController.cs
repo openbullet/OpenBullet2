@@ -151,11 +151,8 @@ public class ProxyGroupController : ApiController
             }
         }
 
+        // This will cascade delete all the proxies in the group
         await _proxyGroupRepo.Delete(entity);
-
-        // TODO: Turn this into an EF-core based cascade delete (optimized)
-        // Delete the proxies related to that group from the DB
-        await _proxyRepo.Delete(proxies);
 
         return new AffectedEntriesDto
         {

@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Core.Entities;
+﻿using System.Collections.Generic;
+
+namespace OpenBullet2.Core.Entities;
 
 /// <summary>
 /// This entity stores a group that identifies a collection of proxies.
@@ -14,4 +16,9 @@ public class ProxyGroupEntity : Entity
     /// The owner of this group (null if admin).
     /// </summary>
     public GuestEntity Owner { get; set; }
+    
+    /// <summary>
+    /// The proxies in this group.
+    /// </summary>
+    public ICollection<ProxyEntity> Proxies { get; set; }
 }

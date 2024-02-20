@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OpenBullet2.Core.Entities;
 
@@ -28,4 +29,9 @@ public class GuestEntity : Entity
     /// These can include masked IP ranges and static DNS.
     /// </summary>
     public string AllowedAddresses { get; set; }
+
+    /// <summary>
+    /// The proxy groups that the guest owns.
+    /// </summary>
+    public ICollection<ProxyGroupEntity> ProxyGroups { get; set; }
 }

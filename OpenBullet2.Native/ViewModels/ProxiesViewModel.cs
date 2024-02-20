@@ -140,7 +140,7 @@ namespace OpenBullet2.Native.ViewModels
                 }
             }
 
-            await proxyRepo.Delete(ProxiesCollection);
+            // This will cascade delete all the proxies in the group
             await proxyGroupRepo.Delete(selectedGroup);
 
             SelectedGroupId = allGroup.Id;
