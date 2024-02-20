@@ -101,7 +101,7 @@ public class InfoController : ApiController
     {
         // NOTE: We cannot call the query param "version" otherwise ASP.NET core
         // will set its value to the API version instead of what was passed :|
-        var markdown = string.Empty;
+        string markdown;
 
         using var client = new HttpClient();
         client.DefaultRequestHeaders.UserAgent.ParseAdd(
@@ -112,6 +112,7 @@ public class InfoController : ApiController
 
         try
         {
+            // The changelog is only present for stable builds in the master branch
             var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
             using var response = await client.GetAsync(url);
 
@@ -162,52 +163,55 @@ public class InfoController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<CollectionInfoDto>> GetCollectionInfo()
     {
-        var jobsCount = _serviceProvider
+        var jobCount = _serviceProvider
             .GetRequiredService<JobManagerService>().Jobs.Count();
 
-        var proxiesCount = await _serviceProvider
+        var proxyCount = await _serviceProvider
             .GetRequiredService<IProxyRepository>().GetAll().CountAsync();
 
-        var wordlistsCount = await _serviceProvider
+        var wordlistCount = await _serviceProvider
             .GetRequiredService<IWordlistRepository>().GetAll().CountAsync();
         
-        var wordlistsLines = await _serviceProvider
+        var wordlistLines = await _serviceProvider
             .GetRequiredService<IWordlistRepository>().GetAll().SumAsync(w => (long)w.Total);
 
-        var hitsCount = await _serviceProvider
+        var hitCount = await _serviceProvider
             .GetRequiredService<IHitRepository>().GetAll().CountAsync();
 
-        var configsCount = _serviceProvider
+        var configCount = _serviceProvider
             .GetRequiredService<ConfigService>().Configs.Count;
 
-        var guestsCount = await _serviceProvider
+        var guestCount = await _serviceProvider
             .GetRequiredService<IGuestRepository>().GetAll().CountAsync();
 
-        var pluginsCount = _serviceProvider
+        var pluginCount = _serviceProvider
             .GetRequiredService<PluginRepository>().GetPlugins().Count();
 
         return new CollectionInfoDto
         {
-            JobsCount = jobsCount,
-            ProxiesCount = proxiesCount,
-            WordlistsCount = wordlistsCount,
-            WordlistsLines = wordlistsLines,
-            HitsCount = hitsCount,
-            ConfigsCount = configsCount,
-            GuestsCount = guestsCount,
-            PluginsCount = pluginsCount
+            JobsCount = jobCount,
+            ProxiesCount = proxyCount,
+            WordlistsCount = wordlistCount,
+            WordlistsLines = wordlistLines,
+            HitsCount = hitCount,
+            ConfigsCount = configCount,
+            GuestsCount = guestCount,
+            PluginsCount = pluginCount
         };
     }
 
     private static string GetOperatingSystem()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
             return Environment.OSVersion.VersionString;
+        }
 
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
             return $"macOS {Environment.OSVersion.Version}";
+        }
 
-        else
-            return RuntimeInformation.OSDescription;
+        return RuntimeInformation.OSDescription;
     }
 }
