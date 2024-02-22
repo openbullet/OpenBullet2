@@ -17,11 +17,11 @@ public class EndpointDto
     /// The valid API keys that can be used to access this endpoint.
     /// </summary>
     [Required]
-    public List<string> ApiKeys { get; set; } = new();
+    public IEnumerable<string> ApiKeys { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// The IDs of the configs that this endpoint should expose.
     /// </summary>
     [Required]
-    public List<string> ConfigIds { get; set; } = new();
+    public IEnumerable<string> ConfigIds { get; set; } = Array.Empty<string>();
 }
