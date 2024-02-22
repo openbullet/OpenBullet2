@@ -17,15 +17,15 @@ public class ProxyFiltersDto : PaginationDto
     /// The search term to filter results by the proxy host,
     /// port, username or country. Optional.
     /// </summary>
-    public string? SearchTerm { get; set; }
+    public string? SearchTerm { get; set; } = null;
 
     /// <summary>
     /// The proxy type filter, if any.
     /// </summary>
-    public ProxyType? Type { get; set; }
+    public ProxyType? Type { get; set; } = null;
 
     /// <summary>
     /// The proxy status filter, if any.
     /// </summary>
-    public ProxyWorkingStatus? Status { get; set; }
+    public ProxyWorkingStatus? Status { get; set; } = null;
 }

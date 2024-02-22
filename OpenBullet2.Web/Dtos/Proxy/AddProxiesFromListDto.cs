@@ -17,5 +17,5 @@ public class AddProxiesFromListDto : AddProxiesDto
     /// <example>(http)127.0.0.1:8080</example>
     /// <example>(socks5)myproxy.com:1234:user:secretpassword</example>
     [Required]
-    public List<string> Proxies { get; set; } = new();
+    public IEnumerable<string> Proxies { get; set; } = Array.Empty<string>();
 }

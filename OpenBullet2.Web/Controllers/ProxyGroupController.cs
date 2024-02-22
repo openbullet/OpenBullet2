@@ -153,6 +153,9 @@ public class ProxyGroupController : ApiController
 
         // This will cascade delete all the proxies in the group
         await _proxyGroupRepo.Delete(entity);
+        
+        _logger.LogInformation("Deleted the proxy group with id {id} and {proxyCount} proxies",
+            entity.Id, proxies.Count);
 
         return new AffectedEntriesDto
         {

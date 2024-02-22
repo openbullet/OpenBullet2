@@ -110,7 +110,7 @@ public class ProxyController : ApiController
             var text = await response.Content.ReadAsStringAsync();
 
             lines = text.Split(
-                new string[] { "\r\n", "\n" },
+                ["\r\n", "\n"],
                 StringSplitOptions.RemoveEmptyEntries);
         }
         catch (Exception ex)
@@ -254,8 +254,7 @@ public class ProxyController : ApiController
             }
         }
 
-        return proxies.Select(p =>
-            Core.Helpers.Mapper.MapProxyToProxyEntity(p));
+        return proxies.Select(Core.Helpers.Mapper.MapProxyToProxyEntity);
     }
 
     private IQueryable<ProxyEntity> FilteredQuery(ProxyFiltersDto dto)

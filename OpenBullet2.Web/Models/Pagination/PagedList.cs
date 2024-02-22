@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
+using System.Text.Json.Serialization;
 
 namespace OpenBullet2.Web.Models.Pagination;
 
@@ -11,7 +12,8 @@ public class PagedList<T>
     /// <summary>
     /// The list of items.
     /// </summary>
-    public List<T> Items { get; private set; }
+    [JsonInclude]
+    public List<T> Items { get; private set; } = [];
 
     /// <summary>
     /// The current page.
@@ -33,6 +35,15 @@ public class PagedList<T>
     /// </summary>
     public int TotalCount { get; set; }
 
+    /// <summary>
+    /// Parameterless constructor for serialization.
+    /// </summary>
+    [JsonConstructor]
+    public PagedList()
+    {
+        
+    }
+    
     /// <summary></summary>
     public PagedList(IEnumerable<T> items, int totalCount, int pageNumber,
         int pageSize)

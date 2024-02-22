@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
+[Collection("IntegrationTests")]
 public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
     : IntegrationTests(testOutputHelper)
 {
