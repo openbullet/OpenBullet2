@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,8 +13,8 @@ internal class AdminAttribute : Attribute, IAuthorizationFilter
     {
         if (context.HttpContext.GetApiUser().Role is not UserRole.Admin)
         {
-            throw new UnauthorizedAccessException(
-                "You must be an admin user to perform this operation");
+            throw new ForbiddenException(
+                ErrorCode.NotAdmin, "You must be an admin user to perform this operation");
         }
     }
 }

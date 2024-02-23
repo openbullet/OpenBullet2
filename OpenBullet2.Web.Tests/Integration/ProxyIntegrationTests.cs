@@ -29,7 +29,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var guest = new GuestEntity { Username = "guest" };
         dbContext.Guests.Add(guest);
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
-        dbContext.ProxyGroups.AddRange([adminGroup, guestGroup]);
+        dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
         var adminProxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity {
                 Host = "127.0.0.1",
@@ -79,7 +79,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest" };
         var guest2 = new GuestEntity { Username = "guest2" };
-        dbContext.Guests.AddRange([guest, guest2]);
+        dbContext.Guests.AddRange(guest, guest2);
         var adminGroup = new ProxyGroupEntity { Name = "adminGroup" };
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
         var guest2Group = new ProxyGroupEntity { Name = "guest2Group", Owner = guest2 };
@@ -139,9 +139,10 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
         var group = new ProxyGroupEntity { Name = "group" };
-        var group2 = new ProxyGroupEntity { Name = "group2" };
-        dbContext.ProxyGroups.AddRange([group, group2]);
+        var group2 = new ProxyGroupEntity { Name = "group2", Owner = guest };
+        dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
@@ -264,7 +265,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group" };
         var group2 = new ProxyGroupEntity { Name = "group2" };
-        dbContext.ProxyGroups.AddRange([group, group2]);
+        dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",
@@ -321,7 +322,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group" };
         var group2 = new ProxyGroupEntity { Name = "group2" };
-        dbContext.ProxyGroups.AddRange([group, group2]);
+        dbContext.ProxyGroups.AddRange(group, group2);
         var proxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity {
                 Host = p % 2 == 0 ? "127.0.0.1" : "localhost",

@@ -33,6 +33,12 @@ internal class ExceptionMiddleware
                 new ApiError(ErrorCode.Unauthorized, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
+        catch (ForbiddenException ex)
+        {
+            await Respond(context,
+                new ApiError(ex.ErrorCode, ex.Message),
+                HttpStatusCode.Forbidden);
+        }
         catch (ResourceNotFoundException ex)
         {
             await Respond(context,

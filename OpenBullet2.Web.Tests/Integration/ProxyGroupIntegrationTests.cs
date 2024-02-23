@@ -49,7 +49,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest" };
         var guest2 = new GuestEntity { Username = "guest2" };
-        dbContext.Guests.AddRange([guest, guest2]);
+        dbContext.Guests.AddRange(guest, guest2);
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group1", Owner = guest });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group2" });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group3", Owner = guest2 });

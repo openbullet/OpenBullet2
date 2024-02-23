@@ -38,6 +38,11 @@ public static class ErrorCode
     /// Unauthorized access.
     /// </summary>
     public const string Unauthorized = "UNAUTHORIZED";
+    
+    /// <summary>
+    /// Only admins can perform this action.
+    /// </summary>
+    public const string NotAdmin = "NOT_ADMIN";
 
     /// <summary>
     /// Local file not found.

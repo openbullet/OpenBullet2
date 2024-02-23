@@ -83,7 +83,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     [Fact]
-    public async Task GetAllEndpoints_Guest_Unauthorized()
+    public async Task GetAllEndpoints_Guest_Forbidden()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -101,8 +101,8 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
-        Assert.Equal(ErrorCode.Unauthorized, result.Error.Content!.ErrorCode);
+        Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
             
     [Fact]
@@ -135,7 +135,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     [Fact]
-    public async Task CreateEndpoint_Guest_Unauthorized()
+    public async Task CreateEndpoint_Guest_Forbidden()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -159,8 +159,8 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
-        Assert.Equal(ErrorCode.Unauthorized, result.Error.Content!.ErrorCode);
+        Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
     
     [Fact]
@@ -200,7 +200,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     [Fact]
-    public async Task UpdateEndpoint_Guest_Unauthorized()
+    public async Task UpdateEndpoint_Guest_Forbidden()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -231,8 +231,8 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.False(result.IsSuccess);
-        Assert.Equal(HttpStatusCode.Unauthorized, result.Error.Response.StatusCode);
-        Assert.Equal(ErrorCode.Unauthorized, result.Error.Content!.ErrorCode);
+        Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
     
     [Fact]
@@ -263,7 +263,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     [Fact]
-    public async Task DeleteEndpoint_Guest_Unauthorized()
+    public async Task DeleteEndpoint_Guest_Forbidden()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -289,8 +289,8 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.NotNull(error);
-        Assert.Equal(HttpStatusCode.Unauthorized, error.Response.StatusCode);
-        Assert.Equal(ErrorCode.Unauthorized, error.Content!.ErrorCode);
+        Assert.Equal(HttpStatusCode.Forbidden, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
 
     [Fact]
