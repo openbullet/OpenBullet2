@@ -22,7 +22,7 @@ namespace OpenBullet2.Repositories
         public async Task AddFromCssFile(string fileName, Stream stream)
         {
             using var reader = new StreamReader(stream);
-            using var fs = new FileStream(Path.Combine(BaseFolder, fileName), FileMode.Create);
+            await using var fs = new FileStream(Path.Combine(BaseFolder, fileName), FileMode.Create);
             await stream.CopyToAsync(fs);
         }
 

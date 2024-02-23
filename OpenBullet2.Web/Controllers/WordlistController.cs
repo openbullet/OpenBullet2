@@ -139,7 +139,7 @@ public class WordlistController : ApiController
                 _logger.LogWarning("Guest user {username} tried to access a file outside of the allowed directory while creating a wordlist at {filePath}",
                     apiUser.Username, dto.FilePath);
 
-                throw new UnauthorizedAccessException(
+                throw new ForbiddenException(ErrorCode.FileOutsideAllowedPath,
                     $"Guest users cannot access files outside of the {_baseDir} folder");
             }
         }
@@ -185,7 +185,7 @@ public class WordlistController : ApiController
         var path = FileUtils.GetFirstAvailableFileName(
             Path.Combine(_baseDir, "Wordlists", file.FileName));
 
-        using var fileStream = System.IO.File.OpenWrite(path);
+        await using var fileStream = System.IO.File.OpenWrite(path);
         await file.CopyToAsync(fileStream);
 
         _logger.LogInformation("Uploaded a wordlist file at {path}", path);

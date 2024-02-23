@@ -48,6 +48,11 @@ public static class ErrorCode
     /// Local file not found.
     /// </summary>
     public const string FileNotFound = "FILE_NOT_FOUND";
+    
+    /// <summary>
+    /// File outside allowed path.
+    /// </summary>
+    public const string FileOutsideAllowedPath = "FILE_OUTSIDE_ALLOWED_PATH";
 
     /// <summary>
     /// Remote resource not found.

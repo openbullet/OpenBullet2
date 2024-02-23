@@ -18,9 +18,10 @@ namespace OpenBullet2.Web.Tests.Integration;
 public class IntegrationTests : IDisposable
 {
     private readonly ITestOutputHelper _testOutputHelper;
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new();
     private readonly IServiceScope _serviceScope;
     protected WebApplicationFactory<Program> Factory { get; }
+    protected JsonSerializerOptions JsonSerializerOptions { get; } = new();
+    protected string UserDataFolder { get; }
     
     protected IntegrationTests(ITestOutputHelper testOutputHelper)
     {
@@ -28,17 +29,17 @@ public class IntegrationTests : IDisposable
         _testOutputHelper = testOutputHelper;
         
         var enumConverter = new JsonStringEnumConverter(JsonNamingPolicy.CamelCase);
-        _jsonSerializerOptions.Converters.Add(enumConverter);
-        _jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        _jsonSerializerOptions.IncludeFields = true;
+        JsonSerializerOptions.Converters.Add(enumConverter);
+        JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        JsonSerializerOptions.IncludeFields = true;
         
         // Override the user data folder and connection string
         // to avoid conflicts with other tests
-        var userDataFolder = Path.Combine(Path.GetTempPath(), $"OB2_UserData_{Guid.NewGuid():N}");
-        Environment.SetEnvironmentVariable("Settings__UserDataFolder", userDataFolder);
+        UserDataFolder = Path.Combine(Path.GetTempPath(), $"OB2_UserData_{Guid.NewGuid():N}");
+        Environment.SetEnvironmentVariable("Settings__UserDataFolder", UserDataFolder);
         
         Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection",
-            $"Data Source={userDataFolder}/OpenBullet.db;");
+            $"Data Source={UserDataFolder}/OpenBullet.db;");
         
         _serviceScope = Factory.Services.CreateScope();
     }
@@ -83,7 +84,7 @@ public class IntegrationTests : IDisposable
  
     protected async Task<ApiErrorResponse?> PostJsonAsync(HttpClient client, Uri url, object dto)
     {
-        var json = JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), _jsonSerializerOptions);
+        var json = JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), JsonSerializerOptions);
         var response = await client.PostAsync(url, json);
         var jsonResponse = await response.Content.ReadAsStringAsync();
  
@@ -96,7 +97,7 @@ public class IntegrationTests : IDisposable
             {
                 return new ApiErrorResponse
                 {
-                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, _jsonSerializerOptions)!,
+                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, JsonSerializerOptions)!,
                     Response = response
                 };
             }
@@ -126,7 +127,7 @@ public class IntegrationTests : IDisposable
     {
         var json = dto is null 
             ? null 
-            : JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), _jsonSerializerOptions);
+            : JsonContent.Create(dto, MediaTypeHeaderValue.Parse("application/json"), JsonSerializerOptions);
         
         var request = new HttpRequestMessage(method, url) { Content = json };
         var response = await client.SendAsync(request);
@@ -141,7 +142,7 @@ public class IntegrationTests : IDisposable
             {
                 return new ApiErrorResponse
                 {
-                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, _jsonSerializerOptions)!,
+                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, JsonSerializerOptions)!,
                     Response = response
                 }!;
             }
@@ -154,7 +155,7 @@ public class IntegrationTests : IDisposable
             }
         }
  
-        return JsonSerializer.Deserialize<T>(jsonResponse, _jsonSerializerOptions)!;
+        return JsonSerializer.Deserialize<T>(jsonResponse, JsonSerializerOptions)!;
     }
 
     protected Task<Result<T, ApiErrorResponse>> DeleteJsonAsync<T>(HttpClient client, string url)
@@ -180,7 +181,7 @@ public class IntegrationTests : IDisposable
             {
                 return new ApiErrorResponse
                 {
-                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, _jsonSerializerOptions)!,
+                    Content = JsonSerializer.Deserialize<ApiError>(jsonResponse, JsonSerializerOptions)!,
                     Response = response
                 };
             }
