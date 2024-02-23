@@ -4,9 +4,11 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Proxy;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Pagination;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Proxies;
+using System.Net;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -313,7 +315,89 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(1000 - 1000 / 8, group1ProxyCount);
         Assert.Equal(500 + 1000 / 8, group2ProxyCount);
     }
-    
+
+    /// <summary>
+    /// A guest should now be allowed to move proxies from
+    /// an admin-owned group to a self-owned group.
+    /// </summary>
+    [Fact]
+    public async Task MoveMany_Guest_FromNotOwned_ToOwned_NothingMoved()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var adminGroup = new ProxyGroupEntity { Name = "adminGroup" };
+        var guest = new GuestEntity { Username = "guest" };
+        var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
+        dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
+        var proxies = Enumerable.Range(8080, 1000)
+            .Select(p => new ProxyEntity {
+                Host = "127.0.0.1",
+                Port = p,
+                Group = adminGroup
+            });
+        dbContext.Proxies.AddRange(proxies);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new MoveProxiesDto
+        {
+            PageNumber = 0,
+            PageSize = 25,
+            ProxyGroupId = adminGroup.Id,
+            DestinationGroupId = guestGroup.Id
+        };
+        var result = await PostJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/move/many", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(0, result.Value.Count);
+    }
+
+    [Fact]
+    public async Task UpdateMany_Guest_FromOwned_ToNotOwned_Fail()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        var adminGroup = new ProxyGroupEntity { Name = "adminGroup" };
+        var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
+        dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
+        var proxies = Enumerable.Range(8080, 1000)
+            .Select(p => new ProxyEntity
+            {
+                Host = "127.0.0.1", 
+                Port = p, 
+                Group = guestGroup
+            });
+        dbContext.Proxies.AddRange(proxies);
+        await dbContext.SaveChangesAsync();
+
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+
+        // Act
+        var dto = new MoveProxiesDto 
+        {
+            PageNumber = 0,
+            PageSize = 25,
+            ProxyGroupId = guestGroup.Id,
+            DestinationGroupId = adminGroup.Id
+        };
+        var result = await PostJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/move/many", dto);
+
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content!.ErrorCode);
+    }
+
     [Fact]
     public async Task DownloadMany_Filtered_Success()
     {
@@ -410,7 +494,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
     }
 
     [Fact]
-    public async Task Delete_Slow_Success()
+    public async Task DeleteSlow_Admin_Success()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -442,5 +526,40 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
             .CountAsync();
         
         Assert.Equal(2, remaining);
+    }
+    
+    [Fact]
+    public async Task DeleteSlow_Guest_NotOwned_Fail()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var adminGroup = new ProxyGroupEntity { Name = "adminGroup" };
+        var guest = new GuestEntity { Username = "guest" };
+        var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
+        dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
+        dbContext.Proxies.AddRange([
+            new ProxyEntity { Ping = 1000, Group = adminGroup },
+            new ProxyEntity { Ping = 2000, Group = adminGroup },
+            new ProxyEntity { Ping = 3000, Group = adminGroup },
+            new ProxyEntity { Ping = 4000, Group = adminGroup },
+        ]);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new {
+            proxyGroupId = adminGroup.Id,
+            maxPing = 2000
+        };
+        var result = await DeleteJsonAsync<AffectedEntriesDto>(
+            client, "/api/v1/proxy/slow".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content!.ErrorCode);
     }
 }
