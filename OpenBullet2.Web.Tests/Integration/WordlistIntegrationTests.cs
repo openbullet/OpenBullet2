@@ -529,7 +529,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var lines = Enumerable.Range(0, 100).Select(i => i.ToString());
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         await using var writer = new StreamWriter(stream);
         foreach (var line in lines)
         {
