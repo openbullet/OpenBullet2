@@ -55,24 +55,6 @@ public class JobMonitorController : ApiController
         MapTriggeredAction(GetTriggeredAction(id));
 
     /// <summary>
-    /// Update a triggered action.
-    /// </summary>
-    [HttpPut("triggered-action")]
-    [MapToApiVersion("1.0")]
-    public ActionResult<TriggeredActionDto> Update(
-        UpdateTriggeredActionDto dto)
-    {
-        var targetAction = GetTriggeredAction(dto.Id);
-
-        var newAction = _mapper.Map(dto, targetAction);
-        _jobMonitorService.SaveStateIfChanged();
-        
-        _logger.LogInformation("Updated triggered action {Id}", newAction.Id);
-
-        return MapTriggeredAction(newAction);
-    }
-
-    /// <summary>
     /// Create a new triggered action.
     /// </summary>
     [HttpPost("triggered-action")]
@@ -87,6 +69,24 @@ public class JobMonitorController : ApiController
         _jobMonitorService.SaveStateIfChanged();
         
         _logger.LogInformation("Created triggered action {Id}", newAction.Id);
+
+        return MapTriggeredAction(newAction);
+    }
+    
+    /// <summary>
+    /// Update a triggered action.
+    /// </summary>
+    [HttpPut("triggered-action")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<TriggeredActionDto> Update(
+        UpdateTriggeredActionDto dto)
+    {
+        var targetAction = GetTriggeredAction(dto.Id);
+
+        var newAction = _mapper.Map(dto, targetAction);
+        _jobMonitorService.SaveStateIfChanged();
+        
+        _logger.LogInformation("Updated triggered action {Id}", newAction.Id);
 
         return MapTriggeredAction(newAction);
     }

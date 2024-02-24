@@ -168,10 +168,16 @@ public class IntegrationTests : IDisposable
     protected async Task<Result<T, ApiErrorResponse>> DeleteJsonAsync<T>(HttpClient client, Uri url)
         => await SendJsonAsync<T>(client, url, null, HttpMethod.Delete);
     
-    protected async Task<ApiErrorResponse?> PatchAsync(HttpClient client, string url, object dto)
+    protected async Task<ApiErrorResponse?> PostAsync(HttpClient client, string url, object? dto)
+        => await SendAsync(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Post);
+    
+    protected async Task<ApiErrorResponse?> PostAsync(HttpClient client, Uri url, object? dto)
+        => await SendAsync(client, url, dto, HttpMethod.Post);
+    
+    protected async Task<ApiErrorResponse?> PatchAsync(HttpClient client, string url, object? dto)
         => await SendAsync(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Patch);
     
-    protected async Task<ApiErrorResponse?> PatchAsync(HttpClient client, Uri url, object dto)
+    protected async Task<ApiErrorResponse?> PatchAsync(HttpClient client, Uri url, object? dto)
         => await SendAsync(client, url, dto, HttpMethod.Post);
     
     protected async Task<ApiErrorResponse?> DeleteAsync(HttpClient client, Uri url)
