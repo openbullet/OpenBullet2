@@ -254,7 +254,7 @@ public class HitController : ApiController
             .ToListAsync();
 
         // For each config, get the number of hits for each day
-        var hits = new Dictionary<string, IEnumerable<int>>();
+        var hits = new Dictionary<string, List<int>>();
         
         foreach (var configName in configNames)
         {

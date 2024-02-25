@@ -13,5 +13,5 @@ public class RecentHitsDto
     /// <summary>
     /// The time-series for each config.
     /// </summary>
-    public Dictionary<string, IEnumerable<int>> Hits { get; set; } = new(); 
+    public Dictionary<string, List<int>> Hits { get; set; } = new(); 
 }

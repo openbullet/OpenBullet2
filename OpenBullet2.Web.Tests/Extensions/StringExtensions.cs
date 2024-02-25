@@ -32,6 +32,10 @@ public static class StringExtensions
             {
                 stringValue = enumValue.ToString().ToCamelCase();
             }
+            else if (value is DateTime dateTimeValue)
+            {
+                stringValue = dateTimeValue.ToString("O");
+            }
             else
             {
                 stringValue = value?.ToString();
