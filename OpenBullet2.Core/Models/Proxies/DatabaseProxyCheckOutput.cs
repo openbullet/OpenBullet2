@@ -21,11 +21,11 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
     }
 
     /// <inheritdoc/>
-    public async Task Store(Proxy proxy)
+    public async Task StoreAsync(Proxy proxy)
     {
         try
         {
-            var entity = await proxyRepo.Get(proxy.Id);
+            var entity = await proxyRepo.GetAsync(proxy.Id);
             entity.Country = proxy.Country;
             entity.LastChecked = proxy.LastChecked;
             entity.Ping = proxy.Ping;
@@ -37,7 +37,7 @@ public class DatabaseProxyCheckOutput : IProxyCheckOutput, IDisposable
 
             try
             {
-                await proxyRepo.Update(entity);
+                await proxyRepo.UpdateAsync(entity);
             }
             finally
             {

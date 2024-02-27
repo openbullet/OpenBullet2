@@ -26,7 +26,7 @@ public class HybridWordlistRepository : IWordlistRepository
     }
 
     /// <inheritdoc/>
-    public async Task Add(WordlistEntity entity, CancellationToken cancellationToken = default)
+    public async Task AddAsync(WordlistEntity entity, CancellationToken cancellationToken = default)
     {
         // Save it to the DB
         context.Add(entity);
@@ -34,7 +34,7 @@ public class HybridWordlistRepository : IWordlistRepository
     }
 
     /// <inheritdoc/>
-    public async Task Add(WordlistEntity entity, MemoryStream stream,
+    public async Task AddAsync(WordlistEntity entity, MemoryStream stream,
         CancellationToken cancellationToken = default)
     {
         // Generate a unique filename
@@ -50,7 +50,7 @@ public class HybridWordlistRepository : IWordlistRepository
         // Count the amount of lines
         entity.Total = File.ReadLines(entity.FileName).Count();
 
-        await Add(entity);
+        await AddAsync(entity);
     }
 
     /// <inheritdoc/>
@@ -58,13 +58,14 @@ public class HybridWordlistRepository : IWordlistRepository
         => context.Wordlists;
 
     /// <inheritdoc/>
-    public async Task<WordlistEntity> Get(int id, CancellationToken cancellationToken = default)
+    public async Task<WordlistEntity> GetAsync(
+        int id, CancellationToken cancellationToken = default)
         => await GetAll().Include(w => w.Owner)
-        .FirstOrDefaultAsync(e => e.Id == id)
+        .FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken)
         .ConfigureAwait(false);
 
     /// <inheritdoc/>
-    public async Task Update(WordlistEntity entity, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(WordlistEntity entity, CancellationToken cancellationToken = default)
     {
         context.Entry(entity).State = EntityState.Modified;
         context.Update(entity);
@@ -72,7 +73,7 @@ public class HybridWordlistRepository : IWordlistRepository
     }
 
     /// <inheritdoc/>
-    public async Task Delete(WordlistEntity entity, bool deleteFile = false,
+    public async Task DeleteAsync(WordlistEntity entity, bool deleteFile = false,
         CancellationToken cancellationToken = default)
     {
         if (deleteFile && File.Exists(entity.FileName))

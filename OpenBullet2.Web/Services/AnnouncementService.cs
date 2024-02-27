@@ -15,7 +15,7 @@ public class AnnouncementService : IAnnouncementService
     public DateTime? LastFetched => cached?.LastFetch;
 
     /// <inheritdoc/>
-    public async Task<string> FetchAnnouncement()
+    public async Task<string> FetchAnnouncementAsync()
     {
         var isDebug = false;
 

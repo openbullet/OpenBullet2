@@ -60,7 +60,7 @@ namespace OpenBullet2.Native.ViewModels
         private void SortCollection()
             => JobsCollection = new ObservableCollection<JobViewModel>(JobsCollection.OrderBy(j => j.Id));
 
-        public async Task<JobViewModel> CreateJob(JobOptions options)
+        public async Task<JobViewModel> CreateJobAsync(JobOptions options)
         {
             var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
@@ -72,7 +72,7 @@ namespace OpenBullet2.Native.ViewModels
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
             };
 
-            await jobRepo.Add(entity);
+            await jobRepo.AddAsync(entity);
 
             var job = jobFactory.FromOptions(entity.Id, 0, options);
             var jobVM = MakeViewModel(job);
@@ -84,13 +84,13 @@ namespace OpenBullet2.Native.ViewModels
             return jobVM;
         }
 
-        public async Task<JobViewModel> EditJob(JobEntity entity, JobOptions options)
+        public async Task<JobViewModel> EditJobAsync(JobEntity entity, JobOptions options)
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
             entity.JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings);
 
-            await jobRepo.Update(entity);
+            await jobRepo.UpdateAsync(entity);
 
             var oldJob = jobManager.Jobs.First(j => j.Id == entity.Id);
             var newJob = jobFactory.FromOptions(entity.Id, 0, options);
@@ -103,7 +103,7 @@ namespace OpenBullet2.Native.ViewModels
             return JobsCollection.First(j => j.Id == newJob.Id);
         }
 
-        public async Task<JobViewModel> CloneJob(JobType type, JobOptions options)
+        public async Task<JobViewModel> CloneJobAsync(JobType type, JobOptions options)
         {
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var wrapper = new JobOptionsWrapper { Options = options };
@@ -114,7 +114,7 @@ namespace OpenBullet2.Native.ViewModels
                 JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
             };
 
-            await jobRepo.Add(entity);
+            await jobRepo.AddAsync(entity);
 
             var job = jobFactory.FromOptions(entity.Id, 0, options);
             jobManager.AddJob(job);
@@ -147,7 +147,7 @@ namespace OpenBullet2.Native.ViewModels
             JobsCollection.Clear();
         }
 
-        public async Task RemoveJob(JobViewModel jobVM)
+        public async Task RemoveJobAsync(JobViewModel jobVM)
         {
             if (jobVM.Job.Status != JobStatus.Idle)
             {
@@ -155,7 +155,7 @@ namespace OpenBullet2.Native.ViewModels
             }
 
             var entity = await jobRepo.GetAll().FirstAsync(e => e.Id == jobVM.Id);
-            await jobRepo.Delete(entity);
+            await jobRepo.DeleteAsync(entity);
             jobManager.RemoveJob(jobVM.Job);
             JobsCollection.Remove(jobVM);
             SortCollection();

@@ -233,7 +233,7 @@ using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>(
 var configService = app.Services.GetRequiredService<ConfigService>()
     ?? throw new Exception($"Missing service: {nameof(ConfigService)}");
 
-await configService.ReloadConfigs();
+await configService.ReloadConfigsAsync();
 
 // Start the job monitor at the start of the application,
 // otherwise it will only be started when navigating to the page

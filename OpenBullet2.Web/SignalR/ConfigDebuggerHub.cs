@@ -73,7 +73,7 @@ public class ConfigDebuggerHub : AuthorizedHub
     /// Stop the debugger.
     /// </summary>
     [HubMethodName("stop")]
-    public async Task Stop()
+    public async Task StopAsync()
     {
         var debugger = _debuggerService.TryGet(GetConfigId()!)!;
 
@@ -96,7 +96,7 @@ public class ConfigDebuggerHub : AuthorizedHub
     /// Take a step in step-by-step mode.
     /// </summary>
     [HubMethodName("takeStep")]
-    public async Task TakeStep()
+    public async Task TakeStepAsync()
     {
         var debugger = _debuggerService.TryGet(GetConfigId()!)!;
 
@@ -131,7 +131,7 @@ public class ConfigDebuggerHub : AuthorizedHub
     /// Get the state of the debugger.
     /// </summary>
     [HubMethodName("getState")]
-    public async Task GetState()
+    public async Task GetStateAsync()
     {
         DbgStateDto? state = null;
 

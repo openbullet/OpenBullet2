@@ -117,7 +117,7 @@ public class SettingsController : ApiController
         // NOTE: To check this we can just print the hashcodes before
         // and after this instruction.
         _mapper.Map(settings, _obSettingsService.Settings);
-        await _obSettingsService.Save();
+        await _obSettingsService.SaveAsync();
 
         return _mapper.Map<OpenBulletSettingsDto>(_obSettingsService.Settings);
     }
@@ -133,7 +133,7 @@ public class SettingsController : ApiController
     {
         _obSettingsService.Settings.SecuritySettings
             .SetupAdminPassword(dto.Password);
-        await _obSettingsService.Save();
+        await _obSettingsService.SaveAsync();
 
         return Ok();
     }
@@ -146,7 +146,7 @@ public class SettingsController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> AddTheme(IFormFile file)
     {
-        await _themeService.SaveCssFile(file.FileName, file.OpenReadStream());
+        await _themeService.SaveCssFileAsync(file.FileName, file.OpenReadStream());
         return Ok();
     }
     
@@ -177,7 +177,7 @@ public class SettingsController : ApiController
         
         try
         {
-            bytes = await _themeService.GetCssFile(name);
+            bytes = await _themeService.GetCssFileAsync(name);
         }
         catch
         {

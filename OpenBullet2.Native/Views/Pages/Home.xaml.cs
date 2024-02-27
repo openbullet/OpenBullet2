@@ -63,7 +63,7 @@ namespace OpenBullet2.Native.Views.Pages
             FetchAnnouncement();
         }
 
-        private async void FetchAnnouncement() => Announcement = await annService.FetchAnnouncement();
+        private async void FetchAnnouncement() => Announcement = await annService.FetchAnnouncementAsync();
 
         private void NotifyUpdateAvailable()
         {

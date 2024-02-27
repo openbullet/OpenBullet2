@@ -51,7 +51,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             vm = SP.GetService<ViewModelsService>().Hits;
             DataContext = vm;
-            _ = vm.Initialize();
+            _ = vm.InitializeAsync();
 
             InitializeComponent();
             window = SP.GetService<MainWindow>();
@@ -84,7 +84,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.Delete(SelectedHits);
+                await vm.DeleteAsync(SelectedHits);
                 Alert.Success("Done", "Successfully deleted the selected hits from the DB");
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace OpenBullet2.Native.Views.Pages
             {
                 try
                 {
-                    await vm.Purge();
+                    await vm.PurgeAsync();
                     Alert.Success("Done", "Successfully deleted all hits from the DB");
                 }
                 catch (Exception ex)
@@ -121,7 +121,7 @@ namespace OpenBullet2.Native.Views.Pages
 
         private async void DeleteDuplicates(object sender, RoutedEventArgs e)
         {
-            var deleted = await vm.DeleteDuplicates();
+            var deleted = await vm.DeleteDuplicatesAsync();
             Alert.Success("Done", $"Successfully deleted {deleted} duplicate hits");
         }
 
@@ -202,7 +202,7 @@ namespace OpenBullet2.Native.Views.Pages
             await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 var jobs = SP.GetService<ViewModelsService>().Jobs;
-                var jobVM = await jobs.CreateJob(jobOptions);
+                var jobVM = await jobs.CreateJobAsync(jobOptions);
                 window.DisplayJob(jobVM);
             });
         }

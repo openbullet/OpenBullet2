@@ -17,7 +17,7 @@ public class DbProxyGroupRepository : DbRepository<ProxyGroupEntity>, IProxyGrou
     }
 
     /// <inheritdoc/>
-    public async override Task<ProxyGroupEntity> Get(int id, CancellationToken cancellationToken = default)
+    public async override Task<ProxyGroupEntity> GetAsync(int id, CancellationToken cancellationToken = default)
         => await GetAll().Include(w => w.Owner)
         .FirstOrDefaultAsync(e => e.Id == id, cancellationToken)
         .ConfigureAwait(false);

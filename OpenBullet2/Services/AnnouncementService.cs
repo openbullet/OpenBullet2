@@ -11,7 +11,7 @@ namespace OpenBullet2.Services
         private record CachedAnnouncement(string Content, DateTime LastFetch);
         private readonly Dictionary<string, CachedAnnouncement> cached = new();
 
-        public async Task<string> FetchAnnouncement()
+        public async Task<string> FetchAnnouncementAsync()
         {
             var isDebug = false;
 

@@ -58,7 +58,7 @@
         Hit.Type = model.Type;
         Hit.CapturedData = model.CapturedData;
 
-        await HitRepo.Update(Hit);
+        await HitRepo.UpdateAsync(Hit);
         BlazoredModal.Close();
     }
 }

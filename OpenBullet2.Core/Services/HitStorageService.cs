@@ -26,7 +26,7 @@ public class HitStorageService : IDisposable
     /// <summary>
     /// Stores a hit in a thread-safe manner.
     /// </summary>
-    public async Task Store(Hit hit)
+    public async Task StoreAsync(Hit hit)
     {
         using var scope = _scopeFactory.CreateScope();
 
@@ -82,7 +82,7 @@ public class HitStorageService : IDisposable
 
         try
         {
-            await hitRepo.Add(entity);
+            await hitRepo.AddAsync(entity);
         }
         finally
         {

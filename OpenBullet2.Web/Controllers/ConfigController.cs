@@ -59,7 +59,7 @@ public class ConfigController : ApiController
     {
         if (reload)
         {
-            await _configService.ReloadConfigs();
+            await _configService.ReloadConfigsAsync();
         }
 
         var configs = _configService.Configs
@@ -168,7 +168,7 @@ public class ConfigController : ApiController
         if (dto.Persistent)
         {
             // Save it
-            await _configRepo.Save(config);
+            await _configRepo.SaveAsync(config);
 
             _logger.LogInformation("Edited config with id {id}", dto.Id);
         }
@@ -184,9 +184,9 @@ public class ConfigController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConfigDto>> CreateConfig()
     {
-        var config = await _configRepo.Create();
+        var config = await _configRepo.CreateAsync();
         config.Metadata.Author = _obSettingsService.Settings.GeneralSettings.DefaultAuthor;
-        await _configRepo.Save(config);
+        await _configRepo.SaveAsync(config);
         _configService.Configs.Add(config);
 
         _logger.LogInformation("Created config with id {id}", config.Id);
@@ -233,13 +233,13 @@ public class ConfigController : ApiController
         }
 
         // Pack and unpack to clone
-        var packed = await ConfigPacker.Pack(original);
+        var packed = await ConfigPacker.PackAsync(original);
         using var ms = new MemoryStream(packed);
         var cloned = await ConfigPacker.Unpack(ms);
 
         // Change the id and save it again
         cloned.Id = Guid.NewGuid().ToString();
-        await _configRepo.Save(cloned);
+        await _configRepo.SaveAsync(cloned);
 
         _configService.Configs.Add(cloned);
 
@@ -271,7 +271,7 @@ public class ConfigController : ApiController
         }
 
         var fileName = config.Metadata.Name.ToValidFileName() + ".opk";
-        var bytes = await ConfigPacker.Pack(config);
+        var bytes = await ConfigPacker.PackAsync(config);
 
         return File(bytes, "application/zip", fileName);
     }
@@ -286,7 +286,7 @@ public class ConfigController : ApiController
     {
         // Do not download remote configs
         var configsToPack = _configService.Configs.Where(c => !c.IsRemote);
-        var bytes = await ConfigPacker.Pack(configsToPack);
+        var bytes = await ConfigPacker.PackAsync(configsToPack);
 
         return File(bytes, "application/zip", "configs.zip");
     }
@@ -304,11 +304,11 @@ public class ConfigController : ApiController
         foreach (var file in files)
         {
             using var stream = file.OpenReadStream();
-            await _configRepo.Upload(stream, file.FileName);
+            await _configRepo.UploadAsync(stream, file.FileName);
         }
 
         // Reload from disk to get the new configs
-        await _configService.ReloadConfigs();
+        await _configService.ReloadConfigsAsync();
 
         _logger.LogInformation("Uploaded {fileCount} configs", files.Count);
 

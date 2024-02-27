@@ -61,14 +61,14 @@ namespace OpenBullet2.Pages
             OBSettingsService.Settings.SecuritySettings.SetupAdminPassword(admin.Password);
 
             // Authenticate the admin (we don't care about its IP)
-            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(admin.Username, admin.Password, IPAddress.Parse("127.0.0.1"));
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUserAsync(admin.Username, admin.Password, IPAddress.Parse("127.0.0.1"));
 
             step++;
         }
 
         private async Task CompleteSetup()
         {
-            await OBSettingsService.Save();
+            await OBSettingsService.SaveAsync();
             Nav.NavigateTo("/");
         }
     }

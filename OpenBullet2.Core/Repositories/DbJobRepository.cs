@@ -18,21 +18,21 @@ public class DbJobRepository : DbRepository<JobEntity>, IJobRepository
 
     }
 
-    public override async Task<JobEntity> Get(int id, CancellationToken cancellationToken = default)
+    public override async Task<JobEntity> GetAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entity = await base.Get(id, cancellationToken).ConfigureAwait(false);
+        var entity = await base.GetAsync(id, cancellationToken).ConfigureAwait(false);
         context.Entry(entity).Reload();
         return entity;
     }
 
-    public async override Task Update(JobEntity entity, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(JobEntity entity, CancellationToken cancellationToken = default)
     {
         context.DetachLocal<JobEntity>(entity.Id);
         context.Entry(entity).State = EntityState.Modified;
-        await base.Update(entity, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
-    public async override Task Update(IEnumerable<JobEntity> entities, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(IEnumerable<JobEntity> entities, CancellationToken cancellationToken = default)
     {
         foreach (var entity in entities)
         {
@@ -40,7 +40,7 @@ public class DbJobRepository : DbRepository<JobEntity>, IJobRepository
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        await base.Update(entities, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entities, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>

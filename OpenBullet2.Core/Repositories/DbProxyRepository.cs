@@ -18,24 +18,24 @@ public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
         
     }
 
-    public async override Task Update(ProxyEntity entity, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(ProxyEntity entity, CancellationToken cancellationToken = default)
     {
         context.Entry(entity).State = EntityState.Modified;
-        await base.Update(entity, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
-    public async override Task Update(IEnumerable<ProxyEntity> entities, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(IEnumerable<ProxyEntity> entities, CancellationToken cancellationToken = default)
     {
         foreach (var entity in entities)
         {
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        await base.Update(entities, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entities, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task<int> RemoveDuplicates(int groupId)
+    public async Task<int> RemoveDuplicatesAsync(int groupId)
     {
         var proxies = await GetAll()
             .Where(p => p.Group.Id == groupId)
@@ -46,7 +46,7 @@ public class DbProxyRepository : DbRepository<ProxyEntity>, IProxyRepository
             .SelectMany(g => g.Skip(1))
             .ToList();
         
-        await Delete(duplicates);
+        await DeleteAsync(duplicates);
 
         return duplicates.Count;
     }

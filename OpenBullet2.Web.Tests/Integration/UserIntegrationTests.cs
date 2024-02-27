@@ -100,7 +100,7 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.Add(entity);
+        await guestRepo.AddAsync(entity);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
@@ -147,7 +147,7 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = "1.1.1.1",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.Add(entity);
+        await guestRepo.AddAsync(entity);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
@@ -175,7 +175,7 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.Add(entity);
+        await guestRepo.AddAsync(entity);
         var dto = new UserLoginDto
         {
             Username = "guest_user",
@@ -203,7 +203,7 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
             AllowedAddresses = string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest_pass")
         };
-        await guestRepo.Add(entity);
+        await guestRepo.AddAsync(entity);
         var dto = new UserLoginDto
         {
             Username = "guest_user",

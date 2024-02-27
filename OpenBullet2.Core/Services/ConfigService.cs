@@ -61,10 +61,10 @@ public class ConfigService
     /// <summary>
     /// Reloads all configs from the <see cref="IConfigRepository"/> and remote endpoints.
     /// </summary>
-    public async Task ReloadConfigs()
+    public async Task ReloadConfigsAsync()
     {
         // Load from the main repository
-        Configs = (await configRepo.GetAll()).ToList();
+        Configs = (await configRepo.GetAllAsync()).ToList();
         SelectedConfig = null;
 
         // Load from remotes (fire and forget)

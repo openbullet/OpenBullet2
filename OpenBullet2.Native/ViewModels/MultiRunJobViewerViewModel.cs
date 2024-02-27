@@ -402,7 +402,7 @@ namespace OpenBullet2.Native.ViewModels
         }
 
         #region Controls
-        public async Task Start()
+        public async Task StartAsync()
         {
             try
             {
@@ -419,9 +419,9 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
-        public Task Stop() => MultiRunJob.Stop();
+        public Task StopAsync() => MultiRunJob.Stop();
 
-        public async Task Abort()
+        public async Task AbortAsync()
         {
             if (MultiRunJob.Status is JobStatus.Starting or JobStatus.Waiting)
             {
@@ -432,11 +432,11 @@ namespace OpenBullet2.Native.ViewModels
             await MultiRunJob.Abort();
         }
 
-        public Task Pause() => MultiRunJob.Pause();
-        public Task Resume() => MultiRunJob.Resume();
+        public Task PauseAsync() => MultiRunJob.Pause();
+        public Task ResumeAsync() => MultiRunJob.Resume();
         public void SkipWait() => MultiRunJob.SkipWait();
         
-        public async Task ChangeBots(int newValue)
+        public async Task ChangeBotsAsync(int newValue)
         {
             // TODO: Also edit the job options! So the number of bots is persisted
 

@@ -82,7 +82,7 @@ public class InfoController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AnnouncementDto>> GetAnnouncement()
     {
-        var markdown = await _announcementService.FetchAnnouncement();
+        var markdown = await _announcementService.FetchAnnouncementAsync();
 
         return new AnnouncementDto
         {

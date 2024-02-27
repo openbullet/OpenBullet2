@@ -36,7 +36,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.True(result.IsSuccess);
-        var guest = await repo.Get(result.Value.Id);
+        var guest = await repo.GetAsync(result.Value.Id);
         Assert.NotNull(guest);
         Assert.Equal("guest", guest.Username);
         Assert.Equal(dto.AccessExpiration, guest.AccessExpiration);
@@ -81,7 +81,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             Username = "guest",
             Password = "guest123"
         };
-        await repo.Add(new GuestEntity
+        await repo.AddAsync(new GuestEntity
         {
             Username = "guest",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest123"),
@@ -128,7 +128,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             AccessExpiration = DateTime.UtcNow.AddDays(30),
             AllowedAddresses = ""
         };
-        await repo.Add(guest);
+        await repo.AddAsync(guest);
 
         var dto = new UpdateGuestInfoDto {
             Id = guest.Id,
@@ -144,7 +144,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.True(result.IsSuccess);
-        var updatedGuest = await repo.Get(result.Value.Id);
+        var updatedGuest = await repo.GetAsync(result.Value.Id);
         await dbContext.Entry(guest).ReloadAsync();
         Assert.NotNull(updatedGuest);
         Assert.Equal(dto.AccessExpiration, updatedGuest.AccessExpiration);
@@ -197,8 +197,8 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             AccessExpiration = DateTime.UtcNow.AddDays(30),
             AllowedAddresses = ""
         };
-        await repo.Add(guest1);
-        await repo.Add(guest2);
+        await repo.AddAsync(guest1);
+        await repo.AddAsync(guest2);
         
         var dto = new UpdateGuestInfoDto {
             Id = guest1.Id,
@@ -226,7 +226,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             AccessExpiration = DateTime.UtcNow.AddDays(30),
             AllowedAddresses = ""
         };
-        await repo.Add(guest);
+        await repo.AddAsync(guest);
         var dto = new UpdateGuestInfoDto {
             Id = guest.Id,
             Username = "admin"
@@ -254,7 +254,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             AccessExpiration = DateTime.UtcNow.AddDays(30),
             AllowedAddresses = ""
         };
-        await repo.Add(guest);
+        await repo.AddAsync(guest);
         var dto = new UpdateGuestPasswordDto {
             Id = guest.Id,
             Password = "guest1234"
@@ -265,7 +265,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.True(result.IsSuccess);
-        var updatedGuest = await repo.Get(result.Value.Id);
+        var updatedGuest = await repo.GetAsync(result.Value.Id);
         await dbContext.Entry(guest).ReloadAsync();
         Assert.NotNull(updatedGuest);
         Assert.True(BCrypt.Net.BCrypt.Verify(dto.Password, updatedGuest.PasswordHash));
@@ -310,14 +310,14 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
             AccessExpiration = DateTime.UtcNow.AddDays(30),
             AllowedAddresses = ""
         };
-        await repo.Add(guest);
+        await repo.AddAsync(guest);
         
         // Act
         var result = await DeleteAsync(client, $"/api/v1/guest?id={guest.Id}");
         
         // Assert
         Assert.Null(result);
-        Assert.Null(await repo.Get(guest.Id));
+        Assert.Null(await repo.GetAsync(guest.Id));
     }
     
     [Fact]

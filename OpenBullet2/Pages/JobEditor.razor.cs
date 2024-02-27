@@ -30,8 +30,8 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
-            jobEntity = await JobRepo.Get(JobId);
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
+            jobEntity = await JobRepo.GetAsync(JobId);
             jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
         }
 
@@ -43,7 +43,7 @@ namespace OpenBullet2.Pages
             var wrapper = new JobOptionsWrapper { Options = jobOptions };
             jobEntity.JobOptions = JsonConvert.SerializeObject(wrapper, settings);
             
-            await JobRepo.Update(jobEntity);
+            await JobRepo.UpdateAsync(jobEntity);
 
             try
             {

@@ -50,12 +50,12 @@ namespace OpenBullet2.Native.Views.Pages
 
         public async void EditJob(JobViewModel jobVM)
         {
-            var entity = await jobRepo.Get(jobVM.Id);
+            var entity = await jobRepo.GetAsync(jobVM.Id);
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var jobOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
             Action<JobOptions> onAccept = async options =>
             {
-                jobVM = await vm.EditJob(entity, options);
+                jobVM = await vm.EditJobAsync(entity, options);
                 mainWindow.DisplayJob(jobVM);
             };
 
@@ -72,14 +72,14 @@ namespace OpenBullet2.Native.Views.Pages
         private async void CloneJob(object sender, RoutedEventArgs e)
         {
             var jobVM = (JobViewModel)(sender as Button).Tag;
-            var entity = await jobRepo.Get(jobVM.Id);
+            var entity = await jobRepo.GetAsync(jobVM.Id);
             var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
             var newOptions = JobOptionsFactory.CloneExistant(oldOptions);
 
             Action<JobOptions> onAccept = async options =>
             {
-                var cloned = await vm.CloneJob(entity.JobType, options);
+                var cloned = await vm.CloneJobAsync(entity.JobType, options);
                 mainWindow.DisplayJob(cloned);
             };
 
@@ -97,7 +97,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.RemoveJob((JobViewModel)(sender as Button).Tag);
+                await vm.RemoveJobAsync((JobViewModel)(sender as Button).Tag);
             }
             catch (Exception ex)
             {
@@ -105,7 +105,7 @@ namespace OpenBullet2.Native.Views.Pages
             }
         }
 
-        public async void CreateJob(JobOptions options) => await vm.CreateJob(options);
+        public async void CreateJob(JobOptions options) => await vm.CreateJobAsync(options);
 
         private void ViewJob(object sender, MouseButtonEventArgs e)
             => SP.GetService<MainWindow>().DisplayJob((JobViewModel)(sender as WrapPanel).Tag);

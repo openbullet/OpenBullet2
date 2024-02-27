@@ -14,5 +14,5 @@ public interface IAnnouncementService
     /// <summary>
     /// Fetches the markdown text of the announcement and caches it.
     /// </summary>
-    Task<string> FetchAnnouncement();
+    Task<string> FetchAnnouncementAsync();
 }

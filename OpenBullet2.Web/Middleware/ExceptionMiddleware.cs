@@ -29,39 +29,39 @@ internal class ExceptionMiddleware
         catch (UnauthorizedAccessException ex)
         {
             _logger.LogWarning("Unauthorized request: {message}", ex.Message);
-            await Respond(context,
+            await RespondAsync(context,
                 new ApiError(ErrorCode.Unauthorized, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
         catch (ForbiddenException ex)
         {
-            await Respond(context,
+            await RespondAsync(context,
                 new ApiError(ex.ErrorCode, ex.Message),
                 HttpStatusCode.Forbidden);
         }
         catch (ResourceNotFoundException ex)
         {
-            await Respond(context,
+            await RespondAsync(context,
                 new ApiError(ex.ErrorCode, ex.Message),
                 HttpStatusCode.NotFound);
         }
         catch (ApiException ex)
         {
             _logger.LogWarning("Request failed with managed exception: {message}", ex.Message);
-            await Respond(context,
+            await RespondAsync(context,
                 new ApiError(ex.ErrorCode, ex.Message, ex.StackTrace?.Trim()),
                 HttpStatusCode.BadRequest);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Generic exception");
-            await Respond(context,
+            await RespondAsync(context,
                 new ApiError(ErrorCode.InternalServerError, ex.Message,
                 ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
         }
     }
 
-    private async Task Respond(HttpContext context, ApiError error,
+    private async Task RespondAsync(HttpContext context, ApiError error,
         HttpStatusCode statusCode)
     {
         context.Response.ContentType= "application/json";

@@ -45,43 +45,43 @@ public class MultiRunJobService : IJobService, IDisposable
         _logger = logger;
 
         _onStatusChanged = EventHandlers.TryAsync<JobStatus>(
-            OnStatusChanged,
-            SendError
+            OnStatusChangedAsync,
+            SendErrorAsync
         );
 
         _onCompleted = EventHandlers.TryAsync(
-            OnCompleted,
-            SendError
+            OnCompletedAsync,
+            SendErrorAsync
         );
 
         _onError = EventHandlers.TryAsync<Exception>(
-            OnError,
-            SendError
+            OnErrorAsync,
+            SendErrorAsync
         );
 
         _onTaskError = EventHandlers.TryAsync<ErrorDetails<MultiRunInput>>(
-            OnTaskError,
-            SendError
+            OnTaskErrorAsync,
+            SendErrorAsync
         );
 
         _onResult = EventHandlers.TryAsync<ResultDetails<MultiRunInput, CheckResult>>(
-            OnResult,
-            SendError
+            OnResultAsync,
+            SendErrorAsync
         );
 
         _onTimerTick = EventHandlers.TryAsync(
-            OnTimerTick,
-            SendError
+            OnTimerTickAsync,
+            SendErrorAsync
         );
 
         _onHit = EventHandlers.TryAsync<Hit>(
-            OnHit,
-            SendError
+            OnHitAsync,
+            SendErrorAsync
         );
 
         _onBotsChanged = EventHandlers.TryAsync(
-            OnBotsChanged,
-            SendError
+            OnBotsChangedAsync,
+            SendErrorAsync
         );
     }
 
@@ -145,7 +145,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.Start().Forget(
             async ex => {
                 _logger.LogError(ex, "Could not start job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -159,7 +159,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.Stop().Forget(
             async ex => {
                 _logger.LogError(ex, "Could not stop job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -173,7 +173,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.Abort().Forget(
             async ex => {
                 _logger.LogError(ex, "Could not abort job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -187,7 +187,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.Pause().Forget(
             async ex => {
                 _logger.LogError(ex, "Could not pause job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -201,7 +201,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.Resume().Forget(
             async ex => {
                 _logger.LogError(ex, "Could not resume job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -220,7 +220,7 @@ public class MultiRunJobService : IJobService, IDisposable
             async ex =>
             {
                 _logger.LogError(ex, "Could not change bots for job {jobId}", jobId);
-                await SendError(ex);
+                await SendErrorAsync(ex);
             });
     }
 
@@ -229,24 +229,24 @@ public class MultiRunJobService : IJobService, IDisposable
     private MultiRunJob GetJob(int jobId)
         => (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
 
-    private async Task OnStatusChanged(object? sender, JobStatus e)
+    private async Task OnStatusChangedAsync(object? sender, JobStatus e)
     {
         var message = new JobStatusChangedMessage
         {
             NewStatus = e
         };
 
-        await NotifyClients(sender, message, JobMethods.StatusChanged);
+        await NotifyClientsAsync(sender, message, JobMethods.StatusChanged);
     }
 
-    private async Task OnCompleted(object? sender, EventArgs e)
+    private async Task OnCompletedAsync(object? sender, EventArgs e)
     {
         var message = new JobCompletedMessage();
 
-        await NotifyClients(sender, message, JobMethods.Completed);
+        await NotifyClientsAsync(sender, message, JobMethods.Completed);
     }
 
-    private async Task OnError(object? sender, Exception e)
+    private async Task OnErrorAsync(object? sender, Exception e)
     {
         var message = new ErrorMessage
         {
@@ -255,10 +255,10 @@ public class MultiRunJobService : IJobService, IDisposable
             StackTrace = e.ToString()
         };
 
-        await NotifyClients(sender, message, CommonMethods.Error);
+        await NotifyClientsAsync(sender, message, CommonMethods.Error);
     }
 
-    private async Task OnTaskError(object? sender, ErrorDetails<MultiRunInput> e)
+    private async Task OnTaskErrorAsync(object? sender, ErrorDetails<MultiRunInput> e)
     {
         var message = new MRJTaskErrorMessage
         {
@@ -271,10 +271,10 @@ public class MultiRunJobService : IJobService, IDisposable
             ErrorMessage = e.Exception.Message
         };
 
-        await NotifyClients(sender, message, JobMethods.TaskError);
+        await NotifyClientsAsync(sender, message, JobMethods.TaskError);
     }
 
-    private async Task OnResult(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
+    private async Task OnResultAsync(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
     {
         var message = new MRJNewResultMessage
         {
@@ -287,10 +287,10 @@ public class MultiRunJobService : IJobService, IDisposable
             Status = e.Result.BotData.STATUS
         };
 
-        await NotifyClients(sender, message, MultiRunJobMethods.NewResult);
+        await NotifyClientsAsync(sender, message, MultiRunJobMethods.NewResult);
     }
 
-    private async Task OnTimerTick(object? sender, EventArgs e)
+    private async Task OnTimerTickAsync(object? sender, EventArgs e)
     {
         var job = (sender as MultiRunJob)!;
 
@@ -323,10 +323,10 @@ public class MultiRunJobService : IJobService, IDisposable
             Progress = job.Progress
         };
 
-        await NotifyClients(sender, message, JobMethods.TimerTick);
+        await NotifyClientsAsync(sender, message, JobMethods.TimerTick);
     }
 
-    private async Task OnHit(object? sender, Hit e)
+    private async Task OnHitAsync(object? sender, Hit e)
     {
         var message = new MRJNewHitMessage
         {
@@ -344,10 +344,10 @@ public class MultiRunJobService : IJobService, IDisposable
             }
         };
 
-        await NotifyClients(sender, message, MultiRunJobMethods.NewHit);
+        await NotifyClientsAsync(sender, message, MultiRunJobMethods.NewHit);
     }
 
-    private async Task OnBotsChanged(object? sender, EventArgs e)
+    private async Task OnBotsChangedAsync(object? sender, EventArgs e)
     {
         var job = (sender as MultiRunJob)!;
 
@@ -356,10 +356,10 @@ public class MultiRunJobService : IJobService, IDisposable
             NewValue = job.Bots
         };
 
-        await NotifyClients(sender, message, JobMethods.BotsChanged);
+        await NotifyClientsAsync(sender, message, JobMethods.BotsChanged);
     }
 
-    private async Task NotifyClients(object? sender, object message,
+    private async Task NotifyClientsAsync(object? sender, object message,
         string method)
     {
         var job = (sender as MultiRunJob);
@@ -368,7 +368,7 @@ public class MultiRunJobService : IJobService, IDisposable
             method, message);
     }
 
-    private Task SendError(Exception ex)
+    private Task SendErrorAsync(Exception ex)
     {
         _logger.LogError(ex, "Error while sending message to the client");
         return Task.CompletedTask;

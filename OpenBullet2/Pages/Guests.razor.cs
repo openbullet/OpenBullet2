@@ -110,7 +110,7 @@ namespace OpenBullet2.Pages
             if (!result.Cancelled)
             {
                 var entity = (GuestEntity)result.Data;
-                await GuestRepo.Add(entity);
+                await GuestRepo.AddAsync(entity);
                 await RefreshList();
             }
         }
@@ -131,7 +131,7 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                await GuestRepo.Update(selectedGuest);
+                await GuestRepo.UpdateAsync(selectedGuest);
                 await RefreshList();
             }
         }
@@ -150,7 +150,7 @@ namespace OpenBullet2.Pages
             if (!result.Cancelled)
             {
                 selectedGuest.PasswordHash = BCrypt.Net.BCrypt.HashPassword(result.Data as string);
-                await GuestRepo.Update(selectedGuest);
+                await GuestRepo.UpdateAsync(selectedGuest);
                 await RefreshList();
             }
         }
@@ -173,7 +173,7 @@ namespace OpenBullet2.Pages
                     var jobsToDelete = await JobRepo.GetAll().Include(j => j.Owner)
                         .Where(j => j.Owner.Id == selectedGuest.Id).ToListAsync();
 
-                    await JobRepo.Delete(jobsToDelete);
+                    await JobRepo.DeleteAsync(jobsToDelete);
 
                     // Delete jobs from the service
                     foreach (var job in JobManager.Jobs.Where(j => j.OwnerId == selectedGuest.Id))
@@ -191,10 +191,10 @@ namespace OpenBullet2.Pages
                             .Where(p => p.Group.Id == group.Id)
                             .ToListAsync();
                         
-                        await ProxyRepo.Delete(toDelete);
+                        await ProxyRepo.DeleteAsync(toDelete);
                     }
 
-                    await ProxyGroupRepo.Delete(proxyGroupsToDelete);
+                    await ProxyGroupRepo.DeleteAsync(proxyGroupsToDelete);
 
                     // Delete wordlists
                     var wordlistsToDelete = await WordlistRepo.GetAll().Include(w => w.Owner)
@@ -202,11 +202,11 @@ namespace OpenBullet2.Pages
 
                     foreach (var w in wordlistsToDelete)
                     {
-                        await WordlistRepo.Delete(w, false);
+                        await WordlistRepo.DeleteAsync(w, false);
                     }
 
                     // Delete the guest from the db
-                    await GuestRepo.Delete(selectedGuest);
+                    await GuestRepo.DeleteAsync(selectedGuest);
 
                     // Delete the guest from the local list
                     guests.Remove(selectedGuest);

@@ -40,7 +40,7 @@
 
         try
         {
-            await ((OBAuthenticationStateProvider)Auth).AuthenticateUser(user.Username, user.Password, ip);
+            await ((OBAuthenticationStateProvider)Auth).AuthenticateUserAsync(user.Username, user.Password, ip);
             Nav.NavigateTo("/");
         }
         catch (Exception ex)

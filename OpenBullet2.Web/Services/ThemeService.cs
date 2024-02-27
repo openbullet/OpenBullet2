@@ -20,7 +20,7 @@ public class ThemeService
     /// </summary>
     /// <param name="fileName">Must end in .css</param>
     /// <param name="stream">The file stream</param>
-    public async Task SaveCssFile(string fileName, Stream stream)
+    public async Task SaveCssFileAsync(string fileName, Stream stream)
     {
         if (!fileName.EndsWith(".css"))
         {
@@ -46,7 +46,7 @@ public class ThemeService
     /// Gets a CSS file by name.
     /// </summary>
     /// <param name="name">The name of the file</param>
-    public async Task<byte[]> GetCssFile(string name)
+    public async Task<byte[]> GetCssFileAsync(string name)
     {
         var fileName = name + ".css";
         

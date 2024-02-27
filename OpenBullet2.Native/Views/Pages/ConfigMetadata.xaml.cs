@@ -52,7 +52,7 @@ namespace OpenBullet2.Native.Views.Pages
         {
             try
             {
-                await vm.SetIconFromUrl(urlTextbox.Text);
+                await vm.SetIconFromUrlAsync(urlTextbox.Text);
             }
             catch (Exception ex)
             {

@@ -58,7 +58,7 @@ public class UpdateService : BackgroundService, IUpdateService
 
         do
         {
-            await FetchRemoteVersion();
+            await FetchRemoteVersionAsync();
         }
         while (await timer.WaitForNextTickAsync(stoppingToken));
     }
@@ -70,7 +70,7 @@ public class UpdateService : BackgroundService, IUpdateService
         _ => VersionType.Release
     };
 
-    private async Task FetchRemoteVersion()
+    private async Task FetchRemoteVersionAsync()
     {
         var isDebug = false;
 

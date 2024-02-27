@@ -26,7 +26,7 @@ namespace RuriLib.Helpers
         /// <summary>
         /// Packs the <paramref name="config"/> and returns the bytes of the resulting archive.
         /// </summary>
-        public static async Task<byte[]> Pack(Config config)
+        public static async Task<byte[]> PackAsync(Config config)
         {
             using var packageStream = new MemoryStream();
             using (var archive = new ZipArchive(packageStream, ZipArchiveMode.Create, false))
@@ -73,7 +73,7 @@ namespace RuriLib.Helpers
         /// <summary>
         /// Packs multiple <paramref name="configs"/> into a single archive.
         /// </summary>
-        public static async Task<byte[]> Pack(IEnumerable<Config> configs)
+        public static async Task<byte[]> PackAsync(IEnumerable<Config> configs)
         {
             // Use a dictionary to keep track of filenames and avoid duplicates
             var fileNames = new Dictionary<string, int>();
@@ -98,7 +98,7 @@ namespace RuriLib.Helpers
                         fileNames[fileName] = 1;
                     }
 
-                    var packedConfig = await Pack(config);
+                    var packedConfig = await PackAsync(config);
                     await CreateZipEntryFromBytes(archive, fileName + ".opk", packedConfig);
                 }
             }

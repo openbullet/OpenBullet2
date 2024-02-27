@@ -30,7 +30,7 @@ public class PerformanceMonitorService : IHostedService
     /// <summary>
     /// Registers a new connection.
     /// </summary>
-    public async Task RegisterConnection(string connectionId)
+    public async Task RegisterConnectionAsync(string connectionId)
     {
         await _semaphore.WaitAsync();
 
@@ -47,7 +47,7 @@ public class PerformanceMonitorService : IHostedService
     /// <summary>
     /// Unregisters an existing connection.
     /// </summary>
-    public async Task UnregisterConnection(string connectionId)
+    public async Task UnregisterConnectionAsync(string connectionId)
     {
         await _semaphore.WaitAsync();
 
@@ -61,14 +61,14 @@ public class PerformanceMonitorService : IHostedService
         }
     }
 
-    private async Task ReadMetricsLoop()
+    private async Task ReadMetricsLoopAsync()
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
 
         do
         {
             var memory = Process.GetCurrentProcess().WorkingSet64;
-            var cpu = await ReadCpuUsage(_cts.Token);
+            var cpu = await ReadCpuUsageAsync(_cts.Token);
             var (upload, download) = await ReadNetworkUsage();
 
             var metrics = new PerformanceMetrics
@@ -95,7 +95,7 @@ public class PerformanceMonitorService : IHostedService
         } while (await timer.WaitForNextTickAsync(_cts.Token));
     }
 
-    private static async Task<double> ReadCpuUsage(CancellationToken cancellationToken)
+    private static async Task<double> ReadCpuUsageAsync(CancellationToken cancellationToken)
     {
         var sw = new Stopwatch();
 
@@ -156,7 +156,7 @@ public class PerformanceMonitorService : IHostedService
     /// <inheritdoc/>
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        ReadMetricsLoop().Forget(e =>
+        ReadMetricsLoopAsync().Forget(e =>
         {
             _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
         });

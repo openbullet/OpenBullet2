@@ -52,7 +52,7 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             wordlists = uid == 0
                 ? await WordlistRepo.GetAll().Include(w => w.Owner).ToListAsync()
@@ -133,8 +133,8 @@ namespace OpenBullet2.Pages
             if (!result.Cancelled)
             {
                 var entity = result.Data as WordlistEntity;
-                entity.Owner = await GuestRepo.Get(uid);
-                await WordlistRepo.Add(entity);
+                entity.Owner = await GuestRepo.GetAsync(uid);
+                await WordlistRepo.AddAsync(entity);
                 wordlists.Add(entity);
                 await js.AlertSuccess(Loc["Added"], Loc["AddedWordlist"]);
             }
@@ -158,7 +158,7 @@ namespace OpenBullet2.Pages
 
             if (!result.Cancelled)
             {
-                await WordlistRepo.Update(selectedWordlist);
+                await WordlistRepo.UpdateAsync(selectedWordlist);
 
                 // Update the wordlist in existing jobs
                 foreach (var job in JobManager.Jobs.Where(j => j.Status == JobStatus.Idle && j is MultiRunJob).Cast<MultiRunJob>())
@@ -173,7 +173,7 @@ namespace OpenBullet2.Pages
                             Total = selectedWordlist.Total
                         });
 
-                        await JobManager.SaveMultiRunJobOptions(job);
+                        await JobManager.SaveMultiRunJobOptionsAsync(job);
                     }
                 }
             }
@@ -209,7 +209,7 @@ namespace OpenBullet2.Pages
                     $"{Loc["DeleteFileText1"]} {selectedWordlist.FileName} {Loc["DeleteFileText2"]}", Loc["KeepFile"]);
 
                 // Delete the wordlist from the DB and disk
-                await WordlistRepo.Delete(selectedWordlist, deleteFile);
+                await WordlistRepo.DeleteAsync(selectedWordlist, deleteFile);
             }
 
             await RefreshList();
@@ -245,7 +245,7 @@ namespace OpenBullet2.Pages
 
             foreach (var wordlist in toDelete)
             {
-                await WordlistRepo.Delete(wordlist, false);
+                await WordlistRepo.DeleteAsync(wordlist, false);
             }
 
             await RefreshList();

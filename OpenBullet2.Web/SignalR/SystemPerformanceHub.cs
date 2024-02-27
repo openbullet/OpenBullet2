@@ -24,13 +24,13 @@ public class SystemPerformanceHub : AuthorizedHub
     public async override Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
-        await _performanceMonitorService.RegisterConnection(Context.ConnectionId);
+        await _performanceMonitorService.RegisterConnectionAsync(Context.ConnectionId);
     }
 
     /// <inheritdoc/>
     public async override Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);
-        await _performanceMonitorService.UnregisterConnection(Context.ConnectionId);
+        await _performanceMonitorService.UnregisterConnectionAsync(Context.ConnectionId);
     }
 }

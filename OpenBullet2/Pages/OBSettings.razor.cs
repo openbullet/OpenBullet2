@@ -51,7 +51,7 @@ namespace OpenBullet2.Pages
         {
             try
             {
-                await SettingsService.Save();
+                await SettingsService.SaveAsync();
                 await js.AlertSuccess(Loc["Saved"], Loc["SettingsSaved"]);
             }
             catch (Exception ex)

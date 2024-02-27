@@ -20,7 +20,7 @@ public class DBIPProxyGeolocationProvider : IProxyGeolocationProvider, IDisposab
     }
 
     /// <inheritdoc/>
-    public async Task<string> Geolocate(string host)
+    public async Task<string> GeolocateAsync(string host)
     {
         if (!IPAddress.TryParse(host, out var _))
         {

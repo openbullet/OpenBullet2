@@ -16,7 +16,7 @@ namespace RuriLib.Functions.Networking
         /// Retrieves a list of records from Google's DNS over HTTP service at dns.google.com.
         /// The list is ordered by priority.
         /// </summary>
-        public static async Task<List<string>> FromGoogle(string domain, string type, Proxy proxy = null,
+        public static async Task<List<string>> FromGoogleAsync(string domain, string type, Proxy proxy = null,
             int timeout = 30000, CancellationToken cancellationToken = default)
         {
             var url = $"https://dns.google.com/resolve?name={Uri.EscapeDataString(domain)}&type={type}";

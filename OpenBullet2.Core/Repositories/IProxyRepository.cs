@@ -13,5 +13,5 @@ public interface IProxyRepository : IRepository<ProxyEntity>
     /// Duplication is checked on type, host, port, username and password.
     /// Returns the number of removed entries.
     /// </summary>
-    Task<int> RemoveDuplicates(int groupId);
+    Task<int> RemoveDuplicatesAsync(int groupId);
 }

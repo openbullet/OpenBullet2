@@ -93,7 +93,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
         groups = uid == 0
             ? await ProxyGroupRepo.GetAll().ToListAsync()

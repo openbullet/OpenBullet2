@@ -53,12 +53,12 @@ public class ConfigDebuggerService : IDisposable
 
         // Create the event handlers
         _onNewLog = EventHandlers.TryAsync<BotLoggerEntry>(
-            OnNewLogEntry,
+            OnNewLogEntryAsync,
             SendError
         );
 
         _onStatusChanged = EventHandlers.TryAsync<ConfigDebuggerStatus>(
-            OnStatusChanged,
+            OnStatusChangedAsync,
             SendError
         );
     }
@@ -103,7 +103,7 @@ public class ConfigDebuggerService : IDisposable
             connectionId, configId);
     }
 
-    private async Task OnNewLogEntry(object? sender, BotLoggerEntry e)
+    private async Task OnNewLogEntryAsync(object? sender, BotLoggerEntry e)
     {
         var message = new DbgNewLogMessage
         {
@@ -116,7 +116,7 @@ public class ConfigDebuggerService : IDisposable
             ConfigDebuggerMethods.NewLogEntry, message);
     }
 
-    private async Task OnStatusChanged(object? sender, ConfigDebuggerStatus e)
+    private async Task OnStatusChangedAsync(object? sender, ConfigDebuggerStatus e)
     {
         var message = new DbgStatusChangedMessage
         {

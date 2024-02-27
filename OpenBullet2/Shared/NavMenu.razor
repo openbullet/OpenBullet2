@@ -198,7 +198,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
         isAdmin = uid == 0;
         await InvokeAsync(StateHasChanged);
 
@@ -213,7 +213,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        var uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
         // Only re-render if isAdmin has changed
         if (isAdmin != (uid == 0))
@@ -265,7 +265,7 @@
             }
         }
 
-        await ConfigRepo.Save(ConfigService.SelectedConfig);
+        await ConfigRepo.SaveAsync(ConfigService.SelectedConfig);
         await js.AlertSuccess(Loc["AwwYeah"], $"{ConfigService.SelectedConfig.Metadata.Name} {Loc["wasSavedSuccessfully"]}");
     }
 

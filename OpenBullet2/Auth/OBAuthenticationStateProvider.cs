@@ -77,7 +77,7 @@ namespace OpenBullet2.Auth
         /// Gets the current user ID. The admin user always has an ID equal to 0, while
         /// guests have sequential user IDs starting from 1. If no user is found, this method returns -1.
         /// </summary>
-        public async Task<int> GetCurrentUserId()
+        public async Task<int> GetCurrentUserIdAsync()
         {
             var user = await GetAuthenticationStateAsync();
             var claims = user.User.Claims;
@@ -105,19 +105,19 @@ namespace OpenBullet2.Auth
         /// <summary>
         /// Authenticates a user by <paramref name="username"/>, <paramref name="password"/> and <paramref name="ip"/>.
         /// </summary>
-        public async Task AuthenticateUser(string username, string password, IPAddress ip)
+        public async Task AuthenticateUserAsync(string username, string password, IPAddress ip)
         {
             if (settingsService.Settings.SecuritySettings.AdminUsername == username)
             {
-                await AuthenticateAdmin(username, password);
+                await AuthenticateAdminAsync(username, password);
             }
             else
             {
-                await AuthenticateGuest(username, password, ip);
+                await AuthenticateGuestAsync(username, password, ip);
             }
         }
 
-        private async Task AuthenticateAdmin(string username, string password)
+        private async Task AuthenticateAdminAsync(string username, string password)
         {
             if (!BCrypt.Net.BCrypt.Verify(password, settingsService.Settings.SecuritySettings.AdminPasswordHash))
             {
@@ -138,7 +138,7 @@ namespace OpenBullet2.Auth
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(admin)));
         }
 
-        private async Task AuthenticateGuest(string username, string password, IPAddress ip)
+        private async Task AuthenticateGuestAsync(string username, string password, IPAddress ip)
         {
             var entity = guestRepo.GetAll().FirstOrDefault(g => g.Username == username);
 
@@ -162,7 +162,7 @@ namespace OpenBullet2.Auth
                 ip = ip.MapToIPv4();
             }
 
-            var isValid = await Firewall.CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            var isValid = await Firewall.CheckIpValidityAsync(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             if (entity.AllowedAddresses.Length > 0 && !isValid)
             {
@@ -212,6 +212,6 @@ namespace OpenBullet2.Auth
         /// Deletes the JWT from the browser's localStorage.
         /// </summary>
         /// <returns></returns>
-        public async Task Logout() => await localStorage.RemoveItemAsync("jwt");
+        public async Task LogoutAsync() => await localStorage.RemoveItemAsync("jwt");
     }
 }

@@ -18,5 +18,5 @@ public class DatabaseHitOutput : IHitOutput
 
     /// <inheritdoc/>
     public Task Store(Hit hit)
-        => hitStorage.Store(hit);
+        => hitStorage.StoreAsync(hit);
 }

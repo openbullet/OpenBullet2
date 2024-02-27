@@ -64,7 +64,7 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             hits = uid == 0
                 ? await HitRepo.GetAll().ToListAsync()
@@ -166,7 +166,7 @@ namespace OpenBullet2.Pages
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {selected.Count} {Loc["hits"]}?", Loc["Cancel"]))
             {
                 // Delete the hit from the db
-                await HitRepo.Delete(selected);
+                await HitRepo.DeleteAsync(selected);
 
                 // Delete the hit from the local list
                 selected.ForEach(h => hits.Remove(h));
@@ -186,7 +186,7 @@ namespace OpenBullet2.Pages
             if (await js.Confirm(Loc["AreYouSure"], $"{Loc["ReallyDelete"]} {duplicates.Count} {Loc["hits"]}?", Loc["Cancel"]))
             {
                 // Delete the hit from the db
-                await HitRepo.Delete(duplicates);
+                await HitRepo.DeleteAsync(duplicates);
 
                 // Delete the hit from the local list
                 duplicates.ForEach(h => hits.Remove(h));
@@ -201,11 +201,11 @@ namespace OpenBullet2.Pages
             {
                 if (uid == 0)
                 {
-                    await HitRepo.Purge();
+                    await HitRepo.PurgeAsync();
                 }
                 else
                 {
-                    await HitRepo.Delete(hits);
+                    await HitRepo.DeleteAsync(hits);
                 }
                 
                 await RefreshList();
@@ -262,13 +262,13 @@ namespace OpenBullet2.Pages
 
             var entity = new JobEntity
             {
-                Owner = await GuestRepo.Get(uid),
+                Owner = await GuestRepo.GetAsync(uid),
                 CreationDate = DateTime.Now,
                 JobType = JobType.MultiRun,
                 JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
             };
 
-            await JobRepo.Add(entity);
+            await JobRepo.AddAsync(entity);
 
             try
             {

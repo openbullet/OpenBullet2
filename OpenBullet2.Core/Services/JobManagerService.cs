@@ -48,7 +48,7 @@ public class JobManagerService : IDisposable
                     .Replace("OpenBullet2.Models", "OpenBullet2.Core.Models")
                     .Replace(", OpenBullet2\"", ", OpenBullet2.Core\"");
 
-                jobRepo.Update(entity).Wait();
+                jobRepo.UpdateAsync(entity).Wait();
             }
 
             var options = JsonConvert.DeserializeObject<JobOptionsWrapper>(entity.JobOptions, jsonSettings).Options;
@@ -67,9 +67,9 @@ public class JobManagerService : IDisposable
         {
             mrj.OnCompleted += SaveRecord;
             mrj.OnTimerTick += SaveRecord;
-            mrj.OnCompleted += SaveMultiRunJobOptions;
-            mrj.OnTimerTick += SaveMultiRunJobOptions;
-            mrj.OnBotsChanged += SaveMultiRunJobOptions;
+            mrj.OnCompleted += SaveMultiRunJobOptionsAsync;
+            mrj.OnTimerTick += SaveMultiRunJobOptionsAsync;
+            mrj.OnBotsChanged += SaveMultiRunJobOptionsAsync;
         }
     }
 
@@ -83,9 +83,9 @@ public class JobManagerService : IDisposable
             {
                 mrj.OnCompleted -= SaveRecord;
                 mrj.OnTimerTick -= SaveRecord;
-                mrj.OnCompleted -= SaveMultiRunJobOptions;
-                mrj.OnTimerTick -= SaveMultiRunJobOptions;
-                mrj.OnBotsChanged -= SaveMultiRunJobOptions;
+                mrj.OnCompleted -= SaveMultiRunJobOptionsAsync;
+                mrj.OnTimerTick -= SaveMultiRunJobOptionsAsync;
+                mrj.OnBotsChanged -= SaveMultiRunJobOptionsAsync;
             }
             catch
             {
@@ -124,7 +124,7 @@ public class JobManagerService : IDisposable
 
             if (record == null)
             {
-                await recordRepo.Add(new RecordEntity
+                await recordRepo.AddAsync(new RecordEntity
                 {
                     ConfigId = job.Config.Id,
                     WordlistId = pool.Wordlist.Id,
@@ -134,7 +134,7 @@ public class JobManagerService : IDisposable
             else
             {
                 record.Checkpoint = checkpoint;
-                await recordRepo.Update(record);
+                await recordRepo.UpdateAsync(record);
             }
         }
         catch
@@ -147,18 +147,18 @@ public class JobManagerService : IDisposable
         }
     }
 
-    private async void SaveMultiRunJobOptions(object sender, EventArgs e)
+    private async void SaveMultiRunJobOptionsAsync(object sender, EventArgs e)
     {
         if (sender is not MultiRunJob job)
         {
             return;
         }
 
-        await SaveMultiRunJobOptions(job);
+        await SaveMultiRunJobOptionsAsync(job);
     }
 
     // Saves the options for a MultiRunJob in the IJobRepository. Thread safe.
-    public async Task SaveMultiRunJobOptions(MultiRunJob job)
+    public async Task SaveMultiRunJobOptionsAsync(MultiRunJob job)
     {
         using var scope = _scopeFactory.CreateScope();
         var jobRepo = scope.ServiceProvider.GetRequiredService<IJobRepository>();
@@ -167,7 +167,7 @@ public class JobManagerService : IDisposable
 
         try
         {
-            var entity = await jobRepo.Get(job.Id);
+            var entity = await jobRepo.GetAsync(job.Id);
 
             if (entity == null || entity.JobOptions == null)
             {
@@ -205,7 +205,7 @@ public class JobManagerService : IDisposable
             entity.JobOptions = JsonConvert.SerializeObject(newWrapper, settings);
 
             // Update the job
-            await jobRepo.Update(entity);
+            await jobRepo.UpdateAsync(entity);
         }
         catch
         {
@@ -227,9 +227,9 @@ public class JobManagerService : IDisposable
                 {
                     mrj.OnCompleted -= SaveRecord;
                     mrj.OnTimerTick -= SaveRecord;
-                    mrj.OnCompleted -= SaveMultiRunJobOptions;
-                    mrj.OnTimerTick -= SaveMultiRunJobOptions;
-                    mrj.OnBotsChanged -= SaveMultiRunJobOptions;
+                    mrj.OnCompleted -= SaveMultiRunJobOptionsAsync;
+                    mrj.OnTimerTick -= SaveMultiRunJobOptionsAsync;
+                    mrj.OnBotsChanged -= SaveMultiRunJobOptionsAsync;
                 }
                 catch
                 {

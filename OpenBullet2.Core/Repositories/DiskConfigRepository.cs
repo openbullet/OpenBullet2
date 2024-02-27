@@ -29,7 +29,7 @@ public class DiskConfigRepository : IConfigRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Config>> GetAll()
+    public async Task<IEnumerable<Config>> GetAllAsync()
     {
         // Try to convert legacy configs automatically before loading
         foreach (var file in Directory.GetFiles(BaseFolder).Where(file => file.EndsWith(".loli")))
@@ -38,7 +38,7 @@ public class DiskConfigRepository : IConfigRepository
             {
                 var id = Path.GetFileNameWithoutExtension(file);
                 var converted = ConfigConverter.Convert(File.ReadAllText(file), id);
-                await Save(converted);
+                await SaveAsync(converted);
                 File.Delete(file);
                 Console.WriteLine($"Converted legacy .loli config ({file}) to the new .opk format");
             }
@@ -53,7 +53,7 @@ public class DiskConfigRepository : IConfigRepository
             {
                 try
                 {
-                    return await Get(Path.GetFileNameWithoutExtension(file));
+                    return await GetAsync(Path.GetFileNameWithoutExtension(file));
                 }
                 catch (Exception ex)
                 {
@@ -67,7 +67,7 @@ public class DiskConfigRepository : IConfigRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Config> Get(string id)
+    public async Task<Config> GetAsync(string id)
     {
         var file = GetFileName(id);
 
@@ -84,7 +84,7 @@ public class DiskConfigRepository : IConfigRepository
     }
 
     /// <inheritdoc/>
-    public async Task<byte[]> GetBytes(string id)
+    public async Task<byte[]> GetBytesAsync(string id)
     {
         var file = GetFileName(id);
 
@@ -101,7 +101,7 @@ public class DiskConfigRepository : IConfigRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Config> Create(string id = null)
+    public async Task<Config> CreateAsync(string id = null)
     {
         var config = new Config();
 
@@ -115,12 +115,12 @@ public class DiskConfigRepository : IConfigRepository
             _rlSettings.Environment.WordlistTypes.First().Name
         };
 
-        await Save(config);
+        await SaveAsync(config);
         return config;
     }
 
     /// <inheritdoc/>
-    public async Task Upload(Stream stream, string fileName)
+    public async Task UploadAsync(Stream stream, string fileName)
     {
         var extension = Path.GetExtension(fileName);
 
@@ -128,7 +128,7 @@ public class DiskConfigRepository : IConfigRepository
         if (extension == ".opk")
         {
             var config = await ConfigPacker.Unpack(stream);
-            await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
+            await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.PackAsync(config));
         }
         // Otherwise it's a .loli config
         else if (extension == ".loli")
@@ -139,7 +139,7 @@ public class DiskConfigRepository : IConfigRepository
             var content = Encoding.UTF8.GetString(ms.ToArray());
             var id = Path.GetFileNameWithoutExtension(fileName);
             var converted = ConfigConverter.Convert(content, id);
-            await Save(converted);
+            await SaveAsync(converted);
         }
         else
         {
@@ -148,7 +148,7 @@ public class DiskConfigRepository : IConfigRepository
     }
 
     /// <inheritdoc/>
-    public async Task Save(Config config)
+    public async Task SaveAsync(Config config)
     {
         // Update the last modified date
         config.Metadata.LastModified = DateTime.Now;
@@ -172,7 +172,7 @@ public class DiskConfigRepository : IConfigRepository
             }
         }
 
-        await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.Pack(config));
+        await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.PackAsync(config));
     }
 
     /// <inheritdoc/>

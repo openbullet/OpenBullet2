@@ -38,7 +38,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var announcementService = GetRequiredService<IAnnouncementService>();
-        var announcement = await announcementService.FetchAnnouncement();
+        var announcement = await announcementService.FetchAnnouncementAsync();
         
         // Act
         var result = await GetJsonAsync<AnnouncementDto>(client, "/api/v1/info/announcement");

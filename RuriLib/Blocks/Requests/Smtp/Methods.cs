@@ -182,7 +182,7 @@ namespace RuriLib.Blocks.Requests.Smtp
             candidates.Clear();
             try
             {
-                var mxRecords = await DnsLookup.FromGoogle(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
+                var mxRecords = await DnsLookup.FromGoogleAsync(domain, "MX", data.Proxy, 30000, data.CancellationToken).ConfigureAwait(false);
                 mxRecords.ForEach(r =>
                 {
                     candidates.Add(new HostEntry(r, 465));

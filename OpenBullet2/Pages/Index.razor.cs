@@ -34,7 +34,7 @@ namespace OpenBullet2.Pages
 
             StartPeriodicRefresh();
 
-            Task.Run(() => announcement = AnnouncementService.FetchAnnouncement().Result);
+            Task.Run(() => announcement = AnnouncementService.FetchAnnouncementAsync().Result);
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -72,7 +72,7 @@ namespace OpenBullet2.Pages
 
         private async Task Logout()
         {
-            await ((Auth.OBAuthenticationStateProvider)Auth).Logout();
+            await ((Auth.OBAuthenticationStateProvider)Auth).LogoutAsync();
             Nav.NavigateTo("/", true);
         }
 

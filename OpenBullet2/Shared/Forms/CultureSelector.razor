@@ -83,7 +83,7 @@
 
             if (SaveSettings)
             {
-                await OBSettingsService.Save();
+                await OBSettingsService.SaveAsync();
             }
 
             CultureInfo.CurrentCulture = new CultureInfo(culture);

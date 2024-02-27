@@ -72,9 +72,9 @@ public class ProxyController : ApiController
 
         entities.ForEach(e => e.Group = groupEntity);
 
-        await _proxyRepo.Add(entities);
+        await _proxyRepo.AddAsync(entities);
 
-        var duplicatesCount = await _proxyRepo.RemoveDuplicates(dto.ProxyGroupId);
+        var duplicatesCount = await _proxyRepo.RemoveDuplicatesAsync(dto.ProxyGroupId);
 
         _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
             entities.Count - duplicatesCount, groupEntity.Name);
@@ -125,9 +125,9 @@ public class ProxyController : ApiController
 
         entities.ForEach(e => e.Group = groupEntity);
 
-        await _proxyRepo.Add(entities);
+        await _proxyRepo.AddAsync(entities);
 
-        var duplicatesCount = await _proxyRepo.RemoveDuplicates(dto.ProxyGroupId);
+        var duplicatesCount = await _proxyRepo.RemoveDuplicatesAsync(dto.ProxyGroupId);
 
         _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
             entities.Count - duplicatesCount, groupEntity.Name);
@@ -156,8 +156,8 @@ public class ProxyController : ApiController
         var toMove = await query.ToListAsync();
         toMove.ForEach(p => p.Group = destinationGroupEntity);
 
-        await _proxyRepo.Update(toMove);
-        await _proxyRepo.RemoveDuplicates(dto.DestinationGroupId);
+        await _proxyRepo.UpdateAsync(toMove);
+        await _proxyRepo.RemoveDuplicatesAsync(dto.DestinationGroupId);
 
         _logger.LogInformation("Moved {proxyCount} proxies", toMove.Count);
 
@@ -196,7 +196,7 @@ public class ProxyController : ApiController
 
         var toDelete = await query.ToListAsync();
 
-        await _proxyRepo.Delete(toDelete);
+        await _proxyRepo.DeleteAsync(toDelete);
 
         _logger.LogInformation("Deleted {proxyCount} proxies", toDelete.Count);
 
@@ -225,7 +225,7 @@ public class ProxyController : ApiController
             .Where(p => p.Group.Id == proxyGroupId)
             .ToListAsync();
 
-        await _proxyRepo.Delete(toDelete);
+        await _proxyRepo.DeleteAsync(toDelete);
 
         _logger.LogInformation("Deleted {hitCount} proxies from proxy group {name}",
             toDelete.Count, groupEntity.Name);
@@ -297,7 +297,7 @@ public class ProxyController : ApiController
 
     private async Task<ProxyGroupEntity> GetProxyGroupEntityAsync(int id)
     {
-        var entity = await _proxyGroupRepo.Get(id);
+        var entity = await _proxyGroupRepo.GetAsync(id);
 
         if (entity is null)
         {

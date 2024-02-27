@@ -31,9 +31,9 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
-            jobEntity = await JobRepo.Get(JobId);
+            jobEntity = await JobRepo.GetAsync(JobId);
             var oldOptions = JsonConvert.DeserializeObject<JobOptionsWrapper>(jobEntity.JobOptions, settings).Options;
             jobOptions = JobOptionsFactory.CloneExistant(oldOptions);
             jobType = jobEntity.JobType;
@@ -47,13 +47,13 @@ namespace OpenBullet2.Pages
             var wrapper = new JobOptionsWrapper { Options = jobOptions };
             var entity = new JobEntity
             {
-                Owner = await GuestRepo.Get(uid),
+                Owner = await GuestRepo.GetAsync(uid),
                 CreationDate = DateTime.Now,
                 JobType = jobType,
                 JobOptions = JsonConvert.SerializeObject(wrapper, settings)
             };
 
-            await JobRepo.Add(entity);
+            await JobRepo.AddAsync(entity);
 
             // Get the entity that was just added in order to get its ID
             // entity = await JobRepo.GetAll().Include(j => j.Owner).OrderByDescending(e => e.Id).FirstAsync();

@@ -20,7 +20,7 @@ public class OpenBulletSettingsService
     public string FileName => Path.Combine(BaseFolder, "OpenBulletSettings.json");
 
     /// <summary>
-    /// The actual settings. After modifying them, call the <see cref="Save"/> method to persist them.
+    /// The actual settings. After modifying them, call the <see cref="SaveAsync"/> method to persist them.
     /// </summary>
     public OpenBulletSettings Settings { get; private set; }
 
@@ -42,14 +42,14 @@ public class OpenBulletSettingsService
         else
         {
             Recreate();
-            Save().Wait();
+            SaveAsync().Wait();
         }
     }
 
     /// <summary>
     /// Saves the <see cref="Settings"/> to disk.
     /// </summary>
-    public async Task Save() => await File.WriteAllTextAsync(FileName, JsonConvert.SerializeObject(Settings, jsonSettings));
+    public async Task SaveAsync() => await File.WriteAllTextAsync(FileName, JsonConvert.SerializeObject(Settings, jsonSettings));
 
     /// <summary>
     /// Restores the default <see cref="Settings"/> (does not save to disk).

@@ -19,12 +19,12 @@ public interface IRepository<T> where T : Entity
     /// <summary>
     /// Adds an <paramref name="entity"/> to the repository.
     /// </summary>
-    Task Add(T entity, CancellationToken cancellationToken = default);
+    Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds multiple <paramref name="entities"/> to the repository.
     /// </summary>
-    Task Add(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+    Task AddAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
     // ----
     // READ
@@ -33,7 +33,7 @@ public interface IRepository<T> where T : Entity
     /// <summary>
     /// Gets an entity by <paramref name="id"/>. Returns null if not found.
     /// </summary>
-    Task<T> Get(int id, CancellationToken cancellationToken = default);
+    Task<T> GetAsync(int id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets an <see cref="IQueryable{T}"/> of all entities in the repository for further filtering.
@@ -47,12 +47,12 @@ public interface IRepository<T> where T : Entity
     /// <summary>
     /// Updates an <paramref name="entity"/> in the repository.
     /// </summary>
-    Task Update(T entity, CancellationToken cancellationToken = default);
+    Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates multiple <paramref name="entities"/> in the repository.
     /// </summary>
-    Task Update(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+    Task UpdateAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
     // ------
     // DELETE
@@ -61,12 +61,12 @@ public interface IRepository<T> where T : Entity
     /// <summary>
     /// Deletes an <paramref name="entity"/> from the repository.
     /// </summary>
-    Task Delete(T entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes multiple <paramref name="entities"/> from the repository.
     /// </summary>
-    Task Delete(IEnumerable<T> entities, CancellationToken cancellationToken = default);
+    Task DeleteAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Attaches to a given entity so that EF doesn't try to create a new one

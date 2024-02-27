@@ -58,7 +58,7 @@ public class ConfigSharingService
     /// Gets the bytes of the zip archive containing the configs
     /// that need to be shared via the given endpoint.
     /// </summary>
-    public async Task<byte[]> GetArchive(string endpointName)
+    public async Task<byte[]> GetArchiveAsync(string endpointName)
     {
         var endpoint = GetEndpoint(endpointName);
 
@@ -73,10 +73,10 @@ public class ConfigSharingService
                 try
                 {
                     // Get the config from the repo, randomize the id, convert it to C# and repack it into bytes
-                    var config = await _configRepo.Get(configId);
+                    var config = await _configRepo.GetAsync(configId);
                     config.ChangeMode(ConfigMode.CSharp);
                     config.Id = Guid.NewGuid().ToString();
-                    var bytes = await ConfigPacker.Pack(config);
+                    var bytes = await ConfigPacker.PackAsync(config);
 
                     // Create the entry and write the data
                     var zipArchiveEntry = archive.CreateEntry($"{configId}.opk", CompressionLevel.Fastest);

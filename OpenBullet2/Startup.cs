@@ -203,7 +203,7 @@ namespace OpenBullet2
 
             // Load the configs
             var configService = app.ApplicationServices.GetService<ConfigService>();
-            configService.ReloadConfigs().Wait();
+            configService.ReloadConfigsAsync().Wait();
 
             // Initialize autocompletion
             AutocompletionProvider.Init(obSettings.GeneralSettings.CustomSnippets);

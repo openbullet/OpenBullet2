@@ -103,7 +103,7 @@ public class UserController : ApiController
         
         if (entity.AllowedAddresses.Length > 0)
         {
-            var isValid = await Firewall.CheckIpValidity(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            var isValid = await Firewall.CheckIpValidityAsync(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             if (!isValid)
             {

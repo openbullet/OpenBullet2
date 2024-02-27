@@ -34,7 +34,7 @@ namespace OpenBullet2.Pages
 
         protected async override Task OnInitializedAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             // If admin, also show the owner of each job
             if (uid == 0)
@@ -101,7 +101,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var entity = await JobRepo.GetAll().FirstAsync(e => e.Id == job.Id);
-                await JobRepo.Delete(entity);
+                await JobRepo.DeleteAsync(entity);
                 Manager.RemoveJob(job);
             }
             finally
@@ -131,7 +131,7 @@ namespace OpenBullet2.Pages
                 var entities = await JobRepo.GetAll().Include(j => j.Owner)
                 .Where(j => j.Owner.Id == uid).ToListAsync();
 
-                await JobRepo.Delete(entities);
+                await JobRepo.DeleteAsync(entities);
 
                 foreach (var job in Manager.Jobs.Where(j => j.OwnerId == uid))
                 {

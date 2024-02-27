@@ -114,7 +114,7 @@ public class JobFactoryService
                     : _randomUAProvider,
                 RNG = _rngProvider
             },
-            DataPool = dataPoolFactory.FromOptions(options.DataPool).Result
+            DataPool = dataPoolFactory.FromOptionsAsync(options.DataPool).Result
         };
 
         return job;

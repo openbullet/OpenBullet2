@@ -133,7 +133,7 @@ public class SharedController : ApiController
                 throw new UnauthorizedAccessException("Invalid api key");
             }
 
-            return File(await _configSharingService.GetArchive(endpointName),
+            return File(await _configSharingService.GetArchiveAsync(endpointName),
                 "application/zip", "configs.zip");
         }
         catch (UnauthorizedAccessException)

@@ -4,6 +4,6 @@ namespace RuriLib.Models.Proxies
 {
     public interface IProxyGeolocationProvider
     {
-        Task<string> Geolocate(string host);
+        Task<string> GeolocateAsync(string host);
     }
 }

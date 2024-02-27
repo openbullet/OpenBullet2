@@ -57,7 +57,7 @@ public class GuestController : ApiController
         }
 
         var entity = _mapper.Map<GuestEntity>(dto);
-        await _guestRepo.Add(entity);
+        await _guestRepo.AddAsync(entity);
 
         _logger.LogInformation("Created a new guest user with username {username}",
             dto.Username);
@@ -95,7 +95,7 @@ public class GuestController : ApiController
         }
 
         _mapper.Map(dto, entity);
-        await _guestRepo.Update(entity);
+        await _guestRepo.UpdateAsync(entity);
 
         _logger.LogInformation(
             "Updated the information of guest user with username {username}",
@@ -114,7 +114,7 @@ public class GuestController : ApiController
         var entity = await GetEntityAsync(dto.Id);
 
         _mapper.Map(dto, entity);
-        await _guestRepo.Update(entity);
+        await _guestRepo.UpdateAsync(entity);
 
         _logger.LogInformation(
             "Updated the password of guest user with username {username}",
@@ -155,7 +155,7 @@ public class GuestController : ApiController
     {
         var entity = await GetEntityAsync(id);
 
-        await _guestRepo.Delete(entity);
+        await _guestRepo.DeleteAsync(entity);
 
         _logger.LogInformation("Deleted the guest user with username {username}",
             entity.Username);
@@ -165,7 +165,7 @@ public class GuestController : ApiController
 
     private async Task<GuestEntity> GetEntityAsync(int id)
     {
-        var entity = await _guestRepo.Get(id);
+        var entity = await _guestRepo.GetAsync(id);
 
         if (entity is null)
         {

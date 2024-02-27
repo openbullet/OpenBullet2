@@ -61,12 +61,12 @@ public class HitController : ApiController
             entity.OwnerId = apiUser.Id;
         }
 
-        await _hitRepo.Add(entity);
+        await _hitRepo.AddAsync(entity);
 
         _logger.LogInformation("Created a new hit");
 
         var hitDto = _mapper.Map<HitDto>(entity);
-        var owner = await _guestRepo.Get(apiUser.Id);
+        var owner = await _guestRepo.GetAsync(apiUser.Id);
 
         hitDto.Owner = _mapper.Map<OwnerDto>(owner);
         return hitDto;
@@ -123,7 +123,7 @@ public class HitController : ApiController
         EnsureOwnership(entity);
 
         _mapper.Map(dto, entity);
-        await _hitRepo.Update(entity);
+        await _hitRepo.UpdateAsync(entity);
 
         _logger.LogInformation("Updated the information of hit with id {id}", dto.Id);
 
@@ -140,7 +140,7 @@ public class HitController : ApiController
         var entity = await GetEntityAsync(id);
         EnsureOwnership(entity);
 
-        await _hitRepo.Delete(entity);
+        await _hitRepo.DeleteAsync(entity);
 
         _logger.LogInformation("Deleted the hit with id {id}", id);
 
@@ -160,7 +160,7 @@ public class HitController : ApiController
 
         var toDelete = await query.ToListAsync();
 
-        await _hitRepo.Delete(toDelete);
+        await _hitRepo.DeleteAsync(toDelete);
 
         _logger.LogInformation("Deleted {hitCount} hits", toDelete.Count);
 
@@ -191,7 +191,7 @@ public class HitController : ApiController
             .SelectMany(g => g.OrderBy(h => h.Date)
             .Reverse().Skip(1)).ToList();
 
-        await _hitRepo.Delete(duplicates);
+        await _hitRepo.DeleteAsync(duplicates);
 
         _logger.LogInformation("Deleted {hitCount} duplicate hits", duplicates.Count);
 
@@ -213,8 +213,8 @@ public class HitController : ApiController
     {
         _logger.LogWarning("Purging all hits from the database...");
 
-        var count = await _hitRepo.Count();
-        await _hitRepo.Purge();
+        var count = await _hitRepo.CountAsync();
+        await _hitRepo.PurgeAsync();
 
         _logger.LogWarning("Purged {count} hits from the database!", count);
 
@@ -336,7 +336,7 @@ public class HitController : ApiController
 
     private async Task<HitEntity> GetEntityAsync(int id)
     {
-        var entity = await _hitRepo.Get(id);
+        var entity = await _hitRepo.GetAsync(id);
 
         if (entity is null)
         {

@@ -112,7 +112,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.True(result.IsSuccess);
-        var group = await proxyGroupRepo.Get(result.Value.Id);
+        var group = await proxyGroupRepo.GetAsync(result.Value.Id);
         Assert.NotNull(group);
         Assert.Equal("group1", group.Name);
         Assert.NotNull(group.Owner);
@@ -213,13 +213,13 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.Null(result);
-        group = await proxyGroupRepo.Get(group.Id);
+        group = await proxyGroupRepo.GetAsync(group.Id);
         Assert.Null(group);
         
         // Proxies should be deleted as well
-        proxy1 = await proxyRepo.Get(proxy1.Id);
+        proxy1 = await proxyRepo.GetAsync(proxy1.Id);
         Assert.Null(proxy1);
-        proxy2 = await proxyRepo.Get(proxy2.Id);
+        proxy2 = await proxyRepo.GetAsync(proxy2.Id);
         Assert.Null(proxy2);
     }
     
@@ -248,13 +248,13 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Assert
         Assert.Null(result);
-        group = await proxyGroupRepo.Get(group.Id);
+        group = await proxyGroupRepo.GetAsync(group.Id);
         Assert.Null(group);
         
         // Proxies should be deleted as well
-        proxy1 = await proxyRepo.Get(proxy1.Id);
+        proxy1 = await proxyRepo.GetAsync(proxy1.Id);
         Assert.Null(proxy1);
-        proxy2 = await proxyRepo.Get(proxy2.Id);
+        proxy2 = await proxyRepo.GetAsync(proxy2.Id);
         Assert.Null(proxy2);
     }
     

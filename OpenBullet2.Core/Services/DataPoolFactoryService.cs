@@ -26,7 +26,7 @@ public class DataPoolFactoryService
     /// <summary>
     /// Creates a <see cref="DataPool"/> from <see cref="DataPoolOptions"/>.
     /// </summary>
-    public async Task<DataPool> FromOptions(DataPoolOptions options)
+    public async Task<DataPool> FromOptionsAsync(DataPoolOptions options)
     {
         try
         {
@@ -36,7 +36,7 @@ public class DataPoolFactoryService
                 CombinationsDataPoolOptions x => new CombinationsDataPool(x.CharSet, x.Length, x.WordlistType),
                 RangeDataPoolOptions x => new RangeDataPool(x.Start, x.Amount, x.Step, x.Pad, x.WordlistType),
                 FileDataPoolOptions x => new FileDataPool(x.FileName, x.WordlistType),
-                WordlistDataPoolOptions x => await MakeWordlistDataPool(x),
+                WordlistDataPoolOptions x => await MakeWordlistDataPoolAsync(x),
                 _ => throw new NotImplementedException()
             };
         }
@@ -47,9 +47,9 @@ public class DataPoolFactoryService
         }
     }
 
-    private async Task<DataPool> MakeWordlistDataPool(WordlistDataPoolOptions options)
+    private async Task<DataPool> MakeWordlistDataPoolAsync(WordlistDataPoolOptions options)
     {
-        var entity = await _wordlistRepo.Get(options.WordlistId);
+        var entity = await _wordlistRepo.GetAsync(options.WordlistId);
 
         // If the entity was deleted
         if (entity == null)

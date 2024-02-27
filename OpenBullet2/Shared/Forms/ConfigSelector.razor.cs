@@ -43,7 +43,7 @@ namespace OpenBullet2.Shared.Forms
 
         protected async override Task OnParametersSetAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
 

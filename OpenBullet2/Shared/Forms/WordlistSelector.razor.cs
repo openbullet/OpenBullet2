@@ -43,7 +43,7 @@ namespace OpenBullet2.Shared.Forms
 
         protected override async Task OnParametersSetAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             wordlists = uid == 0
                 ? await WordlistRepo.GetAll().ToListAsync()

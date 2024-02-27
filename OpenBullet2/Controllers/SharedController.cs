@@ -28,7 +28,7 @@ namespace OpenBullet2.Controllers
                     return Unauthorized();
                 }
 
-                return File(await configSharingService.GetArchive(endpointName), "application/octet-stream", $"Configs.zip");
+                return File(await configSharingService.GetArchiveAsync(endpointName), "application/octet-stream", $"Configs.zip");
             }
             catch
             {

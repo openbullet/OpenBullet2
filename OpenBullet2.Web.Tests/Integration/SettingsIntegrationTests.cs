@@ -148,7 +148,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var openBulletSettings = GetRequiredService<OpenBulletSettingsService>();
         openBulletSettings.Settings.GeneralSettings.DefaultAuthor = "test";
-        await openBulletSettings.Save();
+        await openBulletSettings.SaveAsync();
         
         // Act
         var result = await GetJsonAsync<OpenBulletSettingsDto>(
@@ -205,7 +205,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var openBulletSettings = GetRequiredService<OpenBulletSettingsService>();
         openBulletSettings.Settings.GeneralSettings.DefaultAuthor = "test";
-        await openBulletSettings.Save();
+        await openBulletSettings.SaveAsync();
         
         var newSettings = new OpenBulletSettingsDto
         {
@@ -229,7 +229,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var openBulletSettings = GetRequiredService<OpenBulletSettingsService>();
         openBulletSettings.Settings.SecuritySettings.SetupAdminPassword("StrongPassword1_");
-        await openBulletSettings.Save();
+        await openBulletSettings.SaveAsync();
         
         var dto = new UpdateAdminPasswordDto { Password = "StrongPassword2#" };
         
@@ -250,7 +250,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var openBulletSettings = GetRequiredService<OpenBulletSettingsService>();
         openBulletSettings.Settings.SecuritySettings.SetupAdminPassword("StrongPassword1_");
-        await openBulletSettings.Save();
+        await openBulletSettings.SaveAsync();
         
         var dto = new UpdateAdminPasswordDto { Password = "weak" };
         
@@ -356,7 +356,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var themeService = GetRequiredService<ThemeService>();
         using var stream = new MemoryStream();
-        await themeService.SaveCssFile("test.css", stream);
+        await themeService.SaveCssFileAsync("test.css", stream);
         
         // Act
         var result = await GetJsonAsync<List<ThemeDto>>(
@@ -374,7 +374,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var themeService = GetRequiredService<ThemeService>();
         using var stream = new MemoryStream();
-        await themeService.SaveCssFile("test.css", stream);
+        await themeService.SaveCssFileAsync("test.css", stream);
         
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var guest = new GuestEntity { Username = "guest" };

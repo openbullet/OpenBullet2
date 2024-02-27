@@ -280,13 +280,13 @@ public class JobController : ApiController
 
         var entity = new JobEntity
         {
-            Owner = await _guestRepo.Get(apiUser.Id),
+            Owner = await _guestRepo.GetAsync(apiUser.Id),
             CreationDate = DateTime.Now,
             JobType = JobType.MultiRun,
             JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
         };
 
-        await _jobRepo.Add(entity);
+        await _jobRepo.AddAsync(entity);
 
         // This might fail and we would have inconsistencies!
         // If that happens, remove the entity and rethrow
@@ -299,7 +299,7 @@ public class JobController : ApiController
         }
         catch
         {
-            await _jobRepo.Delete(entity);
+            await _jobRepo.DeleteAsync(entity);
             throw;
         }
     }
@@ -327,13 +327,13 @@ public class JobController : ApiController
 
         var entity = new JobEntity
         {
-            Owner = await _guestRepo.Get(apiUser.Id),
+            Owner = await _guestRepo.GetAsync(apiUser.Id),
             CreationDate = DateTime.Now,
             JobType = JobType.ProxyCheck,
             JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
         };
 
-        await _jobRepo.Add(entity);
+        await _jobRepo.AddAsync(entity);
 
         // This might fail and we would have inconsistencies!
         // If that happens, remove the entity and rethrow
@@ -346,7 +346,7 @@ public class JobController : ApiController
         }
         catch
         {
-            await _jobRepo.Delete(entity);
+            await _jobRepo.DeleteAsync(entity);
             throw;
         }
     }
@@ -381,7 +381,7 @@ public class JobController : ApiController
         var wrapper = new JobOptionsWrapper { Options = jobOptions };
         entity.JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings);
 
-        await _jobRepo.Update(entity);
+        await _jobRepo.UpdateAsync(entity);
 
         var oldJob = _jobManager.Jobs.First(j => j.Id == dto.Id);
 
@@ -424,7 +424,7 @@ public class JobController : ApiController
         var wrapper = new JobOptionsWrapper { Options = jobOptions };
         entity.JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings);
 
-        await _jobRepo.Update(entity);
+        await _jobRepo.UpdateAsync(entity);
 
         var oldJob = _jobManager.Jobs.First(j => j.Id == dto.Id);
 
@@ -522,7 +522,7 @@ public class JobController : ApiController
         EnsureOwnership(entity);
         EnsureOwnership(job);
 
-        await _jobRepo.Delete(entity);
+        await _jobRepo.DeleteAsync(entity);
         _jobManager.RemoveJob(job);
 
         return Ok();
@@ -565,7 +565,7 @@ public class JobController : ApiController
 
             deletedCount = entities.Count;
 
-            await _jobRepo.Delete(entities);
+            await _jobRepo.DeleteAsync(entities);
 
             foreach (var job in _jobManager.Jobs.Where(j => j.OwnerId == apiUser.Id))
             {
@@ -802,7 +802,7 @@ public class JobController : ApiController
 
     private async Task<JobEntity> GetEntityAsync(int id)
     {
-        var entity = await _jobRepo.Get(id);
+        var entity = await _jobRepo.GetAsync(id);
 
         if (entity is null)
         {
@@ -894,7 +894,7 @@ public class JobController : ApiController
 
         if (pcjJobOptions.GroupId != -1)
         {
-            var proxyGroup = await _proxyGroupRepo.Get(pcjJobOptions.GroupId);
+            var proxyGroup = await _proxyGroupRepo.GetAsync(pcjJobOptions.GroupId);
 
             if (proxyGroup is not null)
             {
@@ -1047,7 +1047,7 @@ public class JobController : ApiController
             return "All";
         }
 
-        var proxyGroup = await _proxyGroupRepo.Get(id);
+        var proxyGroup = await _proxyGroupRepo.GetAsync(id);
         return proxyGroup is null ? "Invalid" : proxyGroup.Name;
     }
     

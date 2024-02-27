@@ -7,7 +7,7 @@ namespace OpenBullet2.Helpers
 {
     public static class MonacoThemeSetter
     {
-		public static async Task SetLoliCodeTheme(CustomizationSettings settings)
+		public static async Task SetLoliCodeThemeAsync(CustomizationSettings settings)
         {
 			await MonacoEditorBase.DefineTheme("vs-lolicode", new StandaloneThemeData
 			{
@@ -45,7 +45,7 @@ namespace OpenBullet2.Helpers
 			await MonacoEditorBase.SetTheme("vs-lolicode");
 		}
 
-        public static async Task SetLoliScriptTheme(CustomizationSettings settings)
+        public static async Task SetLoliScriptThemeAsync(CustomizationSettings settings)
         {
             await MonacoEditorBase.DefineTheme("vs-loliscript", new StandaloneThemeData
             {

@@ -375,7 +375,7 @@ namespace RuriLib.Legacy.Blocks
             {
                 try
                 {
-                    var response = await GetResponse(ls, proxy);
+                    var response = await GetResponseAsync(ls, proxy);
 
                     InsertVariable(ls, false, response.Id.ToString(), "CAPTCHAID");
 
@@ -434,7 +434,7 @@ namespace RuriLib.Legacy.Blocks
             }
         }
 
-        private async Task<CaptchaResponse> GetResponse(LSGlobals ls, Proxy proxy)
+        private async Task<CaptchaResponse> GetResponseAsync(LSGlobals ls, Proxy proxy)
         {
             var provider = ls.BotData.Providers.Captcha;
 

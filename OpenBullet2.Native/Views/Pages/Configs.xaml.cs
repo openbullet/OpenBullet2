@@ -70,7 +70,7 @@ namespace OpenBullet2.Native.Views.Pages
         private void Create(object sender, RoutedEventArgs e)
             => new MainDialog(new CreateConfigDialog(this), "Create config").ShowDialog();
 
-        public async void CreateConfig(ConfigForCreationDto dto) => await vm.Create(dto);
+        public async void CreateConfig(ConfigForCreationDto dto) => await vm.CreateAsync(dto);
 
         private void Edit(object sender, RoutedEventArgs e) => EditConfig();
 
@@ -108,7 +108,7 @@ namespace OpenBullet2.Native.Views.Pages
         }
 
         // TODO: Check if current config is not saved and prompt warning
-        private async void Rescan(object sender, RoutedEventArgs e) => await vm.Rescan();
+        private async void Rescan(object sender, RoutedEventArgs e) => await vm.RescanAsync();
 
         private void OpenFolder(object sender, RoutedEventArgs e)
         {

@@ -54,7 +54,7 @@ public class ProxyReloadService : IDisposable
             }
             else
             {
-                var group = await proxyGroupsRepo.Get(groupId, cancellationToken).ConfigureAwait(false);
+                var group = await proxyGroupsRepo.GetAsync(groupId, cancellationToken).ConfigureAwait(false);
                 entities = await proxyRepo.GetAll()
                     .Where(p => p.Group.Id == groupId)
                     .ToListAsync(cancellationToken).ConfigureAwait(false);

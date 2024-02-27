@@ -143,7 +143,7 @@ namespace OpenBullet2.Pages
         {
             if (await js.Confirm(Loc["AreYouSure"], Loc["ConfigReloadWarning"], Loc["Cancel"]))
             {
-                await ConfigService.ReloadConfigs();
+                await ConfigService.ReloadConfigsAsync();
                 configs = ConfigService.Configs.OrderByDescending(c => c.Metadata.LastModified).ToList();
 
                 selectedConfig = null;
@@ -157,7 +157,7 @@ namespace OpenBullet2.Pages
 
         private async Task CreateConfig()
         {
-            selectedConfig = await ConfigRepo.Create();
+            selectedConfig = await ConfigRepo.CreateAsync();
             configs.Insert(0, selectedConfig);
 
             ConfigService.SelectedConfig = selectedConfig;
@@ -183,13 +183,13 @@ namespace OpenBullet2.Pages
             }
 
             // Pack and unpack to clone
-            var packed = await ConfigPacker.Pack(selectedConfig);
+            var packed = await ConfigPacker.PackAsync(selectedConfig);
             using var ms = new MemoryStream(packed);
             var newConfig = await ConfigPacker.Unpack(ms);
             
             // Change the id and save it again
             newConfig.Id = Guid.NewGuid().ToString();
-            await ConfigRepo.Save(newConfig);
+            await ConfigRepo.SaveAsync(newConfig);
 
             // Set it as currently selected config
             configs.Insert(0, newConfig);
@@ -324,7 +324,7 @@ namespace OpenBullet2.Pages
                     ms.Seek(0, SeekOrigin.Begin);
 
                     // Upload it to the repo
-                    await ConfigRepo.Upload(ms, file.Name);
+                    await ConfigRepo.UploadAsync(ms, file.Name);
                 }
 
                 await js.AlertSuccess(Loc["AllDone"], $"{Loc["ConfigsSuccessfullyUploaded"]}: {e.FileCount}");
@@ -359,7 +359,7 @@ namespace OpenBullet2.Pages
             try
             {
                 var fileName = selectedConfig.Metadata.Name.ToValidFileName() + ".opk";
-                await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.Pack(selectedConfig), "application/octet-stream");
+                await BlazorDownloadFileService.DownloadFile(fileName, await ConfigPacker.PackAsync(selectedConfig), "application/octet-stream");
             }
             catch (Exception ex)
             {
@@ -380,7 +380,7 @@ namespace OpenBullet2.Pages
 
             try
             {
-                var bytes = await ConfigPacker.Pack(configsToPack);
+                var bytes = await ConfigPacker.PackAsync(configsToPack);
                 await BlazorDownloadFileService.DownloadFile("configs.zip", bytes, "application/octet-stream");
             }
             catch (Exception ex)

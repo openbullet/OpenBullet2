@@ -54,7 +54,7 @@ namespace OpenBullet2.Pages
             await js.RegisterLoliScript();
             var model = await Editor.GetModel();
             await MonacoEditorBase.SetModelLanguage(model, "loliscript");
-            await MonacoThemeSetter.SetLoliScriptTheme(OBSettingsService.Settings.CustomizationSettings);
+            await MonacoThemeSetter.SetLoliScriptThemeAsync(OBSettingsService.Settings.CustomizationSettings);
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)

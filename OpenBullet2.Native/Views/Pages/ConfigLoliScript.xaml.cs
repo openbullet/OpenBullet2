@@ -72,7 +72,7 @@ namespace OpenBullet2.Native.Views.Pages
             if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
             {
                 configService.SelectedConfig.LoliScript = editor.Text;
-                await configRepo.Save(configService.SelectedConfig);
+                await configRepo.SaveAsync(configService.SelectedConfig);
                 Alert.Success("Saved", $"{configService.SelectedConfig.Metadata.Name} was saved successfully!");
             }
         }

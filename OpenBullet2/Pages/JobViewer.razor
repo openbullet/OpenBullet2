@@ -32,7 +32,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        uid = await ((OpenBullet2.Auth.OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        uid = await ((OpenBullet2.Auth.OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
         job = Manager.Jobs.FirstOrDefault(j => j.Id == Id);
     }
 

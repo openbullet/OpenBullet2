@@ -119,7 +119,7 @@ namespace RuriLib.Models.Jobs
             {
                 try
                 {
-                    input.Proxy.Country = await input.GeoProvider.Geolocate(input.Proxy.Host);
+                    input.Proxy.Country = await input.GeoProvider.GeolocateAsync(input.Proxy.Host);
                 }
                 catch
                 {
@@ -385,7 +385,7 @@ namespace RuriLib.Models.Jobs
             Tested++;
 
             // This is fire and forget
-            _ = ProxyOutput.Store(proxy);
+            _ = ProxyOutput.StoreAsync(proxy);
         }
         #endregion
     }

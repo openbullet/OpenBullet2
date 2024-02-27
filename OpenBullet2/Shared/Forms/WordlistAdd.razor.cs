@@ -51,7 +51,7 @@ namespace OpenBullet2.Shared.Forms
                 Type = wordlistTypes.First()
             };
 
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             if (uid == 0)
             {

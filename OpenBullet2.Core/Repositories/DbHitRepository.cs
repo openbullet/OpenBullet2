@@ -19,20 +19,20 @@ public class DbHitRepository : DbRepository<HitEntity>, IHitRepository
     }
 
     /// <inheritdoc/>
-    public async Task Purge() => await context.Database
+    public async Task PurgeAsync() => await context.Database
         .ExecuteSqlRawAsync($"DELETE FROM {nameof(ApplicationDbContext.Hits)}");
 
     /// <inheritdoc/>
-    public async Task<long> Count() => await context.Hits.CountAsync();
+    public async Task<long> CountAsync() => await context.Hits.CountAsync();
 
-    public async override Task Update(HitEntity entity, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(HitEntity entity, CancellationToken cancellationToken = default)
     {
         context.DetachLocal<HitEntity>(entity.Id);
         context.Entry(entity).State = EntityState.Modified;
-        await base.Update(entity, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
-    public async override Task Update(IEnumerable<HitEntity> entities, CancellationToken cancellationToken = default)
+    public async override Task UpdateAsync(IEnumerable<HitEntity> entities, CancellationToken cancellationToken = default)
     {
         foreach (var entity in entities)
         {
@@ -40,6 +40,6 @@ public class DbHitRepository : DbRepository<HitEntity>, IHitRepository
             context.Entry(entity).State = EntityState.Modified;
         }
 
-        await base.Update(entities, cancellationToken).ConfigureAwait(false);
+        await base.UpdateAsync(entities, cancellationToken).ConfigureAwait(false);
     }
 }

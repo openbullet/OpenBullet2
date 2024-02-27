@@ -22,7 +22,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task Add(T entity, CancellationToken cancellationToken = default)
+    public async virtual Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         
@@ -38,7 +38,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task Add(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public async virtual Task AddAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -54,7 +54,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task Delete(T entity, CancellationToken cancellationToken = default)
+    public async virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -70,7 +70,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task Delete(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public async virtual Task DeleteAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -86,7 +86,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task<T> Get(int id, CancellationToken cancellationToken = default)
+    public async virtual Task<T> GetAsync(int id, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -106,7 +106,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
         => context.Set<T>();
 
     /// <inheritdoc/>
-    public async virtual Task Update(T entity, CancellationToken cancellationToken = default)
+    public async virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 
@@ -122,7 +122,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public async virtual Task Update(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public async virtual Task UpdateAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
 

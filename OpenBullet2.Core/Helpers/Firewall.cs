@@ -14,7 +14,8 @@ public static class Firewall
     /// Checks if an <paramref name="ip"/> is allowed according to a whitelist of <paramref name="allowed"/>
     /// IPs. Supports individual IPv4, individual IPv6, masked IPv4 range, dynamic DNS.
     /// </summary>
-    public static async Task<bool> CheckIpValidity(IPAddress ip, IEnumerable<string> allowed)
+    public static async Task<bool> CheckIpValidityAsync(
+        IPAddress ip, IEnumerable<string> allowed)
     {
         foreach (var addr in allowed)
         {

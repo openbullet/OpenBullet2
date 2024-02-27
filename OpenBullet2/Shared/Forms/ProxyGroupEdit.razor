@@ -34,7 +34,7 @@
     {
         ProxyGroup.Name = model.Name;
 
-        await repo.Update(ProxyGroup);
+        await repo.UpdateAsync(ProxyGroup);
         BlazoredModal.Close();
     }
 }

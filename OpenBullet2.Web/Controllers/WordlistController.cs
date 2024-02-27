@@ -53,7 +53,7 @@ public class WordlistController : ApiController
     {
         var apiUser = HttpContext.GetApiUser();
 
-        var wordlist = await _wordlistRepo.Get(id);
+        var wordlist = await _wordlistRepo.GetAsync(id);
 
         if (apiUser.Role is UserRole.Guest && wordlist.Owner.Id != apiUser.Id)
         {
@@ -161,10 +161,10 @@ public class WordlistController : ApiController
         // owner of the wordlist, for access control purposes.
         if (apiUser.Role is UserRole.Guest)
         {
-            entity.Owner = await _guestRepo.Get(apiUser.Id);
+            entity.Owner = await _guestRepo.GetAsync(apiUser.Id);
         }
 
-        await _wordlistRepo.Add(entity);
+        await _wordlistRepo.AddAsync(entity);
 
         _logger.LogInformation("Created a new wordlist with id {id} for file {fileName}",
             entity.Id, entity.FileName);
@@ -207,7 +207,7 @@ public class WordlistController : ApiController
 
         EnsureOwnership(entity);
 
-        await _wordlistRepo.Delete(entity, alsoDeleteFile);
+        await _wordlistRepo.DeleteAsync(entity, alsoDeleteFile);
 
         return Ok();
     }
@@ -234,7 +234,7 @@ public class WordlistController : ApiController
             if (!System.IO.File.Exists(entity.FileName))
             {
                 deletedCount++;
-                await _wordlistRepo.Delete(entity, deleteFile: false);
+                await _wordlistRepo.DeleteAsync(entity, deleteFile: false);
             }
         }
 
@@ -258,7 +258,7 @@ public class WordlistController : ApiController
         EnsureOwnership(entity);
 
         _mapper.Map(dto, entity);
-        await _wordlistRepo.Update(entity);
+        await _wordlistRepo.UpdateAsync(entity);
 
         _logger.LogInformation("Updated the information of the wordlist with id {id}",
             entity.Id);
@@ -268,7 +268,7 @@ public class WordlistController : ApiController
 
     private async Task<WordlistEntity> GetEntityAsync(int id)
     {
-        var entity = await _wordlistRepo.Get(id);
+        var entity = await _wordlistRepo.GetAsync(id);
 
         if (entity is null)
         {

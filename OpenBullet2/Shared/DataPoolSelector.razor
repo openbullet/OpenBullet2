@@ -115,7 +115,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+        uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
         wordlistTypes = RuriLibSettings.Environment.WordlistTypes.Select(t => t.Name).ToList();
         await InvokeAsync(StateHasChanged);
     }
@@ -125,7 +125,7 @@
         // We're in edit mode
         if (Options is WordlistDataPoolOptions o && o.WordlistId != -1)
         {
-            selectedWordlist = await WordlistRepo.Get(o.WordlistId);
+            selectedWordlist = await WordlistRepo.GetAsync(o.WordlistId);
         }
 
         // Hook the correct type for radio buttons
@@ -194,8 +194,8 @@
         if (!result.Cancelled)
         {
             var entity = result.Data as WordlistEntity;
-            entity.Owner = await GuestRepo.Get(uid);
-            await WordlistRepo.Add(entity);
+            entity.Owner = await GuestRepo.GetAsync(uid);
+            await WordlistRepo.AddAsync(entity);
 
             selectedWordlist = entity;
             ((WordlistDataPoolOptions)Options).WordlistId = selectedWordlist.Id;

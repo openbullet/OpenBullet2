@@ -301,10 +301,10 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         var configService = GetRequiredService<ConfigService>();
         var configRepo = GetRequiredService<IConfigRepository>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = await configRepo.Create();
+        var config = await configRepo.CreateAsync();
         config.Metadata.Name = "myConfig";
         configService.Configs.Add(config);
-        await configRepo.Save(config);
+        await configRepo.SaveAsync(config);
         var endpoint = new Endpoint
         {
             Route = "test",
@@ -348,10 +348,10 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         var configService = GetRequiredService<ConfigService>();
         var configRepo = GetRequiredService<IConfigRepository>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = await configRepo.Create();
+        var config = await configRepo.CreateAsync();
         config.Metadata.Name = "myConfig";
         configService.Configs.Add(config);
-        await configRepo.Save(config);
+        await configRepo.SaveAsync(config);
         var endpoint = new Endpoint
         {
             Route = "test",

@@ -75,11 +75,11 @@ public class ProxyGroupController : ApiController
         // owner of the proxy group, for access control purposes.
         if (apiUser.Role is UserRole.Guest)
         {
-            var owner = await _guestRepo.Get(apiUser.Id);
+            var owner = await _guestRepo.GetAsync(apiUser.Id);
             entity.Owner = owner;
         }
 
-        await _proxyGroupRepo.Add(entity);
+        await _proxyGroupRepo.AddAsync(entity);
 
         _logger.LogInformation("Created a new proxy group with name {name}", dto.Name);
 
@@ -98,7 +98,7 @@ public class ProxyGroupController : ApiController
         EnsureOwnership(entity);
 
         _mapper.Map(dto, entity);
-        await _proxyGroupRepo.Update(entity);
+        await _proxyGroupRepo.UpdateAsync(entity);
 
         _logger.LogInformation("Updated the information of the proxy group with id {id}", entity.Id);
 
@@ -152,7 +152,7 @@ public class ProxyGroupController : ApiController
         }
 
         // This will cascade delete all the proxies in the group
-        await _proxyGroupRepo.Delete(entity);
+        await _proxyGroupRepo.DeleteAsync(entity);
         
         _logger.LogInformation("Deleted the proxy group with id {id} and {proxyCount} proxies",
             entity.Id, proxies.Count);
@@ -165,7 +165,7 @@ public class ProxyGroupController : ApiController
 
     private async Task<ProxyGroupEntity> GetEntityAsync(int id)
     {
-        var entity = await _proxyGroupRepo.Get(id);
+        var entity = await _proxyGroupRepo.GetAsync(id);
 
         if (entity is null)
         {

@@ -60,7 +60,7 @@ namespace OpenBullet2.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserId();
+            uid = await ((OBAuthenticationStateProvider)Auth).GetCurrentUserIdAsync();
 
             groups = uid == 0
                 ? await ProxyGroupsRepo.GetAll().Include(g => g.Owner).ToListAsync()
@@ -152,8 +152,8 @@ namespace OpenBullet2.Pages
             if (!result.Cancelled)
             {
                 var entity = result.Data as ProxyGroupEntity;
-                entity.Owner = await GuestRepo.Get(uid);
-                await ProxyGroupsRepo.Add(entity);
+                entity.Owner = await GuestRepo.GetAsync(uid);
+                await ProxyGroupsRepo.AddAsync(entity);
                 groups.Add(entity);
                 await js.AlertSuccess(Loc["Created"], Loc["ProxyGroupCreated"]);
                 currentGroupId = groups.Last().Id;
@@ -209,7 +209,7 @@ namespace OpenBullet2.Pages
             {
                 // Delete the group from the DB, this
                 // will cascade delete all the proxies in the group
-                await ProxyGroupsRepo.Delete(groupToDelete);
+                await ProxyGroupsRepo.DeleteAsync(groupToDelete);
 
                 // Delete the group from the local list
                 groups.Remove(groupToDelete);
@@ -236,11 +236,11 @@ namespace OpenBullet2.Pages
                 var dto = result.Data as ProxiesForImportDto;
 
                 var entities = ParseProxies(dto).ToList();
-                var currentGroup = await ProxyGroupsRepo.Get(currentGroupId);
+                var currentGroup = await ProxyGroupsRepo.GetAsync(currentGroupId);
                 entities.ForEach(e => e.Group = currentGroup);
 
-                await ProxyRepo.Add(entities);
-                await ProxyRepo.RemoveDuplicates(currentGroupId);
+                await ProxyRepo.AddAsync(entities);
+                await ProxyRepo.RemoveDuplicatesAsync(currentGroupId);
                 await RefreshList();
 
                 await js.AlertSuccess(Loc["Imported"], $"{Loc["ProxiesImportedSuccessfully"]}: {dto.Lines.Distinct().Count()}");
@@ -330,7 +330,7 @@ namespace OpenBullet2.Pages
                     proxy.Group = group;
                 }
 
-                await ProxyRepo.Update(filtered);
+                await ProxyRepo.UpdateAsync(filtered);
 
                 await js.AlertSuccess(Loc["Moved"], $"{filtered.Count()} {Loc["proxiesMoved"]}");
                 await RefreshList();
@@ -343,7 +343,7 @@ namespace OpenBullet2.Pages
 
         private async Task DeleteProxies(IEnumerable<ProxyEntity> toDelete)
         {
-            await ProxyRepo.Delete(toDelete);
+            await ProxyRepo.DeleteAsync(toDelete);
             await RefreshList();
             await js.AlertSuccess(Loc["Deleted"], $"{Loc["ProxiesDeletedSuccessfully"]}: {toDelete.Count()}");
         }

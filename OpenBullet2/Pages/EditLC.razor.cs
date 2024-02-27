@@ -77,7 +77,7 @@ namespace OpenBullet2.Pages
             await js.RegisterLoliCode();
             var model = await Editor.GetModel();
             await MonacoEditorBase.SetModelLanguage(model, "lolicode");
-            await MonacoThemeSetter.SetLoliCodeTheme(OBSettingsService.Settings.CustomizationSettings);
+            await MonacoThemeSetter.SetLoliCodeThemeAsync(OBSettingsService.Settings.CustomizationSettings);
         }
 
         private async Task OnStartupMonacoInit()
@@ -85,7 +85,7 @@ namespace OpenBullet2.Pages
             await js.RegisterLoliCode();
             var model = await StartupEditor.GetModel();
             await MonacoEditorBase.SetModelLanguage(model, "lolicode");
-            await MonacoThemeSetter.SetLoliCodeTheme(OBSettingsService.Settings.CustomizationSettings);
+            await MonacoThemeSetter.SetLoliCodeThemeAsync(OBSettingsService.Settings.CustomizationSettings);
         }
 
         private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)

@@ -43,11 +43,11 @@ namespace OpenBullet2.Native.Services
             }
 
             // Check for updates once a day
-            timer = new Timer(new TimerCallback(async _ => await FetchRemoteVersion()),
+            timer = new Timer(new TimerCallback(async _ => await FetchRemoteVersionAsync()),
                     null, 0, (int)TimeSpan.FromDays(1).TotalMilliseconds);
         }
 
-        private async Task FetchRemoteVersion()
+        private async Task FetchRemoteVersionAsync()
         {
             var isDebug = false;
 
