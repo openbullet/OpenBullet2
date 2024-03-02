@@ -1,10 +1,12 @@
 ﻿using OpenBullet2.Core;
+using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
+using RuriLib.Services;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -13,6 +15,14 @@ namespace OpenBullet2.Web.Tests.Integration;
 public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
     : IntegrationTests(testOutputHelper)
 {
+    private const string _additionScript = """
+                                           BLOCK:Addition
+                                             firstNumber = 1
+                                             secondNumber = 2
+                                             => VAR @result
+                                           ENDBLOCK
+                                           """;
+    
     /// <summary>
     /// Admin can read all configs' overview info.
     /// </summary>
@@ -24,38 +34,47 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         var configService = GetRequiredService<ConfigService>();
         var config1 = new Config {
             Id = Guid.NewGuid().ToString(),
-            Metadata = new ConfigMetadata {
+            Metadata = new ConfigMetadata
+            {
                 Name = "TestConfig1",
                 Author = "TestAuthor1",
                 Category = "TestCategory1",
                 CreationDate = new DateTime(2021, 1, 2),
                 LastModified = new DateTime(2021, 1, 2)
             },
-            Settings = new ConfigSettings {
-                ProxySettings = new ProxySettings {
+            Settings = new ConfigSettings
+            {
+                ProxySettings = new ProxySettings
+                {
                     UseProxies = false
                 },
-                DataSettings = new DataSettings {
+                DataSettings = new DataSettings
+                {
                     AllowedWordlistTypes = ["Default"]
                 }
             },
             IsRemote = false,
             Mode = ConfigMode.Stack
         };
-        var config2 = new Config {
+        var config2 = new Config
+        {
             Id = Guid.NewGuid().ToString(),
-            Metadata = new ConfigMetadata {
+            Metadata = new ConfigMetadata
+            {
                 Name = "TestConfig2",
                 Author = "TestAuthor2",
                 Category = "TestCategory2",
                 CreationDate = new DateTime(2021, 1, 1),
                 LastModified = new DateTime(2021, 1, 1)
             },
-            Settings = new ConfigSettings {
-                ProxySettings = new ProxySettings {
+            Settings = new ConfigSettings
+            {
+                ProxySettings = new ProxySettings
+                {
                     UseProxies = true
                 },
-                DataSettings = new DataSettings {
+                DataSettings = new DataSettings
+                {
                     AllowedWordlistTypes = ["Default", "Credentials"]
                 }
             },
@@ -111,32 +130,38 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configRepository = GetRequiredService<IConfigRepository>();
-        var config1 = new Config {
+        var config1 = new Config
+        {
             Id = Guid.NewGuid().ToString(),
-            Metadata = new ConfigMetadata {
+            Metadata = new ConfigMetadata
+            {
                 Name = "TestConfig1",
                 Author = "TestAuthor1",
                 Category = "TestCategory1",
                 CreationDate = new DateTime(2021, 1, 2),
                 LastModified = new DateTime(2021, 1, 2)
             },
-            Settings = new ConfigSettings {
+            Settings = new ConfigSettings
+            {
                 ProxySettings = new ProxySettings { UseProxies = false },
                 DataSettings = new DataSettings { AllowedWordlistTypes = ["Default"] }
             },
             IsRemote = false,
             Mode = ConfigMode.Stack
         };
-        var config2 = new Config {
+        var config2 = new Config
+        {
             Id = Guid.NewGuid().ToString(),
-            Metadata = new ConfigMetadata {
+            Metadata = new ConfigMetadata
+            {
                 Name = "TestConfig2",
                 Author = "TestAuthor2",
                 Category = "TestCategory2",
                 CreationDate = new DateTime(2021, 1, 2),
                 LastModified = new DateTime(2021, 1, 2)
             },
-            Settings = new ConfigSettings {
+            Settings = new ConfigSettings
+            {
                 ProxySettings = new ProxySettings { UseProxies = false },
                 DataSettings = new DataSettings { AllowedWordlistTypes = ["Default"] }
             },
@@ -161,9 +186,80 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(config1.Id, configs[0].Id);
     }
 
-    // Guest can read all configs' overview info
+    /// <summary>
+    /// Guest can read all configs' overview info.
+    /// </summary>
+    [Fact]
+    public async Task GetAll_Guest_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
+        configService.Configs.Add(config);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var result = await GetJsonAsync<IEnumerable<ConfigInfoDto>>(
+            client, "/api/v1/config/all");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        var configs = result.Value.ToList();
+        Assert.Single(configs);
+        Assert.Equal(config.Id, configs[0].Id);
+    }
     
-    // Admin can get config's metadata
+    /// <summary>
+    /// Admin can get config's metadata.
+    /// </summary>
+    [Fact]
+    public async Task GetMetadata_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        await AddTestPluginAsync();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig",
+                Author = "TestAuthor",
+                Category = "TestCategory",
+                Base64Image = "abc"
+            },
+            LoliCodeScript = _additionScript,
+            Mode = ConfigMode.LoliCode
+        };
+        configService.Configs.Add(config);
+        await configRepository.SaveAsync(config);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var result = await GetJsonAsync<ConfigMetadataDto>(
+            client, "/api/v1/config/metadata".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(config.Metadata.Name, result.Value.Name);
+        Assert.Equal(config.Metadata.Author, result.Value.Author);
+        Assert.Equal(config.Metadata.Category, result.Value.Category);
+        Assert.Equal(config.Metadata.Base64Image, result.Value.Base64Image);
+        Assert.Single(result.Value.Plugins);
+        Assert.Contains("OB2TestPlugin", result.Value.Plugins[0]);
+    }
     
     // Guest can get config's metadata
     
@@ -239,4 +335,11 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
     // Admin can get a new block instance
     
     // Guest cannot get a new block instance
+    
+    private async Task AddTestPluginAsync() {
+        var pluginRepo = GetRequiredService<PluginRepository>();
+        var file = new FileInfo("Resources/OB2TestPlugin.zip");
+        await using var fs = file.OpenRead();
+        pluginRepo.AddPlugin(fs);
+    }
 }
