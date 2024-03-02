@@ -16,5 +16,5 @@ public class ApiController : ControllerBase
     // TODO: Trigger a toast without timer in frontend via the
     // http interceptor if this header is set.
     protected void SetWarning(string message) => 
-        Response.Headers.Add("X-Application-Warning", message);
+        Response.Headers.Append("X-Application-Warning", message);
 }
