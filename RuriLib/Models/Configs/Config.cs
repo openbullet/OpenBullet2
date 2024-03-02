@@ -16,7 +16,7 @@ namespace RuriLib.Models.Configs
         /// <summary>
         /// The unique ID of the config.
         /// </summary>
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         /// <summary>
         /// Whether the config was downloaded from a remote source and should not
@@ -88,11 +88,6 @@ namespace RuriLib.Models.Configs
 
         [JsonIgnore]
         public List<(BlockInstance, int)> DeletedBlocksHistory { get; set; } = new List<(BlockInstance, int)>();
-
-        public Config()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
 
         public void ChangeMode(ConfigMode newMode)
         {

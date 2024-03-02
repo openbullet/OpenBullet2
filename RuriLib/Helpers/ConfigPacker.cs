@@ -111,7 +111,7 @@ namespace RuriLib.Helpers
         /// </summary>
         public static Task<Config> Unpack(Stream stream)
         {
-            var config = new Config();
+            var config = new Config { Id = Guid.NewGuid().ToString() };
 
             using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
             {

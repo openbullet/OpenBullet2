@@ -28,6 +28,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         var configSharingService = GetRequiredService<ConfigSharingService>();
         var config1 = new Config
         {
+            Id = Guid.NewGuid().ToString(),
             Metadata = new ConfigMetadata
             {
                 Name = "config1"
@@ -35,6 +36,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var config2 = new Config
         {
+            Id = Guid.NewGuid().ToString(),
             Metadata = new ConfigMetadata
             {
                 Name = "config2"
@@ -42,6 +44,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         };
         var config3 = new Config
         {
+            Id = Guid.NewGuid().ToString(),
             Metadata = new ConfigMetadata
             {
                 Name = "config3"
@@ -112,7 +115,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = new Config();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
         configService.Configs.Add(config);
         var dto = new EndpointDto
         {
@@ -170,7 +173,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = new Config();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
         configService.Configs.Add(config);
         var endpoint = new Endpoint
         {
@@ -206,7 +209,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = new Config();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
         configService.Configs.Add(config);
         var endpoint = new Endpoint
         {
@@ -242,7 +245,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = new Config();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
         configService.Configs.Add(config);
         var endpoint = new Endpoint
         {
@@ -269,7 +272,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var configService = GetRequiredService<ConfigService>();
         var configSharingService = GetRequiredService<ConfigSharingService>();
-        var config = new Config();
+        var config = new Config { Id = Guid.NewGuid().ToString() };
         configService.Configs.Add(config);
         var endpoint = new Endpoint
         {

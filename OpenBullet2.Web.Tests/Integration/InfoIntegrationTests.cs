@@ -126,7 +126,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Create a config
         var configService = GetRequiredService<ConfigService>();
-        configService.Configs.Add(new Config());
+        configService.Configs.Add(new Config { Id = "test" });
         
         // Add a guest
         dbContext.Guests.Add(new GuestEntity());

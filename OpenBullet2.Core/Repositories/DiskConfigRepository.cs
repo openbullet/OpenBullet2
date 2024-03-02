@@ -103,17 +103,11 @@ public class DiskConfigRepository : IConfigRepository
     /// <inheritdoc/>
     public async Task<Config> CreateAsync(string id = null)
     {
-        var config = new Config();
+        var config = new Config { Id = id ?? Guid.NewGuid().ToString() };
 
-        if (id is not null)
-        {
-            config.Id = id;
-        }
-
-        config.Settings.DataSettings.AllowedWordlistTypes = new string[]
-        {
+        config.Settings.DataSettings.AllowedWordlistTypes = [
             _rlSettings.Environment.WordlistTypes.First().Name
-        };
+        ];
 
         await SaveAsync(config);
         return config;
