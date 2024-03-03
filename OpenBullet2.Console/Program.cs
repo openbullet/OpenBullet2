@@ -115,7 +115,7 @@ Feel free to contribute to the versatility of this project by adding the missing
 
             // Unpack the config
             using var fs = new FileStream(opts.ConfigFile, FileMode.Open);
-            var config = ConfigPacker.Unpack(fs).Result;
+            var config = ConfigPacker.UnpackAsync(fs).Result;
 
             DataPool dataPool;
             if (string.IsNullOrEmpty(opts.WordlistFile) && !string.IsNullOrEmpty(opts.WordlistRange))

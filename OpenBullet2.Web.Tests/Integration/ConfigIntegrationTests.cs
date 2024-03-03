@@ -2,16 +2,24 @@
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
+using OpenBullet2.Web.Dtos.Config.Blocks;
+using OpenBullet2.Web.Dtos.Config.Convert;
 using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Models.Errors;
 using OpenBullet2.Web.Tests.Extensions;
+using RuriLib.Helpers;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Services;
+using System.IO.Compression;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -896,53 +904,839 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(configService.Configs.FirstOrDefault(c => c.Id == config.Id));
     }
 
-    // Admin can clone a config
+    /// <summary>
+    /// Admin can clone a config.
+    /// </summary>
+    [Fact]
+    public async Task CloneConfig_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            Settings = new ConfigSettings
+            {
+                ProxySettings = new ProxySettings
+                {
+                    UseProxies = false
+                },
+                DataSettings = new DataSettings
+                {
+                    AllowedWordlistTypes = ["Default"]
+                }
+            },
+            LoliCodeScript = _additionScript,
+            Mode = ConfigMode.LoliCode
+        };
+        configService.Configs.Add(config);
+        await configRepository.SaveAsync(config);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var result = await PostJsonAsync<ConfigDto>(
+            client, "/api/v1/config/clone".ToUri(queryParams), new { });
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        var clonedConfig = result.Value;
+        Assert.NotEqual(config.Id, clonedConfig.Id);
+        Assert.Equal(config.Metadata.Name, clonedConfig.Metadata.Name);
+        Assert.Equal(config.Settings.ProxySettings.UseProxies, clonedConfig.Settings.ProxySettings.UseProxies);
+        Assert.Equal(config.Settings.DataSettings.AllowedWordlistTypes, clonedConfig.Settings.DataSettings.AllowedWordlistTypes);
+        Assert.Equal(config.LoliCodeScript, clonedConfig.LoliCodeScript);
+        Assert.Equal(config.Mode, clonedConfig.Mode);
+        
+        // Make sure the cloned config was created both in the service and in the repository
+        var createdConfig = await configRepository.GetAsync(clonedConfig.Id);
+        Assert.NotNull(createdConfig);
+        
+        var createdConfigInService = configService.Configs.FirstOrDefault(c => c.Id == clonedConfig.Id);
+        Assert.NotNull(createdConfigInService);
+    }
 
-    // Admin cannot clone a remote config
+    /// <summary>
+    /// Admin cannot clone a remote config.
+    /// </summary>
+    [Fact]
+    public async Task CloneConfig_Admin_Remote_NotAllowed()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            IsRemote = true
+        };
+        configService.Configs.Add(config);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var error = await PostAsync(client,
+            "/api/v1/config/clone".ToUri(queryParams), new { });
 
-    // Guest cannot clone a config (forbidden)
+        // Assert
+        Assert.NotNull(error);
+        Assert.NotNull(error.Content);
+        Assert.Equal(ErrorCode.ActionNotAllowedForRemoteConfig, error.Content.ErrorCode);
+    }
 
-    // Admin can download a config
+    /// <summary>
+    /// Guest cannot clone a config (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task CloneConfig_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            }
+        };
+        configService.Configs.Add(config);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var error = await PostAsync(client,
+            "/api/v1/config/clone".ToUri(queryParams), new { });
 
-    // Admin cannot download a remote config
+        // Assert
+        Assert.NotNull(error);
+        Assert.NotNull(error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, error.Content.ErrorCode);
+    }
 
-    // Guest cannot download a config
+    /// <summary>
+    /// Admin can download a config.
+    /// </summary>
+    [Fact]
+    public async Task DownloadConfig_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            }
+        };
+        configService.Configs.Add(config);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var response = await client.GetAsync(
+            "/api/v1/config/download".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.Equal("application/octet-stream", response.Content.Headers.ContentType!.MediaType);
+        
+        var downloadedConfig = await ConfigPacker.UnpackAsync(
+            await response.Content.ReadAsStreamAsync());
 
-    // Admin can download all configs (except remote)
+        // The id will not be the same since it's not saved inside the
+        // config but it's the name of the file
+        Assert.Equal(config.Metadata.Name, downloadedConfig.Metadata.Name);
+    }
 
-    // Guest cannot download all configs
+    /// <summary>
+    /// Admin cannot download a remote config.
+    /// </summary>
+    [Fact]
+    public async Task DownloadConfig_Admin_Remote_NotAllowed()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            IsRemote = true
+        };
+        configService.Configs.Add(config);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var response = await client.GetAsync(
+            "/api/v1/config/download".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
 
-    // Admin can upload configs (with all kinds of modes)
+    /// <summary>
+    /// Guest cannot download a config.
+    /// </summary>
+    [Fact]
+    public async Task DownloadConfig_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            }
+        };
+        configService.Configs.Add(config);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = config.Id
+        };
+        var response = await client.GetAsync(
+            "/api/v1/config/download".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+    }
 
-    // Guest cannot upload configs
+    /// <summary>
+    /// Admin can download all configs (except remote).
+    /// </summary>
+    [Fact]
+    public async Task DownloadAllConfigs_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config1 = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig1"
+            }
+        };
+        var config2 = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig2"
+            },
+            IsRemote = true
+        };
+        configService.Configs.AddRange([config1, config2]);
+        await configRepository.SaveAsync(config1);
+        await configRepository.SaveAsync(config2);
+        
+        // Act
+        var response = await client.GetAsync("/api/v1/config/download/all");
+        
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.Equal("application/zip", response.Content.Headers.ContentType!.MediaType);
+        
+        await using var zipStream = await response.Content.ReadAsStreamAsync();
+        var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+        Assert.Single(zipArchive.Entries);
+        Assert.Equal("TestConfig1.opk", zipArchive.Entries[0].Name);
+    }
 
-    // Admin can convert LoliCode to C#
+    /// <summary>
+    /// Guest cannot download all configs (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task DownloadAllConfigs_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var configService = GetRequiredService<ConfigService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config1 = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig1"
+            }
+        };
+        var config2 = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig2"
+            }
+        };
+        configService.Configs.AddRange([config1, config2]);
+        await configRepository.SaveAsync(config1);
+        await configRepository.SaveAsync(config2);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var response = await client.GetAsync("/api/v1/config/download/all");
+        
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+        var error = await response.Content.ReadFromJsonAsync<ApiError>();
+        Assert.NotNull(error);
+        Assert.Equal(ErrorCode.NotAdmin, error.ErrorCode);
+    }
 
-    // What happens if LoliCode is invalid?
+    /// <summary>
+    /// Admin can upload configs (with all kinds of modes).
+    /// </summary>
+    [Fact]
+    public async Task UploadConfig_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var loliCodeConfig = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            LoliCodeScript = "LOG \"Hello, world!\"",
+            Mode = ConfigMode.LoliCode
+        };
+        var cSharpConfig = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            CSharpScript = "using System; public class TestConfig { public void Main() { Console.WriteLine(\"Hello, world!\"); } }",
+            Mode = ConfigMode.CSharp
+        };
+        var legacyConfig = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            LoliScript = "LOG \"Hello, world!\"",
+            Mode = ConfigMode.Legacy
+        };
+        var dllConfig = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata
+            {
+                Name = "TestConfig"
+            },
+            DLLBytes = [0x00, 0x01, 0x02],
+            Mode = ConfigMode.DLL
+        };
+        configService.Configs.AddRange([loliCodeConfig, cSharpConfig, legacyConfig, dllConfig]);
+        
+        // Act
+        var packedLoliCodeConfig = await ConfigPacker.PackAsync(loliCodeConfig);
+        var packedCSharpConfig = await ConfigPacker.PackAsync(cSharpConfig);
+        var packedLegacyConfig = await ConfigPacker.PackAsync(legacyConfig);
+        var packedDllConfig = await ConfigPacker.PackAsync(dllConfig);
+        var formData = new MultipartFormDataContent
+        {
+            { new ByteArrayContent(packedLoliCodeConfig), "files", "TestConfig1.opk" },
+            { new ByteArrayContent(packedCSharpConfig), "files", "TestConfig2.opk" },
+            { new ByteArrayContent(packedLegacyConfig), "files", "TestConfig3.opk" },
+            { new ByteArrayContent(packedDllConfig), "files", "TestConfig4.opk" }
+        };
+        var response = await client.PostAsync("/api/v1/config/upload/many", formData);
+        
+        // Assert
+        Assert.True(response.IsSuccessStatusCode);
+        var affectedEntries = await response.Content.ReadFromJsonAsync<AffectedEntriesDto>(JsonSerializerOptions);
+        Assert.NotNull(affectedEntries);
+        Assert.Equal(4, affectedEntries.Count);
+        
+        var configs = await configRepository.GetAllAsync();
+        Assert.Equal(4, configs.Count());
+    }
 
-    // Guest cannot convert LoliCode to C#
+    /// <summary>
+    /// Guest cannot upload configs (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task UploadConfig_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var response = await client.PostAsync("/api/v1/config/upload/many",
+            new MultipartFormDataContent());
+        
+        // Assert
+        Assert.False(response.IsSuccessStatusCode);
+        var error = await response.Content.ReadFromJsonAsync<ApiError>();
+        Assert.NotNull(error);
+        Assert.Equal(ErrorCode.NotAdmin, error.ErrorCode);
+    }
 
-    // Admin can convert LoliCode to Stack
+    /// <summary>
+    /// Admin can convert LoliCode to C#.
+    /// </summary>
+    [Fact]
+    public async Task ConvertLoliCodeToCSharp_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
 
-    // What happens if LoliCode is invalid?
+        // Act
+        var dto = new ConvertLoliCodeToCSharpDto
+        {
+            LoliCode = "LOG \"Hello, world!\"",
+            Settings = new ConfigSettingsDto()
+        };
+        var result = await PostJsonAsync<ConvertedCSharpDto>(
+            client, "/api/v1/config/convert/lolicode/csharp", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Contains("data.Logger.LogObject(\"Hello, world!\");",
+            result.Value.CSharpScript);
+    }
 
-    // Guest cannot convert LoliCode to Stack
+    [Fact]
+    public async Task ConvertLoliCodeToCSharp_Admin_InvalidLoliCode_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var dto = new ConvertLoliCodeToCSharpDto
+        {
+            LoliCode = "BLOCK:ThisIsInvalid\n  abc",
+            Settings = new ConfigSettingsDto()
+        };
+        var result = await PostJsonAsync<ConvertedCSharpDto>(
+            client, "/api/v1/config/convert/lolicode/csharp", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        
+        // TODO: This needs a more talking error
+    }
 
-    // Admin can convert Stack to LoliCode
+    /// <summary>
+    /// Guest cannot convert LoliCode to C# (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task ConvertLoliCodeToCSharp_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new ConvertLoliCodeToCSharpDto
+        {
+            LoliCode = "LOG \"Hello, world!\"",
+            Settings = new ConfigSettingsDto()
+        };
+        var result = await PostJsonAsync<ConvertedCSharpDto>(
+            client, "/api/v1/config/convert/lolicode/csharp", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
 
-    // Guest cannot convert Stack to LoliCode
+    /// <summary>
+    /// Admin can convert LoliCode to Stack.
+    /// </summary>
+    [Fact]
+    public async Task ConvertLoliCodeToStack_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var dto = new ConvertLoliCodeToStackDto
+        {
+            LoliCode = "LOG \"Hello, world!\""
+        };
+        var result = await PostJsonAsync<ConvertedStackDto>(
+            client, "/api/v1/config/convert/lolicode/stack", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Collection(result.Value.Stack,
+            x => Assert.Equal("LOG \"Hello, world!\"", ((JsonElement)x).GetProperty("script").GetString()));
+    }
 
-    // Admin can get all block descriptors, including ones from plugins
+    [Fact]
+    public async Task ConvertLoliCodeToStack_Admin_InvalidLoliCode_BadRequest()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var dto = new ConvertLoliCodeToStackDto
+        {
+            LoliCode = "BLOCK:ThisIsInvalid\n  abc"
+        };
+        var result = await PostJsonAsync<ConvertedStackDto>(
+            client, "/api/v1/config/convert/lolicode/stack", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+    }
 
-    // Guest cannot get all block descriptors
+    /// <summary>
+    /// Guest cannot convert LoliCode to Stack (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task ConvertLoliCodeToStack_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new ConvertLoliCodeToStackDto
+        {
+            LoliCode = "LOG \"Hello, world!\""
+        };
+        var result = await PostJsonAsync<ConvertedStackDto>(
+            client, "/api/v1/config/convert/lolicode/stack", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
 
-    // Admin can get the category tree, including plugins
+    /// <summary>
+    /// Admin can convert Stack to LoliCode.
+    /// </summary>
+    [Fact]
+    public async Task ConvertStackToLoliCode_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var block = new 
+        {
+            Script = "LOG \"Hello, world!\"",
+            Id = "loliCode",
+            Disabled = false,
+            Label = "Log",
+            Settings = new { },
+            Type = "loliCode"
+        };
+        var dto = new ConvertStackToLoliCodeDto
+        {
+            Stack = [
+                JsonSerializer.SerializeToElement(block, JsonSerializerOptions)
+            ]
+        };
+        var result = await PostJsonAsync<ConvertedLoliCodeDto>(
+            client, "/api/v1/config/convert/stack/lolicode", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal("LOG \"Hello, world!\"", 
+            result.Value.LoliCode.Trim(['\n', '\r', ' ']));
+    }
 
-    // Guest cannot get the category tree
+    /// <summary>
+    /// Guest cannot convert Stack to LoliCode (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task ConvertStackToLoliCode_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var block = new 
+        {
+            Script = "LOG \"Hello, world!\"",
+            Id = "loliCode",
+            Disabled = false,
+            Label = "Log",
+            Settings = new { },
+            Type = "loliCode"
+        };
+        var dto = new ConvertStackToLoliCodeDto
+        {
+            Stack = [
+                JsonSerializer.SerializeToElement(block, JsonSerializerOptions)
+            ]
+        };
+        var result = await PostJsonAsync<ConvertedLoliCodeDto>(
+            client, "/api/v1/config/convert/stack/lolicode", dto);
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
 
-    // Admin can get a new block instance
+    /// <summary>
+    /// Admin can get all block descriptors, including ones from plugins.
+    /// </summary>
+    [Fact]
+    public async Task GetAllBlockDescriptors_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        await AddTestPluginAsync();
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, BlockDescriptorDto>>(
+            client, "/api/v1/config/block-descriptors");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotEmpty(result.Value);
+        Assert.Contains("Parse", result.Value.Keys);
+        Assert.Contains("Addition", result.Value.Keys);
+    }
 
-    // Guest cannot get a new block instance
+    /// <summary>
+    /// Guest cannot get all block descriptors.
+    /// </summary>
+    [Fact]
+    public async Task GetAllBlockDescriptors_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        await AddTestPluginAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, BlockDescriptorDto>>(
+            client, "/api/v1/config/block-descriptors");
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
+
+    /// <summary>
+    /// Admin can get the category tree, including plugins.
+    /// </summary>
+    [Fact]
+    public async Task GetCategoryTree_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        await AddTestPluginAsync();
+        
+        // Act
+        var result = await GetJsonAsync<CategoryTreeNodeDto>(
+            client, "/api/v1/config/category-tree");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        var root = result.Value;
+        Assert.Contains("Parse",
+            root.SubCategories
+                .First(sc => sc.Name == "RuriLib")
+                .SubCategories.First(sc => sc.Name == "Blocks")
+                .SubCategories.First(sc => sc.Name == "Parsing")
+                .DescriptorIds);
+        Assert.Contains("Addition",
+            root.SubCategories
+                .First(sc => sc.Name == "OB2TestPlugin")
+                .SubCategories.First(sc => sc.Name == "Blocks")
+                .SubCategories.First(sc => sc.Name == "Functions")
+                .DescriptorIds);
+    }
+
+    /// <summary>
+    /// Guest cannot get the category tree.
+    /// </summary>
+    [Fact]
+    public async Task GetCategoryTree_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        await AddTestPluginAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        
+        // Act
+        var result = await GetJsonAsync<CategoryTreeNodeDto>(
+            client, "/api/v1/config/category-tree");
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
+
+    /// <summary>
+    /// Admin can get a new block instance.
+    /// </summary>
+    [Fact]
+    public async Task GetBlockInstance_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var queryParams = new
+        {
+            id = "ConstantString"
+        };
+        var result = await GetJsonAsync<BlockInstanceDto>(
+            client, "/api/v1/config/block-instance".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Equal("ConstantString", result.Value.Id);
+        Assert.Contains("value", result.Value.Settings.Keys);
+    }
+
+    [Fact]
+    public async Task GetBlockInstance_Admin_InvalidId_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var queryParams = new
+        {
+            id = "InvalidId"
+        };
+        var result = await GetJsonAsync<BlockInstanceDto>(
+            client, "/api/v1/config/block-instance".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.InvalidBlockId, result.Error.Content.ErrorCode);
+    }
+    
+    /// <summary>
+    /// Guest cannot get a new block instance (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task GetBlockInstance_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        RequireLogin();
+        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        
+        // Act
+        var queryParams = new
+        {
+            id = "ConstantString"
+        };
+        var result = await GetJsonAsync<BlockInstanceDto>(
+            client, "/api/v1/config/block-instance".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
 
     private async Task AddTestPluginAsync() {
         var pluginRepo = GetRequiredService<PluginRepository>();

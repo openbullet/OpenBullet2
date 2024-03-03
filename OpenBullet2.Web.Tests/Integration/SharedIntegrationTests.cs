@@ -336,7 +336,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(archive.Entries);
         var entry = archive.Entries[0];
         await using var stream = entry.Open();
-        var unpackedConfig = await ConfigPacker.Unpack(stream);
+        var unpackedConfig = await ConfigPacker.UnpackAsync(stream);
         
         // The id is randomized on the downloaded configs, so
         // we check the name instead

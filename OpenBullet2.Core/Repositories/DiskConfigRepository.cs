@@ -75,7 +75,7 @@ public class DiskConfigRepository : IConfigRepository
         {
             using var fileStream = new FileStream(file, FileMode.Open, FileAccess.Read);
 
-            var config = await ConfigPacker.Unpack(fileStream);
+            var config = await ConfigPacker.UnpackAsync(fileStream);
             config.Id = id;
             return config;
         }
@@ -121,7 +121,7 @@ public class DiskConfigRepository : IConfigRepository
         // If it's a .opk config
         if (extension == ".opk")
         {
-            var config = await ConfigPacker.Unpack(stream);
+            var config = await ConfigPacker.UnpackAsync(stream);
             await File.WriteAllBytesAsync(GetFileName(config), await ConfigPacker.PackAsync(config));
         }
         // Otherwise it's a .loli config

@@ -235,7 +235,7 @@ public class ConfigController : ApiController
         // Pack and unpack to clone
         var packed = await ConfigPacker.PackAsync(original);
         using var ms = new MemoryStream(packed);
-        var cloned = await ConfigPacker.Unpack(ms);
+        var cloned = await ConfigPacker.UnpackAsync(ms);
 
         // Change the id and save it again
         cloned.Id = Guid.NewGuid().ToString();
@@ -273,7 +273,7 @@ public class ConfigController : ApiController
         var fileName = config.Metadata.Name.ToValidFileName() + ".opk";
         var bytes = await ConfigPacker.PackAsync(config);
 
-        return File(bytes, "application/zip", fileName);
+        return File(bytes, "application/octet-stream", fileName);
     }
 
     /// <summary>
@@ -303,7 +303,7 @@ public class ConfigController : ApiController
     {
         foreach (var file in files)
         {
-            using var stream = file.OpenReadStream();
+            await using var stream = file.OpenReadStream();
             await _configRepo.UploadAsync(stream, file.FileName);
         }
 

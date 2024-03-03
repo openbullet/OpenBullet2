@@ -150,11 +150,11 @@ public class IntegrationTests : IDisposable
     protected async Task<Result<T, ApiErrorResponse>> GetJsonAsync<T>(HttpClient client, Uri url)
         => await SendJsonAsync<T>(client, url, null, HttpMethod.Get);
  
-    protected async Task<ApiErrorResponse?> PostJsonAsync(HttpClient client, string url, object dto)
-        => await SendAsync(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Post);
- 
     protected async Task<Result<T, ApiErrorResponse>> PostJsonAsync<T>(HttpClient client, string url, object dto)
         => await SendJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Post);
+    
+    protected async Task<Result<T, ApiErrorResponse>> PostJsonAsync<T>(HttpClient client, Uri url, object dto)
+        => await SendJsonAsync<T>(client, url, dto, HttpMethod.Post);
  
     protected async Task<Result<T, ApiErrorResponse>> PutJsonAsync<T>(HttpClient client, string url, object dto)
         => await SendJsonAsync<T>(client, new Uri(url, UriKind.Relative), dto, HttpMethod.Put);

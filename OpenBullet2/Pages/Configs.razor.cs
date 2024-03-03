@@ -185,7 +185,7 @@ namespace OpenBullet2.Pages
             // Pack and unpack to clone
             var packed = await ConfigPacker.PackAsync(selectedConfig);
             using var ms = new MemoryStream(packed);
-            var newConfig = await ConfigPacker.Unpack(ms);
+            var newConfig = await ConfigPacker.UnpackAsync(ms);
             
             // Change the id and save it again
             newConfig.Id = Guid.NewGuid().ToString();

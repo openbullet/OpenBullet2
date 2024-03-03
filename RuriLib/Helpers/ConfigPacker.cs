@@ -109,7 +109,7 @@ namespace RuriLib.Helpers
         /// <summary>
         /// Unpacks a <paramref name="stream"/> to a Config.
         /// </summary>
-        public static Task<Config> Unpack(Stream stream)
+        public static Task<Config> UnpackAsync(Stream stream)
         {
             var config = new Config { Id = Guid.NewGuid().ToString() };
 

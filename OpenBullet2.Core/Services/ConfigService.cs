@@ -108,7 +108,7 @@ public class ConfigService
                     try
                     {
                         using var entryStream = entry.Open();
-                        var config = await ConfigPacker.Unpack(entryStream);
+                        var config = await ConfigPacker.UnpackAsync(entryStream);
 
                         // Calculate the hash of the metadata of the remote config to use as id.
                         // This is done to have a consistent id through successive pulls of configs
