@@ -5,6 +5,7 @@ using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Logging;
 using RuriLib.Models.Configs;
@@ -346,8 +347,42 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Value.DataStats);
         Assert.NotNull(result.Value.ProxyStats);
     }
-    
-    // Guest cannot get the details of a multi run job not owned by them
+
+    /// <summary>
+    /// Guest cannot get the details of a multi run job not owned by them.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJob_Guest_NotOwned_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 2;
+        jobManager.AddJob(mrJob);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
     
     // Guest can get the details of their multi run job
     
