@@ -6,7 +6,6 @@ using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
-using OpenBullet2.Web.Dtos.Config.Settings;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Errors;
 using OpenBullet2.Web.Tests.Extensions;
@@ -19,7 +18,6 @@ using System.IO.Compression;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;

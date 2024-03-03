@@ -67,8 +67,7 @@ public class JobController : ApiController
         
         // Only get the jobs of the user!
         var jobs = _jobManager.Jobs
-            .Where(j => CanSee(apiUser, j) && j is MultiRunJob)
-            .Cast<MultiRunJob>()
+            .Where(j => CanSee(apiUser, j))
             .OrderBy(j => j.Id);
         
         var mapped = jobs.Select(job => new JobOverviewDto {
@@ -116,7 +115,7 @@ public class JobController : ApiController
             {
                 Id = job.Id,
                 OwnerId = job.OwnerId,
-                Type = GetJobType(job),
+                Type = JobType.MultiRun,
                 Status = job.Status,
                 Name = job.Name,
                 ConfigName = job.Config?.Metadata.Name,
@@ -154,7 +153,10 @@ public class JobController : ApiController
             .Cast<ProxyCheckJob>()
             .OrderBy(j => j.Id);
 
-        return Ok(_mapper.Map<IEnumerable<ProxyCheckJobOverviewDto>>(jobs));
+        var dtos = _mapper.Map<IEnumerable<ProxyCheckJobOverviewDto>>(jobs).ToList();
+        
+        dtos.ForEach(dto => dto.Type = JobType.ProxyCheck);
+        return Ok(dtos);
     }
 
     /// <summary>
@@ -386,7 +388,7 @@ public class JobController : ApiController
         var oldJob = _jobManager.Jobs.First(j => j.Id == dto.Id);
 
         var newJob = _jobFactory.FromOptions(
-            dto.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
+            dto.Id, entity.Owner?.Id ?? 0, jobOptions);
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
@@ -429,39 +431,12 @@ public class JobController : ApiController
         var oldJob = _jobManager.Jobs.First(j => j.Id == dto.Id);
 
         var newJob = _jobFactory.FromOptions(
-            dto.Id, entity.Owner == null ? 0 : entity.Owner.Id, jobOptions);
+            dto.Id, entity.Owner?.Id ?? 0, jobOptions);
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
 
         return await MapProxyCheckJobDto((ProxyCheckJob)newJob);
-    }
-
-    /// <summary>
-    /// Set the number of bots.
-    /// </summary>
-    [HttpPatch("bot-number")]
-    [MapToApiVersion("1.0")]
-    public async Task<ActionResult> SetBotNumber(SetBotNumberDto dto)
-    {
-        var job = GetJob(dto.JobId);
-        EnsureOwnership(job);
-
-        switch (job)
-        {
-            case MultiRunJob mrj:
-                await mrj.ChangeBots(dto.BotNumber);
-                break;
-
-            case ProxyCheckJob pcj:
-                await pcj.ChangeBots(dto.BotNumber);
-                break;
-
-            default:
-                throw new NotSupportedException();
-        }
-
-        return Ok();
     }
 
     /// <summary>

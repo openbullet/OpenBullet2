@@ -117,16 +117,6 @@ export class JobService {
         );
     }
 
-    setBotNumber(jobId: number, botNumber: number) {
-        return this.http.patch(
-            getBaseUrl() + '/job/bot-number',
-            {
-                jobId,
-                botNumber
-            }
-        );
-    }
-
     getCustomInputs(jobId: number) {
         return this.http.get<CustomInputQuestionDto[]>(
             getBaseUrl() + '/job/multi-run/custom-inputs',
