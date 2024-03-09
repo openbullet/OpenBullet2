@@ -1,10 +1,17 @@
-﻿using OpenBullet2.Core;
+﻿using Newtonsoft.Json;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Models.Proxies.Sources;
+using OpenBullet2.Core.Models.Settings;
+using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Dtos.Job.MultiRun;
+using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Logging;
@@ -13,8 +20,8 @@ using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Services;
-using System.Text.Json;
 using Xunit.Abstractions;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -352,7 +359,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     /// Guest cannot get the details of a multi run job not owned by them.
     /// </summary>
     [Fact]
-    public async Task GetMultiRunJob_Guest_NotOwned_Forbidden()
+    public async Task GetMultiRunJob_Guest_NotOwned_NotFound()
     {
         // Arrange
         using var client = Factory.CreateClient();
@@ -381,32 +388,542 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsSuccess);
         Assert.NotNull(result.Error);
         Assert.NotNull(result.Error.Content);
-        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+        Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
     }
     
-    // Guest can get the details of their multi run job
+    /// <summary>
+    /// Guest can get the details of their multi run job.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJob_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 2;
+        mrJob.OwnerId = guest.Id;
+        jobManager.AddJob(mrJob);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(mrJob.Id, result.Value.Id);
+        Assert.Equal(mrJob.Name, result.Value.Name);
+    }
     
-    // Admin can get the details of a proxy check job
+    /// <summary>
+    /// Admin can get the details of a proxy check job.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var proxyRepository = GetRequiredService<IProxyRepository>();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        pcJob.Bots = 10;
+        pcJob.StartCondition = new RelativeTimeStartCondition
+        {
+            StartAfter = TimeSpan.FromSeconds(1)
+        };
+        pcJob.Url = "https://example.com";
+        pcJob.SuccessKey = "<title>Example</title>";
+        pcJob.Timeout = TimeSpan.FromSeconds(10);
+        pcJob.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepository);
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(pcJob.Id, result.Value.Id);
+        Assert.Equal(pcJob.Name, result.Value.Name);
+        Assert.Equal(pcJob.Bots, result.Value.Bots);
+        Assert.Equal(pcJob.Url, result.Value.Target!.Url);
+        Assert.Equal(pcJob.SuccessKey, result.Value.Target!.SuccessKey);
+        Assert.Equal(pcJob.Timeout.TotalMilliseconds, result.Value.TimeoutMilliseconds);
+        Assert.Contains("database", result.Value.CheckOutput.ToLower());
+    }
     
-    // Guest cannot get the details of a proxy check job not owned by them
+    /// <summary>
+    /// Guest cannot get the details of a proxy check job not owned by them.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJob_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        var jobEntity = CreateProxyCheckJobEntity(pcJob);
+        jobEntity.Id = pcJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
+    }
     
-    // Guest can get the details of their proxy check job
+    /// <summary>
+    /// Guest can get the details of their proxy check job.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJob_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var proxyRepository = GetRequiredService<IProxyRepository>();
+        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        dbContext.Guests.Add(guest);
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        pcJob.OwnerId = guest.Id;
+        pcJob.Bots = 10;
+        pcJob.StartCondition = new RelativeTimeStartCondition
+        {
+            StartAfter = TimeSpan.FromSeconds(1)
+        };
+        pcJob.Url = "https://example.com";
+        pcJob.SuccessKey = "<title>Example</title>";
+        pcJob.Timeout = TimeSpan.FromSeconds(10);
+        pcJob.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepository);
+        var jobEntity = CreateProxyCheckJobEntity(pcJob, owner: guest);
+        jobEntity.Id = pcJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(pcJob.Id, result.Value.Id);
+        Assert.Equal(pcJob.Name, result.Value.Name);
+        Assert.Equal(pcJob.Bots, result.Value.Bots);
+        Assert.Equal(pcJob.Url, result.Value.Target!.Url);
+        Assert.Equal(pcJob.SuccessKey, result.Value.Target!.SuccessKey);
+        Assert.Equal(pcJob.Timeout.TotalMilliseconds, result.Value.TimeoutMilliseconds);
+        Assert.Contains("database", result.Value.CheckOutput.ToLower());
+    }
     
-    // Admin can get the options of a multi run job
+    /// <summary>
+    /// Admin can get the options of a multi run job.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJobOptions_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var db = GetRequiredService<ApplicationDbContext>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        jobManager.AddJob(mrJob);
+        var jobOptions = new MultiRunJobOptions {
+            Name = "Test MRJ",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = new CombinationsDataPoolOptions { CharSet = "abc", Length = 2 },
+            HitOutputs = [new DatabaseHitOutputOptions()],
+            ProxySources = [new GroupProxySourceOptions { GroupId = -1 }],
+            StartCondition = new RelativeTimeStartCondition { StartAfter = TimeSpan.FromSeconds(1) }
+        };
+        var jobEntity = CreateMultiRunJobEntity(mrJob, jobOptions);
+        jobEntity.Id = mrJob.Id;
+        db.Jobs.Add(jobEntity);
+        await db.SaveChangesAsync();
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobOptionsDto>(
+            client, "/api/v1/job/multi-run/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(jobOptions.ConfigId, result.Value.ConfigId);
+        Assert.Equal(jobOptions.Bots, result.Value.Bots);
+        Assert.Equal(jobOptions.Skip, result.Value.Skip);
+        Assert.Equal(jobOptions.ProxyMode, result.Value.ProxyMode);
+        Assert.Single(result.Value.HitOutputs);
+        Assert.Single(result.Value.ProxySources);
+    }
     
-    // Admin can get the default options of a multi run job
+    /// <summary>
+    /// Admin can get the default options of a multi run job.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJobDefaultOptions_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var queryParams = new
+        {
+            id = -1
+        };
+        var result = await GetJsonAsync<MultiRunJobOptionsDto>(
+            client, "/api/v1/job/multi-run/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+    }
     
-    // Guest cannot get the options of a multi run job not owned by them
+    /// <summary>
+    /// Guest cannot get the options of a multi run job not owned by them.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJobOptions_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        var jobOptions = new MultiRunJobOptions {
+            Name = "Test MRJ",
+            ConfigId = Guid.NewGuid().ToString(),
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = new CombinationsDataPoolOptions { CharSet = "abc", Length = 2 },
+            HitOutputs = [new DatabaseHitOutputOptions()],
+            ProxySources = [new GroupProxySourceOptions { GroupId = -1 }],
+            StartCondition = new RelativeTimeStartCondition { StartAfter = TimeSpan.FromSeconds(1) }
+        };
+        var jobEntity = CreateMultiRunJobEntity(mrJob, jobOptions);
+        jobEntity.Id = mrJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobOptionsDto>(
+            client, "/api/v1/job/multi-run/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
+    }
     
-    // Guest can get the options of their multi run job
+    /// <summary>
+    /// Guest can get the options of their multi run job.
+    /// </summary>
+    [Fact]
+    public async Task GetMultiRunJobOptions_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        var jobOptions = new MultiRunJobOptions {
+            Name = "Test MRJ",
+            ConfigId = Guid.NewGuid().ToString(),
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = new CombinationsDataPoolOptions { CharSet = "abc", Length = 2 },
+            HitOutputs = [new DatabaseHitOutputOptions()],
+            ProxySources = [new GroupProxySourceOptions { GroupId = -1 }],
+            StartCondition = new RelativeTimeStartCondition { StartAfter = TimeSpan.FromSeconds(1) }
+        };
+        var jobEntity = CreateMultiRunJobEntity(mrJob, jobOptions);
+        jobEntity.Id = mrJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = mrJob.Id
+        };
+        var result = await GetJsonAsync<MultiRunJobOptionsDto>(
+            client, "/api/v1/job/multi-run/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(jobOptions.ConfigId, result.Value.ConfigId);
+        Assert.Equal(jobOptions.Bots, result.Value.Bots);
+        Assert.Equal(jobOptions.Skip, result.Value.Skip);
+        Assert.Equal(jobOptions.ProxyMode, result.Value.ProxyMode);
+        Assert.Single(result.Value.HitOutputs);
+        Assert.Single(result.Value.ProxySources);
+    }
     
-    // Admin can get the options of a proxy check job
+    /// <summary>
+    /// Admin can get the options of a proxy check job.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJobOptions_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        var jobOptions = new ProxyCheckJobOptions {
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTarget {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            TimeoutMilliseconds = 10000
+        };
+        var jobEntity = CreateProxyCheckJobEntity(pcJob, jobOptions);
+        jobEntity.Id = pcJob.Id;
+        jobEntity.Owner = null;
+        var db = GetRequiredService<ApplicationDbContext>();
+        db.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await db.SaveChangesAsync();
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
+            client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(jobOptions.Bots, result.Value.Bots);
+        Assert.Equal(jobOptions.GroupId, result.Value.GroupId);
+        Assert.Equal(jobOptions.CheckOnlyUntested, result.Value.CheckOnlyUntested);
+        Assert.Equal(jobOptions.Target.Url, result.Value.Target!.Url);
+        Assert.Equal(jobOptions.Target.SuccessKey, result.Value.Target!.SuccessKey);
+        Assert.Equal(jobOptions.TimeoutMilliseconds, result.Value.TimeoutMilliseconds);
+    }
     
-    // Admin can get the default options of a proxy check job
+    /// <summary>
+    /// Admin can get the default options of a proxy check job.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJobDefaultOptions_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var queryParams = new
+        {
+            id = -1
+        };
+        var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
+            client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+    }
     
-    // Guest cannot get the options of a proxy check job not owned by them
+    /// <summary>
+    /// Guest cannot get the options of a proxy check job not owned by them.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJobOptions_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        var jobOptions = new ProxyCheckJobOptions {
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTarget {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            TimeoutMilliseconds = 10000
+        };
+        var jobEntity = CreateProxyCheckJobEntity(pcJob, jobOptions);
+        jobEntity.Id = pcJob.Id;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
+            client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.JobNotFound, result.Error.Content.ErrorCode);
+    }
     
-    // Guest can get the options of their proxy check job
+    /// <summary>
+    /// Guest can get the options of their proxy check job.
+    /// </summary>
+    [Fact]
+    public async Task GetProxyCheckJobOptions_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        dbContext.Guests.Add(guest);
+        var pcJob = CreateProxyCheckJob();
+        pcJob.Id = 1;
+        pcJob.Name = "Test PCJ";
+        pcJob.OwnerId = guest.Id;
+        var jobOptions = new ProxyCheckJobOptions {
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTarget {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            TimeoutMilliseconds = 10000
+        };
+        var jobEntity = CreateProxyCheckJobEntity(pcJob, jobOptions);
+        jobEntity.Id = pcJob.Id;
+        jobEntity.Owner = guest;
+        dbContext.Jobs.Add(jobEntity);
+        jobManager.AddJob(pcJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var queryParams = new
+        {
+            id = pcJob.Id
+        };
+        var result = await GetJsonAsync<ProxyCheckJobOptionsDto>(
+            client, "/api/v1/job/proxy-check/options".ToUri(queryParams));
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(jobOptions.Bots, result.Value.Bots);
+        Assert.Equal(jobOptions.GroupId, result.Value.GroupId);
+        Assert.Equal(jobOptions.CheckOnlyUntested, result.Value.CheckOnlyUntested);
+        Assert.Equal(jobOptions.Target.Url, result.Value.Target!.Url);
+        Assert.Equal(jobOptions.Target.SuccessKey, result.Value.Target!.SuccessKey);
+        Assert.Equal(jobOptions.TimeoutMilliseconds, result.Value.TimeoutMilliseconds);
+    }
     
     // Admin can create a multi run job
     
@@ -526,12 +1043,18 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         return new ProxyCheckJob(ruriLibSettingsService, pluginRepository, logger);
     }
     
-    private JobEntity CreateJobEntity(Job job, JobOptions? options = null,
-        GuestEntity? owner = null)
+    private JobEntity CreateMultiRunJobEntity(Job job, MultiRunJobOptions? options = null)
     {
-        var jsonOptions = options is null
-            ? "{}"
-            : JsonSerializer.Serialize(options, JsonSerializerOptions);
+        // We need to use Newtonsoft.Json here for the TypeNameHandling
+        var jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+        
+        var wrapper = new JobOptionsWrapper
+        {
+            Options = options ?? new MultiRunJobOptions()
+        };
         
         return new JobEntity
         {
@@ -542,7 +1065,34 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 ProxyCheckJob _ => JobType.ProxyCheck,
                 _ => throw new NotImplementedException()    
             },
-            JobOptions = jsonOptions,
+            JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
+        };
+    }
+    
+    private JobEntity CreateProxyCheckJobEntity(Job job,
+        ProxyCheckJobOptions? options = null, GuestEntity? owner = null)
+    {
+        // We need to use Newtonsoft.Json here for the TypeNameHandling
+        var jsonSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+        
+        var wrapper = new JobOptionsWrapper
+        {
+            Options = options ?? new ProxyCheckJobOptions()
+        };
+        
+        return new JobEntity
+        {
+            CreationDate = DateTime.Now,
+            JobType = job switch
+            {
+                MultiRunJob _ => JobType.MultiRun,
+                ProxyCheckJob _ => JobType.ProxyCheck,
+                _ => throw new NotImplementedException()    
+            },
+            JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings),
             Owner = owner
         };
     }

@@ -20,8 +20,10 @@ public class DbJobRepository : DbRepository<JobEntity>, IJobRepository
 
     public override async Task<JobEntity> GetAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entity = await base.GetAsync(id, cancellationToken).ConfigureAwait(false);
-        context.Entry(entity).Reload();
+        var entity = await context.Jobs
+            .Include(j => j.Owner)
+            .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
+        await context.Entry(entity).ReloadAsync(cancellationToken);
         return entity;
     }
 
