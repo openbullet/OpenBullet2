@@ -157,7 +157,7 @@ app.UseCors(o => o
     .AllowAnyMethod()
     .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
     .WithOrigins("http://localhost:4200") // TODO: Make this editable from the config, if not configured get it from the value of --urls
-    .WithExposedHeaders("Content-Disposition")
+    .WithExposedHeaders("Content-Disposition", "X-Application-Warning")
 );
 
 app.UseMiddleware<ExceptionMiddleware>();

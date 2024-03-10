@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable, catchError, throwError } from "rxjs";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Observable, catchError, tap, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
 import { UserService } from "src/app/main/services/user.service";
 
@@ -26,6 +26,18 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         }
 
         return next.handle(request).pipe(
+            tap((event: HttpEvent<any>) => {
+                if (event instanceof HttpResponse) {
+                    const headerValue = event.headers.get('X-Application-Warning');
+                    if (headerValue) {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Warning',
+                            detail: headerValue
+                        });
+                    }
+                }
+            }),
             catchError(error => {
                 if (error instanceof HttpErrorResponse) {
                     let showMessage = true;
