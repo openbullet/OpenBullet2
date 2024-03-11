@@ -4,6 +4,7 @@ using OpenBullet2.Core.Helpers;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.User;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using System.Net;
 using System.Security.Claims;
@@ -55,7 +56,8 @@ public class UserController : ApiController
 
         if (passwordRequired && !validPassword)
         {
-            throw new UnauthorizedAccessException("Invalid username or password");
+            throw new UnauthorizedException(ErrorCode.InvalidCredentials,
+                "Invalid username or password");
         }
 
         var claims = new[]
@@ -81,17 +83,20 @@ public class UserController : ApiController
         if (entity == null)
         {
             // Invalid username
-            throw new UnauthorizedAccessException("Invalid username or password");
+            throw new UnauthorizedException(ErrorCode.InvalidCredentials,
+                "Invalid username or password");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, entity.PasswordHash))
         {
-            throw new UnauthorizedAccessException("Invalid username or password");
+            throw new UnauthorizedException(ErrorCode.InvalidCredentials,
+                "Invalid username or password");
         }
 
         if (DateTime.UtcNow > entity.AccessExpiration)
         {
-            throw new UnauthorizedAccessException("Access to this guest account has expired");
+            throw new UnauthorizedException(ErrorCode.GuestAccountExpired,
+                "Access to this guest account has expired");
         }
 
         var ip = HttpContext.Connection.RemoteIpAddress ?? IPAddress.None;
@@ -107,7 +112,8 @@ public class UserController : ApiController
 
             if (!isValid)
             {
-                throw new UnauthorizedAccessException($"Unauthorized IP address: {ip}");
+                throw new UnauthorizedException(ErrorCode.UnauthorizedIpAddress,
+                    $"Unauthorized IP address: {ip}");
             }
         }
 

@@ -17,8 +17,8 @@
                     </div>
                     <input id="username" type="text"
                         spellcheck="false"
-                        [(ngModel)]="username"
-                        placeholder="Username" />
+                        (keyup.enter)="submitForm()"
+                        [(ngModel)]="username" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -28,7 +28,7 @@
                     </div>
                     <input id="password" type="password"
                         [(ngModel)]="password"
-                        placeholder="Password" />
+                        (keyup.enter)="submitForm()" />
                 </div>
             </div>
             <div class="row mb-3" *ngIf="failedLoginMessage !== null">

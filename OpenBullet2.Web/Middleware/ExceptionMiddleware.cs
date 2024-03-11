@@ -26,11 +26,11 @@ internal class ExceptionMiddleware
         {
             await _next(context);
         }
-        catch (UnauthorizedAccessException ex)
+        catch (UnauthorizedException ex)
         {
             _logger.LogWarning("Unauthorized request: {message}", ex.Message);
             await RespondAsync(context,
-                new ApiError(ErrorCode.Unauthorized, ex.Message),
+                new ApiError(ex.ErrorCode, ex.Message),
                 HttpStatusCode.Unauthorized);
         }
         catch (ForbiddenException ex)

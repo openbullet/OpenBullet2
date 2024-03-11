@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using OpenBullet2.Core.Services;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -54,7 +55,8 @@ public class AuthTokenService : IAuthTokenService
         }
         catch
         {
-            throw new UnauthorizedAccessException("Invalid authentication token");
+            throw new UnauthorizedException(ErrorCode.InvalidAuthToken,
+                "Invalid authentication token");
         }
     }
 }

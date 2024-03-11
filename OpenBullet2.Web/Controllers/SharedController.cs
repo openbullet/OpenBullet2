@@ -130,13 +130,14 @@ public class SharedController : ApiController
             if (endpoint is null || apiKey is null ||
                 !endpoint.ApiKeys.Contains(apiKey))
             {
-                throw new UnauthorizedAccessException("Invalid api key");
+                throw new UnauthorizedException(ErrorCode.InvalidApiKey,
+                    "Invalid api key");
             }
 
             return File(await _configSharingService.GetArchiveAsync(endpointName),
                 "application/zip", "configs.zip");
         }
-        catch (UnauthorizedAccessException)
+        catch (UnauthorizedException)
         {
             throw;
         }

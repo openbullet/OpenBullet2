@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
 using System.IdentityModel.Tokens.Jwt;
@@ -61,10 +62,11 @@ public abstract class AuthorizedHub : Hub
                 new ErrorMessage
                 {
                     Message = "Missing auth token",
-                    Type = nameof(UnauthorizedAccessException)
+                    Type = nameof(UnauthorizedException)
                 });
 
-            throw new UnauthorizedAccessException("Missing auth token");
+            throw new UnauthorizedException(
+                ErrorCode.MissingAuthToken, "Missing auth token");
         }
 
         try
@@ -93,10 +95,11 @@ public abstract class AuthorizedHub : Hub
                 new ErrorMessage
                 {
                     Message = "You must be an admin to use this hub",
-                    Type = nameof(UnauthorizedAccessException)
+                    Type = nameof(UnauthorizedException)
                 });
 
-            throw new UnauthorizedAccessException("You must be an admin to use this hub");
+            throw new UnauthorizedException(ErrorCode.NotAdmin,
+                "You must be an admin to use this hub");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using OpenBullet2.Core.Entities;
+﻿using OpenBullet2.Web.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -20,6 +20,6 @@ public interface IAuthTokenService
     /// Validates a JWT.
     /// </summary>
     /// <param name="token">The JWT to validate</param>
-    /// <exception cref="UnauthorizedAccessException">Thrown when the JWT is invalid</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the JWT is invalid</exception>
     JwtSecurityToken ValidateToken(string token);
 }

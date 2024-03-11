@@ -40,9 +40,44 @@ public static class ErrorCode
     public const string Unauthorized = "UNAUTHORIZED";
     
     /// <summary>
+    /// Unauthorized IP address.
+    /// </summary>
+    public const string UnauthorizedIpAddress = "UNAUTHORIZED_IP_ADDRESS";
+    
+    /// <summary>
+    /// Missing auth token.
+    /// </summary>
+    public const string MissingAuthToken = "MISSING_AUTH_TOKEN";
+    
+    /// <summary>
+    /// Invalid auth token.
+    /// </summary>
+    public const string InvalidAuthToken = "INVALID_AUTH_TOKEN";
+    
+    /// <summary>
+    /// Invalid API key.
+    /// </summary>
+    public const string InvalidApiKey = "INVALID_API_KEY";
+    
+    /// <summary>
+    /// Invalid username or password.
+    /// </summary>
+    public const string InvalidCredentials = "INVALID_CREDENTIALS";
+    
+    /// <summary>
     /// Only admins can perform this action.
     /// </summary>
     public const string NotAdmin = "NOT_ADMIN";
+    
+    /// <summary>
+    /// The guest account has expired.
+    /// </summary>
+    public const string GuestAccountExpired = "GUEST_ACCOUNT_EXPIRED";
+    
+    /// <summary>
+    /// The user has no permission to perform this action.
+    /// </summary>
+    public const string InvalidRole = "INVALID_ROLE";
 
     /// <summary>
     /// Local file not found.

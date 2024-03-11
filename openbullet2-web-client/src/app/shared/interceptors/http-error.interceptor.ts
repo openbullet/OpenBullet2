@@ -7,10 +7,14 @@ import { UserService } from "src/app/main/services/user.service";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
+    private requireLoginErrorCodes: string[] = [
+        'MISSING_AUTH_TOKEN',
+        'INVALID_AUTH_TOKEN'
+    ];
+
     constructor(private router: Router,
         private messageService: MessageService,
         private userService: UserService) {
-
     }
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -43,7 +47,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                     let showMessage = true;
 
                     // If unauthorized, redirect to login page
-                    if (error.error.errorType === 'UNAUTHORIZED') {
+                    if (this.requireLoginErrorCodes.includes(error.error.errorCode)) {
                         this.router.navigate(['/login']);
                         showMessage = false;
                     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 
@@ -12,7 +13,7 @@ internal class GuestAttribute : Attribute, IAuthorizationFilter
         if (context.HttpContext.GetApiUser().Role is not UserRole.Admin
             and not UserRole.Guest)
         {
-            throw new UnauthorizedAccessException(
+            throw new UnauthorizedException(ErrorCode.InvalidRole,
                 "You must be a guest or admin user to perform this operation");
         }
     }
