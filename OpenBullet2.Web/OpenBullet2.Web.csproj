@@ -24,6 +24,10 @@
     <Content Remove="Configs\**" />
     <EmbeddedResource Remove="Configs\**" />
     <None Remove="Configs\**" />
+    <None Remove="dbip-country-lite.mmdb" />
+    <Content Include="dbip-country-lite.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 	
   <ItemGroup>
@@ -42,9 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="dbip-country-lite.mmdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
 	<None Update="version.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
