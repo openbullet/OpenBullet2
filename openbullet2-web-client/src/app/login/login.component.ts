@@ -11,6 +11,7 @@ export class LoginComponent {
   username: string = '';
   password: string = '';
   failedLoginMessage: string | null = null;
+  forgotCredentialsModalVisible = false;
 
   constructor(private userService: UserService,
     private router: Router) {

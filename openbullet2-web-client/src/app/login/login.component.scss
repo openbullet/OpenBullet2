@@ -3,6 +3,11 @@
 .login-container {
     background-color: var(--bg-secondary);
     border-radius: 20px;
+
+    .forgot-credentials {
+        color: var(--fg-accent-light);
+        font-size: 12px;
+    }
 }
 
 /* 992 is bootstrap's lg */

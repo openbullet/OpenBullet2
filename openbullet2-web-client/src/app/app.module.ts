@@ -18,11 +18,14 @@ import { MessageService } from 'primeng/api';
 import { LoginComponent } from './login/login.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ForgotCredentialsComponent } from './login/forgot-credentials/forgot-credentials.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ForgotCredentialsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,10 +33,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     FontAwesomeModule,
     FormsModule,
+    DialogModule,
     ReactiveFormsModule,
     InputTextModule,
     HttpClientModule,
-    NgxSpinnerModule.forRoot(<NgxSpinnerConfig>{ 
+    NgxSpinnerModule.forRoot(<NgxSpinnerConfig>{
       type: 'cube-transition',
       bdColor: 'rgba(0, 0, 0, 0.8)',
       size: 'medium',

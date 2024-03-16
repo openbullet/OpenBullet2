@@ -38,13 +38,35 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button class="button button-accent login-button" 
+                    <button class="button button-accent login-button"
                         [disabled]="!isFormValid()"
                         (click)="submitForm()">
                         Login
                     </button>
                 </div>
             </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <a class="forgot-credentials" href="javascript:void(0);"
+                        (click)="forgotCredentialsModalVisible = true">
+                        I forgot my credentials
+                    </a>
+                </div>
+            </div>
         </div>        
     </div>
 </div>
+
+<p-dialog 
+    #forgotCredentialsModal
+    header="I forgot my credentials!"
+    [(visible)]="forgotCredentialsModalVisible"
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-forgot-credentials
+        #forgotCredentialsComponent />
+</p-dialog>

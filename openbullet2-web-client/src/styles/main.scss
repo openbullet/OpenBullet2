@@ -302,6 +302,10 @@ ul.p-submenu-list:has(> .long-menu-item) {
     min-width: 500px !important;
 }
 
+.p-dialog-title {
+    color: var(--fg-primary);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 10px;
