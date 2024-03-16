@@ -9,5 +9,6 @@ export interface ConfigInfoDto {
     allowedWordlistTypes: string[];
     creationDate: string;
     lastModified: string;
-    mode: string
+    mode: string;
+    dangerous: boolean;
 }

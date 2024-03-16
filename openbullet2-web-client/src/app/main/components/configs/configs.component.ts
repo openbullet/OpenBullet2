@@ -141,6 +141,14 @@ export class ConfigsComponent implements OnInit {
           summary: 'Selected',
           detail: `Selected config ${resp.metadata.name}`
         });
+        if (config.dangerous) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Dangerous',
+            detail: `This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!`,
+            life: 10000
+          });
+        }
         this.router.navigate([this.getRouteBySettings(resp)]);
       });
   }

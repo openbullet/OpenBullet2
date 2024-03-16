@@ -65,7 +65,16 @@ public class ConfigController : ApiController
         var configs = _configService.Configs
             .OrderByDescending(c => c.Metadata.LastModified);
 
-        return Ok(_mapper.Map<IEnumerable<ConfigInfoDto>>(configs));
+        var dtos = new List<ConfigInfoDto>();
+        
+        foreach (var config in configs)
+        {
+            var dto = _mapper.Map<ConfigInfoDto>(config);
+            dto.Dangerous = config.HasCSharpCode();
+            dtos.Add(dto);
+        }
+
+        return dtos;
     }
     
     /// <summary>
@@ -87,7 +96,9 @@ public class ConfigController : ApiController
     public ActionResult<ConfigInfoDto> GetInfo(string id)
     {
         var config = GetConfigFromService(id);
-        return _mapper.Map<ConfigInfoDto>(config);
+        var dto = _mapper.Map<ConfigInfoDto>(config);
+        dto.Dangerous = config.HasCSharpCode();
+        return dto;
     }
 
     /// <summary>

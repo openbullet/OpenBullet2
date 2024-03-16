@@ -61,4 +61,9 @@ public class ConfigInfoDto
     /// The current config mode.
     /// </summary>
     public ConfigMode Mode { get; set; } = ConfigMode.LoliCode;
+    
+    /// <summary>
+    /// Whether the config is dangerous and might contain malicious code.
+    /// </summary>
+    public bool Dangerous { get; set; }
 }

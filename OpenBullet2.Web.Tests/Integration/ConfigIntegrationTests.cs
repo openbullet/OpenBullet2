@@ -90,7 +90,8 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 }
             },
             IsRemote = true,
-            Mode = ConfigMode.LoliCode
+            Mode = ConfigMode.LoliCode,
+            LoliCodeScript = "int n = 1;"
         };
         configService.Configs.AddRange([config1, config2]);
         
@@ -115,6 +116,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
             x => Assert.Equal("Default", x));
         Assert.False(configs[0].IsRemote);
         Assert.Equal(ConfigMode.Stack, configs[0].Mode);
+        Assert.False(configs[0].Dangerous);
         
         Assert.Equal(config2.Id, configs[1].Id);
         Assert.Equal("TestConfig2", configs[1].Name);
@@ -128,6 +130,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
             x => Assert.Equal("Credentials", x));
         Assert.True(configs[1].IsRemote);
         Assert.Equal(ConfigMode.LoliCode, configs[1].Mode);
+        Assert.True(configs[1].Dangerous);
     }
 
     /// <summary>

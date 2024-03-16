@@ -427,6 +427,14 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   selectConfig(config: ConfigInfoDto) {
+    if (config.dangerous) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Dangerous',
+        detail: `This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!`,
+        life: 10000
+      });
+    }
     this.selectedConfigInfo = config;
     this.options!.configId = config.id;
     this.selectConfigModalVisible = false;
