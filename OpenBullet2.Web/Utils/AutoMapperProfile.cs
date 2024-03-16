@@ -130,13 +130,6 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.WordlistType, e => e.MapFrom(entity => entity.Type))
             .ForMember(dto => dto.Owner, e => e.MapFrom(entity => entity.Owner));
 
-        CreateMap<CreateWordlistDto, WordlistEntity>()
-            .ForMember(entity => entity.Type, e => e.MapFrom(dto => dto.WordlistType))
-            .ForMember(entity => entity.FileName, e => e.MapFrom(
-                dto => dto.FilePath.Replace('\\', '/')))
-            .ForMember(entity => entity.Total, e => e.MapFrom(
-                dto => File.ReadLines(dto.FilePath).Count()));
-
         CreateMap<UpdateWordlistInfoDto, WordlistEntity>()
             .ForMember(entity => entity.Type, e => e.MapFrom(dto => dto.WordlistType));
 

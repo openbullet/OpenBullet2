@@ -50,11 +50,12 @@
             <input id="filePath" type="text" class="w-100"
                 spellcheck="false"
                 [(ngModel)]="filePath"
-                placeholder="/path/to/wordlist.txt" />
+                [placeholder]="isAdmin ? '/path/to/wordlist.txt' : 'UserData/Wordlists/example.txt'" />
             <br />
             <span class="text-small color-inactive">
                 The absolute (or relative) path to the file on disk.
-                For relative paths, the base folder is <i>UserData</i>.
+                For relative paths, the base folder is the folder of 
+                the OpenBullet2 executable.
             </span>
         </div>
     </div>

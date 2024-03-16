@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dto';
+import { UserService } from 'src/app/main/services/user.service';
 
 @Component({
   selector: 'app-add-wordlist',
@@ -14,6 +15,11 @@ export class AddWordlistComponent {
   wordlistType: string = 'Default';
   filePath: string = '';
   isCreating: boolean = false;
+  isAdmin: boolean;
+
+  constructor(private userService: UserService) {
+    this.isAdmin = this.userService.isAdmin();
+  }
 
   public reset() {
     this.name = '';

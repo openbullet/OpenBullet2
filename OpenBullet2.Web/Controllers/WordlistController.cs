@@ -68,7 +68,7 @@ public class WordlistController : ApiController
     }
 
     /// <summary>
-    /// List all of the available wordlists.
+    /// List all the available wordlists.
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
@@ -131,7 +131,7 @@ public class WordlistController : ApiController
         var apiUser = HttpContext.GetApiUser();
 
         // If the user is a guest, make sure they are not accessing
-        // anything outside of the UserData folder.
+        // anything outside the UserData folder.
         if (apiUser.Role is UserRole.Guest)
         {
             if (!dto.FilePath.IsSubPathOf(_baseDir))
@@ -145,7 +145,9 @@ public class WordlistController : ApiController
         }
 
         // Make sure the file exists
-        if (!System.IO.File.Exists(dto.FilePath))
+        var path = dto.FilePath.Replace('\\', '/');
+        
+        if (!System.IO.File.Exists(path))
         {
             _logger.LogWarning("Tried to create a wordlist for the file {filePath} which does not exist",
                 dto.FilePath);
@@ -155,7 +157,14 @@ public class WordlistController : ApiController
                 Path.GetFileName(dto.FilePath), dto.FilePath);
         }
 
-        var entity = _mapper.Map<WordlistEntity>(dto);
+        var entity = new WordlistEntity
+        {
+            Name = dto.Name,
+            FileName = path,
+            Purpose = dto.Purpose,
+            Total = System.IO.File.ReadLines(path).Count(),
+            Type = dto.WordlistType
+        };
 
         // If the user is a guest, we also have to mark them as the
         // owner of the wordlist, for access control purposes.
