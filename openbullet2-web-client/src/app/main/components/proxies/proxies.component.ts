@@ -15,6 +15,7 @@ import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxie
 import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './import-proxies-from-remote/import-proxies-from-remote.component';
 import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
 import { saveFile } from 'src/app/shared/utils/files';
+import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
 
 @Component({
   selector: 'app-proxies',
@@ -22,6 +23,9 @@ import { saveFile } from 'src/app/shared/utils/files';
   styleUrls: ['./proxies.component.scss']
 })
 export class ProxiesComponent implements OnInit {
+  @ViewChild('createProxyGroupComponent')
+  createProxyGroupComponent: CreateProxyGroupComponent | undefined;
+
   @ViewChild('importProxiesFromTextComponent')
   importProxiesFromTextComponent: ImportProxiesFromTextComponent | undefined;
 
@@ -123,7 +127,7 @@ export class ProxiesComponent implements OnInit {
               id: 'move-filtered-proxies',
               label: 'Move to',
               icon: 'pi pi-fw pi-arrow-right color-accent-light',
-              items: [] // This array is filled at runtime
+              visible: false,
             },
             {
               id: 'delete-filtered-proxies',
@@ -198,11 +202,17 @@ export class ProxiesComponent implements OnInit {
           }
         });
 
-        this.proxyMenuItems
+        const moveToMenuItem = this.proxyMenuItems
           .find(i => i.id === 'edit')!
           .items!.find(i => i.id === 'edit-filtered-proxies')!
-          .items!.find(i => i.id === 'move-filtered-proxies')!
-          .items = moveToMenuItems;
+          .items!.find(i => i.id === 'move-filtered-proxies')!;
+
+        if (moveToMenuItems.length > 0) {
+          moveToMenuItem.items = moveToMenuItems;
+          moveToMenuItem.visible = true;
+        } else {
+          moveToMenuItem.visible = false;
+        }
       });
   }
 
@@ -230,6 +240,7 @@ export class ProxiesComponent implements OnInit {
   }
 
   openCreateProxyGroupModal() {
+    this.createProxyGroupComponent?.reset();
     this.createProxyGroupModalVisible = true;
   }
 
