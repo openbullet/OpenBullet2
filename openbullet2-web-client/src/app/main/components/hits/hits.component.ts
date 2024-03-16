@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { saveFile } from 'src/app/shared/utils/files';
 import { faDatabase, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-hits',
@@ -84,6 +85,7 @@ export class HitsComponent implements OnInit {
           id: 'purge-hits',
           label: 'Purge all hits',
           icon: 'pi pi-fw pi-trash color-bad',
+          visible: this.userService.isAdmin(),
           command: e => this.confirmPurgeHits()
         },
         {
@@ -99,7 +101,8 @@ export class HitsComponent implements OnInit {
   constructor(private settingsService: SettingsService,
     private hitService: HitService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private userService: UserService) {
 
   }
 

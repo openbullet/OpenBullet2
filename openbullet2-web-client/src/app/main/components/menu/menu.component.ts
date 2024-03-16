@@ -53,7 +53,7 @@ export class MenuComponent implements OnDestroy {
           icon: faEye,
           label: 'Monitor',
           link: '/monitor',
-          onlyAdmin: false
+          onlyAdmin: true
         },
         {
           icon: faFileShield,

@@ -88,7 +88,8 @@ const routes: Routes = [
       },
       {
         component: JobMonitorComponent,
-        path: 'monitor'
+        path: 'monitor',
+        canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {
         component: EditTriggeredActionComponent,

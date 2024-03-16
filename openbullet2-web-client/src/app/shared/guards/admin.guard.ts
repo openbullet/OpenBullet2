@@ -9,7 +9,6 @@ export class AdminGuard {
   constructor(private userService: UserService) { }
 
   canActivate(): boolean {
-    const userInfo = this.userService.loadUserInfo();
-    return userInfo.role.toLowerCase() === 'admin';
+    return this.userService.isAdmin();
   }
 }
