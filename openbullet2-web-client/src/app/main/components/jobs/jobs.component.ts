@@ -4,7 +4,6 @@ import { JobService } from '../../services/job.service';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
 import { SettingsService } from '../../services/settings.service';
-import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { JobStatus } from '../../dtos/job/job-status';
@@ -17,7 +16,6 @@ import { JobStatus } from '../../dtos/job/job-status';
 export class JobsComponent implements OnInit, OnDestroy {
   multiRunJobs: MultiRunJobOverviewDto[] | null = null;
   proxyCheckJobs: ProxyCheckJobOverviewDto[] | null = null;
-  settings: OBSettingsDto | null = null;
 
   faBolt = faBolt;
   faPlus = faPlus;
@@ -62,10 +60,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.refreshJobs();
 
-    this.settingsService.getSettings()
+    this.settingsService.getSafeSettings()
       .subscribe(settings => {
-        this.settings = settings;
-
         this.intervalId = setInterval(() => {
           this.refreshJobs();
         }, settings.generalSettings.jobManagerUpdateInterval);

@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
-import { OBSettingsDto } from "../dtos/settings/ob-settings.dto";
+import { OBSettingsDto, SafeOBSettingsDto } from "../dtos/settings/ob-settings.dto";
 import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
 import { EnvironmentSettingsDto } from "../dtos/settings/environment-settings.dto";
 import { Observable, shareReplay } from "rxjs";
@@ -41,6 +41,12 @@ export class SettingsService {
     getDefaultSettings() {
         return this.http.get<OBSettingsDto>(
             getBaseUrl() + '/settings/default'
+        );
+    }
+
+    getSafeSettings() {
+        return this.http.get<SafeOBSettingsDto>(
+            getBaseUrl() + '/settings/safe'
         );
     }
 

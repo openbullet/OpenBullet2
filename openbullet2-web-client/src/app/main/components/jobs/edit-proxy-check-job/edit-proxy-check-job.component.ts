@@ -13,6 +13,7 @@ import { OBSettingsDto, ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-s
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyGroupService } from 'src/app/main/services/proxy-group.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { UserService } from 'src/app/main/services/user.service';
 import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
@@ -69,7 +70,8 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     private jobService: JobService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     combineLatest([activatedRoute.url, activatedRoute.queryParams])
       .subscribe(results => {
@@ -88,10 +90,12 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
         this.initJobOptions();
       });
 
-    this.settingsService.getSettings()
-      .subscribe(settings => {
-        this.settings = settings;
-      });
+    if (this.userService.isAdmin()) {
+      this.settingsService.getSettings()
+        .subscribe(settings => {
+          this.settings = settings;
+        });
+    }
 
     this.proxyGroupService.getAllProxyGroups()
       .subscribe(proxyGroups => {

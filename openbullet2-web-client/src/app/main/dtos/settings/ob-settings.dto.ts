@@ -57,3 +57,11 @@ export interface CustomizationOBSettings {
     wordWrap: boolean;
     playSoundOnHit: boolean
 }
+
+export interface SafeOBSettingsDto {
+    generalSettings: SafeGeneralOBSettings;
+}
+
+export interface SafeGeneralOBSettings {
+    jobManagerUpdateInterval: number;
+}

@@ -1,4 +1,4 @@
-<div *ngIf="options === null || proxyGroups === null || settings === null">
+<div *ngIf="options === null || proxyGroups === null">
     <h1>
         <fa-icon [icon]="faBolt" [fixedWidth]="true"></fa-icon>
         {{ mode | titlecase }} Proxy Check Job
@@ -10,7 +10,7 @@
     <app-spinner [fullWidth]="true" />
 </div>
 
-<div *ngIf="options !== null && proxyGroups !== null && settings !== null"
+<div *ngIf="options !== null && proxyGroups !== null"
     class="container-fluid no-paddings">
     <div class="row">
         <div class="col-8 pl-0">
@@ -150,6 +150,7 @@
     <div class="row my-2">
         <div class="col-12">
             <p-dropdown
+                *ngIf="settings !== null"
                 (onChange)="targetSiteSelected($event.value)"
                 [ngModel]="options.target"
                 [options]="settings.generalSettings.proxyCheckTargets">

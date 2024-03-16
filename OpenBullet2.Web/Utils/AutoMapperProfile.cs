@@ -102,8 +102,10 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<EnvironmentSettings, EnvironmentSettingsDto>();
         CreateMap<OpenBulletSettings, OpenBulletSettingsDto>().ReverseMap();
+        CreateMap<OpenBulletSettings, SafeOpenBulletSettingsDto>();
         CreateMap<SecuritySettings, OBSecuritySettingsDto>().ReverseMap();
         CreateMap<Core.Models.Settings.GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
+        CreateMap<Core.Models.Settings.GeneralSettings, SafeOBGeneralSettingsDto>();
         CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
         CreateMap<RuriLib.Models.Settings.GlobalSettings, RuriLib.Models.Settings.GlobalSettings>();
         CreateMap<RuriLib.Models.Settings.GeneralSettings, RuriLib.Models.Settings.GeneralSettings>();

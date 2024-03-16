@@ -100,6 +100,15 @@ public class SettingsController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<OpenBulletSettingsDto> GetDefaultSettings()
         => _mapper.Map<OpenBulletSettingsDto>(new OpenBulletSettings());
+    
+    /// <summary>
+    /// Get the safe OpenBullet settings that even a guest user is allowed to see.
+    /// </summary>
+    [Guest]
+    [HttpGet("safe")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<SafeOpenBulletSettingsDto> GetSafeSettings()
+        => _mapper.Map<SafeOpenBulletSettingsDto>(_obSettingsService.Settings);
 
     /// <summary>
     /// Update the OpenBullet settings.
