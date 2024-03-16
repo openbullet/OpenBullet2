@@ -356,6 +356,14 @@
                                 {{ selectedWordlist.lineCount }} lines
                             </span>
                         </div>
+                        <div class="mt-2" *ngIf="selectedWordlist === null">
+                            <span class="font-weight-bold color-inactive d-block">
+                                No wordlist selected
+                            </span>
+                            <span class="text-small color-inactive d-block">
+                                (click the button below to select one)
+                            </span>
+                        </div>
                     </div>
                     <button class="button button-secondary mt-2"
                         (click)="openSelectWordlistModal()">

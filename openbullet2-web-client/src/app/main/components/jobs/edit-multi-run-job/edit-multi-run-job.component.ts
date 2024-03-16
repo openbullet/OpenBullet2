@@ -261,8 +261,8 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           });
         }
 
-        // If the data pool is a wordlist, we need to fetch it
-        if (this.dataPoolType === DataPoolType.Wordlist) {
+        // If the data pool is a wordlist, and the id is not -1, we need to fetch it
+        if (this.dataPoolType === DataPoolType.Wordlist && this.dataPoolWordlistId !== -1) {
           this.wordlistService.getWordlist(this.dataPoolWordlistId).subscribe(wordlist => {
             this.selectedWordlist = wordlist;
           });
