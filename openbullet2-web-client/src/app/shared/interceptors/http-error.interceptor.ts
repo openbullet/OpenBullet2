@@ -46,8 +46,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 if (error instanceof HttpErrorResponse) {
                     let showMessage = true;
 
-                    // If unauthorized, redirect to login page
+                    // If unauthorized, clear any invalid jwt and redirect to login page
                     if (this.requireLoginErrorCodes.includes(error.error.errorCode)) {
+                        this.userService.resetJwt();
                         this.router.navigate(['/login']);
                         showMessage = false;
                     }
