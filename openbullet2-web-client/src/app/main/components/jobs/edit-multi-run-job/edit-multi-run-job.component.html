@@ -401,7 +401,7 @@
                     [style]="{ 'min-width': '300px' }"
                     (touched)="touched = true" ngDefaultControl
                     (validityChange)="onValidityChange($event)"
-                    [(ngModel)]="dataPoolFileName" regex="^.+$"
+                    [(ngModel)]="dataPoolFileName"
                     placeholder="/path/to/my/file.txt" />
                 <div class="mt-2 mb-1">
                     <span class="text-small">Wordlist Type</span>
@@ -430,7 +430,8 @@
                             <app-input-number key="rangeStart" class="input-small w-100"
                                 (touched)="touched = true" ngDefaultControl
                                 (validityChange)="onValidityChange($event)"
-                                [(ngModel)]="dataPoolRangeStart" [min]="1"
+                                [(ngModel)]="dataPoolRangeStart"
+                                [integer]="true"
                                 placeholder="0" />
                         </div>
                         <div class="col align-self-stretch pl-2">
@@ -441,6 +442,7 @@
                                 (touched)="touched = true" ngDefaultControl
                                 (validityChange)="onValidityChange($event)"
                                 [(ngModel)]="dataPoolRangeAmount" [min]="1"
+                                [integer]="true"
                                 placeholder="100" />
                         </div>
                         <div class="col align-self-stretch pl-2">
@@ -451,6 +453,7 @@
                                 (touched)="touched = true" ngDefaultControl
                                 (validityChange)="onValidityChange($event)"
                                 [(ngModel)]="dataPoolRangeStep" [min]="1"
+                                [integer]="true"
                                 placeholder="1" />
                         </div>
                         <div class="col col-auto pl-2">
