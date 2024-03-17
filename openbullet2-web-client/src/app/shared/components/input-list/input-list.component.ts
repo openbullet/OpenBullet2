@@ -31,6 +31,7 @@ export class InputListComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.value = this.list === null ? '' : this.list.join('\n');
+    this.checkValidity(this.value);
   }
 
   // Notifies the subscribers that this input was touched

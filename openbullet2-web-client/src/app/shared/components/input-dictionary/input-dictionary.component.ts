@@ -38,6 +38,7 @@ export class InputDictionaryComponent implements OnChanges {
     // Convert the dictionary to a string like key1: value1\nkey2: value2
     const entries = Object.entries(this.dictionary);
     this.value = entries.map(([key, value]) => `${key}: ${value}`).join('\n');
+    this.checkValidity(this.value);
   }
 
   // Notifies the subscribers that this input was touched

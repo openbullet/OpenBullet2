@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FieldValidity } from '../../utils/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FieldValidity } from '../../utils/forms';
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss']
 })
-export class InputNumberComponent {
+export class InputNumberComponent implements OnInit {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() min: number | null = null;
@@ -23,6 +23,10 @@ export class InputNumberComponent {
 
   isValid = true;
   isTouched = false;
+
+  ngOnInit(): void {
+    this.notifyValidity(this.checkValidity(this.ngModel ?? 0));
+  }
 
   // Notifies the subscribers that this input was touched
   notifyTouched() {
