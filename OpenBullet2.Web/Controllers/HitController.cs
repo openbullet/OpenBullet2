@@ -73,7 +73,7 @@ public class HitController : ApiController
     }
 
     /// <summary>
-    /// List all of the available hits, supports filtering and pagination.
+    /// List all the available hits, supports filtering and pagination.
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]

@@ -542,7 +542,7 @@ public class JobController : ApiController
 
             await _jobRepo.DeleteAsync(entities);
 
-            foreach (var job in _jobManager.Jobs.Where(j => j.OwnerId == apiUser.Id))
+            foreach (var job in _jobManager.Jobs.Where(j => j.OwnerId == apiUser.Id).ToList())
             {
                 _jobManager.RemoveJob(job);
             }
