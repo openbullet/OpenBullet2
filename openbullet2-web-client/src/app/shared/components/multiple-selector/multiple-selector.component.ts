@@ -6,12 +6,12 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './multiple-selector.component.html',
   styleUrls: ['./multiple-selector.component.scss']
 })
-export class MultipleSelectorComponent implements OnChanges {
-  @Input() selectedItems: string[] = [];
-  @Input() allItems: string[] = [];
-  deselectedItems: string[] = [];
-  @Output() selectedItemsChange = new EventEmitter<string[]>();
-  @Output() onChange = new EventEmitter<string[]>();
+export class MultipleSelectorComponent<T> implements OnChanges {
+  @Input() selectedItems: T[] = [];
+  @Input() allItems: T[] = [];
+  deselectedItems: T[] = [];
+  @Output() selectedItemsChange = new EventEmitter<T[]>();
+  @Output() onChange = new EventEmitter<T[]>();
 
   @ContentChild(TemplateRef) itemTemplate
     : TemplateRef<any> | null = null;
@@ -27,7 +27,7 @@ export class MultipleSelectorComponent implements OnChanges {
       i => this.selectedItems.indexOf(i) === -1);
   }
 
-  selectItem(item: string) {
+  selectItem(item: T) {
     const index = this.deselectedItems.indexOf(item);
 
     if (index !== -1) {
@@ -38,7 +38,7 @@ export class MultipleSelectorComponent implements OnChanges {
     }
   }
 
-  deselectItem(item: string) {
+  deselectItem(item: T) {
     const index = this.selectedItems.indexOf(item);
 
     if (index !== -1) {

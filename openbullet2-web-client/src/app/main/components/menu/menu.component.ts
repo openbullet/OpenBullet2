@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { ConfigDto } from '../../dtos/config/config.dto';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../services/user.service';
+import { ConfigMode } from '../../dtos/config/config-info.dto';
 
 interface MenuSection {
   label: string,
@@ -180,7 +181,7 @@ export class MenuComponent implements OnDestroy {
       }
     ];
 
-    if (config.mode === 'stack' || config.mode === 'loliCode') {
+    if (config.mode === ConfigMode.Stack || config.mode === ConfigMode.LoliCode) {
       menuItems.push(
         {
           icon: faGripLines,
@@ -197,7 +198,7 @@ export class MenuComponent implements OnDestroy {
       );
     }
 
-    if (config.mode === 'legacy') {
+    if (config.mode === ConfigMode.Legacy) {
       menuItems.push(
         {
           icon: faCode,
@@ -217,8 +218,8 @@ export class MenuComponent implements OnDestroy {
       }
     );
 
-    if (config.mode === 'stack' || config.mode === 'loliCode'
-      || config.mode === 'cSharp') {
+    if (config.mode === ConfigMode.Stack || config.mode === ConfigMode.LoliCode
+      || config.mode === ConfigMode.CSharp) {
       menuItems.push(
         {
           icon: faCode,

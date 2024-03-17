@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { RLSettingsDto } from '../../dtos/settings/rl-settings.dto';
+import { BrowserType, CaptchaServiceType, ParallelizerType, RLSettingsDto } from '../../dtos/settings/rl-settings.dto';
 import { SettingsService } from '../../services/settings.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
@@ -41,34 +41,35 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   settings: RLSettingsDto | null = null;
   touched: boolean = false;
   faWrench = faWrench;
-  parallelizerTypes: string[] = [
-    'taskBased',
-    'threadBased',
-    'parallelBased'
+  parallelizerTypes: ParallelizerType[] = [
+    ParallelizerType.TaskBased,
+    ParallelizerType.ThreadBased,
+    ParallelizerType.ParallelBased
   ];
-  browserTypes: string[] = [
-    'chrome',
-    'firefox'
+  browserTypes: BrowserType[] = [
+    BrowserType.Chrome,
+    BrowserType.Firefox
   ];
-  captchaServiceTypes: string[] = [
-    'twoCaptcha',
-    'antiCaptcha',
-    'customTwoCaptcha',
-    'deathByCaptcha',
-    'deCaptcher',
-    'imageTyperz',
-    'capMonster',
-    'aZCaptcha',
-    'captchasIO',
-    'ruCaptcha',
-    'solveCaptcha',
-    'solveRecaptcha',
-    'trueCaptcha',
-    'nineKW',
-    'customAntiCaptcha',
-    'anyCaptcha',
-    'capSolver'
+  captchaServiceTypes: CaptchaServiceType[] = [
+    CaptchaServiceType.TwoCaptcha,
+    CaptchaServiceType.AntiCaptcha,
+    CaptchaServiceType.CustomTwoCaptcha,
+    CaptchaServiceType.DeathByCaptcha,
+    CaptchaServiceType.DeCaptcher,
+    CaptchaServiceType.ImageTyperz,
+    CaptchaServiceType.CapMonster,
+    CaptchaServiceType.AzCaptcha,
+    CaptchaServiceType.CaptchasIO,
+    CaptchaServiceType.RuCaptcha,
+    CaptchaServiceType.SolveCaptcha,
+    CaptchaServiceType.SolveRecaptcha,
+    CaptchaServiceType.TrueCaptcha,
+    CaptchaServiceType.NineKW,
+    CaptchaServiceType.CustomAntiCaptcha,
+    CaptchaServiceType.AnyCaptcha,
+    CaptchaServiceType.CapSolver,
   ];
+  CaptchaServiceType = CaptchaServiceType;
 
   constructor(private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
@@ -158,7 +159,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     return this.touched && Object.values(this.fieldsValidity).every(v => v);
   }
 
-  onCaptchaServiceChange(newValue: string) {
+  onCaptchaServiceChange(newValue: CaptchaServiceType) {
     this.settings!.captchaSettings.currentService = newValue;
   }
 }

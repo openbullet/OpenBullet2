@@ -1,3 +1,34 @@
+export enum ParallelizerType {
+    TaskBased = 'taskBased',
+    ThreadBased = 'threadBased',
+    ParallelBased = 'parallelBased'
+}
+
+export enum CaptchaServiceType {
+    TwoCaptcha = 'twoCaptcha',
+    AntiCaptcha = 'antiCaptcha',
+    CustomTwoCaptcha = 'customTwoCaptcha',
+    DeathByCaptcha = 'deathByCaptcha',
+    DeCaptcher = 'deCaptcher',
+    ImageTyperz = 'imageTyperz',
+    CapMonster = 'capMonster',
+    AzCaptcha = 'azCaptcha',
+    CaptchasIO = 'captchasIO',
+    RuCaptcha = 'ruCaptcha',
+    SolveCaptcha = 'solveCaptcha',
+    SolveRecaptcha = 'solveRecaptcha',
+    TrueCaptcha = 'trueCaptcha',
+    NineKW = 'nineKW',
+    CustomAntiCaptcha = 'customAntiCaptcha',
+    AnyCaptcha = 'anyCaptcha',
+    CapSolver = 'capSolver'
+}
+
+export enum BrowserType {
+    Chrome = 'chrome',
+    Firefox = 'firefox'
+}
+
 export interface RLSettingsDto {
     generalSettings: GeneralRLSettings;
     captchaSettings: CaptchaRLSettings;
@@ -7,7 +38,7 @@ export interface RLSettingsDto {
 }
 
 export interface GeneralRLSettings {
-    parallelizerType: string;
+    parallelizerType: ParallelizerType;
     logJobActivityToFile: boolean;
     restrictBlocksToCWD: boolean;
     useCustomUserAgentsList: boolean;
@@ -18,7 +49,7 @@ export interface GeneralRLSettings {
 }
 
 export interface CaptchaRLSettings {
-    currentService: string;
+    currentService: CaptchaServiceType;
     timeoutSeconds: number;
     pollingIntervalMilliseconds: number;
     checkBalanceBeforeSolving: boolean;
@@ -62,7 +93,7 @@ export interface PuppeteerRLSettings {
 }
 
 export interface SeleniumRLSettings {
-    browserType: string;
+    browserType: BrowserType;
     chromeBinaryLocation: string;
     firefoxBinaryLocation: string
 }

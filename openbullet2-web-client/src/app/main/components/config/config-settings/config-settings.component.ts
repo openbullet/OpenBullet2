@@ -1,8 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
-import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto } from 'src/app/main/dtos/config/config.dto';
+import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto, StringRule } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
+import { ProxyType } from 'src/app/main/enums/proxy-type';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
 
@@ -38,22 +39,22 @@ export class ConfigSettingsComponent implements OnInit {
   editImageModalVisible = false;
 
   botStatuses: string[] = [];
-  proxyTypes: string[] = [
-    'http',
-    'socks4',
-    'socks4a',
-    'socks5'
+  proxyTypes: ProxyType[] = [
+    ProxyType.Http,
+    ProxyType.Socks4,
+    ProxyType.Socks4a,
+    ProxyType.Socks5
   ];
   wordlistTypes: string[] = [];
-  stringRules: string[] = [
-    'equalTo',
-    'contains',
-    'longerThan',
-    'shorterThan',
-    'containsAll',
-    'containsAny',
-    'startsWith',
-    'endsWith',
+  stringRules: StringRule[] = [
+    StringRule.EqualTo,
+    StringRule.Contains,
+    StringRule.LongerThan,
+    StringRule.ShorterThan,
+    StringRule.ContainsAny,
+    StringRule.ContainsAll,
+    StringRule.StartsWith,
+    StringRule.EndsWith,
   ];
 
   constructor(private configService: ConfigService,
@@ -93,7 +94,7 @@ export class ConfigSettingsComponent implements OnInit {
         {
           sliceName: '',
           invert: false,
-          comparison: 'equalTo',
+          comparison: StringRule.EqualTo,
           stringToCompare: '',
           caseSensitive: true
         }

@@ -1,12 +1,15 @@
+import { ProxyType } from "../../enums/proxy-type";
+import { ProxyWorkingStatus } from "../../enums/proxy-working-status";
+
 export interface ProxyDto {
     id: number;
     host: string;
     port: number;
-    type: string;
+    type: ProxyType;
     username: string;
     password: string;
     country: string;
-    status: string;
+    status: ProxyWorkingStatus;
     ping: number;
     lastChecked: string;
     groupId: number

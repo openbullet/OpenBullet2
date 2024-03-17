@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { ProxiesToImport } from '../import-proxies-from-text/import-proxies-from-text.component';
+import { ProxyType } from 'src/app/main/enums/proxy-type';
 
 @Component({
   selector: 'app-import-proxies-from-file',
@@ -15,12 +16,12 @@ export class ImportProxiesFromFileComponent {
 
   defaultUsername: string = '';
   defaultPassword: string = '';
-  defaultProxyType: string = '';
-  proxyTypes: string[] = [
-    'http',
-    'socks4',
-    'socks5',
-    'socks4a'
+  defaultProxyType: ProxyType = ProxyType.Http;
+  proxyTypes: ProxyType[] = [
+    ProxyType.Http,
+    ProxyType.Socks4,
+    ProxyType.Socks4a,
+    ProxyType.Socks5
   ];
 
   constructor(private messageService: MessageService) {
@@ -32,7 +33,7 @@ export class ImportProxiesFromFileComponent {
     this.selectedFile = null;
     this.defaultUsername = '';
     this.defaultPassword = '';
-    this.defaultProxyType = 'http';
+    this.defaultProxyType = ProxyType.Http;
   }
 
   submitForm() {

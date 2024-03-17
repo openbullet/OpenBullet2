@@ -1,8 +1,9 @@
+import { ConfigMode } from "./config-info.dto";
 import { ConfigSettingsDto } from "./config.dto";
 
 export interface UpdateConfigDto {
     id: string;
-    mode: string;
+    mode: ConfigMode;
     metadata: UpdateConfigMetadataDto;
     settings: ConfigSettingsDto;
     readme: string;

@@ -2,6 +2,7 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { ConfigService } from "../services/config.service";
 import { lastValueFrom } from "rxjs";
+import { ConfigMode } from "../dtos/config/config-info.dto";
 
 export const updateCSharpScript: ResolveFn<any> =
     async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
@@ -16,7 +17,7 @@ export const updateCSharpScript: ResolveFn<any> =
 
         // If the config's mode is loliCode, we need to convert the
         // loliCode to C# first
-        if (config.mode === 'loliCode') {
+        if (config.mode === ConfigMode.LoliCode) {
             const dto = await lastValueFrom(configService.convertLoliCodeToCSharp(
                 config.settings, config.loliCodeScript));
 

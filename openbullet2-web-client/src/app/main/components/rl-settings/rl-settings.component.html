@@ -193,7 +193,7 @@
                 [(ngModel)]="settings.captchaSettings.currentService" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'twoCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.TwoCaptcha">
         <div class="col-12">
             <span class="mr-2">2Captcha API Key</span>
             <app-input-text key="twoCaptchaApiKey"
@@ -204,7 +204,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'antiCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AntiCaptcha">
         <div class="col-12">
             <span class="mr-2">Anti-Captcha API Key</span>
             <app-input-text key="antiCaptchaApiKey"
@@ -215,7 +215,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'customTwoCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CustomTwoCaptcha">
         <div class="col-12">
             <span class="mr-2">Custom 2Captcha API Key</span>
             <app-input-text key="customTwoCaptchaApiKey"
@@ -249,7 +249,7 @@
                 label="Override host header" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'deathByCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.DeathByCaptcha">
         <div class="col-12">
             <span class="mr-2">Death By Captcha Username</span>
             <app-input-text key="deathByCaptchaUsername"
@@ -267,7 +267,7 @@
                 placeholder="PASSWORD" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'deCaptcher'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.DeCaptcher">
         <div class="col-12">
             <span class="mr-2">DeCaptcher Username</span>
             <app-input-text key="deCaptcherUsername"
@@ -285,7 +285,7 @@
                 placeholder="PASSWORD" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'imageTyperz'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.ImageTyperz">
         <div class="col-12">
             <span class="mr-2">ImageTyperz API Key</span>
             <app-input-text key="imageTyperzApiKey"
@@ -296,7 +296,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'capMonster'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapMonster">
         <div class="col-12">
             <span class="mr-2">CapMonster Host</span>
             <app-input-text key="capMonsterHost"
@@ -314,7 +314,7 @@
                 placeholder="8080" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'aZCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AzCaptcha">
         <div class="col-12">
             <span class="mr-2">AZ Captcha API Key</span>
             <app-input-text key="azCaptchaApiKey"
@@ -325,7 +325,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'captchasIO'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CaptchasIO">
         <div class="col-12">
             <span class="mr-2">Captchas.IO API Key</span>
             <app-input-text key="captchasDotIoApiKey"
@@ -336,7 +336,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'ruCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.RuCaptcha">
         <div class="col-12">
             <span class="mr-2">RuCaptcha API Key</span>
             <app-input-text key="ruCaptchaApiKey"
@@ -347,7 +347,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'solveCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.SolveCaptcha">
         <div class="col-12">
             <span class="mr-2">SolveCaptcha API Key</span>
             <app-input-text key="solveCaptchaApiKey"
@@ -358,7 +358,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'solveRecaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.SolveRecaptcha">
         <div class="col-12">
             <span class="mr-2">SolveRecaptcha API Key</span>
             <app-input-text key="solveRecaptchaApiKey"
@@ -369,7 +369,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'trueCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.TrueCaptcha">
         <div class="col-12">
             <span class="mr-2">TrueCaptcha API Key</span>
             <app-input-text key="trueCaptchaApiKey"
@@ -389,7 +389,7 @@
                 placeholder="USERNAME" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'nineKW'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.NineKW">
         <div class="col-12">
             <span class="mr-2">9kw API Key</span>
             <app-input-text key="nineKWApiKey"
@@ -400,7 +400,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'customAntiCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CustomAntiCaptcha">
         <div class="col-12">
             <span class="mr-2">Custom Anti-Captcha API Key</span>
             <app-input-text key="customAntiCaptchaApiKey"
@@ -427,7 +427,7 @@
                 placeholder="8080" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'anyCaptcha'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.AnyCaptcha">
         <div class="col-12">
             <span class="mr-2">AnyCaptcha API Key</span>
             <app-input-text key="anyCaptchaApiKey"
@@ -438,7 +438,7 @@
                 placeholder="API_KEY" />
         </div>
     </div>
-    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === 'capSolver'">
+    <div class="row my-3" *ngIf="settings.captchaSettings.currentService === CaptchaServiceType.CapSolver">
         <div class="col-12">
             <span class="mr-2">CapSolver API Key</span>
             <app-input-text key="capSolverApiKey"

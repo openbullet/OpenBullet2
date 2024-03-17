@@ -1,3 +1,18 @@
+export enum ConfigSection {
+    Metadata = 'metadata',
+    Readme = 'readme',
+    Stacker = 'stacker',
+    LoliCode = 'loliCode',
+    Settings = 'settings',
+    CSharpCode = 'cSharpCode',
+    LoliScript = 'loliScript'
+}
+
+export enum JobDisplayMode {
+    Standard = 'standard',
+    Detailed = 'detailed'
+}
+
 export interface OBSettingsDto {
     generalSettings: GeneralOBSettings;
     remoteSettings: RemoteOBSettings;
@@ -6,7 +21,7 @@ export interface OBSettingsDto {
 }
 
 export interface GeneralOBSettings {
-    configSectionOnLoad: string;
+    configSectionOnLoad: ConfigSection;
     autoSetRecommendedBots: boolean;
     warnConfigNotSaved: boolean;
     defaultAuthor: string;
@@ -14,7 +29,7 @@ export interface GeneralOBSettings {
     logBufferSize: number;
     ignoreWordlistNameOnHitsDedupe: boolean;
     proxyCheckTargets: ProxyCheckTarget[];
-    defaultJobDisplayMode: string;
+    defaultJobDisplayMode: JobDisplayMode;
     jobUpdateInterval: number;
     jobManagerUpdateInterval: number;
     groupCapturesInDebugger: boolean;

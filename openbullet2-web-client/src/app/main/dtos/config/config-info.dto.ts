@@ -1,3 +1,11 @@
+export enum ConfigMode {
+    Stack = 'stack',
+    LoliCode = 'loliCode',
+    CSharp = 'cSharp',
+    DLL = 'dll',
+    Legacy = 'legacy'
+}
+
 export interface ConfigInfoDto {
     id: string;
     name: string;
@@ -9,6 +17,6 @@ export interface ConfigInfoDto {
     allowedWordlistTypes: string[];
     creationDate: string;
     lastModified: string;
-    mode: string;
+    mode: ConfigMode;
     dangerous: boolean;
 }

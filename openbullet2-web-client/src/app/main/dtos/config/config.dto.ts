@@ -1,7 +1,21 @@
+import { ProxyType } from "../../enums/proxy-type";
+import { ConfigMode } from "./config-info.dto";
+
+export enum StringRule {
+    EqualTo = 'equalTo',
+    Contains = 'contains',
+    LongerThan = 'longerThan',
+    ShorterThan = 'shorterThan',
+    ContainsAll = 'containsAll',
+    ContainsAny = 'containsAny',
+    StartsWith = 'startsWith',
+    EndsWith = 'endsWith'
+}
+
 export interface ConfigDto {
     id: string;
     isRemote: boolean;
-    mode: string;
+    mode: ConfigMode;
     metadata: ConfigMetadataDto;
     settings: ConfigSettingsDto;
     readme: string;
@@ -44,7 +58,7 @@ export interface ConfigProxySettingsDto {
     maxUsesPerProxy: number;
     banLoopEvasion: number;
     banProxyStatuses: string[];
-    allowedProxyTypes: string[]
+    allowedProxyTypes: ProxyType[];
 }
 
 export interface ConfigInputSettingsDto {
@@ -72,7 +86,7 @@ export interface DataRulesDto {
 export interface SimpleDataRuleDto {
     sliceName: string;
     invert: boolean;
-    comparison: string;
+    comparison: StringRule;
     stringToCompare: string;
     caseSensitive: boolean
 }

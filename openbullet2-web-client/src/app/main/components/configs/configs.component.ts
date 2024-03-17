@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
+import { ConfigInfoDto, ConfigMode } from '../../dtos/config/config-info.dto';
 import { faClone, faDownload, faFilterCircleXmark, faGears, faPen, faTriangleExclamation, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfigService } from '../../services/config.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -167,14 +167,14 @@ export class ConfigsComponent implements OnInit {
 
       case 'stacker':
         switch (config.mode) {
-          case 'loliCode':
-          case 'stack':
+          case ConfigMode.LoliCode:
+          case ConfigMode.Stack:
             return 'config/stacker';
 
-          case 'cSharp':
+          case ConfigMode.CSharp:
             return 'config/csharp';
 
-          case 'legacy':
+          case ConfigMode.Legacy:
             return 'config/loliscript';
 
           default:
@@ -184,14 +184,14 @@ export class ConfigsComponent implements OnInit {
       case 'loliCode':
       case 'loliScript':
         switch (config.mode) {
-          case 'loliCode':
-          case 'stack':
+          case ConfigMode.LoliCode:
+          case ConfigMode.Stack:
             return 'config/lolicode';
 
-          case 'cSharp':
+          case ConfigMode.CSharp:
             return 'config/csharp';
 
-          case 'legacy':
+          case ConfigMode.Legacy:
             return 'config/loliscript';
 
           default:
@@ -203,12 +203,12 @@ export class ConfigsComponent implements OnInit {
 
       case 'cSharpCode':
         switch (config.mode) {
-          case 'loliCode':
-          case 'stack':
-          case 'cSharp':
+          case ConfigMode.LoliCode:
+          case ConfigMode.Stack:
+          case ConfigMode.CSharp:
             return 'config/csharp';
 
-          case 'legacy':
+          case ConfigMode.Legacy:
             return 'config/loliscript';
 
           default:

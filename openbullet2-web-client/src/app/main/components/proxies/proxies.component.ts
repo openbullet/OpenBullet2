@@ -16,6 +16,8 @@ import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './impor
 import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
 import { saveFile } from 'src/app/shared/utils/files';
 import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
+import { ProxyWorkingStatus } from '../../enums/proxy-working-status';
+import { ProxyType } from '../../enums/proxy-type';
 
 @Component({
   selector: 'app-proxies',
@@ -65,20 +67,20 @@ export class ProxiesComponent implements OnInit {
   importProxiesFromRemoteModalVisible = false;
 
   searchTerm: string = '';
-  proxyWorkingStatus: string = 'anyStatus';
-  proxyWorkingStatuses: string[] = [
+  proxyWorkingStatus: 'anyStatus' | ProxyWorkingStatus = 'anyStatus';
+  proxyWorkingStatuses: ('anyStatus' | ProxyWorkingStatus)[] = [
     'anyStatus',
-    'working',
-    'notWorking',
-    'untested'
+    ProxyWorkingStatus.Untested,
+    ProxyWorkingStatus.Working,
+    ProxyWorkingStatus.NotWorking
   ];
-  proxyType: string = 'anyType';
-  proxyTypes: string[] = [
+  proxyType: 'anyType' | ProxyType = 'anyType';
+  proxyTypes: ('anyType' | ProxyType)[] = [
     'anyType',
-    'http',
-    'socks4',
-    'socks5',
-    'socks4a'
+    ProxyType.Http,
+    ProxyType.Socks4,
+    ProxyType.Socks4a,
+    ProxyType.Socks5
   ];
 
   proxyMenuItems: MenuItem[] = [
@@ -372,7 +374,7 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: null,
       type: null,
-      status: 'notWorking'
+      status: ProxyWorkingStatus.NotWorking
     });
   }
 
@@ -383,7 +385,7 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: null,
       type: null,
-      status: 'untested'
+      status: ProxyWorkingStatus.Untested
     });
   }
 

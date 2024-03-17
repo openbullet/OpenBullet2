@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { ProxyType } from 'src/app/main/enums/proxy-type';
 
 export interface RemoteProxiesToImport {
-  defaultType: string;
+  defaultType: ProxyType;
   defaultUsername: string;
   defaultPassword: string;
   url: string
@@ -17,19 +18,19 @@ export class ImportProxiesFromRemoteComponent {
   url: string = '';
   defaultUsername: string = '';
   defaultPassword: string = '';
-  defaultProxyType: string = '';
-  proxyTypes: string[] = [
-    'http',
-    'socks4',
-    'socks5',
-    'socks4a'
+  defaultProxyType: ProxyType = ProxyType.Http;
+  proxyTypes: ProxyType[] = [
+    ProxyType.Http,
+    ProxyType.Socks4,
+    ProxyType.Socks4a,
+    ProxyType.Socks5
   ];
 
   public reset() {
     this.url = '';
     this.defaultUsername = '';
     this.defaultPassword = '';
-    this.defaultProxyType = 'http';
+    this.defaultProxyType = ProxyType.Http;
   }
 
   submitForm() {

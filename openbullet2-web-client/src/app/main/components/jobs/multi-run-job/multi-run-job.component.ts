@@ -19,6 +19,7 @@ import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
+import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 
 interface LogMessage {
   timestamp: Date;
@@ -664,19 +665,19 @@ export class MultiRunJobComponent {
     let route = '';
 
     switch (config.mode) {
-      case 'loliCode':
+      case ConfigMode.LoliCode:
         route = 'config/lolicode';
         break;
 
-      case 'stack':
+      case ConfigMode.Stack:
         route = 'config/stacker';
         break;
 
-      case 'cSharp':
+      case ConfigMode.CSharp:
         route = 'config/csharp';
         break;
 
-      case 'legacy':
+      case ConfigMode.Legacy:
         route = 'config/loliscript';
         break;
     }

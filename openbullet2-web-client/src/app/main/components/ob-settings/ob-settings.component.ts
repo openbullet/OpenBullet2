@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SettingsService } from '../../services/settings.service';
-import { CustomSnippet, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint } from '../../dtos/settings/ob-settings.dto';
+import { ConfigSection, CustomSnippet, JobDisplayMode, OBSettingsDto, ProxyCheckTarget, RemoteConfigsEndpoint } from '../../dtos/settings/ob-settings.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
@@ -59,18 +59,18 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   settings: OBSettingsDto | null = null;
   themes: string[] | null = null;
   touched: boolean = false;
-  configSections: string[] = [
-    'metadata',
-    'readme',
-    'stacker',
-    'loliCode',
-    'settings',
-    'cSharpCode',
-    'loliScript'
+  configSections: ConfigSection[] = [
+    ConfigSection.Metadata,
+    ConfigSection.Readme,
+    ConfigSection.Stacker,
+    ConfigSection.LoliCode,
+    ConfigSection.Settings,
+    ConfigSection.CSharpCode,
+    ConfigSection.LoliScript
   ];
-  jobDisplayModes: string[] = [
-    'standard',
-    'detailed'
+  jobDisplayModes: JobDisplayMode[] = [
+    JobDisplayMode.Standard,
+    JobDisplayMode.Detailed
   ];
   selectedProxyCheckTarget: ProxyCheckTarget | null = null;
   selectedCustomSnippet: CustomSnippet | null = null;
