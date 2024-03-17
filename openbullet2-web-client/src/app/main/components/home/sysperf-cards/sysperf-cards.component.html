@@ -93,6 +93,7 @@
                             <span>Memory</span>
                             <span class="perf-timespan">Last minute</span>
                             <button class="button button-transparent ml-2" 
+                                *ngIf="isAdmin"
                                 pTooltip="Trigger aggressive server-side Garbage Collection"
                                 (click)="garbageCollect()">
                                 <fa-icon [icon]="faTrashCan" [fixedWidth]="true"></fa-icon>

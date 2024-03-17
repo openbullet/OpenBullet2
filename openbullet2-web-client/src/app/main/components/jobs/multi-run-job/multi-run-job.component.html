@@ -1,6 +1,8 @@
-<div class="back-to-jobs" (click)="backToJobs()">
-    <fa-icon [icon]="faAngleLeft" [fixedWidth]="true"></fa-icon>
-    <span class="ml-2">Back to Jobs</span>
+<div class="back-to-jobs-container">
+    <div class="back-to-jobs" (click)="backToJobs()">
+        <fa-icon [icon]="faAngleLeft" [fixedWidth]="true"></fa-icon>
+        <span class="ml-2">Back to Jobs</span>
+    </div>
 </div>
 
 <div class="container-fluid d-flex flex-row px-0" *ngIf="job === null">

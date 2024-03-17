@@ -19,9 +19,14 @@
     margin-left: auto;
 }
 
-.back-to-jobs {
-    /* TODO: Add cute bounce animation to angle bracket on hover */
-    cursor: pointer;
+.back-to-jobs-container {
+    display: flex;
+
+    .back-to-jobs {
+        align-self: flex-start;
+        /* TODO: Add cute bounce animation to angle bracket on hover */
+        cursor: pointer;
+    }
 }
 
 .job-stats {

@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { PerformanceInfoDto } from 'src/app/main/dtos/info/performance-info.dto';
 import { DebugService } from 'src/app/main/services/debug.service';
 import { SysPerfHubService } from 'src/app/main/services/sysperf.hub.service';
+import { UserService } from 'src/app/main/services/user.service';
 import { formatBytes } from 'src/app/shared/utils/bytes';
 
 @Component({
@@ -165,13 +166,17 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
   };
 
   metricsSubscription: Subscription | null = null;
+  isAdmin: boolean;
 
   @ViewChildren(BaseChartDirective) charts?: QueryList<BaseChartDirective>;
 
   constructor(
     private sysPerfHubService: SysPerfHubService,
     private debugService: DebugService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private userService: UserService) {
+    this.isAdmin = this.userService.isAdmin();
+  }
 
   ngOnInit(): void {
     // Mocked metrics, to use when debugging
