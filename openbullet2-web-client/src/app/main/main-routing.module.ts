@@ -29,6 +29,7 @@ import { canDeactivateFormComponent } from '../shared/guards/can-deactivate-form
 import { JobMonitorComponent } from './components/job-monitor/job-monitor.component';
 import { EditTriggeredActionComponent } from './components/job-monitor/edit-triggered-action/edit-triggered-action.component';
 import { ConfigStackerComponent } from './components/config/config-stacker/config-stacker.component';
+import { ConfigLoliscriptComponent } from './components/config/config-loliscript/config-loliscript.component';
 
 const routes: Routes = [
   // Main component layout
@@ -141,6 +142,11 @@ const routes: Routes = [
       {
         component: ConfigLolicodeComponent,
         path: 'config/lolicode',
+        canActivate: [() => inject(AdminGuard).canActivate()]
+      },
+      {
+        component: ConfigLoliscriptComponent,
+        path: 'config/loliscript',
         canActivate: [() => inject(AdminGuard).canActivate()]
       },
       {

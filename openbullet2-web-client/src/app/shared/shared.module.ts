@@ -20,12 +20,14 @@ import { InputTimeSpanComponent } from './components/input-time-span/input-time-
 import { TimeSpanPipe } from './pipes/timespan.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { InputDictionaryComponent } from './components/input-dictionary/input-dictionary.component';
+import { registerLoliScript } from './languages/loliscript';
 
 declare const monaco: any;
 
 const monacoConfig: NgxMonacoEditorConfig = {
   onMonacoLoad() {
     registerLoliCode(monaco);
+    registerLoliScript(monaco);
   },
   defaultOptions: {
     automaticLayout: true,

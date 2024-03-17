@@ -46,6 +46,7 @@
             <div style="height: 830px; width: 100%">
                 <app-code-editor #editor
                     language="csharp" ngDefaultControl 
+                    theme="vs-dark"
                     (loaded)="editorLoaded()"
                     [readOnly]="true"
                     (codeChanged)="codeChanged($event)" />

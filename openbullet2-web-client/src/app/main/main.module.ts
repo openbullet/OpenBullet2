@@ -113,6 +113,7 @@ import { HttpRequestBlockComponent } from './components/config/config-stacker/ht
 import { CreateKeycheckKeyComponent } from './components/config/config-stacker/keycheck-block/create-keycheck-key/create-keycheck-key.component';
 import { RecentHitsChartComponent } from './components/home/recent-hits-chart/recent-hits-chart.component';
 import { ChangelogComponent } from './components/changelog/changelog.component';
+import { ConfigLoliscriptComponent } from './components/config/config-loliscript/config-loliscript.component';
 
 @NgModule({
   declarations: [
@@ -202,7 +203,8 @@ import { ChangelogComponent } from './components/changelog/changelog.component';
     HttpRequestBlockComponent,
     CreateKeycheckKeyComponent,
     RecentHitsChartComponent,
-    ChangelogComponent
+    ChangelogComponent,
+    ConfigLoliscriptComponent
   ],
   imports: [
     CommonModule,

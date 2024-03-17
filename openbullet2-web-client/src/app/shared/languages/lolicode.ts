@@ -1,6 +1,6 @@
 export function registerLoliCode(monaco: any) {
-	// Register a new language
-	monaco.languages.register({ id: 'lolicode' });
+    // Register a new language
+    monaco.languages.register({ id: 'lolicode' });
 
     monaco.languages.setLanguageConfiguration('lolicode', {
         wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\#\$\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
@@ -58,8 +58,8 @@ export function registerLoliCode(monaco: any) {
         }
     });
 
-	// Register a tokens provider for the language
-	monaco.languages.setMonarchTokensProvider('lolicode', {
+    // Register a tokens provider for the language
+    monaco.languages.setMonarchTokensProvider('lolicode', {
 
         keywords: ["extern", "alias", "using", "bool", "decimal", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong", "char", "float", "double", "object", "dynamic", "string", "assembly", "is", "as", "ref", "out", "this", "base", "new", "typeof", "void", "checked", "unchecked", "default", "delegate", "var", "const", "if", "else", "switch", "case", "while", "do", "for", "foreach", "in", "break", "continue", "goto", "return", "throw", "try", "catch", "finally", "lock", "yield", "from", "let", "where", "join", "on", "equals", "into", "orderby", "ascending", "descending", "select", "group", "by", "namespace", "partial", "class", "field", "event", "method", "param", "property", "public", "protected", "internal", "private", "abstract", "sealed", "static", "struct", "readonly", "volatile", "virtual", "override", "params", "get", "set", "add", "remove", "operator", "true", "false", "implicit", "explicit", "interface", "enum", "null", "async", "await", "fixed", "sizeof", "stackalloc", "unsafe", "nameof", "when",
             "JUMP", "REPEAT", "END", "FOREACH", "IN", "LOG", "CLOG", "WHILE", "IF", "ELSE", "ELSE IF", "TRY", "CATCH", "LOCK", "SET", "TAKE", "TAKEONE", "FROM", "FINALLY", "ACQUIRELOCK", "RELEASELOCK", "MARK", "UNMARK", "USEPROXY", "PROXY"], // Lolicode-specific
@@ -282,10 +282,10 @@ export function registerLoliCode(monaco: any) {
                 [/[A-Za-z0-9]*\n/, "jumplabel", "@pop"]
             ]
         }
-	});
+    });
 
     // Register the theme
-    monaco.editor.defineTheme('vs-lolicode', {
+    monaco.editor.defineTheme('vs-dark-lolicode', {
         base: 'vs-dark', // TODO: This could be manually set by the user
         inherit: true,
         colors: {

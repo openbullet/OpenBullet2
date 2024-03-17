@@ -11,6 +11,7 @@ export class CodeEditorComponent implements OnInit {
   @Input() key!: string;
   @Input() language: string = 'lolicode';
   @Input() readOnly: boolean = false;
+  @Input() theme: string = 'vs-dark-lolicode';
   editorOptions: any = {};
   isTouched = false;
   model: string = '';
@@ -24,7 +25,7 @@ export class CodeEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.editorOptions = {
-      theme: 'vs-lolicode',
+      theme: this.theme,
       language: this.language,
       readOnly: this.readOnly,
       // wordWrap: true
