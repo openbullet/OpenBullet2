@@ -35,7 +35,7 @@ public abstract class AuthorizedHub : Hub
     private bool OnlyAdmin { get; }
 
     /// <inheritdoc />
-    public async override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
@@ -49,9 +49,9 @@ public abstract class AuthorizedHub : Hub
 
         // Make sure the user provided a valid auth token
         var request = Context.GetHttpContext()!.Request;
-        var authHeader = request.Query["access_token"].FirstOrDefault();
+        var accessToken = request.Query["access_token"].FirstOrDefault();
 
-        if (authHeader is null)
+        if (accessToken is null)
         {
             await Clients.Caller.SendAsync(
                 CommonMethods.Error,
@@ -63,8 +63,7 @@ public abstract class AuthorizedHub : Hub
 
         try
         {
-            var token = authHeader.Split(' ')[1];
-            var validToken = _tokenService.ValidateToken(token);
+            var validToken = _tokenService.ValidateToken(accessToken);
             User = ApiUser.FromToken(validToken);
         }
         catch (Exception ex)
