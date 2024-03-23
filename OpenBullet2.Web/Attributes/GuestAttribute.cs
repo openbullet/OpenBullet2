@@ -17,4 +17,4 @@ internal class GuestAttribute : Attribute, IAuthorizationFilter
                 "You must be a guest or admin user to perform this operation");
         }
     }
-}   
+}

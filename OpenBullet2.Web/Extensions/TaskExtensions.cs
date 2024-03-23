@@ -29,7 +29,7 @@ static internal class TaskExtensions
 
         // Allocate the async/await state machine only when needed for performance reasons.
         // More info about the state machine: https://blogs.msdn.microsoft.com/seteplia/2017/11/30/dissecting-the-async-methods-in-c/?WT.mc_id=DT-MVP-5003978
-        async static Task ForgetAwaited(Task task, Func<Exception, Task>? onError)
+        static async Task ForgetAwaited(Task task, Func<Exception, Task>? onError)
         {
             try
             {

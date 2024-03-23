@@ -255,12 +255,18 @@ static internal class BlockMapper
         block.Disabled = dto.Disabled;
         block.Label = dto.Label;
 
-        foreach (var kvp in dto.Settings) MapSetting(kvp.Value, block.Settings[kvp.Key]);
+        foreach (var kvp in dto.Settings)
+        {
+            MapSetting(kvp.Value, block.Settings[kvp.Key]);
+        }
     }
 
     private static void MapSetting(BlockSettingDto? dto, BlockSetting setting)
     {
-        if (dto is null) return;
+        if (dto is null)
+        {
+            return;
+        }
 
         setting.InputMode = dto.InputMode;
         setting.InputVariableName = dto.InputVariableName;

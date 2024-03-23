@@ -19,7 +19,7 @@ public class CollectionInfoDto
     /// The number of imported wordlists.
     /// </summary>
     public int WordlistsCount { get; set; }
-    
+
     /// <summary>
     /// The number of lines across all wordlists.
     /// </summary>

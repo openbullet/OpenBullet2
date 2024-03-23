@@ -8,7 +8,7 @@ public class ChangelogDto
     /// <summary>
     /// The version that the changelog refers to.
     /// </summary>
-    public string Version { get; set; } = string.Empty; 
+    public string Version { get; set; } = string.Empty;
 
     /// <summary>
     /// The markdown text of the changelog.

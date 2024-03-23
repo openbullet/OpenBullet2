@@ -61,7 +61,7 @@ public class UpdateConfigDto
 
     /// <summary>
     /// Whether to persistently save the config to the repository.
-    /// Set to <see langword="false"/> if the config is only being saved to
+    /// Set to <see langword="false" /> if the config is only being saved to
     /// memory, e.g. for debugging needs.
     /// </summary>
     public bool Persistent { get; set; } = true;

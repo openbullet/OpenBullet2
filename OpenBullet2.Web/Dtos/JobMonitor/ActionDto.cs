@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.JobMonitor;
 /// </summary>
 public class ActionDto : PolyDto
 {
-
 }
 
 /// <summary>
@@ -16,8 +15,8 @@ public class ActionDto : PolyDto
 /// the next action in the chain.
 /// </summary>
 [PolyType("waitAction")]
-[MapsFrom(typeof(WaitAction), autoMap: false)]
-[MapsTo(typeof(WaitAction), autoMap: false)]
+[MapsFrom(typeof(WaitAction), false)]
+[MapsTo(typeof(WaitAction), false)]
 public class WaitActionDto : ActionDto
 {
     /// <summary>
@@ -30,8 +29,8 @@ public class WaitActionDto : ActionDto
 /// Sets the relative start condition of a job to the given time span.
 /// </summary>
 [PolyType("setRelativeStartConditionAction")]
-[MapsFrom(typeof(SetRelativeStartConditionAction), autoMap: false)]
-[MapsTo(typeof(SetRelativeStartConditionAction), autoMap: false)]
+[MapsFrom(typeof(SetRelativeStartConditionAction), false)]
+[MapsTo(typeof(SetRelativeStartConditionAction), false)]
 public class SetRelativeStartConditionActionDto : ActionDto
 {
     /// <summary>

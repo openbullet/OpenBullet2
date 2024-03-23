@@ -26,7 +26,7 @@ public class JobOverviewDto
     /// </summary>
     [JsonPropertyOrder(-3)]
     public JobType Type { get; set; }
-    
+
     /// <summary>
     /// The job status.
     /// </summary>

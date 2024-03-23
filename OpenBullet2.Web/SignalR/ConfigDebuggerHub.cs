@@ -24,13 +24,13 @@ public class ConfigDebuggerHub : AuthorizedHub
     public ConfigDebuggerHub(ConfigDebuggerService debuggerService,
         IAuthTokenService tokenService, IMapper mapper,
         OpenBulletSettingsService obSettingsService)
-        : base(tokenService, obSettingsService, onlyAdmin: true)
+        : base(tokenService, obSettingsService, true)
     {
         _debuggerService = debuggerService;
         _mapper = mapper;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
@@ -49,7 +49,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         _debuggerService.RegisterConnection(Context.ConnectionId, configId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);
@@ -64,9 +64,9 @@ public class ConfigDebuggerHub : AuthorizedHub
     /// </summary>
     [HubMethodName("start")]
     public void Start(DbgStartRequestDto dto) => _debuggerService.StartNew(
-            GetConfigId()!,
-            _mapper.Map<DebuggerOptions>(dto)
-        );
+        GetConfigId()!,
+        _mapper.Map<DebuggerOptions>(dto)
+    );
 
     /// <summary>
     /// Stop the debugger.
@@ -79,11 +79,8 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is ConfigDebuggerStatus.Idle)
         {
             await Clients.Caller.SendAsync(
-                CommonMethods.Error, new ErrorMessage
-                {
-                    Type = "Invalid operation",
-                    Message = "The debugger is not running"
-                });
+                CommonMethods.Error,
+                new ErrorMessage { Type = "Invalid operation", Message = "The debugger is not running" });
 
             return;
         }
@@ -102,11 +99,8 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (!debugger.Options.StepByStep)
         {
             await Clients.Caller.SendAsync(
-                CommonMethods.Error, new ErrorMessage
-                {
-                    Type = "Invalid operation",
-                    Message = "The debugger is not in step by step mode"
-                });
+                CommonMethods.Error,
+                new ErrorMessage { Type = "Invalid operation", Message = "The debugger is not in step by step mode" });
 
             return;
         }
@@ -114,11 +108,8 @@ public class ConfigDebuggerHub : AuthorizedHub
         if (debugger.Status is not ConfigDebuggerStatus.WaitingForStep)
         {
             await Clients.Caller.SendAsync(
-                CommonMethods.Error, new ErrorMessage
-                {
-                    Type = "Invalid operation",
-                    Message = "The debugger is not waiting for a step"
-                });
+                CommonMethods.Error,
+                new ErrorMessage { Type = "Invalid operation", Message = "The debugger is not waiting for a step" });
 
             return;
         }
@@ -140,8 +131,7 @@ public class ConfigDebuggerHub : AuthorizedHub
         // If there is a debugger
         if (debugger is not null)
         {
-            state = new DbgStateDto
-            {
+            state = new DbgStateDto {
                 Log = debugger.Logger.Entries,
                 Status = debugger.Status,
                 Variables = debugger.Options.Variables.Select(

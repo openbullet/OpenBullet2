@@ -8,23 +8,8 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public class UpdateService : BackgroundService, IUpdateService
 {
-    private readonly string _versionFile = "version.txt";
     private readonly ILogger<UpdateService> _logger;
-
-    /// <inheritdoc/>
-    public Version CurrentVersion { get; private set; } = new(0, 2, 5);
-
-    /// <inheritdoc/>
-    public Version RemoteVersion { get; private set; } = new(0, 2, 5);
-
-    /// <inheritdoc/>
-    public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
-
-    /// <inheritdoc/>
-    public VersionType CurrentVersionType => GetVersionType(CurrentVersion);
-
-    /// <inheritdoc/>
-    public VersionType RemoteVersionType => GetVersionType(RemoteVersion);
+    private readonly string _versionFile = "version.txt";
 
     /// <summary></summary>
     public UpdateService(ILogger<UpdateService> logger)
@@ -50,7 +35,22 @@ public class UpdateService : BackgroundService, IUpdateService
         _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public Version CurrentVersion { get; } = new(0, 2, 5);
+
+    /// <inheritdoc />
+    public Version RemoteVersion { get; private set; } = new(0, 2, 5);
+
+    /// <inheritdoc />
+    public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
+
+    /// <inheritdoc />
+    public VersionType CurrentVersionType => GetVersionType(CurrentVersion);
+
+    /// <inheritdoc />
+    public VersionType RemoteVersionType => GetVersionType(RemoteVersion);
+
+    /// <inheritdoc />
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // Check for updates every 3 hours
@@ -59,12 +59,10 @@ public class UpdateService : BackgroundService, IUpdateService
         do
         {
             await FetchRemoteVersionAsync();
-        }
-        while (await timer.WaitForNextTickAsync(stoppingToken));
+        } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
 
-    private static VersionType GetVersionType(Version version) => version switch
-    {
+    private static VersionType GetVersionType(Version version) => version switch {
         { Major: 0, Minor: 0 } => VersionType.Alpha,
         { Major: 0 } => VersionType.Beta,
         _ => VersionType.Release
@@ -86,35 +84,34 @@ public class UpdateService : BackgroundService, IUpdateService
             await Task.Delay(1);
             return;
         }
-        else
+
+        try
         {
-            try
-            {
-                // Query the GitHub api to get a list of the latest releases
-                using HttpClient client = new();
+            // Query the GitHub api to get a list of the latest releases
+            using HttpClient client = new();
 #pragma warning disable S1075
-                client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
+            client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
 #pragma warning restore S1075
-                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-                var response = await client.GetAsync("releases/latest");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            var response = await client.GetAsync("releases/latest");
 
-                // Take the first and get its name
-                var json = await response.Content.ReadAsStringAsync();
-                var release = JToken.Parse(json);
-                var releaseName = release["name"]?.ToString() ?? "0.0.1";
+            // Take the first and get its name
+            var json = await response.Content.ReadAsStringAsync();
+            var release = JToken.Parse(json);
+            var releaseName = release["name"]?.ToString() ?? "0.0.1";
 
-                // Try to parse that name to a Version object
-                RemoteVersion = Version.Parse(releaseName);
+            // Try to parse that name to a Version object
+            RemoteVersion = Version.Parse(releaseName);
 
-                if (IsUpdateAvailable)
-                {
-                    _logger.LogInformation("There is a new update! Version {Version}", RemoteVersion);
-                }
-            }
-            catch (Exception ex)
+            if (IsUpdateAvailable)
             {
-                _logger.LogWarning(ex, "Failed to check for updates. I will retry in 3 hours.");
+                _logger.LogInformation("There is a new update! Version {Version}", RemoteVersion);
             }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to check for updates. I will retry in 3 hours.");
         }
     }
 }

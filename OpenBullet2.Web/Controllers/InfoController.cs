@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -7,9 +6,9 @@ using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
-using OpenBullet2.Web.Services;
 using RuriLib.Services;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace OpenBullet2.Web.Controllers;
@@ -22,8 +21,8 @@ namespace OpenBullet2.Web.Controllers;
 public class InfoController : ApiController
 {
     private readonly IAnnouncementService _announcementService;
-    private readonly IUpdateService _updateService;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IUpdateService _updateService;
 
     /// <summary></summary>
     public InfoController(IAnnouncementService announcementService,
@@ -41,24 +40,23 @@ public class InfoController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<ServerInfoDto> GetServerInfo()
     {
-        var version = System.Reflection.Assembly
+        var version = Assembly
             .GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 1);
 
         var buildDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             .AddDays(version.Build).AddSeconds(version.Revision * 2);
-        
+
         var buildNumber = $"{version.Build}.{version.Revision}";
 
         var ip = HttpContext.Connection?.RemoteIpAddress
-            ?? IPAddress.Parse("127.0.0.1");
+                 ?? IPAddress.Parse("127.0.0.1");
 
         if (ip.IsIPv4MappedToIPv6)
         {
             ip = ip.MapToIPv4();
         }
 
-        return new ServerInfoDto
-        {
+        return new ServerInfoDto {
             LocalUtcOffset = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now),
             StartTime = Globals.StartTime,
             OperatingSystem = GetOperatingSystem(),
@@ -78,11 +76,7 @@ public class InfoController : ApiController
     {
         var markdown = await _announcementService.FetchAnnouncementAsync();
 
-        return new AnnouncementDto
-        {
-            MarkdownText = markdown,
-            LastFetched = _announcementService.LastFetched
-        };
+        return new AnnouncementDto { MarkdownText = markdown, LastFetched = _announcementService.LastFetched };
     }
 
     /// <summary>
@@ -129,11 +123,7 @@ public class InfoController : ApiController
             markdown = "Could not retrieve the changelog";
         }
 
-        return new ChangelogDto 
-        {
-            MarkdownText = markdown,
-            Version = v
-        };
+        return new ChangelogDto { MarkdownText = markdown, Version = v };
     }
 
     /// <summary>
@@ -141,8 +131,7 @@ public class InfoController : ApiController
     /// </summary>
     [HttpGet("update")]
     [MapToApiVersion("1.0")]
-    public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto
-    {
+    public ActionResult<UpdateInfoDto> GetUpdateInfo() => new UpdateInfoDto {
         CurrentVersion = _updateService.CurrentVersion.ToString(),
         RemoteVersion = _updateService.RemoteVersion.ToString(),
         IsUpdateAvailable = _updateService.IsUpdateAvailable,
@@ -165,7 +154,7 @@ public class InfoController : ApiController
 
         var wordlistCount = await _serviceProvider
             .GetRequiredService<IWordlistRepository>().GetAll().CountAsync();
-        
+
         var wordlistLines = await _serviceProvider
             .GetRequiredService<IWordlistRepository>().GetAll().SumAsync(w => (long)w.Total);
 
@@ -181,8 +170,7 @@ public class InfoController : ApiController
         var pluginCount = _serviceProvider
             .GetRequiredService<PluginRepository>().GetPlugins().Count();
 
-        return new CollectionInfoDto
-        {
+        return new CollectionInfoDto {
             JobsCount = jobCount,
             ProxiesCount = proxyCount,
             WordlistsCount = wordlistCount,

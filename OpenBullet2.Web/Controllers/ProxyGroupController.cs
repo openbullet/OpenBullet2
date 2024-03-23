@@ -23,12 +23,12 @@ namespace OpenBullet2.Web.Controllers;
 [Route("api/v{version:apiVersion}/proxy-group")]
 public class ProxyGroupController : ApiController
 {
-    private readonly IProxyGroupRepository _proxyGroupRepo;
-    private readonly IProxyRepository _proxyRepo;
     private readonly IGuestRepository _guestRepo;
-    private readonly IMapper _mapper;
     private readonly JobManagerService _jobManagerService;
     private readonly ILogger<ProxyGroupController> _logger;
+    private readonly IMapper _mapper;
+    private readonly IProxyGroupRepository _proxyGroupRepo;
+    private readonly IProxyRepository _proxyRepo;
 
     /// <summary></summary>
     public ProxyGroupController(IProxyGroupRepository proxyGroupRepo,
@@ -53,9 +53,9 @@ public class ProxyGroupController : ApiController
         var apiUser = HttpContext.GetApiUser();
 
         var entities = apiUser.Role is UserRole.Admin
-                ? await _proxyGroupRepo.GetAll().Include(g => g.Owner).ToListAsync()
-                : await _proxyGroupRepo.GetAll().Include(g => g.Owner)
-                    .Where(g => g.Owner.Id == apiUser.Id).ToListAsync();
+            ? await _proxyGroupRepo.GetAll().Include(g => g.Owner).ToListAsync()
+            : await _proxyGroupRepo.GetAll().Include(g => g.Owner)
+                .Where(g => g.Owner.Id == apiUser.Id).ToListAsync();
 
         return Ok(_mapper.Map<IEnumerable<ProxyGroupDto>>(entities));
     }
@@ -153,14 +153,11 @@ public class ProxyGroupController : ApiController
 
         // This will cascade delete all the proxies in the group
         await _proxyGroupRepo.DeleteAsync(entity);
-        
+
         _logger.LogInformation("Deleted the proxy group with id {Id} and {ProxyCount} proxies",
             entity.Id, proxies.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = proxies.Count
-        };
+        return new AffectedEntriesDto { Count = proxies.Count };
     }
 
     private async Task<ProxyGroupEntity> GetEntityAsync(int id)

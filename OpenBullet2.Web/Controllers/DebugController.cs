@@ -24,5 +24,4 @@ public class DebugController : ApiController
             dto.Mode, dto.Blocking, dto.Compacting);
         return Ok();
     }
-
 }

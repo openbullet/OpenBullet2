@@ -10,12 +10,12 @@ public class CategoryTreeNodeDto
     /// The name of the category.
     /// </summary>
     public required string Name { get; set; }
-    
+
     /// <summary>
     /// The subcategories.
     /// </summary>
     public required IEnumerable<CategoryTreeNodeDto> SubCategories { get; set; }
-    
+
     /// <summary>
     /// The IDs of the blocks in the category.
     /// </summary>

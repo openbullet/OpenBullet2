@@ -29,19 +29,12 @@ public class ConfigProxySettingsDto
     /// The values of a bot's status that result in banning the proxy at
     /// the end of the execution of the config.
     /// </summary>
-    public string[] BanProxyStatuses { get; set; } = new string[]
-    { 
-        "BAN", "ERROR"
-    };
+    public string[] BanProxyStatuses { get; set; } = { "BAN", "ERROR" };
 
     /// <summary>
     /// The proxy types that are allowed to be used for this config.
     /// </summary>
-    public ProxyType[] AllowedProxyTypes { get; set; } = new ProxyType[]
-    {
-            ProxyType.Http,
-            ProxyType.Socks4,
-            ProxyType.Socks4a,
-            ProxyType.Socks5
+    public ProxyType[] AllowedProxyTypes { get; set; } = {
+        ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5
     };
 }

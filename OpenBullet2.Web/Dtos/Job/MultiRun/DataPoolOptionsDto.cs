@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 /// </summary>
 public class DataPoolOptionsDto : PolyDto
 {
-
 }
 
 /// <summary>
@@ -111,5 +110,4 @@ public class CombinationsDataPoolOptionsDto : DataPoolOptionsDto
 [MapsTo(typeof(InfiniteDataPoolOptions))]
 public class InfiniteDataPoolOptionsDto : DataPoolOptionsDto
 {
-    
 }

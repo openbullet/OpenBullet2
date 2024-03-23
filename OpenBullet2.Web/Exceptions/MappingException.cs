@@ -6,7 +6,7 @@ namespace OpenBullet2.Web.Exceptions;
 public class MappingException : Exception
 {
     /// <summary>
-    /// Creates a new <see cref="MappingException"/> with a message.
+    /// Creates a new <see cref="MappingException" /> with a message.
     /// </summary>
     public MappingException(string message) : base(message) { }
 }

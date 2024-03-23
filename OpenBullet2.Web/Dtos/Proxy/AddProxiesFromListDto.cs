@@ -3,7 +3,7 @@
 namespace OpenBullet2.Web.Dtos.Proxy;
 
 /// <summary>
-/// DTO that contains a list of proxies that need to be 
+/// DTO that contains a list of proxies that need to be
 /// saved and added to a group.
 /// </summary>
 public class AddProxiesFromListDto : AddProxiesDto

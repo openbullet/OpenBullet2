@@ -6,18 +6,17 @@
 public class ResourceAlreadyExistsException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="ResourceAlreadyExistsException"/>.
+    /// Creates a <see cref="ResourceAlreadyExistsException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
     public ResourceAlreadyExistsException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 
     /// <summary>
-    /// Creates a <see cref="ResourceAlreadyExistsException"/>.
+    /// Creates a <see cref="ResourceAlreadyExistsException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="resource">The resource that already exists</param>
@@ -26,7 +25,5 @@ public class ResourceAlreadyExistsException : ApiException
         string resource, string path) :
         base(errorCode, $"The resource '{resource}' already exists at {path}")
     {
-
     }
 }
-

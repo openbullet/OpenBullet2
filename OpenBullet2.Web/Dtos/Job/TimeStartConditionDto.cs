@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.Job;
 /// </summary>
 public class TimeStartConditionDto : PolyDto
 {
-
 }
 
 /// <summary>

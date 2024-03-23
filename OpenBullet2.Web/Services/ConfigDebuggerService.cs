@@ -15,28 +15,28 @@ using RuriLib.Services;
 namespace OpenBullet2.Web.Services;
 
 /// <summary>
-/// Holds references to <see cref="ConfigDebugger"/> instances.
+/// Holds references to <see cref="ConfigDebugger" /> instances.
 /// This holds 1 instance for each config.
 /// </summary>
 public sealed class ConfigDebuggerService : IDisposable
-{   
-    private readonly PluginRepository _pluginRepo;
-    private readonly IRandomUAProvider _randomUAProvider;
-    private readonly IRNGProvider _rngProvider;
-    private readonly RuriLibSettingsService _rlSettingsService;
+{
     private readonly ConfigService _configService;
-    private readonly IHubContext<ConfigDebuggerHub> _hub;
-    private readonly ILogger<ConfigDebuggerService> _logger;
-
-    // Maps config IDs to debuggers
-    private readonly Dictionary<string, ConfigDebugger> _debuggers = new();
 
     // Maps debuggers to connections
     private readonly Dictionary<ConfigDebugger, List<string>> _connections = new();
 
+    // Maps config IDs to debuggers
+    private readonly Dictionary<string, ConfigDebugger> _debuggers = new();
+    private readonly IHubContext<ConfigDebuggerHub> _hub;
+    private readonly ILogger<ConfigDebuggerService> _logger;
+
     // Event handlers
     private readonly EventHandler<BotLoggerEntry> _onNewLog;
     private readonly EventHandler<ConfigDebuggerStatus> _onStatusChanged;
+    private readonly PluginRepository _pluginRepo;
+    private readonly IRandomUAProvider _randomUAProvider;
+    private readonly RuriLibSettingsService _rlSettingsService;
+    private readonly IRNGProvider _rngProvider;
 
     /// <summary></summary>
     public ConfigDebuggerService(PluginRepository pluginRepo,
@@ -64,6 +64,13 @@ public sealed class ConfigDebuggerService : IDisposable
         );
     }
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
     /// <summary>
     /// Registers a new connection, a.k.a. a debugging session started
     /// by a given client for a given config.
@@ -71,7 +78,7 @@ public sealed class ConfigDebuggerService : IDisposable
     public void RegisterConnection(string connectionId, string configId)
     {
         // If we don't already have a debugger for this config, create one
-        if(!_debuggers.TryGetValue(configId, out var debugger))
+        if (!_debuggers.TryGetValue(configId, out var debugger))
         {
             var config = _configService.Configs.Find(c => c.Id == configId);
             debugger = new ConfigDebugger(config);
@@ -106,12 +113,9 @@ public sealed class ConfigDebuggerService : IDisposable
 
     private async Task OnNewLogEntryAsync(object? sender, BotLoggerEntry e)
     {
-        var message = new DbgNewLogMessage
-        {
-            NewMessage = e
-        };
+        var message = new DbgNewLogMessage { NewMessage = e };
 
-        var debugger = (sender as ConfigDebugger);
+        var debugger = sender as ConfigDebugger;
 
         await _hub.Clients.Clients(_connections[debugger!]).SendAsync(
             ConfigDebuggerMethods.NewLogEntry, message);
@@ -119,12 +123,9 @@ public sealed class ConfigDebuggerService : IDisposable
 
     private async Task OnStatusChangedAsync(object? sender, ConfigDebuggerStatus e)
     {
-        var message = new DbgStatusChangedMessage
-        {
-            NewStatus = e
-        };
+        var message = new DbgStatusChangedMessage { NewStatus = e };
 
-        var debugger = (sender as ConfigDebugger);
+        var debugger = sender as ConfigDebugger;
 
         await _hub.Clients.Clients(_connections[debugger!]).SendAsync(
             ConfigDebuggerMethods.StatusChanged, message);
@@ -132,8 +133,7 @@ public sealed class ConfigDebuggerService : IDisposable
         // Right now, only when the status goes back to idle, we
         // update the variables.
         // TODO: In the future it would be nice to update them more often.
-        var varMessage = new DbgVariablesChangedMessage
-        {
+        var varMessage = new DbgVariablesChangedMessage {
             Variables = (sender as ConfigDebugger)!.Options.Variables.Select(MapVariable)
         };
 
@@ -148,16 +148,14 @@ public sealed class ConfigDebuggerService : IDisposable
     }
 
     /// <summary>
-    /// Maps a <see cref="Variable"/> to a <see cref="VariableDto"/>.
+    /// Maps a <see cref="Variable" /> to a <see cref="VariableDto" />.
     /// </summary>
     public static VariableDto MapVariable(Variable v)
-        => new()
-        {
+        => new() {
             Name = v.Name,
             MarkedForCapture = v.MarkedForCapture,
             Type = v.Type,
-            Value = v switch
-            {
+            Value = v switch {
                 StringVariable x => x.AsString(),
                 IntVariable x => x.AsInt(),
                 FloatVariable x => x.AsFloat(),
@@ -170,7 +168,7 @@ public sealed class ConfigDebuggerService : IDisposable
         };
 
     /// <summary>
-    /// Gets an existing <see cref="ConfigDebugger"/> for the given
+    /// Gets an existing <see cref="ConfigDebugger" /> for the given
     /// config or returns null if none was created.
     /// </summary>
     public ConfigDebugger? TryGet(string configId)
@@ -197,11 +195,8 @@ public sealed class ConfigDebuggerService : IDisposable
             }
             catch (Exception ex)
             {
-                var message = new ErrorMessage
-                {
-                    Type = ex.GetType().Name,
-                    Message = ex.Message,
-                    StackTrace = ex.ToString()
+                var message = new ErrorMessage {
+                    Type = ex.GetType().Name, Message = ex.Message, StackTrace = ex.ToString()
                 };
 
                 await _hub.Clients.Clients(_connections[debugger])
@@ -237,8 +232,7 @@ public sealed class ConfigDebuggerService : IDisposable
         }
 
         // Create the new instance
-        var debugger = new ConfigDebugger(config, options)
-        {
+        var debugger = new ConfigDebugger(config, options) {
             PluginRepo = _pluginRepo,
             RandomUAProvider = _randomUAProvider,
             RNGProvider = _rngProvider,
@@ -255,7 +249,7 @@ public sealed class ConfigDebuggerService : IDisposable
         }
         else
         {
-            _connections[debugger] = new();
+            _connections[debugger] = new List<string>();
         }
 
         // Hook the events to the newly created debugger
@@ -265,13 +259,6 @@ public sealed class ConfigDebuggerService : IDisposable
         return debugger;
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-    
     private void Dispose(bool disposing)
     {
         if (disposing)
@@ -282,8 +269,8 @@ public sealed class ConfigDebuggerService : IDisposable
             }
         }
     }
-    
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     ~ConfigDebuggerService()
     {
         Dispose(false);

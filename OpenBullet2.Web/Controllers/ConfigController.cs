@@ -28,11 +28,11 @@ namespace OpenBullet2.Web.Controllers;
 public class ConfigController : ApiController
 {
     private readonly IConfigRepository _configRepo;
-    private readonly PluginRepository _pluginRepository;
     private readonly ConfigService _configService;
+    private readonly ILogger<ConfigController> _logger;
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
-    private readonly ILogger<ConfigController> _logger;
+    private readonly PluginRepository _pluginRepository;
 
     /// <summary></summary>
     public ConfigController(IConfigRepository configRepo,
@@ -66,7 +66,7 @@ public class ConfigController : ApiController
             .OrderByDescending(c => c.Metadata.LastModified);
 
         var dtos = new List<ConfigInfoDto>();
-        
+
         foreach (var config in configs)
         {
             var dto = _mapper.Map<ConfigInfoDto>(config);
@@ -76,7 +76,7 @@ public class ConfigController : ApiController
 
         return dtos;
     }
-    
+
     /// <summary>
     /// Get a config's metadata.
     /// </summary>
@@ -87,7 +87,7 @@ public class ConfigController : ApiController
         var config = GetConfigFromService(id);
         return _mapper.Map<ConfigMetadataDto>(config.Metadata);
     }
-    
+
     /// <summary>
     /// Get a config's info.
     /// </summary>
@@ -110,10 +110,7 @@ public class ConfigController : ApiController
     {
         var config = GetConfigFromService(id);
 
-        return new ConfigReadmeDto
-        {
-            MarkdownText = config.Readme
-        };
+        return new ConfigReadmeDto { MarkdownText = config.Readme };
     }
 
     /// <summary>
@@ -167,7 +164,7 @@ public class ConfigController : ApiController
 
         // Apply the new fields to the existing config
         _mapper.Map(dto, config);
-        
+
         // If the mode is Stack or LoliCode we also have to make sure to
         // update the Stack according to the new LoliCode
         if (config.Mode is ConfigMode.Stack or ConfigMode.LoliCode)
@@ -323,10 +320,7 @@ public class ConfigController : ApiController
 
         _logger.LogInformation("Uploaded {FileCount} configs", files.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = files.Count
-        };
+        return new AffectedEntriesDto { Count = files.Count };
     }
 
     /// <summary>
@@ -341,10 +335,7 @@ public class ConfigController : ApiController
         var converted = Loli2CSharpTranspiler
             .Transpile(dto.LoliCode, _mapper.Map<ConfigSettings>(dto.Settings));
 
-        return new ConvertedCSharpDto
-        {
-            CSharpScript = converted
-        };
+        return new ConvertedCSharpDto { CSharpScript = converted };
     }
 
     /// <summary>
@@ -363,10 +354,7 @@ public class ConfigController : ApiController
         var stack = _mapper.Map<IEnumerable<BlockInstanceDto>>(converted)
             .Cast<object>().ToList();
 
-        return new ConvertedStackDto
-        {
-            Stack = stack
-        };
+        return new ConvertedStackDto { Stack = stack };
     }
 
     /// <summary>
@@ -378,13 +366,10 @@ public class ConfigController : ApiController
     public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
         ConvertStackToLoliCodeDto dto)
     {
-        var mapped = BlockMapper.MapStack(dto.Stack, _mapper);
+        var mapped = dto.Stack.MapStack(_mapper);
         var converted = Stack2LoliTranspiler.Transpile(mapped);
 
-        return new ConvertedLoliCodeDto
-        {
-            LoliCode = converted
-        };
+        return new ConvertedLoliCodeDto { LoliCode = converted };
     }
 
     /// <summary>
@@ -411,7 +396,7 @@ public class ConfigController : ApiController
 
         return config;
     }
-    
+
     /// <summary>
     /// Get the category tree of all the available blocks.
     /// </summary>
@@ -423,7 +408,7 @@ public class ConfigController : ApiController
         var tree = RuriLib.Globals.DescriptorsRepository.AsTree();
         return MapCategoryTreeNode(tree);
     }
-    
+
     /// <summary>
     /// Gets a block instance by id.
     /// </summary>
@@ -433,27 +418,26 @@ public class ConfigController : ApiController
     public ActionResult<object> GetBlockInstance(string id)
     {
         BlockInstance block;
-        
+
         try
         {
-            block = BlockFactory.GetBlock<BlockInstance>(id);   
+            block = BlockFactory.GetBlock<BlockInstance>(id);
         }
         catch (Exception)
         {
             throw new EntryNotFoundException(ErrorCode.InvalidBlockId,
                 id, nameof(RuriLib.Globals.DescriptorsRepository));
         }
-        
+
         // We cast to object to avoid the serializer from
         // serializing the wrong type (base class instead of derived)
         var dto = _mapper.Map<BlockInstanceDto>(block) as object;
-        
+
         return dto;
     }
-    
+
     private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
-        => new() 
-        {
+        => new() {
             Name = node.Name,
             SubCategories = node.SubCategories.Select(MapCategoryTreeNode).ToList(),
             DescriptorIds = node.Descriptors.Select(d => d.Id).ToList()

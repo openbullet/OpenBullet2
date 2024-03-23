@@ -10,7 +10,6 @@ namespace OpenBullet2.Web.Dtos.JobMonitor;
 /// </summary>
 public class TriggerDto : PolyDto
 {
-
 }
 
 /// <summary>
@@ -35,7 +34,6 @@ public class JobStatusTriggerDto : TriggerDto
 [MapsTo(typeof(JobFinishedTrigger))]
 public class JobFinishedTriggerDto : TriggerDto
 {
-
 }
 
 /// <summary>
@@ -95,20 +93,18 @@ public class TimeComparisonTrigger : TriggerDto
 /// Triggers when the elapsed time reaches a given threshold.
 /// </summary>
 [PolyType("timeElapsedTrigger")]
-[MapsFrom(typeof(TimeElapsedTrigger), autoMap: false)]
-[MapsTo(typeof(TimeElapsedTrigger), autoMap: false)]
+[MapsFrom(typeof(TimeElapsedTrigger), false)]
+[MapsTo(typeof(TimeElapsedTrigger), false)]
 public class TimeElapsedTriggerDto : TimeComparisonTrigger
 {
-
 }
 
 /// <summary>
 /// Triggers when the remaining time reaches a given threshold.
 /// </summary>
 [PolyType("timeRemainingTrigger")]
-[MapsFrom(typeof(TimeRemainingTrigger), autoMap: false)]
-[MapsTo(typeof(TimeRemainingTrigger), autoMap: false)]
+[MapsFrom(typeof(TimeRemainingTrigger), false)]
+[MapsTo(typeof(TimeRemainingTrigger), false)]
 public class TimeRemainingTriggerDto : TimeComparisonTrigger
 {
-    
 }

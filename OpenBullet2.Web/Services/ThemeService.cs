@@ -14,7 +14,7 @@ public class ThemeService
 
         Directory.CreateDirectory(_basePath);
     }
-    
+
     /// <summary>
     /// Saves a CSS file.
     /// </summary>
@@ -26,7 +26,7 @@ public class ThemeService
         {
             throw new ArgumentException("File name must end with .css");
         }
-        
+
         var path = Path.Combine(_basePath, fileName);
 
         await using var fs = new FileStream(path, FileMode.Create);
@@ -49,7 +49,7 @@ public class ThemeService
     public async Task<byte[]> GetCssFileAsync(string name)
     {
         var fileName = name + ".css";
-        
+
         var path = Path.Combine(_basePath, fileName);
 
         if (!File.Exists(path))

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace OpenBullet2.Web.Dtos.Config.Convert;
+﻿namespace OpenBullet2.Web.Dtos.Config.Convert;
 
 /// <summary>
 /// DTO used to convert a LoliCode script to a Stack of blocks.

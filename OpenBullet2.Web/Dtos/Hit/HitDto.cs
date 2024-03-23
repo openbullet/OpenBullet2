@@ -66,7 +66,7 @@ public class HitDto
 
     /// <summary>
     /// The name of the wordlist that was used to get the hit, blank if no wordlist was used.
-    /// Needed to identify the name even if the wordlist was deleted. If <see cref="WordlistId"/> is less than -1,
+    /// Needed to identify the name even if the wordlist was deleted. If <see cref="WordlistId" /> is less than -1,
     /// this field contains information about the data pool that was used.
     /// </summary>
     public string WordlistName { get; set; } = string.Empty;

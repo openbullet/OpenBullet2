@@ -7,11 +7,10 @@
 public class ForbiddenException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="ForbiddenException"/> with a message.
+    /// Creates a <see cref="ForbiddenException" /> with a message.
     /// </summary>
-    public ForbiddenException(string errorCode, string message) 
+    public ForbiddenException(string errorCode, string message)
         : base(errorCode, message)
     {
-        
     }
 }

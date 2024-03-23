@@ -22,7 +22,7 @@ static internal class PolyDtoCache
         {
             return;
         }
-        
+
         var polyDtoTypes = assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(PolyDto)));
 
@@ -76,24 +76,28 @@ static internal class PolyDtoCache
     {
         var polyDtoType = typeof(T);
         return _subTypes.TryGetValue(polyDtoType, out var subType)
-            ? subType : Array.Empty<Type>();
+            ? subType
+            : Array.Empty<Type>();
     }
 
     static internal string?[] GetValidPolyTypeNames<T>() where T : PolyDto
         => GetSubTypes<T>().Select(GetPolyTypeNameFromType).ToArray();
 
     static internal string? GetPolyTypeNameFromType(Type subType)
-        => _polyTypeNames.TryGetValue(subType, out var polyType) 
-            ? polyType : null;
+        => _polyTypeNames.TryGetValue(subType, out var polyType)
+            ? polyType
+            : null;
 
     static internal string? GetPolyTypeNameFromType<T>()
         => GetPolyTypeNameFromType(typeof(T));
 
     static internal Type? GetPolyTypeFromName(string polyTypeName)
         => _polyTypes.TryGetValue(polyTypeName, out var type)
-            ? type : null;
+            ? type
+            : null;
 
     static internal Type? GetMapping(Type type)
-    => _mappings.TryGetValue(type, out var mappedType)
-        ? mappedType : null;
+        => _mappings.TryGetValue(type, out var mappedType)
+            ? mappedType
+            : null;
 }

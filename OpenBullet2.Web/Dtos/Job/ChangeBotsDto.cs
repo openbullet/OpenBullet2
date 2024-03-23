@@ -9,7 +9,7 @@ public class ChangeBotsDto
     /// The id of the job.
     /// </summary>
     public int JobId { get; set; }
-    
+
     /// <summary>
     /// The desired number of bots.
     /// </summary>

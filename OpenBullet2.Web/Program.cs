@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
@@ -45,12 +46,13 @@ builder.Services.Configure<FormOptions>(x =>
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
-    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    options.DefaultApiVersion = new ApiVersion(1, 0);
     options.ReportApiVersions = true;
 });
 
 builder.Services.AddControllers()
-    .AddJsonOptions(opts => {
+    .AddJsonOptions(opts =>
+    {
         var enumConverter = new JsonStringEnumConverter(JsonNamingPolicy.CamelCase);
         opts.JsonSerializerOptions.Converters.Add(enumConverter);
     });
@@ -77,7 +79,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty,
-    b => b.MigrationsAssembly("OpenBullet2.Core")));
+        b => b.MigrationsAssembly("OpenBullet2.Core")));
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
@@ -90,7 +92,7 @@ builder.Services.AddScoped<IGuestRepository, DbGuestRepository>();
 builder.Services.AddScoped<IRecordRepository, DbRecordRepository>();
 builder.Services.AddScoped<IWordlistRepository>(service =>
     new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
-    $"{userDataFolder}/Wordlists"));
+        $"{userDataFolder}/Wordlists"));
 
 builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
@@ -103,7 +105,7 @@ builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
-    $"{userDataFolder}/Configs"));
+        $"{userDataFolder}/Configs"));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
@@ -114,7 +116,7 @@ builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<JobManagerService>();
 builder.Services.AddSingleton(service =>
     new JobMonitorService(service.GetService<JobManagerService>(),
-        fileName: $"{userDataFolder}/triggeredActions.json", autoSave: false));
+        $"{userDataFolder}/triggeredActions.json", false));
 builder.Services.AddSingleton<HitStorageService>();
 builder.Services.AddSingleton(_ => new RuriLibSettingsService(userDataFolder));
 builder.Services.AddSingleton(_ => new OpenBulletSettingsService(userDataFolder));
@@ -125,7 +127,7 @@ builder.Services.AddSingleton<IRandomUAProvider>(
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
-    $"{userDataFolder}/Logs/Jobs"));
+        $"{userDataFolder}/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();
@@ -156,7 +158,8 @@ app.UseCors(o => o
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
-    .WithOrigins("http://localhost:4200") // TODO: Make this editable from the config, if not configured get it from the value of --urls
+    .WithOrigins(
+        "http://localhost:4200") // TODO: Make this editable from the config, if not configured get it from the value of --urls
     .WithExposedHeaders("Content-Disposition", "X-Application-Warning")
 );
 
@@ -246,6 +249,5 @@ app.Run();
 /// </summary>
 public partial class Program
 {
-    
 }
 #pragma warning restore S1118

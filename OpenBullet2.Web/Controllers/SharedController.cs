@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Shared;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Services;
+using Endpoint = OpenBullet2.Core.Models.Sharing.Endpoint;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -15,8 +15,8 @@ namespace OpenBullet2.Web.Controllers;
 public class SharedController : ApiController
 {
     private readonly ConfigSharingService _configSharingService;
-    private readonly IMapper _mapper;
     private readonly ILogger<SharedController> _logger;
+    private readonly IMapper _mapper;
 
     /// <summary></summary>
     public SharedController(ConfigSharingService configSharingService,
@@ -56,7 +56,7 @@ public class SharedController : ApiController
                 $"There is already an endpoint with route {dto.Route}");
         }
 
-        var endpoint = _mapper.Map<Core.Models.Sharing.Endpoint>(dto);
+        var endpoint = _mapper.Map<Endpoint>(dto);
         _configSharingService.Endpoints.Add(endpoint);
 
         _configSharingService.Save();

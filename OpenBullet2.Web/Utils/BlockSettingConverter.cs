@@ -6,8 +6,6 @@ namespace OpenBullet2.Web.Utils;
 
 internal class BlockSettingConverter : ITypeConverter<BlockSettingDto, BlockSetting>
 {
-    public BlockSetting Convert(BlockSettingDto source, BlockSetting destination, ResolutionContext context)
-    {
-        return destination;
-    }
+    public BlockSetting Convert(BlockSettingDto source, BlockSetting destination, ResolutionContext context) =>
+        destination;
 }

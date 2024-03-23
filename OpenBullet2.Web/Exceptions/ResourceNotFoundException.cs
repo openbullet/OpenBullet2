@@ -6,18 +6,17 @@
 public class ResourceNotFoundException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="ResourceNotFoundException"/>.
+    /// Creates a <see cref="ResourceNotFoundException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public ResourceNotFoundException(string errorCode, string message) 
+    public ResourceNotFoundException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 
     /// <summary>
-    /// Creates a <see cref="ResourceNotFoundException"/>.
+    /// Creates a <see cref="ResourceNotFoundException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="resource">The resource that was not found</param>
@@ -26,6 +25,5 @@ public class ResourceNotFoundException : ApiException
         string resource, string path) :
         base(errorCode, $"Could not find the resource '{resource}' at {path}")
     {
-
     }
 }

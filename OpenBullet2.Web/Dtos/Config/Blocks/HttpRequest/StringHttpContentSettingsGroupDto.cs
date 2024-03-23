@@ -8,7 +8,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 /// </summary>
 [PolyType("multipartString")]
 [MapsFrom(typeof(StringHttpContentSettingsGroup))]
-[MapsTo(typeof(StringHttpContentSettingsGroup), autoMap: false)]
+[MapsTo(typeof(StringHttpContentSettingsGroup), false)]
 public class StringHttpContentSettingsGroupDto : HttpContentSettingsGroupDto
 {
     /// <summary>

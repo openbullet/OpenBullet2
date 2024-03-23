@@ -7,13 +7,12 @@
 public class RemoteFetchFailedException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="RemoteFetchFailedException"/>.
+    /// Creates a <see cref="RemoteFetchFailedException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
     public RemoteFetchFailedException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 }

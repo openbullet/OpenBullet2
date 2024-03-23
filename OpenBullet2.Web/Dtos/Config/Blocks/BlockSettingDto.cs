@@ -20,7 +20,7 @@ public class BlockSettingDto
 
     /// <summary>
     /// The input variable name, only used if the input mode
-    /// is <see cref="SettingInputMode.Variable"/>.
+    /// is <see cref="SettingInputMode.Variable" />.
     /// </summary>
     public string? InputVariableName { get; set; }
 

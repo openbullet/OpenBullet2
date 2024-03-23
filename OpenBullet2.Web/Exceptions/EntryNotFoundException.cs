@@ -6,18 +6,17 @@
 public class EntryNotFoundException : ApiException
 {
     /// <summary>
-    /// Creates an <see cref="EntryNotFoundException"/>.
+    /// Creates an <see cref="EntryNotFoundException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
     public EntryNotFoundException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 
     /// <summary>
-    /// Creates an <see cref="EntryNotFoundException"/>.
+    /// Creates an <see cref="EntryNotFoundException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="id">The id of the entry that was not found</param>
@@ -25,6 +24,5 @@ public class EntryNotFoundException : ApiException
     public EntryNotFoundException(string errorCode, object id, string collection)
         : base(errorCode, $"The requested entry with id {id} was not found in the collection {collection}")
     {
-
     }
 }

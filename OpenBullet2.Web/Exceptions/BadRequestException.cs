@@ -6,11 +6,11 @@
 public class BadRequestException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="BadRequestException"/>.
+    /// Creates a <see cref="BadRequestException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
-    public BadRequestException(string errorCode, string message) 
+    public BadRequestException(string errorCode, string message)
         : base(errorCode, message)
     {
     }

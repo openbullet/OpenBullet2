@@ -16,7 +16,9 @@ public class UpdateGuestInfoDto
     /// <summary>
     /// The username the guest user will use to log in.
     /// </summary>
-    [Required, MinLength(3), MaxLength(32)]
+    [Required]
+    [MinLength(3)]
+    [MaxLength(32)]
     public string Username { get; set; } = string.Empty;
 
     /// <summary>

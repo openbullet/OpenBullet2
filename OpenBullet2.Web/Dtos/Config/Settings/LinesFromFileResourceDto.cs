@@ -21,7 +21,7 @@ public class LinesFromFileResourceDto
     public string Location { get; set; } = string.Empty;
 
     /// <summary>
-    /// Whether to go back to the start of the file if there are 
+    /// Whether to go back to the start of the file if there are
     /// no more lines to read.
     /// </summary>
     public bool LoopsAround { get; set; } = true;

@@ -17,9 +17,9 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class UserController : ApiController
 {
-    private readonly OpenBulletSettingsService _obSettingsService;
     private readonly IAuthTokenService _authService;
     private readonly IGuestRepository _guestRepo;
+    private readonly OpenBulletSettingsService _obSettingsService;
 
     /// <summary></summary>
     public UserController(OpenBulletSettingsService obSettingsService,
@@ -39,11 +39,12 @@ public class UserController : ApiController
     public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto)
     {
         // Admin user
-        if (string.Equals(_obSettingsService.Settings.SecuritySettings.AdminUsername, dto.Username, StringComparison.CurrentCultureIgnoreCase))
+        if (string.Equals(_obSettingsService.Settings.SecuritySettings.AdminUsername, dto.Username,
+                StringComparison.CurrentCultureIgnoreCase))
         {
             return await LoginAdminUser(dto);
         }
-        
+
         // Guest
         return await LoginGuestUser(dto);
     }
@@ -60,20 +61,15 @@ public class UserController : ApiController
                 "Invalid username or password");
         }
 
-        var claims = new[]
-        {
+        var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
-            new Claim(ClaimTypes.Name, dto.Username),
-            new Claim(ClaimTypes.Role, "Admin")
+            new Claim(ClaimTypes.Name, dto.Username), new Claim(ClaimTypes.Role, "Admin")
         };
 
         var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
         var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
 
-        return Task.FromResult(new LoggedInUserDto
-        {
-            Token = token
-        });
+        return Task.FromResult(new LoggedInUserDto { Token = token });
     }
 
     private async Task<LoggedInUserDto> LoginGuestUser(UserLoginDto dto)
@@ -105,10 +101,11 @@ public class UserController : ApiController
         {
             ip = ip.MapToIPv4();
         }
-        
+
         if (entity.AllowedAddresses.Length > 0)
         {
-            var isValid = await Firewall.CheckIpValidityAsync(ip, entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            var isValid = await Firewall.CheckIpValidityAsync(ip,
+                entity.AllowedAddresses.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             if (!isValid)
             {
@@ -117,11 +114,9 @@ public class UserController : ApiController
             }
         }
 
-        var claims = new[]
-        {
+        var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, entity.Id.ToString(), ClaimValueTypes.Integer),
-            new Claim(ClaimTypes.Name, dto.Username),
-            new Claim(ClaimTypes.Role, "Guest"),
+            new Claim(ClaimTypes.Name, dto.Username), new Claim(ClaimTypes.Role, "Guest"),
             new Claim("IPAtLogin", ip.ToString())
         };
 
@@ -133,9 +128,6 @@ public class UserController : ApiController
         var token = _authService.GenerateToken(claims,
             accessExpiration < lifetimeSpan ? accessExpiration : lifetimeSpan);
 
-        return new LoggedInUserDto
-        {
-            Token = token
-        };
+        return new LoggedInUserDto { Token = token };
     }
 }

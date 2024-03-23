@@ -16,9 +16,8 @@ static internal class EventHandlers
 
     public static EventHandler<TArgs> TryAsync<TArgs>(
         Func<object?, TArgs, Task> callback,
-        Func<Exception, Task> errorHandler)
-    {
-        return new EventHandler<TArgs>(async (object? s, TArgs e) =>
+        Func<Exception, Task> errorHandler) =>
+        async (s, e) =>
         {
             try
             {
@@ -28,14 +27,12 @@ static internal class EventHandlers
             {
                 await errorHandler.Invoke(ex);
             }
-        });
-    }
+        };
 
     public static EventHandler TryAsync(
         Func<object?, EventArgs, Task> callback,
-        Func<Exception, Task> errorHandler)
-    {
-        return new EventHandler(async (object? s, EventArgs e) =>
+        Func<Exception, Task> errorHandler) =>
+        async (s, e) =>
         {
             try
             {
@@ -45,6 +42,5 @@ static internal class EventHandlers
             {
                 await errorHandler.Invoke(ex);
             }
-        });
-    }
+        };
 }

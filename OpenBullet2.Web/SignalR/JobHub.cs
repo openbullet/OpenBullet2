@@ -18,12 +18,12 @@ public abstract class JobHub : AuthorizedHub
     protected JobHub(IAuthTokenService tokenService,
         ILogger logger, IJobService jobService,
         OpenBulletSettingsService obSettingsService)
-        : base(tokenService, obSettingsService, onlyAdmin: false)
+        : base(tokenService, obSettingsService, false)
     {
         _jobService = jobService;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
@@ -42,7 +42,7 @@ public abstract class JobHub : AuthorizedHub
         _jobService.RegisterConnection(Context.ConnectionId, (int)jobId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);

@@ -9,9 +9,9 @@ public class RecentHitsDto
     /// The dates on the x axis.
     /// </summary>
     public IEnumerable<DateTime> Dates { get; set; } = Array.Empty<DateTime>();
-    
+
     /// <summary>
     /// The time-series for each config.
     /// </summary>
-    public Dictionary<string, List<int>> Hits { get; set; } = new(); 
+    public Dictionary<string, List<int>> Hits { get; set; } = new();
 }

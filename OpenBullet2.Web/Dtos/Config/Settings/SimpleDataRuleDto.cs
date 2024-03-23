@@ -11,7 +11,8 @@ public class SimpleDataRuleDto
     /// <summary>
     /// The name of the slice that should be checked.
     /// </summary>
-    [Required, MinLength(1)]
+    [Required]
+    [MinLength(1)]
     public string SliceName { get; set; } = string.Empty;
 
     /// <summary>

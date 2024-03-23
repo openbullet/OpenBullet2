@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 /// </summary>
 public class HitOutputOptionsDto : PolyDto
 {
-
 }
 
 /// <summary>
@@ -19,7 +18,6 @@ public class HitOutputOptionsDto : PolyDto
 [MapsTo(typeof(DatabaseHitOutputOptions))]
 public class DatabaseHitOutputOptionsDto : HitOutputOptionsDto
 {
-
 }
 
 /// <summary>

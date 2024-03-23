@@ -7,13 +7,12 @@
 public class ResourceInUseException : ApiException
 {
     /// <summary>
-    /// Creates a <see cref="ResourceInUseException"/>.
+    /// Creates a <see cref="ResourceInUseException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
     public ResourceInUseException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 }

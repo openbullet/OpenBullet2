@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
 /// </summary>
 public class ProxyCheckOutputOptionsDto : PolyDto
 {
-
 }
 
 /// <summary>
@@ -19,5 +18,4 @@ public class ProxyCheckOutputOptionsDto : PolyDto
 [MapsTo(typeof(DatabaseProxyCheckOutputOptions))]
 public class DatabaseProxyCheckOutputOptionsDto : ProxyCheckOutputOptionsDto
 {
-
 }

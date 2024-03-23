@@ -8,7 +8,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 /// </summary>
 [PolyType("rawRequestParams")]
 [MapsFrom(typeof(RawRequestParams))]
-[MapsTo(typeof(RawRequestParams), autoMap: false)]
+[MapsTo(typeof(RawRequestParams), false)]
 public class RawRequestParamsDto : RequestParamsDto
 {
     /// <summary>

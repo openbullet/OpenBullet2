@@ -8,8 +8,8 @@ namespace OpenBullet2.Web.Utils;
 
 internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 {
-    private readonly IApiVersionDescriptionProvider _provider;
     private readonly IHostEnvironment _hostEnvironment;
+    private readonly IApiVersionDescriptionProvider _provider;
 
     public ConfigureSwaggerOptions(
         IApiVersionDescriptionProvider provider,
@@ -39,17 +39,13 @@ internal class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOption
         }
     }
 
-    public void Configure(string? name, SwaggerGenOptions options) 
+    public void Configure(string? name, SwaggerGenOptions options)
         => Configure(options);
 
     private static OpenApiInfo CreateVersionInfo(
-            ApiVersionDescription description)
+        ApiVersionDescription description)
     {
-        var info = new OpenApiInfo()
-        {
-            Title = "OpenBullet 2 API",
-            Version = description.ApiVersion.ToString()
-        };
+        var info = new OpenApiInfo { Title = "OpenBullet 2 API", Version = description.ApiVersion.ToString() };
 
         if (description.IsDeprecated)
         {

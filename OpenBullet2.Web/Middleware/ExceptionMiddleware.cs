@@ -7,12 +7,11 @@ namespace OpenBullet2.Web.Middleware;
 
 internal class ExceptionMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly JsonSerializerOptions _jsonSerializerOptions =
+        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
     private readonly ILogger<ExceptionMiddleware> _logger;
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-        PropertyNamingPolicy= JsonNamingPolicy.CamelCase
-    };
+    private readonly RequestDelegate _next;
 
     public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
@@ -55,14 +54,14 @@ internal class ExceptionMiddleware
             _logger.LogError(ex, "Generic exception");
             await RespondAsync(context,
                 new ApiError(ErrorCode.InternalServerError, ex.Message,
-                ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
+                    ex.StackTrace?.Trim()), HttpStatusCode.InternalServerError);
         }
     }
 
     private async Task RespondAsync(HttpContext context, ApiError error,
         HttpStatusCode statusCode)
     {
-        context.Response.ContentType= "application/json";
+        context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
         await context.Response.WriteAsync(

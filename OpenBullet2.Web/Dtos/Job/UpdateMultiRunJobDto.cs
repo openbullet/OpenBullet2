@@ -57,8 +57,8 @@ public class UpdateMultiRunJobDto
     public NoValidProxyBehaviour NoValidProxyBehaviour { get; set; } = NoValidProxyBehaviour.Reload;
 
     /// <summary>
-    /// How long should proxies be banned for. ONLY use this when <see cref="NoValidProxyBehaviour"/>
-    /// is set to <see cref="NoValidProxyBehaviour.Unban"/>.
+    /// How long should proxies be banned for. ONLY use this when <see cref="NoValidProxyBehaviour" />
+    /// is set to <see cref="NoValidProxyBehaviour.Unban" />.
     /// </summary>
     public int ProxyBanTimeSeconds { get; set; } = 0;
 
@@ -81,7 +81,7 @@ public class UpdateMultiRunJobDto
     /// <summary>
     /// The amount of seconds that the pool will wait before reloading all proxies from the sources (periodically).
     /// Set it to 0 to disable this behaviour and only allow the pool to reload proxies when all are banned according
-    /// to the value of <see cref="NoValidProxyBehaviour"/>.
+    /// to the value of <see cref="NoValidProxyBehaviour" />.
     /// </summary>
     public int PeriodicReloadIntervalSeconds { get; set; } = 0;
 

@@ -15,19 +15,19 @@ public class SystemPerformanceHub : AuthorizedHub
     public SystemPerformanceHub(IAuthTokenService tokenService,
         OpenBulletSettingsService obSettingsService,
         PerformanceMonitorService performanceMonitorService)
-        :base(tokenService, obSettingsService, onlyAdmin: false)
+        : base(tokenService, obSettingsService, false)
     {
         _performanceMonitorService = performanceMonitorService;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
         await _performanceMonitorService.RegisterConnectionAsync(Context.ConnectionId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnDisconnectedAsync(Exception? exception)
     {
         await base.OnDisconnectedAsync(exception);

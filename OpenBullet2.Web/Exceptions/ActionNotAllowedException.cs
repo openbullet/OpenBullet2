@@ -6,13 +6,12 @@
 public class ActionNotAllowedException : ApiException
 {
     /// <summary>
-    /// Creates an <see cref="ActionNotAllowedException"/>.
+    /// Creates an <see cref="ActionNotAllowedException" />.
     /// </summary>
     /// <param name="errorCode">The error code</param>
     /// <param name="message">The error message</param>
     public ActionNotAllowedException(string errorCode, string message)
         : base(errorCode, message)
     {
-
     }
 }

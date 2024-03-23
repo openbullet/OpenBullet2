@@ -2,16 +2,14 @@
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace OpenBullet2.Web.Exceptions;
 
 internal class AuthTokenVerificationMiddleware
 {
+    private readonly IAuthTokenService _authTokenService;
     private readonly RequestDelegate _next;
     private readonly OpenBulletSettingsService _obSettingsService;
-    private readonly IAuthTokenService _authTokenService;
 
     public AuthTokenVerificationMiddleware(RequestDelegate next,
         OpenBulletSettingsService obSettingsService,
@@ -27,11 +25,8 @@ internal class AuthTokenVerificationMiddleware
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
         {
-            var apiUser = new ApiUser
-            {
-                Id = -1,
-                Role = UserRole.Admin,
-                Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
+            var apiUser = new ApiUser {
+                Id = -1, Role = UserRole.Admin, Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
             };
 
             context.SetApiUser(apiUser);

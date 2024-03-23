@@ -5,5 +5,5 @@
 /// </summary>
 public class MrjStartRequest
 {
-    Dictionary<string, string> CustomInputAnswers { get; set; } = new();
+    private Dictionary<string, string> CustomInputAnswers { get; set; } = new();
 }

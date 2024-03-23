@@ -5,7 +5,7 @@ namespace OpenBullet2.Web.Dtos;
 
 /// <summary>
 /// Base type for polymorphic classes that can be decorated with
-/// a <see cref="PolyTypeAttribute"/> for type discrimination
+/// a <see cref="PolyTypeAttribute" /> for type discrimination
 /// during (de)serialization.
 /// </summary>
 public class PolyDto

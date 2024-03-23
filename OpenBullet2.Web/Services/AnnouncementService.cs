@@ -9,12 +9,7 @@ namespace OpenBullet2.Web.Services;
 public class AnnouncementService : IAnnouncementService
 {
     private readonly ILogger<AnnouncementService> _logger;
-
-    private sealed record CachedAnnouncement(string Content, DateTime LastFetch);
     private CachedAnnouncement? _cached;
-
-    /// <inheritdoc/>
-    public DateTime? LastFetched => _cached?.LastFetch;
 
     /// <summary></summary>
     public AnnouncementService(ILogger<AnnouncementService> logger)
@@ -22,7 +17,10 @@ public class AnnouncementService : IAnnouncementService
         _logger = logger;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public DateTime? LastFetched => _cached?.LastFetch;
+
+    /// <inheritdoc />
     public async Task<string> FetchAnnouncementAsync()
     {
         var isDebug = false;
@@ -36,38 +34,40 @@ public class AnnouncementService : IAnnouncementService
 #pragma warning restore S2583
         {
             await Task.Delay(1);
-            return "This is a **test** `message`"; // Change this to some valid markdown string to test announcements in debug mode
+            return
+                "This is a **test** `message`"; // Change this to some valid markdown string to test announcements in debug mode
         }
-        else
+
+        // If the cache doesn't exist or is more than 3 hours old, fetch from the web
+        if (_cached is null || DateTime.Now > _cached.LastFetch + TimeSpan.FromHours(3))
         {
-            // If the cache doesn't exist or is more than 3 hours old, fetch from the web
-            if (_cached is null || DateTime.Now > _cached.LastFetch + TimeSpan.FromHours(3))
+            try
             {
-                try
-                {
-                    // For now, we point it to the english announcement, if later
-                    // on we decide to implement localization we need to change this.
-                    var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/en.md";
-                    using HttpClient client = new();
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-                    using var response = await client.GetAsync(url);
+                // For now, we point it to the english announcement, if later
+                // on we decide to implement localization we need to change this.
+                var url = "https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/en.md";
+                using HttpClient client = new();
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+                using var response = await client.GetAsync(url);
 
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        _logger.LogError("Could not load the announcement: {StatusCode}", response.StatusCode);
-                        return "Could not load the announcement... are you offline?";
-                    }
-
-                    _cached = new(await response.Content.ReadAsStringAsync(), DateTime.Now);
-                }
-                catch (Exception ex)
+                if (!response.IsSuccessStatusCode)
                 {
-                    _logger.LogError(ex, "Could not load the announcement");
+                    _logger.LogError("Could not load the announcement: {StatusCode}", response.StatusCode);
                     return "Could not load the announcement... are you offline?";
                 }
-            }
 
-            return _cached.Content;
+                _cached = new CachedAnnouncement(await response.Content.ReadAsStringAsync(), DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not load the announcement");
+                return "Could not load the announcement... are you offline?";
+            }
         }
+
+        return _cached.Content;
     }
+
+    private sealed record CachedAnnouncement(string Content, DateTime LastFetch);
 }

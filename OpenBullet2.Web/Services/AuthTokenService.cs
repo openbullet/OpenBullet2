@@ -14,13 +14,13 @@ public class AuthTokenService : IAuthTokenService
 {
     private readonly OpenBulletSettingsService _obSettingsService;
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public AuthTokenService(OpenBulletSettingsService obSettingsService)
     {
         _obSettingsService = obSettingsService;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public string GenerateToken(IEnumerable<Claim> claims, TimeSpan lifetime)
     {
         var key = new SymmetricSecurityKey(_obSettingsService.Settings.SecuritySettings.JwtKey);
@@ -32,13 +32,12 @@ public class AuthTokenService : IAuthTokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public JwtSecurityToken ValidateToken(string token)
     {
         var key = new SymmetricSecurityKey(_obSettingsService.Settings.SecuritySettings.JwtKey);
         var handler = new JwtSecurityTokenHandler();
-        var handlerParams = new TokenValidationParameters
-        {
+        var handlerParams = new TokenValidationParameters {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
             ValidateIssuer = false,

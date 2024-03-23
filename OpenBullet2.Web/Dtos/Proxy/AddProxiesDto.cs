@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace OpenBullet2.Web.Dtos.Proxy;
 
 /// <summary>
-/// DTO that contains information about proxies that need to be 
+/// DTO that contains information about proxies that need to be
 /// saved and added to a group.
 /// </summary>
 public class AddProxiesDto
 {
     /// <summary>
-    /// The proxy type to use when not specified in the string, 
+    /// The proxy type to use when not specified in the string,
     /// http by default.
     /// </summary>
     public ProxyType DefaultType { get; set; } = ProxyType.Http;

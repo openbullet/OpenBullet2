@@ -5,6 +5,17 @@
 /// </summary>
 public class ErrorMessage
 {
+    /// <summary></summary>
+    public ErrorMessage(string message)
+    {
+        Message = message;
+    }
+
+    /// <summary></summary>
+    public ErrorMessage()
+    {
+    }
+
     /// <summary>
     /// The error type.
     /// </summary>
@@ -19,16 +30,4 @@ public class ErrorMessage
     /// The full stack trace of the exception.
     /// </summary>
     public string StackTrace { get; set; } = string.Empty;
-
-    /// <summary></summary>
-    public ErrorMessage(string message)
-    {
-        Message = message;
-    }
-
-    /// <summary></summary>
-    public ErrorMessage()
-    {
-        
-    }
 }

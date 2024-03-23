@@ -20,21 +20,20 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public sealed class ProxyCheckJobService : IJobService, IDisposable
 {
-    private readonly JobManagerService _jobManager;
-    private readonly IHubContext<ProxyCheckJobHub> _hub;
-    private readonly ILogger<ProxyCheckJobService> _logger;
-
     // Maps jobs to connections
     private readonly Dictionary<ProxyCheckJob, List<string>> _connections = new();
+    private readonly IHubContext<ProxyCheckJobHub> _hub;
+    private readonly JobManagerService _jobManager;
+    private readonly ILogger<ProxyCheckJobService> _logger;
+    private readonly EventHandler _onBotsChanged;
+    private readonly EventHandler _onCompleted;
+    private readonly EventHandler<Exception> _onError;
+    private readonly EventHandler<ResultDetails<ProxyCheckInput, Proxy>> _onResult;
 
     // Event handlers
     private readonly EventHandler<JobStatus> _onStatusChanged;
-    private readonly EventHandler _onCompleted;
-    private readonly EventHandler<Exception> _onError;
     private readonly EventHandler<ErrorDetails<ProxyCheckInput>> _onTaskError;
-    private readonly EventHandler<ResultDetails<ProxyCheckInput, Proxy>> _onResult;
     private readonly EventHandler _onTimerTick;
-    private readonly EventHandler _onBotsChanged;
 
     /// <summary></summary>
     public ProxyCheckJobService(JobManagerService jobManager,
@@ -73,14 +72,21 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
             OnTimerTickAsync,
             SendErrorAsync
         );
-        
+
         _onBotsChanged = EventHandlers.TryAsync(
             OnBotsChangedAsync,
             SendErrorAsync
         );
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc />
     public void RegisterConnection(string connectionId, int jobId)
     {
         var job = _jobManager.Jobs.FirstOrDefault(j => j.Id == jobId);
@@ -99,7 +105,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
 
         if (!_connections.ContainsKey(pcJob))
         {
-            _connections[pcJob] = new();
+            _connections[pcJob] = new List<string>();
 
             // Hook the event handlers to the job
             pcJob.OnStatusChanged += _onStatusChanged;
@@ -118,7 +124,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
             connectionId, jobId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void UnregisterConnection(string connectionId, int jobId)
     {
         var job = (ProxyCheckJob)_jobManager.Jobs.First(j => j.Id == jobId);
@@ -129,7 +135,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
             connectionId, jobId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Start(int jobId)
     {
         var job = GetJob(jobId);
@@ -137,13 +143,14 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Start().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not start job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Stop(int jobId)
     {
         var job = GetJob(jobId);
@@ -151,13 +158,14 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Stop().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not stop job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Abort(int jobId)
     {
         var job = GetJob(jobId);
@@ -165,13 +173,14 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Abort().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not abort job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Pause(int jobId)
     {
         var job = GetJob(jobId);
@@ -179,13 +188,14 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Pause().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not pause job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Resume(int jobId)
     {
         var job = GetJob(jobId);
@@ -193,20 +203,21 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Resume().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not resume job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void SkipWait(int jobId)
     {
         var job = GetJob(jobId);
         job.SkipWait();
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void ChangeBots(int jobId, ChangeBotsMessage message)
     {
         var job = GetJob(jobId);
@@ -225,10 +236,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
 
     private async Task OnStatusChangedAsync(object? sender, JobStatus e)
     {
-        var message = new JobStatusChangedMessage
-        {
-            NewStatus = e
-        };
+        var message = new JobStatusChangedMessage { NewStatus = e };
 
         await NotifyClientsAsync(sender, message, JobMethods.StatusChanged);
     }
@@ -242,23 +250,15 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
 
     private async Task OnErrorAsync(object? sender, Exception e)
     {
-        var message = new ErrorMessage
-        {
-            Type = e.GetType().Name,
-            Message = e.Message,
-            StackTrace = e.ToString()
-        };
+        var message = new ErrorMessage { Type = e.GetType().Name, Message = e.Message, StackTrace = e.ToString() };
 
         await NotifyClientsAsync(sender, message, CommonMethods.Error);
     }
-    
+
     private async Task OnTaskErrorAsync(object? sender, ErrorDetails<ProxyCheckInput> e)
     {
-        var message = new PcjTaskErrorMessage
-        {
-            ProxyHost = e.Item.Proxy.Host,
-            ProxyPort = e.Item.Proxy.Port,
-            ErrorMessage = e.Exception.Message
+        var message = new PcjTaskErrorMessage {
+            ProxyHost = e.Item.Proxy.Host, ProxyPort = e.Item.Proxy.Port, ErrorMessage = e.Exception.Message
         };
 
         await NotifyClientsAsync(sender, message, JobMethods.TaskError);
@@ -266,8 +266,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
 
     private async Task OnResultAsync(object? sender, ResultDetails<ProxyCheckInput, Proxy> e)
     {
-        var message = new PcjNewResultMessage
-        {
+        var message = new PcjNewResultMessage {
             ProxyHost = e.Result.Host,
             ProxyPort = e.Result.Port,
             WorkingStatus = e.Result.WorkingStatus,
@@ -282,8 +281,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
     {
         var job = (sender as ProxyCheckJob)!;
 
-        var message = new PcjStatsMessage
-        {
+        var message = new PcjStatsMessage {
             Tested = job.Tested,
             Working = job.Working,
             NotWorking = job.NotWorking,
@@ -295,15 +293,12 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
 
         await NotifyClientsAsync(sender, message, JobMethods.TimerTick);
     }
-    
+
     private async Task OnBotsChangedAsync(object? sender, EventArgs e)
     {
         var job = (sender as ProxyCheckJob)!;
 
-        var message = new BotsChangedMessage
-        {
-            NewValue = job.Bots
-        };
+        var message = new BotsChangedMessage { NewValue = job.Bots };
 
         await NotifyClientsAsync(sender, message, JobMethods.BotsChanged);
     }
@@ -311,7 +306,7 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
     private async Task NotifyClientsAsync(object? sender, object message,
         string method)
     {
-        var job = (sender as ProxyCheckJob);
+        var job = sender as ProxyCheckJob;
 
         await _hub.Clients.Clients(_connections[job!]).SendAsync(
             method, message);
@@ -323,13 +318,6 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
         return Task.CompletedTask;
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-    
     private void Dispose(bool disposing)
     {
         if (disposing)
@@ -345,8 +333,8 @@ public sealed class ProxyCheckJobService : IJobService, IDisposable
             }
         }
     }
-    
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     ~ProxyCheckJobService()
     {
         Dispose(false);

@@ -18,9 +18,9 @@ namespace OpenBullet2.Web.Controllers;
 public class GuestController : ApiController
 {
     private readonly IGuestRepository _guestRepo;
+    private readonly ILogger<GuestController> _logger;
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
-    private readonly ILogger<GuestController> _logger;
 
     /// <summary></summary>
     public GuestController(IGuestRepository guestRepo, IMapper mapper,
@@ -48,7 +48,7 @@ public class GuestController : ApiController
             throw new BadRequestException(ErrorCode.UsernameTaken,
                 $"A guest user with the username {dto.Username} already exists");
         }
-        
+
         // Also make sure the admin is not using the same username
         if (_obSettingsService.Settings.SecuritySettings.AdminUsername == dto.Username)
         {
@@ -73,7 +73,7 @@ public class GuestController : ApiController
     public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto)
     {
         var entity = await GetEntityAsync(dto.Id);
-        
+
         // If the username was changed, make sure it's not taken
         if (entity.Username != dto.Username)
         {
@@ -85,7 +85,7 @@ public class GuestController : ApiController
                 throw new BadRequestException(ErrorCode.UsernameTaken,
                     $"A guest user with the username {dto.Username} already exists");
             }
-            
+
             // Also make sure the admin is not using the same username
             if (_obSettingsService.Settings.SecuritySettings.AdminUsername == dto.Username)
             {

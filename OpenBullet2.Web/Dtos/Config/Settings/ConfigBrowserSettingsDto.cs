@@ -15,7 +15,7 @@ public class ConfigBrowserSettingsDto
     /// Whether to launch the browser in headless mode.
     /// </summary>
     public bool Headless { get; set; } = true;
-    
+
     /// <summary>
     /// The extra command line arguments to pass to the browser's executable
     /// when opening a new browser.

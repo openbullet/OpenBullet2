@@ -25,10 +25,10 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class HitController : ApiController
 {
-    private readonly IHitRepository _hitRepo;
     private readonly IGuestRepository _guestRepo;
-    private readonly IMapper _mapper;
+    private readonly IHitRepository _hitRepo;
     private readonly ILogger<HitController> _logger;
+    private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
 
     /// <summary></summary>
@@ -106,7 +106,7 @@ public class HitController : ApiController
 
         var outputHits = string.Join(Environment.NewLine,
             hits.Select(h => FormatHit(h, format)));
-        
+
         var bytes = Encoding.UTF8.GetBytes(outputHits);
         return File(bytes, "text/plain", "hits.txt");
     }
@@ -164,10 +164,7 @@ public class HitController : ApiController
 
         _logger.LogInformation("Deleted {HitCount} hits", toDelete.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = toDelete.Count
-        };
+        return new AffectedEntriesDto { Count = toDelete.Count };
     }
 
     /// <summary>
@@ -189,16 +186,13 @@ public class HitController : ApiController
             .GroupBy(h => h.GetHashCode(_obSettingsService.Settings.GeneralSettings.IgnoreWordlistNameOnHitsDedupe))
             .Where(g => g.Count() > 1)
             .SelectMany(g => g.OrderBy(h => h.Date)
-            .Reverse().Skip(1)).ToList();
+                .Reverse().Skip(1)).ToList();
 
         await _hitRepo.DeleteAsync(duplicates);
 
         _logger.LogInformation("Deleted {HitCount} duplicate hits", duplicates.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = duplicates.Count
-        };
+        return new AffectedEntriesDto { Count = duplicates.Count };
     }
 
     /// <summary>
@@ -218,12 +212,9 @@ public class HitController : ApiController
 
         _logger.LogWarning("Purged {Count} hits from the database!", count);
 
-        return new AffectedEntriesDto
-        {
-            Count = count
-        };
+        return new AffectedEntriesDto { Count = count };
     }
-    
+
     /// <summary>
     /// Get stats about recent hits.
     /// </summary>
@@ -239,12 +230,12 @@ public class HitController : ApiController
             : _hitRepo.GetAll()
                 .Where(h => h.OwnerId == apiUser.Id)
                 .Where(h => h.Type == "SUCCESS");
-        
+
         var dates = Enumerable.Range(0, days)
             .Select(i => DateTime.Now.Date.AddDays(-i))
             .Reverse()
             .ToList();
-        
+
         // First of all, get the distinct names of the configs
         // that have hits in the last N days
         var configNames = await query
@@ -255,34 +246,30 @@ public class HitController : ApiController
 
         // For each config, get the number of hits for each day
         var hits = new Dictionary<string, List<int>>();
-        
+
         foreach (var configName in configNames)
         {
             var configHits = new List<int>();
-            
+
             foreach (var date in dates)
             {
                 var dailyHits = await query
                     .Where(h => h.ConfigName == configName && h.Date.Date == date)
                     .CountAsync();
-                
+
                 configHits.Add(dailyHits);
             }
 
             hits.Add(configName, configHits);
         }
-        
+
         // If there are no hits, return an empty response
         if (hits.Count == 0)
         {
             return new RecentHitsDto();
         }
 
-        return new RecentHitsDto
-        {
-            Dates = dates,
-            Hits = hits
-        };
+        return new RecentHitsDto { Dates = dates, Hits = hits };
     }
 
     private IQueryable<HitEntity> FilteredQuery(HitFiltersDto dto)

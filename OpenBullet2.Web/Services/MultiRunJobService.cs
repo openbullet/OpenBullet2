@@ -19,22 +19,21 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public sealed class MultiRunJobService : IJobService, IDisposable
 {
-    private readonly JobManagerService _jobManager;
-    private readonly IHubContext<MultiRunJobHub> _hub;
-    private readonly ILogger<MultiRunJobService> _logger;
-
     // Maps jobs to connections
     private readonly Dictionary<MultiRunJob, List<string>> _connections = new();
+    private readonly IHubContext<MultiRunJobHub> _hub;
+    private readonly JobManagerService _jobManager;
+    private readonly ILogger<MultiRunJobService> _logger;
+    private readonly EventHandler _onBotsChanged;
+    private readonly EventHandler _onCompleted;
+    private readonly EventHandler<Exception> _onError;
+    private readonly EventHandler<Hit> _onHit;
+    private readonly EventHandler<ResultDetails<MultiRunInput, CheckResult>> _onResult;
 
     // Event handlers
     private readonly EventHandler<JobStatus> _onStatusChanged;
-    private readonly EventHandler _onCompleted;
-    private readonly EventHandler<Exception> _onError;
     private readonly EventHandler<ErrorDetails<MultiRunInput>> _onTaskError;
-    private readonly EventHandler<ResultDetails<MultiRunInput, CheckResult>> _onResult;
     private readonly EventHandler _onTimerTick;
-    private readonly EventHandler<Hit> _onHit;
-    private readonly EventHandler _onBotsChanged;
 
     /// <summary></summary>
     public MultiRunJobService(JobManagerService jobManager,
@@ -85,7 +84,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         );
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <inheritdoc />
     public void RegisterConnection(string connectionId, int jobId)
     {
         var job = _jobManager.Jobs.FirstOrDefault(j => j.Id == jobId);
@@ -104,7 +110,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
         if (!_connections.ContainsKey(mrJob))
         {
-            _connections[mrJob] = new();
+            _connections[mrJob] = new List<string>();
 
             // Hook the event handlers to the job
             mrJob.OnStatusChanged += _onStatusChanged;
@@ -124,7 +130,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             connectionId, jobId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void UnregisterConnection(string connectionId, int jobId)
     {
         var job = (MultiRunJob)_jobManager.Jobs.First(j => j.Id == jobId);
@@ -135,7 +141,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             connectionId, jobId);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Start(int jobId)
     {
         var job = GetJob(jobId);
@@ -143,13 +149,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Start().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not start job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Stop(int jobId)
     {
         var job = GetJob(jobId);
@@ -157,13 +164,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Stop().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not stop job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Abort(int jobId)
     {
         var job = GetJob(jobId);
@@ -171,13 +179,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Abort().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not abort job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Pause(int jobId)
     {
         var job = GetJob(jobId);
@@ -185,13 +194,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Pause().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not pause job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void Resume(int jobId)
     {
         var job = GetJob(jobId);
@@ -199,20 +209,21 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         // We can only do a closure on this logger because this
         // service is a singleton!!!
         job.Resume().Forget(
-            async ex => {
+            async ex =>
+            {
                 _logger.LogError(ex, "Could not resume job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public void SkipWait(int jobId)
     {
         var job = GetJob(jobId);
         job.SkipWait();
     }
-    
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     public void ChangeBots(int jobId, ChangeBotsMessage message)
     {
         var job = GetJob(jobId);
@@ -231,10 +242,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnStatusChangedAsync(object? sender, JobStatus e)
     {
-        var message = new JobStatusChangedMessage
-        {
-            NewStatus = e
-        };
+        var message = new JobStatusChangedMessage { NewStatus = e };
 
         await NotifyClientsAsync(sender, message, JobMethods.StatusChanged);
     }
@@ -248,26 +256,18 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnErrorAsync(object? sender, Exception e)
     {
-        var message = new ErrorMessage
-        {
-            Type = e.GetType().Name,
-            Message = e.Message,
-            StackTrace = e.ToString()
-        };
+        var message = new ErrorMessage { Type = e.GetType().Name, Message = e.Message, StackTrace = e.ToString() };
 
         await NotifyClientsAsync(sender, message, CommonMethods.Error);
     }
 
     private async Task OnTaskErrorAsync(object? sender, ErrorDetails<MultiRunInput> e)
     {
-        var message = new MrjTaskErrorMessage
-        {
+        var message = new MrjTaskErrorMessage {
             DataLine = e.Item.BotData.Line.Data,
-            Proxy = e.Item.BotData.Proxy is null ? null : new MrjProxy
-            {
-                Host = e.Item.BotData.Proxy.Host,
-                Port = e.Item.BotData.Proxy.Port
-            },
+            Proxy = e.Item.BotData.Proxy is null
+                ? null
+                : new MrjProxy { Host = e.Item.BotData.Proxy.Host, Port = e.Item.BotData.Proxy.Port },
             ErrorMessage = e.Exception.Message
         };
 
@@ -276,14 +276,11 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnResultAsync(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
     {
-        var message = new MrjNewResultMessage
-        {
+        var message = new MrjNewResultMessage {
             DataLine = e.Item.BotData.Line.Data,
-            Proxy = e.Item.BotData.Proxy is null ? null : new MrjProxy
-            {
-                Host = e.Item.BotData.Proxy.Host,
-                Port = e.Item.BotData.Proxy.Port
-            },
+            Proxy = e.Item.BotData.Proxy is null
+                ? null
+                : new MrjProxy { Host = e.Item.BotData.Proxy.Host, Port = e.Item.BotData.Proxy.Port },
             Status = e.Result.BotData.STATUS
         };
 
@@ -294,10 +291,8 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     {
         var job = (sender as MultiRunJob)!;
 
-        var message = new MrjStatsMessage
-        {
-            DataStats = new MrjDataStatsDto
-            {
+        var message = new MrjStatsMessage {
+            DataStats = new MrjDataStatsDto {
                 Hits = job.DataHits,
                 Custom = job.DataCustom,
                 Fails = job.DataFails,
@@ -309,13 +304,10 @@ public sealed class MultiRunJobService : IJobService, IDisposable
                 Total = job.DataPool.Size,
                 Tested = job.DataTested
             },
-            ProxyStats = new MrjProxyStatsDto
-            {
-                Total = job.ProxiesTotal,
-                Alive = job.ProxiesAlive,
-                Bad = job.ProxiesBad,
-                Banned = job.ProxiesBanned
-            },
+            ProxyStats =
+                new MrjProxyStatsDto {
+                    Total = job.ProxiesTotal, Alive = job.ProxiesAlive, Bad = job.ProxiesBad, Banned = job.ProxiesBanned
+                },
             CPM = job.CPM,
             CaptchaCredit = job.CaptchaCredit,
             Elapsed = job.Elapsed,
@@ -328,18 +320,13 @@ public sealed class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnHitAsync(object? sender, Hit e)
     {
-        var message = new MrjNewHitMessage
-        {
-            Hit = new MrjHitDto
-            {
+        var message = new MrjNewHitMessage {
+            Hit = new MrjHitDto {
                 Id = e.Id,
                 Date = e.Date,
                 Type = e.Type,
                 Data = e.DataString,
-                Proxy = e.Proxy is not null ? new MrjProxy {
-                    Host = e.Proxy.Host,
-                    Port = e.Proxy.Port
-                } : null,
+                Proxy = e.Proxy is not null ? new MrjProxy { Host = e.Proxy.Host, Port = e.Proxy.Port } : null,
                 CapturedData = e.CapturedDataString
             }
         };
@@ -351,10 +338,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     {
         var job = (sender as MultiRunJob)!;
 
-        var message = new BotsChangedMessage
-        {
-            NewValue = job.Bots
-        };
+        var message = new BotsChangedMessage { NewValue = job.Bots };
 
         await NotifyClientsAsync(sender, message, JobMethods.BotsChanged);
     }
@@ -362,7 +346,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
     private async Task NotifyClientsAsync(object? sender, object message,
         string method)
     {
-        var job = (sender as MultiRunJob);
+        var job = sender as MultiRunJob;
 
         await _hub.Clients.Clients(_connections[job!]).SendAsync(
             method, message);
@@ -374,13 +358,6 @@ public sealed class MultiRunJobService : IJobService, IDisposable
         return Task.CompletedTask;
     }
 
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-    
     private void Dispose(bool disposing)
     {
         if (disposing)
@@ -397,8 +374,8 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             }
         }
     }
-    
-    /// <inheritdoc/>
+
+    /// <inheritdoc />
     ~MultiRunJobService()
     {
         Dispose(false);

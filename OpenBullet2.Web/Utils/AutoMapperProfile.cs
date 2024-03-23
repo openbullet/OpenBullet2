@@ -65,14 +65,22 @@ internal class AutoMapperProfile : Profile
             var mapsFromAttributes = type.GetCustomAttributes<MapsFromAttribute>();
 
             foreach (var mapsFrom in mapsFromAttributes)
+            {
                 if (mapsFrom.AutoMap)
+                {
                     CreateMap(mapsFrom.SourceType, type);
+                }
+            }
 
             var mapsToAttributes = type.GetCustomAttributes<MapsToAttribute>();
 
             foreach (var mapsTo in mapsToAttributes)
+            {
                 if (mapsTo.AutoMap)
+                {
                     CreateMap(type, mapsTo.DestinationType);
+                }
+            }
         }
 
         CreateMap<CreateGuestDto, GuestEntity>()
@@ -376,12 +384,14 @@ internal class AutoMapperProfile : Profile
     private static object MapBlockSettingValue(BlockSetting setting)
     {
         if (setting.InputMode is SettingInputMode.Interpolated)
+        {
             return setting.InterpolatedSetting switch {
                 InterpolatedStringSetting x => x.Value,
                 InterpolatedListOfStringsSetting x => x.Value,
                 InterpolatedDictionaryOfStringsSetting x => x.Value,
                 _ => throw new NotImplementedException()
             };
+        }
 
         return setting.FixedSetting switch {
             StringSetting x => x.Value ?? string.Empty,
@@ -399,12 +409,14 @@ internal class AutoMapperProfile : Profile
     private static BlockSettingType MapBlockSettingType(BlockSetting setting)
     {
         if (setting.InputMode is SettingInputMode.Interpolated)
+        {
             return setting.InterpolatedSetting switch {
                 InterpolatedStringSetting => BlockSettingType.String,
                 InterpolatedListOfStringsSetting => BlockSettingType.ListOfStrings,
                 InterpolatedDictionaryOfStringsSetting => BlockSettingType.DictionaryOfStrings,
                 _ => throw new NotImplementedException()
             };
+        }
 
         return setting.FixedSetting switch {
             StringSetting => BlockSettingType.String,

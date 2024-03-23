@@ -19,10 +19,10 @@ namespace OpenBullet2.Web.Controllers;
 [Route("api/v{version:apiVersion}/job-monitor")]
 public class JobMonitorController : ApiController
 {
-    private readonly JobMonitorService _jobMonitorService;
     private readonly JobManagerService _jobManagerService;
-    private readonly IMapper _mapper;
+    private readonly JobMonitorService _jobMonitorService;
     private readonly ILogger<JobMonitorController> _logger;
+    private readonly IMapper _mapper;
 
     /// <summary></summary>
     public JobMonitorController(JobMonitorService jobMonitorService,
@@ -67,12 +67,12 @@ public class JobMonitorController : ApiController
         var newAction = _mapper.Map<TriggeredAction>(dto);
         actions.Add(newAction);
         _jobMonitorService.SaveStateIfChanged();
-        
+
         _logger.LogInformation("Created triggered action {Id}", newAction.Id);
 
         return MapTriggeredAction(newAction);
     }
-    
+
     /// <summary>
     /// Update a triggered action.
     /// </summary>
@@ -85,7 +85,7 @@ public class JobMonitorController : ApiController
 
         var newAction = _mapper.Map(dto, targetAction);
         _jobMonitorService.SaveStateIfChanged();
-        
+
         _logger.LogInformation("Updated triggered action {Id}", newAction.Id);
 
         return MapTriggeredAction(newAction);
@@ -102,12 +102,12 @@ public class JobMonitorController : ApiController
 
         targetAction.Reset();
         _jobMonitorService.SaveStateIfChanged();
-        
+
         _logger.LogInformation("Reset triggered action {Id}", id);
 
         return Ok();
     }
-    
+
     /// <summary>
     /// Sets a triggered action as active or inactive.
     /// </summary>
@@ -119,7 +119,7 @@ public class JobMonitorController : ApiController
 
         targetAction.IsActive = active;
         _jobMonitorService.SaveStateIfChanged();
-        
+
         _logger.LogInformation("Set triggered action {Id} as {Active}", id, active ? "active" : "inactive");
 
         return Ok();
@@ -136,12 +136,12 @@ public class JobMonitorController : ApiController
 
         _jobMonitorService.TriggeredActions.Remove(targetAction);
         _jobMonitorService.SaveStateIfChanged();
-        
+
         _logger.LogInformation("Deleted triggered action {Id}", id);
 
         return Ok();
     }
-    
+
     private TriggeredAction GetTriggeredAction(string id)
     {
         var actions = _jobMonitorService.TriggeredActions;
@@ -156,26 +156,25 @@ public class JobMonitorController : ApiController
 
         return targetAction;
     }
-    
+
     private TriggeredActionDto MapTriggeredAction(TriggeredAction action)
     {
         var mapped = _mapper.Map<TriggeredActionDto>(action);
-        
+
         // Search for a job with the given id and set its name
         var job = _jobManagerService.Jobs.FirstOrDefault(j => j.Id == mapped.JobId);
-        
+
         if (job is not null)
         {
             mapped.JobName = job.Name;
             mapped.JobType = GetJobType(job);
         }
-        
+
         return mapped;
     }
-    
+
     private static JobType GetJobType(Job job) =>
-        job switch
-        {
+        job switch {
             MultiRunJob => JobType.MultiRun,
             ProxyCheckJob => JobType.ProxyCheck,
             _ => throw new NotImplementedException()

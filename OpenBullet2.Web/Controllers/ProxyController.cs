@@ -12,6 +12,7 @@ using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Proxies;
 using System.Text;
+using Mapper = OpenBullet2.Core.Helpers.Mapper;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -22,10 +23,10 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class ProxyController : ApiController
 {
-    private readonly IProxyRepository _proxyRepo;
-    private readonly IProxyGroupRepository _proxyGroupRepo;
-    private readonly IMapper _mapper;
     private readonly ILogger<ProxyController> _logger;
+    private readonly IMapper _mapper;
+    private readonly IProxyGroupRepository _proxyGroupRepo;
+    private readonly IProxyRepository _proxyRepo;
 
     /// <summary></summary>
     public ProxyController(IProxyRepository proxyRepo,
@@ -79,10 +80,7 @@ public class ProxyController : ApiController
         _logger.LogInformation("Added {ProxyCount} unique new proxies to proxy group {Name}",
             entities.Count - duplicatesCount, groupEntity.Name);
 
-        return new AffectedEntriesDto
-        {
-            Count = entities.Count - duplicatesCount
-        };
+        return new AffectedEntriesDto { Count = entities.Count - duplicatesCount };
     }
 
     /// <summary>
@@ -132,17 +130,14 @@ public class ProxyController : ApiController
         _logger.LogInformation("Added {ProxyCount} unique new proxies to proxy group {Name}",
             entities.Count - duplicatesCount, groupEntity.Name);
 
-        return new AffectedEntriesDto
-        {
-            Count = entities.Count - duplicatesCount
-        };
+        return new AffectedEntriesDto { Count = entities.Count - duplicatesCount };
     }
 
     /// <summary>
     /// Move all proxies that match the filters from one group to another.
     /// Returns the number of moved proxies.
     /// </summary>
-    [HttpPost("move/many")] 
+    [HttpPost("move/many")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> MoveMany(
         MoveProxiesDto dto)
@@ -161,10 +156,7 @@ public class ProxyController : ApiController
 
         _logger.LogInformation("Moved {ProxyCount} proxies", toMove.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = toMove.Count
-        };
+        return new AffectedEntriesDto { Count = toMove.Count };
     }
 
     /// <summary>
@@ -200,10 +192,7 @@ public class ProxyController : ApiController
 
         _logger.LogInformation("Deleted {ProxyCount} proxies", toDelete.Count);
 
-        return new AffectedEntriesDto
-        {
-            Count = toDelete.Count
-        };
+        return new AffectedEntriesDto { Count = toDelete.Count };
     }
 
     /// <summary>
@@ -230,10 +219,7 @@ public class ProxyController : ApiController
         _logger.LogInformation("Deleted {HitCount} proxies from proxy group {Name}",
             toDelete.Count, groupEntity.Name);
 
-        return new AffectedEntriesDto
-        {
-            Count = toDelete.Count
-        };
+        return new AffectedEntriesDto { Count = toDelete.Count };
     }
 
     private IEnumerable<ProxyEntity> ParseProxies(IEnumerable<string> lines,
@@ -244,7 +230,7 @@ public class ProxyController : ApiController
         foreach (var line in lines)
         {
             if (Proxy.TryParse(line, out var proxy, defaultType,
-                defaultUsername, defaultPassword))
+                    defaultUsername, defaultPassword))
             {
                 proxies.Add(proxy);
             }
@@ -254,7 +240,7 @@ public class ProxyController : ApiController
             }
         }
 
-        return proxies.Select(Core.Helpers.Mapper.MapProxyToProxyEntity);
+        return proxies.Select(Mapper.MapProxyToProxyEntity);
     }
 
     private IQueryable<ProxyEntity> FilteredQuery(ProxyFiltersDto dto)

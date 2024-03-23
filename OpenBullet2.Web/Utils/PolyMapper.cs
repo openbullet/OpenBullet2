@@ -33,7 +33,7 @@ static internal class PolyMapper
         foreach (var item in list)
         {
             var mapped = MapFrom(item, mapper);
-            
+
             if (mapped is not null)
             {
                 mappedList.Add(mapped);
@@ -106,7 +106,8 @@ static internal class PolyMapper
         if (subType is null)
         {
             var validTypeNames = PolyDtoCache.GetValidPolyTypeNames<T>();
-            throw new MappingException($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
+            throw new MappingException(
+                $"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
         }
 
         return (T?)jsonElement.Deserialize(subType, Globals.JsonOptions);

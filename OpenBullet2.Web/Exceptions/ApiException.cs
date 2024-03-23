@@ -6,13 +6,8 @@
 public class ApiException : Exception
 {
     /// <summary>
-    /// The error code.
-    /// </summary>
-    public string ErrorCode { get; set; }
-
-    /// <summary>
-    /// Creates an <see cref="ApiException"/> given an 
-    /// <paramref name="errorCode"/> and a <paramref name="message"/>.
+    /// Creates an <see cref="ApiException" /> given an
+    /// <paramref name="errorCode" /> and a <paramref name="message" />.
     /// </summary>
     public ApiException(string errorCode, string message)
         : base(message)
@@ -20,7 +15,12 @@ public class ApiException : Exception
         ErrorCode = errorCode;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// The error code.
+    /// </summary>
+    public string ErrorCode { get; set; }
+
+    /// <inheritdoc />
     public override string ToString() => Message;
 }
 
@@ -33,47 +33,47 @@ public static class ErrorCode
     /// Internal Server Error.
     /// </summary>
     public const string InternalServerError = "INTERNAL_SERVER_ERROR";
-    
+
     /// <summary>
     /// Unauthorized access.
     /// </summary>
     public const string Unauthorized = "UNAUTHORIZED";
-    
+
     /// <summary>
     /// Unauthorized IP address.
     /// </summary>
     public const string UnauthorizedIpAddress = "UNAUTHORIZED_IP_ADDRESS";
-    
+
     /// <summary>
     /// Missing auth token.
     /// </summary>
     public const string MissingAuthToken = "MISSING_AUTH_TOKEN";
-    
+
     /// <summary>
     /// Invalid auth token.
     /// </summary>
     public const string InvalidAuthToken = "INVALID_AUTH_TOKEN";
-    
+
     /// <summary>
     /// Invalid API key.
     /// </summary>
     public const string InvalidApiKey = "INVALID_API_KEY";
-    
+
     /// <summary>
     /// Invalid username or password.
     /// </summary>
     public const string InvalidCredentials = "INVALID_CREDENTIALS";
-    
+
     /// <summary>
     /// Only admins can perform this action.
     /// </summary>
     public const string NotAdmin = "NOT_ADMIN";
-    
+
     /// <summary>
     /// The guest account has expired.
     /// </summary>
     public const string GuestAccountExpired = "GUEST_ACCOUNT_EXPIRED";
-    
+
     /// <summary>
     /// The user has no permission to perform this action.
     /// </summary>
@@ -83,7 +83,7 @@ public static class ErrorCode
     /// Local file not found.
     /// </summary>
     public const string FileNotFound = "FILE_NOT_FOUND";
-    
+
     /// <summary>
     /// File outside allowed path.
     /// </summary>
@@ -108,7 +108,7 @@ public static class ErrorCode
     /// Guest user not found.
     /// </summary>
     public const string GuestUserNotFound = "GUEST_USER_NOT_FOUND";
-    
+
     /// <summary>
     /// A user with the same username already exists.
     /// </summary>
@@ -183,22 +183,22 @@ public static class ErrorCode
     /// Action not allowed for a remote config.
     /// </summary>
     public const string ActionNotAllowedForRemoteConfig = "ACTION_NOT_ALLOWED_FOR_REMOTE_CONFIG";
-    
+
     /// <summary>
     /// Invalid block id.
     /// </summary>
     public const string InvalidBlockId = "INVALID_BLOCK_ID";
-    
+
     /// <summary>
     /// The config debugger is not idle.
     /// </summary>
     public const string ConfigDebuggerNotIdle = "CONFIG_DEBUGGER_NOT_IDLE";
-    
+
     /// <summary>
     /// Missing config id.
     /// </summary>
     public const string MissingConfigId = "MISSING_CONFIG_ID";
-    
+
     /// <summary>
     /// Missing job id.
     /// </summary>

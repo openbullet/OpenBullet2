@@ -7,7 +7,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
 /// An enum block parameter.
 /// </summary>
 [PolyType("enumParam")]
-[MapsFrom(typeof(EnumParameter), autoMap: false)]
+[MapsFrom(typeof(EnumParameter), false)]
 public class EnumBlockParameterDto : BlockParameterDto
 {
     /// <summary>

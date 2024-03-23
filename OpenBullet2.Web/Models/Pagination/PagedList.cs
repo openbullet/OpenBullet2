@@ -10,6 +10,25 @@ namespace OpenBullet2.Web.Models.Pagination;
 public class PagedList<T>
 {
     /// <summary>
+    /// Parameterless constructor for serialization.
+    /// </summary>
+    [JsonConstructor]
+    public PagedList()
+    {
+    }
+
+    /// <summary></summary>
+    public PagedList(IEnumerable<T> items, int totalCount, int pageNumber,
+        int pageSize)
+    {
+        PageNumber = pageNumber;
+        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        PageSize = pageSize;
+        TotalCount = totalCount;
+        Items = items.ToList();
+    }
+
+    /// <summary>
     /// The list of items.
     /// </summary>
     [JsonInclude]
@@ -36,27 +55,7 @@ public class PagedList<T>
     public int TotalCount { get; set; }
 
     /// <summary>
-    /// Parameterless constructor for serialization.
-    /// </summary>
-    [JsonConstructor]
-    public PagedList()
-    {
-        
-    }
-    
-    /// <summary></summary>
-    public PagedList(IEnumerable<T> items, int totalCount, int pageNumber,
-        int pageSize)
-    {
-        PageNumber = pageNumber;
-        TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-        PageSize = pageSize;
-        TotalCount = totalCount;
-        Items = items.ToList();
-    }
-
-    /// <summary>
-    /// Creates a paged list from an <see cref="IQueryable{T}"/>, useful
+    /// Creates a paged list from an <see cref="IQueryable{T}" />, useful
     /// for DB calls to optimize the query.
     /// </summary>
     public static async Task<PagedList<TEntity>> CreateAsync<TEntity>(

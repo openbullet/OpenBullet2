@@ -1,5 +1,4 @@
-﻿using Esprima.Ast;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.SignalR;
@@ -13,11 +12,11 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public class PerformanceMonitorService : IHostedService
 {
-    private readonly ILogger<PerformanceMonitorService> _logger;
-    private CancellationTokenSource _cts = new();
-    private readonly IHubContext<SystemPerformanceHub> _hub;
     private readonly List<string> _connections = new();
+    private readonly IHubContext<SystemPerformanceHub> _hub;
+    private readonly ILogger<PerformanceMonitorService> _logger;
     private readonly SemaphoreSlim _semaphore = new(1);
+    private CancellationTokenSource _cts = new();
 
     /// <summary></summary>
     public PerformanceMonitorService(ILogger<PerformanceMonitorService> logger,
@@ -25,6 +24,29 @@ public class PerformanceMonitorService : IHostedService
     {
         _hub = hub;
         _logger = logger;
+    }
+
+    /// <inheritdoc />
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        ReadMetricsLoopAsync().Forget(e =>
+        {
+            _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
+        });
+
+        // Dispose the old cancellation token source and create a new one
+        _cts.Dispose();
+        _cts = new CancellationTokenSource();
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc />
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _cts.Cancel();
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -71,8 +93,7 @@ public class PerformanceMonitorService : IHostedService
             var cpu = await ReadCpuUsageAsync(_cts.Token);
             var (upload, download) = await ReadNetworkUsage();
 
-            var metrics = new PerformanceMetrics
-            {
+            var metrics = new PerformanceMetrics {
                 MemoryUsage = memory,
                 CpuUsage = cpu,
                 NetworkDownload = download,
@@ -116,7 +137,9 @@ public class PerformanceMonitorService : IHostedService
     private static async Task<(long upload, long download)> ReadNetworkUsage()
     {
         if (!NetworkInterface.GetIsNetworkAvailable())
+        {
             return (0, 0);
+        }
 
         var interfaces = NetworkInterface.GetAllNetworkInterfaces();
         var startUpload = GetCurrentNetUpload(interfaces);
@@ -151,29 +174,6 @@ public class PerformanceMonitorService : IHostedService
         {
             return 0;
         }
-    }
-
-    /// <inheritdoc/>
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
-        ReadMetricsLoopAsync().Forget(e =>
-        {
-            _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
-        });
-
-        // Dispose the old cancellation token source and create a new one
-        _cts.Dispose();
-        _cts = new();
-
-        return Task.CompletedTask;
-    }
-
-    /// <inheritdoc/>
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        _cts.Cancel();
-
-        return Task.CompletedTask;
     }
 }
 

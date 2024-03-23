@@ -8,7 +8,6 @@ namespace OpenBullet2.Web.Dtos.JobMonitor;
 /// </summary>
 public class MultiRunJobActionDto : ActionDto
 {
-
 }
 
 /// <summary>
@@ -33,5 +32,4 @@ public class SetBotsActionDto : MultiRunJobActionDto
 [MapsTo(typeof(ReloadProxiesAction))]
 public class ReloadProxiesActionDto : MultiRunJobActionDto
 {
-
 }

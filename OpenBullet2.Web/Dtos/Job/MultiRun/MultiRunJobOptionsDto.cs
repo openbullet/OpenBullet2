@@ -49,8 +49,8 @@ public class MultiRunJobOptionsDto
     public NoValidProxyBehaviour NoValidProxyBehaviour { get; set; } = NoValidProxyBehaviour.Reload;
 
     /// <summary>
-    /// How long should proxies be banned for. ONLY use this when <see cref="NoValidProxyBehaviour"/>
-    /// is set to <see cref="NoValidProxyBehaviour.Unban"/>.
+    /// How long should proxies be banned for. ONLY use this when <see cref="NoValidProxyBehaviour" />
+    /// is set to <see cref="NoValidProxyBehaviour.Unban" />.
     /// </summary>
     public int ProxyBanTimeSeconds { get; set; } = 0;
 
@@ -73,7 +73,7 @@ public class MultiRunJobOptionsDto
     /// <summary>
     /// The amount of seconds that the pool will wait before reloading all proxies from the sources (periodically).
     /// Set it to 0 to disable this behaviour and only allow the pool to reload proxies when all are banned according
-    /// to the value of <see cref="NoValidProxyBehaviour"/>.
+    /// to the value of <see cref="NoValidProxyBehaviour" />.
     /// </summary>
     public int PeriodicReloadIntervalSeconds { get; set; } = 0;
 
@@ -85,16 +85,10 @@ public class MultiRunJobOptionsDto
     /// <summary>
     /// The options for the proxy sources that will be used to fill the proxy pool whenever it requests a reload.
     /// </summary>
-    public List<object> ProxySources { get; set; } = new()
-    {
-        new GroupProxySourceOptionsDto { GroupId = -1 }
-    };
+    public List<object> ProxySources { get; set; } = new() { new GroupProxySourceOptionsDto { GroupId = -1 } };
 
     /// <summary>
     /// The options for the outputs where hits will be stored.
     /// </summary>
-    public List<object> HitOutputs { get; set; } = new()
-    {
-        new DatabaseHitOutputOptionsDto()
-    };
+    public List<object> HitOutputs { get; set; } = new() { new DatabaseHitOutputOptionsDto() };
 }

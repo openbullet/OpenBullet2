@@ -9,7 +9,6 @@ namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 /// </summary>
 public class ProxySourceOptionsDto : PolyDto
 {
-
 }
 
 /// <summary>

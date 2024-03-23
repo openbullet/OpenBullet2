@@ -2,7 +2,6 @@
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace OpenBullet2.Web.Attributes;
 

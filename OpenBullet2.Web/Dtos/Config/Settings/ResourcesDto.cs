@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace OpenBullet2.Web.Dtos.Config.Settings;
+﻿namespace OpenBullet2.Web.Dtos.Config.Settings;
 
 /// <summary>
 /// DTO that contains the options of the configured resources.

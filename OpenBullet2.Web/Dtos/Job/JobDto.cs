@@ -1,5 +1,4 @@
 ﻿using OpenBullet2.Core.Models.Jobs;
-using OpenBullet2.Logging;
 using RuriLib.Models.Jobs;
 using System.Text.Json.Serialization;
 
@@ -21,7 +20,7 @@ public class JobDto
     /// </summary>
     [JsonPropertyOrder(-5)]
     public int OwnerId { get; set; }
-    
+
     /// <summary>
     /// The job type.
     /// </summary>
@@ -39,7 +38,7 @@ public class JobDto
     /// </summary>
     [JsonPropertyOrder(-2)]
     public string Name { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// When the job was started, if it was started.
     /// </summary>

@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Exceptions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System.IO.Compression;
+using Endpoint = OpenBullet2.Core.Models.Sharing.Endpoint;
 
 namespace OpenBullet2.Web.Services;
 
@@ -13,16 +13,9 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public class ConfigSharingService
 {
-    private readonly ILogger<ConfigSharingService> _logger;
     private readonly IConfigRepository _configRepo;
     private readonly JsonSerializerSettings _jsonSettings;
-    private string SettingsFolder { get; }
-    private string EndpointsFile => Path.Combine(SettingsFolder, "sharingEndpoints.json");
-    
-    /// <summary>
-    /// The configured shared endpoints.
-    /// </summary>
-    public List<Core.Models.Sharing.Endpoint> Endpoints { get; set; } = new();
+    private readonly ILogger<ConfigSharingService> _logger;
 
     /// <summary></summary>
     public ConfigSharingService(IConfigRepository configRepo,
@@ -33,18 +26,23 @@ public class ConfigSharingService
         SettingsFolder = settingsFolder;
         Directory.CreateDirectory(settingsFolder);
 
-        _jsonSettings = new JsonSerializerSettings
-        {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.Auto
-        };
+        _jsonSettings =
+            new JsonSerializerSettings { Formatting = Formatting.Indented, TypeNameHandling = TypeNameHandling.Auto };
 
         if (File.Exists(EndpointsFile))
         {
-            Endpoints = JsonConvert.DeserializeObject<List<Core.Models.Sharing.Endpoint>>(
+            Endpoints = JsonConvert.DeserializeObject<List<Endpoint>>(
                 File.ReadAllText(EndpointsFile), _jsonSettings)!;
         }
     }
+
+    private string SettingsFolder { get; }
+    private string EndpointsFile => Path.Combine(SettingsFolder, "sharingEndpoints.json");
+
+    /// <summary>
+    /// The configured shared endpoints.
+    /// </summary>
+    public List<Endpoint> Endpoints { get; set; } = new();
 
     /// <summary>
     /// Saves the endpoints configuration to file.
@@ -55,7 +53,7 @@ public class ConfigSharingService
     /// <summary>
     /// Gets an endpoint by name, returns null if not found.
     /// </summary>
-    public Core.Models.Sharing.Endpoint? GetEndpoint(string endpointName)
+    public Endpoint? GetEndpoint(string endpointName)
         => Endpoints.Find(e => e.Route.Equals(endpointName, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>

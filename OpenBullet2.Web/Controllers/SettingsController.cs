@@ -5,7 +5,6 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Services;
-using RuriLib.Models.Environment;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
 
@@ -17,9 +16,9 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class SettingsController : ApiController
 {
-    private readonly RuriLibSettingsService _ruriLibSettingsService;
-    private readonly OpenBulletSettingsService _obSettingsService;
     private readonly IMapper _mapper;
+    private readonly OpenBulletSettingsService _obSettingsService;
+    private readonly RuriLibSettingsService _ruriLibSettingsService;
     private readonly ThemeService _themeService;
 
     /// <summary></summary>
@@ -73,7 +72,7 @@ public class SettingsController : ApiController
         // NOTE: We use the mapper here to apply the new settings over the
         // existing ones so we don't update the references and we can
         // edit the settings live if a component is using them.
-        
+
         // NOTE: To check this we can just print the hashcodes before
         // and after this instruction.
         _mapper.Map(settings, _ruriLibSettingsService.RuriLibSettings);
@@ -100,7 +99,7 @@ public class SettingsController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<OpenBulletSettingsDto> GetDefaultSettings()
         => _mapper.Map<OpenBulletSettingsDto>(new OpenBulletSettings());
-    
+
     /// <summary>
     /// Get the safe OpenBullet settings that even a guest user is allowed to see.
     /// </summary>
@@ -158,7 +157,7 @@ public class SettingsController : ApiController
         await _themeService.SaveCssFileAsync(file.FileName, file.OpenReadStream());
         return Ok();
     }
-    
+
     /// <summary>
     /// Get all CSS themes.
     /// </summary>
@@ -183,7 +182,7 @@ public class SettingsController : ApiController
         }
 
         var bytes = Array.Empty<byte>();
-        
+
         try
         {
             bytes = await _themeService.GetCssFileAsync(name);
@@ -192,7 +191,7 @@ public class SettingsController : ApiController
         {
             // If anything happens, return an empty file
         }
-        
+
         return File(bytes, "text/css", "theme.css");
     }
 }

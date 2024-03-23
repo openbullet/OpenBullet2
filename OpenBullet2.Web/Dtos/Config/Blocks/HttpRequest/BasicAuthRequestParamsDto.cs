@@ -8,7 +8,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 /// </summary>
 [PolyType("basicAuthRequestParams")]
 [MapsFrom(typeof(BasicAuthRequestParams))]
-[MapsTo(typeof(BasicAuthRequestParams), autoMap: false)]
+[MapsTo(typeof(BasicAuthRequestParams), false)]
 public class BasicAuthRequestParamsDto : RequestParamsDto
 {
     /// <summary>

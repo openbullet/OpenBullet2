@@ -2,7 +2,6 @@
 
 namespace OpenBullet2.Web.Dtos.Settings;
 
-
 /// <summary>
 /// Settings for the OpenBullet 2 application.
 /// </summary>

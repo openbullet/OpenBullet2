@@ -1,6 +1,4 @@
-﻿using OpenBullet2.Web.Dtos.Config.Blocks.Parameters;
-using RuriLib.Models.Blocks.Parameters;
-using RuriLib.Models.Variables;
+﻿using RuriLib.Models.Variables;
 
 namespace OpenBullet2.Web.Dtos.Config.Blocks;
 
@@ -22,7 +20,7 @@ public class BlockDescriptorDto
     /// <summary>
     /// The description of the block.
     /// </summary>
-    public string Description { get; set; } = string.Empty; 
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The extra information about the block.

@@ -9,7 +9,6 @@ namespace OpenBullet2.Web.Dtos.JobMonitor;
 /// </summary>
 public class MultiRunJobTriggerDto : TriggerDto
 {
-
 }
 
 /// <summary>
@@ -38,7 +37,6 @@ public class MrjNumComparisonTrigger : MultiRunJobTriggerDto
 [MapsTo(typeof(TestedCountTrigger))]
 public class TestedCountTriggerDto : MrjNumComparisonTrigger
 {
-
 }
 
 /// <summary>
@@ -49,7 +47,6 @@ public class TestedCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(HitCountTrigger))]
 public class HitCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -60,7 +57,6 @@ public class HitCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(CustomCountTrigger))]
 public class CustomCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -71,7 +67,6 @@ public class CustomCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(ToCheckCountTrigger))]
 public class ToCheckCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -82,7 +77,6 @@ public class ToCheckCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(FailCountTrigger))]
 public class FailCountTriggerDto : MrjNumComparisonTrigger
 {
-
 }
 
 /// <summary>
@@ -93,7 +87,6 @@ public class FailCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(RetryCountTrigger))]
 public class RetryCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -104,7 +97,6 @@ public class RetryCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(BanCountTrigger))]
 public class BanCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -115,7 +107,6 @@ public class BanCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(ErrorCountTrigger))]
 public class ErrorCountTriggerDto : MrjNumComparisonTrigger
 {
-
 }
 
 /// <summary>
@@ -126,7 +117,6 @@ public class ErrorCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(AliveProxiesCountTrigger))]
 public class AliveProxiesCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -137,7 +127,6 @@ public class AliveProxiesCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(BannedProxiesCountTrigger))]
 public class BannedProxiesCountTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>
@@ -148,7 +137,6 @@ public class BannedProxiesCountTriggerDto : MrjNumComparisonTrigger
 [MapsTo(typeof(CPMTrigger))]
 public class CpmTriggerDto : MrjNumComparisonTrigger
 {
-    
 }
 
 /// <summary>

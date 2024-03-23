@@ -7,8 +7,8 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.HttpRequest;
 /// DTO that represents standard request params.
 /// </summary>
 [PolyType("multipartRequestParams")]
-[MapsFrom(typeof(MultipartRequestParams), autoMap: false)]
-[MapsTo(typeof(MultipartRequestParams), autoMap: false)]
+[MapsFrom(typeof(MultipartRequestParams), false)]
+[MapsTo(typeof(MultipartRequestParams), false)]
 public class MultipartRequestParamsDto : RequestParamsDto
 {
     /// <summary>

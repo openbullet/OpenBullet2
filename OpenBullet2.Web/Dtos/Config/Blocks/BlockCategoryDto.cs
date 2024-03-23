@@ -9,7 +9,7 @@ public class BlockCategoryDto
     /// The name of the category.
     /// </summary>
     public string Name { get; set; } = string.Empty;
- 
+
     /// <summary>
     /// The path of the category.
     /// </summary>

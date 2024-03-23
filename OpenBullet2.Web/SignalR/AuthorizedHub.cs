@@ -4,7 +4,6 @@ using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Models.Identity;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace OpenBullet2.Web.SignalR;
 
@@ -13,8 +12,17 @@ namespace OpenBullet2.Web.SignalR;
 /// </summary>
 public abstract class AuthorizedHub : Hub
 {
-    private readonly IAuthTokenService _tokenService;
     private readonly OpenBulletSettingsService _obSettingsService;
+    private readonly IAuthTokenService _tokenService;
+
+    /// <summary></summary>
+    protected AuthorizedHub(IAuthTokenService tokenService,
+        OpenBulletSettingsService obSettingsService, bool onlyAdmin)
+    {
+        _tokenService = tokenService;
+        _obSettingsService = obSettingsService;
+        OnlyAdmin = onlyAdmin;
+    }
 
     /// <summary>
     /// The verified user.
@@ -26,26 +34,14 @@ public abstract class AuthorizedHub : Hub
     /// </summary>
     private bool OnlyAdmin { get; }
 
-    /// <summary></summary>
-    protected AuthorizedHub(IAuthTokenService tokenService,
-        OpenBulletSettingsService obSettingsService, bool onlyAdmin)
-    {
-        _tokenService = tokenService;
-        _obSettingsService = obSettingsService;
-        OnlyAdmin = onlyAdmin;
-    }
-
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public async override Task OnConnectedAsync()
     {
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
         {
-            User = new ApiUser
-            {
-                Id = -1,
-                Role = UserRole.Admin,
-                Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
+            User = new ApiUser {
+                Id = -1, Role = UserRole.Admin, Username = _obSettingsService.Settings.SecuritySettings.AdminUsername
             };
 
             return;
@@ -59,11 +55,7 @@ public abstract class AuthorizedHub : Hub
         {
             await Clients.Caller.SendAsync(
                 CommonMethods.Error,
-                new ErrorMessage
-                {
-                    Message = "Missing auth token",
-                    Type = nameof(UnauthorizedException)
-                });
+                new ErrorMessage { Message = "Missing auth token", Type = nameof(UnauthorizedException) });
 
             throw new UnauthorizedException(
                 ErrorCode.MissingAuthToken, "Missing auth token");
@@ -79,11 +71,7 @@ public abstract class AuthorizedHub : Hub
         {
             await Clients.Caller.SendAsync(
                 CommonMethods.Error,
-                new ErrorMessage
-                {
-                    Message = ex.Message,
-                    Type = ex.GetType().Name
-                });
+                new ErrorMessage { Message = ex.Message, Type = ex.GetType().Name });
 
             throw;
         }
@@ -92,10 +80,8 @@ public abstract class AuthorizedHub : Hub
         {
             await Clients.Caller.SendAsync(
                 CommonMethods.Error,
-                new ErrorMessage
-                {
-                    Message = "You must be an admin to use this hub",
-                    Type = nameof(UnauthorizedException)
+                new ErrorMessage {
+                    Message = "You must be an admin to use this hub", Type = nameof(UnauthorizedException)
                 });
 
             throw new UnauthorizedException(ErrorCode.NotAdmin,

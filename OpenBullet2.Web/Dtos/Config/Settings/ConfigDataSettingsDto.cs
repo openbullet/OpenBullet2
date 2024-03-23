@@ -8,10 +8,7 @@ public class ConfigDataSettingsDto
     /// <summary>
     /// The types of wordlists that can be used with this config.
     /// </summary>
-    public string[] AllowedWordlistTypes { get; set; } = new string[]
-    {
-        "Default"
-    };
+    public string[] AllowedWordlistTypes { get; set; } = { "Default" };
 
     /// <summary>
     /// Whether to apply URL encoding to the data slices.

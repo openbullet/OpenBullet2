@@ -32,12 +32,8 @@ public class ConfigGeneralSettingsDto
     /// <summary>
     /// The statuses for which the bot should continue executing the
     /// config's script. When the <code>data.STATUS</code> variable
-    /// assumes a value that is different from the ones provided, 
+    /// assumes a value that is different from the ones provided,
     /// the bot will stop executing the config.
     /// </summary>
-    public string[] ContinueStatuses { get; set; } = new string[]
-    {
-        "SUCCESS",
-        "NONE"
-    };
+    public string[] ContinueStatuses { get; set; } = { "SUCCESS", "NONE" };
 }

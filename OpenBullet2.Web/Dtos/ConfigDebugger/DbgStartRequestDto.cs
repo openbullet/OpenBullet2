@@ -13,12 +13,12 @@ public class DbgStartRequestDto
     public string TestData { get; set; } = "";
 
     /// <summary>
-    /// The Wordlist Type to use when slicing the <see cref="TestData"/>.
+    /// The Wordlist Type to use when slicing the <see cref="TestData" />.
     /// </summary>
     public string WordlistType { get; set; } = "Default";
 
     /// <summary>
-    /// Whether the provided <see cref="TestProxy"/> should be used.
+    /// Whether the provided <see cref="TestProxy" /> should be used.
     /// </summary>
     public bool UseProxy { get; set; } = false;
 
@@ -28,7 +28,7 @@ public class DbgStartRequestDto
     public string TestProxy { get; set; } = "";
 
     /// <summary>
-    /// The type of <see cref="TestProxy"/>.
+    /// The type of <see cref="TestProxy" />.
     /// </summary>
     public ProxyType ProxyType { get; set; } = ProxyType.Http;
 

@@ -8,11 +8,6 @@
 public class PolyTypeAttribute : Attribute
 {
     /// <summary>
-    /// The polymorphic type discriminator.
-    /// </summary>
-    public string PolyType { get; init; }
-
-    /// <summary>
     /// Assigns the given poly type discriminator.
     /// </summary>
     public PolyTypeAttribute(string polyType)
@@ -21,7 +16,12 @@ public class PolyTypeAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the <see cref="PolyTypeAttribute"/> of a class
+    /// The polymorphic type discriminator.
+    /// </summary>
+    public string PolyType { get; init; }
+
+    /// <summary>
+    /// Gets the <see cref="PolyTypeAttribute" /> of a class
     /// or null if it was not assigned.
     /// </summary>
     public static PolyTypeAttribute? FromType(Type type)

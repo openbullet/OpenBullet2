@@ -24,7 +24,7 @@ public class JobConfigDto
     /// The author of the config.
     /// </summary>
     public string Author { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Whether the config needs proxies to run.
     /// </summary>

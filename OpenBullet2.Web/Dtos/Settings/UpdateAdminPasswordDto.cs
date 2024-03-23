@@ -10,6 +10,7 @@ public class UpdateAdminPasswordDto
     /// <summary>
     /// The new password the admin user will use to log in.
     /// </summary>
-    [Required, MinLength(8)]
+    [Required]
+    [MinLength(8)]
     public string Password { get; set; } = string.Empty;
 }

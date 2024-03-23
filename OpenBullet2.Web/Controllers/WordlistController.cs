@@ -1,6 +1,4 @@
-﻿using AngleSharp.Dom;
-using AutoMapper;
-using IronPython.Runtime;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -23,11 +21,11 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class WordlistController : ApiController
 {
-    private readonly IWordlistRepository _wordlistRepo;
-    private readonly IGuestRepository _guestRepo;
-    private readonly IMapper _mapper;
-    private readonly ILogger<WordlistController> _logger;
     private readonly string _baseDir;
+    private readonly IGuestRepository _guestRepo;
+    private readonly ILogger<WordlistController> _logger;
+    private readonly IMapper _mapper;
+    private readonly IWordlistRepository _wordlistRepo;
 
     /// <summary></summary>
     public WordlistController(IWordlistRepository wordlistRepo,
@@ -39,7 +37,7 @@ public class WordlistController : ApiController
         _guestRepo = guestRepo;
         _mapper = mapper;
         _logger = logger;
-        
+
         _baseDir = config.GetSection("Settings")
             .GetValue<string>("UserDataFolder") ?? "UserData";
     }
@@ -59,7 +57,7 @@ public class WordlistController : ApiController
         {
             _logger.LogWarning("Guest user {Username} tried to access a wordlist not owned by them",
                 apiUser.Username);
-            
+
             throw new EntryNotFoundException(ErrorCode.WordlistNotFound,
                 id, nameof(IWordlistRepository));
         }
@@ -113,11 +111,7 @@ public class WordlistController : ApiController
 
         var size = new FileInfo(entity.FileName).Length;
 
-        return new WordlistPreviewDto
-        {
-            FirstLines = firstLines,
-            SizeInBytes = size
-        };
+        return new WordlistPreviewDto { FirstLines = firstLines, SizeInBytes = size };
     }
 
     /// <summary>
@@ -134,7 +128,8 @@ public class WordlistController : ApiController
         // anything outside the UserData folder.
         if (apiUser.Role is UserRole.Guest && !dto.FilePath.IsSubPathOf(_baseDir))
         {
-            _logger.LogWarning("Guest user {Username} tried to access a file outside of the allowed directory while creating a wordlist at {FilePath}",
+            _logger.LogWarning(
+                "Guest user {Username} tried to access a file outside of the allowed directory while creating a wordlist at {FilePath}",
                 apiUser.Username, dto.FilePath);
 
             throw new ForbiddenException(ErrorCode.FileOutsideAllowedPath,
@@ -143,7 +138,7 @@ public class WordlistController : ApiController
 
         // Make sure the file exists
         var path = dto.FilePath.Replace('\\', '/');
-        
+
         if (!System.IO.File.Exists(path))
         {
             _logger.LogWarning("Tried to create a wordlist for the file {FilePath} which does not exist",
@@ -154,8 +149,7 @@ public class WordlistController : ApiController
                 Path.GetFileName(dto.FilePath), dto.FilePath);
         }
 
-        var entity = new WordlistEntity
-        {
+        var entity = new WordlistEntity {
             Name = dto.Name,
             FileName = path,
             Purpose = dto.Purpose,
@@ -240,14 +234,11 @@ public class WordlistController : ApiController
             if (!System.IO.File.Exists(entity.FileName))
             {
                 deletedCount++;
-                await _wordlistRepo.DeleteAsync(entity, deleteFile: false);
+                await _wordlistRepo.DeleteAsync(entity);
             }
         }
 
-        return new AffectedEntriesDto
-        {
-            Count = deletedCount
-        };
+        return new AffectedEntriesDto { Count = deletedCount };
     }
 
     /// <summary>

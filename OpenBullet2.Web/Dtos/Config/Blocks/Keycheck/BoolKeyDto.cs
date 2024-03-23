@@ -12,7 +12,7 @@ namespace OpenBullet2.Web.Dtos.Config.Blocks.Keycheck;
 public class BoolKeyDto : KeyDto
 {
     /// <summary>
-    /// The comparison condition.   
+    /// The comparison condition.
     /// </summary>
     public BoolComparison Comparison { get; set; }
 }
