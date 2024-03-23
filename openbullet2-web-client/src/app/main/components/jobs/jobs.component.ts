@@ -124,7 +124,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Idle',
-        detail: 'The job you are trying to abort is idle, please' +
+        detail: 'The job you are trying to abort is idle, please ' +
           'start it first'
       });
       return;
@@ -150,7 +150,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to start is not idle, please' +
+        detail: 'The job you are trying to start is not idle, please ' +
           'stop it or abort it first'
       });
       return;
@@ -175,7 +175,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to edit is not idle, please' +
+        detail: 'The job you are trying to edit is not idle, please ' +
           'stop it or abort it first'
       });
       return;
@@ -195,7 +195,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to edit is not idle, please' +
+        detail: 'The job you are trying to edit is not idle, please ' +
           'stop it or abort it first'
       });
       return;
@@ -233,7 +233,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to delete is not idle, please' +
+        detail: 'The job you are trying to delete is not idle, please ' +
           'stop it or abort it first'
       });
       return;
