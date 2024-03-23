@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Core.Repositories;
+using OpenBullet2.Web.Exceptions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
 using System.IO.Compression;
@@ -12,19 +13,22 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public class ConfigSharingService
 {
+    private readonly ILogger<ConfigSharingService> _logger;
     private readonly IConfigRepository _configRepo;
     private readonly JsonSerializerSettings _jsonSettings;
-    private string SettingsFolder { get; init; }
+    private string SettingsFolder { get; }
     private string EndpointsFile => Path.Combine(SettingsFolder, "sharingEndpoints.json");
-
+    
     /// <summary>
     /// The configured shared endpoints.
     /// </summary>
     public List<Core.Models.Sharing.Endpoint> Endpoints { get; set; } = new();
 
     /// <summary></summary>
-    public ConfigSharingService(IConfigRepository configRepo, string settingsFolder)
+    public ConfigSharingService(IConfigRepository configRepo,
+        ILogger<ConfigSharingService> logger, string settingsFolder)
     {
+        _logger = logger;
         _configRepo = configRepo;
         SettingsFolder = settingsFolder;
         Directory.CreateDirectory(settingsFolder);
@@ -52,7 +56,7 @@ public class ConfigSharingService
     /// Gets an endpoint by name, returns null if not found.
     /// </summary>
     public Core.Models.Sharing.Endpoint? GetEndpoint(string endpointName)
-        => Endpoints.FirstOrDefault(e => e.Route.Equals(endpointName, StringComparison.OrdinalIgnoreCase));
+        => Endpoints.Find(e => e.Route.Equals(endpointName, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
     /// Gets the bytes of the zip archive containing the configs
@@ -63,7 +67,9 @@ public class ConfigSharingService
         var endpoint = GetEndpoint(endpointName);
 
         if (endpoint == null)
-            throw new Exception("Invalid endpoint");
+        {
+            throw new EntryNotFoundException(ErrorCode.EndpointNotFound, "Invalid endpoint");
+        }
 
         using MemoryStream ms = new();
         using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
@@ -80,13 +86,14 @@ public class ConfigSharingService
 
                     // Create the entry and write the data
                     var zipArchiveEntry = archive.CreateEntry($"{configId}.opk", CompressionLevel.Fastest);
-                    using var zipStream = zipArchiveEntry.Open();
-                    zipStream.Write(bytes, 0, bytes.Length);
+                    await using var zipStream = zipArchiveEntry.Open();
+                    await zipStream.WriteAsync(bytes);
                 }
                 catch (Exception ex)
                 {
                     // If something happens, simply log it and omit the config from the archive
-                    Console.WriteLine($"Error while packing config {configId} for endpoint {endpoint.Route}: {ex.Message}");
+                    _logger.LogError(ex, "Error while packing config {ConfigId} for endpoint {Route}: {Message}",
+                        configId, endpoint.Route, ex.Message);
                 }
             }
         }

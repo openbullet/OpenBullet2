@@ -3,7 +3,7 @@
 /// <summary>
 /// An error happened in a task.
 /// </summary>
-public class MRJTaskErrorMessage
+public class MrjTaskErrorMessage
 {
     /// <summary>
     /// The data line that was being processed.
@@ -13,7 +13,7 @@ public class MRJTaskErrorMessage
     /// <summary>
     /// The proxy, if any.
     /// </summary>
-    public MRJProxy? Proxy { get; set; }
+    public MrjProxy? Proxy { get; set; }
 
     /// <summary>
     /// The error message.

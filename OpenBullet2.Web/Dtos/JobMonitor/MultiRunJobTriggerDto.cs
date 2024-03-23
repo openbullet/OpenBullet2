@@ -146,7 +146,7 @@ public class BannedProxiesCountTriggerDto : MrjNumComparisonTrigger
 [PolyType("cpmCountTrigger")]
 [MapsFrom(typeof(CPMTrigger))]
 [MapsTo(typeof(CPMTrigger))]
-public class CPMTriggerDto : MrjNumComparisonTrigger
+public class CpmTriggerDto : MrjNumComparisonTrigger
 {
     
 }

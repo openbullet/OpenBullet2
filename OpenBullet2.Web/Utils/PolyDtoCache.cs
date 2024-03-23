@@ -1,5 +1,4 @@
-﻿using Microsoft.Scripting.Utils;
-using OpenBullet2.Web.Attributes;
+﻿using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos;
 using System.Reflection;
 
@@ -26,11 +25,6 @@ static internal class PolyDtoCache
         
         var polyDtoTypes = assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(PolyDto)));
-
-        if (polyDtoTypes is null)
-        {
-            return;
-        }
 
         // For each poly type, get the subtypes and map their discrims
         foreach (var polyDtoType in polyDtoTypes)

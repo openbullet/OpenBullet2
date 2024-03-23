@@ -3,7 +3,7 @@
 /// <summary>
 /// Proxy stats.
 /// </summary>
-public class MRJProxyStatsDto
+public class MrjProxyStatsDto
 {
     /// <summary>
     /// The total number of proxies available.

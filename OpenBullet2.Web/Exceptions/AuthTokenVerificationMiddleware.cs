@@ -10,17 +10,14 @@ namespace OpenBullet2.Web.Exceptions;
 internal class AuthTokenVerificationMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<AuthTokenVerificationMiddleware> _logger;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly IAuthTokenService _authTokenService;
 
     public AuthTokenVerificationMiddleware(RequestDelegate next,
-        ILogger<AuthTokenVerificationMiddleware> logger,
         OpenBulletSettingsService obSettingsService,
         IAuthTokenService authTokenService)
     {
         _next = next;
-        _logger = logger;
         _obSettingsService = obSettingsService;
         _authTokenService = authTokenService;
     }
@@ -46,7 +43,7 @@ internal class AuthTokenVerificationMiddleware
 
         // If there is a token, validate it
         var token = context.Request.Headers["Authorization"]
-            .FirstOrDefault()?.Split(' ').Last();
+            .FirstOrDefault()?.Split(' ')[1];
 
         if (token is not null)
         {

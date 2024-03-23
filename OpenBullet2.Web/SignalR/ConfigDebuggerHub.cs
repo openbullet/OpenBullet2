@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
 using RuriLib.Models.Debugger;
@@ -17,17 +18,15 @@ namespace OpenBullet2.Web.SignalR;
 public class ConfigDebuggerHub : AuthorizedHub
 {
     private readonly ConfigDebuggerService _debuggerService;
-    private readonly ILogger<ConfigDebuggerHub> _logger;
     private readonly IMapper _mapper;
 
     /// <summary></summary>
     public ConfigDebuggerHub(ConfigDebuggerService debuggerService,
-        IAuthTokenService tokenService, ILogger<ConfigDebuggerHub> logger,
-        IMapper mapper, OpenBulletSettingsService obSettingsService)
+        IAuthTokenService tokenService, IMapper mapper,
+        OpenBulletSettingsService obSettingsService)
         : base(tokenService, obSettingsService, onlyAdmin: true)
     {
         _debuggerService = debuggerService;
-        _logger = logger;
         _mapper = mapper;
     }
 
@@ -44,7 +43,7 @@ public class ConfigDebuggerHub : AuthorizedHub
                 CommonMethods.Error,
                 new ErrorMessage("Please specify a config id"));
 
-            throw new Exception("Please specify a config id");
+            throw new ApiException(ErrorCode.MissingConfigId, "Please specify a config id");
         }
 
         _debuggerService.RegisterConnection(Context.ConnectionId, configId);

@@ -3,7 +3,7 @@
 /// <summary>
 /// A hit obtained by a multi run job.
 /// </summary>
-public class MRJHitDto
+public class MrjHitDto
 {
     /// <summary>
     /// The temporary id of the hit in memory.
@@ -28,7 +28,7 @@ public class MRJHitDto
     /// <summary>
     /// The proxy that was used to obtain the hit, if any.
     /// </summary>
-    public MRJProxy? Proxy { get; set; } = null;
+    public MrjProxy? Proxy { get; set; } = null;
 
     /// <summary>
     /// The data captured by the config's script.

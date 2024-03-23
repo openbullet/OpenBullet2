@@ -81,7 +81,7 @@ public class ProxyGroupController : ApiController
 
         await _proxyGroupRepo.AddAsync(entity);
 
-        _logger.LogInformation("Created a new proxy group with name {name}", dto.Name);
+        _logger.LogInformation("Created a new proxy group with name {Name}", dto.Name);
 
         return _mapper.Map<ProxyGroupDto>(entity);
     }
@@ -100,7 +100,7 @@ public class ProxyGroupController : ApiController
         _mapper.Map(dto, entity);
         await _proxyGroupRepo.UpdateAsync(entity);
 
-        _logger.LogInformation("Updated the information of the proxy group with id {id}", entity.Id);
+        _logger.LogInformation("Updated the information of the proxy group with id {Id}", entity.Id);
 
         return _mapper.Map<ProxyGroupDto>(entity);
     }
@@ -154,7 +154,7 @@ public class ProxyGroupController : ApiController
         // This will cascade delete all the proxies in the group
         await _proxyGroupRepo.DeleteAsync(entity);
         
-        _logger.LogInformation("Deleted the proxy group with id {id} and {proxyCount} proxies",
+        _logger.LogInformation("Deleted the proxy group with id {Id} and {ProxyCount} proxies",
             entity.Id, proxies.Count);
 
         return new AffectedEntriesDto
@@ -184,7 +184,7 @@ public class ProxyGroupController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning("Guest user {username} tried to access a proxy group not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a proxy group not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,

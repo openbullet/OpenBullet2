@@ -17,7 +17,7 @@ namespace OpenBullet2.Web.Services;
 /// <summary>
 /// Notifies clients about updates on multi run jobs.
 /// </summary>
-public class MultiRunJobService : IJobService, IDisposable
+public sealed class MultiRunJobService : IJobService, IDisposable
 {
     private readonly JobManagerService _jobManager;
     private readonly IHubContext<MultiRunJobHub> _hub;
@@ -120,7 +120,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // Add the connection to the list
         _connections[mrJob].Add(connectionId);
 
-        _logger.LogDebug("Registered new connection {connectionId} for multi run job {jobId}",
+        _logger.LogDebug("Registered new connection {ConnectionId} for multi run job {JobId}",
             connectionId, jobId);
     }
 
@@ -131,7 +131,7 @@ public class MultiRunJobService : IJobService, IDisposable
 
         _connections[job].Remove(connectionId);
 
-        _logger.LogDebug("Unregistered connection {connectionId} for multi run job {jobId}",
+        _logger.LogDebug("Unregistered connection {ConnectionId} for multi run job {JobId}",
             connectionId, jobId);
     }
 
@@ -144,7 +144,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Start().Forget(
             async ex => {
-                _logger.LogError(ex, "Could not start job {jobId}", jobId);
+                _logger.LogError(ex, "Could not start job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -158,7 +158,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Stop().Forget(
             async ex => {
-                _logger.LogError(ex, "Could not stop job {jobId}", jobId);
+                _logger.LogError(ex, "Could not stop job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -172,7 +172,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Abort().Forget(
             async ex => {
-                _logger.LogError(ex, "Could not abort job {jobId}", jobId);
+                _logger.LogError(ex, "Could not abort job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -186,7 +186,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Pause().Forget(
             async ex => {
-                _logger.LogError(ex, "Could not pause job {jobId}", jobId);
+                _logger.LogError(ex, "Could not pause job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -200,7 +200,7 @@ public class MultiRunJobService : IJobService, IDisposable
         // service is a singleton!!!
         job.Resume().Forget(
             async ex => {
-                _logger.LogError(ex, "Could not resume job {jobId}", jobId);
+                _logger.LogError(ex, "Could not resume job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -219,7 +219,7 @@ public class MultiRunJobService : IJobService, IDisposable
         job.ChangeBots(message.Desired).Forget(
             async ex =>
             {
-                _logger.LogError(ex, "Could not change bots for job {jobId}", jobId);
+                _logger.LogError(ex, "Could not change bots for job {JobId}", jobId);
                 await SendErrorAsync(ex);
             });
     }
@@ -260,10 +260,10 @@ public class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnTaskErrorAsync(object? sender, ErrorDetails<MultiRunInput> e)
     {
-        var message = new MRJTaskErrorMessage
+        var message = new MrjTaskErrorMessage
         {
             DataLine = e.Item.BotData.Line.Data,
-            Proxy = e.Item.BotData.Proxy is null ? null : new MRJProxy
+            Proxy = e.Item.BotData.Proxy is null ? null : new MrjProxy
             {
                 Host = e.Item.BotData.Proxy.Host,
                 Port = e.Item.BotData.Proxy.Port
@@ -276,10 +276,10 @@ public class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnResultAsync(object? sender, ResultDetails<MultiRunInput, CheckResult> e)
     {
-        var message = new MRJNewResultMessage
+        var message = new MrjNewResultMessage
         {
             DataLine = e.Item.BotData.Line.Data,
-            Proxy = e.Item.BotData.Proxy is null ? null : new MRJProxy
+            Proxy = e.Item.BotData.Proxy is null ? null : new MrjProxy
             {
                 Host = e.Item.BotData.Proxy.Host,
                 Port = e.Item.BotData.Proxy.Port
@@ -294,9 +294,9 @@ public class MultiRunJobService : IJobService, IDisposable
     {
         var job = (sender as MultiRunJob)!;
 
-        var message = new MRJStatsMessage
+        var message = new MrjStatsMessage
         {
-            DataStats = new MRJDataStatsDto
+            DataStats = new MrjDataStatsDto
             {
                 Hits = job.DataHits,
                 Custom = job.DataCustom,
@@ -309,7 +309,7 @@ public class MultiRunJobService : IJobService, IDisposable
                 Total = job.DataPool.Size,
                 Tested = job.DataTested
             },
-            ProxyStats = new MRJProxyStatsDto
+            ProxyStats = new MrjProxyStatsDto
             {
                 Total = job.ProxiesTotal,
                 Alive = job.ProxiesAlive,
@@ -328,15 +328,15 @@ public class MultiRunJobService : IJobService, IDisposable
 
     private async Task OnHitAsync(object? sender, Hit e)
     {
-        var message = new MRJNewHitMessage
+        var message = new MrjNewHitMessage
         {
-            Hit = new MRJHitDto
+            Hit = new MrjHitDto
             {
                 Id = e.Id,
                 Date = e.Date,
                 Type = e.Type,
                 Data = e.DataString,
-                Proxy = e.Proxy is not null ? new MRJProxy {
+                Proxy = e.Proxy is not null ? new MrjProxy {
                     Host = e.Proxy.Host,
                     Port = e.Proxy.Port
                 } : null,
@@ -377,15 +377,30 @@ public class MultiRunJobService : IJobService, IDisposable
     /// <inheritdoc/>
     public void Dispose()
     {
-        foreach (var job in _connections.Keys)
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            job.OnStatusChanged -= _onStatusChanged;
-            job.OnCompleted -= _onCompleted;
-            job.OnError -= _onError;
-            job.OnTaskError -= _onTaskError;
-            job.OnResult -= _onResult;
-            job.OnHit -= _onHit;
-            job.OnBotsChanged -= _onBotsChanged;
+            foreach (var job in _connections.Keys)
+            {
+                job.OnStatusChanged -= _onStatusChanged;
+                job.OnCompleted -= _onCompleted;
+                job.OnError -= _onError;
+                job.OnTaskError -= _onTaskError;
+                job.OnResult -= _onResult;
+                job.OnHit -= _onHit;
+                job.OnBotsChanged -= _onBotsChanged;
+            }
         }
+    }
+    
+    /// <inheritdoc/>
+    ~MultiRunJobService()
+    {
+        Dispose(false);
     }
 }

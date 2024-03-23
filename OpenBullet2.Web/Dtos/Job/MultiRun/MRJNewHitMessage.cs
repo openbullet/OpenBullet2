@@ -3,10 +3,10 @@
 /// <summary>
 /// A new hit has been found.
 /// </summary>
-public class MRJNewHitMessage
+public class MrjNewHitMessage
 {
     /// <summary>
     /// The hit.
     /// </summary>
-    public required MRJHitDto Hit { get; set; }
+    public required MrjHitDto Hit { get; set; }
 }

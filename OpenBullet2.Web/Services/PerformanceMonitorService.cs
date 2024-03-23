@@ -161,8 +161,9 @@ public class PerformanceMonitorService : IHostedService
             _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
         });
 
+        // Dispose the old cancellation token source and create a new one
+        _cts.Dispose();
         _cts = new();
-
 
         return Task.CompletedTask;
     }

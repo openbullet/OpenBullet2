@@ -59,7 +59,7 @@ public class GuestController : ApiController
         var entity = _mapper.Map<GuestEntity>(dto);
         await _guestRepo.AddAsync(entity);
 
-        _logger.LogInformation("Created a new guest user with username {username}",
+        _logger.LogInformation("Created a new guest user with username {Username}",
             dto.Username);
 
         return _mapper.Map<GuestDto>(entity);
@@ -98,7 +98,7 @@ public class GuestController : ApiController
         await _guestRepo.UpdateAsync(entity);
 
         _logger.LogInformation(
-            "Updated the information of guest user with username {username}",
+            "Updated the information of guest user with username {Username}",
             dto.Username);
 
         return _mapper.Map<GuestDto>(entity);
@@ -117,7 +117,7 @@ public class GuestController : ApiController
         await _guestRepo.UpdateAsync(entity);
 
         _logger.LogInformation(
-            "Updated the password of guest user with username {username}",
+            "Updated the password of guest user with username {Username}",
             entity.Username);
 
         return _mapper.Map<GuestDto>(entity);
@@ -157,7 +157,7 @@ public class GuestController : ApiController
 
         await _guestRepo.DeleteAsync(entity);
 
-        _logger.LogInformation("Deleted the guest user with username {username}",
+        _logger.LogInformation("Deleted the guest user with username {Username}",
             entity.Username);
 
         return Ok();

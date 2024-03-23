@@ -57,7 +57,7 @@ public class WordlistController : ApiController
 
         if (apiUser.Role is UserRole.Guest && wordlist.Owner.Id != apiUser.Id)
         {
-            _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a wordlist not owned by them",
                 apiUser.Username);
             
             throw new EntryNotFoundException(ErrorCode.WordlistNotFound,
@@ -100,7 +100,7 @@ public class WordlistController : ApiController
 
         if (!System.IO.File.Exists(entity.FileName))
         {
-            _logger.LogWarning("The wordlist with id {id} references a file that was moved or deleted from {fileName}",
+            _logger.LogWarning("The wordlist with id {Id} references a file that was moved or deleted from {FileName}",
                 id, entity.FileName);
 
             throw new ResourceNotFoundException(
@@ -132,16 +132,13 @@ public class WordlistController : ApiController
 
         // If the user is a guest, make sure they are not accessing
         // anything outside the UserData folder.
-        if (apiUser.Role is UserRole.Guest)
+        if (apiUser.Role is UserRole.Guest && !dto.FilePath.IsSubPathOf(_baseDir))
         {
-            if (!dto.FilePath.IsSubPathOf(_baseDir))
-            {
-                _logger.LogWarning("Guest user {username} tried to access a file outside of the allowed directory while creating a wordlist at {filePath}",
-                    apiUser.Username, dto.FilePath);
+            _logger.LogWarning("Guest user {Username} tried to access a file outside of the allowed directory while creating a wordlist at {FilePath}",
+                apiUser.Username, dto.FilePath);
 
-                throw new ForbiddenException(ErrorCode.FileOutsideAllowedPath,
-                    $"Guest users cannot access files outside of the {_baseDir} folder");
-            }
+            throw new ForbiddenException(ErrorCode.FileOutsideAllowedPath,
+                $"Guest users cannot access files outside of the {_baseDir} folder");
         }
 
         // Make sure the file exists
@@ -149,7 +146,7 @@ public class WordlistController : ApiController
         
         if (!System.IO.File.Exists(path))
         {
-            _logger.LogWarning("Tried to create a wordlist for the file {filePath} which does not exist",
+            _logger.LogWarning("Tried to create a wordlist for the file {FilePath} which does not exist",
                 dto.FilePath);
 
             throw new ResourceNotFoundException(
@@ -175,7 +172,7 @@ public class WordlistController : ApiController
 
         await _wordlistRepo.AddAsync(entity);
 
-        _logger.LogInformation("Created a new wordlist with id {id} for file {fileName}",
+        _logger.LogInformation("Created a new wordlist with id {Id} for file {FileName}",
             entity.Id, entity.FileName);
 
         return _mapper.Map<WordlistDto>(entity);
@@ -197,7 +194,7 @@ public class WordlistController : ApiController
         await using var fileStream = System.IO.File.OpenWrite(path);
         await file.CopyToAsync(fileStream);
 
-        _logger.LogInformation("Uploaded a wordlist file at {path}", path);
+        _logger.LogInformation("Uploaded a wordlist file at {Path}", path);
 
         return new WordlistFileDto { FilePath = path };
     }
@@ -269,7 +266,7 @@ public class WordlistController : ApiController
         _mapper.Map(dto, entity);
         await _wordlistRepo.UpdateAsync(entity);
 
-        _logger.LogInformation("Updated the information of the wordlist with id {id}",
+        _logger.LogInformation("Updated the information of the wordlist with id {Id}",
             entity.Id);
 
         return _mapper.Map<WordlistDto>(entity);
@@ -296,7 +293,7 @@ public class WordlistController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning("Guest user {username} tried to access a wordlist not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a wordlist not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.WordlistNotFound,

@@ -9,16 +9,11 @@ namespace OpenBullet2.Web.SignalR;
 /// </summary>
 public class MultiRunJobHub : JobHub
 {
-    private readonly ILogger<MultiRunJobHub> _logger;
-    private readonly MultiRunJobService _jobService;
-
     /// <summary></summary>
     public MultiRunJobHub(IAuthTokenService tokenService,
         ILogger<MultiRunJobHub> logger, MultiRunJobService jobService,
         OpenBulletSettingsService obSettingsService)
         : base(tokenService, logger, jobService, obSettingsService)
     {
-        _logger = logger;
-        _jobService = jobService;
     }
 }

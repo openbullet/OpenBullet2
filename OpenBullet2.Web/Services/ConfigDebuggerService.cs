@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ConfigDebugger;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.SignalR;
 using OpenBullet2.Web.Utils;
 using RuriLib.Logging;
@@ -17,7 +18,7 @@ namespace OpenBullet2.Web.Services;
 /// Holds references to <see cref="ConfigDebugger"/> instances.
 /// This holds 1 instance for each config.
 /// </summary>
-public class ConfigDebuggerService : IDisposable
+public sealed class ConfigDebuggerService : IDisposable
 {   
     private readonly PluginRepository _pluginRepo;
     private readonly IRandomUAProvider _randomUAProvider;
@@ -72,10 +73,10 @@ public class ConfigDebuggerService : IDisposable
         // If we don't already have a debugger for this config, create one
         if(!_debuggers.TryGetValue(configId, out var debugger))
         {
-            var config = _configService.Configs.FirstOrDefault(c => c.Id == configId);
+            var config = _configService.Configs.Find(c => c.Id == configId);
             debugger = new ConfigDebugger(config);
             _debuggers[configId] = debugger;
-            _connections[debugger] = new();
+            _connections[debugger] = [];
 
             // Hook the event handlers to the newly created debugger
             debugger.NewLogEntry += _onNewLog;
@@ -85,7 +86,7 @@ public class ConfigDebuggerService : IDisposable
         // Add the connection to the list
         _connections[debugger].Add(connectionId);
 
-        _logger.LogDebug("Registered new connection {connectionId} for debugger of config {configId}",
+        _logger.LogDebug("Registered new connection {ConnectionId} for debugger of config {ConfigId}",
             connectionId, configId);
     }
 
@@ -99,7 +100,7 @@ public class ConfigDebuggerService : IDisposable
             _connections[debugger].Remove(connectionId);
         }
 
-        _logger.LogDebug("Unregistered connection {connectionId} for debugger of config {configId}",
+        _logger.LogDebug("Unregistered connection {ConnectionId} for debugger of config {ConfigId}",
             connectionId, configId);
     }
 
@@ -212,7 +213,7 @@ public class ConfigDebuggerService : IDisposable
     private ConfigDebugger CreateNew(string configId, DebuggerOptions options)
     {
         // Get the config
-        var config = _configService.Configs.FirstOrDefault(c => c.Id == configId);
+        var config = _configService.Configs.Find(c => c.Id == configId);
 
         if (config is null)
         {
@@ -225,7 +226,8 @@ public class ConfigDebuggerService : IDisposable
             // If it's still running we cannot do that
             if (existing.Status is not ConfigDebuggerStatus.Idle)
             {
-                throw new Exception("The debugger status is not idle, so it cannot be started");
+                throw new ApiException(ErrorCode.ConfigDebuggerNotIdle,
+                    "The debugger status is not idle, so it cannot be started");
             }
 
             _debuggers.Remove(config.Id);
@@ -266,11 +268,24 @@ public class ConfigDebuggerService : IDisposable
     /// <inheritdoc/>
     public void Dispose()
     {
-        foreach (var debugger in _debuggers.Values)
-        {
-            debugger.Dispose();
-        }
-
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+    
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            foreach (var debugger in _debuggers.Values)
+            {
+                debugger.Dispose();
+            }
+        }
+    }
+    
+    /// <inheritdoc/>
+    ~ConfigDebuggerService()
+    {
+        Dispose(false);
     }
 }

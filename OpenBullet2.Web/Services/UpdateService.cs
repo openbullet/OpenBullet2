@@ -78,7 +78,9 @@ public class UpdateService : BackgroundService, IUpdateService
         isDebug = true;
 #endif
 
+#pragma warning disable S2583
         if (isDebug)
+#pragma warning restore S2583
         {
             _logger.LogWarning("Skipped updates check in debug mode");
             await Task.Delay(1);
@@ -88,9 +90,11 @@ public class UpdateService : BackgroundService, IUpdateService
         {
             try
             {
-                // Query the github api to get a list of the latest releases
+                // Query the GitHub api to get a list of the latest releases
                 using HttpClient client = new();
+#pragma warning disable S1075
                 client.BaseAddress = new Uri("https://api.github.com/repos/openbullet/OpenBullet2/");
+#pragma warning restore S1075
                 client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
                 var response = await client.GetAsync("releases/latest");
 
@@ -104,12 +108,12 @@ public class UpdateService : BackgroundService, IUpdateService
 
                 if (IsUpdateAvailable)
                 {
-                    _logger.LogInformation("There is a new update! Version {version}", RemoteVersion);
+                    _logger.LogInformation("There is a new update! Version {Version}", RemoteVersion);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.LogWarning("Failed to check for updates. I will retry in 3 hours.");
+                _logger.LogWarning(ex, "Failed to check for updates. I will retry in 3 hours.");
             }
         }
     }

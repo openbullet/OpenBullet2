@@ -143,7 +143,7 @@ public class ConfigController : ApiController
         if (config.IsRemote)
         {
             _logger.LogWarning(
-                $"Attempted to edit a remote config with id {dto.Id}");
+                "Attempted to edit a remote config with id {Id}", dto.Id);
 
             throw new ActionNotAllowedException(
                 ErrorCode.ActionNotAllowedForRemoteConfig,
@@ -181,7 +181,7 @@ public class ConfigController : ApiController
             // Save it
             await _configRepo.SaveAsync(config);
 
-            _logger.LogInformation("Edited config with id {id}", dto.Id);
+            _logger.LogInformation("Edited config with id {Id}", dto.Id);
         }
 
         return _mapper.Map<ConfigDto>(config);
@@ -200,7 +200,7 @@ public class ConfigController : ApiController
         await _configRepo.SaveAsync(config);
         _configService.Configs.Add(config);
 
-        _logger.LogInformation("Created config with id {id}", config.Id);
+        _logger.LogInformation("Created config with id {Id}", config.Id);
 
         return _mapper.Map<ConfigDto>(config);
     }
@@ -217,7 +217,7 @@ public class ConfigController : ApiController
         _configRepo.Delete(config);
         _configService.Configs.Remove(config);
 
-        _logger.LogInformation("Deleted config with id {id}", id);
+        _logger.LogInformation("Deleted config with id {Id}", id);
 
         return Ok();
     }
@@ -236,7 +236,7 @@ public class ConfigController : ApiController
         if (original.IsRemote)
         {
             _logger.LogWarning(
-                $"Attempted to edit a remote config with id {id}");
+                "Attempted to edit a remote config with id {Id}", id);
 
             throw new ActionNotAllowedException(
                 ErrorCode.ActionNotAllowedForRemoteConfig,
@@ -254,7 +254,7 @@ public class ConfigController : ApiController
 
         _configService.Configs.Add(cloned);
 
-        _logger.LogInformation("Created config with id {clonedId} by cloning {originalId}",
+        _logger.LogInformation("Created config with id {ClonedId} by cloning {OriginalId}",
             cloned.Id, original.Id);
 
         return _mapper.Map<ConfigDto>(cloned);
@@ -274,14 +274,14 @@ public class ConfigController : ApiController
         if (config.IsRemote)
         {
             _logger.LogWarning(
-                $"Attempted to download a remote config with id {id}");
+                "Attempted to download a remote config with id {Id}", id);
 
             throw new ActionNotAllowedException(
                 ErrorCode.ActionNotAllowedForRemoteConfig,
                 $"Attempted to download a remote config with id {id}");
         }
 
-        var fileName = config.Metadata.Name.ToValidFileName() + ".opk";
+        var fileName = $"{config.Metadata.Name.ToValidFileName()}.opk";
         var bytes = await ConfigPacker.PackAsync(config);
 
         return File(bytes, "application/octet-stream", fileName);
@@ -321,7 +321,7 @@ public class ConfigController : ApiController
         // Reload from disk to get the new configs
         await _configService.ReloadConfigsAsync();
 
-        _logger.LogInformation("Uploaded {fileCount} configs", files.Count);
+        _logger.LogInformation("Uploaded {FileCount} configs", files.Count);
 
         return new AffectedEntriesDto
         {
@@ -401,7 +401,7 @@ public class ConfigController : ApiController
 
     private Config GetConfigFromService(string id)
     {
-        var config = _configService.Configs.FirstOrDefault(c => c.Id == id);
+        var config = _configService.Configs.Find(c => c.Id == id);
 
         if (config is null)
         {
@@ -438,7 +438,7 @@ public class ConfigController : ApiController
         {
             block = BlockFactory.GetBlock<BlockInstance>(id);   
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw new EntryNotFoundException(ErrorCode.InvalidBlockId,
                 id, nameof(RuriLib.Globals.DescriptorsRepository));

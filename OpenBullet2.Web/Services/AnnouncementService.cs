@@ -8,11 +8,19 @@ namespace OpenBullet2.Web.Services;
 /// </summary>
 public class AnnouncementService : IAnnouncementService
 {
-    private record CachedAnnouncement(string Content, DateTime LastFetch);
-    private CachedAnnouncement? cached;
+    private readonly ILogger<AnnouncementService> _logger;
+
+    private sealed record CachedAnnouncement(string Content, DateTime LastFetch);
+    private CachedAnnouncement? _cached;
 
     /// <inheritdoc/>
-    public DateTime? LastFetched => cached?.LastFetch;
+    public DateTime? LastFetched => _cached?.LastFetch;
+
+    /// <summary></summary>
+    public AnnouncementService(ILogger<AnnouncementService> logger)
+    {
+        _logger = logger;
+    }
 
     /// <inheritdoc/>
     public async Task<string> FetchAnnouncementAsync()
@@ -23,7 +31,9 @@ public class AnnouncementService : IAnnouncementService
         isDebug = true;
 #endif
 
+#pragma warning disable S2583
         if (isDebug)
+#pragma warning restore S2583
         {
             await Task.Delay(1);
             return "This is a **test** `message`"; // Change this to some valid markdown string to test announcements in debug mode
@@ -31,11 +41,11 @@ public class AnnouncementService : IAnnouncementService
         else
         {
             // If the cache doesn't exist or is more than 3 hours old, fetch from the web
-            if (cached is null || DateTime.Now - cached.LastFetch > TimeSpan.FromHours(3))
+            if (_cached is null || DateTime.Now > _cached.LastFetch + TimeSpan.FromHours(3))
             {
                 try
                 {
-                    // For now we point it to the english announcement, if later
+                    // For now, we point it to the english announcement, if later
                     // on we decide to implement localization we need to change this.
                     var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/en.md";
                     using HttpClient client = new();
@@ -44,18 +54,20 @@ public class AnnouncementService : IAnnouncementService
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new Exception();
+                        _logger.LogError("Could not load the announcement: {StatusCode}", response.StatusCode);
+                        return "Could not load the announcement... are you offline?";
                     }
 
-                    cached = new(await response.Content.ReadAsStringAsync(), DateTime.Now);
+                    _cached = new(await response.Content.ReadAsStringAsync(), DateTime.Now);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Could not load the announcement");
                     return "Could not load the announcement... are you offline?";
                 }
             }
 
-            return cached.Content;
+            return _cached.Content;
         }
     }
 }

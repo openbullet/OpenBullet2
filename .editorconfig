@@ -187,11 +187,6 @@ dotnet_naming_style.pascal_case.required_prefix =
 dotnet_naming_style.pascal_case.required_suffix = 
 dotnet_naming_style.pascal_case.word_separator = 
 dotnet_naming_style.pascal_case.capitalization = pascal_case
-
-dotnet_naming_style.pascal_case.required_prefix = 
-dotnet_naming_style.pascal_case.required_suffix = 
-dotnet_naming_style.pascal_case.word_separator = 
-dotnet_naming_style.pascal_case.capitalization = pascal_case
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
 indent_size = 4
@@ -221,3 +216,8 @@ dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_rule.private_fields_should_be_camel_case_leading_underscore.severity = warning
 dotnet_naming_rule.private_fields_should_be_camel_case_leading_underscore.symbols = private_fields
 dotnet_naming_rule.private_fields_should_be_camel_case_leading_underscore.style = camel_case_leading_underscore
+
+# SonarAnalyzer.CSharp
+
+# S2094: Remove this empty class, write its code or make it an "interface"
+dotnet_diagnostic.S2094.severity = none

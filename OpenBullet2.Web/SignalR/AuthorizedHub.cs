@@ -19,15 +19,15 @@ public abstract class AuthorizedHub : Hub
     /// <summary>
     /// The verified user.
     /// </summary>
-    protected ApiUser? User { get; private set; }
+    private ApiUser? User { get; set; }
 
     /// <summary>
     /// Whether this hub should only be used by the admin user.
     /// </summary>
-    public bool OnlyAdmin { get; } = false;
+    private bool OnlyAdmin { get; }
 
     /// <summary></summary>
-    public AuthorizedHub(IAuthTokenService tokenService,
+    protected AuthorizedHub(IAuthTokenService tokenService,
         OpenBulletSettingsService obSettingsService, bool onlyAdmin)
     {
         _tokenService = tokenService;
@@ -36,7 +36,7 @@ public abstract class AuthorizedHub : Hub
     }
 
     /// <inheritdoc/>
-    public override async Task OnConnectedAsync()
+    public async override Task OnConnectedAsync()
     {
         // If the admin user does not need any login, allow anonymous requests
         if (!_obSettingsService.Settings.SecuritySettings.RequireAdminLogin)
@@ -71,7 +71,7 @@ public abstract class AuthorizedHub : Hub
 
         try
         {
-            var token = authHeader.Split(' ').Last();
+            var token = authHeader.Split(' ')[1];
             var validToken = _tokenService.ValidateToken(token);
             User = ApiUser.FromToken(validToken);
         }

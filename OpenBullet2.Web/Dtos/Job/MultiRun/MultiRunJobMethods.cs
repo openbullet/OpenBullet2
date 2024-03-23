@@ -1,6 +1,6 @@
 ﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
-internal class MultiRunJobMethods
+static internal class MultiRunJobMethods
 {
     public const string NewResult = "newResult";
     public const string NewHit = "newHit";

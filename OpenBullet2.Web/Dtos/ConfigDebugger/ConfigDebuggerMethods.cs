@@ -1,6 +1,6 @@
 ﻿namespace OpenBullet2.Web.Dtos.ConfigDebugger;
 
-internal class ConfigDebuggerMethods
+static internal class ConfigDebuggerMethods
 {
     public const string NewLogEntry = "newLogEntry";
     public const string DebuggerState = "debuggerState";

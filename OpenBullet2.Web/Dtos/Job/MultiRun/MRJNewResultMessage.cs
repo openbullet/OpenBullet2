@@ -3,7 +3,7 @@
 /// <summary>
 /// Message sent when a new result is generated.
 /// </summary>
-public class MRJNewResultMessage
+public class MrjNewResultMessage
 {
     /// <summary>
     /// The data line that generated this result.
@@ -13,7 +13,7 @@ public class MRJNewResultMessage
     /// <summary>
     /// The proxy, if any.
     /// </summary>
-    public MRJProxy? Proxy { get; set; }
+    public MrjProxy? Proxy { get; set; }
 
     /// <summary>
     /// The final status of the bot.

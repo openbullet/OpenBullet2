@@ -3,7 +3,7 @@
 /// <summary>
 /// Request to start a multi run job.
 /// </summary>
-public class MRJStartRequest
+public class MrjStartRequest
 {
     Dictionary<string, string> CustomInputAnswers { get; set; } = new();
 }

@@ -76,7 +76,7 @@ public class ProxyController : ApiController
 
         var duplicatesCount = await _proxyRepo.RemoveDuplicatesAsync(dto.ProxyGroupId);
 
-        _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
+        _logger.LogInformation("Added {ProxyCount} unique new proxies to proxy group {Name}",
             entities.Count - duplicatesCount, groupEntity.Name);
 
         return new AffectedEntriesDto
@@ -129,7 +129,7 @@ public class ProxyController : ApiController
 
         var duplicatesCount = await _proxyRepo.RemoveDuplicatesAsync(dto.ProxyGroupId);
 
-        _logger.LogInformation("Added {proxyCount} unique new proxies to proxy group {name}",
+        _logger.LogInformation("Added {ProxyCount} unique new proxies to proxy group {Name}",
             entities.Count - duplicatesCount, groupEntity.Name);
 
         return new AffectedEntriesDto
@@ -159,7 +159,7 @@ public class ProxyController : ApiController
         await _proxyRepo.UpdateAsync(toMove);
         await _proxyRepo.RemoveDuplicatesAsync(dto.DestinationGroupId);
 
-        _logger.LogInformation("Moved {proxyCount} proxies", toMove.Count);
+        _logger.LogInformation("Moved {ProxyCount} proxies", toMove.Count);
 
         return new AffectedEntriesDto
         {
@@ -198,7 +198,7 @@ public class ProxyController : ApiController
 
         await _proxyRepo.DeleteAsync(toDelete);
 
-        _logger.LogInformation("Deleted {proxyCount} proxies", toDelete.Count);
+        _logger.LogInformation("Deleted {ProxyCount} proxies", toDelete.Count);
 
         return new AffectedEntriesDto
         {
@@ -227,7 +227,7 @@ public class ProxyController : ApiController
 
         await _proxyRepo.DeleteAsync(toDelete);
 
-        _logger.LogInformation("Deleted {hitCount} proxies from proxy group {name}",
+        _logger.LogInformation("Deleted {HitCount} proxies from proxy group {Name}",
             toDelete.Count, groupEntity.Name);
 
         return new AffectedEntriesDto
@@ -250,7 +250,7 @@ public class ProxyController : ApiController
             }
             else
             {
-                _logger.LogWarning("Failed to parse proxy {line}", line);
+                _logger.LogWarning("Failed to parse proxy {Line}", line);
             }
         }
 
@@ -316,7 +316,7 @@ public class ProxyController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning("Guest user {username} tried to access a proxy group not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a proxy group not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.ProxyGroupNotFound,

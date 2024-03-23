@@ -2,6 +2,7 @@
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 
 namespace OpenBullet2.Web.SignalR;
@@ -11,16 +12,14 @@ namespace OpenBullet2.Web.SignalR;
 /// </summary>
 public abstract class JobHub : AuthorizedHub
 {
-    private readonly ILogger _logger;
     private readonly IJobService _jobService;
 
     /// <summary></summary>
-    public JobHub(IAuthTokenService tokenService,
+    protected JobHub(IAuthTokenService tokenService,
         ILogger logger, IJobService jobService,
         OpenBulletSettingsService obSettingsService)
         : base(tokenService, obSettingsService, onlyAdmin: false)
     {
-        _logger = logger;
         _jobService = jobService;
     }
 
@@ -37,7 +36,7 @@ public abstract class JobHub : AuthorizedHub
                 CommonMethods.Error,
                 new ErrorMessage("Please specify a job id"));
 
-            throw new Exception("Please specify a job id");
+            throw new ApiException(ErrorCode.MissingJobId, "Please specify a job id");
         }
 
         _jobService.RegisterConnection(Context.ConnectionId, (int)jobId);
@@ -99,7 +98,7 @@ public abstract class JobHub : AuthorizedHub
     /// <summary>
     /// Gets the job id provided by the user at connection setup.
     /// </summary>
-    protected int? GetJobId()
+    private int? GetJobId()
     {
         var request = Context.GetHttpContext()!.Request;
         var id = request.Query["jobId"].FirstOrDefault();

@@ -51,12 +51,12 @@ public class MultiRunJobDto : JobDto
     /// <summary>
     /// Statistics about the data lines.
     /// </summary>
-    public MRJDataStatsDto DataStats { get; set; } = new();
+    public MrjDataStatsDto DataStats { get; set; } = new();
 
     /// <summary>
     /// Statistics about the proxies.
     /// </summary>
-    public MRJProxyStatsDto ProxyStats { get; set; } = new();
+    public MrjProxyStatsDto ProxyStats { get; set; } = new();
 
     /// <summary>
     /// The number of checks per minute.
@@ -87,5 +87,5 @@ public class MultiRunJobDto : JobDto
     /// <summary>
     /// The list of hits.
     /// </summary>
-    public List<MRJHitDto> Hits { get; set; } = new();
+    public List<MrjHitDto> Hits { get; set; } = new();
 }

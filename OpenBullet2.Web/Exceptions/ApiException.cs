@@ -188,4 +188,19 @@ public static class ErrorCode
     /// Invalid block id.
     /// </summary>
     public const string InvalidBlockId = "INVALID_BLOCK_ID";
+    
+    /// <summary>
+    /// The config debugger is not idle.
+    /// </summary>
+    public const string ConfigDebuggerNotIdle = "CONFIG_DEBUGGER_NOT_IDLE";
+    
+    /// <summary>
+    /// Missing config id.
+    /// </summary>
+    public const string MissingConfigId = "MISSING_CONFIG_ID";
+    
+    /// <summary>
+    /// Missing job id.
+    /// </summary>
+    public const string MissingJobId = "MISSING_JOB_ID";
 }

@@ -4,7 +4,7 @@
 /// Sent at regular intervals while the job runs, contains
 /// information about the current stats.
 /// </summary>
-public class PCJStatsMessage
+public class PcjStatsMessage
 {
     /// <summary>
     /// The number of tested proxies.

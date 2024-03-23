@@ -4,17 +4,17 @@
 /// Sent at regular intervals while the job runs, contains
 /// information about the current stats.
 /// </summary>
-public class MRJStatsMessage
+public class MrjStatsMessage
 {
     /// <summary>
     /// Statistics about the data lines.
     /// </summary>
-    public MRJDataStatsDto DataStats { get; set; } = new();
+    public MrjDataStatsDto DataStats { get; set; } = new();
 
     /// <summary>
     /// Statistics about the proxies.
     /// </summary>
-    public MRJProxyStatsDto ProxyStats { get; set; } = new();
+    public MrjProxyStatsDto ProxyStats { get; set; } = new();
 
     /// <summary>
     /// The checks per minute.

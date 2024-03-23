@@ -1,6 +1,6 @@
 ﻿namespace OpenBullet2.Web.Dtos.Job;
 
-internal class JobMethods
+static internal class JobMethods
 {
     public const string StatusChanged = "statusChanged";
     public const string TimerTick = "timerTick";

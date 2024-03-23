@@ -5,7 +5,7 @@ namespace OpenBullet2.Web.Dtos.Job.ProxyCheck;
 /// <summary>
 /// Message sent when a new result is generated.
 /// </summary>
-public class PCJNewResultMessage
+public class PcjNewResultMessage
 {
     /// <summary>
     /// The host of the proxy.

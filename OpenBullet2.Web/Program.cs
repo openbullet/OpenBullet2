@@ -67,8 +67,6 @@ builder.Services.AddSignalR()
 
 // Swagger with versioning implemented according to this guide
 // https://referbruv.com/blog/integrating-aspnet-core-api-versions-with-swagger-ui/
-
-// builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddVersionedApiExplorer(setup =>
 {
     setup.GroupNameFormat = "'v'VVV";
@@ -109,6 +107,7 @@ builder.Services.AddSingleton<IConfigRepository>(service =>
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
+        service.GetRequiredService<ILogger<ConfigSharingService>>(),
         userDataFolder));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
@@ -144,11 +143,12 @@ var versionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDesc
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    foreach (var description in versionDescriptionProvider.ApiVersionDescriptions)
+    foreach (var groupName in versionDescriptionProvider.ApiVersionDescriptions
+                 .Select(description => description.GroupName))
     {
         options.SwaggerEndpoint(
-            $"/swagger/{description.GroupName}/swagger.json",
-            description.GroupName.ToUpperInvariant());
+            $"/swagger/{groupName}/swagger.json",
+            groupName.ToUpperInvariant());
     }
 });
 
@@ -205,8 +205,7 @@ app.MapFallbackToController(
     nameof(FallbackController).Replace("Controller", "")
 );
 
-var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>()?.Settings
-    ?? throw new Exception($"Missing service: {nameof(OpenBulletSettingsService)}");
+var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>().Settings;
 
 if (RootChecker.IsRoot())
 {
@@ -222,17 +221,14 @@ if (obSettings.SecuritySettings.HttpsRedirect)
 PolyDtoCache.Scan();
 
 // Apply DB migrations or create a DB if it doesn't exist
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>()?.CreateScope()
-    ?? throw new Exception($"Missing service: {nameof(ConfigService)}"))
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.Migrate();
 }
 
 // Load the configs
-var configService = app.Services.GetRequiredService<ConfigService>()
-    ?? throw new Exception($"Missing service: {nameof(ConfigService)}");
-
+var configService = app.Services.GetRequiredService<ConfigService>();
 await configService.ReloadConfigsAsync();
 
 // Start the job monitor at the start of the application,
@@ -245,6 +241,9 @@ app.Run();
 
 // This makes Program visible for integration tests
 #pragma warning disable S1118
+/// <summary>
+/// The main entry point for the application.
+/// </summary>
 public partial class Program
 {
     

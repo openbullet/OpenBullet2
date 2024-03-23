@@ -23,21 +23,15 @@ public class InfoController : ApiController
 {
     private readonly IAnnouncementService _announcementService;
     private readonly IUpdateService _updateService;
-    private readonly IMapper _mapper;
     private readonly IServiceProvider _serviceProvider;
-    private readonly PerformanceMonitorService _performanceMonitorService;
 
     /// <summary></summary>
     public InfoController(IAnnouncementService announcementService,
-        IUpdateService updateService, IMapper mapper,
-        IServiceProvider serviceProvider,
-        PerformanceMonitorService performanceMonitorService)
+        IUpdateService updateService, IServiceProvider serviceProvider)
     {
         _announcementService = announcementService;
         _updateService = updateService;
-        _mapper = mapper;
         _serviceProvider = serviceProvider;
-        _performanceMonitorService = performanceMonitorService;
     }
 
     /// <summary>
@@ -50,7 +44,7 @@ public class InfoController : ApiController
         var version = System.Reflection.Assembly
             .GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 1);
 
-        var buildDate = new DateTime(2000, 1, 1)
+        var buildDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             .AddDays(version.Build).AddSeconds(version.Revision * 2);
         
         var buildNumber = $"{version.Build}.{version.Revision}";

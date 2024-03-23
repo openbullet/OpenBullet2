@@ -128,7 +128,7 @@ public class JobController : ApiController
                 DataTotal = job.DataPool.Size,
                 DataTested = job.Status is JobStatus.Idle ? job.Skip : job.DataTested + job.Skip,
                 CPM = job.CPM,
-                Progress = job.Progress == -1 ? 0 : job.Progress
+                Progress = job.Progress < 0 ? 0 : job.Progress
             };
 
             dtos.Add(dto);
@@ -209,12 +209,12 @@ public class JobController : ApiController
 
         if (jobOptions is null)
         {
-            throw new Exception("The job options are null");
+            throw new ApiException(ErrorCode.InvalidJobConfiguration, "The job options are null");
         }
 
         if (jobOptions is not MultiRunJobOptions mrjJobOptions)
         {
-            throw new Exception("Invalid job options type");
+            throw new ApiException(ErrorCode.InvalidJobType, "Invalid job options type");
         }
 
         return _mapper.Map<MultiRunJobOptionsDto>(mrjJobOptions);
@@ -248,12 +248,12 @@ public class JobController : ApiController
 
         if (jobOptions is null)
         {
-            throw new Exception("The job options are null");
+            throw new ApiException(ErrorCode.InvalidJobConfiguration, "The job options are null");
         }
 
         if (jobOptions is not ProxyCheckJobOptions pcJobOptions)
         {
-            throw new Exception("Invalid job options type");
+            throw new ApiException(ErrorCode.InvalidJobType, "Invalid job options type");
         }
 
         return _mapper.Map<ProxyCheckJobOptionsDto>(pcJobOptions);
@@ -560,7 +560,7 @@ public class JobController : ApiController
     /// </summary>
     [HttpGet("multi-run/hit-log")]
     [MapToApiVersion("1.0")]
-    public ActionResult<MRJHitLogDto> GetHitLog(int jobId, string hitId)
+    public ActionResult<MrjHitLogDto> GetHitLog(int jobId, string hitId)
     {
         var job = GetJob(jobId);
         EnsureOwnership(job);
@@ -572,7 +572,7 @@ public class JobController : ApiController
                 $"The job with id {jobId} is not a multi run job");
         }
 
-        var hit = mrJob.Hits.FirstOrDefault(h => h.Id == hitId);
+        var hit = mrJob.Hits.Find(h => h.Id == hitId);
 
         if (hit is null)
         {
@@ -580,7 +580,7 @@ public class JobController : ApiController
                 hitId, nameof(MultiRunJob.Hits));
         }
         
-        return new MRJHitLogDto
+        return new MrjHitLogDto
         {
             Log = hit.BotLogger?.Entries.ToList()
         };
@@ -604,7 +604,7 @@ public class JobController : ApiController
         {
             job.Start().Forget(
                 e => _logger.LogError(
-                    "Error while starting job {jobId}: {message}", dto.JobId, e.Message));
+                    "Error while starting job {JobId}: {Message}", dto.JobId, e.Message));
         }
         
         return Ok();
@@ -628,7 +628,7 @@ public class JobController : ApiController
         {
             job.Stop().Forget(
                 e => _logger.LogError(
-                    "Error while stopping job {jobId}: {message}", dto.JobId, e.Message));
+                    "Error while stopping job {JobId}: {Message}", dto.JobId, e.Message));
         }
         
         return Ok();
@@ -652,7 +652,7 @@ public class JobController : ApiController
         {
             job.Pause().Forget(
                 e => _logger.LogError(
-                    "Error while pausing job {jobId}: {message}", dto.JobId, e.Message));
+                    "Error while pausing job {JobId}: {Message}", dto.JobId, e.Message));
         }
         
         return Ok();
@@ -676,7 +676,7 @@ public class JobController : ApiController
         {
             job.Resume().Forget(
                 e => _logger.LogError(
-                    "Error while resuming job {jobId}: {message}", dto.JobId, e.Message));
+                    "Error while resuming job {JobId}: {Message}", dto.JobId, e.Message));
         }
         
         return Ok();
@@ -700,7 +700,7 @@ public class JobController : ApiController
         {
             job.Abort().Forget(
                 e => _logger.LogError(
-                    "Error while aborting job {jobId}: {message}", dto.JobId, e.Message));
+                    "Error while aborting job {JobId}: {Message}", dto.JobId, e.Message));
         }
         
         return Ok();
@@ -799,7 +799,7 @@ public class JobController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != job.OwnerId)
         {
-            _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a job not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.JobNotFound,
@@ -815,7 +815,7 @@ public class JobController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.Owner?.Id)
         {
-            _logger.LogWarning("Guest user {username} tried to access a job not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a job not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.JobNotFound,
@@ -857,12 +857,12 @@ public class JobController : ApiController
 
         if (jobOptions is null)
         {
-            throw new Exception("The job options are null");
+            throw new ApiException(ErrorCode.InvalidJobConfiguration, "The job options are null");
         }
 
         if (jobOptions is not ProxyCheckJobOptions pcjJobOptions)
         {
-            throw new Exception("Invalid job options type");
+            throw new ApiException(ErrorCode.InvalidJobType, "Invalid job options type");
         }
 
         var groupName = "All";
@@ -903,7 +903,7 @@ public class JobController : ApiController
             CPM = job.CPM,
             Elapsed = job.Elapsed,
             Remaining = job.Remaining,
-            Progress = job.Progress == -1 ? 0 : job.Progress,
+            Progress = job.Progress < 0 ? 0 : job.Progress,
         };
     }
 
@@ -975,7 +975,7 @@ public class JobController : ApiController
             ProxyMode = job.ProxyMode,
             ProxySources = proxySources.ToList(),
             HitOutputs = hitOutputs,
-            DataStats = new MRJDataStatsDto
+            DataStats = new MrjDataStatsDto
             {
                 Hits = job.DataHits,
                 Custom = job.DataCustom,
@@ -988,7 +988,7 @@ public class JobController : ApiController
                 Total = job.DataPool.Size,
                 Tested = job.DataTested
             },
-            ProxyStats = new MRJProxyStatsDto
+            ProxyStats = new MrjProxyStatsDto
             {
                 Total = job.ProxiesTotal,
                 Alive = job.ProxiesAlive,
@@ -999,14 +999,14 @@ public class JobController : ApiController
             CaptchaCredit = job.CaptchaCredit,
             Elapsed = job.Elapsed,
             Remaining = job.Remaining,
-            Progress = job.Progress == -1 ? 0 : job.Progress,
-            Hits = job.Hits.Select(h => new MRJHitDto
+            Progress = job.Progress < 0 ? 0 : job.Progress,
+            Hits = job.Hits.Select(h => new MrjHitDto
             {
                 Id = h.Id,
                 Date = h.Date,
                 Type = h.Type,
                 Data = h.DataString,
-                Proxy = h.Proxy is not null ? new MRJProxy {
+                Proxy = h.Proxy is not null ? new MrjProxy {
                     Host = h.Proxy.Host,
                     Port = h.Proxy.Port
                 } : null,

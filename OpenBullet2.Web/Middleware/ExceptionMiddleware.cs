@@ -28,7 +28,6 @@ internal class ExceptionMiddleware
         }
         catch (UnauthorizedException ex)
         {
-            _logger.LogWarning("Unauthorized request: {message}", ex.Message);
             await RespondAsync(context,
                 new ApiError(ex.ErrorCode, ex.Message),
                 HttpStatusCode.Unauthorized);
@@ -47,7 +46,6 @@ internal class ExceptionMiddleware
         }
         catch (ApiException ex)
         {
-            _logger.LogWarning("Request failed with managed exception: {message}", ex.Message);
             await RespondAsync(context,
                 new ApiError(ex.ErrorCode, ex.Message, ex.StackTrace?.Trim()),
                 HttpStatusCode.BadRequest);

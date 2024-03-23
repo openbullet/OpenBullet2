@@ -3,7 +3,7 @@
 /// <summary>
 /// A proxy in a multi run job.
 /// </summary>
-public class MRJProxy
+public class MrjProxy
 {
     /// <summary>
     /// The host of the proxy.

@@ -34,9 +34,8 @@ static internal class BlockMapper
                     var httpRequestDescriptor = RuriLib.Globals
                         .DescriptorsRepository.GetAs<HttpRequestBlockDescriptor>(id);
                     var httpRequestBlock = new HttpRequestBlockInstance(httpRequestDescriptor);
-                    var httpRequestBlockDto = JsonSerializer
-                        .Deserialize<HttpRequestBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var httpRequestBlockDto = jsonElement
+                        .Deserialize<HttpRequestBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(httpRequestBlockDto!, httpRequestBlock);
                     block = httpRequestBlock;
                     break;
@@ -45,9 +44,8 @@ static internal class BlockMapper
                     var parseDescriptor = RuriLib.Globals
                         .DescriptorsRepository.GetAs<ParseBlockDescriptor>(id);
                     var parseBlock = new ParseBlockInstance(parseDescriptor);
-                    var parseBlockDto = JsonSerializer
-                        .Deserialize<ParseBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var parseBlockDto = jsonElement
+                        .Deserialize<ParseBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(parseBlockDto!, parseBlock);
                     block = parseBlock;
                     break;
@@ -56,9 +54,8 @@ static internal class BlockMapper
                     var scriptDescriptor = RuriLib.Globals
                         .DescriptorsRepository.GetAs<ScriptBlockDescriptor>(id);
                     var scriptBlock = new ScriptBlockInstance(scriptDescriptor);
-                    var scriptBlockDto = JsonSerializer
-                        .Deserialize<ScriptBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var scriptBlockDto = jsonElement
+                        .Deserialize<ScriptBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(scriptBlockDto!, scriptBlock);
                     block = scriptBlock;
                     break;
@@ -67,9 +64,8 @@ static internal class BlockMapper
                     var keycheckDescriptor = RuriLib.Globals
                         .DescriptorsRepository.GetAs<KeycheckBlockDescriptor>(id);
                     var keycheckBlock = new KeycheckBlockInstance(keycheckDescriptor);
-                    var keycheckBlockDto = JsonSerializer
-                        .Deserialize<KeycheckBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var keycheckBlockDto = jsonElement
+                        .Deserialize<KeycheckBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(keycheckBlockDto!, keycheckBlock);
                     block = keycheckBlock;
                     break;
@@ -77,9 +73,8 @@ static internal class BlockMapper
                 case "loliCode":
                     var lolicodeBlock = new LoliCodeBlockInstance(
                         new LoliCodeBlockDescriptor());
-                    var lolicodeBlockDto = JsonSerializer
-                        .Deserialize<LoliCodeBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var lolicodeBlockDto = jsonElement
+                        .Deserialize<LoliCodeBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(lolicodeBlockDto!, lolicodeBlock);
                     block = lolicodeBlock;
                     break;
@@ -88,9 +83,8 @@ static internal class BlockMapper
                     var autoDescriptor = RuriLib.Globals
                         .DescriptorsRepository.GetAs<AutoBlockDescriptor>(id);
                     var autoBlock = new AutoBlockInstance(autoDescriptor);
-                    var autoBlockDto = JsonSerializer
-                        .Deserialize<AutoBlockInstanceDto>(
-                        jsonElement, Globals.JsonOptions);
+                    var autoBlockDto = jsonElement
+                        .Deserialize<AutoBlockInstanceDto>(Globals.JsonOptions);
                     MapBlock(autoBlockDto!, autoBlock);
                     block = autoBlock;
                     break;
@@ -140,17 +134,12 @@ static internal class BlockMapper
         MapBaseBlock(dto, block);
         foreach (var keychainDto in dto.Keychains)
         {
-            var keychain = new Keychain
-            {
-                ResultStatus = keychainDto.ResultStatus,
-                Mode = keychainDto.Mode
-            };
+            var keychain = new Keychain { ResultStatus = keychainDto.ResultStatus, Mode = keychainDto.Mode };
 
             foreach (var k in keychainDto.Keys)
             {
                 var keyDto = PolyMapper.ConvertPolyDto<KeyDto>((JsonElement)k);
-                Key key = keyDto switch
-                {
+                Key key = keyDto switch {
                     StringKeyDto x => new StringKey { Comparison = x.Comparison },
                     IntKeyDto x => new IntKey { Comparison = x.Comparison },
                     FloatKeyDto x => new FloatKey { Comparison = x.Comparison },
@@ -227,7 +216,7 @@ static internal class BlockMapper
 
             HttpContentSettingsGroup content;
 
-            switch(contentDto)
+            switch (contentDto)
             {
                 case StringHttpContentSettingsGroupDto x:
                     var str = new StringHttpContentSettingsGroup();
@@ -255,7 +244,7 @@ static internal class BlockMapper
 
                 default:
                     throw new NotImplementedException();
-            };
+            }
 
             multipart.Contents.Add(content);
         }
@@ -266,18 +255,12 @@ static internal class BlockMapper
         block.Disabled = dto.Disabled;
         block.Label = dto.Label;
 
-        foreach (var kvp in dto.Settings)
-        {
-            MapSetting(kvp.Value, block.Settings[kvp.Key]);
-        }
+        foreach (var kvp in dto.Settings) MapSetting(kvp.Value, block.Settings[kvp.Key]);
     }
 
-    private static BlockSetting MapSetting(BlockSettingDto? dto, BlockSetting setting)
+    private static void MapSetting(BlockSettingDto? dto, BlockSetting setting)
     {
-        if (dto is null)
-        {
-            return setting;
-        }
+        if (dto is null) return;
 
         setting.InputMode = dto.InputMode;
         setting.InputVariableName = dto.InputVariableName;
@@ -307,24 +290,22 @@ static internal class BlockMapper
                 break;
 
             case BlockSettingType.ListOfStrings:
-                ((ListOfStringsSetting)setting.FixedSetting).Value = JsonSerializer
-                    .Deserialize<List<string>>(value, Globals.JsonOptions);
-                ((InterpolatedListOfStringsSetting)setting.InterpolatedSetting).Value = JsonSerializer
-                    .Deserialize<List<string>>(value, Globals.JsonOptions);
+                ((ListOfStringsSetting)setting.FixedSetting).Value = value
+                    .Deserialize<List<string>>(Globals.JsonOptions);
+                ((InterpolatedListOfStringsSetting)setting.InterpolatedSetting).Value = value
+                    .Deserialize<List<string>>(Globals.JsonOptions);
                 break;
 
             case BlockSettingType.DictionaryOfStrings:
-                ((DictionaryOfStringsSetting)setting.FixedSetting).Value = JsonSerializer
-                    .Deserialize<Dictionary<string, string>>(value, Globals.JsonOptions);
-                ((InterpolatedDictionaryOfStringsSetting)setting.InterpolatedSetting).Value = JsonSerializer
-                    .Deserialize<Dictionary<string, string>>(value, Globals.JsonOptions);
+                ((DictionaryOfStringsSetting)setting.FixedSetting).Value = value
+                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
+                ((InterpolatedDictionaryOfStringsSetting)setting.InterpolatedSetting).Value = value
+                    .Deserialize<Dictionary<string, string>>(Globals.JsonOptions);
                 break;
 
             case BlockSettingType.Enum:
                 ((EnumSetting)setting.FixedSetting).Value = value.GetString();
                 break;
         }
-
-        return setting;
     }
 }

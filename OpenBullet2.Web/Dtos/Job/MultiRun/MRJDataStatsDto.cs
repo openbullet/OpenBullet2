@@ -3,7 +3,7 @@
 /// <summary>
 /// Data stats.
 /// </summary>
-public class MRJDataStatsDto
+public class MrjDataStatsDto
 {
     /// <summary>
     /// The number of hits this job got.

@@ -47,7 +47,7 @@ public class SharedController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<EndpointDto> CreateEndpoint(EndpointDto dto)
     {
-        var existing = _configSharingService.Endpoints.FirstOrDefault(
+        var existing = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 
         if (existing is not null)
@@ -61,7 +61,7 @@ public class SharedController : ApiController
 
         _configSharingService.Save();
 
-        _logger.LogInformation("Created shared endpoint at route {route}", dto.Route);
+        _logger.LogInformation("Created shared endpoint at route {Route}", dto.Route);
 
         return _mapper.Map<EndpointDto>(endpoint);
     }
@@ -74,7 +74,7 @@ public class SharedController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<EndpointDto> UpdateEndpoint(EndpointDto dto)
     {
-        var endpoint = _configSharingService.Endpoints.FirstOrDefault(
+        var endpoint = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 
         if (endpoint is null)
@@ -86,7 +86,7 @@ public class SharedController : ApiController
         _mapper.Map(dto, endpoint);
         _configSharingService.Save();
 
-        _logger.LogInformation("Updated shared endpoint at route {route}", dto.Route);
+        _logger.LogInformation("Updated shared endpoint at route {Route}", dto.Route);
 
         return _mapper.Map<EndpointDto>(endpoint);
     }
@@ -99,7 +99,7 @@ public class SharedController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult DeleteEndpoint(string route)
     {
-        var endpoint = _configSharingService.Endpoints.FirstOrDefault(
+        var endpoint = _configSharingService.Endpoints.Find(
             e => e.Route == route);
 
         if (endpoint is null)

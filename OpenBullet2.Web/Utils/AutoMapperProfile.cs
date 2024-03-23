@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BCrypt.Net;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
@@ -29,15 +30,12 @@ using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Blocks.Custom;
 using RuriLib.Models.Blocks.Custom.HttpRequest;
-using RuriLib.Models.Blocks.Custom.HttpRequest.Multipart;
 using RuriLib.Models.Blocks.Custom.Keycheck;
 using RuriLib.Models.Blocks.Parameters;
 using RuriLib.Models.Blocks.Settings;
 using RuriLib.Models.Blocks.Settings.Interpolated;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
-using RuriLib.Models.Data;
-using RuriLib.Models.Data.DataPools;
 using RuriLib.Models.Data.Resources.Options;
 using RuriLib.Models.Data.Rules;
 using RuriLib.Models.Debugger;
@@ -47,8 +45,13 @@ using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
 using RuriLib.Models.Jobs.StartConditions;
+using RuriLib.Models.Settings;
 using System.Reflection;
 using System.Text.Json;
+using Action = RuriLib.Models.Jobs.Monitor.Actions.Action;
+using Endpoint = OpenBullet2.Core.Models.Sharing.Endpoint;
+using GeneralSettings = OpenBullet2.Core.Models.Settings.GeneralSettings;
+using ProxySettings = RuriLib.Models.Settings.ProxySettings;
 
 namespace OpenBullet2.Web.Utils;
 
@@ -62,27 +65,19 @@ internal class AutoMapperProfile : Profile
             var mapsFromAttributes = type.GetCustomAttributes<MapsFromAttribute>();
 
             foreach (var mapsFrom in mapsFromAttributes)
-            {
                 if (mapsFrom.AutoMap)
-                {
                     CreateMap(mapsFrom.SourceType, type);
-                }
-            }
 
             var mapsToAttributes = type.GetCustomAttributes<MapsToAttribute>();
 
             foreach (var mapsTo in mapsToAttributes)
-            {
                 if (mapsTo.AutoMap)
-                {
                     CreateMap(type, mapsTo.DestinationType);
-                }
-            }
         }
 
         CreateMap<CreateGuestDto, GuestEntity>()
-            .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto => 
-                BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.SaltRevision.Revision2B)))
+            .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto =>
+                BCrypt.Net.BCrypt.HashPassword(dto.Password, SaltRevision.Revision2B)))
             .ForMember(entity => entity.AllowedAddresses, e => e.MapFrom(dto =>
                 string.Join(',', dto.AllowedAddresses)));
 
@@ -92,7 +87,7 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<UpdateGuestPasswordDto, GuestEntity>()
             .ForMember(entity => entity.PasswordHash, e => e.MapFrom(dto =>
-                BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.SaltRevision.Revision2B)));
+                BCrypt.Net.BCrypt.HashPassword(dto.Password, SaltRevision.Revision2B)));
 
         CreateMap<GuestEntity, GuestDto>()
             .ForMember(dto => dto.AllowedAddresses, e => e.MapFrom(entity =>
@@ -104,15 +99,15 @@ internal class AutoMapperProfile : Profile
         CreateMap<OpenBulletSettings, OpenBulletSettingsDto>().ReverseMap();
         CreateMap<OpenBulletSettings, SafeOpenBulletSettingsDto>();
         CreateMap<SecuritySettings, OBSecuritySettingsDto>().ReverseMap();
-        CreateMap<Core.Models.Settings.GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
-        CreateMap<Core.Models.Settings.GeneralSettings, SafeOBGeneralSettingsDto>();
+        CreateMap<GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
+        CreateMap<GeneralSettings, SafeOBGeneralSettingsDto>();
         CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
-        CreateMap<RuriLib.Models.Settings.GlobalSettings, RuriLib.Models.Settings.GlobalSettings>();
+        CreateMap<GlobalSettings, GlobalSettings>();
         CreateMap<RuriLib.Models.Settings.GeneralSettings, RuriLib.Models.Settings.GeneralSettings>();
-        CreateMap<RuriLib.Models.Settings.CaptchaSettings, RuriLib.Models.Settings.CaptchaSettings>();
-        CreateMap<RuriLib.Models.Settings.ProxySettings, RuriLib.Models.Settings.ProxySettings>();
-        CreateMap<RuriLib.Models.Settings.PuppeteerSettings, RuriLib.Models.Settings.PuppeteerSettings>();
-        CreateMap<RuriLib.Models.Settings.SeleniumSettings, RuriLib.Models.Settings.SeleniumSettings>();
+        CreateMap<CaptchaSettings, CaptchaSettings>();
+        CreateMap<ProxySettings, ProxySettings>();
+        CreateMap<PuppeteerSettings, PuppeteerSettings>();
+        CreateMap<SeleniumSettings, SeleniumSettings>();
 
         CreateMap<HitEntity, HitDto>();
         CreateMap<UpdateHitDto, HitEntity>();
@@ -143,10 +138,10 @@ internal class AutoMapperProfile : Profile
         CreateMap<UpdateProxyGroupDto, ProxyGroupEntity>();
 
         CreateMap<ProxyCheckJob, ProxyCheckJobOverviewDto>()
-            .ForMember(dto => dto.Progress, e => e.MapFrom(job => job.Progress == -1 ? 0 : job.Progress));
+            .ForMember(dto => dto.Progress, e => e.MapFrom(job => job.Progress < 0 ? 0 : job.Progress));
 
         CreateMap<ProxyCheckTarget, ProxyCheckTargetDto>().ReverseMap();
-        
+
         CreateMap<CreateProxyCheckJobDto, ProxyCheckJobOptions>()
             .ForMember(o => o.CheckOutput, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<ProxyCheckOutputOptionsDto, ProxyCheckOutputOptions>(
@@ -216,7 +211,7 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.CreationDate, e => e.MapFrom(c => c.Metadata.CreationDate))
             .ForMember(dto => dto.LastModified, e => e.MapFrom(c => c.Metadata.LastModified))
             .ForMember(dto => dto.Name, e => e.MapFrom(c => c.Metadata.Name))
-            .ForMember(dto => dto.NeedsProxies, e => e.MapFrom(c => 
+            .ForMember(dto => dto.NeedsProxies, e => e.MapFrom(c =>
                 c.Settings.ProxySettings.UseProxies));
 
         CreateMap<Config, ConfigDto>();
@@ -225,33 +220,31 @@ internal class AutoMapperProfile : Profile
         CreateMap<ConfigMetadata, ConfigMetadataDto>();
         CreateMap<ConfigSettings, ConfigSettingsDto>().ReverseMap();
         CreateMap<RuriLib.Models.Configs.Settings.GeneralSettings, ConfigGeneralSettingsDto>().ReverseMap();
-        CreateMap<ProxySettings, ConfigProxySettingsDto>().ReverseMap();
+        CreateMap<RuriLib.Models.Configs.Settings.ProxySettings, ConfigProxySettingsDto>().ReverseMap();
         CreateMap<InputSettings, ConfigInputSettingsDto>().ReverseMap();
         CreateMap<DataSettings, ConfigDataSettingsDto>()
             .ForMember(dto => dto.DataRules, e => e.MapFrom(
-                (s, d, i, ctx) => new DataRulesDto
-                {
+                (s, d, i, ctx) => new DataRulesDto {
                     Simple = ctx.Mapper.Map<List<SimpleDataRuleDto>>(
                         s.DataRules.OfType<SimpleDataRule>().ToList()),
                     Regex = ctx.Mapper.Map<List<RegexDataRuleDto>>(
                         s.DataRules.OfType<RegexDataRule>().ToList())
                 }))
             .ForMember(dto => dto.Resources, e => e.MapFrom(
-                (s, d, i, ctx) => new ResourcesDto
-                {
+                (s, d, i, ctx) => new ResourcesDto {
                     LinesFromFile = ctx.Mapper.Map<List<LinesFromFileResourceDto>>(
-                        s.DataRules.OfType<LinesFromFileResourceOptions>().ToList()),
+                        s.Resources.OfType<LinesFromFileResourceOptions>().ToList()),
                     RandomLinesFromFile = ctx.Mapper.Map<List<RandomLinesFromFileResourceDto>>(
-                        s.DataRules.OfType<RandomLinesFromFileResourceOptions>().ToList())
+                        s.Resources.OfType<RandomLinesFromFileResourceOptions>().ToList())
                 }));
 
         CreateMap<ConfigDataSettingsDto, DataSettings>()
             .ForMember(settings => settings.DataRules, e => e.MapFrom(
-                    (s, d, i, ctx) => MapDataRules(s.DataRules, ctx.Mapper)
-                ))
+                (s, d, i, ctx) => MapDataRules(s.DataRules, ctx.Mapper)
+            ))
             .ForMember(settings => settings.Resources, e => e.MapFrom(
-                    (s, d, i, ctx) => MapResources(s.Resources, ctx.Mapper)
-                ));
+                (s, d, i, ctx) => MapResources(s.Resources, ctx.Mapper)
+            ));
 
         CreateMap<BrowserSettings, ConfigBrowserSettingsDto>().ReverseMap();
         CreateMap<ScriptSettings, ConfigScriptSettingsDto>().ReverseMap();
@@ -261,7 +254,7 @@ internal class AutoMapperProfile : Profile
         CreateMap<LinesFromFileResourceOptions, LinesFromFileResourceDto>().ReverseMap();
         CreateMap<RandomLinesFromFileResourceOptions, RandomLinesFromFileResourceDto>().ReverseMap();
 
-        CreateMap<Core.Models.Sharing.Endpoint, EndpointDto>().ReverseMap();
+        CreateMap<Endpoint, EndpointDto>().ReverseMap();
 
         // Allow conversion between PagedLists with different generic type
         // (the types must be mapped separately)
@@ -278,13 +271,13 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<TriggerDto, Trigger>(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, RuriLib.Models.Jobs.Monitor.Actions.Action>(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, Action>(s.Actions, ctx.Mapper)));
 
         CreateMap<UpdateTriggeredActionDto, TriggeredAction>()
             .ForMember(dto => dto.Triggers, e => e.MapFrom(
                 (s, d, i, ctx) => PolyMapper.MapBetween<TriggerDto, Trigger>(s.Triggers, ctx.Mapper)))
             .ForMember(dto => dto.Actions, e => e.MapFrom(
-                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, RuriLib.Models.Jobs.Monitor.Actions.Action>(s.Actions, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapBetween<ActionDto, Action>(s.Actions, ctx.Mapper)));
 
         // Triggers
         CreateMap<TimeElapsedTriggerDto, TimeElapsedTrigger>()
@@ -341,7 +334,7 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<HttpRequestBlockInstance, HttpRequestBlockInstanceDto>()
             .ForMember(dto => dto.RequestParams, e => e.MapFrom(
-                 (s, d, i, ctx) => PolyMapper.MapFrom(s.RequestParams, ctx.Mapper)));
+                (s, d, i, ctx) => PolyMapper.MapFrom(s.RequestParams, ctx.Mapper)));
 
         CreateMap<HttpRequestBlockInstanceDto, HttpRequestBlockInstance>()
             .ForMember(m => m.RequestParams, e => e.MapFrom(
@@ -383,18 +376,14 @@ internal class AutoMapperProfile : Profile
     private static object MapBlockSettingValue(BlockSetting setting)
     {
         if (setting.InputMode is SettingInputMode.Interpolated)
-        {
-            return setting.InterpolatedSetting switch
-            {
+            return setting.InterpolatedSetting switch {
                 InterpolatedStringSetting x => x.Value,
                 InterpolatedListOfStringsSetting x => x.Value,
                 InterpolatedDictionaryOfStringsSetting x => x.Value,
                 _ => throw new NotImplementedException()
             };
-        }
 
-        return setting.FixedSetting switch
-        {
+        return setting.FixedSetting switch {
             StringSetting x => x.Value ?? string.Empty,
             IntSetting x => x.Value,
             FloatSetting x => x.Value,
@@ -410,18 +399,14 @@ internal class AutoMapperProfile : Profile
     private static BlockSettingType MapBlockSettingType(BlockSetting setting)
     {
         if (setting.InputMode is SettingInputMode.Interpolated)
-        {
-            return setting.InterpolatedSetting switch
-            {
+            return setting.InterpolatedSetting switch {
                 InterpolatedStringSetting => BlockSettingType.String,
                 InterpolatedListOfStringsSetting => BlockSettingType.ListOfStrings,
                 InterpolatedDictionaryOfStringsSetting => BlockSettingType.DictionaryOfStrings,
                 _ => throw new NotImplementedException()
             };
-        }
 
-        return setting.FixedSetting switch
-        {
+        return setting.FixedSetting switch {
             StringSetting => BlockSettingType.String,
             IntSetting => BlockSettingType.Int,
             FloatSetting => BlockSettingType.Float,
@@ -453,10 +438,9 @@ internal class AutoMapperProfile : Profile
             dto.RandomLinesFromFile));
         return resources;
     }
-    
+
     private static BlockInstanceType GetBlockInstanceType(BlockInstance instance) =>
-        instance switch
-        {
+        instance switch {
             AutoBlockInstance => BlockInstanceType.Auto,
             ParseBlockInstance => BlockInstanceType.Parse,
             ScriptBlockInstance => BlockInstanceType.Script,

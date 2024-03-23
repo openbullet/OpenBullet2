@@ -145,7 +145,7 @@ public class JobMonitorController : ApiController
     private TriggeredAction GetTriggeredAction(string id)
     {
         var actions = _jobMonitorService.TriggeredActions;
-        var targetAction = actions.FirstOrDefault(a => a.Id == id);
+        var targetAction = actions.Find(a => a.Id == id);
 
         if (targetAction is null)
         {

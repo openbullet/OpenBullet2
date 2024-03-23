@@ -11,14 +11,6 @@ namespace OpenBullet2.Web.Controllers;
 [ApiVersion("1.0")]
 public class DebugController : ApiController
 {
-    private readonly ILogger<DebugController> _logger;
-
-    /// <summary></summary>
-    public DebugController(ILogger<DebugController> logger)
-    {
-        _logger = logger;
-    }
-
     /// <summary>
     /// Trigger the garbage collector.
     /// </summary>
@@ -26,7 +18,9 @@ public class DebugController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult GarbageCollect(GarbageCollectRequestDto dto)
     {
-        GC.Collect(dto.Generations is -1 ? GC.MaxGeneration : dto.Generations, 
+#pragma warning disable S1215
+        GC.Collect(dto.Generations is -1 ? GC.MaxGeneration : dto.Generations,
+#pragma warning restore S1215
             dto.Mode, dto.Blocking, dto.Compacting);
         return Ok();
     }

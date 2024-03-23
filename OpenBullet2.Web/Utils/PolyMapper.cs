@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OpenBullet2.Web.Dtos;
+using OpenBullet2.Web.Exceptions;
 using System.Text.Json;
 
 namespace OpenBullet2.Web.Utils;
@@ -89,7 +90,7 @@ static internal class PolyMapper
 
         if (subTypes.Length == 0)
         {
-            throw new Exception($"No subtypes found for type {typeof(T).FullName}");
+            throw new MappingException($"No subtypes found for type {typeof(T).FullName}");
         }
 
         var polyTypeName = jsonElement
@@ -97,7 +98,7 @@ static internal class PolyMapper
 
         if (polyTypeName is null)
         {
-            throw new Exception($"The json document has no _polyTypeName field");
+            throw new MappingException("The json document has no _polyTypeName field");
         }
 
         var subType = PolyDtoCache.GetPolyTypeFromName(polyTypeName);
@@ -105,9 +106,9 @@ static internal class PolyMapper
         if (subType is null)
         {
             var validTypeNames = PolyDtoCache.GetValidPolyTypeNames<T>();
-            throw new Exception($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
+            throw new MappingException($"Invalid _polyTypeName: {polyTypeName}. Valid values: {string.Join(", ", validTypeNames)}");
         }
 
-        return (T?)JsonSerializer.Deserialize(jsonElement, subType, Globals.JsonOptions);
+        return (T?)jsonElement.Deserialize(subType, Globals.JsonOptions);
     }
 }

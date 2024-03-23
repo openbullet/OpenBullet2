@@ -125,7 +125,7 @@ public class HitController : ApiController
         _mapper.Map(dto, entity);
         await _hitRepo.UpdateAsync(entity);
 
-        _logger.LogInformation("Updated the information of hit with id {id}", dto.Id);
+        _logger.LogInformation("Updated the information of hit with id {Id}", dto.Id);
 
         return _mapper.Map<HitDto>(entity);
     }
@@ -142,7 +142,7 @@ public class HitController : ApiController
 
         await _hitRepo.DeleteAsync(entity);
 
-        _logger.LogInformation("Deleted the hit with id {id}", id);
+        _logger.LogInformation("Deleted the hit with id {Id}", id);
 
         return Ok();
     }
@@ -162,7 +162,7 @@ public class HitController : ApiController
 
         await _hitRepo.DeleteAsync(toDelete);
 
-        _logger.LogInformation("Deleted {hitCount} hits", toDelete.Count);
+        _logger.LogInformation("Deleted {HitCount} hits", toDelete.Count);
 
         return new AffectedEntriesDto
         {
@@ -193,7 +193,7 @@ public class HitController : ApiController
 
         await _hitRepo.DeleteAsync(duplicates);
 
-        _logger.LogInformation("Deleted {hitCount} duplicate hits", duplicates.Count);
+        _logger.LogInformation("Deleted {HitCount} duplicate hits", duplicates.Count);
 
         return new AffectedEntriesDto
         {
@@ -216,7 +216,7 @@ public class HitController : ApiController
         var count = await _hitRepo.CountAsync();
         await _hitRepo.PurgeAsync();
 
-        _logger.LogWarning("Purged {count} hits from the database!", count);
+        _logger.LogWarning("Purged {Count} hits from the database!", count);
 
         return new AffectedEntriesDto
         {
@@ -355,7 +355,7 @@ public class HitController : ApiController
         // by them, throw a not found exception.
         if (apiUser.Role is UserRole.Guest && apiUser.Id != entity.OwnerId)
         {
-            _logger.LogWarning("Guest user {username} tried to access a hit not owned by them",
+            _logger.LogWarning("Guest user {Username} tried to access a hit not owned by them",
                 apiUser.Username);
 
             throw new EntryNotFoundException(ErrorCode.HitNotFound,
