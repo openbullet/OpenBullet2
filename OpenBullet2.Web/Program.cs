@@ -154,12 +154,14 @@ app.UseSwaggerUI(options =>
     }
 });
 
+var allowedOrigin = app.Configuration.GetSection("Settings")
+    .GetValue<string>("AllowedOrigin") ?? "http://localhost:4200";
+
 app.UseCors(o => o
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
-    .WithOrigins(
-        "http://localhost:4200") // TODO: Make this editable from the config, if not configured get it from the value of --urls
+    .WithOrigins(allowedOrigin)
     .WithExposedHeaders("Content-Disposition", "X-Application-Warning")
 );
 
