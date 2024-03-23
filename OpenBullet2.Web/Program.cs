@@ -22,6 +22,7 @@ using RuriLib.Services;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +83,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         b => b.MigrationsAssembly("OpenBullet2.Core")));
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // Scoped
 builder.Services.AddScoped<IProxyRepository, DbProxyRepository>();
