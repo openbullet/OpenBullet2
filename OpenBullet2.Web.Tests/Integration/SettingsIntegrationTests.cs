@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
+using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Exceptions;
@@ -9,6 +10,7 @@ using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
 using Xunit.Abstractions;
+using GeneralSettings = RuriLib.Models.Settings.GeneralSettings;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -419,5 +421,54 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
         Assert.Equal(".test { color: red; }", content);
+    }
+    
+    /// <summary>
+    /// Admin can get custom snippets.
+    /// </summary>
+    [Fact]
+    public async Task GetCustomSnippets_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var openBulletSettings = GetRequiredService<OpenBulletSettingsService>();
+        var snippet = new CustomSnippet {
+            Name = "test",
+            Description = "test",
+            Body = "test"
+        };
+        openBulletSettings.Settings.GeneralSettings.CustomSnippets.Add(snippet);
+        await openBulletSettings.SaveAsync();
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, string>>(
+            client, "/api/v1/settings/custom-snippets");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        Assert.Contains(result.Value, x => x.Key == "test");
+    }
+    
+    /// <summary>
+    /// Guest cannot get custom snippets.
+    /// </summary>
+    [Fact]
+    public async Task GetCustomSnippets_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        RequireLogin();
+        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, string>>(
+            client, "/api/v1/settings/custom-snippets");
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
 }

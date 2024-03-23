@@ -319,5 +319,246 @@ export function registerLoliCode(monaco: any) {
         ]
     });
 
-    // TODO: Register completions
+    monaco.languages.registerCompletionItemProvider('lolicode', {
+        provideCompletionItems: function (model: any, position: any) {
+            let word = model.getWordUntilPosition(position);
+            let range = {
+                startLineNumber: position.lineNumber,
+                startColumn: word.startColumn,
+                endLineNumber: position.lineNumber,
+                endColumn: word.endColumn
+            };
+
+            let blockAutocompletions = autoCompleteBlock(monaco, range);
+            let customAutocompletions = autoCompleteLoliCodeStatement(monaco, range);
+
+            return {
+                suggestions: blockAutocompletions.concat(customAutocompletions)
+            };
+        }
+    });
+}
+
+export function autoCompleteBlock(monaco: any, range: any) {
+    let blockAutocompletions = [];
+    for (var id in monaco.loliCodeBlockSnippets) {
+        blockAutocompletions.push({
+            label: 'BLOCK:' + id,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'BLOCK:' + id + '\n' + monaco.loliCodeBlockSnippets[id] + 'ENDBLOCK\n',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        });
+    }
+    return blockAutocompletions;
+}
+
+export function autoCompleteLoliCodeStatement(monaco: any, range: any) {
+    // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
+    // here you could do a server side lookup
+    let customAutocompletions = [
+        {
+            label: 'LOG (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'LOG ${1:"hello"}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'CLOG (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'CLOG ${1:YellowGreen} ${2:"hello"}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'JUMP (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'JUMP ${1:#HERE}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'REPEAT (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'REPEAT ${1:5}',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'FOREACH (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'FOREACH ${1:elem} IN ${2:list}',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'WHILE (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'WHILE ${1:STRINGKEY} ${2:@data.SOURCE} ${3:Contains} ${4:"hello"}',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'IF (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'IF ${1:STRINGKEY} ${2:@data.SOURCE} ${3:Contains} ${4:"hello"}',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'IF/ELSE (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'IF ${1:STRINGKEY} ${2:@data.SOURCE} ${3:Contains} ${4:"hello"}',
+                '',
+                'ELSE',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'IF/ELSE IF/ELSE (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'IF ${1:STRINGKEY} ${2:@data.SOURCE} ${3:Contains} ${4:"hello"}',
+                '',
+                'ELSE IF ${5:STRINGKEY} ${6:@data.SOURCE} ${7:Contains} ${8:"another"}',
+                '',
+                'ELSE',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'TRY/CATCH (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'TRY',
+                '',
+                'CATCH',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'TRY/CATCH/FINALLY (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'TRY',
+                '',
+                'CATCH',
+                '',
+                'FINALLY',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'LOCK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'LOCK ${1:globals}',
+                '',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'ACQUIRELOCK/RELEASELOCK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: [
+                'ACQUIRELOCK ${1:globals}',
+                'TRY',
+                '// Async code goes here',
+                'FINALLY',
+                'RELEASELOCK ${1:globals}',
+                'END'
+            ].join('\n'),
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET VAR (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET VAR ${1:name} ${2:"value"}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET CAP (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET CAP ${1:name} ${2:"value"}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET USEPROXY (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET USEPROXY ${1:value}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (Auth) (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type} "${4:username}" "${5:password}"',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'MARK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'MARK @${1:variable}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'UNMARK (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'UNMARK @${1:variable}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'SET PROXY (Auth) (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'SET PROXY "${1:host}" ${2:port} ${3:type} "${4:username}" "${5:password}"',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'TAKEONE (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'TAKEONE FROM ${1:"resourceName"} => ${2:@myString}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        },
+        {
+            label: 'TAKE (LoliCode)',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'TAKE ${1:5} FROM ${2:"resourceName"} => ${3:@myList}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        }
+    ];
+
+    for (var id in monaco.loliCodeCustomSnippets) {
+        customAutocompletions.push({
+            label: id,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: monaco.loliCodeCustomSnippets[id],
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+        });
+    }
+
+    return customAutocompletions;
 }

@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Repositories;
@@ -8,6 +9,7 @@ using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
 using RuriLib.Extensions;
 using RuriLib.Helpers;
@@ -32,6 +34,7 @@ public class ConfigController : ApiController
     private readonly ILogger<ConfigController> _logger;
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
+    private readonly LoliCodeAutocompletionService _loliCodeAutocompletionService;
     private readonly PluginRepository _pluginRepository;
 
     /// <summary></summary>
@@ -39,6 +42,7 @@ public class ConfigController : ApiController
         PluginRepository pluginRepository,
         ConfigService configService, IMapper mapper,
         OpenBulletSettingsService obSettingsService,
+        LoliCodeAutocompletionService loliCodeAutocompletionService,
         ILogger<ConfigController> logger)
     {
         _configRepo = configRepo;
@@ -46,6 +50,7 @@ public class ConfigController : ApiController
         _configService = configService;
         _mapper = mapper;
         _obSettingsService = obSettingsService;
+        _loliCodeAutocompletionService = loliCodeAutocompletionService;
         _logger = logger;
     }
 
@@ -435,6 +440,15 @@ public class ConfigController : ApiController
 
         return dto;
     }
+    
+    /// <summary>
+    /// Get the block snippets.
+    /// </summary>
+    [Admin]
+    [HttpGet("block-snippets")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<FrozenDictionary<string, string>> GetBlockSnippets()
+        => _loliCodeAutocompletionService.BlockSnippets;
 
     private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
         => new() {

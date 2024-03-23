@@ -259,4 +259,10 @@ export class ConfigService {
             }
         );
     }
+
+    getBlockSnippets() {
+        return this.http.get<{ [key: string]: string }>(
+            getBaseUrl() + '/config/block-snippets'
+        );
+    }
 }

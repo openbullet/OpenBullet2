@@ -106,4 +106,10 @@ export class SettingsService {
             }
         );
     }
+
+    getCustomSnippets() {
+        return this.http.get<{ [key: string]: string }>(
+            getBaseUrl() + '/settings/custom-snippets'
+        );
+    }
 }

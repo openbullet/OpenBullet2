@@ -1737,6 +1737,48 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
     
+    /// <summary>
+    /// Admin can get block snippets.
+    /// </summary>
+    [Fact]
+    public async Task GetBlockSnippets_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, string>>(
+            client, "/api/v1/config/block-snippets");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotEmpty(result.Value);
+        Assert.Contains("ConstantString", result.Value.Keys);
+    }
+    
+    /// <summary>
+    /// Guest cannot get block snippets.
+    /// </summary>
+    [Fact]
+    public async Task GetBlockSnippets_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        RequireLogin();
+        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        
+        // Act
+        var result = await GetJsonAsync<Dictionary<string, string>>(
+            client, "/api/v1/config/block-snippets");
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
+    
     private async Task AddTestPluginAsync() {
         var pluginRepo = GetRequiredService<PluginRepository>();
         var file = new FileInfo("Resources/OB2TestPlugin.zip");

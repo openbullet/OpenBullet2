@@ -194,4 +194,15 @@ public class SettingsController : ApiController
 
         return File(bytes, "text/css", "theme.css");
     }
+    
+    /// <summary>
+    /// Get all custom snippets.
+    /// </summary>
+    [Admin]
+    [HttpGet("custom-snippets")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<Dictionary<string, string>> GetCustomSnippets()
+        => _obSettingsService.Settings.GeneralSettings.CustomSnippets
+            .Where(s => !string.IsNullOrWhiteSpace(s.Name))
+            .ToDictionary(s => s.Name, s => s.Body);
 }

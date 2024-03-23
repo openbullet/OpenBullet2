@@ -135,6 +135,7 @@ builder.Services.AddSingleton<IJobLogger>(service =>
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();
+builder.Services.AddSingleton<LoliCodeAutocompletionService>();
 
 // Hosted Services
 builder.Services.AddHostedService(
@@ -239,6 +240,10 @@ using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>(
 // Load the configs
 var configService = app.Services.GetRequiredService<ConfigService>();
 await configService.ReloadConfigsAsync();
+
+// Register the block snippets
+var autocompletionProvider = app.Services.GetRequiredService<LoliCodeAutocompletionService>();
+autocompletionProvider.Init();
 
 // Start the job monitor at the start of the application,
 // otherwise it will only be started when navigating to the page

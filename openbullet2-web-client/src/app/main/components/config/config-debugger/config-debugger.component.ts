@@ -89,7 +89,6 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         this.variables = msg.variables;
         this.status = msg.status;
 
-        console.log('Debugger state loaded');
         this.onNewState();
       });
   }
