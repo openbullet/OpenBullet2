@@ -98,7 +98,7 @@ public class PerformanceMonitorService : IHostedService
                 CpuUsage = cpu,
                 NetworkDownload = download,
                 NetworkUpload = upload,
-                Time = DateTime.Now
+                Time = DateTime.UtcNow
             };
 
             // Send the metrics to all connected clients

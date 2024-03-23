@@ -39,7 +39,7 @@ public class AnnouncementService : IAnnouncementService
         }
 
         // If the cache doesn't exist or is more than 3 hours old, fetch from the web
-        if (_cached is null || DateTime.Now > _cached.LastFetch + TimeSpan.FromHours(3))
+        if (_cached is null || DateTime.UtcNow > _cached.LastFetch + TimeSpan.FromHours(3))
         {
             try
             {
@@ -57,7 +57,7 @@ public class AnnouncementService : IAnnouncementService
                     return "Could not load the announcement... are you offline?";
                 }
 
-                _cached = new CachedAnnouncement(await response.Content.ReadAsStringAsync(), DateTime.Now);
+                _cached = new CachedAnnouncement(await response.Content.ReadAsStringAsync(), DateTime.UtcNow);
             }
             catch (Exception ex)
             {

@@ -268,7 +268,7 @@ public class JobController : ApiController
 
         var entity = new JobEntity {
             Owner = await _guestRepo.GetAsync(apiUser.Id),
-            CreationDate = DateTime.Now,
+            CreationDate = DateTime.UtcNow,
             JobType = JobType.MultiRun,
             JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
         };
@@ -308,7 +308,7 @@ public class JobController : ApiController
 
         var entity = new JobEntity {
             Owner = await _guestRepo.GetAsync(apiUser.Id),
-            CreationDate = DateTime.Now,
+            CreationDate = DateTime.UtcNow,
             JobType = JobType.ProxyCheck,
             JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
         };

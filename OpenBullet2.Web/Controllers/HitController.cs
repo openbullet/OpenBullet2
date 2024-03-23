@@ -232,14 +232,14 @@ public class HitController : ApiController
                 .Where(h => h.Type == "SUCCESS");
 
         var dates = Enumerable.Range(0, days)
-            .Select(i => DateTime.Now.Date.AddDays(-i))
+            .Select(i => DateTime.UtcNow.Date.AddDays(-i))
             .Reverse()
             .ToList();
 
         // First of all, get the distinct names of the configs
         // that have hits in the last N days
         var configNames = await query
-            .Where(h => h.Date >= DateTime.Now.Date.AddDays(-days))
+            .Where(h => h.Date >= DateTime.UtcNow.Date.AddDays(-days))
             .Select(h => h.ConfigName)
             .Distinct()
             .ToListAsync();
