@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Common;
@@ -6,7 +7,6 @@ using OpenBullet2.Web.Dtos.Hit;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Pagination;
 using OpenBullet2.Web.Tests.Extensions;
-using System.Globalization;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -128,7 +128,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.WordlistName, hit.WordlistName);
         Assert.Equal(guest.Id, hit.OwnerId);
     }
-
+    
     [Fact]
     public async Task UpdateHit_Admin_Success()
     {
@@ -178,7 +178,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(hit.WordlistId, hit.WordlistId);
         Assert.Equal(hit.WordlistName, hit.WordlistName);
     }
-
+    
     [Fact]
     public async Task UpdateHit_Guest_NotOwned_NotFound()
     {
@@ -212,7 +212,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.HitNotFound, result.Error.Content.ErrorCode);
     }
-
+    
     [Fact]
     public async Task DeleteHit_Admin_Success()
     {
@@ -234,7 +234,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var hitAfter = dbContext.Hits.FirstOrDefault();
         Assert.Null(hitAfter);
     }
-
+    
     [Fact]
     public async Task DeleteHit_Guest_NotOwned_NotFound()
     {
@@ -260,7 +260,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error.Content);
         Assert.Equal(ErrorCode.HitNotFound, error.Content.ErrorCode);
     }
-
+    
     [Fact]
     public async Task GetAll_Admin_ListAll()
     {
@@ -294,7 +294,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     [Fact]
     public async Task GetAll_Guest_OnlyOwn()
     {
@@ -342,7 +342,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     [Fact]
     public async Task GetAll_Filtered_Admin_Success()
     {
@@ -384,7 +384,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     [Fact]
     public async Task DownloadMany_Admin_Formatted_Success()
     {
@@ -551,7 +551,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var hitsAfter = await dbContext.Hits.CountAsync();
         Assert.Equal(100, hitsAfter);
     }
-
+    
     [Fact]
     public async Task DeleteDuplicates_Admin_Success()
     {
@@ -589,7 +589,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             .Select(i => CreateHit("adminData"));
         dbContext.Hits.AddRange(adminHits);
         var hits = Enumerable.Range(0, 100)
-            .Select(i => CreateHit("guestData", ownerId: guest.Id));
+            .Select(i => CreateHit("guestData", guest.Id));
         dbContext.Hits.AddRange(hits);
         await dbContext.SaveChangesAsync();
         
@@ -607,7 +607,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var hitsAfter = await dbContext.Hits.CountAsync();
         Assert.Equal(101, hitsAfter);
     }
-
+    
     [Fact]
     public async Task Purge_Admin_ClearAllHits()
     {
@@ -658,7 +658,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var hitsAfter = await dbContext.Hits.CountAsync();
         Assert.Equal(100, hitsAfter);
     }
-
+    
     [Fact]
     public async Task GetRecent_Admin_Success()
     {
@@ -670,29 +670,29 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             new HitEntity {
                 Date = DateTime.UtcNow,
                 Type = "SUCCESS",
-                ConfigName = "config1",
+                ConfigName = "config1"
             },
             new HitEntity {
                 Date = DateTime.UtcNow.AddDays(-1),
                 Type = "SUCCESS",
-                ConfigName = "config1",
+                ConfigName = "config1"
             },
             new HitEntity {
                 Date = DateTime.UtcNow.AddDays(-1),
                 Type = "SUCCESS",
-                ConfigName = "config1",
+                ConfigName = "config1"
             },
             new HitEntity {
                 Date = DateTime.UtcNow.AddDays(-7),
                 Type = "SUCCESS",
-                ConfigName = "config1",
+                ConfigName = "config1"
             },
             // Recent for config2
             new HitEntity {
                 Date = DateTime.UtcNow.AddDays(-2),
                 Type = "SUCCESS",
-                ConfigName = "config2",
-            },
+                ConfigName = "config2"
+            }
         ];
         dbContext.Hits.AddRange(hits);
         await dbContext.SaveChangesAsync();
@@ -729,7 +729,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, dict["config2"][1]);
         Assert.Equal(0, dict["config2"][2]);
     }
-
+    
     [Fact]
     public async Task GetRecent_Guest_OnlyOwn()
     {
@@ -744,7 +744,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             new HitEntity {
                 Date = DateTime.UtcNow,
                 Type = "SUCCESS",
-                ConfigName = "config1",
+                ConfigName = "config1"
             }
         ];
         List<HitEntity> hits = [
@@ -795,10 +795,12 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Config2 should have 1 hit on the only day
         Assert.Equal(1, dict["config2"][0]);
     }
-
+    
     private static HitEntity CreateHit(
-        string? data = null, int ownerId = 0) =>
-        new() {
+        string? data = null, int ownerId = 0)
+    {
+        return new HitEntity
+        {
             Data = data ?? "Data",
             CapturedData = "CapturedData",
             Proxy = "(Socks5)127.0.0.1:8080:user:pass",
@@ -811,4 +813,5 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             WordlistName = "WordlistName",
             OwnerId = ownerId
         };
+    }
 }

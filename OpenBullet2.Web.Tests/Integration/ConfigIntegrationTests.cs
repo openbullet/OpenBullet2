@@ -1,4 +1,8 @@
-﻿using OpenBullet2.Core;
+﻿using System.IO.Compression;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -14,10 +18,6 @@ using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Configs.Settings;
 using RuriLib.Services;
-using System.IO.Compression;
-using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -50,8 +50,8 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 Name = "TestConfig1",
                 Author = "TestAuthor1",
                 Category = "TestCategory1",
-                CreationDate = new DateTime(2021, 1, 2),
-                LastModified = new DateTime(2021, 1, 2)
+                CreationDate = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                LastModified = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc)
             },
             Settings = new ConfigSettings
             {
@@ -75,8 +75,8 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 Name = "TestConfig2",
                 Author = "TestAuthor2",
                 Category = "TestCategory2",
-                CreationDate = new DateTime(2021, 1, 1),
-                LastModified = new DateTime(2021, 1, 1)
+                CreationDate = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                LastModified = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             },
             Settings = new ConfigSettings
             {
@@ -132,7 +132,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(ConfigMode.LoliCode, configs[1].Mode);
         Assert.True(configs[1].Dangerous);
     }
-
+    
     /// <summary>
     /// Admin can read all configs' overview info when reloaded
     /// from the repository.
@@ -152,8 +152,8 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 Name = "TestConfig1",
                 Author = "TestAuthor1",
                 Category = "TestCategory1",
-                CreationDate = new DateTime(2021, 1, 2),
-                LastModified = new DateTime(2021, 1, 2)
+                CreationDate = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                LastModified = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc)
             },
             Settings = new ConfigSettings
             {
@@ -171,8 +171,8 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 Name = "TestConfig2",
                 Author = "TestAuthor2",
                 Category = "TestCategory2",
-                CreationDate = new DateTime(2021, 1, 2),
-                LastModified = new DateTime(2021, 1, 2)
+                CreationDate = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+                LastModified = new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc)
             },
             Settings = new ConfigSettings
             {
@@ -199,7 +199,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(configs);
         Assert.Equal(config1.Id, configs[0].Id);
     }
-
+    
     /// <summary>
     /// Guest can read all configs' overview info.
     /// </summary>
@@ -274,7 +274,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(result.Value.Plugins);
         Assert.Contains("OB2TestPlugin", result.Value.Plugins[0]);
     }
-
+    
     /// <summary>
     /// Guest can get config's metadata.
     /// </summary>
@@ -326,7 +326,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(result.Value.Plugins);
         Assert.Contains("OB2TestPlugin", result.Value.Plugins[0]);
     }
-
+    
     /// <summary>
     /// Admin can get config's readme
     /// </summary>
@@ -359,7 +359,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsSuccess);
         Assert.Equal(config.Readme, result.Value.MarkdownText);
     }
-
+    
     /// <summary>
     /// // Guest can get config's readme.
     /// </summary>
@@ -399,7 +399,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsSuccess);
         Assert.Equal(config.Readme, result.Value.MarkdownText);
     }
-
+    
     /// <summary>
     /// Admin can get a config's full data.
     /// </summary>
@@ -436,7 +436,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(config.LoliCodeScript, result.Value.LoliCodeScript);
         Assert.Equal(config.Mode, result.Value.Mode);
     }
-
+    
     /// <summary>
     /// Guest cannot get a config's full data (forbidden).
     /// </summary>
@@ -479,7 +479,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can update a config in LoliCode mode.
     /// </summary>
@@ -535,7 +535,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
             x => Assert.Equal(
                 "LOG \"Hello, world! 2\"", ((LoliCodeBlockInstance)x).Script));
     }
-
+    
     /// <summary>
     /// Admin can update a config in LoliCode mode, with persistency.
     /// </summary>
@@ -594,7 +594,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
             x => Assert.Equal(
                 "LOG \"Hello, world! 2\"", ((LoliCodeBlockInstance)x).Script));
     }
-
+    
     /// <summary>
     /// Guest cannot update a config (forbidden).
     /// </summary>
@@ -645,7 +645,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin cannot update a remote config.
     /// </summary>
@@ -690,7 +690,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.ActionNotAllowedForRemoteConfig, result.Error.Content.ErrorCode);
     }
-
+    
     // We are missing the display of the X-Application-Warning header in the frontend
     [Fact]
     public async Task UpdateConfig_Admin_MissingPlugin_Warning()
@@ -729,7 +729,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(warning);
         Assert.Contains("MissingPlugin", warning);
     }
-
+    
     [Fact]
     public async Task UpdateConfig_Admin_InvalidLoliCode_BadRequest()
     {
@@ -756,7 +756,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 Name = "UpdatedConfig"
             },
             Settings = new ConfigSettingsDto(),
-            LoliCodeScript = "BLOCK:ThisIsInvalid\n  abc",
+            LoliCodeScript = "BLOCK:ThisIsInvalid\n  abc"
         };
         var result = await PutJsonAsync<ConfigDto>(
             client, "/api/v1/config", dto);
@@ -767,7 +767,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         // TODO: Needs a more talking error
     }
-
+    
     /// <summary>
     /// Admin can create a config.
     /// </summary>
@@ -793,10 +793,10 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(createdConfig);
         Assert.Equal(config.Id, createdConfig.Id);
 
-        var createdConfigInService = configService.Configs.FirstOrDefault(c => c.Id == config.Id);
+        var createdConfigInService = configService.Configs.Find(c => c.Id == config.Id);
         Assert.NotNull(createdConfigInService);
     }
-
+    
     /// <summary>
     /// Guest cannot create a config (forbidden).
     /// </summary>
@@ -809,8 +809,6 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         var guest = new GuestEntity { Username = "guest" };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
-        var configService = GetRequiredService<ConfigService>();
-        var configRepository = GetRequiredService<IConfigRepository>();
 
         RequireLogin();
         ImpersonateGuest(client, guest);
@@ -825,7 +823,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// // Admin can delete a config.
     /// </summary>
@@ -860,7 +858,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Empty(await configRepository.GetAllAsync());
         Assert.Empty(configService.Configs);
     }
-
+    
     /// <summary>
     /// Guest cannot delete a config (forbidden).
     /// </summary>
@@ -902,9 +900,9 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error.Content);
         Assert.Equal(ErrorCode.NotAdmin, error.Content.ErrorCode);
         Assert.NotNull(await configRepository.GetAsync(config.Id));
-        Assert.NotNull(configService.Configs.FirstOrDefault(c => c.Id == config.Id));
+        Assert.NotNull(configService.Configs.Find(c => c.Id == config.Id));
     }
-
+    
     /// <summary>
     /// Admin can clone a config.
     /// </summary>
@@ -961,10 +959,10 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         var createdConfig = await configRepository.GetAsync(clonedConfig.Id);
         Assert.NotNull(createdConfig);
         
-        var createdConfigInService = configService.Configs.FirstOrDefault(c => c.Id == clonedConfig.Id);
+        var createdConfigInService = configService.Configs.Find(c => c.Id == clonedConfig.Id);
         Assert.NotNull(createdConfigInService);
     }
-
+    
     /// <summary>
     /// Admin cannot clone a remote config.
     /// </summary>
@@ -998,7 +996,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error.Content);
         Assert.Equal(ErrorCode.ActionNotAllowedForRemoteConfig, error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Guest cannot clone a config (forbidden).
     /// </summary>
@@ -1038,7 +1036,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error.Content);
         Assert.Equal(ErrorCode.NotAdmin, error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can download a config.
     /// </summary>
@@ -1077,7 +1075,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // config but it's the name of the file
         Assert.Equal(config.Metadata.Name, downloadedConfig.Metadata.Name);
     }
-
+    
     /// <summary>
     /// Admin cannot download a remote config.
     /// </summary>
@@ -1109,7 +1107,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.False(response.IsSuccessStatusCode);
     }
-
+    
     /// <summary>
     /// Guest cannot download a config.
     /// </summary>
@@ -1147,7 +1145,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.False(response.IsSuccessStatusCode);
     }
-
+    
     /// <summary>
     /// Admin can download all configs (except remote).
     /// </summary>
@@ -1191,7 +1189,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Single(zipArchive.Entries);
         Assert.Equal("TestConfig1.opk", zipArchive.Entries[0].Name);
     }
-
+    
     /// <summary>
     /// Guest cannot download all configs (forbidden).
     /// </summary>
@@ -1238,7 +1236,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error);
         Assert.Equal(ErrorCode.NotAdmin, error.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can upload configs (with all kinds of modes).
     /// </summary>
@@ -1314,7 +1312,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         var configs = await configRepository.GetAllAsync();
         Assert.Equal(4, configs.Count());
     }
-
+    
     /// <summary>
     /// Guest cannot upload configs (forbidden).
     /// </summary>
@@ -1341,7 +1339,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(error);
         Assert.Equal(ErrorCode.NotAdmin, error.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can convert LoliCode to C#.
     /// </summary>
@@ -1365,7 +1363,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("data.Logger.LogObject(\"Hello, world!\");",
             result.Value.CSharpScript);
     }
-
+    
     [Fact]
     public async Task ConvertLoliCodeToCSharp_Admin_InvalidLoliCode_BadRequest()
     {
@@ -1386,7 +1384,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // TODO: This needs a more talking error
     }
-
+    
     /// <summary>
     /// Guest cannot convert LoliCode to C# (forbidden).
     /// </summary>
@@ -1418,7 +1416,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can convert LoliCode to Stack.
     /// </summary>
@@ -1441,7 +1439,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Collection(result.Value.Stack,
             x => Assert.Equal("LOG \"Hello, world!\"", ((JsonElement)x).GetProperty("script").GetString()));
     }
-
+    
     [Fact]
     public async Task ConvertLoliCodeToStack_Admin_InvalidLoliCode_BadRequest()
     {
@@ -1459,7 +1457,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.False(result.IsSuccess);
     }
-
+    
     /// <summary>
     /// Guest cannot convert LoliCode to Stack (forbidden).
     /// </summary>
@@ -1490,7 +1488,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can convert Stack to LoliCode.
     /// </summary>
@@ -1522,9 +1520,9 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal("LOG \"Hello, world!\"", 
-            result.Value.LoliCode.Trim(['\n', '\r', ' ']));
+            result.Value.LoliCode.Trim('\n', '\r', ' '));
     }
-
+    
     /// <summary>
     /// Guest cannot convert Stack to LoliCode (forbidden).
     /// </summary>
@@ -1566,7 +1564,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can get all block descriptors, including ones from plugins.
     /// </summary>
@@ -1587,7 +1585,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Contains("Parse", result.Value.Keys);
         Assert.Contains("Addition", result.Value.Keys);
     }
-
+    
     /// <summary>
     /// Guest cannot get all block descriptors.
     /// </summary>
@@ -1611,7 +1609,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can get the category tree, including plugins.
     /// </summary>
@@ -1642,7 +1640,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
                 .SubCategories.First(sc => sc.Name == "Functions")
                 .DescriptorIds);
     }
-
+    
     /// <summary>
     /// Guest cannot get the category tree.
     /// </summary>
@@ -1666,7 +1664,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     /// <summary>
     /// Admin can get a new block instance.
     /// </summary>
@@ -1690,7 +1688,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("ConstantString", result.Value.Id);
         Assert.Contains("value", result.Value.Settings.Keys);
     }
-
+    
     [Fact]
     public async Task GetBlockInstance_Admin_InvalidId_NotFound()
     {
@@ -1738,7 +1736,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Error.Content);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
     }
-
+    
     private async Task AddTestPluginAsync() {
         var pluginRepo = GetRequiredService<PluginRepository>();
         var file = new FileInfo("Resources/OB2TestPlugin.zip");

@@ -1,4 +1,8 @@
-﻿using OpenBullet2.Core;
+﻿using System.Net;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
@@ -10,10 +14,6 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.Monitor;
 using RuriLib.Models.Jobs.Monitor.Actions;
 using RuriLib.Models.Jobs.Monitor.Triggers;
-using System.Net;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -36,7 +36,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             Triggers = [
                 new JobStatusTrigger { Status = JobStatus.Running },
                 new ProgressTrigger { Comparison = NumComparison.GreaterThan, Amount = 50 },
-                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 },
+                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 }
             ],
             Actions = [
                 new StopJobAction { JobId = 1 },
@@ -62,7 +62,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(triggeredAction.Triggers.Count, dto.Triggers.Count);
         Assert.Equal(triggeredAction.Actions.Count, dto.Actions.Count);
     }
-
+    
     [Fact]
     public async Task GetAllTriggeredActions_Guest_Forbidden()
     {
@@ -100,7 +100,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             Triggers = [
                 new JobStatusTrigger { Status = JobStatus.Running },
                 new ProgressTrigger { Comparison = NumComparison.GreaterThan, Amount = 50 },
-                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 },
+                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 }
             ],
             Actions = [
                 new StopJobAction { JobId = 1 },
@@ -192,7 +192,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.Single(jobMonitorService.TriggeredActions);
         
-        var triggeredAction = jobMonitorService.TriggeredActions.First();
+        var triggeredAction = jobMonitorService.TriggeredActions[0];
         Assert.Equal(result.Value.Id, triggeredAction.Id);
         Assert.Equal(dto.Name, triggeredAction.Name);
         Assert.Equal(dto.JobId, triggeredAction.JobId);
@@ -224,7 +224,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task UpdateTriggeredAction_Admin_Success()
     {
@@ -238,7 +238,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
             Triggers = [
                 new JobStatusTrigger { Status = JobStatus.Running },
                 new ProgressTrigger { Comparison = NumComparison.GreaterThan, Amount = 50 },
-                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 },
+                new TimeElapsedTrigger { Comparison = NumComparison.GreaterThan, Seconds = 10 }
             ],
             Actions = [
                 new StopJobAction { JobId = 1 },
@@ -277,7 +277,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.Triggers.Count, result.Value.Triggers.Count);
         Assert.Equal(dto.Actions.Count, result.Value.Actions.Count);
 
-        var updatedAction = jobMonitorService.TriggeredActions.First();
+        var updatedAction = jobMonitorService.TriggeredActions[0];
         Assert.Equal(dto.Id, updatedAction.Id);
         Assert.Equal(dto.Name, updatedAction.Name);
         Assert.Equal(dto.JobId, updatedAction.JobId);
@@ -456,7 +456,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, error!.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-
+    
     private JsonElement Serialize<T>(T obj) where T : class
     {
         var node = JsonNode.Parse(

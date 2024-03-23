@@ -1,4 +1,5 @@
-﻿using OpenBullet2.Core;
+﻿using System.Net;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Settings;
@@ -7,7 +8,6 @@ using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
-using System.Net;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -32,7 +32,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.Value.ExportFormats.Count > 0);
         Assert.Contains(result.Value.CustomStatuses, x => x.Name == "CUSTOM");
     }
-
+    
     [Fact]
     public async Task GetRuriLibSettings_Admin_Success()
     {
@@ -393,7 +393,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task GetTheme_Success()
     {

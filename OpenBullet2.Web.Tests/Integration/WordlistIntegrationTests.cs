@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Web.Dtos.Common;
@@ -6,8 +8,6 @@ using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Extensions;
-using System.Net;
-using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -130,7 +130,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorCode.WordlistNotFound, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task GetAll_Admin_ListAll()
     {
@@ -173,7 +173,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(wordlist1.Type, result1.WordlistType);
         Assert.Null(result1.Owner);
     }
-
+    
     [Fact]
     public async Task GetAll_Guest_OnlyOwn()
     {
@@ -226,7 +226,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var result1 = result.Value.First();
         Assert.Equal(wordlist1.Id, result1.Id);
     }
-
+    
     [Fact]
     public async Task GetPreview_Admin_Success()
     {
@@ -531,17 +531,14 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var lines = Enumerable.Range(0, 100).Select(i => i.ToString());
         using var stream = new MemoryStream();
         await using var writer = new StreamWriter(stream);
-        foreach (var line in lines)
-        {
-            await writer.WriteLineAsync(line);
-        }
+        foreach (var line in lines) await writer.WriteLineAsync(line);
         stream.Position = 0;
         
         var content = new MultipartFormDataContent
         {
             { new StreamContent(stream), "file", "test.txt" }
         };
-
+        
         // Act
         var result = await client.PostAsync(
             "/api/v1/wordlist/upload", content);
@@ -680,7 +677,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(),  // Exists
+            FileName = Path.GetTempFileName(), // Exists
             Purpose = "test",
             Total = 10,
             Type = "Default"
@@ -714,7 +711,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.NotNull(notDeleted);
     }
-
+    
     [Fact]
     public async Task DeleteNotFound_Guest_OnlyOwn()
     {
@@ -726,7 +723,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         var wordlist1 = new WordlistEntity
         {
             Name = "test1",
-            FileName = Path.GetTempFileName(),  // Exists
+            FileName = Path.GetTempFileName(), // Exists
             Purpose = "test",
             Total = 10,
             Type = "Default",
@@ -782,7 +779,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.Equal(3, notDeleted.Count);
     }
-
+    
     [Fact]
     public async Task UpdateWordlistInfo_Admin_Success()
     {
@@ -822,7 +819,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.Purpose, wordlist.Purpose);
         Assert.Equal(dto.WordlistType, wordlist.Type);
     }
-
+    
     [Fact]
     public async Task UpdateWordlistInfo_Guest_NotOwned_Failure()
     {

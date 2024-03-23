@@ -1,4 +1,6 @@
-﻿using OpenBullet2.Core;
+﻿using System.IO.Compression;
+using System.Net;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Sharing;
 using OpenBullet2.Core.Repositories;
@@ -9,8 +11,6 @@ using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Models.Configs;
-using System.IO.Compression;
-using System.Net;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -107,7 +107,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-            
+    
     [Fact]
     public async Task CreateEndpoint_Admin_Success()
     {
@@ -295,7 +295,7 @@ public class SharedIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task DownloadConfigs_CorrectApiKey_Success()
     {

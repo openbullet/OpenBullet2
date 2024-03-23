@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
@@ -8,7 +9,6 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Models.Pagination;
 using OpenBullet2.Web.Tests.Extensions;
 using RuriLib.Models.Proxies;
-using System.Net;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -69,7 +69,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     /// <summary>
     /// A guest can list all proxies in their own proxy groups.
     /// </summary>
@@ -85,7 +85,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var adminGroup = new ProxyGroupEntity { Name = "adminGroup" };
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
         var guest2Group = new ProxyGroupEntity { Name = "guest2Group", Owner = guest2 };
-        dbContext.ProxyGroups.AddRange([adminGroup, guestGroup, guest2Group]);
+        dbContext.ProxyGroups.AddRange(adminGroup, guestGroup, guest2Group);
         var adminProxies = Enumerable.Range(8080, 1000)
             .Select(p => new ProxyEntity {
                 Host = "127.0.0.1",
@@ -134,7 +134,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     [Fact]
     public async Task GetAll_Filtered_Success()
     {
@@ -183,7 +183,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
     }
-
+    
     [Fact]
     public async Task Add_FromList_Success()
     {
@@ -217,7 +217,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.Equal(1001, proxies.Count);
         
-        var first = proxies.First();
+        var first = proxies[0];
         Assert.Equal(ProxyType.Socks5, first.Type);
         Assert.Equal("username", first.Username);
         Assert.Equal("password", first.Password);
@@ -229,7 +229,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("user", localhost.Username);
         Assert.Equal("pass", localhost.Password);
     }
-
+    
     [Fact]
     public async Task Add_FromRemote_Success()
     {
@@ -258,7 +258,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.Equal(result.Value.Count, proxies.Count);
     }
-
+    
     [Fact]
     public async Task MoveMany_Filtered_Success()
     {
@@ -315,7 +315,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(1000 - 1000 / 8, group1ProxyCount);
         Assert.Equal(500 + 1000 / 8, group2ProxyCount);
     }
-
+    
     /// <summary>
     /// A guest should now be allowed to move proxies from
     /// an admin-owned group to a self-owned group.
@@ -357,7 +357,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Count);
     }
-
+    
     [Fact]
     public async Task UpdateMany_Guest_FromOwned_ToNotOwned_Fail()
     {
@@ -397,7 +397,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task DownloadMany_Filtered_Success()
     {
@@ -449,7 +449,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal("attachment", response.Content.Headers.ContentDisposition!.DispositionType);
         Assert.Equal("proxies.txt", response.Content.Headers.ContentDisposition!.FileName);
     }
-
+    
     [Fact]
     public async Task DeleteMany_Filtered_Success()
     {
@@ -492,7 +492,7 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         
         Assert.Equal(1000 - 1000 / 8, remaining);
     }
-
+    
     [Fact]
     public async Task DeleteSlow_Admin_Success()
     {
@@ -501,12 +501,12 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var group = new ProxyGroupEntity { Name = "group" };
         dbContext.ProxyGroups.Add(group);
-        dbContext.Proxies.AddRange([
+        dbContext.Proxies.AddRange(
             new ProxyEntity { Ping = 1000, Group = group },
             new ProxyEntity { Ping = 2000, Group = group },
             new ProxyEntity { Ping = 3000, Group = group },
-            new ProxyEntity { Ping = 4000, Group = group },
-        ]);
+            new ProxyEntity { Ping = 4000, Group = group }
+        );
         await dbContext.SaveChangesAsync();
         
         // Act
@@ -538,12 +538,12 @@ public class ProxyIntegrationTests(ITestOutputHelper testOutputHelper)
         var guest = new GuestEntity { Username = "guest" };
         var guestGroup = new ProxyGroupEntity { Name = "guestGroup", Owner = guest };
         dbContext.ProxyGroups.AddRange(adminGroup, guestGroup);
-        dbContext.Proxies.AddRange([
+        dbContext.Proxies.AddRange(
             new ProxyEntity { Ping = 1000, Group = adminGroup },
             new ProxyEntity { Ping = 2000, Group = adminGroup },
             new ProxyEntity { Ping = 3000, Group = adminGroup },
-            new ProxyEntity { Ping = 4000, Group = adminGroup },
-        ]);
+            new ProxyEntity { Ping = 4000, Group = adminGroup }
+        );
         await dbContext.SaveChangesAsync();
         
         RequireLogin();

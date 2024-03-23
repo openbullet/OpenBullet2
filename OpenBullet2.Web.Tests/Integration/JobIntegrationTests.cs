@@ -21,7 +21,6 @@ using RuriLib.Models.Jobs;
 using RuriLib.Models.Jobs.StartConditions;
 using RuriLib.Services;
 using Xunit.Abstractions;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace OpenBullet2.Web.Tests.Integration;
 
@@ -354,7 +353,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Value.DataStats);
         Assert.NotNull(result.Value.ProxyStats);
     }
-
+    
     /// <summary>
     /// Guest cannot get the details of a multi run job not owned by them.
     /// </summary>
@@ -1022,7 +1021,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     // Guest cannot change the number of bots in a job not owned by them
     
     // Guest can change the number of bots in their job
-
+    
     private MultiRunJob CreateMultiRunJob()
     {
         var logger = GetRequiredService<IJobLogger>();

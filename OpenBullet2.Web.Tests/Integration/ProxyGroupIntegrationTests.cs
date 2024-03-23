@@ -281,7 +281,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.NotNull(result.Content);
         Assert.Equal(ErrorCode.ProxyGroupNotFound, result.Content.ErrorCode);
     }
-
+    
     [Fact]
     public async Task DeleteProxyGroup_InUse_ByProxyCheckJob_Failure()
     {

@@ -1,9 +1,9 @@
-﻿using OpenBullet2.Core;
+﻿using System.Net;
+using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Exceptions;
-using System.Net;
 using Xunit.Abstractions;
 
 namespace OpenBullet2.Web.Tests.Integration;
@@ -42,7 +42,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.AccessExpiration, guest.AccessExpiration);
         Assert.True(guest.AllowedAddresses.Split(',').SequenceEqual(dto.AllowedAddresses));
     }
-
+    
     [Fact]
     public async Task CreateGuest_Guest_Forbidden()
     {
@@ -70,7 +70,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.Forbidden, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.NotAdmin, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task CreateGuest_UsernameAlreadyExists_Failure()
     {
@@ -84,7 +84,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         await repo.AddAsync(new GuestEntity
         {
             Username = "guest",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest123"),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("guest123")
         });
         
         // Act
@@ -114,7 +114,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(HttpStatusCode.BadRequest, result.Error.Response.StatusCode);
         Assert.Equal(ErrorCode.UsernameTaken, result.Error.Content!.ErrorCode);
     }
-
+    
     [Fact]
     public async Task UpdateGuestInfo_Admin_Success()
     {
@@ -150,7 +150,7 @@ public class GuestIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.AccessExpiration, updatedGuest.AccessExpiration);
         Assert.True(updatedGuest.AllowedAddresses.Split(',').SequenceEqual(dto.AllowedAddresses));
     }
-
+    
     [Fact]
     public async Task UpdateGuestInfo_Guest_Forbidden()
     {

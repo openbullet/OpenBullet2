@@ -47,7 +47,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsSuccess);
         Assert.Equal(announcement, result.Value.MarkdownText);
     }
-
+    
     [Fact]
     public async Task GetChangelog_Success()
     {
@@ -69,7 +69,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(updateService.CurrentVersion.Minor, version.Minor);
         Assert.Equal(updateService.CurrentVersion.Build, version.Build);
     }
-
+    
     [Fact]
     public async Task GetUpdateInfo_Success()
     {
@@ -86,7 +86,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(currentVersion.ToString(), result.Value.CurrentVersion);
         Assert.Equal(updateService.RemoteVersion.ToString(), result.Value.RemoteVersion);
     }
-
+    
     [Fact]
     public async Task GetCollectionInfo_Success()
     {
@@ -106,14 +106,12 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxyGroup = new ProxyGroupEntity { Name = "Test" };
         dbContext.ProxyGroups.Add(proxyGroup);
         foreach (var port in Enumerable.Range(1000, 1000))
-        {
             dbContext.Proxies.Add(new ProxyEntity
             {
                 Host = "127.0.0.1",
                 Port = port,
                 Group = proxyGroup
             });
-        }
         
         // Create two wordlists
         dbContext.Wordlists.Add(new WordlistEntity { Total = 50 });
@@ -133,7 +131,7 @@ public class InfoIntegrationTests(ITestOutputHelper testOutputHelper)
         
         // Load a plugin
         var pluginRepo = GetRequiredService<PluginRepository>();
-        var file = new FileInfo($"Resources/OB2TestPlugin.zip");
+        var file = new FileInfo("Resources/OB2TestPlugin.zip");
         await using var fs = file.OpenRead();
         pluginRepo.AddPlugin(fs);
         

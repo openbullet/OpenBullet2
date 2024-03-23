@@ -22,16 +22,16 @@ public class PluginIntegrationTests(ITestOutputHelper testOutputHelper)
         {
             { new StreamContent(fs), "file", file.Name }
         };
-
+        
         // Act
         var result = await client.PostAsync("/api/v1/plugin", content);
-
+        
         // Assert
         result.EnsureSuccessStatusCode();
         var plugins = pluginRepo.GetPluginNames();
         Assert.Contains(_pluginName, plugins);
     }
-
+    
     [Fact]
     public async Task GetAllPlugins_Success()
     {
@@ -41,11 +41,11 @@ public class PluginIntegrationTests(ITestOutputHelper testOutputHelper)
         var file = new FileInfo($"Resources/{_pluginName}.zip");
         await using var fs = file.OpenRead();
         pluginRepo.AddPlugin(fs);
-
+        
         // Act
         var result = await GetJsonAsync<IEnumerable<PluginDto>>(
             client, "/api/v1/plugin/all");
-
+        
         // Assert
         Assert.True(result.IsSuccess);
         var plugins = result.Value.Select(p => p.Name);
@@ -61,11 +61,11 @@ public class PluginIntegrationTests(ITestOutputHelper testOutputHelper)
         var file = new FileInfo($"Resources/{_pluginName}.zip");
         await using var fs = file.OpenRead();
         pluginRepo.AddPlugin(fs);
-
+        
         // Act
         var result = await client.DeleteAsync(
             $"/api/v1/plugin?name={_pluginName}");
-
+        
         // Assert
         result.EnsureSuccessStatusCode();
         var plugins = pluginRepo.GetPluginNames();
