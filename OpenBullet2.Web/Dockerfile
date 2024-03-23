@@ -45,6 +45,7 @@ RUN apt-get update -yq && apt-get install -y --no-install-recommends curl
 
 COPY --from=backend /build .
 COPY --from=frontend /build ./wwwroot
+COPY dbip-country-lite.mmdb .
 
 EXPOSE 5000
 
