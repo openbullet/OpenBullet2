@@ -64,8 +64,8 @@ csharp_preserve_single_line_statements = true
 
 #Style - Code block preferences
 
-#prefer no curly braces if allowed
-csharp_prefer_braces = false:suggestion
+#always prefer curly braces if allowed
+csharp_prefer_braces = true:suggestion
 
 #Style - expression bodied member options
 
