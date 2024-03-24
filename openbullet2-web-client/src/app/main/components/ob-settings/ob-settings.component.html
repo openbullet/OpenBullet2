@@ -298,11 +298,16 @@
                 (validityChange)="onValidityChange($event)"
                 [(ngModel)]="settings.securitySettings.adminUsername"
                 placeholder="admin" />
-            <button class="button button-accent mt-3 d-block"
-                pTooltip="Change admin password" tooltipPosition="bottom"
-                (click)="changeAdminPasswordComponent.reset(); openChangeAdminPasswordModal()">
-                Change admin password
-            </button>
+            <div class="mt-3 d-block">
+                <button class="button button-accent mr-1"
+                    (click)="changeAdminPasswordComponent.reset(); openChangeAdminPasswordModal()">
+                    Change admin password
+                </button>
+                <button class="button button-accent"
+                    (click)="changeAdminApiKeyComponent.reset(settings.securitySettings.adminApiKey); openChangeAdminApiKeyModal()">
+                    {{ settings.securitySettings.adminApiKey === '' ? 'Set' : 'Change' }} admin API key
+                </button>
+            </div>
         </div>
     </div>
     <div class="row my-3">
@@ -489,6 +494,21 @@
     <app-change-admin-password
         #changeAdminPasswordComponent
         (confirm)="changeAdminPassword($event)" />
+</p-dialog>
+
+<p-dialog 
+    #changeAdminApiKeyModal
+    header="Change admin API key" 
+    [(visible)]="changeAdminApiKeyModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-change-admin-api-key
+        #changeAdminApiKeyComponent
+        (confirm)="changeAdminApiKey($event)" />
 </p-dialog>
 
 <p-dialog 

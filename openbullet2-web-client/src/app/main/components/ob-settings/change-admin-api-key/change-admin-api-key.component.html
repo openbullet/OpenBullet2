@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-1">
+                <span class="text-small">API Key</span>
+            </div>
+            <input id="apiKey" type="text"
+                class="w-100"
+                [(ngModel)]="apiKey"
+                placeholder="Disabled" />
+            <span class="text-small color-inactive">
+                At least 12 characters.<br />
+                If empty, API key authentication will be disabled.
+            </span>
+            <button class="button button-secondary mt-2" 
+                (click)="generateApiKey()">
+                Generate random
+            </button>
+            <br />
+        </div>
+    </div>
+    <div class="row mt-4 mb-2">
+        <div class="col-12">
+            <button class="button button-accent float-right" 
+                [disabled]="!isFormValid()"
+                (click)="submitForm()">
+                Change
+            </button>
+        </div>
+    </div>
+</div>

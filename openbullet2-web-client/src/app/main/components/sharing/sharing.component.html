@@ -84,6 +84,7 @@
                                 *ngFor="let apiKey of selectedEndpoint.apiKeys" 
                                 [label]="apiKey"
                                 [removable]="true"
+                                pTooltip="Remove this API key"
                                 (onRemove)="removeApiKey(selectedEndpoint, apiKey)">
                             </p-chip>
                         </div>

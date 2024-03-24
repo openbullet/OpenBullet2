@@ -51,6 +51,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   createCustomSnippetModalVisible = false;
   updateCustomSnippetModalVisible = false;
   changeAdminPasswordModalVisible = false;
+  changeAdminApiKeyModalVisible = false;
   createRemoteConfigsEndpointModalVisible = false;
   updateRemoteConfigsEndpointModalVisible = false;
   addThemeModalVisible = false;
@@ -247,6 +248,10 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     this.changeAdminPasswordModalVisible = true;
   }
 
+  openChangeAdminApiKeyModal() {
+    this.changeAdminApiKeyModalVisible = true;
+  }
+
   changeAdminPassword(password: string) {
     this.settingsService.updateAdminPassword(password)
       .subscribe(() => {
@@ -257,6 +262,14 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
         });
         this.changeAdminPasswordModalVisible = false;
       });
+  }
+
+  changeAdminApiKey(apiKey: string) {
+    // Maybe in the future we can use a different endpoint for this
+    if (this.settings === null) return;
+    this.settings.securitySettings.adminApiKey = apiKey;
+    this.touched = true;
+    this.changeAdminApiKeyModalVisible = false;
   }
 
   openCreateRemoteConfigsEndpointModal() {

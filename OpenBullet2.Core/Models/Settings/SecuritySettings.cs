@@ -28,6 +28,12 @@ public class SecuritySettings
     /// The bcrypt hash of the admin user's password.
     /// </summary>
     public string AdminPasswordHash { get; set; }
+    
+    /// <summary>
+    /// The API key that the admin can use to authenticate to the API.
+    /// If empty, the admin will not be able to use the API.
+    /// </summary>
+    public string AdminApiKey { get; set; } = string.Empty;
 
     /// <summary>
     /// The JWT key that this application will use when issuing authentication tokens.

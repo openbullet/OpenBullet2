@@ -61,6 +61,7 @@ export interface SecurityOBSettings {
     allowSystemWideFileAccess: boolean;
     requireAdminLogin: boolean;
     adminUsername: string;
+    adminApiKey: string;
     adminSessionLifetimeHours: number;
     guestSessionLifetimeHours: number;
     httpsRedirect: boolean

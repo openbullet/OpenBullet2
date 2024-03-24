@@ -53,6 +53,11 @@ public static class ErrorCode
     /// Invalid auth token.
     /// </summary>
     public const string InvalidAuthToken = "INVALID_AUTH_TOKEN";
+    
+    /// <summary>
+    /// Not authenticated.
+    /// </summary>
+    public const string NotAuthenticated = "NOT_AUTHENTICATED";
 
     /// <summary>
     /// Invalid API key.

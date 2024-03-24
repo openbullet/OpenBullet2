@@ -1,4 +1,9 @@
 @OpenBullet2.Web_ApiRoot = http://localhost:5000/api/v1
+@OpenBullet2.ApiKey = 0123456789abcdef
 
 ### Health check
 GET {{OpenBullet2.Web_ApiRoot}}/health
+
+### Server info
+GET {{OpenBullet2.Web_ApiRoot}}/info/server
+X-Api-Key: {{OpenBullet2.ApiKey}}

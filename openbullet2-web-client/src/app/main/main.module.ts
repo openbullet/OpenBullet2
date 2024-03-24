@@ -114,6 +114,7 @@ import { CreateKeycheckKeyComponent } from './components/config/config-stacker/k
 import { RecentHitsChartComponent } from './components/home/recent-hits-chart/recent-hits-chart.component';
 import { ChangelogComponent } from './components/changelog/changelog.component';
 import { ConfigLoliscriptComponent } from './components/config/config-loliscript/config-loliscript.component';
+import { ChangeAdminApiKeyComponent } from './components/ob-settings/change-admin-api-key/change-admin-api-key.component';
 
 @NgModule({
   declarations: [
@@ -204,7 +205,8 @@ import { ConfigLoliscriptComponent } from './components/config/config-loliscript
     CreateKeycheckKeyComponent,
     RecentHitsChartComponent,
     ChangelogComponent,
-    ConfigLoliscriptComponent
+    ConfigLoliscriptComponent,
+    ChangeAdminApiKeyComponent
   ],
   imports: [
     CommonModule,

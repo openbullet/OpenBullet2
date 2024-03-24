@@ -9,7 +9,8 @@ import { UserService } from "src/app/main/services/user.service";
 export class HttpErrorInterceptor implements HttpInterceptor {
     private requireLoginErrorCodes: string[] = [
         'MISSING_AUTH_TOKEN',
-        'INVALID_AUTH_TOKEN'
+        'INVALID_AUTH_TOKEN',
+        'NOT_AUTHENTICATED'
     ];
 
     constructor(private router: Router,

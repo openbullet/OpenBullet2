@@ -21,6 +21,12 @@ public class OBSecuritySettingsDto
     /// The username for the admin user.
     /// </summary>
     public string AdminUsername { get; set; } = "admin";
+    
+    /// <summary>
+    /// The API key that the admin can use to authenticate to the API.
+    /// If empty, the admin will not be able to use the API.
+    /// </summary>
+    public string AdminApiKey { get; set; } = string.Empty;
 
     /// <summary>
     /// The number of hours that the admin session will last before requiring another login.
