@@ -1,0 +1,4 @@
+@OpenBullet2.Web_ApiRoot = http://localhost:5000/api/v1
+
+### Health check
+GET {{OpenBullet2.Web_ApiRoot}}/health
