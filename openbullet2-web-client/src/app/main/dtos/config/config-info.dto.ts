@@ -19,4 +19,5 @@ export interface ConfigInfoDto {
     lastModified: string;
     mode: ConfigMode;
     dangerous: boolean;
+    suggestedBots: number;
 }

@@ -66,4 +66,9 @@ public class ConfigInfoDto
     /// Whether the config is dangerous and might contain malicious code.
     /// </summary>
     public bool Dangerous { get; set; }
+    
+    /// <summary>
+    /// The number of bots that the config suggests to use.
+    /// </summary>
+    public int SuggestedBots { get; set; }
 }

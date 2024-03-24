@@ -220,7 +220,9 @@ internal class AutoMapperProfile : Profile
             .ForMember(dto => dto.LastModified, e => e.MapFrom(c => c.Metadata.LastModified))
             .ForMember(dto => dto.Name, e => e.MapFrom(c => c.Metadata.Name))
             .ForMember(dto => dto.NeedsProxies, e => e.MapFrom(c =>
-                c.Settings.ProxySettings.UseProxies));
+                c.Settings.ProxySettings.UseProxies))
+            .ForMember(dto => dto.SuggestedBots, e => e.MapFrom(c =>
+                c.Settings.GeneralSettings.SuggestedBots));
 
         CreateMap<Config, ConfigDto>();
         CreateMap<UpdateConfigDto, Config>();

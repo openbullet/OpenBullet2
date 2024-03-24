@@ -436,6 +436,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     }
     this.selectedConfigInfo = config;
     this.options!.configId = config.id;
+    this.options!.bots = config.suggestedBots;
     this.selectConfigModalVisible = false;
     this.touched = true;
   }
