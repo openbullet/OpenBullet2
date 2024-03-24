@@ -14,7 +14,10 @@ body {
     color: var(--fg-primary);
 }
 
-* {
+/* We cannot use * here because it will also apply to the spans that
+are created by monaco-editor when calculating the width of the
+glyphs for the applied font (Chivo Mono). */
+app-root * {
     font-family: Poppins;
 }
 
