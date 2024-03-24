@@ -31,6 +31,12 @@ public class PerformanceMonitorService : IHostedService
     {
         ReadMetricsLoopAsync().Forget(e =>
         {
+            // Don't log TaskCanceledException
+            if (e is TaskCanceledException)
+            {
+                return;
+            }
+            
             _logger.LogError(new EventId(0), e, "Got an error while reading performance metrics");
         });
 
