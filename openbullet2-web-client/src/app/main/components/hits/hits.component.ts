@@ -10,6 +10,7 @@ import { saveFile } from 'src/app/shared/utils/files';
 import { faDatabase, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
 import { UserService } from '../../services/user.service';
+import { HitSortField } from '../../dtos/hit/hit-filters.dto';
 
 @Component({
   selector: 'app-hits',
@@ -36,7 +37,6 @@ export class HitsComponent implements OnInit {
   configName: string = 'anyConfig';
   configNames: string[] = ['anyConfig'];
 
-  // TODO: Add calendar to UI
   rangeDates: Date[] = [
     moment().subtract(7, 'days').toDate(),
     moment().endOf('day').toDate()
@@ -145,7 +145,8 @@ export class HitsComponent implements OnInit {
   }
 
   // TODO: Only call this when necessary, don't make double calls!
-  refreshHits(pageNumber: number = 1, pageSize: number | null = null) {
+  refreshHits(pageNumber: number = 1, pageSize: number | null = null,
+    sortBy: HitSortField | null = null, sortDescending: boolean = false) {
     if (this.envSettings === null) return;
 
     this.hitService.getHits({
@@ -156,15 +157,17 @@ export class HitsComponent implements OnInit {
       configName: this.configName === 'anyConfig' ? null : this.configName,
       minDate: this.rangeDates[0].toISOString(),
       maxDate: this.rangeDates[1].toISOString(),
-      sortBy: null, // TODO: Implement sorting
-      sortDescending: false
+      sortBy: sortBy,
+      sortDescending: sortDescending
     }).subscribe(hits => this.hits = hits);
   }
 
   lazyLoadHits(event: any) {
     this.refreshHits(
       Math.floor(event.first / event.rows) + 1,
-      event.rows
+      event.rows,
+      event.sortField as HitSortField,
+      event.sortOrder === -1
     );
   }
 
@@ -181,7 +184,10 @@ export class HitsComponent implements OnInit {
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString()
+      maxDate: this.rangeDates[1].toISOString(),
+      configName: this.configName === 'anyConfig' ? null : this.configName,
+      sortBy: null,
+      sortDescending: false
     }).subscribe(resp => {
       this.messageService.add({
         severity: 'success',
@@ -234,7 +240,10 @@ export class HitsComponent implements OnInit {
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
       minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString()
+      maxDate: this.rangeDates[1].toISOString(),
+      configName: this.configName === 'anyConfig' ? null : this.configName,
+      sortBy: null,
+      sortDescending: false
     }, format).subscribe(resp => saveFile(resp));
   }
 

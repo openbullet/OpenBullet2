@@ -64,7 +64,6 @@ public class PagedList<T>
     {
         var count = await source.CountAsync();
         var items = await source
-            .OrderBy(x => x.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize).ToListAsync();
 

@@ -9,7 +9,7 @@ import { PagedList } from '../../dtos/common/paged-list.dto';
 import { UpdateProxyGroupDto } from '../../dtos/proxy-group/update-proxy-group.dto';
 import { CreateProxyGroupDto } from '../../dtos/proxy-group/create-proxy-group.dto';
 import { MenuItem } from 'primeng/api';
-import { ProxyFiltersDto } from '../../dtos/proxy/proxy-filter.dto';
+import { ProxyFiltersDto, ProxySortField } from '../../dtos/proxy/proxy-filters.dto';
 import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxies.component';
 import { ImportProxiesFromTextComponent, ProxiesToImport } from './import-proxies-from-text/import-proxies-from-text.component';
 import { ImportProxiesFromRemoteComponent, RemoteProxiesToImport } from './import-proxies-from-remote/import-proxies-from-remote.component';
@@ -219,21 +219,26 @@ export class ProxiesComponent implements OnInit {
   }
 
   // TODO: Only call this when necessary, don't make double calls!
-  refreshProxies(pageNumber: number = 1, pageSize: number | null = null) {
+  refreshProxies(pageNumber: number = 1, pageSize: number | null = null,
+    sortBy: ProxySortField | null = null, sortDescending: boolean = false) {
     this.proxyService.getProxies({
       pageNumber,
       pageSize: pageSize ?? this.rowCount,
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: this.searchTerm,
       type: this.proxyType === 'anyType' ? null : this.proxyType,
-      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus
+      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+      sortBy: sortBy,
+      sortDescending: sortDescending
     }).subscribe(proxies => this.proxies = proxies);
   }
 
   lazyLoadProxies(event: any) {
     this.refreshProxies(
       Math.floor(event.first / event.rows) + 1,
-      event.rows
+      event.rows,
+      event.sortField as ProxySortField,
+      event.sortOrder === -1
     );
   }
 
@@ -363,7 +368,9 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: this.searchTerm,
       type: this.proxyType === 'anyType' ? null : this.proxyType,
-      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus
+      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+      sortBy: null,
+      sortDescending: false
     });
   }
 
@@ -374,7 +381,9 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: null,
       type: null,
-      status: ProxyWorkingStatus.NotWorking
+      status: ProxyWorkingStatus.NotWorking,
+      sortBy: null,
+      sortDescending: false
     });
   }
 
@@ -385,7 +394,9 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: null,
       type: null,
-      status: ProxyWorkingStatus.Untested
+      status: ProxyWorkingStatus.Untested,
+      sortBy: null,
+      sortDescending: false
     });
   }
 
@@ -419,7 +430,9 @@ export class ProxiesComponent implements OnInit {
         proxyGroupId: this.selectedProxyGroup.id,
         searchTerm: null,
         type: null,
-        status: null
+        status: null,
+        sortBy: null,
+        sortDescending: false
       })
     });
   }
@@ -506,7 +519,9 @@ export class ProxiesComponent implements OnInit {
       proxyGroupId: this.selectedProxyGroup.id,
       searchTerm: this.searchTerm,
       type: this.proxyType === 'anyType' ? null : this.proxyType,
-      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus
+      status: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+      sortBy: null,
+      sortDescending: false
     }).subscribe(resp => saveFile(resp));
   }
 }

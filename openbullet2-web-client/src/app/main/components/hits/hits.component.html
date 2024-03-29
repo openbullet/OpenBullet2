@@ -69,6 +69,8 @@
                 #hitsDt
                 [value]="hits.items"
                 [lazy]="true"
+                sortField="date"
+                [sortOrder]="-1"
                 [totalRecords]="hits.totalCount"
                 [first]="(hits.pageNumber - 1) * hits.pageSize"
                 (onLazyLoad)="lazyLoadHits($event)"
@@ -90,28 +92,38 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
                     <tr *ngIf="hits.items.length > 0">
-                        <!-- TODO: Send sorting info to backend
-                        to implement sorting! -->
                         <th style="min-width:10rem" pResizableColumn>
                             Type
                         </th>
-                        <th style="min-width:7rem" pResizableColumn>
-                            Data
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="data">
+                            <div class="d-flex align-items-center">
+                                Data <p-sortIcon field="data" />
+                            </div>
                         </th>
-                        <th style="min-width:7rem" pResizableColumn>
-                            Config
+                        <th style="min-width:7rem" pResizableColumn pSortableColumn="configName">
+                            <div class="d-flex align-items-center">
+                                Config <p-sortIcon field="configName" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem">
-                            Date
+                        <th style="min-width:10rem" pSortableColumn="date">
+                            <div class="d-flex align-items-center">
+                                Date <p-sortIcon field="date" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Wordlist
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="wordlistName">
+                            <div class="d-flex align-items-center">
+                                Wordlist <p-sortIcon field="wordlistName" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Proxy
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="proxy">
+                            <div class="d-flex align-items-center">
+                                Proxy <p-sortIcon field="proxy" />
+                            </div>
                         </th>
-                        <th style="min-width:15rem" pResizableColumn>
-                            Captured Data
+                        <th style="min-width:15rem" pResizableColumn pSortableColumn="capturedData">
+                            <div class="d-flex align-items-center">
+                                Captured Data <p-sortIcon field="capturedData" />
+                            </div>
                         </th>
                         <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
                     </tr>

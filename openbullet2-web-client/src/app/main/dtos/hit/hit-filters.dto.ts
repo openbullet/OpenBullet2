@@ -1,10 +1,10 @@
-export interface HitFiltersDto {
-    pageNumber: number | null;
-    pageSize: number | null;
-    searchTerm: string | null;
-    type: string | null;
-    minDate: string | null;
-    maxDate: string | null,
+export enum HitSortField {
+    Data = 'data',
+    ConfigName = 'configName',
+    Date = 'date',
+    WordlistName = 'wordlistName',
+    Proxy = 'proxy',
+    CapturedData = 'capturedData',
 }
 
 export interface ListHitFiltersDto {
@@ -15,6 +15,6 @@ export interface ListHitFiltersDto {
     type: string | null;
     minDate: string | null;
     maxDate: string | null,
-    sortBy: string | null;
+    sortBy: HitSortField | null;
     sortDescending: boolean;
 }

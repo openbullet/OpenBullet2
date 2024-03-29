@@ -1,17 +1,13 @@
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { getBaseUrl } from "src/app/shared/utils/host";
-import { ProxyGroupDto } from "../dtos/proxy-group/proxy-group.dto";
-import { UpdateProxyGroupDto } from "../dtos/proxy-group/update-proxy-group.dto";
-import { CreateProxyGroupDto } from "../dtos/proxy-group/create-proxy-group.dto";
-import { ProxyFiltersDto } from "../dtos/proxy/proxy-filter.dto";
+import { ProxyFiltersDto } from "../dtos/proxy/proxy-filters.dto";
 import { ProxyDto } from "../dtos/proxy/proxy.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { AddProxiesFromListDto } from "../dtos/proxy/add-proxies-from-list.dto";
 import { AddProxiesFromRemoteDto } from "../dtos/proxy/add-proxies-from-remote.dto";
 import { MoveProxiesDto } from "../dtos/proxy/move-proxies.dto";
 import { PagedList } from "../dtos/common/paged-list.dto";
-import { Observable, map } from "rxjs";
 
 @Injectable({
     providedIn: 'root'

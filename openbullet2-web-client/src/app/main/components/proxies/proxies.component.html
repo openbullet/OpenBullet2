@@ -101,6 +101,8 @@
                 #proxiesDt
                 [value]="proxies.items"
                 [lazy]="true"
+                sortField="lastChecked"
+                [sortOrder]="-1"
                 [totalRecords]="proxies.totalCount"
                 [first]="(proxies.pageNumber - 1) * proxies.pageSize"
                 (onLazyLoad)="lazyLoadProxies($event)"
@@ -122,34 +124,46 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
                     <tr *ngIf="proxies.items.length > 0">
-                        <!-- TODO: Send sorting info to backend
-                        to implement sorting! -->
                         <th style="min-width:7rem">
                             Type
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Host
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="host">
+                            <div class="d-flex align-items-center">
+                                Host <p-sortIcon field="name" />
+                            </div>
                         </th>
-                        <th style="min-width:7rem">
-                            Port
+                        <th style="min-width:7rem" pSortableColumn="port">
+                            <div class="d-flex align-items-center">
+                                Port <p-sortIcon field="port" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Username
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="username">
+                            <div class="d-flex align-items-center">
+                                Username <p-sortIcon field="username" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Password
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="password">
+                            <div class="d-flex align-items-center">
+                                Password <p-sortIcon field="password" />
+                            </div>
                         </th>
-                        <th style="min-width:10rem" pResizableColumn>
-                            Country
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="country">
+                            <div class="d-flex align-items-center">
+                                Country <p-sortIcon field="country" />
+                            </div>
                         </th>
                         <th style="min-width:10rem">
                             Status
                         </th>
-                        <th style="min-width:7rem">
-                            Ping
+                        <th style="min-width:7rem" pSortableColumn="ping">
+                            <div class="d-flex align-items-center">
+                                Ping <p-sortIcon field="ping" />
+                            </div>
                         </th>
-                        <th style="min-width:15rem">
-                            Last Checked
+                        <th style="min-width:15rem" pSortableColumn="lastChecked">
+                            <div class="d-flex align-items-center">
+                                Last checked <p-sortIcon field="lastChecked" />
+                            </div>  
                         </th>
                     </tr>
                 </ng-template>

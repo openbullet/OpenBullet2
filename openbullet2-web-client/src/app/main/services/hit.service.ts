@@ -4,7 +4,7 @@ import { getBaseUrl } from "src/app/shared/utils/host";
 import { CreateHitDto } from "../dtos/hit/create-hit.dto";
 import { HitDto } from "../dtos/hit/hit.dto";
 import { UpdateHitDto } from "../dtos/hit/update-hit.dto";
-import { HitFiltersDto, ListHitFiltersDto } from "../dtos/hit/hit-filters.dto";
+import { ListHitFiltersDto } from "../dtos/hit/hit-filters.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { RecentHitsDto } from "../dtos/hit/recent-hits.dto";
 import { PagedList } from "../dtos/common/paged-list.dto";
@@ -55,7 +55,7 @@ export class HitService {
         );
     }
 
-    downloadHits(filter: HitFiltersDto, format: string) {
+    downloadHits(filter: ListHitFiltersDto, format: string) {
         return this.http.get<Blob>(
             getBaseUrl() + '/hit/download/many', {
             params: {
@@ -69,7 +69,7 @@ export class HitService {
         );
     }
 
-    deleteHits(filter: HitFiltersDto) {
+    deleteHits(filter: ListHitFiltersDto) {
         return this.http.delete<AffectedEntriesDto>(
             getBaseUrl() + '/hit/many', {
             params: <any>Object.fromEntries(
