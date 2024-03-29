@@ -303,8 +303,12 @@ public class ProxyController : ApiController
                 ProxySortField.LastChecked => dto.SortDescending
                     ? query.OrderByDescending(p => p.LastChecked)
                     : query.OrderBy(p => p.LastChecked),
-                _ => query
+                _ => query.OrderByDescending(p => p.LastChecked)
             };
+        }
+        else
+        {
+            query = query.OrderByDescending(p => p.LastChecked);
         }
 
         return query;

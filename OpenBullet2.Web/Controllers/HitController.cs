@@ -354,8 +354,12 @@ public class HitController : ApiController
                 HitSortField.CapturedData => dto.SortDescending
                     ? query.OrderByDescending(h => h.CapturedData)
                     : query.OrderBy(h => h.CapturedData),
-                _ => query
+                _ => query.OrderByDescending(h => h.Date)
             };
+        }
+        else
+        {
+            query = query.OrderByDescending(h => h.Date);
         }
 
         return query;
