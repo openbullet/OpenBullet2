@@ -334,14 +334,28 @@ public class HitController : ApiController
 
         if (dto.SortBy is not null)
         {
-            switch (dto.SortBy)
+            query = dto.SortBy switch
             {
-                case HitSortField.Date:
-                    query = dto.SortDescending
-                        ? query.OrderByDescending(h => h.Date)
-                        : query.OrderBy(h => h.Date);
-                    break;
-            }
+                HitSortField.Data => dto.SortDescending
+                    ? query.OrderByDescending(h => h.Data)
+                    : query.OrderBy(h => h.Data),
+                HitSortField.ConfigName => dto.SortDescending
+                    ? query.OrderByDescending(h => h.ConfigName)
+                    : query.OrderBy(h => h.ConfigName),
+                HitSortField.Date => dto.SortDescending
+                    ? query.OrderByDescending(h => h.Date)
+                    : query.OrderBy(h => h.Date),
+                HitSortField.WordlistName => dto.SortDescending
+                    ? query.OrderByDescending(h => h.WordlistName)
+                    : query.OrderBy(h => h.WordlistName),
+                HitSortField.Proxy => dto.SortDescending
+                    ? query.OrderByDescending(h => h.Proxy)
+                    : query.OrderBy(h => h.Proxy),
+                HitSortField.CapturedData => dto.SortDescending
+                    ? query.OrderByDescending(h => h.CapturedData)
+                    : query.OrderBy(h => h.CapturedData),
+                _ => query
+            };
         }
 
         return query;

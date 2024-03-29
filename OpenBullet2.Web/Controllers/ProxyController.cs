@@ -277,6 +277,35 @@ public class ProxyController : ApiController
         {
             query = query.Where(p => p.Group.Id == dto.ProxyGroupId);
         }
+        
+        if (dto.SortBy is not null)
+        {
+            query = dto.SortBy switch
+            {
+                ProxySortField.Host => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Host)
+                    : query.OrderBy(p => p.Host),
+                ProxySortField.Port => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Port)
+                    : query.OrderBy(p => p.Port),
+                ProxySortField.Username => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Username)
+                    : query.OrderBy(p => p.Username),
+                ProxySortField.Password => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Password)
+                    : query.OrderBy(p => p.Password),
+                ProxySortField.Country => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Country)
+                    : query.OrderBy(p => p.Country),
+                ProxySortField.Ping => dto.SortDescending
+                    ? query.OrderByDescending(p => p.Ping)
+                    : query.OrderBy(p => p.Ping),
+                ProxySortField.LastChecked => dto.SortDescending
+                    ? query.OrderByDescending(p => p.LastChecked)
+                    : query.OrderBy(p => p.LastChecked),
+                _ => query
+            };
+        }
 
         return query;
     }

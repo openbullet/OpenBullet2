@@ -28,4 +28,14 @@ public class ProxyFiltersDto : PaginationDto
     /// The proxy status filter, if any.
     /// </summary>
     public ProxyWorkingStatus? Status { get; set; } = null;
+    
+    /// <summary>
+    /// The field to sort proxies by, if any.
+    /// </summary>
+    public ProxySortField? SortBy { get; set; } = null;
+    
+    /// <summary>
+    /// Whether to sort the proxies in descending order.
+    /// </summary>
+    public bool SortDescending { get; set; } = false;
 }
