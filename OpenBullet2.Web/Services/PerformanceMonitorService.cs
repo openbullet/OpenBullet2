@@ -31,8 +31,8 @@ public class PerformanceMonitorService : IHostedService
     {
         ReadMetricsLoopAsync().Forget(e =>
         {
-            // Don't log TaskCanceledException
-            if (e is TaskCanceledException)
+            // Don't log OperationCanceledException
+            if (e is OperationCanceledException)
             {
                 return;
             }
