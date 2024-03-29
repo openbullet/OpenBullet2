@@ -9,14 +9,12 @@ namespace RuriLib.Models.Hits.HitOutputs
 {
     public class TelegramBotHitOutput : IHitOutput
     {
-        public string ApiServer { get; set; }
         public string Token { get; set; }
         public long ChatId { get; set; }
         public bool OnlyHits { get; set; }
 
-        public TelegramBotHitOutput(string apiServer, string token, long chatId, bool onlyHits = true)
+        public TelegramBotHitOutput(string token, long chatId, bool onlyHits = true)
         {
-            ApiServer = apiServer;
             Token = token;
             ChatId = chatId;
             OnlyHits = onlyHits;
@@ -31,7 +29,7 @@ namespace RuriLib.Models.Hits.HitOutputs
 
             using var client = new HttpClient();
 
-            var webhook = $"{new Uri(ApiServer)}bot{Token}/sendMessage";
+            var webhook = $"https://api.telegram.org/bot{Token}/sendMessage";
 
             var obj = new Dictionary<string, object>()
             {

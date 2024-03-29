@@ -115,11 +115,6 @@ public class DiscordWebhookActionDto : ActionDto
 public class TelegramBotActionDto : ActionDto
 {
     /// <summary>
-    /// The API server.
-    /// </summary>
-    public string ApiServer { get; set; } = "https://api.telegram.org/";
-
-    /// <summary>
     /// The authentication token.
     /// </summary>
     public string Token { get; set; } = string.Empty;

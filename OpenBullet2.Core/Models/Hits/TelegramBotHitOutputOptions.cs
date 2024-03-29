@@ -8,11 +8,6 @@ namespace OpenBullet2.Core.Models.Hits;
 public class TelegramBotHitOutputOptions : HitOutputOptions
 {
     /// <summary>
-    /// The API server URL.
-    /// </summary>
-    public string ApiServer { get; set; } = "https://api.telegram.org/";
-
-    /// <summary>
     /// The authentication token.
     /// </summary>
     public string Token { get; set; } = string.Empty;
