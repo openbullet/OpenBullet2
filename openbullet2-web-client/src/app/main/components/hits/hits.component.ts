@@ -33,6 +33,9 @@ export class HitsComponent implements OnInit {
     'NONE'
   ];
 
+  configName: string = 'anyConfig';
+  configNames: string[] = ['anyConfig'];
+
   // TODO: Add calendar to UI
   rangeDates: Date[] = [
     moment().subtract(7, 'days').toDate(),
@@ -134,6 +137,11 @@ export class HitsComponent implements OnInit {
 
         this.refreshHits();
       });
+
+    this.hitService.getConfigNames()
+      .subscribe(configNames => {
+        this.configNames = ['anyConfig', ...configNames];
+      });
   }
 
   // TODO: Only call this when necessary, don't make double calls!
@@ -145,6 +153,7 @@ export class HitsComponent implements OnInit {
       pageSize: pageSize ?? this.rowCount,
       searchTerm: this.searchTerm,
       type: this.hitType === 'Any Type' ? null : this.hitType,
+      configName: this.configName === 'anyConfig' ? null : this.configName,
       minDate: this.rangeDates[0].toISOString(),
       maxDate: this.rangeDates[1].toISOString(),
       sortBy: null, // TODO: Implement sorting

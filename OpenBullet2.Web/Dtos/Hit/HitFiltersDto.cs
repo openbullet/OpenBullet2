@@ -9,9 +9,14 @@ public class HitFiltersDto : PaginationDto
 {
     /// <summary>
     /// The search term to filter results by the hit data,
-    /// captured data, config name, wordlist name or proxy. Optional.
+    /// captured data, wordlist name or proxy. Optional.
     /// </summary>
     public string? SearchTerm { get; set; }
+    
+    /// <summary>
+    /// The config name to filter results by. Optional.
+    /// </summary>
+    public string? ConfigName { get; set; }
 
     /// <summary>
     /// The hit type. Optional.

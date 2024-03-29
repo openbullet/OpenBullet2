@@ -11,6 +11,7 @@ export interface ListHitFiltersDto {
     pageNumber: number | null;
     pageSize: number | null;
     searchTerm: string | null;
+    configName: string | null;
     type: string | null;
     minDate: string | null;
     maxDate: string | null,

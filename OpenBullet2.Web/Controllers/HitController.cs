@@ -87,6 +87,28 @@ public class HitController : ApiController
 
         return _mapper.Map<PagedList<HitDto>>(pagedEntities);
     }
+    
+    /// <summary>
+    /// Get the names of all the configs that have hits in the database.
+    /// </summary>
+    [HttpGet("config-names")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<IEnumerable<string>>> GetConfigNames()
+    {
+        var apiUser = HttpContext.GetApiUser();
+
+        var query = apiUser.Role is UserRole.Admin
+            ? _hitRepo.GetAll()
+            : _hitRepo.GetAll()
+                .Where(h => h.OwnerId == apiUser.Id);
+
+        var configNames = await query
+            .Select(h => h.ConfigName)
+            .Distinct()
+            .ToListAsync();
+
+        return configNames;
+    }
 
     /// <summary>
     /// Download a txt file with one hit per line, containing all hits
@@ -287,8 +309,12 @@ public class HitController : ApiController
                 EF.Functions.Like(h.Data, $"%{dto.SearchTerm}%") ||
                 EF.Functions.Like(h.CapturedData, $"%{dto.SearchTerm}%") ||
                 EF.Functions.Like(h.Proxy, $"%{dto.SearchTerm}%") ||
-                EF.Functions.Like(h.ConfigName, $"%{dto.SearchTerm}%") ||
                 EF.Functions.Like(h.WordlistName, $"%{dto.SearchTerm}%"));
+        }
+        
+        if (!string.IsNullOrEmpty(dto.ConfigName))
+        {
+            query = query.Where(h => h.ConfigName == dto.ConfigName);
         }
 
         if (dto.Type is not null)

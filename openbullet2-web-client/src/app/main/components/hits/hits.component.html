@@ -31,6 +31,18 @@
                 (ngModelChange)="refreshHits()"
                 [options]="hitTypes">
             </p-dropdown>
+            <p-dropdown
+                class="ml-2"
+                [(ngModel)]="configName"
+                (ngModelChange)="refreshHits()"
+                [options]="configNames">
+                <ng-template let-item pTemplate="selectedItem">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+                <ng-template let-item pTemplate="item">
+                    <span>{{item | pascalcase : true}}</span>
+                </ng-template>
+            </p-dropdown>
             <p-calendar
                 [(ngModel)]="rangeDates"
                 selectionMode="range"

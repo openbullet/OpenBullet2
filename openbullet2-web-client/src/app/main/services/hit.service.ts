@@ -4,10 +4,10 @@ import { getBaseUrl } from "src/app/shared/utils/host";
 import { CreateHitDto } from "../dtos/hit/create-hit.dto";
 import { HitDto } from "../dtos/hit/hit.dto";
 import { UpdateHitDto } from "../dtos/hit/update-hit.dto";
-import { PagedList } from "../dtos/common/paged-list.dto";
 import { HitFiltersDto, ListHitFiltersDto } from "../dtos/hit/hit-filters.dto";
 import { AffectedEntriesDto } from "../dtos/common/affected-entries.dto";
 import { RecentHitsDto } from "../dtos/hit/recent-hits.dto";
+import { PagedList } from "../dtos/common/paged-list.dto";
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +23,12 @@ export class HitService {
             params: <any>Object.fromEntries(
                 Object.entries(filter).filter(([_, v]) => v != null))
         }
+        );
+    }
+
+    getConfigNames() {
+        return this.http.get<string[]>(
+            getBaseUrl() + '/hit/config-names'
         );
     }
 

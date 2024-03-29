@@ -378,11 +378,71 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(25, result.Value.Items.Count);
-        // I don't know why but it returns 126 items instead
-        // of 125 and I'm too tired to sit here and debug...
+        // I don't know why, but it returns 126 items instead
+        // of 125, and I'm too tired to sit here and debug...
         Assert.Equal(1000 / 8 + 1, result.Value.TotalCount);
         Assert.Equal(0, result.Value.PageNumber);
         Assert.Equal(25, result.Value.PageSize);
+    }
+    
+    [Fact]
+    public async Task GetConfigNames_Admin_ListAll()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var hits = Enumerable.Range(0, 100)
+            .Select(i => new HitEntity {
+                ConfigName = i % 2 == 0 ? "Config1" : "Config2"
+            });
+        dbContext.Hits.AddRange(hits);
+        await dbContext.SaveChangesAsync();
+        
+        // Act
+        var result = await GetJsonAsync<List<string>>(
+            client, "/api/v1/hit/config-names");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Contains("Config1", result.Value);
+        Assert.Contains("Config2", result.Value);
+    }
+    
+    [Fact]
+    public async Task GetConfigNames_Guest_OnlyOwn()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest" };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        var adminHits = Enumerable.Range(0, 100)
+            .Select(i => new HitEntity {
+                ConfigName = "Config1"
+            });
+        var hits = Enumerable.Range(0, 100)
+            .Select(i => new HitEntity {
+                ConfigName = "Config2",
+                OwnerId = guest.Id
+            });
+        dbContext.Hits.AddRange(adminHits);
+        dbContext.Hits.AddRange(hits);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var result = await GetJsonAsync<List<string>>(
+            client, "/api/v1/hit/config-names");
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value);
+        Assert.Contains("Config2", result.Value);
     }
     
     [Fact]
