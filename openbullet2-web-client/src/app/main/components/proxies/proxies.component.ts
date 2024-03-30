@@ -18,6 +18,7 @@ import { saveFile } from 'src/app/shared/utils/files';
 import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
 import { ProxyWorkingStatus } from '../../enums/proxy-working-status';
 import { ProxyType } from '../../enums/proxy-type';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-proxies',
@@ -82,6 +83,8 @@ export class ProxiesComponent implements OnInit {
     ProxyType.Socks4a,
     ProxyType.Socks5
   ];
+  sortBy: ProxySortField = ProxySortField.LastChecked;
+  sortDescending: boolean = false;
 
   proxyMenuItems: MenuItem[] = [
     {
@@ -177,12 +180,21 @@ export class ProxiesComponent implements OnInit {
   constructor(private proxyGroupService: ProxyGroupService,
     private proxyService: ProxyService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.refreshProxyGroups();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchTerm = params['searchTerm'] ?? '';
+      this.proxyWorkingStatus = params['proxyWorkingStatus'] ?? 'anyStatus';
+      this.proxyType = params['proxyType'] ?? 'anyType';
+      this.sortBy = params['sortBy'];
+      this.sortDescending = params['sortDescending'] === 'true';
+      this.refreshProxyGroups();
+    });
   }
 
   refreshProxyGroups() {
@@ -220,7 +232,19 @@ export class ProxiesComponent implements OnInit {
 
   // TODO: Only call this when necessary, don't make double calls!
   refreshProxies(pageNumber: number = 1, pageSize: number | null = null,
-    sortBy: ProxySortField | null = null, sortDescending: boolean = false) {
+    sortBy: ProxySortField = ProxySortField.LastChecked, sortDescending: boolean = false) {
+    // Update the URL with the new filters WITHOUT reloading the page
+    // Do not add stuff to the URL if it's the default value
+    window.history.replaceState({}, '', this.router.createUrlTree([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        searchTerm: this.searchTerm || null,
+        proxyWorkingStatus: this.proxyWorkingStatus === 'anyStatus' ? null : this.proxyWorkingStatus,
+        proxyType: this.proxyType === 'anyType' ? null : this.proxyType,
+        sortBy: sortBy,
+        sortDescending: sortDescending ? 'true' : null,
+      }
+    }).toString());
     this.proxyService.getProxies({
       pageNumber,
       pageSize: pageSize ?? this.rowCount,
@@ -240,6 +264,13 @@ export class ProxiesComponent implements OnInit {
       event.sortField as ProxySortField,
       event.sortOrder === -1
     );
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.proxyWorkingStatus = 'anyStatus';
+    this.proxyType = 'anyType';
+    this.refreshProxies();
   }
 
   proxyGroupSelected() {
