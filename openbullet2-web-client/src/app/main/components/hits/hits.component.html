@@ -55,6 +55,11 @@
             </p-calendar>
         </div>
         <div class="col-4 pr-0 text-right">
+            <button class="button button-secondary mr-2" [style]="{ height: '41px'}"
+                pTooltip="Clear all filters"
+                (click)="clearFilters()">
+                Clear <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+            </button>
             <button class="button button-accent" [style]="{ height: '41px'}" 
                 pTooltip="Apply the current filters"
                 tooltipPosition="left"

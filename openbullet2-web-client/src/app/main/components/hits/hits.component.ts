@@ -7,10 +7,11 @@ import { HitDto } from '../../dtos/hit/hit.dto';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
 import * as moment from 'moment';
 import { saveFile } from 'src/app/shared/utils/files';
-import { faDatabase, faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
 import { UserService } from '../../services/user.service';
 import { HitSortField } from '../../dtos/hit/hit-filters.dto';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-hits',
@@ -25,6 +26,7 @@ export class HitsComponent implements OnInit {
   faPen = faPen;
   faX = faX;
   faDatabase = faDatabase;
+  faFilterCircleXmark = faFilterCircleXmark;
 
   searchTerm: string = '';
   hitType: string = 'Any Type';
@@ -36,6 +38,9 @@ export class HitsComponent implements OnInit {
 
   configName: string = 'anyConfig';
   configNames: string[] = ['anyConfig'];
+
+  sortBy: HitSortField = HitSortField.Date;
+  sortDescending: boolean = true;
 
   rangeDates: Date[] = [
     moment().subtract(7, 'days').toDate(),
@@ -84,7 +89,6 @@ export class HitsComponent implements OnInit {
       icon: 'pi pi-fw pi-trash',
       items: [
         {
-          // TODO: This is only displayed if the user is admin
           id: 'purge-hits',
           label: 'Purge all hits',
           icon: 'pi pi-fw pi-trash color-bad',
@@ -105,49 +109,78 @@ export class HitsComponent implements OnInit {
     private hitService: HitService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private userService: UserService) {
+    private userService: UserService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router) {
 
   }
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-        this.hitTypes = [
-          'Any Type',
-          'SUCCESS',
-          'NONE',
-          ...envSettings.customStatuses.map(cs => cs.name)
-        ];
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.searchTerm = params['searchTerm'] ?? '';
+      this.hitType = params['hitType'] ?? 'Any Type';
+      this.configName = params['configName'] ?? 'anyConfig';
+      this.rangeDates = [
+        moment(params['minDate'] ?? moment().subtract(7, 'days').toISOString()).toDate(),
+        moment(params['maxDate'] ?? moment().endOf('day').toISOString()).toDate()
+      ];
+      this.sortBy = params['sortBy'] ?? HitSortField.Date;
+      this.sortDescending = params['sortDescending'] === 'true';
 
-        // Update the "Export with format" menu items
-        const exportMenuItems = envSettings.exportFormats.map(ef => {
-          return {
-            label: ef.format,
-            command: () => this.downloadHits(ef.format),
-            styleClass: 'long-menu-item'
-          }
+      this.settingsService.getEnvironmentSettings()
+        .subscribe(envSettings => {
+          this.envSettings = envSettings;
+          this.hitTypes = [
+            'Any Type',
+            'SUCCESS',
+            'NONE',
+            ...envSettings.customStatuses.map(cs => cs.name)
+          ];
+
+          // Update the "Export with format" menu items
+          const exportMenuItems = envSettings.exportFormats.map(ef => {
+            return {
+              label: ef.format,
+              command: () => this.downloadHits(ef.format),
+              styleClass: 'long-menu-item'
+            }
+          });
+
+          this.hitMenuItems
+            .find(i => i.id === 'edit')!
+            .items!.find(i => i.id === 'edit-filtered-hits')!
+            .items!.find(i => i.id === 'export-filtered-hits')!
+            .items = exportMenuItems;
+
+          this.refreshHits();
         });
 
-        this.hitMenuItems
-          .find(i => i.id === 'edit')!
-          .items!.find(i => i.id === 'edit-filtered-hits')!
-          .items!.find(i => i.id === 'export-filtered-hits')!
-          .items = exportMenuItems;
-
-        this.refreshHits();
-      });
-
-    this.hitService.getConfigNames()
-      .subscribe(configNames => {
-        this.configNames = ['anyConfig', ...configNames];
-      });
+      this.hitService.getConfigNames()
+        .subscribe(configNames => {
+          this.configNames = ['anyConfig', ...configNames];
+        });
+    });
   }
 
   // TODO: Only call this when necessary, don't make double calls!
   refreshHits(pageNumber: number = 1, pageSize: number | null = null,
-    sortBy: HitSortField | null = null, sortDescending: boolean = false) {
+    sortBy: HitSortField = HitSortField.Date, sortDescending: boolean = true) {
     if (this.envSettings === null) return;
+
+    // Update the URL with the new filters WITHOUT reloading the page
+    // Do not add stuff to the URL if it's the default value
+    window.history.replaceState({}, '', this.router.createUrlTree([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        searchTerm: this.searchTerm === '' ? null : this.searchTerm,
+        hitType: this.hitType === 'Any Type' ? null : this.hitType,
+        configName: this.configName === 'anyConfig' ? null : this.configName,
+        minDate: moment(this.rangeDates[0]).toISOString(),
+        maxDate: moment(this.rangeDates[1]).toISOString(),
+        sortBy: sortBy === HitSortField.Date ? null : sortBy,
+        sortDescending: sortDescending ? 'true' : null
+      }
+    }).toString());
 
     this.hitService.getHits({
       pageNumber,
@@ -169,6 +202,18 @@ export class HitsComponent implements OnInit {
       event.sortField as HitSortField,
       event.sortOrder === -1
     );
+  }
+
+  clearFilters() {
+    this.searchTerm = '';
+    this.hitType = 'Any Type';
+    this.configName = 'anyConfig';
+    this.rangeDates = [
+      moment().subtract(7, 'days').toDate(),
+      moment().endOf('day').toDate()
+    ];
+
+    this.refreshHits();
   }
 
   searchBoxKeyDown(event: any) {

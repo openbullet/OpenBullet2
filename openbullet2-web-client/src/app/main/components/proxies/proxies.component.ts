@@ -84,7 +84,7 @@ export class ProxiesComponent implements OnInit {
     ProxyType.Socks5
   ];
   sortBy: ProxySortField = ProxySortField.LastChecked;
-  sortDescending: boolean = false;
+  sortDescending: boolean = true;
 
   proxyMenuItems: MenuItem[] = [
     {
@@ -232,7 +232,7 @@ export class ProxiesComponent implements OnInit {
 
   // TODO: Only call this when necessary, don't make double calls!
   refreshProxies(pageNumber: number = 1, pageSize: number | null = null,
-    sortBy: ProxySortField = ProxySortField.LastChecked, sortDescending: boolean = false) {
+    sortBy: ProxySortField = ProxySortField.LastChecked, sortDescending: boolean = true) {
     // Update the URL with the new filters WITHOUT reloading the page
     // Do not add stuff to the URL if it's the default value
     window.history.replaceState({}, '', this.router.createUrlTree([], {
