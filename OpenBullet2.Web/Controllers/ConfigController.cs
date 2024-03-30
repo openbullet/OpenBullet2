@@ -55,7 +55,7 @@ public class ConfigController : ApiController
     }
 
     /// <summary>
-    /// List all of the available configs. Optionally, reload them from disk.
+    /// List all the available configs. Optionally, reload them from disk.
     /// </summary>
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
@@ -306,7 +306,7 @@ public class ConfigController : ApiController
 
     /// <summary>
     /// Upload configs as .opk archives. OB1 configs (.loli) are also
-    /// accepted and they will be automatically packed into a .opk archive.
+    /// accepted, and they will be automatically packed into a .opk archive.
     /// </summary>
     [Admin]
     [HttpPost("upload/many")]

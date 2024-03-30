@@ -20,16 +20,18 @@ public class SettingsController : ApiController
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly RuriLibSettingsService _ruriLibSettingsService;
     private readonly ThemeService _themeService;
-
+    private readonly ILogger<SettingsController> _logger;
+    
     /// <summary></summary>
     public SettingsController(RuriLibSettingsService ruriLibSettingsService,
         OpenBulletSettingsService obSettingsService, IMapper mapper,
-        ThemeService themeService)
+        ThemeService themeService, ILogger<SettingsController> logger)
     {
         _ruriLibSettingsService = ruriLibSettingsService;
         _obSettingsService = obSettingsService;
         _mapper = mapper;
         _themeService = themeService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -77,6 +79,8 @@ public class SettingsController : ApiController
         // and after this instruction.
         _mapper.Map(settings, _ruriLibSettingsService.RuriLibSettings);
         await _ruriLibSettingsService.Save();
+        
+        _logger.LogInformation("Updated RuriLib settings");
 
         return _ruriLibSettingsService.RuriLibSettings;
     }
@@ -126,6 +130,8 @@ public class SettingsController : ApiController
         // and after this instruction.
         _mapper.Map(settings, _obSettingsService.Settings);
         await _obSettingsService.SaveAsync();
+        
+        _logger.LogInformation("Updated OpenBullet settings");
 
         return _mapper.Map<OpenBulletSettingsDto>(_obSettingsService.Settings);
     }
@@ -142,6 +148,8 @@ public class SettingsController : ApiController
         _obSettingsService.Settings.SecuritySettings
             .SetupAdminPassword(dto.Password);
         await _obSettingsService.SaveAsync();
+        
+        _logger.LogInformation("Updated the password of the admin user");
 
         return Ok();
     }
@@ -155,6 +163,7 @@ public class SettingsController : ApiController
     public async Task<ActionResult> AddTheme(IFormFile file)
     {
         await _themeService.SaveCssFileAsync(file.FileName, file.OpenReadStream());
+        _logger.LogInformation("Added a new CSS theme from file {FileName}", file.FileName);
         return Ok();
     }
 

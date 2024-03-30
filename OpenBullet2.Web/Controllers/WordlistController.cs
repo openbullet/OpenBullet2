@@ -208,6 +208,8 @@ public class WordlistController : ApiController
         EnsureOwnership(entity);
 
         await _wordlistRepo.DeleteAsync(entity, alsoDeleteFile);
+        
+        _logger.LogInformation("Deleted the wordlist with id {Id}", id);
 
         return Ok();
     }
@@ -237,6 +239,10 @@ public class WordlistController : ApiController
                 await _wordlistRepo.DeleteAsync(entity);
             }
         }
+        
+        _logger.LogInformation(
+            "Deleted {DeletedCount} wordlists that referenced files that were moved or deleted",
+            deletedCount);
 
         return new AffectedEntriesDto { Count = deletedCount };
     }

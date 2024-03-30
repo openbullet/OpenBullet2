@@ -110,6 +110,8 @@ public class SharedController : ApiController
 
         _configSharingService.Endpoints.Remove(endpoint);
         _configSharingService.Save();
+        
+        _logger.LogInformation("Deleted shared endpoint at route {Route}", route);
 
         return Ok();
     }

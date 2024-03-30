@@ -20,8 +20,8 @@ public class DebugController : ApiController
     {
 #pragma warning disable S1215
         GC.Collect(dto.Generations is -1 ? GC.MaxGeneration : dto.Generations,
-#pragma warning restore S1215
             dto.Mode, dto.Blocking, dto.Compacting);
+#pragma warning restore S1215
         return Ok();
     }
 }

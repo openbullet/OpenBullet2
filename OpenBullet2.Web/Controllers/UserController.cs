@@ -19,15 +19,18 @@ public class UserController : ApiController
 {
     private readonly IAuthTokenService _authService;
     private readonly IGuestRepository _guestRepo;
+    private readonly ILogger<UserController> _logger;
     private readonly OpenBulletSettingsService _obSettingsService;
 
     /// <summary></summary>
     public UserController(OpenBulletSettingsService obSettingsService,
-        IAuthTokenService authService, IGuestRepository guestRepo)
+        IAuthTokenService authService, IGuestRepository guestRepo,
+        ILogger<UserController> logger)
     {
         _obSettingsService = obSettingsService;
         _authService = authService;
         _guestRepo = guestRepo;
+        _logger = logger;
     }
 
     /// <summary>
@@ -68,7 +71,9 @@ public class UserController : ApiController
 
         var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
         var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
-
+        
+        _logger.LogInformation("Admin user logged in");
+        
         return Task.FromResult(new LoggedInUserDto { Token = token });
     }
 
@@ -128,6 +133,8 @@ public class UserController : ApiController
         var token = _authService.GenerateToken(claims,
             accessExpiration < lifetimeSpan ? accessExpiration : lifetimeSpan);
 
+        _logger.LogInformation("Guest user {Username} logged in", dto.Username);
+        
         return new LoggedInUserDto { Token = token };
     }
 }

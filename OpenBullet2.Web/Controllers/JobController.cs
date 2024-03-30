@@ -274,6 +274,8 @@ public class JobController : ApiController
         };
 
         await _jobRepo.AddAsync(entity);
+        
+        _logger.LogInformation("Created a new multi run job with id {Id}", entity.Id);
 
         // This might fail and we would have inconsistencies!
         // If that happens, remove the entity and rethrow
@@ -314,6 +316,8 @@ public class JobController : ApiController
         };
 
         await _jobRepo.AddAsync(entity);
+        
+        _logger.LogInformation("Created a new proxy check job with id {Id}", entity.Id);
 
         // This might fail and we would have inconsistencies!
         // If that happens, remove the entity and rethrow
@@ -367,6 +371,8 @@ public class JobController : ApiController
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
+        
+        _logger.LogInformation("Updated the multi run job with id {Id}", dto.Id);
 
         return await MapMultiRunJobDto((MultiRunJob)newJob);
     }
@@ -407,6 +413,8 @@ public class JobController : ApiController
 
         _jobManager.RemoveJob(oldJob);
         _jobManager.AddJob(newJob);
+        
+        _logger.LogInformation("Updated the proxy check job with id {Id}", dto.Id);
 
         return await MapProxyCheckJobDto((ProxyCheckJob)newJob);
     }
@@ -448,6 +456,8 @@ public class JobController : ApiController
         {
             job.CustomInputsAnswers[input.VariableName] = input.Answer;
         }
+        
+        _logger.LogInformation("Set custom inputs for job {Id}", dto.Id);
 
         return Ok();
     }
@@ -468,6 +478,8 @@ public class JobController : ApiController
 
         await _jobRepo.DeleteAsync(entity);
         _jobManager.RemoveJob(job);
+        
+        _logger.LogInformation("Deleted job with id {Id}", id);
 
         return Ok();
     }
@@ -516,6 +528,8 @@ public class JobController : ApiController
                 _jobManager.RemoveJob(job);
             }
         }
+        
+        _logger.LogInformation("Deleted {DeletedCount} jobs", deletedCount);
 
         return new AffectedEntriesDto { Count = deletedCount };
     }
@@ -569,6 +583,8 @@ public class JobController : ApiController
                 e => _logger.LogError(
                     "Error while starting job {JobId}: {Message}", dto.JobId, e.Message));
         }
+        
+        _logger.LogInformation("Started job {JobId}", dto.JobId);
 
         return Ok();
     }
@@ -593,6 +609,8 @@ public class JobController : ApiController
                 e => _logger.LogError(
                     "Error while stopping job {JobId}: {Message}", dto.JobId, e.Message));
         }
+        
+        _logger.LogInformation("Stopped job {JobId}", dto.JobId);
 
         return Ok();
     }
@@ -617,6 +635,8 @@ public class JobController : ApiController
                 e => _logger.LogError(
                     "Error while pausing job {JobId}: {Message}", dto.JobId, e.Message));
         }
+        
+        _logger.LogInformation("Paused job {JobId}", dto.JobId);
 
         return Ok();
     }
@@ -641,6 +661,8 @@ public class JobController : ApiController
                 e => _logger.LogError(
                     "Error while resuming job {JobId}: {Message}", dto.JobId, e.Message));
         }
+        
+        _logger.LogInformation("Resumed job {JobId}", dto.JobId);
 
         return Ok();
     }
@@ -666,6 +688,8 @@ public class JobController : ApiController
                     "Error while aborting job {JobId}: {Message}", dto.JobId, e.Message));
         }
 
+        _logger.LogInformation("Aborted job {JobId}", dto.JobId);
+        
         return Ok();
     }
 
@@ -680,6 +704,7 @@ public class JobController : ApiController
         EnsureOwnership(job);
 
         job.SkipWait();
+        _logger.LogInformation("Skipped wait for job {JobId}", dto.JobId);
         return Ok();
     }
 
@@ -706,6 +731,9 @@ public class JobController : ApiController
             default:
                 throw new NotSupportedException();
         }
+        
+        _logger.LogInformation(
+            "Changed the number of bots for job {JobId} to {Bots}", dto.JobId, dto.Bots);
 
         return Ok();
     }
