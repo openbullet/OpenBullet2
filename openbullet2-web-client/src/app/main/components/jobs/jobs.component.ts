@@ -77,13 +77,8 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.refreshingMultiRunJobs = true;
       this.jobService.getAllMultiRunJobs()
         .subscribe({
-          next: jobs => {
-            this.multiRunJobs = jobs;
-            this.refreshingMultiRunJobs = false;
-          },
-          error: () => {
-            this.refreshingMultiRunJobs = false;
-          }
+          next: jobs => this.multiRunJobs = jobs,
+          complete: () => this.refreshingMultiRunJobs = false
         });
     }
 
@@ -91,13 +86,8 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.refreshingProxyCheckJobs = true;
       this.jobService.getAllProxyCheckJobs()
         .subscribe({
-          next: jobs => {
-            this.proxyCheckJobs = jobs;
-            this.refreshingProxyCheckJobs = false;
-          },
-          error: () => {
-            this.refreshingProxyCheckJobs = false;
-          }
+          next: jobs => this.proxyCheckJobs = jobs,
+          complete: () => this.refreshingProxyCheckJobs = false
         });
     }
   }
