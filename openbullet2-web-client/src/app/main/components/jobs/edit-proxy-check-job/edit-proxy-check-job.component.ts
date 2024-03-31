@@ -45,6 +45,12 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   options: ProxyCheckJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
   settings: OBSettingsDto | null = null;
+  proxyCheckTargets: ProxyCheckTarget[] = [
+    {
+      url: 'Custom',
+      successKey: ''
+    }
+  ];
   targetSiteUrl: string = 'https://example.com';
   targetSiteSuccessKey: string = 'Example Domain';
 
@@ -94,6 +100,13 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
       this.settingsService.getSettings()
         .subscribe(settings => {
           this.settings = settings;
+          this.proxyCheckTargets = [
+            {
+              url: 'Custom',
+              successKey: ''
+            },
+            ...settings.generalSettings.proxyCheckTargets
+          ];
         });
     }
 
@@ -167,6 +180,9 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   }
 
   targetSiteSelected(target: ProxyCheckTarget) {
+    if (target.url === 'Custom') {
+      return;
+    }
     this.targetSiteUrl = target.url;
     this.targetSiteSuccessKey = target.successKey;
     this.touched = true;

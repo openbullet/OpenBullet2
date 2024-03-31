@@ -153,12 +153,16 @@
                 *ngIf="settings !== null"
                 (onChange)="targetSiteSelected($event.value)"
                 [ngModel]="options.target"
-                [options]="settings.generalSettings.proxyCheckTargets">
+                [options]="proxyCheckTargets">
                 <ng-template let-item pTemplate="selectedItem">
-                    <span class="input-small">Saved targets</span>
+                    <span class="input-small">
+                        {{item.url === 'Custom' ? 'Custom' : item.url + ' | ' + item.successKey}}
+                    </span>
                 </ng-template>
                 <ng-template let-item pTemplate="item">
-                    <span class="input-small">{{item.url}} | {{item.successKey}}</span>
+                    <span class="input-small">
+                        {{item.url === 'Custom' ? 'Custom' : item.url + ' | ' + item.successKey}}
+                    </span>
                 </ng-template>
             </p-dropdown>
             <div class="my-1">
