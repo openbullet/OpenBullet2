@@ -36,15 +36,24 @@ export class ConfigLolicodeComponent {
   faGear = faGear;
   faCode = faCode;
   showUsings: boolean = false;
+  showStartupLoliCodeEditor: boolean = false;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
+
+  @ViewChild('startupEditor')
+  startupEditor: CodeEditorComponent | undefined = undefined;
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService,
     private messageService: MessageService) {
     this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+      .subscribe(config => {
+        this.config = config;
+        if (this.config?.startupLoliCodeScript !== '') {
+          this.showStartupLoliCodeEditor = true;
+        }
+      });
   }
 
   editorLoaded() {
@@ -53,9 +62,22 @@ export class ConfigLolicodeComponent {
     }
   }
 
+  startupEditorLoaded() {
+    if (this.startupEditor !== undefined && this.config !== null) {
+      this.startupEditor.code = this.config.startupLoliCodeScript;
+    }
+  }
+
   codeChanged(code: string) {
     if (this.config !== null) {
       this.config.loliCodeScript = code;
+      this.localSave();
+    }
+  }
+
+  startupCodeChanged(code: string) {
+    if (this.config !== null) {
+      this.config.startupLoliCodeScript = code;
       this.localSave();
     }
   }
@@ -75,5 +97,9 @@ export class ConfigLolicodeComponent {
 
   toggleUsings() {
     this.showUsings = !this.showUsings;
+  }
+
+  toggleStartupLoliCodeEditor() {
+    this.showStartupLoliCodeEditor = !this.showStartupLoliCodeEditor;
   }
 }

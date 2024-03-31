@@ -37,15 +37,24 @@ export class ConfigCsharpComponent {
   faCode = faCode;
   wordlistTypes: string[] = [];
   showUsings: boolean = false;
+  showStartupEditor: boolean = false;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
+
+  @ViewChild('startupEditor')
+  startupEditor: CodeEditorComponent | undefined = undefined;
 
   constructor(private configService: ConfigService,
     private settingsService: SettingsService,
     private messageService: MessageService) {
     this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+      .subscribe(config => {
+        this.config = config;
+        if (this.config?.startupCSharpScript !== '') {
+          this.showStartupEditor = true;
+        }
+      });
   }
 
   editorLoaded() {
@@ -54,9 +63,22 @@ export class ConfigCsharpComponent {
     }
   }
 
+  startupEditorLoaded() {
+    if (this.startupEditor !== undefined && this.config !== null) {
+      this.startupEditor.code = this.config.startupCSharpScript;
+    }
+  }
+
   codeChanged(code: string) {
     if (this.config !== null) {
       this.config.cSharpScript = code;
+      this.localSave();
+    }
+  }
+
+  startupCodeChanged(code: string) {
+    if (this.config !== null) {
+      this.config.startupCSharpScript = code;
       this.localSave();
     }
   }
@@ -77,5 +99,9 @@ export class ConfigCsharpComponent {
 
   toggleUsings() {
     this.showUsings = !this.showUsings;
+  }
+
+  toggleStartupEditor() {
+    this.showStartupEditor = !this.showStartupEditor;
   }
 }

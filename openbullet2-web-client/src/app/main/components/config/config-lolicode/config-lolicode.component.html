@@ -29,6 +29,12 @@
                 <fa-icon [icon]="faGear" [fixedWidth]="true"></fa-icon>
                 Toggle Usings
             </button>
+            <button class="button button-secondary ml-2"
+                pTooltip="Show/Hide the startup LoliCode editor" tooltipPosition="bottom"
+                (click)="toggleStartupLoliCodeEditor()">
+                <fa-icon [icon]="faCode" [fixedWidth]="true"></fa-icon>
+                Toggle Startup Code
+            </button>
         </div>
     </div>
     <div class="row mb-3" *ngIf="showUsings">
@@ -42,9 +48,20 @@
                 placeholder="System.Text.RegularExpressions" />
         </div>
     </div>
+    <div class="row mb-3" *ngIf="showStartupLoliCodeEditor">
+        <div class="col-12">
+            <span>You can write a LoliCode script that will be executed when the job starts running</span>
+            <div style="height: 200px; width: 100%" class="mt-2">
+                <app-code-editor #startupEditor
+                    language="lolicode" ngDefaultControl 
+                    (loaded)="startupEditorLoaded()"
+                    (codeChanged)="startupCodeChanged($event)" />
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-6 pr-1">
-            <div style="height: 800px; width: 100%">
+            <div style="height: 830px; width: 100%">
                 <app-code-editor #editor
                     language="lolicode" ngDefaultControl 
                     (loaded)="editorLoaded()"

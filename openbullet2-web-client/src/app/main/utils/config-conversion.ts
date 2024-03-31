@@ -18,9 +18,14 @@ export const updateCSharpScript: ResolveFn<any> =
         // If the config's mode is loliCode, we need to convert the
         // loliCode to C# first
         if (config.mode === ConfigMode.LoliCode) {
-            const dto = await lastValueFrom(configService.convertLoliCodeToCSharp(
+            let dto = await lastValueFrom(configService.convertLoliCodeToCSharp(
                 config.settings, config.loliCodeScript));
 
             config.cSharpScript = dto.cSharpScript;
+
+            dto = await lastValueFrom(configService.convertLoliCodeToCSharp(
+                config.settings, config.startupLoliCodeScript));
+
+            config.startupCSharpScript = dto.cSharpScript;
         }
     };

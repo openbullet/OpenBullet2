@@ -28,6 +28,12 @@
                 <fa-icon [icon]="faGear" [fixedWidth]="true"></fa-icon>
                 Toggle Usings
             </button>
+            <button class="button button-secondary ml-2"
+                pTooltip="Show/Hide the startup editor" tooltipPosition="bottom"
+                (click)="toggleStartupEditor()">
+                <fa-icon [icon]="faCode" [fixedWidth]="true"></fa-icon>
+                Toggle Startup Code
+            </button>
         </div>
     </div>
     <div class="row mb-3" *ngIf="showUsings">
@@ -39,6 +45,19 @@
                 (validityChange)="localSave()"
                 [(list)]="config.settings.scriptSettings.customUsings"
                 placeholder="System.Text.RegularExpressions" />
+        </div>
+    </div>
+    <div class="row mb-3" *ngIf="showStartupEditor">
+        <div class="col-12">
+            <span>The code that will be executed when the job starts running</span>
+            <div style="height: 200px; width: 100%" class="mt-2">
+                <app-code-editor #startupEditor
+                    language="csharp" ngDefaultControl 
+                    theme="vs-dark"
+                    [readOnly]="true"
+                    (loaded)="startupEditorLoaded()"
+                    (codeChanged)="startupCodeChanged($event)" />
+            </div>
         </div>
     </div>
     <div class="row">
