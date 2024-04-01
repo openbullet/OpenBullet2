@@ -61,4 +61,9 @@ public class ProxyDto
     /// The id of the proxy group to which the proxy belongs to.
     /// </summary>
     public int GroupId { get; set; }
+    
+    /// <summary>
+    /// The name of the proxy group to which the proxy belongs to.
+    /// </summary>
+    public required string GroupName { get; set; }
 }

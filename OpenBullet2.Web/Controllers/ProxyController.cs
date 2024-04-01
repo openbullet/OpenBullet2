@@ -249,6 +249,7 @@ public class ProxyController : ApiController
 
         var query = apiUser.Role is UserRole.Admin
             ? _proxyRepo.GetAll()
+                .Include(p => p.Group)
             : _proxyRepo.GetAll()
                 .Include(p => p.Group)
                 .ThenInclude(g => g.Owner)

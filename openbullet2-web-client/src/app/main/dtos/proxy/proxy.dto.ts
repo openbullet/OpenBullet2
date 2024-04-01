@@ -12,5 +12,6 @@ export interface ProxyDto {
     status: ProxyWorkingStatus;
     ping: number;
     lastChecked: string;
-    groupId: number
+    groupId: number;
+    groupName: string;
 }

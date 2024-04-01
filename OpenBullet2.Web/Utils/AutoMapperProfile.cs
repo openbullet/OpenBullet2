@@ -138,6 +138,7 @@ internal class AutoMapperProfile : Profile
 
         CreateMap<ProxyEntity, ProxyDto>()
             .ForMember(dto => dto.GroupId, e => e.MapFrom(entity => entity.Group.Id))
+            .ForMember(dto => dto.GroupName, e => e.MapFrom(entity => entity.Group.Name))
             .ForMember(dto => dto.LastChecked, e => e.MapFrom(entity =>
                 entity.LastChecked == default ? null : (DateTime?)entity.LastChecked));
 

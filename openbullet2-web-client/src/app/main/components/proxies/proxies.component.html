@@ -170,6 +170,9 @@
                                 Last checked <p-sortIcon field="lastChecked" />
                             </div>  
                         </th>
+                        <th *ngIf="selectedProxyGroup === defaultProxyGroup" style="min-width:7rem">
+                            Group
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-proxy>
@@ -213,6 +216,7 @@
                         <td *ngIf="proxy.lastChecked !== null">
                             {{ proxy.lastChecked | date : 'medium' }}
                         </td>
+                        <td *ngIf="selectedProxyGroup === defaultProxyGroup">{{ proxy.groupName }}</td>
                     </tr>
                 </ng-template>
             </p-table>
