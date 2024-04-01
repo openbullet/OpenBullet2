@@ -5,9 +5,12 @@
         <ApplicationIcon>logo.ico</ApplicationIcon>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <!--
+        We cannot use this because of CSharpScript API https://github.com/dotnet/roslyn/issues/50719
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>false</SelfContained>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        -->
     </PropertyGroup>
 
     <PropertyGroup>
