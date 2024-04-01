@@ -45,7 +45,9 @@ public class AnnouncementService : IAnnouncementService
             {
                 // For now, we point it to the english announcement, if later
                 // on we decide to implement localization we need to change this.
+#pragma warning disable S1075
                 var url = "https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Announcements/en.md";
+#pragma warning restore S1075
                 using HttpClient client = new();
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
