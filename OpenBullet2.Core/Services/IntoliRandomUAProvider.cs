@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using OpenBullet2.Core.Exceptions;
 
 namespace OpenBullet2.Core.Services;
 
@@ -31,12 +32,16 @@ public class IntoliRandomUAProvider : IRandomUAProvider
         }
         
         rand = new Random();
-
+        
         if (agents.Count == 0)
-            throw new Exception("No valid user agents found in user-agents.json");
-
+        {
+            throw new MissingUserAgentsException("No valid user agents found in user-agents.json");
+        }
+        
         foreach (var platform in (UAPlatform[])Enum.GetValues(typeof(UAPlatform)))
+        {
             distributions[platform] = ComputeDistribution(agents, platform);
+        }
     }
 
     /// <inheritdoc/>

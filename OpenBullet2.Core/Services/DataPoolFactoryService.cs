@@ -6,6 +6,7 @@ using RuriLib.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using OpenBullet2.Core.Exceptions;
 
 namespace OpenBullet2.Core.Services;
 
@@ -54,12 +55,12 @@ public class DataPoolFactoryService
         // If the entity was deleted
         if (entity == null)
         {
-            throw new Exception($"Wordlist entity not found: {options.WordlistId}");
+            throw new EntityNotFoundException($"Wordlist entity not found: {options.WordlistId}");
         }
 
         if (!File.Exists(entity.FileName))
         {
-            throw new Exception($"Wordlist file not found: {entity.FileName}");
+            throw new EntityNotFoundException($"Wordlist file not found: {entity.FileName}");
         }
 
         var factory = new WordlistFactory(_ruriLibSettings);

@@ -9,6 +9,7 @@ using RuriLib.Helpers.Transpilers;
 using RuriLib.Services;
 using RuriLib.Legacy.Configs;
 using System.Text;
+using OpenBullet2.Core.Exceptions;
 
 namespace OpenBullet2.Core.Repositories;
 
@@ -137,7 +138,7 @@ public class DiskConfigRepository : IConfigRepository
         }
         else
         {
-            throw new Exception($"Unsupported file type: {extension}");
+            throw new UnsupportedFileTypeException($"Unsupported file type: {extension}");
         }
     }
 
