@@ -60,7 +60,7 @@ public class UserIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         var handler = new JwtSecurityTokenHandler();
         var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-        return jsonToken?.Claims ?? throw new Exception("Invalid token");
+        return jsonToken?.Claims ?? throw new ArgumentException("Invalid token", nameof(token));
     }
     
     [Fact]
