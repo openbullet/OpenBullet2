@@ -288,7 +288,11 @@
                     Log
                 </div>
                 <div class="named-card-value logs">
-                    <!-- TODO: Test performance with many logs and add virtualization -->
+                    <!-- TODO: For now, the logBufferSize is set to 200 to avoid
+                    performance issues. To do this properly, we need to work on
+                    DOM manipulation without redrawing the whole list every time,
+                    and we also want to add virtualization that only displays
+                    the items that should be visible on the screen at a given time -->
                     <div class="log-line" *ngFor="let log of logs">
                         <span class="log-line-time monospace">
                             {{log.timestamp | date : 'HH:mm:ss'}}

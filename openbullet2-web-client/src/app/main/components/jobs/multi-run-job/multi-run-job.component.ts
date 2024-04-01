@@ -115,7 +115,7 @@ export class MultiRunJobComponent {
   ];
   selectedHitType: HitType = HitType.Success;
 
-  logsBufferSize: number = 10_000;
+  logsBufferSize: number = 200;
   logs: LogMessage[] = [];
 
   isChangingBots: boolean = false;
