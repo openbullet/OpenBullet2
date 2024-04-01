@@ -8,6 +8,7 @@ using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
+using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
@@ -15,8 +16,10 @@ using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.Transpilers;
+using RuriLib.Logging;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
+using RuriLib.Models.Debugger;
 using RuriLib.Models.Trees;
 using RuriLib.Services;
 
@@ -35,6 +38,7 @@ public class ConfigController : ApiController
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly LoliCodeAutocompletionService _loliCodeAutocompletionService;
+    private readonly ConfigDebuggerService _configDebuggerService;
     private readonly PluginRepository _pluginRepository;
 
     /// <summary></summary>
@@ -43,6 +47,7 @@ public class ConfigController : ApiController
         ConfigService configService, IMapper mapper,
         OpenBulletSettingsService obSettingsService,
         LoliCodeAutocompletionService loliCodeAutocompletionService,
+        ConfigDebuggerService configDebuggerService,
         ILogger<ConfigController> logger)
     {
         _configRepo = configRepo;
@@ -51,6 +56,7 @@ public class ConfigController : ApiController
         _mapper = mapper;
         _obSettingsService = obSettingsService;
         _loliCodeAutocompletionService = loliCodeAutocompletionService;
+        _configDebuggerService = configDebuggerService;
         _logger = logger;
     }
 
@@ -449,6 +455,46 @@ public class ConfigController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult<FrozenDictionary<string, string>> GetBlockSnippets()
         => _loliCodeAutocompletionService.BlockSnippets;
+    
+    /// <summary>
+    /// Debug a config.
+    /// </summary>
+    [Admin]
+    [HttpPost("debug")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<DebugConfigResultDto>> Debug(DebugConfigDto dto)
+    {
+        var options = new DebuggerOptions
+        {
+            ProxyType = dto.ProxyType,
+            TestData = dto.TestData,
+            TestProxy = dto.TestProxy ?? string.Empty,
+            UseProxy = !string.IsNullOrWhiteSpace(dto.TestProxy),
+            WordlistType = dto.WordlistType
+        };
+        
+        ErrorMessage? error = null;
+
+        using var debugger = _configDebuggerService.Create(dto.ConfigId, options);
+        
+        try
+        {
+            await debugger.Run();
+        }
+        catch (Exception ex)
+        {
+            error = new ErrorMessage {
+                Type = ex.GetType().Name, Message = ex.Message, StackTrace = ex.ToString()
+            };
+        }
+        
+        return new DebugConfigResultDto
+        {
+            Log = debugger.Logger.Entries.ToList(),
+            Variables = debugger.Options.Variables.Select(ConfigDebuggerService.MapVariable).ToList(),
+            Error = error
+        };
+    }
 
     private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
         => new() {

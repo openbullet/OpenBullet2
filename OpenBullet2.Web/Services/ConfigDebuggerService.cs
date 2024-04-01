@@ -178,8 +178,6 @@ public sealed class ConfigDebuggerService : IDisposable
     /// Starts a debugger for the given config with the given options,
     /// after disposing the previous one (if any).
     /// </summary>
-    /// <param name="configId"></param>
-    /// <param name="options"></param>
     public void StartNew(string configId, DebuggerOptions options)
     {
         var debugger = CreateNew(configId, options);
@@ -203,6 +201,31 @@ public sealed class ConfigDebuggerService : IDisposable
                     .SendAsync(CommonMethods.Error, message);
             }
         });
+    }
+    
+    /// <summary>
+    /// Creates a new debugger for the given config with the given options.
+    /// </summary>
+    public ConfigDebugger Create(
+        string configId, DebuggerOptions options)
+    {
+        // Get the config
+        var config = _configService.Configs.Find(c => c.Id == configId);
+        
+        if (config is null)
+        {
+            throw new ArgumentException($"Invalid config id: {configId}");
+        }
+        
+        // Create the new instance
+        var debugger = new ConfigDebugger(config, options) {
+            PluginRepo = _pluginRepo,
+            RandomUAProvider = _randomUAProvider,
+            RNGProvider = _rngProvider,
+            RuriLibSettings = _rlSettingsService
+        };
+        
+        return debugger;
     }
 
     private ConfigDebugger CreateNew(string configId, DebuggerOptions options)
