@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getBaseUrl } from 'src/app/shared/utils/host';
-import { WordlistDto } from '../dtos/wordlist/wordlist.dto';
-import { WordlistPreviewDto } from '../dtos/wordlist/wordlist-preview.dto';
+import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { CreateWordlistDto } from '../dtos/wordlist/create-wordlist.dto';
 import { UpdateWordlistInfoDto } from '../dtos/wordlist/update-wordlist-info.dto';
-import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { WordlistFileDto } from '../dtos/wordlist/wordlist-file.dto';
+import { WordlistPreviewDto } from '../dtos/wordlist/wordlist-preview.dto';
+import { WordlistDto } from '../dtos/wordlist/wordlist.dto';
 
 @Injectable({
   providedIn: 'root',

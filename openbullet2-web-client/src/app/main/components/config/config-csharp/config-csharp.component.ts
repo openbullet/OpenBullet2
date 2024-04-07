@@ -35,8 +35,8 @@ export class ConfigCsharpComponent {
   faGear = faGear;
   faCode = faCode;
   wordlistTypes: string[] = [];
-  showUsings: boolean = false;
-  showStartupEditor: boolean = false;
+  showUsings = false;
+  showStartupEditor = false;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;

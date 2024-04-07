@@ -16,7 +16,7 @@ export class InputTimeSpanComponent {
   // ngModel changes, its value would be set here too, effectively
   // setting this value to a number instead of a TimeSpan!
   @Input() timeSpan: TimeSpan = new TimeSpan(0);
-  @Input() small: boolean = true;
+  @Input() small = true;
 
   @Output() touched = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();

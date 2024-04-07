@@ -11,9 +11,9 @@ import { UpdateGuestInfoDto } from 'src/app/main/dtos/guest/update-guest-info.dt
 export class UpdateGuestInfoComponent implements OnChanges {
   @Input() guest: GuestDto | null = null;
   @Output() confirm = new EventEmitter<UpdateGuestInfoDto>();
-  username: string = '';
+  username = '';
   accessExpiration: Date = new Date();
-  allowedAddresses: string = '';
+  allowedAddresses = '';
   faCircleQuestion = faCircleQuestion;
 
   ngOnChanges(changes: SimpleChanges) {

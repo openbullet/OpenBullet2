@@ -9,6 +9,7 @@ import {
   faWindowMaximize,
 } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { VariableDto } from 'src/app/main/dtos/config-debugger/messages';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
@@ -16,10 +17,9 @@ import { BotLoggerEntry, ConfigDebuggerSettings } from 'src/app/main/models/conf
 import { ConfigDebuggerSettingsService } from 'src/app/main/services/config-debugger-settings.service';
 import { ConfigDebuggerHubService } from 'src/app/main/services/config-debugger.hub.service';
 import { ConfigService } from 'src/app/main/services/config.service';
+import { UserService } from 'src/app/main/services/user.service';
 import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
 import { ViewAsHtmlComponent } from './view-as-html/view-as-html.component';
-import { UserService } from 'src/app/main/services/user.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-config-debugger',
@@ -48,7 +48,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
 
   logs: BotLoggerEntry[] = [];
   variables: VariableDto[] = [];
-  status: string = 'unknown';
+  status = 'unknown';
 
   displayVariables = false;
   viewAsHtmlModalVisible = false;

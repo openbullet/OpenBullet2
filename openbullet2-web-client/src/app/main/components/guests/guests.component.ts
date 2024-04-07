@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { GuestService } from '../../services/guest.service';
-import { GuestDto } from '../../dtos/guest/guest.dto';
 import { faFilterCircleXmark, faKey, faPen, faPlus, faUsers, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { CreateGuestDto } from '../../dtos/guest/create-guest.dto';
+import { GuestDto } from '../../dtos/guest/guest.dto';
 import { UpdateGuestInfoDto } from '../../dtos/guest/update-guest-info.dto';
 import { UpdateGuestPasswordDto } from '../../dtos/guest/update-guest-password.dto';
-import { CreateGuestDto } from '../../dtos/guest/create-guest.dto';
+import { GuestService } from '../../services/guest.service';
 
 @Component({
   selector: 'app-guests',

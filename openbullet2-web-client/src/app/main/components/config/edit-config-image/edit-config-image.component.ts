@@ -12,7 +12,7 @@ export class EditConfigImageComponent {
   @ViewChild('fileUpload') fileUpload: FileUpload | null = null;
   selectedFile: File | null = null;
   base64Image: string | null = null;
-  remoteUrl: string = '';
+  remoteUrl = '';
 
   constructor(private http: HttpClient) {}
 

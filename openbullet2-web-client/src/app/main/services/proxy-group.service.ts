@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getBaseUrl } from 'src/app/shared/utils/host';
+import { CreateProxyGroupDto } from '../dtos/proxy-group/create-proxy-group.dto';
 import { ProxyGroupDto } from '../dtos/proxy-group/proxy-group.dto';
 import { UpdateProxyGroupDto } from '../dtos/proxy-group/update-proxy-group.dto';
-import { CreateProxyGroupDto } from '../dtos/proxy-group/create-proxy-group.dto';
 
 @Injectable({
   providedIn: 'root',

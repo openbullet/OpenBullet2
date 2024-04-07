@@ -15,9 +15,9 @@ export interface ProxiesToImport {
 })
 export class ImportProxiesFromTextComponent {
   @Output() confirm = new EventEmitter<ProxiesToImport>();
-  proxies: string = '';
-  defaultUsername: string = '';
-  defaultPassword: string = '';
+  proxies = '';
+  defaultUsername = '';
+  defaultPassword = '';
   defaultProxyType: ProxyType = ProxyType.Http;
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 

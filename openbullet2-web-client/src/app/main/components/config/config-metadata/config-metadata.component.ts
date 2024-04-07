@@ -1,9 +1,9 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { faPen, faTags, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { EditConfigImageComponent } from '../edit-config-image/edit-config-image.component';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-config-metadata',

@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { faArrowRight, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { ChangelogDto } from '../../dtos/info/changelog.dto';
 import { UpdateInfoDto } from '../../dtos/info/update-info.dto';
 import { InfoService } from '../../services/info.service';
-import { ChangelogDto } from '../../dtos/info/changelog.dto';
-import { faArrowRight, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-changelog',

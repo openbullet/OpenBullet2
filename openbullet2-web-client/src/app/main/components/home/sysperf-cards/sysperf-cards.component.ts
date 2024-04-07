@@ -2,11 +2,11 @@ import { formatNumber } from '@angular/common';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import {
   IconDefinition,
+  faCaretDown,
+  faCaretUp,
   faCircleArrowDown,
   faCircleArrowUp,
   faCircleMinus,
-  faCaretDown,
-  faCaretUp,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';

@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProxyGroupDto } from '../../dtos/proxy-group/proxy-group.dto';
-import { ProxyDto } from '../../dtos/proxy/proxy.dto';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   faEye,
   faEyeSlash,
@@ -11,29 +10,30 @@ import {
   faPlus,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
+import { saveFile } from 'src/app/shared/utils/files';
+import { PagedList } from '../../dtos/common/paged-list.dto';
+import { CreateProxyGroupDto } from '../../dtos/proxy-group/create-proxy-group.dto';
+import { ProxyGroupDto } from '../../dtos/proxy-group/proxy-group.dto';
+import { UpdateProxyGroupDto } from '../../dtos/proxy-group/update-proxy-group.dto';
+import { ProxyFiltersDto, ProxySortField } from '../../dtos/proxy/proxy-filters.dto';
+import { ProxyDto } from '../../dtos/proxy/proxy.dto';
+import { ProxyType } from '../../enums/proxy-type';
+import { ProxyWorkingStatus } from '../../enums/proxy-working-status';
 import { ProxyGroupService } from '../../services/proxy-group.service';
 import { ProxyService } from '../../services/proxy.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { PagedList } from '../../dtos/common/paged-list.dto';
-import { UpdateProxyGroupDto } from '../../dtos/proxy-group/update-proxy-group.dto';
-import { CreateProxyGroupDto } from '../../dtos/proxy-group/create-proxy-group.dto';
-import { MenuItem } from 'primeng/api';
-import { ProxyFiltersDto, ProxySortField } from '../../dtos/proxy/proxy-filters.dto';
+import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
 import { DeleteSlowProxiesParams } from './delete-slow-proxies/delete-slow-proxies.component';
-import {
-  ImportProxiesFromTextComponent,
-  ProxiesToImport,
-} from './import-proxies-from-text/import-proxies-from-text.component';
+import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
 import {
   ImportProxiesFromRemoteComponent,
   RemoteProxiesToImport,
 } from './import-proxies-from-remote/import-proxies-from-remote.component';
-import { ImportProxiesFromFileComponent } from './import-proxies-from-file/import-proxies-from-file.component';
-import { saveFile } from 'src/app/shared/utils/files';
-import { CreateProxyGroupComponent } from './create-proxy-group/create-proxy-group.component';
-import { ProxyWorkingStatus } from '../../enums/proxy-working-status';
-import { ProxyType } from '../../enums/proxy-type';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ImportProxiesFromTextComponent,
+  ProxiesToImport,
+} from './import-proxies-from-text/import-proxies-from-text.component';
 
 @Component({
   selector: 'app-proxies',
@@ -55,7 +55,7 @@ export class ProxiesComponent implements OnInit {
 
   proxyGroups: ProxyGroupDto[] | null = null;
   proxies: PagedList<ProxyDto> | null = null;
-  rowCount: number = 10;
+  rowCount = 10;
 
   faPen = faPen;
   faKey = faKey;
@@ -73,7 +73,7 @@ export class ProxiesComponent implements OnInit {
   };
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
-  showPasswords: boolean = false;
+  showPasswords = false;
 
   createProxyGroupModalVisible = false;
   updateProxyGroupModalVisible = false;
@@ -82,7 +82,7 @@ export class ProxiesComponent implements OnInit {
   importProxiesFromFileModalVisible = false;
   importProxiesFromRemoteModalVisible = false;
 
-  searchTerm: string = '';
+  searchTerm = '';
   proxyWorkingStatus: 'anyStatus' | ProxyWorkingStatus = 'anyStatus';
   proxyWorkingStatuses: ('anyStatus' | ProxyWorkingStatus)[] = [
     'anyStatus',
@@ -99,7 +99,7 @@ export class ProxiesComponent implements OnInit {
     ProxyType.Socks5,
   ];
   sortBy: ProxySortField = ProxySortField.LastChecked;
-  sortDescending: boolean = true;
+  sortDescending = true;
 
   proxyMenuItems: MenuItem[] = [
     {
@@ -243,10 +243,10 @@ export class ProxiesComponent implements OnInit {
 
   // TODO: Only call this when necessary, don't make double calls!
   refreshProxies(
-    pageNumber: number = 1,
+    pageNumber = 1,
     pageSize: number | null = null,
     sortBy: ProxySortField = ProxySortField.LastChecked,
-    sortDescending: boolean = true,
+    sortDescending = true,
   ) {
     // Update the URL with the new filters WITHOUT reloading the page
     // Do not add stuff to the URL if it's the default value

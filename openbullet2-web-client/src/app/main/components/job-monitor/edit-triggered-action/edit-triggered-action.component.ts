@@ -44,7 +44,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   getComparisonSubject = getComparisonSubject;
   parseTimeSpan = parseTimeSpan;
 
-  loaded: boolean = false;
+  loaded = false;
   triggeredActionId: string | null = null;
   mode: EditMode = EditMode.Edit;
   jobs: JobOverviewDto[] | null = null;
@@ -57,7 +57,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   actions: ActionDto[] = [];
 
   fieldsValidity: { [key: string]: boolean } = {};
-  touched: boolean = false;
+  touched = false;
 
   addTriggerModalVisible = false;
   addActionModalVisible = false;

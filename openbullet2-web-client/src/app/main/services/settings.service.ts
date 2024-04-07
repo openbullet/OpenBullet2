@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, shareReplay } from 'rxjs';
 import { getBaseUrl } from 'src/app/shared/utils/host';
+import { EnvironmentSettingsDto } from '../dtos/settings/environment-settings.dto';
 import { OBSettingsDto, SafeOBSettingsDto } from '../dtos/settings/ob-settings.dto';
 import { RLSettingsDto } from '../dtos/settings/rl-settings.dto';
-import { EnvironmentSettingsDto } from '../dtos/settings/environment-settings.dto';
-import { Observable, shareReplay } from 'rxjs';
 import { ThemeDto } from '../dtos/settings/theme.dto';
 
 @Injectable({

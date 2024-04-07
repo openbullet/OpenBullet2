@@ -1,6 +1,6 @@
 import { TimeSpanPipe } from 'src/app/shared/pipes/timespan.pipe';
-import { JobStatus } from '../job/job-status';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
+import { JobStatus } from '../job/job-status';
 
 export enum NumComparison {
   EqualTo = 'equalTo',

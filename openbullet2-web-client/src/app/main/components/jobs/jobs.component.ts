@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesome/free-solid-svg-icons';
-import { JobService } from '../../services/job.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { JobStatus } from '../../dtos/job/job-status';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
+import { JobService } from '../../services/job.service';
 import { SettingsService } from '../../services/settings.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Router } from '@angular/router';
-import { JobStatus } from '../../dtos/job/job-status';
 
 @Component({
   selector: 'app-jobs',
@@ -26,10 +26,10 @@ export class JobsComponent implements OnInit, OnDestroy {
   faClone = faClone;
 
   intervalId: any;
-  refreshingMultiRunJobs: boolean = false;
-  refreshingProxyCheckJobs: boolean = false;
-  showMoreMultiRunJobs: boolean = false;
-  showMoreProxyCheckJobs: boolean = false;
+  refreshingMultiRunJobs = false;
+  refreshingProxyCheckJobs = false;
+  showMoreMultiRunJobs = false;
+  showMoreProxyCheckJobs = false;
   createJobModalVisible = false;
 
   statusColor: Record<string, string> = {

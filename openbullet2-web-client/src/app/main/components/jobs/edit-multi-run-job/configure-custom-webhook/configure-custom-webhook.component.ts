@@ -10,9 +10,9 @@ export class ConfigureCustomWebhookComponent {
   @Output() confirm = new EventEmitter<void>();
 
   hitOutput: CustomWebhookHitOutput | null = null;
-  url: string = '';
-  user: string = '';
-  onlyHits: boolean = false;
+  url = '';
+  user = '';
+  onlyHits = false;
 
   public setHitOutput(hitOutput: CustomWebhookHitOutput) {
     this.hitOutput = hitOutput;

@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { faWrench } from '@fortawesome/free-solid-svg-icons';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
+import { FieldValidity } from 'src/app/shared/utils/forms';
 import { BrowserType, CaptchaServiceType, ParallelizerType, RLSettingsDto } from '../../dtos/settings/rl-settings.dto';
 import { SettingsService } from '../../services/settings.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { FieldValidity } from 'src/app/shared/utils/forms';
-import { faWrench } from '@fortawesome/free-solid-svg-icons';
-import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-rl-settings',
@@ -39,7 +39,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
 
   fieldsValidity: { [key: string]: boolean } = {};
   settings: RLSettingsDto | null = null;
-  touched: boolean = false;
+  touched = false;
   faWrench = faWrench;
   parallelizerTypes: ParallelizerType[] = [
     ParallelizerType.TaskBased,

@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { getBaseUrl } from 'src/app/shared/utils/host';
 import {
   CreateTriggeredActionDto,
   TriggeredActionDto,
   UpdateTriggeredActionDto,
 } from '../dtos/monitor/triggered-action.dto';
-import { getBaseUrl } from 'src/app/shared/utils/host';
 
 @Injectable({
   providedIn: 'root',

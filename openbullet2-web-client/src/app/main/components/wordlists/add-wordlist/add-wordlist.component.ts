@@ -10,11 +10,11 @@ import { UserService } from 'src/app/main/services/user.service';
 export class AddWordlistComponent {
   @Input() wordlistTypes: string[] = ['Default'];
   @Output() confirm = new EventEmitter<CreateWordlistDto>();
-  name: string = '';
-  purpose: string = '';
-  wordlistType: string = 'Default';
-  filePath: string = '';
-  isCreating: boolean = false;
+  name = '';
+  purpose = '';
+  wordlistType = 'Default';
+  filePath = '';
+  isCreating = false;
   isAdmin: boolean;
 
   constructor(private userService: UserService) {

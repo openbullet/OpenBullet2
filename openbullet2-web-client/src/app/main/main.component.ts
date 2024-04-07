@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { InfoService } from './services/info.service';
-import { UpdateInfoDto, VersionType } from './dtos/info/update-info.dto';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { UpdateInfoDto, VersionType } from './dtos/info/update-info.dto';
+import { InfoService } from './services/info.service';
 
 @Component({
   selector: 'app-main',

@@ -8,7 +8,7 @@ export function saveFile(response: HttpResponse<Blob>) {
     throw new Error('No body found in response');
   }
 
-  let downloadLink = document.createElement('a');
+  const downloadLink = document.createElement('a');
   downloadLink.href = window.URL.createObjectURL(new Blob([response.body], { type: response.body.type }));
 
   downloadLink.setAttribute('download', filename);

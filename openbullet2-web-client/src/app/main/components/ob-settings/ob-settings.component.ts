@@ -1,5 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { SettingsService } from '../../services/settings.service';
+import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
+import { FieldValidity } from 'src/app/shared/utils/forms';
+import { applyAppTheme } from 'src/app/shared/utils/theme';
 import {
   ConfigSection,
   CustomSnippet,
@@ -8,12 +13,7 @@ import {
   ProxyCheckTarget,
   RemoteConfigsEndpoint,
 } from '../../dtos/settings/ob-settings.dto';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { FieldValidity } from 'src/app/shared/utils/forms';
-import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
-import { applyAppTheme } from 'src/app/shared/utils/theme';
-import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
-import { Observable } from 'rxjs';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-ob-settings',
@@ -66,7 +66,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   fieldsValidity: { [key: string]: boolean } = {};
   settings: OBSettingsDto | null = null;
   themes: string[] | null = null;
-  touched: boolean = false;
+  touched = false;
   configSections: ConfigSection[] = [
     ConfigSection.Metadata,
     ConfigSection.Readme,

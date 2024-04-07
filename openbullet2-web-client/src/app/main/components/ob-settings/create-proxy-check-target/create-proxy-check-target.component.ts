@@ -11,8 +11,8 @@ export class CreateProxyCheckTargetComponent {
   @Output() confirm = new EventEmitter<ProxyCheckTarget>();
 
   faCircleQuestion = faCircleQuestion;
-  url: string = '';
-  successKey: string = '';
+  url = '';
+  successKey = '';
 
   public reset() {
     this.url = '';

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { UserService } from '../main/services/user.service';
 import { Router } from '@angular/router';
+import { UserService } from '../main/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  username = '';
+  password = '';
   failedLoginMessage: string | null = null;
   forgotCredentialsModalVisible = false;
 

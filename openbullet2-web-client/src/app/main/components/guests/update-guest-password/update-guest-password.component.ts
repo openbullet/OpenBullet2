@@ -10,8 +10,8 @@ import { UpdateGuestPasswordDto } from 'src/app/main/dtos/guest/update-guest-pas
 export class UpdateGuestPasswordComponent implements OnChanges {
   @Input() guest: GuestDto | null = null;
   @Output() confirm = new EventEmitter<UpdateGuestPasswordDto>();
-  password: string = '';
-  confirmPassword: string = '';
+  password = '';
+  confirmPassword = '';
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.guest === null) return;

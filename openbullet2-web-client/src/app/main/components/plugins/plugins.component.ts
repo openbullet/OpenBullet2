@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PluginDto } from '../../dtos/plugin/plugin.dto';
 import { faFilterCircleXmark, faKey, faPlus, faPuzzlePiece, faX } from '@fortawesome/free-solid-svg-icons';
-import { PluginService } from '../../services/plugin.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { PluginDto } from '../../dtos/plugin/plugin.dto';
+import { PluginService } from '../../services/plugin.service';
 
 @Component({
   selector: 'app-plugins',

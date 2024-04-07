@@ -14,7 +14,7 @@ export class SelectConfigComponent {
   moment = moment;
   configs: ConfigInfoDto[] | null = null;
   filteredConfigs: ConfigInfoDto[] | null = null;
-  searchTerm: string = '';
+  searchTerm = '';
   selectedConfig: ConfigInfoDto | null = null;
   readme: string | null = null;
 

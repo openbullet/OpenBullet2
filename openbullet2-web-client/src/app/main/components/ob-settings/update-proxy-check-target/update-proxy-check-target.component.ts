@@ -12,8 +12,8 @@ export class UpdateProxyCheckTargetComponent implements OnChanges {
   @Output() confirm = new EventEmitter<ProxyCheckTarget>();
 
   faCircleQuestion = faCircleQuestion;
-  url: string = '';
-  successKey: string = '';
+  url = '';
+  successKey = '';
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.target === null) return;

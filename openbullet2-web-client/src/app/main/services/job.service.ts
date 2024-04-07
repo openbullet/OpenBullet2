@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getBaseUrl } from 'src/app/shared/utils/host';
-import { MultiRunJobOverviewDto } from '../dtos/job/multi-run-job-overview.dto';
-import { ProxyCheckJobOverviewDto } from '../dtos/job/proxy-check-job-overview.dto';
-import { ProxyCheckJobDto } from '../dtos/job/proxy-check-job.dto';
-import { MultiRunJobDto } from '../dtos/job/multi-run-job.dto';
-import { MultiRunJobOptionsDto } from '../dtos/job/multi-run-job-options.dto';
-import { ProxyCheckJobOptionsDto } from '../dtos/job/proxy-check-job-options.dto';
 import { CustomInputQuestionDto, CustomInputsDto } from '../dtos/job/custom-inputs.dto';
 import { MRJHitLogDto } from '../dtos/job/hit-log.dto';
 import { JobOverviewDto } from '../dtos/job/job.dto';
+import { MultiRunJobOptionsDto } from '../dtos/job/multi-run-job-options.dto';
+import { MultiRunJobOverviewDto } from '../dtos/job/multi-run-job-overview.dto';
+import { MultiRunJobDto } from '../dtos/job/multi-run-job.dto';
+import { ProxyCheckJobOptionsDto } from '../dtos/job/proxy-check-job-options.dto';
+import { ProxyCheckJobOverviewDto } from '../dtos/job/proxy-check-job-overview.dto';
+import { ProxyCheckJobDto } from '../dtos/job/proxy-check-job.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -118,42 +118,42 @@ export class JobService {
     });
   }
 
-  start(jobId: number, wait: boolean = false) {
+  start(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/start', {
       jobId,
       wait,
     });
   }
 
-  stop(jobId: number, wait: boolean = false) {
+  stop(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/stop', {
       jobId,
       wait,
     });
   }
 
-  pause(jobId: number, wait: boolean = false) {
+  pause(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/pause', {
       jobId,
       wait,
     });
   }
 
-  resume(jobId: number, wait: boolean = false) {
+  resume(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/resume', {
       jobId,
       wait,
     });
   }
 
-  abort(jobId: number, wait: boolean = false) {
+  abort(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/abort', {
       jobId,
       wait,
     });
   }
 
-  skipWait(jobId: number, wait: boolean = false) {
+  skipWait(jobId: number, wait = false) {
     return this.http.post(getBaseUrl() + '/job/skip-wait', {
       jobId,
       wait,

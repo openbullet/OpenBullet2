@@ -12,14 +12,14 @@ export class InputDictionaryComponent implements OnChanges {
   @Input() class: string | null = null;
   @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
-  @Input() placeholder: string = '';
+  @Input() placeholder = '';
 
   // IMPORTANT: I could not call this ngModel since it's using other
   // ngModels inside it and THEY CONFLICT! Otherwise if the inner
   // ngModel changes, its value would be set here too, effectively
   // setting this value to a string instead of a string[]!
   @Input() dictionary: { [key: string]: string } | null = null;
-  @Input() disabled: boolean = false;
+  @Input() disabled = false;
 
   @Output() touched = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();

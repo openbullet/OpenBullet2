@@ -11,7 +11,7 @@ export class UpdateProxyGroupComponent implements OnChanges {
   @Input() proxyGroup: ProxyGroupDto | null = null;
   @Output() confirm = new EventEmitter<UpdateProxyGroupDto>();
 
-  name: string = '';
+  name = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.proxyGroup === null) return;

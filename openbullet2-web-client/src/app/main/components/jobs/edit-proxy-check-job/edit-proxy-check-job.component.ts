@@ -51,8 +51,8 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
       successKey: '',
     },
   ];
-  targetSiteUrl: string = 'https://example.com';
-  targetSiteSuccessKey: string = 'Example Domain';
+  targetSiteUrl = 'https://example.com';
+  targetSiteSuccessKey = 'Example Domain';
 
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
@@ -67,7 +67,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
   fieldsValidity: { [key: string]: boolean } = {};
-  touched: boolean = false;
+  touched = false;
 
   constructor(
     activatedRoute: ActivatedRoute,
@@ -88,7 +88,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
       const jobId = queryParams['jobId'];
 
       if (jobId !== undefined && !isNaN(jobId)) {
-        this.jobId = parseInt(jobId);
+        this.jobId = Number.parseInt(jobId);
       }
 
       this.initJobOptions();

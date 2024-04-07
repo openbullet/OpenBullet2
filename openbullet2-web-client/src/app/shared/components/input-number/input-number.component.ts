@@ -11,7 +11,7 @@ export class InputNumberComponent implements OnInit {
   @Input() key!: string;
   @Input() min: number | null = null;
   @Input() max: number | null = null;
-  @Input() integer: boolean = true;
+  @Input() integer = true;
   @Input() class: string | null = null;
   @Input() style: { [id: string]: any } = {};
   @Input() placeholder: number | string = '';
@@ -59,7 +59,7 @@ export class InputNumberComponent implements OnInit {
 
   // Called when the value in the input field is changing (user typing)
   valueChanging(event: Event) {
-    const newValue = parseFloat((event.target as HTMLInputElement).value);
+    const newValue = Number.parseFloat((event.target as HTMLInputElement).value);
 
     // Do not notify the validity for each character typed, just
     // check it to set the correct class
@@ -70,7 +70,7 @@ export class InputNumberComponent implements OnInit {
 
   // Called when the value in the input field changed
   valueChanged(event: Event) {
-    const newValue = parseFloat((event.target as HTMLInputElement).value);
+    const newValue = Number.parseFloat((event.target as HTMLInputElement).value);
     const valid = this.checkValidity(newValue);
 
     if (valid) {

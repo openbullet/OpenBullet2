@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { EndpointDto } from '../../dtos/sharing/endpoint.dto';
 import {
   faCircleQuestion,
   faDiceFive,
@@ -9,10 +8,11 @@ import {
   faTriangleExclamation,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
-import { SharingService } from '../../services/sharing.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfigService } from '../../services/config.service';
 import { ConfigInfoDto } from '../../dtos/config/config-info.dto';
+import { EndpointDto } from '../../dtos/sharing/endpoint.dto';
+import { ConfigService } from '../../services/config.service';
+import { SharingService } from '../../services/sharing.service';
 
 @Component({
   selector: 'app-sharing',

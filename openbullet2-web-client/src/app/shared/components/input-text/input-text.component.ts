@@ -12,7 +12,7 @@ export class InputTextComponent implements OnInit {
   @Input() class: string | null = null;
   @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
-  @Input() placeholder: string = '';
+  @Input() placeholder = '';
   @Input() ngModel: string | null = null;
 
   @Output() touched = new EventEmitter();

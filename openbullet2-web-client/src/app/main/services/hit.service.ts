@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getBaseUrl } from 'src/app/shared/utils/host';
-import { CreateHitDto } from '../dtos/hit/create-hit.dto';
-import { HitDto } from '../dtos/hit/hit.dto';
-import { UpdateHitDto } from '../dtos/hit/update-hit.dto';
-import { ListHitFiltersDto } from '../dtos/hit/hit-filters.dto';
 import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
-import { RecentHitsDto } from '../dtos/hit/recent-hits.dto';
 import { PagedList } from '../dtos/common/paged-list.dto';
+import { CreateHitDto } from '../dtos/hit/create-hit.dto';
+import { ListHitFiltersDto } from '../dtos/hit/hit-filters.dto';
+import { HitDto } from '../dtos/hit/hit.dto';
+import { RecentHitsDto } from '../dtos/hit/recent-hits.dto';
+import { UpdateHitDto } from '../dtos/hit/update-hit.dto';
 
 @Injectable({
   providedIn: 'root',

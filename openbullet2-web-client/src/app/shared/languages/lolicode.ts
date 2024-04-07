@@ -65,8 +65,8 @@ export function registerLoliCode(monaco: any) {
     ],
     folding: {
       markers: {
-        start: new RegExp('^\\s*#region\\b'),
-        end: new RegExp('^\\s*#endregion\\b'),
+        start: /^\s*#region\b/,
+        end: /^\s*#endregion\b/,
       },
     },
   });
@@ -549,17 +549,17 @@ export function registerLoliCode(monaco: any) {
   });
 
   monaco.languages.registerCompletionItemProvider('lolicode', {
-    provideCompletionItems: function (model: any, position: any) {
-      let word = model.getWordUntilPosition(position);
-      let range = {
+    provideCompletionItems: (model: any, position: any) => {
+      const word = model.getWordUntilPosition(position);
+      const range = {
         startLineNumber: position.lineNumber,
         startColumn: word.startColumn,
         endLineNumber: position.lineNumber,
         endColumn: word.endColumn,
       };
 
-      let blockAutocompletions = autoCompleteBlock(monaco, range);
-      let customAutocompletions = autoCompleteLoliCodeStatement(monaco, range);
+      const blockAutocompletions = autoCompleteBlock(monaco, range);
+      const customAutocompletions = autoCompleteLoliCodeStatement(monaco, range);
 
       return {
         suggestions: blockAutocompletions.concat(customAutocompletions),
@@ -569,7 +569,7 @@ export function registerLoliCode(monaco: any) {
 }
 
 export function autoCompleteBlock(monaco: any, range: any) {
-  let blockAutocompletions = [];
+  const blockAutocompletions = [];
   for (var id in monaco.loliCodeBlockSnippets) {
     blockAutocompletions.push({
       label: 'BLOCK:' + id,
@@ -584,7 +584,7 @@ export function autoCompleteBlock(monaco: any, range: any) {
 export function autoCompleteLoliCodeStatement(monaco: any, range: any) {
   // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
   // here you could do a server side lookup
-  let customAutocompletions = [
+  const customAutocompletions = [
     {
       label: 'LOG (LoliCode)',
       kind: monaco.languages.CompletionItemKind.Snippet,

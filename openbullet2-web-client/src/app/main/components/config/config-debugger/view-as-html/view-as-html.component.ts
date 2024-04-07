@@ -7,9 +7,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./view-as-html.component.scss'],
 })
 export class ViewAsHtmlComponent implements OnChanges {
-  @Input() html: string = '';
+  @Input() html = '';
 
-  sanitizedHtml: string = '';
+  sanitizedHtml = '';
 
   constructor(private domSanitizer: DomSanitizer) {}
 

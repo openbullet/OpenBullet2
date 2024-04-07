@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AnnouncementDto } from '../dtos/info/announcement.dto';
 import { getBaseUrl } from 'src/app/shared/utils/host';
-import { ServerInfoDto } from '../dtos/info/server-info.dto';
+import { AnnouncementDto } from '../dtos/info/announcement.dto';
+import { ChangelogDto } from '../dtos/info/changelog.dto';
 import { CollectionInfoDto } from '../dtos/info/collection-info.dto';
 import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
-import { ChangelogDto } from '../dtos/info/changelog.dto';
+import { ServerInfoDto } from '../dtos/info/server-info.dto';
 import { UpdateInfoDto } from '../dtos/info/update-info.dto';
 
 @Injectable({

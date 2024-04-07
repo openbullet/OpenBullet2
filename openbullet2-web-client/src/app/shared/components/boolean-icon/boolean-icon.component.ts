@@ -7,8 +7,8 @@ import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./boolean-icon.component.scss'],
 })
 export class BooleanIconComponent {
-  @Input() value: boolean = false;
-  @Input() useColors: boolean = true;
+  @Input() value = false;
+  @Input() useColors = true;
 
   faCheck = faCheck;
   faXMark = faXmark;

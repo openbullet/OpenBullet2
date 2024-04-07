@@ -12,9 +12,9 @@ export class UpdateHitComponent implements OnChanges {
   @Input() hit: HitDto | null = null;
   @Input() hitTypes: string[] = ['SUCCESS', 'NONE'];
   @Output() confirm = new EventEmitter<UpdateHitDto>();
-  data: string = '';
-  capturedData: string = '';
-  hitType: string = 'SUCCESS';
+  data = '';
+  capturedData = '';
+  hitType = 'SUCCESS';
 
   faCircleQuestion = faCircleQuestion;
 

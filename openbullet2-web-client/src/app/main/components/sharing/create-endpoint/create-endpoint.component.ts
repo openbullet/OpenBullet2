@@ -11,7 +11,7 @@ export class CreateEndpointComponent {
   @Output() confirm = new EventEmitter<EndpointDto>();
   faCircleQuestion = faCircleQuestion;
 
-  route: string = '';
+  route = '';
 
   public reset() {
     this.route = 'my-route';

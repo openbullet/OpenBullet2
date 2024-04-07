@@ -11,7 +11,7 @@ export class UploadConfigsComponent {
   @Output() confirm = new EventEmitter<File[]>();
   @ViewChild('fileUpload') fileUpload: FileUpload | null = null;
   selectedFiles: File[] = [];
-  isUploading: boolean = false;
+  isUploading = false;
 
   faInfo = faInfo;
 

@@ -11,15 +11,15 @@ import {
   faTrashCan,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
 import { CategoryTreeNode } from 'src/app/main/dtos/config/category-tree.dto';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
-import { ConfigService } from 'src/app/main/services/config.service';
-import { AddBlockComponent } from './add-block/add-block.component';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
+import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
-import { MessageService } from 'primeng/api';
+import { AddBlockComponent } from './add-block/add-block.component';
 
 interface DeletedBlock {
   block: BlockInstanceTypes;

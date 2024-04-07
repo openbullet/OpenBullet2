@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from '../../services/settings.service';
-import { HitService } from '../../services/hit.service';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { PagedList } from '../../dtos/common/paged-list.dto';
-import { HitDto } from '../../dtos/hit/hit.dto';
-import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
-import * as moment from 'moment';
-import { saveFile } from 'src/app/shared/utils/files';
-import { faDatabase, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
-import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
-import { UserService } from '../../services/user.service';
-import { HitSortField } from '../../dtos/hit/hit-filters.dto';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faDatabase, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
+import * as moment from 'moment';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { saveFile } from 'src/app/shared/utils/files';
+import { PagedList } from '../../dtos/common/paged-list.dto';
+import { HitSortField } from '../../dtos/hit/hit-filters.dto';
+import { HitDto } from '../../dtos/hit/hit.dto';
+import { UpdateHitDto } from '../../dtos/hit/update-hit.dto';
+import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
+import { HitService } from '../../services/hit.service';
+import { SettingsService } from '../../services/settings.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-hits',
@@ -21,22 +21,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class HitsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
   hits: PagedList<HitDto> | null = null;
-  rowCount: number = 10;
+  rowCount = 10;
 
   faPen = faPen;
   faX = faX;
   faDatabase = faDatabase;
   faFilterCircleXmark = faFilterCircleXmark;
 
-  searchTerm: string = '';
-  hitType: string = 'Any Type';
+  searchTerm = '';
+  hitType = 'Any Type';
   hitTypes: string[] = ['Any Type', 'SUCCESS', 'NONE'];
 
-  configName: string = 'anyConfig';
+  configName = 'anyConfig';
   configNames: string[] = ['anyConfig'];
 
   sortBy: HitSortField = HitSortField.Date;
-  sortDescending: boolean = true;
+  sortDescending = true;
 
   rangeDates: Date[] = [moment().subtract(7, 'days').toDate(), moment().endOf('day').toDate()];
 
@@ -149,10 +149,10 @@ export class HitsComponent implements OnInit {
 
   // TODO: Only call this when necessary, don't make double calls!
   refreshHits(
-    pageNumber: number = 1,
+    pageNumber = 1,
     pageSize: number | null = null,
     sortBy: HitSortField = HitSortField.Date,
-    sortDescending: boolean = true,
+    sortDescending = true,
   ) {
     if (this.envSettings === null) return;
 

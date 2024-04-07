@@ -11,8 +11,8 @@ export class CreateRemoteConfigsEndpointComponent {
   @Output() confirm = new EventEmitter<RemoteConfigsEndpoint>();
 
   faCircleQuestion = faCircleQuestion;
-  url: string = '';
-  apiKey: string = '';
+  url = '';
+  apiKey = '';
 
   public reset() {
     this.url = '';

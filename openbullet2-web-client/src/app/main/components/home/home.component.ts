@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { InfoService } from '../../services/info.service';
-import { AnnouncementDto } from '../../dtos/info/announcement.dto';
-import { ServerInfoDto } from '../../dtos/info/server-info.dto';
 import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { TimeSpan } from 'src/app/shared/utils/timespan';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { addTimeSpan, parseTimeSpan } from 'src/app/shared/utils/dates';
-import { CollectionInfoDto } from '../../dtos/info/collection-info.dto';
-import { UserService } from '../../services/user.service';
-import { HitService } from '../../services/hit.service';
+import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { RecentHitsDto } from '../../dtos/hit/recent-hits.dto';
+import { AnnouncementDto } from '../../dtos/info/announcement.dto';
+import { CollectionInfoDto } from '../../dtos/info/collection-info.dto';
+import { ServerInfoDto } from '../../dtos/info/server-info.dto';
+import { HitService } from '../../services/hit.service';
+import { InfoService } from '../../services/info.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -30,15 +30,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   faRightFromBracket = faRightFromBracket;
   timer: any;
   perfTimer: any;
-  username: string = 'admin';
+  username = 'admin';
   recentHits: RecentHitsDto | null = null;
 
   // Performance
-  cpuUsage: string = '0.00%';
+  cpuUsage = '0.00%';
   cpuUsageData: number[] = [];
-  memoryUsage: string = '0 B';
+  memoryUsage = '0 B';
   memoryUsageData: number[] = [];
-  networkUsage: string = '0 B/s | 0 B/s';
+  networkUsage = '0 B/s | 0 B/s';
   networkUsageData: number[] = [];
 
   constructor(

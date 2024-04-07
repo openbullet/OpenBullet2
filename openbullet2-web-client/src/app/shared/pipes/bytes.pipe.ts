@@ -5,7 +5,7 @@ import { formatBytes } from '../utils/bytes';
   name: 'bytes',
 })
 export class BytesPipe implements PipeTransform {
-  transform(value: number, decimals: number = 2): string {
+  transform(value: number, decimals = 2): string {
     return formatBytes(value, decimals);
   }
 }

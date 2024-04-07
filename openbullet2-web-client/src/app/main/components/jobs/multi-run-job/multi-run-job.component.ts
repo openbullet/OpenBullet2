@@ -17,6 +17,7 @@ import {
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
 import { MRJNewHitMessage } from 'src/app/main/dtos/job/messages/multi-run/hit.dto';
 import { MRJNewResultMessage } from 'src/app/main/dtos/job/messages/multi-run/new-result.dto';
@@ -32,7 +33,6 @@ import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
-import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 
 interface LogMessage {
   timestamp: Date;
@@ -83,7 +83,7 @@ export class MultiRunJobComponent {
   };
 
   status: JobStatus = JobStatus.IDLE;
-  bots: number = 0;
+  bots = 0;
 
   dataStats: MRJDataStatsDto = {
     hits: 0,
@@ -105,12 +105,12 @@ export class MultiRunJobComponent {
     banned: 0,
   };
 
-  cpm: number = 0;
-  captchaCredit: number = 0;
-  elapsed: string = '00:00:00';
-  remaining: string = '00:00:00';
-  progress: number = 0;
-  userRole: string = 'guest';
+  cpm = 0;
+  captchaCredit = 0;
+  elapsed = '00:00:00';
+  remaining = '00:00:00';
+  progress = 0;
+  userRole = 'guest';
 
   hitLogModalVisible = false;
 
@@ -124,11 +124,11 @@ export class MultiRunJobComponent {
   hitTypes: HitType[] = [HitType.Success, HitType.Custom, HitType.ToCheck];
   selectedHitType: HitType = HitType.Success;
 
-  logsBufferSize: number = 200;
+  logsBufferSize = 200;
   logs: LogMessage[] = [];
 
-  isChangingBots: boolean = false;
-  desiredBots: number = 1;
+  isChangingBots = false;
+  desiredBots = 1;
 
   startTime: moment.Moment | null = null;
   waitLeft: TimeSpan | null = null;
@@ -155,7 +155,7 @@ export class MultiRunJobComponent {
     userService: UserService,
   ) {
     activatedRoute.url.subscribe((url) => {
-      this.jobId = parseInt(url[2].path);
+      this.jobId = Number.parseInt(url[2].path);
     });
 
     this.userRole = userService.loadUserInfo().role.toLocaleLowerCase();

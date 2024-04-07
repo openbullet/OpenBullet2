@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -8,8 +6,10 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Observable, catchError, tap, throwError } from 'rxjs';
 import { UserService } from 'src/app/main/services/user.service';
 
 @Injectable()

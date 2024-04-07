@@ -15,9 +15,9 @@ export interface RemoteProxiesToImport {
 })
 export class ImportProxiesFromRemoteComponent {
   @Output() confirm = new EventEmitter<RemoteProxiesToImport>();
-  url: string = '';
-  defaultUsername: string = '';
-  defaultPassword: string = '';
+  url = '';
+  defaultUsername = '';
+  defaultPassword = '';
   defaultProxyType: ProxyType = ProxyType.Http;
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 

@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getBaseUrl } from 'src/app/shared/utils/host';
-import { ConfigInfoDto } from '../dtos/config/config-info.dto';
-import { ConfigReadmeDto } from '../dtos/config/config-readme.dto';
-import { ConfigDto, ConfigSettingsDto } from '../dtos/config/config.dto';
-import { UpdateConfigDto } from '../dtos/config/update-config.dto';
-import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from '../dtos/config/conversion.dto';
+import { getBaseUrl } from 'src/app/shared/utils/host';
+import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { BlockDescriptors } from '../dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from '../dtos/config/block-instance.dto';
 import { CategoryTreeNodeDto } from '../dtos/config/category-tree.dto';
+import { ConfigInfoDto } from '../dtos/config/config-info.dto';
+import { ConfigReadmeDto } from '../dtos/config/config-readme.dto';
+import { ConfigDto, ConfigSettingsDto } from '../dtos/config/config.dto';
+import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from '../dtos/config/conversion.dto';
+import { UpdateConfigDto } from '../dtos/config/update-config.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -176,7 +176,7 @@ export class ConfigService {
 
   uploadConfigs(files: File[]) {
     const formData: FormData = new FormData();
-    for (let file of files) {
+    for (const file of files) {
       formData.append('files', file, file.name);
     }
     return this.http.post<AffectedEntriesDto>(getBaseUrl() + '/config/upload/many', formData);

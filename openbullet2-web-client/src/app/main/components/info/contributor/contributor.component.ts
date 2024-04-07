@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class ContributorComponent {
   @Input() image: string | null = null;
-  @Input() name: string = 'Name';
-  @Input() role: string = 'Role';
+  @Input() name = 'Name';
+  @Input() role = 'Role';
 }

@@ -17,11 +17,11 @@ export class UploadWordlistComponent {
   @Output() confirm = new EventEmitter<CreateWordlistDto>();
   @ViewChild('fileUpload') fileUpload: FileUpload | null = null;
   selectedFile: File | null = null;
-  name: string = '';
-  purpose: string = '';
-  wordlistType: string = 'Default';
+  name = '';
+  purpose = '';
+  wordlistType = 'Default';
   filePath: string | null = null; // The path of the file on the server
-  isUploading: boolean = false;
+  isUploading = false;
   uploadProgress: number | null = null;
 
   constructor(

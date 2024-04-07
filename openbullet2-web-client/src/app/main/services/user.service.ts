@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { UserInfo } from '../models/user-info';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClient } from '@angular/common/http';
-import { UserLoginDto } from '../dtos/user/user-login.dto';
-import { LoggedInUserDto } from '../dtos/user/logged-in-user.dto';
+import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { getBaseUrl } from 'src/app/shared/utils/host';
+import { LoggedInUserDto } from '../dtos/user/logged-in-user.dto';
+import { UserLoginDto } from '../dtos/user/user-login.dto';
+import { UserInfo } from '../models/user-info';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private unsavedChanges: boolean = false;
+  private unsavedChanges = false;
 
   constructor(private http: HttpClient) {}
 

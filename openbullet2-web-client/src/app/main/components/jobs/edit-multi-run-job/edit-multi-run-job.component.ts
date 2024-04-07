@@ -22,25 +22,25 @@ import {
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
+import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dto';
+import { WordlistDto } from 'src/app/main/dtos/wordlist/wordlist.dto';
+import { ProxyType } from 'src/app/main/enums/proxy-type';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyGroupService } from 'src/app/main/services/proxy-group.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { WordlistService } from 'src/app/main/services/wordlist.service';
 import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { FieldValidity } from 'src/app/shared/utils/forms';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
-import { SelectConfigComponent } from '../select-config/select-config.component';
-import { ProxyType } from 'src/app/main/enums/proxy-type';
-import { ConfigureDiscordComponent } from './configure-discord/configure-discord.component';
-import { ConfigureTelegramComponent } from './configure-telegram/configure-telegram.component';
-import { ConfigureCustomWebhookComponent } from './configure-custom-webhook/configure-custom-webhook.component';
-import { SelectWordlistComponent } from '../select-wordlist/select-wordlist.component';
-import { WordlistDto } from 'src/app/main/dtos/wordlist/wordlist.dto';
-import { WordlistService } from 'src/app/main/services/wordlist.service';
 import { AddWordlistComponent } from '../../wordlists/add-wordlist/add-wordlist.component';
 import { UploadWordlistComponent } from '../../wordlists/upload-wordlist/upload-wordlist.component';
-import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dto';
+import { SelectConfigComponent } from '../select-config/select-config.component';
+import { SelectWordlistComponent } from '../select-wordlist/select-wordlist.component';
+import { ConfigureCustomWebhookComponent } from './configure-custom-webhook/configure-custom-webhook.component';
+import { ConfigureDiscordComponent } from './configure-discord/configure-discord.component';
+import { ConfigureTelegramComponent } from './configure-telegram/configure-telegram.component';
 
 enum EditMode {
   Create = 'create',
@@ -111,15 +111,15 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   // We save info about data pools here so when the user switches between them
   // using the radio buttons we don't lose the data
-  dataPoolWordlistType: string = 'Default';
-  dataPoolWordlistId: number = -1; // -1 if not present
-  dataPoolFileName: string = '';
-  dataPoolRangeStart: number = 0;
-  dataPoolRangeAmount: number = 0;
-  dataPoolRangeStep: number = 1;
-  dataPoolRangePad: boolean = false;
-  dataPoolCombinationsCharSet: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  dataPoolCombinationsLength: number = 4;
+  dataPoolWordlistType = 'Default';
+  dataPoolWordlistId = -1; // -1 if not present
+  dataPoolFileName = '';
+  dataPoolRangeStart = 0;
+  dataPoolRangeAmount = 0;
+  dataPoolRangeStep = 1;
+  dataPoolRangePad = false;
+  dataPoolCombinationsCharSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  dataPoolCombinationsLength = 4;
 
   selectedConfigInfo: ConfigInfoDto | null = null;
   selectedWordlist: WordlistDto | null = null;
@@ -133,15 +133,15 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
   fieldsValidity: { [key: string]: boolean } = {};
-  touched: boolean = false;
+  touched = false;
 
-  selectConfigModalVisible: boolean = false;
-  selectWordlistModalVisible: boolean = false;
-  addWordlistModalVisible: boolean = false;
-  uploadWordlistModalVisible: boolean = false;
-  configureDiscordWebhookHitOutputModalVisible: boolean = false;
-  configureTelegramBotHitOutputModalVisible: boolean = false;
-  configureCustomWebhookHitOutputModalVisible: boolean = false;
+  selectConfigModalVisible = false;
+  selectWordlistModalVisible = false;
+  addWordlistModalVisible = false;
+  uploadWordlistModalVisible = false;
+  configureDiscordWebhookHitOutputModalVisible = false;
+  configureTelegramBotHitOutputModalVisible = false;
+  configureCustomWebhookHitOutputModalVisible = false;
 
   constructor(
     activatedRoute: ActivatedRoute,
@@ -163,7 +163,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       const jobId = queryParams['jobId'];
 
       if (jobId !== undefined && !isNaN(jobId)) {
-        this.jobId = parseInt(jobId);
+        this.jobId = Number.parseInt(jobId);
       }
 
       this.initJobOptions();

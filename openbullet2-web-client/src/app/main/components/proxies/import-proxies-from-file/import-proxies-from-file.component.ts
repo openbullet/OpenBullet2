@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
-import { ProxiesToImport } from '../import-proxies-from-text/import-proxies-from-text.component';
 import { ProxyType } from 'src/app/main/enums/proxy-type';
+import { ProxiesToImport } from '../import-proxies-from-text/import-proxies-from-text.component';
 
 @Component({
   selector: 'app-import-proxies-from-file',
@@ -14,8 +14,8 @@ export class ImportProxiesFromFileComponent {
   @ViewChild('fileUpload') fileUpload: FileUpload | null = null;
   selectedFile: File | null = null;
 
-  defaultUsername: string = '';
-  defaultPassword: string = '';
+  defaultUsername = '';
+  defaultPassword = '';
   defaultProxyType: ProxyType = ProxyType.Http;
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
@@ -35,7 +35,7 @@ export class ImportProxiesFromFileComponent {
       return;
     }
 
-    let fileReader = new FileReader();
+    const fileReader = new FileReader();
 
     fileReader.onload = (e) => {
       if (fileReader.result === null) {

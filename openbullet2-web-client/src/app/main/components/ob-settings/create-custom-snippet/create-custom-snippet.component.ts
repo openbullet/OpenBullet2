@@ -11,9 +11,9 @@ export class CreateCustomSnippetComponent {
   @Output() confirm = new EventEmitter<CustomSnippet>();
 
   faCircleQuestion = faCircleQuestion;
-  name: string = '';
-  description: string = '';
-  body: string = '';
+  name = '';
+  description = '';
+  body = '';
 
   public reset() {
     this.name = '';

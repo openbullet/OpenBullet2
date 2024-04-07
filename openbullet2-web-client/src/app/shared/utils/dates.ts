@@ -14,18 +14,18 @@ export function parseTimeSpan(input: string): TimeSpan {
   const bigChunks = input.split('.');
 
   if (bigChunks.length > 2) {
-    days = parseInt(bigChunks[0]);
+    days = Number.parseInt(bigChunks[0]);
     input = bigChunks[1];
   }
 
   if (bigChunks.length === 3) {
-    millis = parseInt(bigChunks[2].substring(0, 3));
+    millis = Number.parseInt(bigChunks[2].substring(0, 3));
   }
 
   const chunks = input.split(':');
-  const hours = parseInt(chunks[0]);
-  const minutes = parseInt(chunks[1]);
-  const seconds = parseInt(chunks[2]);
+  const hours = Number.parseInt(chunks[0]);
+  const minutes = Number.parseInt(chunks[1]);
+  const seconds = Number.parseInt(chunks[2]);
 
   return TimeSpan.fromTime(days, hours, minutes, seconds, millis);
 }

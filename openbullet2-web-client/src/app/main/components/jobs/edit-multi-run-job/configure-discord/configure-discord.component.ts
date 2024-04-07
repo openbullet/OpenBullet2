@@ -10,10 +10,10 @@ export class ConfigureDiscordComponent {
   @Output() confirm = new EventEmitter<void>();
 
   hitOutput: DiscordWebhookHitOutput | null = null;
-  webhook: string = '';
-  username: string = '';
-  avatarUrl: string = '';
-  onlyHits: boolean = false;
+  webhook = '';
+  username = '';
+  avatarUrl = '';
+  onlyHits = false;
 
   public setHitOutput(hitOutput: DiscordWebhookHitOutput) {
     this.hitOutput = hitOutput;

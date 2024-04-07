@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { WordlistDto } from '../../dtos/wordlist/wordlist.dto';
 import { faFileLines, faFilterCircleXmark, faPen, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { WordlistService } from '../../services/wordlist.service';
-import { SettingsService } from '../../services/settings.service';
 import { EnvironmentSettingsDto } from '../../dtos/settings/environment-settings.dto';
-import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
 import { CreateWordlistDto } from '../../dtos/wordlist/create-wordlist.dto';
+import { UpdateWordlistInfoDto } from '../../dtos/wordlist/update-wordlist-info.dto';
+import { WordlistDto } from '../../dtos/wordlist/wordlist.dto';
+import { SettingsService } from '../../services/settings.service';
+import { WordlistService } from '../../services/wordlist.service';
 import { AddWordlistComponent } from './add-wordlist/add-wordlist.component';
 import { UploadWordlistComponent } from './upload-wordlist/upload-wordlist.component';
 

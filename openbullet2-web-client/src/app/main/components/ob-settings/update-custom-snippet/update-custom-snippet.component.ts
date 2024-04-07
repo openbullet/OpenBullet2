@@ -15,9 +15,9 @@ export class UpdateCustomSnippetComponent implements OnChanges {
   editor: CodeEditorComponent | undefined = undefined;
 
   faCircleQuestion = faCircleQuestion;
-  name: string = '';
-  description: string = '';
-  body: string = '';
+  name = '';
+  description = '';
+  body = '';
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.snippet === null) return;

@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ChangeAdminApiKeyComponent {
   @Output() confirm = new EventEmitter<string>();
 
-  apiKey: string = '';
+  apiKey = '';
 
   public reset(apiKey: string) {
     this.apiKey = apiKey;

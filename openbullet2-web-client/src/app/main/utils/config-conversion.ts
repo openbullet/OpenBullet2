@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
-import { ConfigService } from '../services/config.service';
 import { lastValueFrom } from 'rxjs';
 import { ConfigMode } from '../dtos/config/config-info.dto';
+import { ConfigService } from '../services/config.service';
 
 export const updateCSharpScript: ResolveFn<any> = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const configService = inject(ConfigService);

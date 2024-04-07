@@ -12,9 +12,9 @@ export class UpdateWordlistInfoComponent implements OnChanges {
   @Input() wordlist: WordlistDto | null = null;
   @Input() wordlistTypes: string[] = ['Default'];
   @Output() confirm = new EventEmitter<UpdateWordlistInfoDto>();
-  name: string = '';
-  purpose: string = '';
-  wordlistType: string = 'Default';
+  name = '';
+  purpose = '';
+  wordlistType = 'Default';
 
   faCircleQuestion = faCircleQuestion;
 

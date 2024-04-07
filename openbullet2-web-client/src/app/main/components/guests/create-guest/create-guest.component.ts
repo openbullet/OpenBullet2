@@ -11,12 +11,12 @@ import { CreateGuestDto } from 'src/app/main/dtos/guest/create-guest.dto';
 export class CreateGuestComponent {
   @Output() confirm = new EventEmitter<CreateGuestDto>();
 
-  username: string = '';
+  username = '';
   accessExpiration: Date = new Date();
-  allowedAddresses: string = '';
+  allowedAddresses = '';
   faCircleQuestion = faCircleQuestion;
-  password: string = '';
-  confirmPassword: string = '';
+  password = '';
+  confirmPassword = '';
 
   public reset() {
     this.username = '';

@@ -1,13 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { getBaseHubUrl } from 'src/app/shared/utils/host';
+import { ErrorMessage } from '../dtos/common/messages.dto';
 import {
   DbgNewLogMessage,
   DbgStateDto,
   DbgStatusChangedMessage,
   DbgVariablesChangedMessage,
 } from '../dtos/config-debugger/messages';
-import { ErrorMessage } from '../dtos/common/messages.dto';
 import { ConfigDebuggerSettings } from '../models/config-debugger-settings';
 import { UserService } from './user.service';
 

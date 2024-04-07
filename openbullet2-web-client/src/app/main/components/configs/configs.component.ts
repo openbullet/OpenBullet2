@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfigInfoDto, ConfigMode } from '../../dtos/config/config-info.dto';
+import { Router } from '@angular/router';
 import {
   faClone,
   faDownload,
@@ -9,16 +9,16 @@ import {
   faTriangleExclamation,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
-import { ConfigService } from '../../services/config.service';
+import * as moment from 'moment';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { saveFile } from 'src/app/shared/utils/files';
-import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
-import * as moment from 'moment';
-import { VolatileSettingsService } from '../../services/volatile-settings.service';
-import { Router } from '@angular/router';
-import { SettingsService } from '../../services/settings.service';
-import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
+import { ConfigInfoDto, ConfigMode } from '../../dtos/config/config-info.dto';
 import { ConfigDto } from '../../dtos/config/config.dto';
+import { OBSettingsDto } from '../../dtos/settings/ob-settings.dto';
+import { ConfigService } from '../../services/config.service';
+import { SettingsService } from '../../services/settings.service';
+import { VolatileSettingsService } from '../../services/volatile-settings.service';
+import { UploadConfigsComponent } from './upload-configs/upload-configs.component';
 
 @Component({
   selector: 'app-configs',
@@ -42,8 +42,8 @@ export class ConfigsComponent implements OnInit {
 
   moment: any = moment;
 
-  displayMode: string = 'grid';
-  uploadConfigsModalVisible: boolean = false;
+  displayMode = 'grid';
+  uploadConfigsModalVisible = false;
 
   configMenuItems: MenuItem[] = [
     {

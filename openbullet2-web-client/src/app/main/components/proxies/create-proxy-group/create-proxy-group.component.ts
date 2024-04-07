@@ -9,7 +9,7 @@ import { CreateProxyGroupDto } from 'src/app/main/dtos/proxy-group/create-proxy-
 export class CreateProxyGroupComponent {
   @Output() confirm = new EventEmitter<CreateProxyGroupDto>();
 
-  name: string = '';
+  name = '';
 
   public reset() {
     this.name = '';

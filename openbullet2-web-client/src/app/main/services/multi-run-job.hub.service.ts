@@ -1,15 +1,15 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { getBaseHubUrl } from 'src/app/shared/utils/host';
-import { UserService } from './user.service';
-import { JobStatusChangedMessage } from '../dtos/job/messages/status-changed.dto';
-import { ChangeBotsMessage } from '../dtos/job/messages/change-bots.dto';
-import { BotsChangedMessage } from '../dtos/job/messages/bots-changed.dto';
 import { ErrorMessage } from '../dtos/common/messages.dto';
+import { BotsChangedMessage } from '../dtos/job/messages/bots-changed.dto';
+import { ChangeBotsMessage } from '../dtos/job/messages/change-bots.dto';
+import { MRJNewHitMessage } from '../dtos/job/messages/multi-run/hit.dto';
 import { MRJNewResultMessage } from '../dtos/job/messages/multi-run/new-result.dto';
 import { MRJStatsMessage } from '../dtos/job/messages/multi-run/stats.dto';
-import { MRJNewHitMessage } from '../dtos/job/messages/multi-run/hit.dto';
 import { MRJTaskErrorMessage } from '../dtos/job/messages/multi-run/task-error.dto';
+import { JobStatusChangedMessage } from '../dtos/job/messages/status-changed.dto';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class MultiRunJobHubService {

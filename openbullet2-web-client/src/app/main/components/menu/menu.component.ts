@@ -19,12 +19,12 @@ import {
   faUsers,
   faWrench,
 } from '@fortawesome/free-solid-svg-icons';
-import { ConfigService } from '../../services/config.service';
-import { Subscription } from 'rxjs';
-import { ConfigDto } from '../../dtos/config/config.dto';
 import { MessageService } from 'primeng/api';
-import { UserService } from '../../services/user.service';
+import { Subscription } from 'rxjs';
 import { ConfigMode } from '../../dtos/config/config-info.dto';
+import { ConfigDto } from '../../dtos/config/config.dto';
+import { ConfigService } from '../../services/config.service';
+import { UserService } from '../../services/user.service';
 
 interface MenuSection {
   label: string;

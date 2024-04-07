@@ -65,8 +65,8 @@ export function registerLoliScript(monaco: any) {
     ],
     folding: {
       markers: {
-        start: new RegExp('^\\s*#region\\b'),
-        end: new RegExp('^\\s*#endregion\\b'),
+        start: /^\s*#region\b/,
+        end: /^\s*#endregion\b/,
       },
     },
   });

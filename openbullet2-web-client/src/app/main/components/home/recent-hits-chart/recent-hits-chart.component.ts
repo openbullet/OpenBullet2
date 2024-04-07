@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RecentHitsDto } from 'src/app/main/dtos/hit/recent-hits.dto';
 import { ChartConfiguration } from 'chart.js';
+import { RecentHitsDto } from 'src/app/main/dtos/hit/recent-hits.dto';
 
 @Component({
   selector: 'app-recent-hits-chart',

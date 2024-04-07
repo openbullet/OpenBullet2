@@ -20,7 +20,7 @@ export class IntSettingComponent {
   }
 
   setValue(event: any) {
-    if (isNaN(event) || isNaN(parseInt(event))) {
+    if (isNaN(event) || isNaN(Number.parseInt(event))) {
       return;
     }
 

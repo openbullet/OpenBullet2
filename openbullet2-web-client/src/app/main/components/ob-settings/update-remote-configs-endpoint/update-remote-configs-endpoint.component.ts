@@ -12,8 +12,8 @@ export class UpdateRemoteConfigsEndpointComponent implements OnChanges {
   @Output() confirm = new EventEmitter<RemoteConfigsEndpoint>();
 
   faCircleQuestion = faCircleQuestion;
-  url: string = '';
-  apiKey: string = '';
+  url = '';
+  apiKey = '';
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.endpoint === null) return;

@@ -20,7 +20,7 @@ export class FloatSettingComponent {
   }
 
   setValue(event: any) {
-    if (isNaN(event) || isNaN(parseFloat(event))) {
+    if (isNaN(event) || isNaN(Number.parseFloat(event))) {
       return;
     }
 

@@ -28,7 +28,7 @@ export class HttpRequestBlockComponent implements OnChanges {
   RequestParamsType = RequestParamsType;
   MultipartContentType = MultipartContentType;
   currentParamsType: RequestParamsType = RequestParamsType.Standard;
-  useCustomCipherSuites: boolean = false;
+  useCustomCipherSuites = false;
 
   standardRequestParams: StandardRequestParamsDto = {
     _polyTypeName: RequestParamsType.Standard,

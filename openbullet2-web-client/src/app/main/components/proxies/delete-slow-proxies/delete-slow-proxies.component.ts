@@ -15,7 +15,7 @@ export class DeleteSlowProxiesComponent {
   @Input() proxyGroup: ProxyGroupDto | null = null;
   @Output() confirm = new EventEmitter<DeleteSlowProxiesParams>();
 
-  maxPing: number = 10000;
+  maxPing = 10000;
 
   submitForm() {
     if (this.proxyGroup === null) {

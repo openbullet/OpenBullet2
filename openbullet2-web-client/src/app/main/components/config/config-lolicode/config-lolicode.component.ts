@@ -34,8 +34,8 @@ export class ConfigLolicodeComponent {
   faTriangleExclamation = faTriangleExclamation;
   faGear = faGear;
   faCode = faCode;
-  showUsings: boolean = false;
-  showStartupLoliCodeEditor: boolean = false;
+  showUsings = false;
+  showStartupLoliCodeEditor = false;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;

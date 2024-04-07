@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
 import { getBaseHubUrl } from 'src/app/shared/utils/host';
+import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })

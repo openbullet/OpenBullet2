@@ -10,10 +10,10 @@ export class ConfigureTelegramComponent {
   @Output() confirm = new EventEmitter<void>();
 
   hitOutput: TelegramBotHitOutput | null = null;
-  apiServer: string = '';
-  token: string = '';
-  chatId: number = 0;
-  onlyHits: boolean = false;
+  apiServer = '';
+  token = '';
+  chatId = 0;
+  onlyHits = false;
 
   public setHitOutput(hitOutput: TelegramBotHitOutput) {
     this.hitOutput = hitOutput;

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faClone, faEye, faPen, faPlus, faPowerOff, faRotate, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { JobType } from '../../dtos/job/job.dto';
+import { getActionText } from '../../dtos/monitor/action.dto';
+import { getTriggerText } from '../../dtos/monitor/trigger.dto';
 import { TriggeredActionDto } from '../../dtos/monitor/triggered-action.dto';
 import { JobMonitorService } from '../../services/job-monitor.service';
-import { JobType } from '../../dtos/job/job.dto';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { getTriggerText } from '../../dtos/monitor/trigger.dto';
-import { getActionText } from '../../dtos/monitor/action.dto';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-monitor',

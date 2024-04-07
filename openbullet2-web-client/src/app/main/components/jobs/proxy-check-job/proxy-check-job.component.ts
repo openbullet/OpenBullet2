@@ -63,20 +63,20 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   };
 
   status: JobStatus = JobStatus.IDLE;
-  bots: number = 0;
-  tested: number = 0;
-  working: number = 0;
-  notWorking: number = 0;
-  cpm: number = 0;
-  elapsed: string = '00:00:00';
-  remaining: string = '00:00:00';
-  progress: number = 0;
+  bots = 0;
+  tested = 0;
+  working = 0;
+  notWorking = 0;
+  cpm = 0;
+  elapsed = '00:00:00';
+  remaining = '00:00:00';
+  progress = 0;
 
-  logsBufferSize: number = 10_000;
+  logsBufferSize = 10_000;
   logs: LogMessage[] = [];
 
-  isChangingBots: boolean = false;
-  desiredBots: number = 1;
+  isChangingBots = false;
+  desiredBots = 1;
 
   startTime: moment.Moment | null = null;
   waitLeft: TimeSpan | null = null;
@@ -99,7 +99,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     private proxyCheckJobHubService: ProxyCheckJobHubService,
   ) {
     activatedRoute.url.subscribe((url) => {
-      this.jobId = parseInt(url[2].path);
+      this.jobId = Number.parseInt(url[2].path);
     });
   }
 

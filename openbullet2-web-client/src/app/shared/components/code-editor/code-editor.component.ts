@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
+import { combineLatest } from 'rxjs';
 import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
 import { autoCompleteBlock, autoCompleteLoliCodeStatement } from '../../languages/lolicode';
-import { combineLatest } from 'rxjs';
 
 declare const monaco: any;
 
@@ -15,12 +15,12 @@ declare const monaco: any;
 export class CodeEditorComponent implements OnInit {
   @Input() id: string | null = null;
   @Input() key!: string;
-  @Input() language: string = 'lolicode';
-  @Input() readOnly: boolean = false;
-  @Input() theme: string = 'vs-dark-lolicode';
+  @Input() language = 'lolicode';
+  @Input() readOnly = false;
+  @Input() theme = 'vs-dark-lolicode';
   editorOptions: any = {};
   isTouched = false;
-  model: string = '';
+  model = '';
 
   @Output() touched = new EventEmitter();
   @Output() codeChanged = new EventEmitter<string>();
@@ -60,7 +60,7 @@ export class CodeEditorComponent implements OnInit {
           monaco.loliCodeCustomSnippets = customSnippets;
 
           monaco.languages.registerCompletionItemProvider('lolicode', {
-            provideCompletionItems: function (model: any, position: any) {
+            provideCompletionItems: (model: any, position: any) => {
               // Check if we are completing BLOCK:
               var textUntilPosition = model.getValueInRange({
                 startLineNumber: position.lineNumber,

@@ -8,8 +8,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ChangeAdminPasswordComponent {
   @Output() confirm = new EventEmitter<string>();
 
-  password: string = '';
-  confirmPassword: string = '';
+  password = '';
+  confirmPassword = '';
 
   public reset() {
     this.password = '';

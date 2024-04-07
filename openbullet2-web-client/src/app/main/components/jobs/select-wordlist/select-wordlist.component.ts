@@ -15,7 +15,7 @@ export class SelectWordlistComponent {
   moment = moment;
   wordlists: WordlistDto[] | null = null;
   filteredWordlists: WordlistDto[] | null = null;
-  searchTerm: string = '';
+  searchTerm = '';
   selectedWordlist: WordlistDto | null = null;
   preview: WordlistPreviewDto | null = null;
 
