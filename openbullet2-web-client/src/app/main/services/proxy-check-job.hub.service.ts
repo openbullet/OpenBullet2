@@ -35,11 +35,11 @@ export class ProxyCheckJobHubService {
   private completedEmitter = new EventEmitter<boolean | null>();
   public completed$ = this.completedEmitter.asObservable();
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   createHubConnection(jobId: number) {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(getBaseHubUrl() + `/proxy-check-job?jobId=${jobId}`, {
+      .withUrl(`${getBaseHubUrl()}/proxy-check-job?jobId=${jobId}`, {
         accessTokenFactory: () => this.userService.getJwt() ?? '',
       })
       .withAutomaticReconnect()

@@ -11,14 +11,14 @@ import {
   providedIn: 'root',
 })
 export class JobMonitorService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllTriggeredActions() {
-    return this.http.get<TriggeredActionDto[]>(getBaseUrl() + '/job-monitor/triggered-action/all');
+    return this.http.get<TriggeredActionDto[]>(`${getBaseUrl()}/job-monitor/triggered-action/all`);
   }
 
   getTriggeredAction(id: string) {
-    return this.http.get<TriggeredActionDto>(getBaseUrl() + '/job-monitor/triggered-action', {
+    return this.http.get<TriggeredActionDto>(`${getBaseUrl()}/job-monitor/triggered-action`, {
       params: {
         id,
       },
@@ -26,15 +26,15 @@ export class JobMonitorService {
   }
 
   createTriggeredAction(dto: CreateTriggeredActionDto) {
-    return this.http.post<TriggeredActionDto>(getBaseUrl() + '/job-monitor/triggered-action', dto);
+    return this.http.post<TriggeredActionDto>(`${getBaseUrl()}/job-monitor/triggered-action`, dto);
   }
 
   updateTriggeredAction(dto: UpdateTriggeredActionDto) {
-    return this.http.put<TriggeredActionDto>(getBaseUrl() + '/job-monitor/triggered-action', dto);
+    return this.http.put<TriggeredActionDto>(`${getBaseUrl()}/job-monitor/triggered-action`, dto);
   }
 
   deleteTriggeredAction(id: string) {
-    return this.http.delete<void>(getBaseUrl() + '/job-monitor/triggered-action', {
+    return this.http.delete<void>(`${getBaseUrl()}/job-monitor/triggered-action`, {
       params: {
         id,
       },
@@ -42,7 +42,7 @@ export class JobMonitorService {
   }
 
   setTriggeredActionActive(id: string, isActive: boolean) {
-    return this.http.post<void>(getBaseUrl() + '/job-monitor/triggered-action/set-active', null, {
+    return this.http.post<void>(`${getBaseUrl()}/job-monitor/triggered-action/set-active`, null, {
       params: {
         id,
         active: isActive.toString(),
@@ -51,7 +51,7 @@ export class JobMonitorService {
   }
 
   resetTriggeredAction(id: string) {
-    return this.http.post<void>(getBaseUrl() + '/job-monitor/triggered-action/reset', null, {
+    return this.http.post<void>(`${getBaseUrl()}/job-monitor/triggered-action/reset`, null, {
       params: {
         id,
       },

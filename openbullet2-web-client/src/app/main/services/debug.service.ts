@@ -6,10 +6,10 @@ import { getBaseUrl } from 'src/app/shared/utils/host';
   providedIn: 'root',
 })
 export class DebugService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   garbageCollect() {
-    return this.http.post(getBaseUrl() + '/debug/gc', {
+    return this.http.post(`${getBaseUrl()}/debug/gc`, {
       generations: -1,
       mode: 'aggressive',
       blocking: true,

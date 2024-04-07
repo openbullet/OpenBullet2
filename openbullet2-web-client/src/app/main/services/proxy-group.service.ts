@@ -9,22 +9,22 @@ import { UpdateProxyGroupDto } from '../dtos/proxy-group/update-proxy-group.dto'
   providedIn: 'root',
 })
 export class ProxyGroupService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllProxyGroups() {
-    return this.http.get<ProxyGroupDto[]>(getBaseUrl() + '/proxy-group/all');
+    return this.http.get<ProxyGroupDto[]>(`${getBaseUrl()}/proxy-group/all`);
   }
 
   createProxyGroup(guest: CreateProxyGroupDto) {
-    return this.http.post<ProxyGroupDto>(getBaseUrl() + '/proxy-group', guest);
+    return this.http.post<ProxyGroupDto>(`${getBaseUrl()}/proxy-group`, guest);
   }
 
   updateProxyGroup(updated: UpdateProxyGroupDto) {
-    return this.http.put<ProxyGroupDto>(getBaseUrl() + '/proxy-group', updated);
+    return this.http.put<ProxyGroupDto>(`${getBaseUrl()}/proxy-group`, updated);
   }
 
   deleteProxyGroup(id: number) {
-    return this.http.delete(getBaseUrl() + '/proxy-group', {
+    return this.http.delete(`${getBaseUrl()}/proxy-group`, {
       params: {
         id,
       },

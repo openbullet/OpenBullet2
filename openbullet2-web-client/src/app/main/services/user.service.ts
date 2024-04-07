@@ -12,7 +12,7 @@ import { UserInfo } from '../models/user-info';
 export class UserService {
   private unsavedChanges = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   resetJwt() {
     window.localStorage.removeItem('jwt');
@@ -63,7 +63,7 @@ export class UserService {
   }
 
   login(user: UserLoginDto) {
-    return this.http.post<LoggedInUserDto>(getBaseUrl() + '/user/login', user);
+    return this.http.post<LoggedInUserDto>(`${getBaseUrl()}/user/login`, user);
   }
 
   setUnsavedChanges(hasUnsavedChanges: boolean) {

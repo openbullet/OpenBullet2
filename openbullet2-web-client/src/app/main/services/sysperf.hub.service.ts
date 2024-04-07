@@ -11,11 +11,11 @@ export class SysPerfHubService {
   private metricsEmitter = new EventEmitter<PerformanceInfoDto | null>();
   public metrics$ = this.metricsEmitter.asObservable();
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   createHubConnection() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(getBaseHubUrl() + '/system-performance', {
+      .withUrl(`${getBaseHubUrl()}/system-performance`, {
         accessTokenFactory: () => this.userService.getJwt() ?? '',
       })
       .withAutomaticReconnect()

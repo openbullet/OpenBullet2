@@ -7,22 +7,22 @@ import { EndpointDto } from '../dtos/sharing/endpoint.dto';
   providedIn: 'root',
 })
 export class SharingService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllEndpoints() {
-    return this.http.get<EndpointDto[]>(getBaseUrl() + '/shared/endpoint/all');
+    return this.http.get<EndpointDto[]>(`${getBaseUrl()}/shared/endpoint/all`);
   }
 
   createEndpoint(endpoint: EndpointDto) {
-    return this.http.post<EndpointDto>(getBaseUrl() + '/shared/endpoint', endpoint);
+    return this.http.post<EndpointDto>(`${getBaseUrl()}/shared/endpoint`, endpoint);
   }
 
   updateEndpoint(updated: EndpointDto) {
-    return this.http.put<EndpointDto>(getBaseUrl() + '/shared/endpoint', updated);
+    return this.http.put<EndpointDto>(`${getBaseUrl()}/shared/endpoint`, updated);
   }
 
   deleteEndpoint(route: string) {
-    return this.http.delete(getBaseUrl() + '/shared/endpoint', {
+    return this.http.delete(`${getBaseUrl()}/shared/endpoint`, {
       params: {
         route,
       },

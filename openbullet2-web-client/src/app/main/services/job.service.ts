@@ -15,22 +15,22 @@ import { ProxyCheckJobDto } from '../dtos/job/proxy-check-job.dto';
   providedIn: 'root',
 })
 export class JobService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllJobs() {
-    return this.http.get<JobOverviewDto[]>(getBaseUrl() + '/job/all');
+    return this.http.get<JobOverviewDto[]>(`${getBaseUrl()}/job/all`);
   }
 
   getAllMultiRunJobs() {
-    return this.http.get<MultiRunJobOverviewDto[]>(getBaseUrl() + '/job/multi-run/all');
+    return this.http.get<MultiRunJobOverviewDto[]>(`${getBaseUrl()}/job/multi-run/all`);
   }
 
   getAllProxyCheckJobs() {
-    return this.http.get<ProxyCheckJobOverviewDto[]>(getBaseUrl() + '/job/proxy-check/all');
+    return this.http.get<ProxyCheckJobOverviewDto[]>(`${getBaseUrl()}/job/proxy-check/all`);
   }
 
   getMultiRunJob(id: number) {
-    return this.http.get<MultiRunJobDto>(getBaseUrl() + '/job/multi-run', {
+    return this.http.get<MultiRunJobDto>(`${getBaseUrl()}/job/multi-run`, {
       params: {
         id,
       },
@@ -38,7 +38,7 @@ export class JobService {
   }
 
   getProxyCheckJob(id: number) {
-    return this.http.get<ProxyCheckJobDto>(getBaseUrl() + '/job/proxy-check', {
+    return this.http.get<ProxyCheckJobDto>(`${getBaseUrl()}/job/proxy-check`, {
       params: {
         id,
       },
@@ -47,7 +47,7 @@ export class JobService {
 
   getMultiRunJobOptions(id: number) {
     // use id = -1 for default options
-    return this.http.get<MultiRunJobOptionsDto>(getBaseUrl() + '/job/multi-run/options', {
+    return this.http.get<MultiRunJobOptionsDto>(`${getBaseUrl()}/job/multi-run/options`, {
       params: {
         id,
       },
@@ -56,7 +56,7 @@ export class JobService {
 
   getProxyCheckJobOptions(id: number) {
     // use id = -1 for default options
-    return this.http.get<ProxyCheckJobOptionsDto>(getBaseUrl() + '/job/proxy-check/options', {
+    return this.http.get<ProxyCheckJobOptionsDto>(`${getBaseUrl()}/job/proxy-check/options`, {
       params: {
         id,
       },
@@ -64,29 +64,29 @@ export class JobService {
   }
 
   createMultiRunJob(options: MultiRunJobOptionsDto) {
-    return this.http.post<MultiRunJobDto>(getBaseUrl() + '/job/multi-run', options);
+    return this.http.post<MultiRunJobDto>(`${getBaseUrl()}/job/multi-run`, options);
   }
 
   createProxyCheckJob(options: ProxyCheckJobOptionsDto) {
-    return this.http.post<ProxyCheckJobDto>(getBaseUrl() + '/job/proxy-check', options);
+    return this.http.post<ProxyCheckJobDto>(`${getBaseUrl()}/job/proxy-check`, options);
   }
 
   updateMultiRunJob(id: number, options: MultiRunJobOptionsDto) {
-    return this.http.put<MultiRunJobDto>(getBaseUrl() + '/job/multi-run', {
+    return this.http.put<MultiRunJobDto>(`${getBaseUrl()}/job/multi-run`, {
       id,
       ...options,
     });
   }
 
   updateProxyCheckJob(id: number, options: ProxyCheckJobOptionsDto) {
-    return this.http.put<ProxyCheckJobDto>(getBaseUrl() + '/job/proxy-check', {
+    return this.http.put<ProxyCheckJobDto>(`${getBaseUrl()}/job/proxy-check`, {
       id,
       ...options,
     });
   }
 
   getCustomInputs(jobId: number) {
-    return this.http.get<CustomInputQuestionDto[]>(getBaseUrl() + '/job/multi-run/custom-inputs', {
+    return this.http.get<CustomInputQuestionDto[]>(`${getBaseUrl()}/job/multi-run/custom-inputs`, {
       params: {
         id: jobId,
       },
@@ -94,11 +94,11 @@ export class JobService {
   }
 
   setCustomInputs(inputs: CustomInputsDto) {
-    return this.http.patch<MultiRunJobDto>(getBaseUrl() + '/job/multi-run/custom-inputs', inputs);
+    return this.http.patch<MultiRunJobDto>(`${getBaseUrl()}/job/multi-run/custom-inputs`, inputs);
   }
 
   deleteJob(id: number) {
-    return this.http.delete(getBaseUrl() + '/job', {
+    return this.http.delete(`${getBaseUrl()}/job`, {
       params: {
         id,
       },
@@ -106,11 +106,11 @@ export class JobService {
   }
 
   deleteAllJobs() {
-    return this.http.delete(getBaseUrl() + '/job/all');
+    return this.http.delete(`${getBaseUrl()}/job/all`);
   }
 
   getHitLog(jobId: number, hitId: string) {
-    return this.http.get<MRJHitLogDto>(getBaseUrl() + '/job/multi-run/hit-log', {
+    return this.http.get<MRJHitLogDto>(`${getBaseUrl()}/job/multi-run/hit-log`, {
       params: {
         jobId,
         hitId,
@@ -119,49 +119,49 @@ export class JobService {
   }
 
   start(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/start', {
+    return this.http.post(`${getBaseUrl()}/job/start`, {
       jobId,
       wait,
     });
   }
 
   stop(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/stop', {
+    return this.http.post(`${getBaseUrl()}/job/stop`, {
       jobId,
       wait,
     });
   }
 
   pause(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/pause', {
+    return this.http.post(`${getBaseUrl()}/job/pause`, {
       jobId,
       wait,
     });
   }
 
   resume(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/resume', {
+    return this.http.post(`${getBaseUrl()}/job/resume`, {
       jobId,
       wait,
     });
   }
 
   abort(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/abort', {
+    return this.http.post(`${getBaseUrl()}/job/abort`, {
       jobId,
       wait,
     });
   }
 
   skipWait(jobId: number, wait = false) {
-    return this.http.post(getBaseUrl() + '/job/skip-wait', {
+    return this.http.post(`${getBaseUrl()}/job/skip-wait`, {
       jobId,
       wait,
     });
   }
 
   changeBots(jobId: number, bots: number) {
-    return this.http.post(getBaseUrl() + '/job/change-bots', {
+    return this.http.post(`${getBaseUrl()}/job/change-bots`, {
       jobId,
       bots,
     });

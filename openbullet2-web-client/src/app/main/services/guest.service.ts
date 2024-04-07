@@ -10,26 +10,26 @@ import { UpdateGuestPasswordDto } from '../dtos/guest/update-guest-password.dto'
   providedIn: 'root',
 })
 export class GuestService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllGuests() {
-    return this.http.get<GuestDto[]>(getBaseUrl() + '/guest/all');
+    return this.http.get<GuestDto[]>(`${getBaseUrl()}/guest/all`);
   }
 
   createGuest(guest: CreateGuestDto) {
-    return this.http.post<GuestDto>(getBaseUrl() + '/guest', guest);
+    return this.http.post<GuestDto>(`${getBaseUrl()}/guest`, guest);
   }
 
   updateGuestInfo(updated: UpdateGuestInfoDto) {
-    return this.http.patch<GuestDto>(getBaseUrl() + '/guest/info', updated);
+    return this.http.patch<GuestDto>(`${getBaseUrl()}/guest/info`, updated);
   }
 
   updateGuestPassword(updated: UpdateGuestPasswordDto) {
-    return this.http.patch<GuestDto>(getBaseUrl() + '/guest/password', updated);
+    return this.http.patch<GuestDto>(`${getBaseUrl()}/guest/password`, updated);
   }
 
   deleteGuest(id: number) {
-    return this.http.delete(getBaseUrl() + '/guest', {
+    return this.http.delete(`${getBaseUrl()}/guest`, {
       params: {
         id,
       },

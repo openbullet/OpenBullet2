@@ -4,7 +4,6 @@ import { getBaseUrl } from 'src/app/shared/utils/host';
 import { AnnouncementDto } from '../dtos/info/announcement.dto';
 import { ChangelogDto } from '../dtos/info/changelog.dto';
 import { CollectionInfoDto } from '../dtos/info/collection-info.dto';
-import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
 import { ServerInfoDto } from '../dtos/info/server-info.dto';
 import { UpdateInfoDto } from '../dtos/info/update-info.dto';
 
@@ -12,25 +11,25 @@ import { UpdateInfoDto } from '../dtos/info/update-info.dto';
   providedIn: 'root',
 })
 export class InfoService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAnnouncement() {
-    return this.http.get<AnnouncementDto>(getBaseUrl() + '/info/announcement');
+    return this.http.get<AnnouncementDto>(`${getBaseUrl()}/info/announcement`);
   }
 
   getServerInfo() {
-    return this.http.get<ServerInfoDto>(getBaseUrl() + '/info/server');
+    return this.http.get<ServerInfoDto>(`${getBaseUrl()}/info/server`);
   }
 
   getCollectionInfo() {
-    return this.http.get<CollectionInfoDto>(getBaseUrl() + '/info/collection');
+    return this.http.get<CollectionInfoDto>(`${getBaseUrl()}/info/collection`);
   }
 
   getChangelog(version: string | null) {
-    return this.http.get<ChangelogDto>(getBaseUrl() + '/info/changelog' + (version ? `?v=${version}` : ''));
+    return this.http.get<ChangelogDto>(`${getBaseUrl()}/info/changelog${version ? `?v=${version}` : ''}`);
   }
 
   getUpdateInfo() {
-    return this.http.get<UpdateInfoDto>(getBaseUrl() + '/info/update');
+    return this.http.get<UpdateInfoDto>(`${getBaseUrl()}/info/update`);
   }
 }

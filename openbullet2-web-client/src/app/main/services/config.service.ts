@@ -45,6 +45,7 @@ export class ConfigService {
       try {
         const config: ConfigDto = JSON.parse(json);
         this.selectConfig(config);
+        // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for catching any error
       } catch (err: any) {
         console.log('Could not restore config from localStorage, maybe the interface changed?', err);
       }
@@ -67,7 +68,7 @@ export class ConfigService {
   }
 
   getAllConfigs(reload: boolean) {
-    return this.http.get<ConfigInfoDto[]>(getBaseUrl() + '/config/all', {
+    return this.http.get<ConfigInfoDto[]>(`${getBaseUrl()}/config/all`, {
       params: {
         reload,
       },
@@ -75,7 +76,7 @@ export class ConfigService {
   }
 
   getReadme(id: string) {
-    return this.http.get<ConfigReadmeDto>(getBaseUrl() + '/config/readme', {
+    return this.http.get<ConfigReadmeDto>(`${getBaseUrl()}/config/readme`, {
       params: {
         id,
       },
@@ -83,7 +84,7 @@ export class ConfigService {
   }
 
   getMetadata(id: string) {
-    return this.http.get<ConfigDto>(getBaseUrl() + '/config/metadata', {
+    return this.http.get<ConfigDto>(`${getBaseUrl()}/config/metadata`, {
       params: {
         id,
       },
@@ -91,7 +92,7 @@ export class ConfigService {
   }
 
   getInfo(id: string) {
-    return this.http.get<ConfigInfoDto>(getBaseUrl() + '/config/info', {
+    return this.http.get<ConfigInfoDto>(`${getBaseUrl()}/config/info`, {
       params: {
         id,
       },
@@ -99,7 +100,7 @@ export class ConfigService {
   }
 
   getConfig(id: string) {
-    return this.http.get<ConfigDto>(getBaseUrl() + '/config', {
+    return this.http.get<ConfigDto>(`${getBaseUrl()}/config`, {
       params: {
         id,
       },
@@ -130,15 +131,15 @@ export class ConfigService {
   }
 
   updateConfig(updated: UpdateConfigDto) {
-    return this.http.put<ConfigDto>(getBaseUrl() + '/config', updated);
+    return this.http.put<ConfigDto>(`${getBaseUrl()}/config`, updated);
   }
 
   createConfig() {
-    return this.http.post<ConfigDto>(getBaseUrl() + '/config', {});
+    return this.http.post<ConfigDto>(`${getBaseUrl()}/config`, {});
   }
 
   deleteConfig(id: string) {
-    return this.http.delete(getBaseUrl() + '/config', {
+    return this.http.delete(`${getBaseUrl()}/config`, {
       params: {
         id,
       },
@@ -147,7 +148,7 @@ export class ConfigService {
 
   cloneConfig(id: string) {
     return this.http.post<ConfigDto>(
-      getBaseUrl() + '/config/clone',
+      `${getBaseUrl()}/config/clone`,
       {},
       {
         params: {
@@ -158,7 +159,7 @@ export class ConfigService {
   }
 
   downloadConfig(id: string) {
-    return this.http.get<Blob>(getBaseUrl() + '/config/download', {
+    return this.http.get<Blob>(`${getBaseUrl()}/config/download`, {
       params: {
         id,
       },
@@ -168,7 +169,7 @@ export class ConfigService {
   }
 
   downloadAllConfigs() {
-    return this.http.get<Blob>(getBaseUrl() + '/config/download/all', {
+    return this.http.get<Blob>(`${getBaseUrl()}/config/download/all`, {
       responseType: 'blob' as 'json',
       observe: 'response',
     });
@@ -179,38 +180,38 @@ export class ConfigService {
     for (const file of files) {
       formData.append('files', file, file.name);
     }
-    return this.http.post<AffectedEntriesDto>(getBaseUrl() + '/config/upload/many', formData);
+    return this.http.post<AffectedEntriesDto>(`${getBaseUrl()}/config/upload/many`, formData);
   }
 
   convertLoliCodeToCSharp(settings: ConfigSettingsDto, loliCode: string) {
-    return this.http.post<ConvertedCSharpDto>(getBaseUrl() + '/config/convert/lolicode/csharp', {
+    return this.http.post<ConvertedCSharpDto>(`${getBaseUrl()}/config/convert/lolicode/csharp`, {
       settings,
       loliCode,
     });
   }
 
   convertStackToLoliCode(stack: BlockInstanceTypes[]) {
-    return this.http.post<ConvertedLoliCodeDto>(getBaseUrl() + '/config/convert/stack/lolicode', {
+    return this.http.post<ConvertedLoliCodeDto>(`${getBaseUrl()}/config/convert/stack/lolicode`, {
       stack,
     });
   }
 
   convertLoliCodeToStack(loliCode: string) {
-    return this.http.post<ConvertedStackDto>(getBaseUrl() + '/config/convert/lolicode/stack', {
+    return this.http.post<ConvertedStackDto>(`${getBaseUrl()}/config/convert/lolicode/stack`, {
       loliCode,
     });
   }
 
   getBlockDescriptors(): Observable<BlockDescriptors> {
-    return this.http.get<BlockDescriptors>(getBaseUrl() + '/config/block-descriptors');
+    return this.http.get<BlockDescriptors>(`${getBaseUrl()}/config/block-descriptors`);
   }
 
   getCategoryTree(): Observable<CategoryTreeNodeDto> {
-    return this.http.get<CategoryTreeNodeDto>(getBaseUrl() + '/config/category-tree');
+    return this.http.get<CategoryTreeNodeDto>(`${getBaseUrl()}/config/category-tree`);
   }
 
   getBlockInstance(id: string): Observable<BlockInstanceTypes> {
-    return this.http.get<BlockInstanceTypes>(getBaseUrl() + '/config/block-instance', {
+    return this.http.get<BlockInstanceTypes>(`${getBaseUrl()}/config/block-instance`, {
       params: {
         id,
       },
@@ -218,6 +219,6 @@ export class ConfigService {
   }
 
   getBlockSnippets() {
-    return this.http.get<{ [key: string]: string }>(getBaseUrl() + '/config/block-snippets');
+    return this.http.get<{ [key: string]: string }>(`${getBaseUrl()}/config/block-snippets`);
   }
 }

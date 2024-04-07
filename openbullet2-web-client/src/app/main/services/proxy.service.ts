@@ -13,31 +13,34 @@ import { ProxyDto } from '../dtos/proxy/proxy.dto';
   providedIn: 'root',
 })
 export class ProxyService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProxies(filter: ProxyFiltersDto) {
-    return this.http.get<PagedList<ProxyDto>>(getBaseUrl() + '/proxy/all', {
+    return this.http.get<PagedList<ProxyDto>>(`${getBaseUrl()}/proxy/all`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
     });
   }
 
   addProxiesFromList(list: AddProxiesFromListDto) {
-    return this.http.post<AffectedEntriesDto>(getBaseUrl() + '/proxy/add', list);
+    return this.http.post<AffectedEntriesDto>(`${getBaseUrl()}/proxy/add`, list);
   }
 
   addProxiesFromRemote(remote: AddProxiesFromRemoteDto) {
-    return this.http.post<AffectedEntriesDto>(getBaseUrl() + '/proxy/add-from-remote', remote);
+    return this.http.post<AffectedEntriesDto>(`${getBaseUrl()}/proxy/add-from-remote`, remote);
   }
 
   moveProxies(info: MoveProxiesDto) {
     return this.http.post<AffectedEntriesDto>(
-      getBaseUrl() + '/proxy/move/many',
+      `${getBaseUrl()}/proxy/move/many`,
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       <any>Object.fromEntries(Object.entries(info).filter(([_, v]) => v != null)),
     );
   }
 
   downloadProxies(filter: ProxyFiltersDto) {
-    return this.http.get<Blob>(getBaseUrl() + '/proxy/download/many', {
+    return this.http.get<Blob>(`${getBaseUrl()}/proxy/download/many`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
       responseType: 'blob' as 'json',
       observe: 'response',
@@ -45,13 +48,14 @@ export class ProxyService {
   }
 
   deleteProxies(filter: ProxyFiltersDto) {
-    return this.http.delete<AffectedEntriesDto>(getBaseUrl() + '/proxy/many', {
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/proxy/many`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
     });
   }
 
   deleteSlowProxies(proxyGroupId: number, maxPing: number) {
-    return this.http.delete<AffectedEntriesDto>(getBaseUrl() + '/proxy/slow', {
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/proxy/slow`, {
       params: {
         proxyGroupId,
         maxPing,

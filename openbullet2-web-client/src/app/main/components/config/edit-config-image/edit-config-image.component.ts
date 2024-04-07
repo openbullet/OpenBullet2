@@ -14,7 +14,7 @@ export class EditConfigImageComponent {
   base64Image: string | null = null;
   remoteUrl = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setImage(base64Image: string) {
     this.base64Image = base64Image;
@@ -31,11 +31,11 @@ export class EditConfigImageComponent {
   }
 
   setImageFromBlob(blob: Blob) {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onloadend = () => {
       this.base64Image = window.btoa(reader.result as string);
     };
-    reader.readAsBinaryString(blob);
+    reader.readAsArrayBuffer(blob);
   }
 
   submitForm() {

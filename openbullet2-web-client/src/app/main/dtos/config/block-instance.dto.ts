@@ -111,6 +111,7 @@ export interface OutputVariable {
 export interface BlockSettingDto {
   name: string;
   inputVariableName: string | null;
+  // biome-ignore lint/suspicious/noExplicitAny: any is needed here because the value can be of any type
   value: any;
   inputMode: SettingInputMode;
   type: BlockSettingType;

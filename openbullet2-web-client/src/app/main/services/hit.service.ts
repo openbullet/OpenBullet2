@@ -13,28 +13,29 @@ import { UpdateHitDto } from '../dtos/hit/update-hit.dto';
   providedIn: 'root',
 })
 export class HitService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getHits(filter: ListHitFiltersDto) {
-    return this.http.get<PagedList<HitDto>>(getBaseUrl() + '/hit/all', {
+    return this.http.get<PagedList<HitDto>>(`${getBaseUrl()}/hit/all`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
     });
   }
 
   getConfigNames() {
-    return this.http.get<string[]>(getBaseUrl() + '/hit/config-names');
+    return this.http.get<string[]>(`${getBaseUrl()}/hit/config-names`);
   }
 
   createHit(hit: CreateHitDto) {
-    return this.http.post<HitDto>(getBaseUrl() + '/hit', hit);
+    return this.http.post<HitDto>(`${getBaseUrl()}/hit`, hit);
   }
 
   updateHit(updated: UpdateHitDto) {
-    return this.http.patch<HitDto>(getBaseUrl() + '/hit', updated);
+    return this.http.patch<HitDto>(`${getBaseUrl()}/hit`, updated);
   }
 
   deleteHit(id: number) {
-    return this.http.delete(getBaseUrl() + '/hit', {
+    return this.http.delete(`${getBaseUrl()}/hit`, {
       params: {
         id,
       },
@@ -42,9 +43,10 @@ export class HitService {
   }
 
   downloadHits(filter: ListHitFiltersDto, format: string) {
-    return this.http.get<Blob>(getBaseUrl() + '/hit/download/many', {
+    return this.http.get<Blob>(`${getBaseUrl()}/hit/download/many`, {
       params: {
         format,
+        // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
         ...(<any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null))),
       },
       responseType: 'blob' as 'json',
@@ -53,21 +55,22 @@ export class HitService {
   }
 
   deleteHits(filter: ListHitFiltersDto) {
-    return this.http.delete<AffectedEntriesDto>(getBaseUrl() + '/hit/many', {
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/hit/many`, {
+      // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
     });
   }
 
   deleteDuplicateHits() {
-    return this.http.delete<AffectedEntriesDto>(getBaseUrl() + '/hit/duplicates');
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/hit/duplicates`);
   }
 
   purgeHits() {
-    return this.http.delete<AffectedEntriesDto>(getBaseUrl() + '/hit/purge');
+    return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/hit/purge`);
   }
 
   getRecentHits(days: number) {
-    return this.http.get<RecentHitsDto>(getBaseUrl() + '/hit/recent', {
+    return this.http.get<RecentHitsDto>(`${getBaseUrl()}/hit/recent`, {
       params: {
         days,
       },

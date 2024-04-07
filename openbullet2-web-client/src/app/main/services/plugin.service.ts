@@ -7,20 +7,20 @@ import { PluginDto } from '../dtos/plugin/plugin.dto';
   providedIn: 'root',
 })
 export class PluginService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllPlugins() {
-    return this.http.get<PluginDto[]>(getBaseUrl() + '/plugin/all');
+    return this.http.get<PluginDto[]>(`${getBaseUrl()}/plugin/all`);
   }
 
   addPlugin(file: File) {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
-    return this.http.post(getBaseUrl() + '/plugin', formData);
+    return this.http.post(`${getBaseUrl()}/plugin`, formData);
   }
 
   deletePlugin(name: string) {
-    return this.http.delete(getBaseUrl() + '/plugin', {
+    return this.http.delete(`${getBaseUrl()}/plugin`, {
       params: {
         name,
       },
