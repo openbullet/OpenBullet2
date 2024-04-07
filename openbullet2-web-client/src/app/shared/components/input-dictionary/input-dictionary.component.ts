@@ -4,13 +4,13 @@ import { FieldValidity } from '../../utils/forms';
 @Component({
   selector: 'app-input-dictionary',
   templateUrl: './input-dictionary.component.html',
-  styleUrls: ['./input-dictionary.component.scss']
+  styleUrls: ['./input-dictionary.component.scss'],
 })
 export class InputDictionaryComponent implements OnChanges {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() class: string | null = null;
-  @Input() style: { [id: string]: any; } = {};
+  @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder: string = '';
 
@@ -85,7 +85,7 @@ export class InputDictionaryComponent implements OnChanges {
           if (key.length === 0) return acc;
           acc[key.trim()] = value.join(':').trim();
           return acc;
-        }, {})
+        }, {}),
       );
     }
 

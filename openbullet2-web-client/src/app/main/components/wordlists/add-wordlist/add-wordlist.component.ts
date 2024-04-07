@@ -5,7 +5,7 @@ import { UserService } from 'src/app/main/services/user.service';
 @Component({
   selector: 'app-add-wordlist',
   templateUrl: './add-wordlist.component.html',
-  styleUrls: ['./add-wordlist.component.scss']
+  styleUrls: ['./add-wordlist.component.scss'],
 })
 export class AddWordlistComponent {
   @Input() wordlistTypes: string[] = ['Default'];
@@ -37,7 +37,7 @@ export class AddWordlistComponent {
       wordlistType: this.wordlistType,
       // Replace starting and ending double quotes since when copying the
       // path from windows explorer it will copy the quotes as well
-      filePath: this.filePath.replace(/^"/, '').replace(/"$/, '')
+      filePath: this.filePath.replace(/^"/, '').replace(/"$/, ''),
     });
   }
 

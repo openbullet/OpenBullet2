@@ -6,7 +6,7 @@ import { UpdateGuestInfoDto } from 'src/app/main/dtos/guest/update-guest-info.dt
 @Component({
   selector: 'app-update-guest-info',
   templateUrl: './update-guest-info.component.html',
-  styleUrls: ['./update-guest-info.component.scss']
+  styleUrls: ['./update-guest-info.component.scss'],
 })
 export class UpdateGuestInfoComponent implements OnChanges {
   @Input() guest: GuestDto | null = null;
@@ -33,7 +33,7 @@ export class UpdateGuestInfoComponent implements OnChanges {
       id: this.guest.id,
       username: this.username,
       accessExpiration: this.accessExpiration.toISOString(),
-      allowedAddresses: this.allowedAddresses.split('\n')
+      allowedAddresses: this.allowedAddresses.split('\n'),
     });
   }
 

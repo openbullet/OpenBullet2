@@ -1,12 +1,21 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BasicAuthRequestParamsDto, BlockSettingType, HttpRequestBlockInstanceDto, MultipartContentType, MultipartRequestParamsDto, RawRequestParamsDto, RequestParamsType, StandardRequestParamsDto } from 'src/app/main/dtos/config/block-instance.dto';
+import {
+  BasicAuthRequestParamsDto,
+  BlockSettingType,
+  HttpRequestBlockInstanceDto,
+  MultipartContentType,
+  MultipartRequestParamsDto,
+  RawRequestParamsDto,
+  RequestParamsType,
+  StandardRequestParamsDto,
+} from 'src/app/main/dtos/config/block-instance.dto';
 
 @Component({
   selector: 'app-http-request-block',
   templateUrl: './http-request-block.component.html',
-  styleUrls: ['./http-request-block.component.scss']
+  styleUrls: ['./http-request-block.component.scss'],
 })
 export class HttpRequestBlockComponent implements OnChanges {
   @Input() block!: HttpRequestBlockInstanceDto;
@@ -24,67 +33,67 @@ export class HttpRequestBlockComponent implements OnChanges {
   standardRequestParams: StandardRequestParamsDto = {
     _polyTypeName: RequestParamsType.Standard,
     content: {
-      name: "content",
-      value: "",
-      inputVariableName: "",
+      name: 'content',
+      value: '',
+      inputVariableName: '',
       inputMode: SettingInputMode.Interpolated,
-      type: BlockSettingType.String
+      type: BlockSettingType.String,
     },
     contentType: {
-      name: "contentType",
-      value: "application/x-www-form-urlencoded",
-      inputVariableName: "",
+      name: 'contentType',
+      value: 'application/x-www-form-urlencoded',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.String
-    }
+      type: BlockSettingType.String,
+    },
   };
 
   rawRequestParams: RawRequestParamsDto = {
     _polyTypeName: RequestParamsType.Raw,
     content: {
-      name: "content",
-      value: "",
-      inputVariableName: "",
+      name: 'content',
+      value: '',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.ByteArray
+      type: BlockSettingType.ByteArray,
     },
     contentType: {
-      name: "contentType",
-      value: "application/octet-stream",
-      inputVariableName: "",
+      name: 'contentType',
+      value: 'application/octet-stream',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.String
-    }
+      type: BlockSettingType.String,
+    },
   };
 
   basicAuthRequestParams: BasicAuthRequestParamsDto = {
     _polyTypeName: RequestParamsType.BasicAuth,
     username: {
-      name: "username",
-      value: "",
-      inputVariableName: "",
+      name: 'username',
+      value: '',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.String
+      type: BlockSettingType.String,
     },
     password: {
-      name: "password",
-      value: "",
-      inputVariableName: "",
+      name: 'password',
+      value: '',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.String
-    }
+      type: BlockSettingType.String,
+    },
   };
 
   multipartRequestParams: MultipartRequestParamsDto = {
     _polyTypeName: RequestParamsType.Multipart,
     contents: [],
     boundary: {
-      name: "boundary",
-      value: "",
-      inputVariableName: "",
+      name: 'boundary',
+      value: '',
+      inputVariableName: '',
       inputMode: SettingInputMode.Fixed,
-      type: BlockSettingType.String
-    }
+      type: BlockSettingType.String,
+    },
   };
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -143,27 +152,27 @@ export class HttpRequestBlockComponent implements OnChanges {
       {
         _polyTypeName: MultipartContentType.String,
         name: {
-          name: "name",
-          value: "",
-          inputVariableName: "",
+          name: 'name',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         contentType: {
-          name: "contentType",
-          value: "text/plain",
-          inputVariableName: "",
+          name: 'contentType',
+          value: 'text/plain',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         data: {
-          name: "data",
-          value: "",
-          inputVariableName: "",
+          name: 'data',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
-        }
-      }
+          type: BlockSettingType.String,
+        },
+      },
     ];
     this.valueChanged();
   }
@@ -174,27 +183,27 @@ export class HttpRequestBlockComponent implements OnChanges {
       {
         _polyTypeName: MultipartContentType.Raw,
         name: {
-          name: "name",
-          value: "",
-          inputVariableName: "",
+          name: 'name',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         contentType: {
-          name: "contentType",
-          value: "application/octet-stream",
-          inputVariableName: "",
+          name: 'contentType',
+          value: 'application/octet-stream',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         data: {
-          name: "data",
-          value: "",
-          inputVariableName: "",
+          name: 'data',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.ByteArray
-        }
-      }
+          type: BlockSettingType.ByteArray,
+        },
+      },
     ];
     this.valueChanged();
   }
@@ -205,27 +214,27 @@ export class HttpRequestBlockComponent implements OnChanges {
       {
         _polyTypeName: MultipartContentType.File,
         name: {
-          name: "name",
-          value: "",
-          inputVariableName: "",
+          name: 'name',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         contentType: {
-          name: "contentType",
-          value: "application/octet-stream",
-          inputVariableName: "",
+          name: 'contentType',
+          value: 'application/octet-stream',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
+          type: BlockSettingType.String,
         },
         fileName: {
-          name: "fileName",
-          value: "",
-          inputVariableName: "",
+          name: 'fileName',
+          value: '',
+          inputVariableName: '',
           inputMode: SettingInputMode.Fixed,
-          type: BlockSettingType.String
-        }
-      }
+          type: BlockSettingType.String,
+        },
+      },
     ];
     this.valueChanged();
   }
@@ -233,7 +242,7 @@ export class HttpRequestBlockComponent implements OnChanges {
   removeMultipart(index: number) {
     this.multipartRequestParams.contents = [
       ...this.multipartRequestParams.contents.slice(0, index),
-      ...this.multipartRequestParams.contents.slice(index + 1)
+      ...this.multipartRequestParams.contents.slice(index + 1),
     ];
     this.valueChanged();
   }

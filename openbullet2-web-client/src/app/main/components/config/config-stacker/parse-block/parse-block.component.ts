@@ -5,7 +5,7 @@ import { ParseBlockInstanceDto, ParseMode } from 'src/app/main/dtos/config/block
 @Component({
   selector: 'app-parse-block',
   templateUrl: './parse-block.component.html',
-  styleUrls: ['./parse-block.component.scss']
+  styleUrls: ['./parse-block.component.scss'],
 })
 export class ParseBlockComponent {
   @Input() block!: ParseBlockInstanceDto;

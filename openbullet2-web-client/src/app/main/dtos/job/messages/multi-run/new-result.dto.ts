@@ -1,7 +1,7 @@
-import { MRJProxy } from "./proxy.dto";
+import { MRJProxy } from './proxy.dto';
 
 export interface MRJNewResultMessage {
-    dataLine: string;
-    proxy: MRJProxy | null;
-    status: string;
+  dataLine: string;
+  proxy: MRJProxy | null;
+  status: string;
 }

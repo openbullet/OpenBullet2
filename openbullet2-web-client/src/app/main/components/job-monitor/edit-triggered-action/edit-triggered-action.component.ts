@@ -19,13 +19,13 @@ import { TimeSpan } from 'src/app/shared/utils/timespan';
 enum EditMode {
   Create = 'create',
   Edit = 'edit',
-  Clone = 'clone'
+  Clone = 'clone',
 }
 
 @Component({
   selector: 'app-edit-triggered-action',
   templateUrl: './edit-triggered-action.component.html',
-  styleUrls: ['./edit-triggered-action.component.scss']
+  styleUrls: ['./edit-triggered-action.component.scss'],
 })
 export class EditTriggeredActionComponent implements DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
@@ -56,7 +56,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   triggers: TriggerDto[] = [];
   actions: ActionDto[] = [];
 
-  fieldsValidity: { [key: string]: boolean; } = {};
+  fieldsValidity: { [key: string]: boolean } = {};
   touched: boolean = false;
 
   addTriggerModalVisible = false;
@@ -68,60 +68,54 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     private jobMonitorService: JobMonitorService,
     private jobService: JobService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
   ) {
-    combineLatest([activatedRoute.url, activatedRoute.queryParams])
-      .subscribe(results => {
+    combineLatest([activatedRoute.url, activatedRoute.queryParams]).subscribe((results) => {
+      const uriChunks = results[0];
 
-        const uriChunks = results[0];
+      this.mode = <EditMode>uriChunks[2].path;
 
-        this.mode = <EditMode>uriChunks[2].path;
+      const queryParams = results[1];
+      const triggeredActionId = queryParams['id'];
 
-        const queryParams = results[1];
-        const triggeredActionId = queryParams['id'];
+      // If we're not creating and we don't have an ID, we can't do anything
+      if (triggeredActionId === undefined && this.mode !== EditMode.Create) {
+        this.router.navigate(['/monitor']);
+        return;
+      }
 
-        // If we're not creating and we don't have an ID, we can't do anything
-        if (triggeredActionId === undefined && this.mode !== EditMode.Create) {
-          this.router.navigate(['/monitor']);
-          return;
-        }
-
-        // Get the jobs
-        this.jobService.getAllJobs().subscribe(
-          (jobs) => {
-            this.jobs = jobs;
-          }
-        );
-
-        // If we're creating a new triggered action, we don't need to load anything
-        if (this.mode === EditMode.Create) {
-          this.loaded = true;
-          return;
-        }
-
-        // If we're editing, we need to set the ID
-        if (this.mode === EditMode.Edit) {
-          this.triggeredActionId = triggeredActionId;
-        }
-
-        // If we're editing or cloning, we need to load the triggered action
-        this.jobMonitorService.getTriggeredAction(triggeredActionId).subscribe(
-          (triggeredAction) => {
-            this.isActive = triggeredAction.isActive;
-            this.isRepeatable = triggeredAction.isRepeatable;
-            this.jobId = triggeredAction.jobId;
-            this.triggers = triggeredAction.triggers;
-            this.actions = triggeredAction.actions;
-
-            // Only set the name if we're editing
-            if (this.mode === EditMode.Edit) {
-              this.name = triggeredAction.name;
-            }
-
-            this.loaded = true;
-          }
-        );
+      // Get the jobs
+      this.jobService.getAllJobs().subscribe((jobs) => {
+        this.jobs = jobs;
       });
+
+      // If we're creating a new triggered action, we don't need to load anything
+      if (this.mode === EditMode.Create) {
+        this.loaded = true;
+        return;
+      }
+
+      // If we're editing, we need to set the ID
+      if (this.mode === EditMode.Edit) {
+        this.triggeredActionId = triggeredActionId;
+      }
+
+      // If we're editing or cloning, we need to load the triggered action
+      this.jobMonitorService.getTriggeredAction(triggeredActionId).subscribe((triggeredAction) => {
+        this.isActive = triggeredAction.isActive;
+        this.isRepeatable = triggeredAction.isRepeatable;
+        this.jobId = triggeredAction.jobId;
+        this.triggers = triggeredAction.triggers;
+        this.actions = triggeredAction.actions;
+
+        // Only set the name if we're editing
+        if (this.mode === EditMode.Edit) {
+          this.name = triggeredAction.name;
+        }
+
+        this.loaded = true;
+      });
+    });
   }
 
   canDeactivate() {
@@ -130,7 +124,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     }
 
     // Ask for confirmation and return the observable
-    return new Observable<boolean>(observer => {
+    return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
         message: `You have unsaved changes. Are you sure that you want to leave?`,
         header: 'Confirmation',
@@ -142,7 +136,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
         reject: () => {
           observer.next(false);
           observer.complete();
-        }
+        },
       });
     });
   }
@@ -150,16 +144,18 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
   onValidityChange(validity: FieldValidity) {
     this.fieldsValidity = {
       ...this.fieldsValidity,
-      [validity.key]: validity.valid
+      [validity.key]: validity.valid,
     };
   }
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return this.touched
-      && Object.values(this.fieldsValidity).every(v => v)
-      && this.jobId !== null
-      && (this.jobs?.find(j => j.id === this.jobId) ?? false);
+    return (
+      this.touched &&
+      Object.values(this.fieldsValidity).every((v) => v) &&
+      this.jobId !== null &&
+      (this.jobs?.find((j) => j.id === this.jobId) ?? false)
+    );
   }
 
   accept() {
@@ -185,20 +181,18 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       isRepeatable: this.isRepeatable,
       jobId: this.jobId!,
       triggers: this.triggers,
-      actions: this.actions
+      actions: this.actions,
     };
 
-    this.jobMonitorService.createTriggeredAction(createTriggeredActionDto).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Create',
-          detail: `The triggered action ${createTriggeredActionDto.name} was created`
-        });
-        this.touched = false;
-        this.router.navigate(['/monitor']);
-      }
-    );
+    this.jobMonitorService.createTriggeredAction(createTriggeredActionDto).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Create',
+        detail: `The triggered action ${createTriggeredActionDto.name} was created`,
+      });
+      this.touched = false;
+      this.router.navigate(['/monitor']);
+    });
   }
 
   updateTriggeredAction() {
@@ -209,20 +203,18 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       isRepeatable: this.isRepeatable,
       jobId: this.jobId!,
       triggers: this.triggers,
-      actions: this.actions
+      actions: this.actions,
     };
 
-    this.jobMonitorService.updateTriggeredAction(updateTriggeredActionDto).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Update',
-          detail: `The triggered action ${updateTriggeredActionDto.name} was updated`
-        });
-        this.touched = false;
-        this.router.navigate(['/monitor']);
-      }
-    );
+    this.jobMonitorService.updateTriggeredAction(updateTriggeredActionDto).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Update',
+        detail: `The triggered action ${updateTriggeredActionDto.name} was updated`,
+      });
+      this.touched = false;
+      this.router.navigate(['/monitor']);
+    });
   }
 
   cloneTriggeredAction() {
@@ -232,20 +224,18 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       isRepeatable: this.isRepeatable,
       jobId: this.jobId!,
       triggers: this.triggers,
-      actions: this.actions
+      actions: this.actions,
     };
 
-    this.jobMonitorService.createTriggeredAction(createTriggeredActionDto).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Clone',
-          detail: `The triggered action ${createTriggeredActionDto.name} was cloned`
-        });
-        this.touched = false;
-        this.router.navigate(['/monitor']);
-      }
-    );
+    this.jobMonitorService.createTriggeredAction(createTriggeredActionDto).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Clone',
+        detail: `The triggered action ${createTriggeredActionDto.name} was cloned`,
+      });
+      this.touched = false;
+      this.router.navigate(['/monitor']);
+    });
   }
 
   getJob(jobId: number | null) {
@@ -253,7 +243,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       return null;
     }
 
-    return this.jobs.find(j => j.id === jobId) ?? null;
+    return this.jobs.find((j) => j.id === jobId) ?? null;
   }
 
   setMonitoredJob(job: JobOverviewDto | undefined) {
@@ -318,12 +308,12 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       case TriggerType.JobStatus:
         trigger = {
           _polyTypeName: TriggerType.JobStatus,
-          status: JobStatus.RUNNING
+          status: JobStatus.RUNNING,
         };
         break;
       case TriggerType.JobFinished:
         trigger = {
-          _polyTypeName: TriggerType.JobFinished
+          _polyTypeName: TriggerType.JobFinished,
         };
         break;
       case TriggerType.TestedCount:
@@ -342,7 +332,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
         trigger = {
           _polyTypeName: type,
           comparison: NumComparison.EqualTo,
-          amount: 0
+          amount: 0,
         };
         break;
       case TriggerType.TimeElapsed:
@@ -350,7 +340,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
         trigger = {
           _polyTypeName: type,
           comparison: NumComparison.EqualTo,
-          timeSpan: TimeSpan.fromSeconds(0).toString()
+          timeSpan: TimeSpan.fromSeconds(0).toString(),
         };
         break;
       default:
@@ -370,14 +360,14 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       case ActionType.Wait:
         action = {
           _polyTypeName: ActionType.Wait,
-          timeSpan: TimeSpan.fromSeconds(0).toString()
+          timeSpan: TimeSpan.fromSeconds(0).toString(),
         };
         break;
       case ActionType.SetRelativeStartCondition:
         action = {
           _polyTypeName: ActionType.SetRelativeStartCondition,
           jobId: 0,
-          timeSpan: TimeSpan.fromSeconds(0).toString()
+          timeSpan: TimeSpan.fromSeconds(0).toString(),
         };
         break;
       case ActionType.StopJob:
@@ -385,14 +375,14 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
       case ActionType.StartJob:
         action = {
           _polyTypeName: type,
-          jobId: 0
+          jobId: 0,
         };
         break;
       case ActionType.DiscordWebhook:
         action = {
           _polyTypeName: ActionType.DiscordWebhook,
           webhook: '',
-          message: ''
+          message: '',
         };
         break;
       case ActionType.TelegramBot:
@@ -401,18 +391,18 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
           apiServer: 'https://api.telegram.org',
           token: '',
           chatId: 0,
-          message: ''
+          message: '',
         };
         break;
       case ActionType.SetBots:
         action = {
           _polyTypeName: ActionType.SetBots,
-          amount: 0
+          amount: 0,
         };
         break;
       case ActionType.ReloadProxies:
         action = {
-          _polyTypeName: ActionType.ReloadProxies
+          _polyTypeName: ActionType.ReloadProxies,
         };
         break;
       default:

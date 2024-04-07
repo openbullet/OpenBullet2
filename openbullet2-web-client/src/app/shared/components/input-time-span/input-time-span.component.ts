@@ -5,7 +5,7 @@ import { TimeSpan } from '../../utils/timespan';
 @Component({
   selector: 'app-input-time-span',
   templateUrl: './input-time-span.component.html',
-  styleUrls: ['./input-time-span.component.scss']
+  styleUrls: ['./input-time-span.component.scss'],
 })
 export class InputTimeSpanComponent {
   @Input() id: string | null = null;

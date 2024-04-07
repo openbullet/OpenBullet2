@@ -5,7 +5,7 @@ import { CustomSnippet } from 'src/app/main/dtos/settings/ob-settings.dto';
 @Component({
   selector: 'app-create-custom-snippet',
   templateUrl: './create-custom-snippet.component.html',
-  styleUrls: ['./create-custom-snippet.component.scss']
+  styleUrls: ['./create-custom-snippet.component.scss'],
 })
 export class CreateCustomSnippetComponent {
   @Output() confirm = new EventEmitter<CustomSnippet>();
@@ -25,7 +25,7 @@ export class CreateCustomSnippetComponent {
     this.confirm.emit({
       name: this.name,
       description: this.description,
-      body: this.body
+      body: this.body,
     });
   }
 

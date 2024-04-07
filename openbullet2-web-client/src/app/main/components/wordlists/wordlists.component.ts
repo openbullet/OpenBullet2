@@ -13,7 +13,7 @@ import { UploadWordlistComponent } from './upload-wordlist/upload-wordlist.compo
 @Component({
   selector: 'app-wordlists',
   templateUrl: './wordlists.component.html',
-  styleUrls: ['./wordlists.component.scss']
+  styleUrls: ['./wordlists.component.scss'],
 })
 export class WordlistsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
@@ -47,15 +47,15 @@ export class WordlistsComponent implements OnInit {
           id: 'add-from-local-file',
           label: 'From local file',
           icon: 'pi pi-fw pi-file color-good',
-          command: e => this.openAddWordlistModal()
+          command: (e) => this.openAddWordlistModal(),
         },
         {
           id: 'upload-file',
           label: 'Upload (remote)',
           icon: 'pi pi-fw pi-upload color-good',
-          command: e => this.openUploadWordlistModal()
-        }
-      ]
+          command: (e) => this.openUploadWordlistModal(),
+        },
+      ],
     },
     {
       id: 'delete',
@@ -66,33 +66,31 @@ export class WordlistsComponent implements OnInit {
           id: 'delete-not-found',
           label: 'With missing files',
           icon: 'pi pi-fw pi-trash color-bad',
-          command: e => this.confirmDeleteNotFound()
-        }
-      ]
-    }
+          command: (e) => this.confirmDeleteNotFound(),
+        },
+      ],
+    },
   ];
 
-  constructor(private wordlistService: WordlistService,
+  constructor(
+    private wordlistService: WordlistService,
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {
-
-  }
+    private messageService: MessageService,
+  ) {}
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-        this.wordlistTypes = envSettings.wordlistTypes.map(t => t.name);
-        this.refreshWordlists();
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+      this.wordlistTypes = envSettings.wordlistTypes.map((t) => t.name);
+      this.refreshWordlists();
+    });
   }
 
   refreshWordlists() {
     if (this.envSettings === null) return;
 
-    this.wordlistService.getAllWordlists()
-      .subscribe(wordlists => this.wordlists = wordlists);
+    this.wordlistService.getAllWordlists().subscribe((wordlists) => (this.wordlists = wordlists));
   }
 
   openAddWordlistModal() {
@@ -111,30 +109,28 @@ export class WordlistsComponent implements OnInit {
   }
 
   createWordlist(wordlist: CreateWordlistDto) {
-    this.wordlistService.createWordlist(wordlist)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Added',
-          detail: `Wordlist ${resp.name} was added`
-        });
-        this.uploadWordlistModalVisible = false;
-        this.addWordlistModalVisible = false;
-        this.refreshWordlists();
+    this.wordlistService.createWordlist(wordlist).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Added',
+        detail: `Wordlist ${resp.name} was added`,
       });
+      this.uploadWordlistModalVisible = false;
+      this.addWordlistModalVisible = false;
+      this.refreshWordlists();
+    });
   }
 
   updateWordlistInfo(updated: UpdateWordlistInfoDto) {
-    this.wordlistService.updateWordlistInfo(updated)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: `Wordlist ${resp.name} was updated`
-        });
-        this.updateWordlistInfoModalVisible = false;
-        this.refreshWordlists();
+    this.wordlistService.updateWordlistInfo(updated).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Updated',
+        detail: `Wordlist ${resp.name} was updated`,
       });
+      this.updateWordlistInfoModalVisible = false;
+      this.refreshWordlists();
+    });
   }
 
   confirmDeleteWordlist(wordlist: WordlistDto) {
@@ -147,21 +143,19 @@ export class WordlistsComponent implements OnInit {
       rejectLabel: 'No, just the wordlist',
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.deleteWordlist(wordlist, true),
-      reject: () => this.deleteWordlist(wordlist, false)
+      reject: () => this.deleteWordlist(wordlist, false),
     });
   }
 
   deleteWordlist(wordlist: WordlistDto, alsoDeleteFile: boolean) {
-    this.wordlistService.deleteWordlist(wordlist.id, alsoDeleteFile)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `Wordlist ${wordlist.name} was deleted` +
-            alsoDeleteFile ? ', along with its file' : ''
-        });
-        this.refreshWordlists();
+    this.wordlistService.deleteWordlist(wordlist.id, alsoDeleteFile).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `Wordlist ${wordlist.name} was deleted` + alsoDeleteFile ? ', along with its file' : '',
       });
+      this.refreshWordlists();
+    });
   }
 
   confirmDeleteNotFound() {
@@ -171,19 +165,18 @@ export class WordlistsComponent implements OnInit {
       Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.deleteNotFound()
+      accept: () => this.deleteNotFound(),
     });
   }
 
   deleteNotFound() {
-    this.wordlistService.deleteNotFoundWordlists()
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `${resp.count} wordlists were deleted from the database`
-        });
-        this.refreshWordlists();
+    this.wordlistService.deleteNotFoundWordlists().subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `${resp.count} wordlists were deleted from the database`,
       });
+      this.refreshWordlists();
+    });
   }
 }

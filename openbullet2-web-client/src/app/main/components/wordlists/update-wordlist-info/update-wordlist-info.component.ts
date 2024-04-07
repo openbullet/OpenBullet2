@@ -6,7 +6,7 @@ import { WordlistDto } from 'src/app/main/dtos/wordlist/wordlist.dto';
 @Component({
   selector: 'app-update-wordlist-info',
   templateUrl: './update-wordlist-info.component.html',
-  styleUrls: ['./update-wordlist-info.component.scss']
+  styleUrls: ['./update-wordlist-info.component.scss'],
 })
 export class UpdateWordlistInfoComponent implements OnChanges {
   @Input() wordlist: WordlistDto | null = null;
@@ -35,7 +35,7 @@ export class UpdateWordlistInfoComponent implements OnChanges {
       id: this.wordlist.id,
       name: this.name,
       purpose: this.purpose,
-      wordlistType: this.wordlistType
+      wordlistType: this.wordlistType,
     });
   }
 

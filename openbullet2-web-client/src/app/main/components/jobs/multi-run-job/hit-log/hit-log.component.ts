@@ -8,7 +8,7 @@ import { faWindowMaximize } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-hit-log',
   templateUrl: './hit-log.component.html',
-  styleUrls: ['./hit-log.component.scss']
+  styleUrls: ['./hit-log.component.scss'],
 })
 export class HitLogComponent {
   @Input() jobId: number | null = null;
@@ -22,7 +22,7 @@ export class HitLogComponent {
   viewAsHtmlModalVisible = false;
   html = '';
 
-  constructor(private jobService: JobService) { }
+  constructor(private jobService: JobService) {}
 
   public getHitLog(hitId: string) {
     if (this.jobId === null) {
@@ -31,7 +31,7 @@ export class HitLogComponent {
 
     this.hitLog = null;
 
-    this.jobService.getHitLog(this.jobId, hitId).subscribe(hitLog => {
+    this.jobService.getHitLog(this.jobId, hitId).subscribe((hitLog) => {
       this.hitLog = hitLog;
     });
   }

@@ -39,169 +39,169 @@ const routes: Routes = [
     children: [
       {
         component: HomeComponent,
-        path: 'home'
+        path: 'home',
       },
       {
         component: JobsComponent,
-        path: 'jobs'
+        path: 'jobs',
       },
       {
         component: EditMultiRunJobComponent,
         path: 'job/multi-run/edit',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditMultiRunJobComponent,
         path: 'job/multi-run/create',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditMultiRunJobComponent,
         path: 'job/multi-run/clone',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       // The route with generic id must go last because otherwise
       // it will match the other ones as well
       {
         component: MultiRunJobComponent,
-        path: 'job/multi-run/:id'
+        path: 'job/multi-run/:id',
       },
       {
         component: EditProxyCheckJobComponent,
         path: 'job/proxy-check/edit',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditProxyCheckJobComponent,
         path: 'job/proxy-check/create',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditProxyCheckJobComponent,
         path: 'job/proxy-check/clone',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       // The route with generic id must go last because otherwise
       // it will match the other ones as well
       {
         component: ProxyCheckJobComponent,
-        path: 'job/proxy-check/:id'
+        path: 'job/proxy-check/:id',
       },
       {
         component: JobMonitorComponent,
         path: 'monitor',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: EditTriggeredActionComponent,
         path: 'monitor/triggered-action/edit',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditTriggeredActionComponent,
         path: 'monitor/triggered-action/create',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: EditTriggeredActionComponent,
         path: 'monitor/triggered-action/clone',
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: ProxiesComponent,
-        path: 'proxies'
+        path: 'proxies',
       },
       {
         component: WordlistsComponent,
-        path: 'wordlists'
+        path: 'wordlists',
       },
       {
         component: HitsComponent,
-        path: 'hits'
+        path: 'hits',
       },
       {
         component: ConfigsComponent,
         path: 'configs',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigMetadataComponent,
         path: 'config/metadata',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigReadmeComponent,
         path: 'config/readme',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigStackerComponent,
         path: 'config/stacker',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigLolicodeComponent,
         path: 'config/lolicode',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigLoliscriptComponent,
         path: 'config/loliscript',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigSettingsComponent,
         path: 'config/settings',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: ConfigCsharpComponent,
         path: 'config/csharp',
         resolve: { data: updateCSharpScript },
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: OBSettingsComponent,
         path: 'settings',
         canActivate: [() => inject(AdminGuard).canActivate()],
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: RlSettingsComponent,
         path: 'rl-settings',
         canActivate: [() => inject(AdminGuard).canActivate()],
-        canDeactivate: [canDeactivateFormComponent]
+        canDeactivate: [canDeactivateFormComponent],
       },
       {
         component: GuestsComponent,
         path: 'guests',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: PluginsComponent,
         path: 'plugins',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: SharingComponent,
         path: 'sharing',
-        canActivate: [() => inject(AdminGuard).canActivate()]
+        canActivate: [() => inject(AdminGuard).canActivate()],
       },
       {
         component: InfoComponent,
-        path: 'info'
-      }
-    ]
+        path: 'info',
+      },
+    ],
   },
   {
     path: '**',
     component: NotFoundComponent,
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class MainRoutingModule { }
+export class MainRoutingModule {}

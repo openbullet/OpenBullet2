@@ -7,7 +7,7 @@ import { ConfigService } from 'src/app/main/services/config.service';
 @Component({
   selector: 'app-config-readme',
   templateUrl: './config-readme.component.html',
-  styleUrls: ['./config-readme.component.scss']
+  styleUrls: ['./config-readme.component.scss'],
 })
 export class ConfigReadmeComponent {
   // Listen for CTRL+S on the page
@@ -16,14 +16,13 @@ export class ConfigReadmeComponent {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -31,10 +30,11 @@ export class ConfigReadmeComponent {
   faTriangleExclamation = faTriangleExclamation;
   faFileLines = faFileLines;
 
-  constructor(private configService: ConfigService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+  constructor(
+    private configService: ConfigService,
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
   }
 
   localSave() {

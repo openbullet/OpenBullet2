@@ -1,3 +1,3 @@
 export interface ConfigReadmeDto {
-    markdownText: string
+  markdownText: string;
 }

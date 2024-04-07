@@ -7,7 +7,7 @@ import {
   faCircleMinus,
   faCaretDown,
   faCaretUp,
-  faTrashCan
+  faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -22,7 +22,7 @@ import { formatBytes } from 'src/app/shared/utils/bytes';
 @Component({
   selector: 'app-sysperf-cards',
   templateUrl: './sysperf-cards.component.html',
-  styleUrls: ['./sysperf-cards.component.scss']
+  styleUrls: ['./sysperf-cards.component.scss'],
 })
 export class SysperfCardsComponent implements OnInit, OnDestroy {
   CHART_DATA_POINTS = 60;
@@ -57,10 +57,10 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(148,159,177,1)',
         fill: false,
-        tension: 0
-      }
+        tension: 0,
+      },
     ],
-    labels: Array(this.CHART_DATA_POINTS).fill('')
+    labels: Array(this.CHART_DATA_POINTS).fill(''),
   };
 
   memoryLineChartData: ChartConfiguration['data'] = {
@@ -71,10 +71,10 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(148,159,177,1)',
         fill: false,
-        tension: 0
-      }
+        tension: 0,
+      },
     ],
-    labels: Array(this.CHART_DATA_POINTS).fill('')
+    labels: Array(this.CHART_DATA_POINTS).fill(''),
   };
 
   networkLineChartData: ChartConfiguration['data'] = {
@@ -86,7 +86,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(50,90,245,1)',
         fill: false,
-        tension: 0
+        tension: 0,
       },
       // Upload
       {
@@ -95,44 +95,44 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         borderColor: 'rgba(100,100,100,1)',
         fill: false,
-        tension: 0
-      }
+        tension: 0,
+      },
     ],
-    labels: Array(this.CHART_DATA_POINTS).fill('')
+    labels: Array(this.CHART_DATA_POINTS).fill(''),
   };
 
   lineChartOptions: ChartConfiguration['options'] = <ChartOptions>{
     events: [], // Remove this to get back the tooltips on hover
     elements: {
       line: {
-        tension: 0.5
+        tension: 0.5,
       },
       point: {
-        radius: 0
-      }
+        radius: 0,
+      },
     },
     scales: {
       x: {
         grid: {
           display: false,
           color: 'rgba(0, 0, 0, 0)',
-          drawBorder: false
+          drawBorder: false,
         },
         angleLines: {
-          display: false
+          display: false,
         },
         ticks: {
-          display: false
-        }
+          display: false,
+        },
       },
       y: {
         grid: {
           display: false,
           color: 'rgba(0, 0, 0, 0)',
-          drawBorder: false
+          drawBorder: false,
         },
         angleLines: {
-          display: false
+          display: false,
         },
         beginAtZero: true,
         ticks: {
@@ -153,16 +153,16 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
             }
 
             return value;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     animation: {
-      duration: 0
+      duration: 0,
     },
     plugins: {
-      legend: { display: false }
-    }
+      legend: { display: false },
+    },
   };
 
   metricsSubscription: Subscription | null = null;
@@ -174,7 +174,8 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     private sysPerfHubService: SysPerfHubService,
     private debugService: DebugService,
     private messageService: MessageService,
-    private userService: UserService) {
+    private userService: UserService,
+  ) {
     this.isAdmin = this.userService.isAdmin();
   }
 
@@ -187,12 +188,11 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     */
 
     this.sysPerfHubService.createHubConnection();
-    this.metricsSubscription = this.sysPerfHubService.metrics$
-      .subscribe(metrics => {
-        if (metrics !== null) {
-          this.onNewMetrics(metrics);
-        }
-      });
+    this.metricsSubscription = this.sysPerfHubService.metrics$.subscribe((metrics) => {
+      if (metrics !== null) {
+        this.onNewMetrics(metrics);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -202,14 +202,13 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
   }
 
   garbageCollect() {
-    this.debugService.garbageCollect()
-      .subscribe(() => {
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Requested',
-          detail: `Garbage Collection is on the way!`
-        });
+    this.debugService.garbageCollect().subscribe(() => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Requested',
+        detail: `Garbage Collection is on the way!`,
       });
+    });
   }
 
   onNewMetrics(perf: PerformanceInfoDto) {
@@ -294,11 +293,9 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
 
     if (percIncrement === 0) {
       return ['perf-flat', faCircleMinus, 0];
-    }
-    else if (percIncrement > 0) {
+    } else if (percIncrement > 0) {
       return ['perf-bad', faCircleArrowUp, percIncrement * 100];
-    }
-    else {
+    } else {
       return ['perf-good', faCircleArrowDown, percIncrement * 100];
     }
   }

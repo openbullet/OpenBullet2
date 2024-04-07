@@ -1,10 +1,21 @@
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-multiple-selector',
   templateUrl: './multiple-selector.component.html',
-  styleUrls: ['./multiple-selector.component.scss']
+  styleUrls: ['./multiple-selector.component.scss'],
 })
 export class MultipleSelectorComponent<T> implements OnChanges {
   @Input() selectedItems: T[] = [];
@@ -13,8 +24,7 @@ export class MultipleSelectorComponent<T> implements OnChanges {
   @Output() selectedItemsChange = new EventEmitter<T[]>();
   @Output() onChange = new EventEmitter<T[]>();
 
-  @ContentChild(TemplateRef) itemTemplate
-    : TemplateRef<any> | null = null;
+  @ContentChild(TemplateRef) itemTemplate: TemplateRef<any> | null = null;
 
   @ViewChild('defaultItemTemplate', { static: true })
   defaultItemTemplate: TemplateRef<any> | null = null;
@@ -23,8 +33,7 @@ export class MultipleSelectorComponent<T> implements OnChanges {
   faArrowLeft = faArrowLeft;
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.deselectedItems = this.allItems.filter(
-      i => this.selectedItems.indexOf(i) === -1);
+    this.deselectedItems = this.allItems.filter((i) => this.selectedItems.indexOf(i) === -1);
   }
 
   selectItem(item: T) {

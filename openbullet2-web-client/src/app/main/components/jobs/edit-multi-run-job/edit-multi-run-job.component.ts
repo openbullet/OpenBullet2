@@ -5,7 +5,20 @@ import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
 import { ConfigInfoDto } from 'src/app/main/dtos/config/config-info.dto';
-import { CustomWebhookHitOutput, DataPoolType, DiscordWebhookHitOutput, HitOutputType, HitOutputTypes, JobProxyMode, MultiRunJobOptionsDto, NoValidProxyBehaviour, ProxySourceType, ProxySourceTypes, TelegramBotHitOutput, WordlistDataPool } from 'src/app/main/dtos/job/multi-run-job-options.dto';
+import {
+  CustomWebhookHitOutput,
+  DataPoolType,
+  DiscordWebhookHitOutput,
+  HitOutputType,
+  HitOutputTypes,
+  JobProxyMode,
+  MultiRunJobOptionsDto,
+  NoValidProxyBehaviour,
+  ProxySourceType,
+  ProxySourceTypes,
+  TelegramBotHitOutput,
+  WordlistDataPool,
+} from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
@@ -32,13 +45,13 @@ import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dt
 enum EditMode {
   Create = 'create',
   Edit = 'edit',
-  Clone = 'clone'
+  Clone = 'clone',
 }
 
 @Component({
   selector: 'app-edit-multi-run-job',
   templateUrl: './edit-multi-run-job.component.html',
-  styleUrls: ['./edit-multi-run-job.component.scss']
+  styleUrls: ['./edit-multi-run-job.component.scss'],
 })
 export class EditMultiRunJobComponent implements DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
@@ -77,25 +90,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   Math = Math;
   StartConditionMode = StartConditionMode;
   JobProxyMode = JobProxyMode;
-  jobProxyModes = [
-    JobProxyMode.Default,
-    JobProxyMode.On,
-    JobProxyMode.Off
-  ];
-  noValidProxyBehaviours = [
-    NoValidProxyBehaviour.DoNothing,
-    NoValidProxyBehaviour.Unban,
-    NoValidProxyBehaviour.Reload
-  ];
+  jobProxyModes = [JobProxyMode.Default, JobProxyMode.On, JobProxyMode.Off];
+  noValidProxyBehaviours = [NoValidProxyBehaviour.DoNothing, NoValidProxyBehaviour.Unban, NoValidProxyBehaviour.Reload];
   DataPoolType = DataPoolType;
   ProxySourceType = ProxySourceType;
   HitOutputType = HitOutputType;
-  proxyTypes = [
-    ProxyType.Http,
-    ProxyType.Socks4,
-    ProxyType.Socks5,
-    ProxyType.Socks4a
-  ];
+  proxyTypes = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks5, ProxyType.Socks4a];
 
   mode: EditMode = EditMode.Edit;
   jobId: number | null = null;
@@ -127,12 +127,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   defaultProxyGroup = {
     id: -1,
     name: 'All',
-    owner: { id: -2, username: 'System' }
+    owner: { id: -2, username: 'System' },
   };
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
-  fieldsValidity: { [key: string]: boolean; } = {};
+  fieldsValidity: { [key: string]: boolean } = {};
   touched: boolean = false;
 
   selectConfigModalVisible: boolean = false;
@@ -152,38 +152,31 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     private wordlistService: WordlistService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
   ) {
-    combineLatest([activatedRoute.url, activatedRoute.queryParams])
-      .subscribe(results => {
+    combineLatest([activatedRoute.url, activatedRoute.queryParams]).subscribe((results) => {
+      const uriChunks = results[0];
 
-        const uriChunks = results[0];
+      this.mode = <EditMode>uriChunks[2].path;
 
-        this.mode = <EditMode>uriChunks[2].path;
+      const queryParams = results[1];
+      const jobId = queryParams['jobId'];
 
-        const queryParams = results[1];
-        const jobId = queryParams['jobId'];
+      if (jobId !== undefined && !isNaN(jobId)) {
+        this.jobId = parseInt(jobId);
+      }
 
-        if (jobId !== undefined && !isNaN(jobId)) {
-          this.jobId = parseInt(jobId);
-        }
+      this.initJobOptions();
+    });
 
-        this.initJobOptions();
-      });
+    this.proxyGroupService.getAllProxyGroups().subscribe((proxyGroups) => {
+      this.proxyGroups = [this.defaultProxyGroup, ...proxyGroups];
+    });
 
-    this.proxyGroupService.getAllProxyGroups()
-      .subscribe(proxyGroups => {
-        this.proxyGroups = [
-          this.defaultProxyGroup,
-          ...proxyGroups
-        ];
-      });
-
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(settings => {
-        this.wordlistTypes = settings.wordlistTypes.map(wt => wt.name);
-        this.dataPoolWordlistType = settings.wordlistTypes[0].name;
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((settings) => {
+      this.wordlistTypes = settings.wordlistTypes.map((wt) => wt.name);
+      this.dataPoolWordlistType = settings.wordlistTypes[0].name;
+    });
   }
 
   canDeactivate() {
@@ -192,7 +185,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     }
 
     // Ask for confirmation and return the observable
-    return new Observable<boolean>(observer => {
+    return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
         message: `You have unsaved changes. Are you sure that you want to leave?`,
         header: 'Confirmation',
@@ -204,7 +197,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
         reject: () => {
           observer.next(false);
           observer.complete();
-        }
+        },
       });
     });
   }
@@ -220,61 +213,60 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       return;
     }
 
-    this.jobService.getMultiRunJobOptions(this.jobId ?? -1)
-      .subscribe(options => {
-        if (options.startCondition._polyTypeName === StartConditionType.Relative) {
-          this.startAfter = parseTimeSpan(options.startCondition.startAfter);
-          this.startConditionMode = StartConditionMode.Relative;
-        } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
-          this.startAt = moment(options.startCondition.startAt).toDate();
-          this.startConditionMode = StartConditionMode.Absolute;
-        }
+    this.jobService.getMultiRunJobOptions(this.jobId ?? -1).subscribe((options) => {
+      if (options.startCondition._polyTypeName === StartConditionType.Relative) {
+        this.startAfter = parseTimeSpan(options.startCondition.startAfter);
+        this.startConditionMode = StartConditionMode.Relative;
+      } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
+        this.startAt = moment(options.startCondition.startAt).toDate();
+        this.startConditionMode = StartConditionMode.Absolute;
+      }
 
-        if (options.dataPool._polyTypeName === DataPoolType.Wordlist) {
-          this.dataPoolType = DataPoolType.Wordlist;
-          this.dataPoolWordlistId = options.dataPool.wordlistId;
-        } else if (options.dataPool._polyTypeName === DataPoolType.File) {
-          this.dataPoolType = DataPoolType.File;
-          this.dataPoolWordlistType = options.dataPool.wordlistType;
-          this.dataPoolFileName = options.dataPool.fileName;
-        } else if (options.dataPool._polyTypeName === DataPoolType.Range) {
-          this.dataPoolType = DataPoolType.Range;
-          this.dataPoolWordlistType = options.dataPool.wordlistType;
-          this.dataPoolRangeStart = options.dataPool.start;
-          this.dataPoolRangeAmount = options.dataPool.amount;
-          this.dataPoolRangeStep = options.dataPool.step;
-          this.dataPoolRangePad = options.dataPool.pad;
-        } else if (options.dataPool._polyTypeName === DataPoolType.Combinations) {
-          this.dataPoolType = DataPoolType.Combinations;
-          this.dataPoolWordlistType = options.dataPool.wordlistType;
-          this.dataPoolCombinationsCharSet = options.dataPool.charSet;
-          this.dataPoolCombinationsLength = options.dataPool.length;
-        } else if (options.dataPool._polyTypeName === DataPoolType.Infinite) {
-          this.dataPoolType = DataPoolType.Infinite;
-        }
+      if (options.dataPool._polyTypeName === DataPoolType.Wordlist) {
+        this.dataPoolType = DataPoolType.Wordlist;
+        this.dataPoolWordlistId = options.dataPool.wordlistId;
+      } else if (options.dataPool._polyTypeName === DataPoolType.File) {
+        this.dataPoolType = DataPoolType.File;
+        this.dataPoolWordlistType = options.dataPool.wordlistType;
+        this.dataPoolFileName = options.dataPool.fileName;
+      } else if (options.dataPool._polyTypeName === DataPoolType.Range) {
+        this.dataPoolType = DataPoolType.Range;
+        this.dataPoolWordlistType = options.dataPool.wordlistType;
+        this.dataPoolRangeStart = options.dataPool.start;
+        this.dataPoolRangeAmount = options.dataPool.amount;
+        this.dataPoolRangeStep = options.dataPool.step;
+        this.dataPoolRangePad = options.dataPool.pad;
+      } else if (options.dataPool._polyTypeName === DataPoolType.Combinations) {
+        this.dataPoolType = DataPoolType.Combinations;
+        this.dataPoolWordlistType = options.dataPool.wordlistType;
+        this.dataPoolCombinationsCharSet = options.dataPool.charSet;
+        this.dataPoolCombinationsLength = options.dataPool.length;
+      } else if (options.dataPool._polyTypeName === DataPoolType.Infinite) {
+        this.dataPoolType = DataPoolType.Infinite;
+      }
 
-        // If there is a config, we need to fetch it
-        if (options.configId !== null) {
-          this.configService.getInfo(options.configId).subscribe(configInfo => {
-            this.selectedConfigInfo = configInfo;
-          });
-        }
+      // If there is a config, we need to fetch it
+      if (options.configId !== null) {
+        this.configService.getInfo(options.configId).subscribe((configInfo) => {
+          this.selectedConfigInfo = configInfo;
+        });
+      }
 
-        // If the data pool is a wordlist, and the id is not -1, we need to fetch it
-        if (this.dataPoolType === DataPoolType.Wordlist && this.dataPoolWordlistId !== -1) {
-          this.wordlistService.getWordlist(this.dataPoolWordlistId).subscribe(wordlist => {
-            this.selectedWordlist = wordlist;
-          });
-        }
+      // If the data pool is a wordlist, and the id is not -1, we need to fetch it
+      if (this.dataPoolType === DataPoolType.Wordlist && this.dataPoolWordlistId !== -1) {
+        this.wordlistService.getWordlist(this.dataPoolWordlistId).subscribe((wordlist) => {
+          this.selectedWordlist = wordlist;
+        });
+      }
 
-        this.options = options;
-      });
+      this.options = options;
+    });
   }
 
   onValidityChange(validity: FieldValidity) {
     this.fieldsValidity = {
       ...this.fieldsValidity,
-      [validity.key]: validity.valid
+      [validity.key]: validity.valid,
     };
   }
 
@@ -294,7 +286,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     if (this.startConditionMode === StartConditionMode.Relative) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Relative,
-        startAfter: this.startAfter.toString()
+        startAfter: this.startAfter.toString(),
       };
     }
   }
@@ -307,7 +299,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     if (this.startConditionMode === StartConditionMode.Absolute) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Absolute,
-        startAt: this.startAt.toISOString()
+        startAt: this.startAt.toISOString(),
       };
     }
   }
@@ -321,14 +313,14 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       case DataPoolType.Wordlist:
         this.options.dataPool = {
           _polyTypeName: DataPoolType.Wordlist,
-          wordlistId: this.dataPoolWordlistId
+          wordlistId: this.dataPoolWordlistId,
         };
         break;
       case DataPoolType.File:
         this.options.dataPool = {
           _polyTypeName: DataPoolType.File,
           wordlistType: this.dataPoolWordlistType,
-          fileName: this.dataPoolFileName
+          fileName: this.dataPoolFileName,
         };
         break;
       case DataPoolType.Range:
@@ -338,7 +330,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           start: this.dataPoolRangeStart,
           amount: this.dataPoolRangeAmount,
           step: this.dataPoolRangeStep,
-          pad: this.dataPoolRangePad
+          pad: this.dataPoolRangePad,
         };
         break;
       case DataPoolType.Combinations:
@@ -346,12 +338,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
           _polyTypeName: DataPoolType.Combinations,
           wordlistType: this.dataPoolWordlistType,
           charSet: this.dataPoolCombinationsCharSet,
-          length: this.dataPoolCombinationsLength
+          length: this.dataPoolCombinationsLength,
         };
         break;
       case DataPoolType.Infinite:
         this.options.dataPool = {
-          _polyTypeName: DataPoolType.Infinite
+          _polyTypeName: DataPoolType.Infinite,
         };
         break;
     }
@@ -359,7 +351,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return this.touched && Object.values(this.fieldsValidity).every(v => v);
+    return this.touched && Object.values(this.fieldsValidity).every((v) => v);
   }
 
   accept() {
@@ -370,38 +362,35 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.configureDataPool();
 
     if (this.mode === EditMode.Create) {
-      this.jobService.createMultiRunJob(this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Created',
-            detail: `Multi run job ${resp.id} was created`
-          });
-          this.router.navigate([`/job/multi-run/${resp.id}`]);
+      this.jobService.createMultiRunJob(this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Created',
+          detail: `Multi run job ${resp.id} was created`,
         });
+        this.router.navigate([`/job/multi-run/${resp.id}`]);
+      });
     } else if (this.mode === EditMode.Edit) {
-      this.jobService.updateMultiRunJob(this.jobId!, this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Updated',
-            detail: `Multi run job ${resp.id} was updated`
-          });
-          this.router.navigate([`/job/multi-run/${resp.id}`]);
+      this.jobService.updateMultiRunJob(this.jobId!, this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Updated',
+          detail: `Multi run job ${resp.id} was updated`,
         });
+        this.router.navigate([`/job/multi-run/${resp.id}`]);
+      });
     } else if (this.mode === EditMode.Clone) {
-      this.jobService.createMultiRunJob(this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Cloned',
-            detail: `Multi run job ${resp.id} was cloned from ${this.jobId}`
-          });
-          this.router.navigate([`/job/multi-run/${resp.id}`]);
+      this.jobService.createMultiRunJob(this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cloned',
+          detail: `Multi run job ${resp.id} was cloned from ${this.jobId}`,
         });
+        this.router.navigate([`/job/multi-run/${resp.id}`]);
+      });
     }
   }
 
@@ -431,7 +420,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
         severity: 'warn',
         summary: 'Dangerous',
         detail: `This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!`,
-        life: 10000
+        life: 10000,
       });
     }
     this.selectedConfigInfo = config;
@@ -475,7 +464,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   addGroupProxySource() {
     this.options!.proxySources.push({
       _polyTypeName: ProxySourceType.Group,
-      groupId: -1
+      groupId: -1,
     });
     this.touched = true;
   }
@@ -484,7 +473,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.options!.proxySources.push({
       _polyTypeName: ProxySourceType.File,
       fileName: '',
-      defaultType: ProxyType.Http
+      defaultType: ProxyType.Http,
     });
     this.touched = true;
   }
@@ -493,31 +482,29 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.options!.proxySources.push({
       _polyTypeName: ProxySourceType.Remote,
       url: '',
-      defaultType: ProxyType.Http
+      defaultType: ProxyType.Http,
     });
     this.touched = true;
   }
 
   removeProxySource(proxySource: ProxySourceTypes) {
-    this.options!.proxySources = this.options!.proxySources
-      .filter(ps => ps !== proxySource);
+    this.options!.proxySources = this.options!.proxySources.filter((ps) => ps !== proxySource);
     this.touched = true;
   }
 
   addDatabaseHitOutput() {
     // If there is already a database hit output, don't add another one
-    if (this.options!.hitOutputs.some(
-      ho => ho._polyTypeName === HitOutputType.Database)) {
+    if (this.options!.hitOutputs.some((ho) => ho._polyTypeName === HitOutputType.Database)) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Already exists',
-        detail: 'You can only have a single database hit output'
+        detail: 'You can only have a single database hit output',
       });
       return;
     }
 
     this.options!.hitOutputs.push({
-      _polyTypeName: HitOutputType.Database
+      _polyTypeName: HitOutputType.Database,
     });
     this.touched = true;
   }
@@ -525,7 +512,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   addFileSystemHitOutput() {
     this.options!.hitOutputs.push({
       _polyTypeName: HitOutputType.FileSystem,
-      baseDir: ''
+      baseDir: '',
     });
     this.touched = true;
   }
@@ -536,7 +523,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       webhook: 'https://discord.com/api/webhooks/...',
       username: '',
       avatarUrl: '',
-      onlyHits: true
+      onlyHits: true,
     });
     this.touched = true;
   }
@@ -547,7 +534,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       apiServer: 'https://api.telegram.org/',
       token: '',
       chatId: 0,
-      onlyHits: true
+      onlyHits: true,
     });
     this.touched = true;
   }
@@ -557,14 +544,13 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       _polyTypeName: HitOutputType.CustomWebhook,
       url: 'http://mycustomwebhook.com',
       user: 'Anonymous',
-      onlyHits: true
+      onlyHits: true,
     });
     this.touched = true;
   }
 
   removeHitOutput(hitOutput: HitOutputTypes) {
-    this.options!.hitOutputs = this.options!.hitOutputs
-      .filter(ho => ho !== hitOutput);
+    this.options!.hitOutputs = this.options!.hitOutputs.filter((ho) => ho !== hitOutput);
     this.touched = true;
   }
 
@@ -599,15 +585,12 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   calcCombinations() {
-    return Math.pow(
-      this.dataPoolCombinationsCharSet.length,
-      this.dataPoolCombinationsLength
-    );
+    return Math.pow(this.dataPoolCombinationsCharSet.length, this.dataPoolCombinationsLength);
   }
 
   calcCombinationsTime(cpm: number): TimeSpan {
     const combinations = this.calcCombinations();
-    const seconds = combinations / cpm * 60;
+    const seconds = (combinations / cpm) * 60;
     return new TimeSpan(seconds * 1000);
   }
 
@@ -630,36 +613,33 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
     const useEllipsis = this.dataPoolRangeAmount > 6;
 
-    const lastNumber = this.dataPoolRangeStart +
-      (this.dataPoolRangeAmount - 1) * this.dataPoolRangeStep;
+    const lastNumber = this.dataPoolRangeStart + (this.dataPoolRangeAmount - 1) * this.dataPoolRangeStep;
 
     const lastNumberDigits = lastNumber.toString().length;
 
     if (this.dataPoolRangePad) {
-      const padLength = Math.max(
-        this.dataPoolRangeStart.toString().length,
-        lastNumberDigits
-      );
+      const padLength = Math.max(this.dataPoolRangeStart.toString().length, lastNumberDigits);
 
-      return range
-        .map(n => n.toString().padStart(padLength, '0'))
-        .join(', ') + (useEllipsis ? ', ... ' : ', ') + lastNumber.toString().padStart(padLength, '0');
+      return (
+        range.map((n) => n.toString().padStart(padLength, '0')).join(', ') +
+        (useEllipsis ? ', ... ' : ', ') +
+        lastNumber.toString().padStart(padLength, '0')
+      );
     }
 
     return range.join(', ') + (useEllipsis ? ', ... ' : ', ') + lastNumber;
   }
 
   createWordlist(wordlist: CreateWordlistDto) {
-    this.wordlistService.createWordlist(wordlist)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Added',
-          detail: `Wordlist ${resp.name} was added`
-        });
-        this.uploadWordlistModalVisible = false;
-        this.addWordlistModalVisible = false;
-        this.selectWordlist(resp);
+    this.wordlistService.createWordlist(wordlist).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Added',
+        detail: `Wordlist ${resp.name} was added`,
       });
+      this.uploadWordlistModalVisible = false;
+      this.addWordlistModalVisible = false;
+      this.selectWordlist(resp);
+    });
   }
 }

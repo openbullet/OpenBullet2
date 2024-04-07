@@ -5,7 +5,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 @Component({
   selector: 'app-byte-array-setting',
   templateUrl: './byte-array-setting.component.html',
-  styleUrls: ['./byte-array-setting.component.scss']
+  styleUrls: ['./byte-array-setting.component.scss'],
 })
 export class ByteArraySettingComponent {
   @Input() parameter: BlockParameterDto | null = null;
@@ -22,7 +22,11 @@ export class ByteArraySettingComponent {
   // Given a base64 string, sets the value of the setting.
   setValue(event: any) {
     // Make sure the input is a valid base64 string.
-    if (event === null || event === undefined || !/^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(event)) {
+    if (
+      event === null ||
+      event === undefined ||
+      !/^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/.test(event)
+    ) {
       return;
     }
 

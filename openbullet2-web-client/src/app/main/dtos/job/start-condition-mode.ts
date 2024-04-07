@@ -1,4 +1,4 @@
 export enum StartConditionMode {
-    Absolute = 'absolute',
-    Relative = 'relative'
+  Absolute = 'absolute',
+  Relative = 'relative',
 }

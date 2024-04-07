@@ -206,7 +206,7 @@ import { ChangeAdminApiKeyComponent } from './components/ob-settings/change-admi
     RecentHitsChartComponent,
     ChangelogComponent,
     ConfigLoliscriptComponent,
-    ChangeAdminApiKeyComponent
+    ChangeAdminApiKeyComponent,
   ],
   imports: [
     CommonModule,
@@ -236,8 +236,8 @@ import { ChangeAdminApiKeyComponent } from './components/ob-settings/change-admi
     NgChartsModule,
     MarkdownModule.forRoot(),
     SharedModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
-  providers: []
+  providers: [],
 })
-export class MainModule { }
+export class MainModule {}

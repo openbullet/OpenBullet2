@@ -31,8 +31,8 @@ const monacoConfig: NgxMonacoEditorConfig = {
   },
   defaultOptions: {
     automaticLayout: true,
-    fontFamily: 'Chivo Mono'
-  }
+    fontFamily: 'Chivo Mono',
+  },
 };
 
 @NgModule({
@@ -51,15 +51,9 @@ const monacoConfig: NgxMonacoEditorConfig = {
     BooleanIconComponent,
     MultipleSelectorComponent,
     InputTimeSpanComponent,
-    InputDictionaryComponent
+    InputDictionaryComponent,
   ],
-  imports: [
-    CommonModule,
-    DropdownModule,
-    MonacoEditorModule.forRoot(monacoConfig),
-    FormsModule,
-    FontAwesomeModule
-  ],
+  imports: [CommonModule, DropdownModule, MonacoEditorModule.forRoot(monacoConfig), FormsModule, FontAwesomeModule],
   exports: [
     SpinnerComponent,
     TruncatePipe,
@@ -75,7 +69,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     BooleanIconComponent,
     MultipleSelectorComponent,
     InputTimeSpanComponent,
-    InputDictionaryComponent
-  ]
+    InputDictionaryComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -1,11 +1,26 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BlockSettingType, BoolComparison, BoolKeyDto, DictComparison, DictionaryKeyDto, FloatKeyDto, IntKeyDto, KeyType, KeyTypes, ListComparison, ListKeyDto, NumComparison, StrComparison, StringKeyDto } from 'src/app/main/dtos/config/block-instance.dto';
+import {
+  BlockSettingType,
+  BoolComparison,
+  BoolKeyDto,
+  DictComparison,
+  DictionaryKeyDto,
+  FloatKeyDto,
+  IntKeyDto,
+  KeyType,
+  KeyTypes,
+  ListComparison,
+  ListKeyDto,
+  NumComparison,
+  StrComparison,
+  StringKeyDto,
+} from 'src/app/main/dtos/config/block-instance.dto';
 
 @Component({
   selector: 'app-create-keycheck-key',
   templateUrl: './create-keycheck-key.component.html',
-  styleUrls: ['./create-keycheck-key.component.scss']
+  styleUrls: ['./create-keycheck-key.component.scss'],
 })
 export class CreateKeycheckKeyComponent {
   @Output() onSelect: EventEmitter<KeyTypes> = new EventEmitter<KeyTypes>();
@@ -20,20 +35,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <BoolKeyDto>{
           _polyTypeName: KeyType.Bool,
           left: {
-            name: "left",
+            name: 'left',
             value: false,
-            inputVariableName: "data.SOURCE",
+            inputVariableName: 'data.SOURCE',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.Bool
+            type: BlockSettingType.Bool,
           },
           right: {
-            name: "right",
+            name: 'right',
             value: true,
-            inputVariableName: "",
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.Bool
+            type: BlockSettingType.Bool,
           },
-          comparison: BoolComparison.Is
+          comparison: BoolComparison.Is,
         };
         break;
 
@@ -41,20 +56,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <DictionaryKeyDto>{
           _polyTypeName: KeyType.Dictionary,
           left: {
-            name: "left",
+            name: 'left',
             value: {},
-            inputVariableName: "data.HEADERS",
+            inputVariableName: 'data.HEADERS',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.DictionaryOfStrings
+            type: BlockSettingType.DictionaryOfStrings,
           },
           right: {
-            name: "right",
-            value: "",
-            inputVariableName: "",
+            name: 'right',
+            value: '',
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.String
+            type: BlockSettingType.String,
           },
-          comparison: DictComparison.HasKey
+          comparison: DictComparison.HasKey,
         };
         break;
 
@@ -62,20 +77,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <ListKeyDto>{
           _polyTypeName: KeyType.List,
           left: {
-            name: "left",
+            name: 'left',
             value: [],
-            inputVariableName: "",
+            inputVariableName: '',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.ListOfStrings
+            type: BlockSettingType.ListOfStrings,
           },
           right: {
-            name: "right",
-            value: "",
-            inputVariableName: "",
+            name: 'right',
+            value: '',
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.String
+            type: BlockSettingType.String,
           },
-          comparison: ListComparison.Contains
+          comparison: ListComparison.Contains,
         };
         break;
 
@@ -83,20 +98,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <IntKeyDto>{
           _polyTypeName: KeyType.Int,
           left: {
-            name: "left",
+            name: 'left',
             value: 0,
-            inputVariableName: "data.RESPONSECODE",
+            inputVariableName: 'data.RESPONSECODE',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.Int
+            type: BlockSettingType.Int,
           },
           right: {
-            name: "right",
+            name: 'right',
             value: 0,
-            inputVariableName: "",
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.Int
+            type: BlockSettingType.Int,
           },
-          comparison: NumComparison.EqualTo
+          comparison: NumComparison.EqualTo,
         };
         break;
 
@@ -104,20 +119,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <FloatKeyDto>{
           _polyTypeName: KeyType.Float,
           left: {
-            name: "left",
+            name: 'left',
             value: 0,
-            inputVariableName: "",
+            inputVariableName: '',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.Float
+            type: BlockSettingType.Float,
           },
           right: {
-            name: "right",
+            name: 'right',
             value: 0,
-            inputVariableName: "",
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.Float
+            type: BlockSettingType.Float,
           },
-          comparison: NumComparison.EqualTo
+          comparison: NumComparison.EqualTo,
         };
         break;
 
@@ -125,20 +140,20 @@ export class CreateKeycheckKeyComponent {
         newKey = <StringKeyDto>{
           _polyTypeName: KeyType.String,
           left: {
-            name: "left",
-            value: "",
-            inputVariableName: "data.SOURCE",
+            name: 'left',
+            value: '',
+            inputVariableName: 'data.SOURCE',
             inputMode: SettingInputMode.Variable,
-            type: BlockSettingType.String
+            type: BlockSettingType.String,
           },
           right: {
-            name: "right",
-            value: "",
-            inputVariableName: "",
+            name: 'right',
+            value: '',
+            inputVariableName: '',
             inputMode: SettingInputMode.Fixed,
-            type: BlockSettingType.String
+            type: BlockSettingType.String,
           },
-          comparison: StrComparison.Contains
+          comparison: StrComparison.Contains,
         };
         break;
 

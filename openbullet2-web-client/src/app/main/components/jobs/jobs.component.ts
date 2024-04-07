@@ -11,7 +11,7 @@ import { JobStatus } from '../../dtos/job/job-status';
 @Component({
   selector: 'app-jobs',
   templateUrl: './jobs.component.html',
-  styleUrls: ['./jobs.component.scss']
+  styleUrls: ['./jobs.component.scss'],
 })
 export class JobsComponent implements OnInit, OnDestroy {
   multiRunJobs: MultiRunJobOverviewDto[] | null = null;
@@ -40,13 +40,13 @@ export class JobsComponent implements OnInit, OnDestroy {
     pausing: 'custom',
     paused: 'custom',
     stopping: 'bad',
-    resuming: 'good'
+    resuming: 'good',
   };
 
   proxyColor: Record<string, string> = {
     on: 'good',
     off: 'bad',
-    default: 'secondary'
+    default: 'secondary',
   };
 
   constructor(
@@ -54,18 +54,17 @@ export class JobsComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.refreshJobs();
 
-    this.settingsService.getSafeSettings()
-      .subscribe(settings => {
-        this.intervalId = setInterval(() => {
-          this.refreshJobs();
-        }, settings.generalSettings.jobManagerUpdateInterval);
-      });
+    this.settingsService.getSafeSettings().subscribe((settings) => {
+      this.intervalId = setInterval(() => {
+        this.refreshJobs();
+      }, settings.generalSettings.jobManagerUpdateInterval);
+    });
   }
 
   ngOnDestroy(): void {
@@ -75,20 +74,18 @@ export class JobsComponent implements OnInit, OnDestroy {
   refreshJobs() {
     if (!this.refreshingMultiRunJobs) {
       this.refreshingMultiRunJobs = true;
-      this.jobService.getAllMultiRunJobs()
-        .subscribe({
-          next: jobs => this.multiRunJobs = jobs,
-          complete: () => this.refreshingMultiRunJobs = false
-        });
+      this.jobService.getAllMultiRunJobs().subscribe({
+        next: (jobs) => (this.multiRunJobs = jobs),
+        complete: () => (this.refreshingMultiRunJobs = false),
+      });
     }
 
     if (!this.refreshingProxyCheckJobs) {
       this.refreshingProxyCheckJobs = true;
-      this.jobService.getAllProxyCheckJobs()
-        .subscribe({
-          next: jobs => this.proxyCheckJobs = jobs,
-          complete: () => this.refreshingProxyCheckJobs = false
-        });
+      this.jobService.getAllProxyCheckJobs().subscribe({
+        next: (jobs) => (this.proxyCheckJobs = jobs),
+        complete: () => (this.refreshingProxyCheckJobs = false),
+      });
     }
   }
 
@@ -101,12 +98,11 @@ export class JobsComponent implements OnInit, OnDestroy {
       message: 'Are you sure you want to delete all jobs?',
       header: 'Are you sure?',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.removeAllJobs()
+      accept: () => this.removeAllJobs(),
     });
   }
 
-  abortJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
-    event: MouseEvent) {
+  abortJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
     // If the status is idle, we can't abort it
@@ -114,25 +110,22 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Idle',
-        detail: 'The job you are trying to abort is idle, please ' +
-          'start it first'
+        detail: 'The job you are trying to abort is idle, please ' + 'start it first',
       });
       return;
     }
 
-    this.jobService.abort(job.id)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Aborted',
-          detail: `Job #${job.id} was aborted`
-        });
-        this.refreshJobs();
+    this.jobService.abort(job.id).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Aborted',
+        detail: `Job #${job.id} was aborted`,
       });
+      this.refreshJobs();
+    });
   }
 
-  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
-    event: MouseEvent) {
+  startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
     // If the status is not idle, we can't start it
@@ -140,21 +133,19 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to start is not idle, please ' +
-          'stop it or abort it first'
+        detail: 'The job you are trying to start is not idle, please ' + 'stop it or abort it first',
       });
       return;
     }
 
-    this.jobService.start(job.id)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Started',
-          detail: `Job #${job.id} was started`
-        });
-        this.refreshJobs();
+    this.jobService.start(job.id).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Started',
+        detail: `Job #${job.id} was started`,
       });
+      this.refreshJobs();
+    });
   }
 
   editMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
@@ -165,16 +156,12 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to edit is not idle, please ' +
-          'stop it or abort it first'
+        detail: 'The job you are trying to edit is not idle, please ' + 'stop it or abort it first',
       });
       return;
     }
 
-    this.router.navigate(
-      [`/job/multi-run/edit`],
-      { queryParams: { jobId: job.id } }
-    );
+    this.router.navigate([`/job/multi-run/edit`], { queryParams: { jobId: job.id } });
   }
 
   editProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
@@ -185,46 +172,34 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to edit is not idle, please ' +
-          'stop it or abort it first'
+        detail: 'The job you are trying to edit is not idle, please ' + 'stop it or abort it first',
       });
       return;
     }
 
-    this.router.navigate(
-      [`/job/proxy-check/edit`],
-      { queryParams: { jobId: job.id } }
-    );
+    this.router.navigate([`/job/proxy-check/edit`], { queryParams: { jobId: job.id } });
   }
 
   cloneMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
-    this.router.navigate(
-      [`/job/multi-run/clone`],
-      { queryParams: { jobId: job.id } }
-    );
+    this.router.navigate([`/job/multi-run/clone`], { queryParams: { jobId: job.id } });
   }
 
   cloneProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
-    this.router.navigate(
-      [`/job/proxy-check/clone`],
-      { queryParams: { jobId: job.id } }
-    );
+    this.router.navigate([`/job/proxy-check/clone`], { queryParams: { jobId: job.id } });
   }
 
-  confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto,
-    event: MouseEvent) {
+  confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
     if (job.status !== 'idle') {
       this.messageService.add({
         severity: 'error',
         summary: 'Not idle',
-        detail: 'The job you are trying to delete is not idle, please ' +
-          'stop it or abort it first'
+        detail: 'The job you are trying to delete is not idle, please ' + 'stop it or abort it first',
       });
       return;
     }
@@ -233,32 +208,30 @@ export class JobsComponent implements OnInit, OnDestroy {
       message: `Are you sure you want to delete job #${job.id}.`,
       header: 'Are you sure?',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.removeJob(job)
+      accept: () => this.removeJob(job),
     });
   }
 
   removeJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto) {
-    this.jobService.deleteJob(job.id)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `Job #${job.id} was deleted`
-        });
-        this.refreshJobs();
+    this.jobService.deleteJob(job.id).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `Job #${job.id} was deleted`,
       });
+      this.refreshJobs();
+    });
   }
 
   removeAllJobs() {
-    this.jobService.deleteAllJobs()
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: 'All jobs were deleted'
-        });
-        this.refreshJobs();
+    this.jobService.deleteAllJobs().subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: 'All jobs were deleted',
       });
+      this.refreshJobs();
+    });
   }
 
   viewProxyCheckJob(pcj: ProxyCheckJobOverviewDto) {

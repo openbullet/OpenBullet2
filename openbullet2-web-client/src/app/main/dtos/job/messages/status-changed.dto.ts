@@ -1,5 +1,5 @@
-import { JobStatus } from "../job-status";
+import { JobStatus } from '../job-status';
 
 export interface JobStatusChangedMessage {
-    newStatus: JobStatus
+  newStatus: JobStatus;
 }

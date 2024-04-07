@@ -5,7 +5,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   selector: 'app-setting-input-variable',
   templateUrl: './setting-input-variable.component.html',
   styleUrls: ['./setting-input-variable.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingInputVariableComponent {
   @Input() setting!: BlockSettingDto;

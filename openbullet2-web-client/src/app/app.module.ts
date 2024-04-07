@@ -22,11 +22,7 @@ import { ForgotCredentialsComponent } from './login/forgot-credentials/forgot-cr
 import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ForgotCredentialsComponent
-  ],
+  declarations: [AppComponent, LoginComponent, ForgotCredentialsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -41,22 +37,22 @@ import { DialogModule } from 'primeng/dialog';
       type: 'cube-transition',
       bdColor: 'rgba(0, 0, 0, 0.8)',
       size: 'medium',
-      color: '#fff'
+      color: '#fff',
     }),
     NgChartsModule,
     MessagesModule,
     ConfirmPopupModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
-      multi: true
+      multi: true,
     },
-    MessageService
+    MessageService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

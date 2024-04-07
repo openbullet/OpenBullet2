@@ -5,7 +5,7 @@ import { FileUpload } from 'primeng/fileupload';
 @Component({
   selector: 'app-edit-config-image',
   templateUrl: './edit-config-image.component.html',
-  styleUrls: ['./edit-config-image.component.scss']
+  styleUrls: ['./edit-config-image.component.scss'],
 })
 export class EditConfigImageComponent {
   @Output() confirm = new EventEmitter<string>();
@@ -14,9 +14,7 @@ export class EditConfigImageComponent {
   base64Image: string | null = null;
   remoteUrl: string = '';
 
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   setImage(base64Image: string) {
     this.base64Image = base64Image;
@@ -25,10 +23,11 @@ export class EditConfigImageComponent {
   }
 
   downloadImage() {
-    this.http.get<Blob>(this.remoteUrl, {
-      responseType: 'blob' as 'json'
-    }
-    ).subscribe(blob => this.setImageFromBlob(blob));
+    this.http
+      .get<Blob>(this.remoteUrl, {
+        responseType: 'blob' as 'json',
+      })
+      .subscribe((blob) => this.setImageFromBlob(blob));
   }
 
   setImageFromBlob(blob: Blob) {

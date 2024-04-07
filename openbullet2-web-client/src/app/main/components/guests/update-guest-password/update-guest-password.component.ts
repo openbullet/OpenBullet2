@@ -5,7 +5,7 @@ import { UpdateGuestPasswordDto } from 'src/app/main/dtos/guest/update-guest-pas
 @Component({
   selector: 'app-update-guest-password',
   templateUrl: './update-guest-password.component.html',
-  styleUrls: ['./update-guest-password.component.scss']
+  styleUrls: ['./update-guest-password.component.scss'],
 })
 export class UpdateGuestPasswordComponent implements OnChanges {
   @Input() guest: GuestDto | null = null;
@@ -27,12 +27,11 @@ export class UpdateGuestPasswordComponent implements OnChanges {
 
     this.confirm.emit({
       id: this.guest.id,
-      password: this.password
+      password: this.password,
     });
   }
 
   isFormValid() {
-    return this.password.length >= 8 &&
-      this.password === this.confirmPassword;
+    return this.password.length >= 8 && this.password === this.confirmPassword;
   }
 }

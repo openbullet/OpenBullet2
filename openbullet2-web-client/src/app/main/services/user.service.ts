@@ -1,80 +1,76 @@
-import { Injectable } from "@angular/core";
-import { UserInfo } from "../models/user-info";
+import { Injectable } from '@angular/core';
+import { UserInfo } from '../models/user-info';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { HttpClient } from "@angular/common/http";
-import { UserLoginDto } from "../dtos/user/user-login.dto";
-import { LoggedInUserDto } from "../dtos/user/logged-in-user.dto";
-import { getBaseUrl } from "src/app/shared/utils/host";
+import { HttpClient } from '@angular/common/http';
+import { UserLoginDto } from '../dtos/user/user-login.dto';
+import { LoggedInUserDto } from '../dtos/user/logged-in-user.dto';
+import { getBaseUrl } from 'src/app/shared/utils/host';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-    private unsavedChanges: boolean = false;
+  private unsavedChanges: boolean = false;
 
-    constructor(
-        private http: HttpClient
-    ) { }
+  constructor(private http: HttpClient) {}
 
-    resetJwt() {
-        window.localStorage.removeItem('jwt');
+  resetJwt() {
+    window.localStorage.removeItem('jwt');
+  }
+
+  saveJwt(jwt: string) {
+    window.localStorage.setItem('jwt', jwt);
+  }
+
+  getJwt(): string | null {
+    return window.localStorage.getItem('jwt');
+  }
+
+  loadUserInfo(): UserInfo {
+    const jwt = this.getJwt();
+
+    // By default, if no authentication is provided, we assume
+    // the user is an admin and that authentication is not
+    // enforced. If there is any trouble, the backend will
+    // block the requests anyways.
+    const defaultUserInfo: UserInfo = {
+      username: 'admin',
+      role: 'admin',
+    };
+
+    if (jwt === null) {
+      return defaultUserInfo;
     }
 
-    saveJwt(jwt: string) {
-        window.localStorage.setItem('jwt', jwt);
+    const helper = new JwtHelperService();
+
+    if (helper.isTokenExpired(jwt)) {
+      return defaultUserInfo;
     }
 
-    getJwt(): string | null {
-        return window.localStorage.getItem('jwt');
-    }
+    const decodedToken = helper.decodeToken(jwt);
+    const name = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
 
-    loadUserInfo(): UserInfo {
-        const jwt = this.getJwt();
+    return {
+      username: name,
+      role: role.toLowerCase(),
+    };
+  }
 
-        // By default, if no authentication is provided, we assume
-        // the user is an admin and that authentication is not
-        // enforced. If there is any trouble, the backend will
-        // block the requests anyways.
-        const defaultUserInfo: UserInfo = {
-            username: 'admin',
-            role: 'admin'
-        };
+  isAdmin(): boolean {
+    return this.loadUserInfo().role.toLowerCase() === 'admin';
+  }
 
-        if (jwt === null) {
-            return defaultUserInfo;
-        }
+  login(user: UserLoginDto) {
+    return this.http.post<LoggedInUserDto>(getBaseUrl() + '/user/login', user);
+  }
 
-        const helper = new JwtHelperService();
+  setUnsavedChanges(hasUnsavedChanges: boolean) {
+    this.unsavedChanges = hasUnsavedChanges;
+  }
 
-        if (helper.isTokenExpired(jwt)) {
-            return defaultUserInfo;
-        }
-
-        const decodedToken = helper.decodeToken(jwt);
-        const name = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
-        const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-        return {
-            username: name,
-            role: role.toLowerCase()
-        };
-    }
-
-    isAdmin(): boolean {
-        return this.loadUserInfo().role.toLowerCase() === 'admin';
-    }
-
-    login(user: UserLoginDto) {
-        return this.http.post<LoggedInUserDto>(
-            getBaseUrl() + '/user/login', user
-        );
-    }
-
-    setUnsavedChanges(hasUnsavedChanges: boolean) {
-        this.unsavedChanges = hasUnsavedChanges;
-    }
-
-    hasUnsavedChanges(): boolean {
-        return this.unsavedChanges;
-    }
+  hasUnsavedChanges(): boolean {
+    return this.unsavedChanges;
+  }
 }

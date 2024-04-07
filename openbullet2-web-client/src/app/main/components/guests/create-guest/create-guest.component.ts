@@ -6,7 +6,7 @@ import { CreateGuestDto } from 'src/app/main/dtos/guest/create-guest.dto';
 @Component({
   selector: 'app-create-guest',
   templateUrl: './create-guest.component.html',
-  styleUrls: ['./create-guest.component.scss']
+  styleUrls: ['./create-guest.component.scss'],
 })
 export class CreateGuestComponent {
   @Output() confirm = new EventEmitter<CreateGuestDto>();
@@ -31,7 +31,7 @@ export class CreateGuestComponent {
       username: this.username,
       accessExpiration: this.accessExpiration.toISOString(),
       allowedAddresses: this.allowedAddresses.split('\n'),
-      password: this.password
+      password: this.password,
     });
   }
 
@@ -40,7 +40,6 @@ export class CreateGuestComponent {
       return false;
     }
 
-    return this.password.length >= 8 &&
-      this.password === this.confirmPassword;
+    return this.password.length >= 8 && this.password === this.confirmPassword;
   }
 }

@@ -5,7 +5,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 @Component({
   selector: 'app-bool-setting',
   templateUrl: './bool-setting.component.html',
-  styleUrls: ['./bool-setting.component.scss']
+  styleUrls: ['./bool-setting.component.scss'],
 })
 export class BoolSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;

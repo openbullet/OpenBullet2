@@ -4,7 +4,7 @@ import { FileUpload } from 'primeng/fileupload';
 @Component({
   selector: 'app-add-plugin',
   templateUrl: './add-plugin.component.html',
-  styleUrls: ['./add-plugin.component.scss']
+  styleUrls: ['./add-plugin.component.scss'],
 })
 export class AddPluginComponent {
   @Output() confirm = new EventEmitter<File>();

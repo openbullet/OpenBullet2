@@ -4,7 +4,7 @@ import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-boolean-icon',
   templateUrl: './boolean-icon.component.html',
-  styleUrls: ['./boolean-icon.component.scss']
+  styleUrls: ['./boolean-icon.component.scss'],
 })
 export class BooleanIconComponent {
   @Input() value: boolean = false;

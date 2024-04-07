@@ -1,83 +1,83 @@
 export enum ConfigSection {
-    Metadata = 'metadata',
-    Readme = 'readme',
-    Stacker = 'stacker',
-    LoliCode = 'loliCode',
-    Settings = 'settings',
-    CSharpCode = 'cSharpCode',
-    LoliScript = 'loliScript'
+  Metadata = 'metadata',
+  Readme = 'readme',
+  Stacker = 'stacker',
+  LoliCode = 'loliCode',
+  Settings = 'settings',
+  CSharpCode = 'cSharpCode',
+  LoliScript = 'loliScript',
 }
 
 export enum JobDisplayMode {
-    Standard = 'standard',
-    Detailed = 'detailed'
+  Standard = 'standard',
+  Detailed = 'detailed',
 }
 
 export interface OBSettingsDto {
-    generalSettings: GeneralOBSettings;
-    remoteSettings: RemoteOBSettings;
-    securitySettings: SecurityOBSettings;
-    customizationSettings: CustomizationOBSettings
+  generalSettings: GeneralOBSettings;
+  remoteSettings: RemoteOBSettings;
+  securitySettings: SecurityOBSettings;
+  customizationSettings: CustomizationOBSettings;
 }
 
 export interface GeneralOBSettings {
-    configSectionOnLoad: ConfigSection;
-    autoSetRecommendedBots: boolean;
-    warnConfigNotSaved: boolean;
-    defaultAuthor: string;
-    enableJobLogging: boolean;
-    logBufferSize: number;
-    ignoreWordlistNameOnHitsDedupe: boolean;
-    proxyCheckTargets: ProxyCheckTarget[];
-    defaultJobDisplayMode: JobDisplayMode;
-    jobUpdateInterval: number;
-    jobManagerUpdateInterval: number;
-    groupCapturesInDebugger: boolean;
-    culture: string;
-    customSnippets: CustomSnippet[]
+  configSectionOnLoad: ConfigSection;
+  autoSetRecommendedBots: boolean;
+  warnConfigNotSaved: boolean;
+  defaultAuthor: string;
+  enableJobLogging: boolean;
+  logBufferSize: number;
+  ignoreWordlistNameOnHitsDedupe: boolean;
+  proxyCheckTargets: ProxyCheckTarget[];
+  defaultJobDisplayMode: JobDisplayMode;
+  jobUpdateInterval: number;
+  jobManagerUpdateInterval: number;
+  groupCapturesInDebugger: boolean;
+  culture: string;
+  customSnippets: CustomSnippet[];
 }
 
 export interface ProxyCheckTarget {
-    url: string;
-    successKey: string
+  url: string;
+  successKey: string;
 }
 
 export interface CustomSnippet {
-    name: string;
-    body: string;
-    description: string
+  name: string;
+  body: string;
+  description: string;
 }
 
 export interface RemoteOBSettings {
-    configsEndpoints: RemoteConfigsEndpoint[]
+  configsEndpoints: RemoteConfigsEndpoint[];
 }
 
 export interface RemoteConfigsEndpoint {
-    url: string;
-    apiKey: string
+  url: string;
+  apiKey: string;
 }
 
 export interface SecurityOBSettings {
-    allowSystemWideFileAccess: boolean;
-    requireAdminLogin: boolean;
-    adminUsername: string;
-    adminApiKey: string;
-    adminSessionLifetimeHours: number;
-    guestSessionLifetimeHours: number;
-    httpsRedirect: boolean
+  allowSystemWideFileAccess: boolean;
+  requireAdminLogin: boolean;
+  adminUsername: string;
+  adminApiKey: string;
+  adminSessionLifetimeHours: number;
+  guestSessionLifetimeHours: number;
+  httpsRedirect: boolean;
 }
 
 export interface CustomizationOBSettings {
-    theme: string;
-    monacoTheme: string;
-    wordWrap: boolean;
-    playSoundOnHit: boolean
+  theme: string;
+  monacoTheme: string;
+  wordWrap: boolean;
+  playSoundOnHit: boolean;
 }
 
 export interface SafeOBSettingsDto {
-    generalSettings: SafeGeneralOBSettings;
+  generalSettings: SafeGeneralOBSettings;
 }
 
 export interface SafeGeneralOBSettings {
-    jobManagerUpdateInterval: number;
+  jobManagerUpdateInterval: number;
 }

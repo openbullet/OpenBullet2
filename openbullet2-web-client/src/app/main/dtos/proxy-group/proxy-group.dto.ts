@@ -1,7 +1,7 @@
-import { OwnerDto } from "../common/owner.dto";
+import { OwnerDto } from '../common/owner.dto';
 
 export interface ProxyGroupDto {
-    id: number;
-    name: string;
-    owner: OwnerDto
+  id: number;
+  name: string;
+  owner: OwnerDto;
 }

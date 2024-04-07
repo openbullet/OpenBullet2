@@ -5,7 +5,7 @@ import { TriggerType } from 'src/app/main/dtos/monitor/trigger.dto';
 @Component({
   selector: 'app-add-trigger',
   templateUrl: './add-trigger.component.html',
-  styleUrls: ['./add-trigger.component.scss']
+  styleUrls: ['./add-trigger.component.scss'],
 })
 export class AddTriggerComponent {
   @Input() jobType: JobType = JobType.MultiRun;

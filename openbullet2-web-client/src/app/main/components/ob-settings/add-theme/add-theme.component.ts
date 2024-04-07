@@ -4,7 +4,7 @@ import { FileUpload } from 'primeng/fileupload';
 @Component({
   selector: 'app-add-theme',
   templateUrl: './add-theme.component.html',
-  styleUrls: ['./add-theme.component.scss']
+  styleUrls: ['./add-theme.component.scss'],
 })
 export class AddThemeComponent {
   @Output() confirm = new EventEmitter<File>();

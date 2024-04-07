@@ -1,3 +1,3 @@
 export interface AffectedEntriesDto {
-    count: number
+  count: number;
 }

@@ -5,7 +5,7 @@ import { RemoteConfigsEndpoint } from 'src/app/main/dtos/settings/ob-settings.dt
 @Component({
   selector: 'app-update-remote-configs-endpoint',
   templateUrl: './update-remote-configs-endpoint.component.html',
-  styleUrls: ['./update-remote-configs-endpoint.component.scss']
+  styleUrls: ['./update-remote-configs-endpoint.component.scss'],
 })
 export class UpdateRemoteConfigsEndpointComponent implements OnChanges {
   @Input() endpoint: RemoteConfigsEndpoint | null = null;
@@ -24,7 +24,7 @@ export class UpdateRemoteConfigsEndpointComponent implements OnChanges {
   submitForm() {
     this.confirm.emit({
       url: this.url,
-      apiKey: this.apiKey
+      apiKey: this.apiKey,
     });
   }
 

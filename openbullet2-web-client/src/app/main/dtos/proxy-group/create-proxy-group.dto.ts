@@ -1,3 +1,3 @@
 export interface CreateProxyGroupDto {
-    name: string
+  name: string;
 }

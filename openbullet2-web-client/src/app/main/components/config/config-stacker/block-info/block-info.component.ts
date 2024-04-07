@@ -6,7 +6,7 @@ import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-s
 @Component({
   selector: 'app-block-info',
   templateUrl: './block-info.component.html',
-  styleUrls: ['./block-info.component.scss']
+  styleUrls: ['./block-info.component.scss'],
 })
 export class BlockInfoComponent {
   @Input() block!: BlockInstanceTypes;

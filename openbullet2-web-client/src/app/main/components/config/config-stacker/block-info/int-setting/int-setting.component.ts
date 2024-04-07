@@ -5,7 +5,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 @Component({
   selector: 'app-int-setting',
   templateUrl: './int-setting.component.html',
-  styleUrls: ['./int-setting.component.scss']
+  styleUrls: ['./int-setting.component.scss'],
 })
 export class IntSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;

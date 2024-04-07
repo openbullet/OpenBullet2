@@ -10,7 +10,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-config-csharp',
   templateUrl: './config-csharp.component.html',
-  styleUrls: ['./config-csharp.component.scss']
+  styleUrls: ['./config-csharp.component.scss'],
 })
 export class ConfigCsharpComponent {
   // Listen for CTRL+S on the page
@@ -19,14 +19,13 @@ export class ConfigCsharpComponent {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -45,16 +44,17 @@ export class ConfigCsharpComponent {
   @ViewChild('startupEditor')
   startupEditor: CodeEditorComponent | undefined = undefined;
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     private settingsService: SettingsService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => {
-        this.config = config;
-        if (this.config?.startupCSharpScript !== '') {
-          this.showStartupEditor = true;
-        }
-      });
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+      if (this.config?.startupCSharpScript !== '') {
+        this.showStartupEditor = true;
+      }
+    });
   }
 
   editorLoaded() {
@@ -84,11 +84,10 @@ export class ConfigCsharpComponent {
   }
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-        this.wordlistTypes = envSettings.wordlistTypes.map(w => w.name);
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+      this.wordlistTypes = envSettings.wordlistTypes.map((w) => w.name);
+    });
   }
 
   localSave() {

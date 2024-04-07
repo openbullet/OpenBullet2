@@ -7,7 +7,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-script-block',
   templateUrl: './script-block.component.html',
-  styleUrls: ['./script-block.component.scss']
+  styleUrls: ['./script-block.component.scss'],
 })
 export class ScriptBlockComponent {
   @Input() block!: ScriptBlockInstanceDto;
@@ -20,11 +20,7 @@ export class ScriptBlockComponent {
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
-  interpreters: Interpreter[] = [
-    Interpreter.Jint,
-    Interpreter.NodeJS,
-    Interpreter.IronPython
-  ];
+  interpreters: Interpreter[] = [Interpreter.Jint, Interpreter.NodeJS, Interpreter.IronPython];
   variableTypes: VariableType[] = [
     VariableType.String,
     VariableType.Bool,
@@ -32,7 +28,7 @@ export class ScriptBlockComponent {
     VariableType.Float,
     VariableType.ByteArray,
     VariableType.ListOfStrings,
-    VariableType.DictionaryOfStrings
+    VariableType.DictionaryOfStrings,
   ];
 
   valueChanged() {
@@ -69,8 +65,8 @@ export class ScriptBlockComponent {
       ...this.block.outputVariables,
       {
         name: 'myResult',
-        type: VariableType.String
-      }
+        type: VariableType.String,
+      },
     ];
     this.valueChanged();
   }

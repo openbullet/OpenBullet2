@@ -2,9 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { InfoService } from '../../services/info.service';
 import { AnnouncementDto } from '../../dtos/info/announcement.dto';
 import { ServerInfoDto } from '../../dtos/info/server-info.dto';
-import {
-  faCopy, faRightFromBracket
-} from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import * as moment from 'moment';
 import { Moment } from 'moment';
@@ -17,7 +15,7 @@ import { RecentHitsDto } from '../../dtos/hit/recent-hits.dto';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   announcement: AnnouncementDto | null = null;
@@ -46,8 +44,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private infoService: InfoService,
     private hitService: HitService,
-    private userService: UserService) {
-  }
+    private userService: UserService,
+  ) {}
 
   // Clear the timer when navigating off the page
   ngOnDestroy(): void {
@@ -58,27 +56,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.username = this.userService.loadUserInfo().username;
 
-    this.infoService.getAnnouncement()
-      .subscribe(ann => this.announcement = ann);
+    this.infoService.getAnnouncement().subscribe((ann) => (this.announcement = ann));
 
-    this.infoService.getCollectionInfo()
-      .subscribe(coll => this.collectionInfo = coll);
+    this.infoService.getCollectionInfo().subscribe((coll) => (this.collectionInfo = coll));
 
-    this.infoService.getServerInfo()
-      .subscribe(info => {
-        this.serverStartTime = moment(info.startTime);
-        this.serverOffset = parseTimeSpan(info.localUtcOffset);
-        this.buildDate = info.buildDate;
-        this.serverInfo = info;
+    this.infoService.getServerInfo().subscribe((info) => {
+      this.serverStartTime = moment(info.startTime);
+      this.serverOffset = parseTimeSpan(info.localUtcOffset);
+      this.buildDate = info.buildDate;
+      this.serverInfo = info;
 
+      this.updateTimes();
+      this.timer = setInterval(() => {
         this.updateTimes();
-        this.timer = setInterval(() => {
-          this.updateTimes();
-        }, 1000);
-      });
+      }, 1000);
+    });
 
-    this.hitService.getRecentHits(7)
-      .subscribe(hits => this.recentHits = hits);
+    this.hitService.getRecentHits(7).subscribe((hits) => (this.recentHits = hits));
   }
 
   updateTimes() {

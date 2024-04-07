@@ -1,5 +1,5 @@
 export interface ErrorMessage {
-    type: string;
-    message: string;
-    stackTrace: string
+  type: string;
+  message: string;
+  stackTrace: string;
 }

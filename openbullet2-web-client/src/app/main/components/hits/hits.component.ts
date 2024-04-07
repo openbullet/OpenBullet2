@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-hits',
   templateUrl: './hits.component.html',
-  styleUrls: ['./hits.component.scss']
+  styleUrls: ['./hits.component.scss'],
 })
 export class HitsComponent implements OnInit {
   envSettings: EnvironmentSettingsDto | null = null;
@@ -30,11 +30,7 @@ export class HitsComponent implements OnInit {
 
   searchTerm: string = '';
   hitType: string = 'Any Type';
-  hitTypes: string[] = [
-    'Any Type',
-    'SUCCESS',
-    'NONE'
-  ];
+  hitTypes: string[] = ['Any Type', 'SUCCESS', 'NONE'];
 
   configName: string = 'anyConfig';
   configNames: string[] = ['anyConfig'];
@@ -42,10 +38,7 @@ export class HitsComponent implements OnInit {
   sortBy: HitSortField = HitSortField.Date;
   sortDescending: boolean = true;
 
-  rangeDates: Date[] = [
-    moment().subtract(7, 'days').toDate(),
-    moment().endOf('day').toDate()
-  ];
+  rangeDates: Date[] = [moment().subtract(7, 'days').toDate(), moment().endOf('day').toDate()];
 
   selectedHit: HitDto | null = null;
   updateHitModalVisible = false;
@@ -65,23 +58,23 @@ export class HitsComponent implements OnInit {
               id: 'export-filtered-hits',
               label: 'Export with format',
               icon: 'pi pi-fw pi-file-export color-accent-light',
-              items: [] // This array is filled at runtime
+              items: [], // This array is filled at runtime
             },
             {
               id: 'send-filtered-hits-to-recheck',
               label: 'Send to recheck',
               icon: 'pi pi-fw pi-arrow-right color-accent-light',
-              command: e => console.log('SEND TO RECHECK!') // TODO: Implement
+              command: (e) => console.log('SEND TO RECHECK!'), // TODO: Implement
             },
             {
               id: 'delete-filtered-hits',
               label: 'Delete',
               icon: 'pi pi-fw pi-trash color-bad',
-              command: e => this.deleteFilteredHits()
-            }
-          ]
-        }
-      ]
+              command: (e) => this.deleteFilteredHits(),
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'delete',
@@ -93,106 +86,110 @@ export class HitsComponent implements OnInit {
           label: 'Purge all hits',
           icon: 'pi pi-fw pi-trash color-bad',
           visible: this.userService.isAdmin(),
-          command: e => this.confirmPurgeHits()
+          command: (e) => this.confirmPurgeHits(),
         },
         {
           id: 'delete-duplicate-hits',
           label: 'Duplicates',
           icon: 'pi pi-fw pi-trash color-bad',
-          command: e => this.deleteDuplicateHits()
-        }
-      ]
-    }
+          command: (e) => this.deleteDuplicateHits(),
+        },
+      ],
+    },
   ];
 
-  constructor(private settingsService: SettingsService,
+  constructor(
+    private settingsService: SettingsService,
     private hitService: HitService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) {
-
-  }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe((params) => {
       this.searchTerm = params['searchTerm'] ?? '';
       this.hitType = params['hitType'] ?? 'Any Type';
       this.configName = params['configName'] ?? 'anyConfig';
       this.rangeDates = [
         moment(params['minDate'] ?? moment().subtract(7, 'days').toISOString()).toDate(),
-        moment(params['maxDate'] ?? moment().endOf('day').toISOString()).toDate()
+        moment(params['maxDate'] ?? moment().endOf('day').toISOString()).toDate(),
       ];
       this.sortBy = params['sortBy'] ?? HitSortField.Date;
       this.sortDescending = params['sortDescending'] === 'true';
 
-      this.settingsService.getEnvironmentSettings()
-        .subscribe(envSettings => {
-          this.envSettings = envSettings;
-          this.hitTypes = [
-            'Any Type',
-            'SUCCESS',
-            'NONE',
-            ...envSettings.customStatuses.map(cs => cs.name)
-          ];
+      this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+        this.envSettings = envSettings;
+        this.hitTypes = ['Any Type', 'SUCCESS', 'NONE', ...envSettings.customStatuses.map((cs) => cs.name)];
 
-          // Update the "Export with format" menu items
-          const exportMenuItems = envSettings.exportFormats.map(ef => {
-            return {
-              label: ef.format,
-              command: () => this.downloadHits(ef.format),
-              styleClass: 'long-menu-item'
-            }
-          });
-
-          this.hitMenuItems
-            .find(i => i.id === 'edit')!
-            .items!.find(i => i.id === 'edit-filtered-hits')!
-            .items!.find(i => i.id === 'export-filtered-hits')!
-            .items = exportMenuItems;
-
-          this.refreshHits();
+        // Update the "Export with format" menu items
+        const exportMenuItems = envSettings.exportFormats.map((ef) => {
+          return {
+            label: ef.format,
+            command: () => this.downloadHits(ef.format),
+            styleClass: 'long-menu-item',
+          };
         });
 
-      this.hitService.getConfigNames()
-        .subscribe(configNames => {
-          this.configNames = ['anyConfig', ...configNames];
-        });
+        this.hitMenuItems
+          .find((i) => i.id === 'edit')!
+          .items!.find((i) => i.id === 'edit-filtered-hits')!
+          .items!.find((i) => i.id === 'export-filtered-hits')!.items = exportMenuItems;
+
+        this.refreshHits();
+      });
+
+      this.hitService.getConfigNames().subscribe((configNames) => {
+        this.configNames = ['anyConfig', ...configNames];
+      });
     });
   }
 
   // TODO: Only call this when necessary, don't make double calls!
-  refreshHits(pageNumber: number = 1, pageSize: number | null = null,
-    sortBy: HitSortField = HitSortField.Date, sortDescending: boolean = true) {
+  refreshHits(
+    pageNumber: number = 1,
+    pageSize: number | null = null,
+    sortBy: HitSortField = HitSortField.Date,
+    sortDescending: boolean = true,
+  ) {
     if (this.envSettings === null) return;
 
     // Update the URL with the new filters WITHOUT reloading the page
     // Do not add stuff to the URL if it's the default value
-    window.history.replaceState({}, '', this.router.createUrlTree([], {
-      relativeTo: this.activatedRoute,
-      queryParams: {
-        searchTerm: this.searchTerm === '' ? null : this.searchTerm,
-        hitType: this.hitType === 'Any Type' ? null : this.hitType,
-        configName: this.configName === 'anyConfig' ? null : this.configName,
-        minDate: moment(this.rangeDates[0]).toISOString(),
-        maxDate: moment(this.rangeDates[1]).toISOString(),
-        sortBy: sortBy === HitSortField.Date ? null : sortBy,
-        sortDescending: sortDescending ? 'true' : null
-      }
-    }).toString());
+    window.history.replaceState(
+      {},
+      '',
+      this.router
+        .createUrlTree([], {
+          relativeTo: this.activatedRoute,
+          queryParams: {
+            searchTerm: this.searchTerm === '' ? null : this.searchTerm,
+            hitType: this.hitType === 'Any Type' ? null : this.hitType,
+            configName: this.configName === 'anyConfig' ? null : this.configName,
+            minDate: moment(this.rangeDates[0]).toISOString(),
+            maxDate: moment(this.rangeDates[1]).toISOString(),
+            sortBy: sortBy === HitSortField.Date ? null : sortBy,
+            sortDescending: sortDescending ? 'true' : null,
+          },
+        })
+        .toString(),
+    );
 
-    this.hitService.getHits({
-      pageNumber,
-      pageSize: pageSize ?? this.rowCount,
-      searchTerm: this.searchTerm,
-      type: this.hitType === 'Any Type' ? null : this.hitType,
-      configName: this.configName === 'anyConfig' ? null : this.configName,
-      minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString(),
-      sortBy: sortBy,
-      sortDescending: sortDescending
-    }).subscribe(hits => this.hits = hits);
+    this.hitService
+      .getHits({
+        pageNumber,
+        pageSize: pageSize ?? this.rowCount,
+        searchTerm: this.searchTerm,
+        type: this.hitType === 'Any Type' ? null : this.hitType,
+        configName: this.configName === 'anyConfig' ? null : this.configName,
+        minDate: this.rangeDates[0].toISOString(),
+        maxDate: this.rangeDates[1].toISOString(),
+        sortBy: sortBy,
+        sortDescending: sortDescending,
+      })
+      .subscribe((hits) => (this.hits = hits));
   }
 
   lazyLoadHits(event: any) {
@@ -200,7 +197,7 @@ export class HitsComponent implements OnInit {
       Math.floor(event.first / event.rows) + 1,
       event.rows,
       event.sortField as HitSortField,
-      event.sortOrder === -1
+      event.sortOrder === -1,
     );
   }
 
@@ -208,10 +205,7 @@ export class HitsComponent implements OnInit {
     this.searchTerm = '';
     this.hitType = 'Any Type';
     this.configName = 'anyConfig';
-    this.rangeDates = [
-      moment().subtract(7, 'days').toDate(),
-      moment().endOf('day').toDate()
-    ];
+    this.rangeDates = [moment().subtract(7, 'days').toDate(), moment().endOf('day').toDate()];
 
     this.refreshHits();
   }
@@ -223,36 +217,37 @@ export class HitsComponent implements OnInit {
   }
 
   deleteFilteredHits() {
-    this.hitService.deleteHits({
-      pageNumber: null,
-      pageSize: null,
-      searchTerm: this.searchTerm,
-      type: this.hitType === 'Any Type' ? null : this.hitType,
-      minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString(),
-      configName: this.configName === 'anyConfig' ? null : this.configName,
-      sortBy: null,
-      sortDescending: false
-    }).subscribe(resp => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted',
-        detail: `${resp.count} hits were deleted from the database`
-      });
-      this.refreshHits();
-    });
-  }
-
-  deleteDuplicateHits() {
-    this.hitService.deleteDuplicateHits()
-      .subscribe(resp => {
+    this.hitService
+      .deleteHits({
+        pageNumber: null,
+        pageSize: null,
+        searchTerm: this.searchTerm,
+        type: this.hitType === 'Any Type' ? null : this.hitType,
+        minDate: this.rangeDates[0].toISOString(),
+        maxDate: this.rangeDates[1].toISOString(),
+        configName: this.configName === 'anyConfig' ? null : this.configName,
+        sortBy: null,
+        sortDescending: false,
+      })
+      .subscribe((resp) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Deleted',
-          detail: `${resp.count} hits were deleted from the database`
+          detail: `${resp.count} hits were deleted from the database`,
         });
         this.refreshHits();
       });
+  }
+
+  deleteDuplicateHits() {
+    this.hitService.deleteDuplicateHits().subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `${resp.count} hits were deleted from the database`,
+      });
+      this.refreshHits();
+    });
   }
 
   confirmPurgeHits() {
@@ -262,34 +257,38 @@ export class HitsComponent implements OnInit {
       this operation. Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.purgeHits()
+      accept: () => this.purgeHits(),
     });
   }
 
   purgeHits() {
-    this.hitService.purgeHits()
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `All ${resp.count} hits were deleted from the database`
-        });
-        this.refreshHits();
+    this.hitService.purgeHits().subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `All ${resp.count} hits were deleted from the database`,
       });
+      this.refreshHits();
+    });
   }
 
   downloadHits(format: string) {
-    this.hitService.downloadHits({
-      pageNumber: null,
-      pageSize: null,
-      searchTerm: this.searchTerm,
-      type: this.hitType === 'Any Type' ? null : this.hitType,
-      minDate: this.rangeDates[0].toISOString(),
-      maxDate: this.rangeDates[1].toISOString(),
-      configName: this.configName === 'anyConfig' ? null : this.configName,
-      sortBy: null,
-      sortDescending: false
-    }, format).subscribe(resp => saveFile(resp));
+    this.hitService
+      .downloadHits(
+        {
+          pageNumber: null,
+          pageSize: null,
+          searchTerm: this.searchTerm,
+          type: this.hitType === 'Any Type' ? null : this.hitType,
+          minDate: this.rangeDates[0].toISOString(),
+          maxDate: this.rangeDates[1].toISOString(),
+          configName: this.configName === 'anyConfig' ? null : this.configName,
+          sortBy: null,
+          sortDescending: false,
+        },
+        format,
+      )
+      .subscribe((resp) => saveFile(resp));
   }
 
   getTypeColor(type: string) {
@@ -301,8 +300,7 @@ export class HitsComponent implements OnInit {
 
     // Check if there is a custom status
     if (this.envSettings !== null) {
-      const customStatus = this.envSettings.customStatuses
-        .find(cs => cs.name === type);
+      const customStatus = this.envSettings.customStatuses.find((cs) => cs.name === type);
 
       if (customStatus !== undefined) {
         return customStatus.color;
@@ -323,32 +321,30 @@ export class HitsComponent implements OnInit {
       Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.deleteHit(hit)
+      accept: () => this.deleteHit(hit),
     });
   }
 
   deleteHit(hit: HitDto) {
-    this.hitService.deleteHit(hit.id)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `Hit ${hit.data} was deleted`
-        });
-        this.refreshHits();
+    this.hitService.deleteHit(hit.id).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `Hit ${hit.data} was deleted`,
       });
+      this.refreshHits();
+    });
   }
 
   updateHit(updated: UpdateHitDto) {
-    this.hitService.updateHit(updated)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: `Hit ${resp.data} was updated`
-        });
-        this.updateHitModalVisible = false;
-        this.refreshHits();
+    this.hitService.updateHit(updated).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Updated',
+        detail: `Hit ${resp.data} was updated`,
       });
+      this.updateHitModalVisible = false;
+      this.refreshHits();
+    });
   }
 }

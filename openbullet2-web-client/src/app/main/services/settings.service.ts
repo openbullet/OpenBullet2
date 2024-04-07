@@ -1,115 +1,85 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { getBaseUrl } from "src/app/shared/utils/host";
-import { OBSettingsDto, SafeOBSettingsDto } from "../dtos/settings/ob-settings.dto";
-import { RLSettingsDto } from "../dtos/settings/rl-settings.dto";
-import { EnvironmentSettingsDto } from "../dtos/settings/environment-settings.dto";
-import { Observable, shareReplay } from "rxjs";
-import { ThemeDto } from "../dtos/settings/theme.dto";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { getBaseUrl } from 'src/app/shared/utils/host';
+import { OBSettingsDto, SafeOBSettingsDto } from '../dtos/settings/ob-settings.dto';
+import { RLSettingsDto } from '../dtos/settings/rl-settings.dto';
+import { EnvironmentSettingsDto } from '../dtos/settings/environment-settings.dto';
+import { Observable, shareReplay } from 'rxjs';
+import { ThemeDto } from '../dtos/settings/theme.dto';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsService {
-    // Cached
-    private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
+  // Cached
+  private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
 
-    constructor(
-        private http: HttpClient
-    ) { }
+  constructor(private http: HttpClient) {}
 
-    getEnvironmentSettings() {
-        if (this.envSettings$ !== null) {
-            return this.envSettings$;
-        }
-
-        this.envSettings$ = this.http.get<EnvironmentSettingsDto>(
-            getBaseUrl() + '/settings/environment'
-        ).pipe(
-            shareReplay(1)
-        );
-
-        return this.envSettings$;
+  getEnvironmentSettings() {
+    if (this.envSettings$ !== null) {
+      return this.envSettings$;
     }
 
-    getSettings() {
-        return this.http.get<OBSettingsDto>(
-            getBaseUrl() + '/settings'
-        );
-    }
+    this.envSettings$ = this.http
+      .get<EnvironmentSettingsDto>(getBaseUrl() + '/settings/environment')
+      .pipe(shareReplay(1));
 
-    getDefaultSettings() {
-        return this.http.get<OBSettingsDto>(
-            getBaseUrl() + '/settings/default'
-        );
-    }
+    return this.envSettings$;
+  }
 
-    getSafeSettings() {
-        return this.http.get<SafeOBSettingsDto>(
-            getBaseUrl() + '/settings/safe'
-        );
-    }
+  getSettings() {
+    return this.http.get<OBSettingsDto>(getBaseUrl() + '/settings');
+  }
 
-    getRuriLibSettings() {
-        return this.http.get<RLSettingsDto>(
-            getBaseUrl() + '/settings/rurilib'
-        );
-    }
+  getDefaultSettings() {
+    return this.http.get<OBSettingsDto>(getBaseUrl() + '/settings/default');
+  }
 
-    getDefaultRuriLibSettings() {
-        return this.http.get<RLSettingsDto>(
-            getBaseUrl() + '/settings/rurilib/default'
-        );
-    }
+  getSafeSettings() {
+    return this.http.get<SafeOBSettingsDto>(getBaseUrl() + '/settings/safe');
+  }
 
-    updateSettings(updated: OBSettingsDto) {
-        return this.http.put<OBSettingsDto>(
-            getBaseUrl() + '/settings', updated
-        );
-    }
+  getRuriLibSettings() {
+    return this.http.get<RLSettingsDto>(getBaseUrl() + '/settings/rurilib');
+  }
 
-    updateRuriLibSettings(updated: RLSettingsDto) {
-        return this.http.put<RLSettingsDto>(
-            getBaseUrl() + '/settings/rurilib', updated
-        );
-    }
+  getDefaultRuriLibSettings() {
+    return this.http.get<RLSettingsDto>(getBaseUrl() + '/settings/rurilib/default');
+  }
 
-    updateAdminPassword(password: string) {
-        return this.http.patch(
-            getBaseUrl() + '/settings/admin/password',
-            {
-                password
-            }
-        )
-    }
+  updateSettings(updated: OBSettingsDto) {
+    return this.http.put<OBSettingsDto>(getBaseUrl() + '/settings', updated);
+  }
 
-    uploadTheme(file: File) {
-        const formData = new FormData();
-        formData.append('file', file, file.name);
+  updateRuriLibSettings(updated: RLSettingsDto) {
+    return this.http.put<RLSettingsDto>(getBaseUrl() + '/settings/rurilib', updated);
+  }
 
-        return this.http.post(
-            getBaseUrl() + '/settings/theme', formData
-        );
-    }
+  updateAdminPassword(password: string) {
+    return this.http.patch(getBaseUrl() + '/settings/admin/password', {
+      password,
+    });
+  }
 
-    getAllThemes() {
-        return this.http.get<ThemeDto[]>(
-            getBaseUrl() + '/settings/theme/all'
-        );
-    }
+  uploadTheme(file: File) {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
 
-    getTheme(name: string | null) {
-        return this.http.get<string>(
-            getBaseUrl() + '/settings/theme',
-            {
-                params: name === null ? {} : { name }
-            }
-        );
-    }
+    return this.http.post(getBaseUrl() + '/settings/theme', formData);
+  }
 
-    getCustomSnippets() {
-        return this.http.get<{ [key: string]: string }>(
-            getBaseUrl() + '/settings/custom-snippets'
-        );
-    }
+  getAllThemes() {
+    return this.http.get<ThemeDto[]>(getBaseUrl() + '/settings/theme/all');
+  }
+
+  getTheme(name: string | null) {
+    return this.http.get<string>(getBaseUrl() + '/settings/theme', {
+      params: name === null ? {} : { name },
+    });
+  }
+
+  getCustomSnippets() {
+    return this.http.get<{ [key: string]: string }>(getBaseUrl() + '/settings/custom-snippets');
+  }
 }

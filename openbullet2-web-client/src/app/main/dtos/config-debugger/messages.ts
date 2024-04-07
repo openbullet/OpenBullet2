@@ -1,26 +1,26 @@
-import { BotLoggerEntry } from "./bot-logger-entry";
+import { BotLoggerEntry } from './bot-logger-entry';
 
 export interface DbgNewLogMessage {
-    newMessage: BotLoggerEntry
+  newMessage: BotLoggerEntry;
 }
 
 export interface DbgStatusChangedMessage {
-    newStatus: string
+  newStatus: string;
 }
 
 export interface VariableDto {
-    name: string;
-    markedForCapture: boolean;
-    type: string;
-    value: any
+  name: string;
+  markedForCapture: boolean;
+  type: string;
+  value: any;
 }
 
 export interface DbgVariablesChangedMessage {
-    variables: VariableDto[];
+  variables: VariableDto[];
 }
 
 export interface DbgStateDto {
-    status: string;
-    log: BotLoggerEntry[];
-    variables: VariableDto[]
+  status: string;
+  log: BotLoggerEntry[];
+  variables: VariableDto[];
 }

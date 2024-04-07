@@ -7,17 +7,17 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
   updateInfo: UpdateInfoDto | null = null;
   faExclamationTriangle = faExclamationTriangle;
   changelogModalVisible = false;
 
-  constructor(private router: Router,
-    private infoService: InfoService) {
-
-  }
+  constructor(
+    private router: Router,
+    private infoService: InfoService,
+  ) {}
 
   ngOnInit(): void {
     if (window.location.pathname === '/') {
@@ -25,11 +25,9 @@ export class MainComponent implements OnInit {
       return;
     }
 
-    this.infoService.getUpdateInfo().subscribe(
-      (updateInfo) => {
-        this.updateInfo = updateInfo;
-      }
-    );
+    this.infoService.getUpdateInfo().subscribe((updateInfo) => {
+      this.updateInfo = updateInfo;
+    });
 
     // Mock update info
     // this.updateInfo = {
@@ -41,13 +39,14 @@ export class MainComponent implements OnInit {
     // };
 
     // Every 12 hours, check for updates
-    setInterval(() => {
-      this.infoService.getUpdateInfo().subscribe(
-        (updateInfo) => {
+    setInterval(
+      () => {
+        this.infoService.getUpdateInfo().subscribe((updateInfo) => {
           this.updateInfo = updateInfo;
-        }
-      );
-    }, 12 * 60 * 60 * 1000);
+        });
+      },
+      12 * 60 * 60 * 1000,
+    );
   }
 
   showChangelog() {

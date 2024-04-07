@@ -1,13 +1,24 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { faArrowDown, faArrowUp, faPlus, faTimes, faX } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BlockSettingType, BoolComparison, DictComparison, KeyTypes, KeychainDto, KeychainMode, KeycheckBlockInstanceDto, ListComparison, NumComparison, StrComparison } from 'src/app/main/dtos/config/block-instance.dto';
+import {
+  BlockSettingType,
+  BoolComparison,
+  DictComparison,
+  KeyTypes,
+  KeychainDto,
+  KeychainMode,
+  KeycheckBlockInstanceDto,
+  ListComparison,
+  NumComparison,
+  StrComparison,
+} from 'src/app/main/dtos/config/block-instance.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 
 @Component({
   selector: 'app-keycheck-block',
   templateUrl: './keycheck-block.component.html',
-  styleUrls: ['./keycheck-block.component.scss']
+  styleUrls: ['./keycheck-block.component.scss'],
 })
 export class KeycheckBlockComponent implements OnInit {
   @Input() block!: KeycheckBlockInstanceDto;
@@ -21,17 +32,8 @@ export class KeycheckBlockComponent implements OnInit {
   faTimes = faTimes;
   faArrowUp = faArrowUp;
   faArrowDown = faArrowDown;
-  keychainStatuses: string[] = [
-    'SUCCESS',
-    'FAIL',
-    'BAN',
-    'RETRY',
-    'NONE'
-  ];
-  keychainModes: KeychainMode[] = [
-    KeychainMode.Or,
-    KeychainMode.And
-  ];
+  keychainStatuses: string[] = ['SUCCESS', 'FAIL', 'BAN', 'RETRY', 'NONE'];
+  keychainModes: KeychainMode[] = [KeychainMode.Or, KeychainMode.And];
   strComparisons: StrComparison[] = [
     StrComparison.EqualTo,
     StrComparison.NotEqualTo,
@@ -40,7 +42,7 @@ export class KeycheckBlockComponent implements OnInit {
     StrComparison.MatchesRegex,
     StrComparison.DoesNotMatchRegex,
     StrComparison.Exists,
-    StrComparison.DoesNotExist
+    StrComparison.DoesNotExist,
   ];
   numComparisons: NumComparison[] = [
     NumComparison.EqualTo,
@@ -48,17 +50,14 @@ export class KeycheckBlockComponent implements OnInit {
     NumComparison.GreaterThan,
     NumComparison.GreaterThanOrEqualTo,
     NumComparison.LessThan,
-    NumComparison.LessThanOrEqualTo
+    NumComparison.LessThanOrEqualTo,
   ];
-  boolComparisons: BoolComparison[] = [
-    BoolComparison.Is,
-    BoolComparison.IsNot
-  ];
+  boolComparisons: BoolComparison[] = [BoolComparison.Is, BoolComparison.IsNot];
   listComparisons: ListComparison[] = [
     ListComparison.Contains,
     ListComparison.DoesNotContain,
     ListComparison.Exists,
-    ListComparison.DoesNotExist
+    ListComparison.DoesNotExist,
   ];
   dictComparisons: DictComparison[] = [
     DictComparison.HasKey,
@@ -66,7 +65,7 @@ export class KeycheckBlockComponent implements OnInit {
     DictComparison.HasValue,
     DictComparison.DoesNotHaveValue,
     DictComparison.Exists,
-    DictComparison.DoesNotExist
+    DictComparison.DoesNotExist,
   ];
 
   selectedKeychain: KeychainDto | null = null;
@@ -75,10 +74,7 @@ export class KeycheckBlockComponent implements OnInit {
   BlockSettingType = BlockSettingType;
 
   ngOnInit(): void {
-    this.keychainStatuses = [
-      ...this.keychainStatuses,
-      ...this.envSettings.customStatuses.map(s => s.name)
-    ];
+    this.keychainStatuses = [...this.keychainStatuses, ...this.envSettings.customStatuses.map((s) => s.name)];
   }
 
   valueChanged() {
@@ -106,8 +102,8 @@ export class KeycheckBlockComponent implements OnInit {
       {
         keys: [],
         mode: KeychainMode.Or,
-        resultStatus: 'SUCCESS'
-      }
+        resultStatus: 'SUCCESS',
+      },
     ];
     this.valueChanged();
   }
@@ -132,7 +128,7 @@ export class KeycheckBlockComponent implements OnInit {
       ...this.block.keychains.slice(0, index - 1),
       keychain,
       this.block.keychains[index - 1],
-      ...this.block.keychains.slice(index + 1)
+      ...this.block.keychains.slice(index + 1),
     ];
     this.valueChanged();
   }
@@ -147,7 +143,7 @@ export class KeycheckBlockComponent implements OnInit {
       ...this.block.keychains.slice(0, index),
       this.block.keychains[index + 1],
       keychain,
-      ...this.block.keychains.slice(index + 2)
+      ...this.block.keychains.slice(index + 2),
     ];
     this.valueChanged();
   }
@@ -159,10 +155,7 @@ export class KeycheckBlockComponent implements OnInit {
       return;
     }
 
-    this.selectedKeychain.keys = [
-      ...this.selectedKeychain.keys,
-      key
-    ];
+    this.selectedKeychain.keys = [...this.selectedKeychain.keys, key];
     this.valueChanged();
   }
 
@@ -192,8 +185,7 @@ export class KeycheckBlockComponent implements OnInit {
 
       default:
         // Get the first custom status that matches
-        const customStatus = this.envSettings.customStatuses.find(
-          s => s.name === keychain.resultStatus);
+        const customStatus = this.envSettings.customStatuses.find((s) => s.name === keychain.resultStatus);
 
         if (customStatus !== undefined) {
           color = customStatus.color;

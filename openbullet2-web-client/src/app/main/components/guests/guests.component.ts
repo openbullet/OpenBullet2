@@ -10,7 +10,7 @@ import { CreateGuestDto } from '../../dtos/guest/create-guest.dto';
 @Component({
   selector: 'app-guests',
   templateUrl: './guests.component.html',
-  styleUrls: ['./guests.component.scss']
+  styleUrls: ['./guests.component.scss'],
 })
 export class GuestsComponent implements OnInit {
   guests: GuestDto[] | null = null;
@@ -27,19 +27,18 @@ export class GuestsComponent implements OnInit {
   updateGuestInfoModalVisible = false;
   updateGuestPasswordModalVisible = false;
 
-  constructor(private guestService: GuestService,
+  constructor(
+    private guestService: GuestService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) {
-
-  }
+    private messageService: MessageService,
+  ) {}
 
   ngOnInit(): void {
     this.refreshGuests();
   }
 
   refreshGuests() {
-    this.guestService.getAllGuests()
-      .subscribe(guests => this.guests = guests);
+    this.guestService.getAllGuests().subscribe((guests) => (this.guests = guests));
   }
 
   openUpdateGuestInfoModal(guest: GuestDto) {
@@ -57,54 +56,50 @@ export class GuestsComponent implements OnInit {
   }
 
   createGuest(guest: CreateGuestDto) {
-    this.guestService.createGuest(guest)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Created',
-          detail: `Guest ${resp.username} was created`
-        });
-        this.createGuestModalVisible = false;
-        this.refreshGuests();
+    this.guestService.createGuest(guest).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Created',
+        detail: `Guest ${resp.username} was created`,
       });
+      this.createGuestModalVisible = false;
+      this.refreshGuests();
+    });
   }
 
   updateGuestInfo(guest: UpdateGuestInfoDto) {
-    this.guestService.updateGuestInfo(guest)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: `Guest ${resp.username} was updated`
-        });
-        this.updateGuestInfoModalVisible = false;
-        this.refreshGuests();
+    this.guestService.updateGuestInfo(guest).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Updated',
+        detail: `Guest ${resp.username} was updated`,
       });
+      this.updateGuestInfoModalVisible = false;
+      this.refreshGuests();
+    });
   }
 
   updateGuestPassword(guest: UpdateGuestPasswordDto) {
-    this.guestService.updateGuestPassword(guest)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Password updated',
-          detail: `Changed the password of ${resp.username}`
-        });
-        this.updateGuestPasswordModalVisible = false;
-        this.refreshGuests();
+    this.guestService.updateGuestPassword(guest).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Password updated',
+        detail: `Changed the password of ${resp.username}`,
       });
+      this.updateGuestPasswordModalVisible = false;
+      this.refreshGuests();
+    });
   }
 
   deleteGuest(guest: GuestDto) {
-    this.guestService.deleteGuest(guest.id)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `Guest ${guest.username} was deleted`
-        });
-        this.refreshGuests();
+    this.guestService.deleteGuest(guest.id).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `Guest ${guest.username} was deleted`,
       });
+      this.refreshGuests();
+    });
   }
 
   confirmDeleteGuest(guest: GuestDto) {
@@ -113,7 +108,7 @@ export class GuestsComponent implements OnInit {
       Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.deleteGuest(guest)
+      accept: () => this.deleteGuest(guest),
     });
   }
 }

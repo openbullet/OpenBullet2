@@ -5,7 +5,7 @@ import { SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto'
 @Component({
   selector: 'app-setting-input-mode',
   templateUrl: './setting-input-mode.component.html',
-  styleUrls: ['./setting-input-mode.component.scss']
+  styleUrls: ['./setting-input-mode.component.scss'],
 })
 export class SettingInputModeComponent {
   @Input() mode!: SettingInputMode;

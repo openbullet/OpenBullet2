@@ -10,7 +10,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-config-loliscript',
   templateUrl: './config-loliscript.component.html',
-  styleUrls: ['./config-loliscript.component.scss']
+  styleUrls: ['./config-loliscript.component.scss'],
 })
 export class ConfigLoliscriptComponent {
   // Listen for CTRL+S on the page
@@ -19,14 +19,13 @@ export class ConfigLoliscriptComponent {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -39,11 +38,12 @@ export class ConfigLoliscriptComponent {
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     private settingsService: SettingsService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
   }
 
   editorLoaded() {
@@ -60,10 +60,9 @@ export class ConfigLoliscriptComponent {
   }
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+    });
   }
 
   localSave() {

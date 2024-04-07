@@ -1,15 +1,15 @@
 export interface CustomInputQuestionDto {
-    description: string;
-    variableName: string;
-    defaultAnswer: string
+  description: string;
+  variableName: string;
+  defaultAnswer: string;
 }
 
 export interface CustomInputsDto {
-    id: number;
-    inputs: CustomInputAnswerDto[]
+  id: number;
+  inputs: CustomInputAnswerDto[];
 }
 
 export interface CustomInputAnswerDto {
-    variableName: string;
-    answer: string
+  variableName: string;
+  answer: string;
 }

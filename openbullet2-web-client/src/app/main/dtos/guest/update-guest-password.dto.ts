@@ -1,4 +1,4 @@
 export interface UpdateGuestPasswordDto {
-    id: number;
-    password: string
+  id: number;
+  password: string;
 }

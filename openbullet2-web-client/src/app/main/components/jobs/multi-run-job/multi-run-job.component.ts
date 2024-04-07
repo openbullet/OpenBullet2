@@ -1,6 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faAlignLeft, faAngleLeft, faBug, faCheck, faCircleDot, faCopy, faForward, faPause, faPen, faPlay, faStop, faX } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAlignLeft,
+  faAngleLeft,
+  faBug,
+  faCheck,
+  faCircleDot,
+  faCopy,
+  faForward,
+  faPause,
+  faPen,
+  faPlay,
+  faStop,
+  faX,
+} from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -36,7 +49,7 @@ enum HitType {
 @Component({
   selector: 'app-multi-run-job',
   templateUrl: './multi-run-job.component.html',
-  styleUrls: ['./multi-run-job.component.scss']
+  styleUrls: ['./multi-run-job.component.scss'],
 })
 export class MultiRunJobComponent {
   jobId: number | null = null;
@@ -66,7 +79,7 @@ export class MultiRunJobComponent {
     pausing: 'custom',
     paused: 'custom',
     stopping: 'bad',
-    resuming: 'good'
+    resuming: 'good',
   };
 
   status: JobStatus = JobStatus.IDLE;
@@ -82,14 +95,14 @@ export class MultiRunJobComponent {
     errors: 0,
     toCheck: 0,
     total: 0,
-    tested: 0
+    tested: 0,
   };
 
   proxyStats = {
     total: 0,
     alive: 0,
     bad: 0,
-    banned: 0
+    banned: 0,
   };
 
   cpm: number = 0;
@@ -108,11 +121,7 @@ export class MultiRunJobComponent {
   filteredHits: MRJHitDto[] = [];
   selectedHits: MRJHitDto[] = [];
   lastSelectedHit: MRJHitDto | null = null;
-  hitTypes: HitType[] = [
-    HitType.Success,
-    HitType.Custom,
-    HitType.ToCheck
-  ];
+  hitTypes: HitType[] = [HitType.Success, HitType.Custom, HitType.ToCheck];
   selectedHitType: HitType = HitType.Success;
 
   logsBufferSize: number = 200;
@@ -145,7 +154,7 @@ export class MultiRunJobComponent {
     private configService: ConfigService,
     userService: UserService,
   ) {
-    activatedRoute.url.subscribe(url => {
+    activatedRoute.url.subscribe((url) => {
       this.jobId = parseInt(url[2].path);
     });
 
@@ -164,89 +173,81 @@ export class MultiRunJobComponent {
     // }, 50);
 
     this.multiRunJobHubService.createHubConnection(this.jobId);
-    this.resultSubscription = this.multiRunJobHubService.result$
-      .subscribe(result => {
-        if (result !== null) {
-          this.onNewResult(result);
+    this.resultSubscription = this.multiRunJobHubService.result$.subscribe((result) => {
+      if (result !== null) {
+        this.onNewResult(result);
+      }
+    });
+
+    this.hitSubscription = this.multiRunJobHubService.hit$.subscribe((hit) => {
+      if (hit !== null) {
+        this.onNewHit(hit);
+      }
+    });
+
+    this.tickSubscription = this.multiRunJobHubService.tick$.subscribe((tick) => {
+      if (tick !== null) {
+        this.dataStats = tick.dataStats;
+        this.proxyStats = tick.proxyStats;
+        this.cpm = tick.cpm;
+        this.captchaCredit = tick.captchaCredit;
+        this.elapsed = tick.elapsed;
+        this.remaining = tick.remaining;
+        this.progress = tick.progress;
+      }
+    });
+
+    this.statusSubscription = this.multiRunJobHubService.status$.subscribe((status) => {
+      if (status !== null) {
+        this.onStatusChanged(status.newStatus);
+      }
+    });
+
+    this.botsSubscription = this.multiRunJobHubService.bots$.subscribe((bots) => {
+      if (bots !== null) {
+        this.onBotsChanged(bots.newValue);
+      }
+    });
+
+    this.taskErrorSubscription = this.multiRunJobHubService.taskError$.subscribe((error) => {
+      if (error !== null) {
+        let logMessage = `Task error (${error.dataLine})`;
+
+        if (error.proxy !== null) {
+          logMessage += ` (${error.proxy.host}:${error.proxy.port})`;
         }
-      });
 
-    this.hitSubscription = this.multiRunJobHubService.hit$
-      .subscribe(hit => {
-        if (hit !== null) {
-          this.onNewHit(hit);
-        }
-      });
+        logMessage += `: ${error.errorMessage}`;
 
-    this.tickSubscription = this.multiRunJobHubService.tick$
-      .subscribe(tick => {
-        if (tick !== null) {
-          this.dataStats = tick.dataStats;
-          this.proxyStats = tick.proxyStats;
-          this.cpm = tick.cpm;
-          this.captchaCredit = tick.captchaCredit;
-          this.elapsed = tick.elapsed;
-          this.remaining = tick.remaining;
-          this.progress = tick.progress;
-        }
-      });
+        this.writeLog({
+          timestamp: new Date(),
+          message: logMessage,
+          color: 'var(--fg-error)',
+        });
+      }
+    });
 
-    this.statusSubscription = this.multiRunJobHubService.status$
-      .subscribe(status => {
-        if (status !== null) {
-          this.onStatusChanged(status.newStatus);
-        }
-      });
+    this.errorSubscription = this.multiRunJobHubService.error$.subscribe((error) => {
+      if (error !== null) {
+        this.messageService.add({
+          severity: 'error',
+          summary: `Error - ${error.type}`,
+          detail: error.message,
+        });
+      }
+    });
 
-    this.botsSubscription = this.multiRunJobHubService.bots$
-      .subscribe(bots => {
-        if (bots !== null) {
-          this.onBotsChanged(bots.newValue);
-        }
-      });
+    this.completedSubscription = this.multiRunJobHubService.completed$.subscribe((completed) => {
+      if (completed) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Completed',
+          detail: 'Job completed',
+        });
 
-    this.taskErrorSubscription = this.multiRunJobHubService.taskError$
-      .subscribe(error => {
-        if (error !== null) {
-          let logMessage = `Task error (${error.dataLine})`;
-
-          if (error.proxy !== null) {
-            logMessage += ` (${error.proxy.host}:${error.proxy.port})`;
-          }
-
-          logMessage += `: ${error.errorMessage}`;
-
-          this.writeLog({
-            timestamp: new Date(),
-            message: logMessage,
-            color: 'var(--fg-error)'
-          });
-        }
-      });
-
-    this.errorSubscription = this.multiRunJobHubService.error$
-      .subscribe(error => {
-        if (error !== null) {
-          this.messageService.add({
-            severity: 'error',
-            summary: `Error - ${error.type}`,
-            detail: error.message
-          });
-        }
-      });
-
-    this.completedSubscription = this.multiRunJobHubService.completed$
-      .subscribe(completed => {
-        if (completed) {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Completed',
-            detail: 'Job completed'
-          });
-
-          this.getJobData();
-        }
-      });
+        this.getJobData();
+      }
+    });
 
     this.getJobData();
 
@@ -273,29 +274,28 @@ export class MultiRunJobComponent {
   }
 
   getJobData() {
-    this.jobService.getMultiRunJob(this.jobId!)
-      .subscribe(job => {
-        this.status = job.status;
-        this.bots = job.bots;
-        this.dataStats = job.dataStats;
-        this.proxyStats = job.proxyStats;
-        this.cpm = job.cpm;
-        this.captchaCredit = job.captchaCredit;
-        this.elapsed = job.elapsed;
-        this.remaining = job.remaining;
-        this.progress = job.progress;
+    this.jobService.getMultiRunJob(this.jobId!).subscribe((job) => {
+      this.status = job.status;
+      this.bots = job.bots;
+      this.dataStats = job.dataStats;
+      this.proxyStats = job.proxyStats;
+      this.cpm = job.cpm;
+      this.captchaCredit = job.captchaCredit;
+      this.elapsed = job.elapsed;
+      this.remaining = job.remaining;
+      this.progress = job.progress;
 
-        if (job.startTime !== null) {
-          this.startTime = moment(job.startTime);
-        }
+      if (job.startTime !== null) {
+        this.startTime = moment(job.startTime);
+      }
 
-        this.selectedHits = [];
-        this.lastSelectedHit = null;
-        this.hits = job.hits;
-        this.chooseHitType(this.selectedHitType);
+      this.selectedHits = [];
+      this.lastSelectedHit = null;
+      this.hits = job.hits;
+      this.chooseHitType(this.selectedHitType);
 
-        this.job = job;
-      });
+      this.job = job;
+    });
   }
 
   onNewResult(result: MRJNewResultMessage) {
@@ -338,7 +338,7 @@ export class MultiRunJobComponent {
     this.writeLog({
       timestamp: new Date(),
       message: logMessage,
-      color: color
+      color: color,
     });
   }
 
@@ -362,7 +362,7 @@ export class MultiRunJobComponent {
     this.writeLog({
       timestamp: new Date(),
       message: logMessage,
-      color: 'var(--fg-primary)'
+      color: 'var(--fg-primary)',
     });
   }
 
@@ -374,7 +374,7 @@ export class MultiRunJobComponent {
     this.writeLog({
       timestamp: new Date(),
       message: logMessage,
-      color: 'var(--fg-primary)'
+      color: 'var(--fg-primary)',
     });
   }
 
@@ -383,10 +383,7 @@ export class MultiRunJobComponent {
   }
 
   editSettings() {
-    this.router.navigate(
-      [`/job/multi-run/edit`],
-      { queryParams: { jobId: this.jobId } }
-    );
+    this.router.navigate([`/job/multi-run/edit`], { queryParams: { jobId: this.jobId } });
   }
 
   backToJobs() {
@@ -433,10 +430,12 @@ export class MultiRunJobComponent {
   }
 
   canAbort() {
-    return this.status === JobStatus.RUNNING ||
+    return (
+      this.status === JobStatus.RUNNING ||
       this.status === JobStatus.PAUSED ||
       this.status === JobStatus.PAUSING ||
-      this.status === JobStatus.STOPPING;
+      this.status === JobStatus.STOPPING
+    );
   }
 
   abort() {
@@ -464,7 +463,7 @@ export class MultiRunJobComponent {
     this.writeLog({
       timestamp: new Date(),
       message: logMessage,
-      color: 'var(--fg-primary)'
+      color: 'var(--fg-primary)',
     });
 
     // If we decrease the bots while the job is running, it
@@ -474,8 +473,7 @@ export class MultiRunJobComponent {
     this.messageService.add({
       severity: 'info',
       summary: 'Requested',
-      detail: `Requested to change bots to ${bots}`
-        + (slow ? '. This might take some time' : '')
+      detail: `Requested to change bots to ${bots}` + (slow ? '. This might take some time' : ''),
     });
 
     this.isChangingBots = false;
@@ -515,13 +513,7 @@ export class MultiRunJobComponent {
     const diff = moment(startAt).diff(moment());
     const duration = moment.duration(diff);
 
-    return TimeSpan.fromTime(
-      duration.days(),
-      duration.hours(),
-      duration.minutes(),
-      duration.seconds(),
-      0
-    );
+    return TimeSpan.fromTime(duration.days(), duration.hours(), duration.minutes(), duration.seconds(), 0);
   }
 
   shouldUseProxies(): boolean {
@@ -540,10 +532,7 @@ export class MultiRunJobComponent {
   }
 
   getTestedCount() {
-    return this.Math.min(
-      this.dataStats.tested + this.job!.skip,
-      this.dataStats.total
-    );
+    return this.Math.min(this.dataStats.tested + this.job!.skip, this.dataStats.total);
   }
 
   chooseHitType(type: HitType) {
@@ -551,15 +540,15 @@ export class MultiRunJobComponent {
 
     switch (type) {
       case HitType.Success:
-        this.filteredHits = this.hits.filter(h => h.type === 'SUCCESS');
+        this.filteredHits = this.hits.filter((h) => h.type === 'SUCCESS');
         break;
 
       case HitType.Custom:
-        this.filteredHits = this.hits.filter(h => h.type === 'CUSTOM');
+        this.filteredHits = this.hits.filter((h) => h.type === 'CUSTOM');
         break;
 
       case HitType.ToCheck:
-        this.filteredHits = this.hits.filter(h => h.type === 'NONE');
+        this.filteredHits = this.hits.filter((h) => h.type === 'NONE');
         break;
     }
 
@@ -593,7 +582,7 @@ export class MultiRunJobComponent {
     // If the user is holding ctrl, toggle the hit selection
     if (event.ctrlKey) {
       if (this.isHitSelected(hit)) {
-        this.selectedHits = this.selectedHits.filter(h => h !== hit);
+        this.selectedHits = this.selectedHits.filter((h) => h !== hit);
       } else {
         this.selectedHits.push(hit);
       }
@@ -613,14 +602,14 @@ export class MultiRunJobComponent {
       this.messageService.add({
         severity: 'error',
         summary: 'Invalid',
-        detail: 'Please select at least one hit to copy data'
+        detail: 'Please select at least one hit to copy data',
       });
       return;
     }
 
     // Copy the data of the selected hits to the clipboard
     const data = this.selectedHits
-      .map(h => {
+      .map((h) => {
         let result = h.data;
 
         if (withCapture) {
@@ -635,7 +624,7 @@ export class MultiRunJobComponent {
     this.messageService.add({
       severity: 'success',
       summary: 'Copied',
-      detail: 'Copied hits data to clipboard'
+      detail: 'Copied hits data to clipboard',
     });
   }
 
@@ -645,7 +634,7 @@ export class MultiRunJobComponent {
       this.messageService.add({
         severity: 'error',
         summary: 'Invalid',
-        detail: 'Please select one hit to send to the debugger'
+        detail: 'Please select one hit to send to the debugger',
       });
       return;
     }
@@ -695,7 +684,7 @@ export class MultiRunJobComponent {
       this.messageService.add({
         severity: 'error',
         summary: 'Invalid',
-        detail: 'Please select one hit to show the full log'
+        detail: 'Please select one hit to show the full log',
       });
       return;
     }

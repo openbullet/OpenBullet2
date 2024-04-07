@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-job-monitor',
   templateUrl: './job-monitor.component.html',
-  styleUrls: ['./job-monitor.component.scss']
+  styleUrls: ['./job-monitor.component.scss'],
 })
 export class JobMonitorComponent implements OnInit, OnDestroy {
   faEye = faEye;
@@ -30,8 +30,8 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
     private jobMonitorService: JobMonitorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
@@ -48,37 +48,31 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
 
   reloadTriggeredActions() {
     this.triggeredActions = null;
-    this.jobMonitorService.getAllTriggeredActions().subscribe(
-      (triggeredActions) => {
-        this.triggeredActions = triggeredActions;
-      }
-    );
+    this.jobMonitorService.getAllTriggeredActions().subscribe((triggeredActions) => {
+      this.triggeredActions = triggeredActions;
+    });
   }
 
   resetAction(triggeredAction: TriggeredActionDto) {
-    this.jobMonitorService.resetTriggeredAction(triggeredAction.id).subscribe(
-      () => {
-        this.reloadTriggeredActions();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Reset',
-          detail: `The triggered action ${triggeredAction.name} was reset`
-        });
-      }
-    );
+    this.jobMonitorService.resetTriggeredAction(triggeredAction.id).subscribe(() => {
+      this.reloadTriggeredActions();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Reset',
+        detail: `The triggered action ${triggeredAction.name} was reset`,
+      });
+    });
   }
 
   setEnabled(triggeredAction: TriggeredActionDto, enabled: boolean) {
-    this.jobMonitorService.setTriggeredActionActive(triggeredAction.id, enabled).subscribe(
-      () => {
-        this.reloadTriggeredActions();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Set enabled',
-          detail: `The triggered action ${triggeredAction.name} was ` + (enabled ? 'enabled' : 'disabled')
-        });
-      }
-    );
+    this.jobMonitorService.setTriggeredActionActive(triggeredAction.id, enabled).subscribe(() => {
+      this.reloadTriggeredActions();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Set enabled',
+        detail: `The triggered action ${triggeredAction.name} was ` + (enabled ? 'enabled' : 'disabled'),
+      });
+    });
   }
 
   getJobUrl(triggeredAction: TriggeredActionDto) {
@@ -99,16 +93,16 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
   editAction(triggeredAction: TriggeredActionDto) {
     this.router.navigate(['/monitor/triggered-action/edit'], {
       queryParams: {
-        id: triggeredAction.id
-      }
+        id: triggeredAction.id,
+      },
     });
   }
 
   cloneAction(triggeredAction: TriggeredActionDto) {
     this.router.navigate(['/monitor/triggered-action/clone'], {
       queryParams: {
-        id: triggeredAction.id
-      }
+        id: triggeredAction.id,
+      },
     });
   }
 
@@ -117,20 +111,18 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
       message: `Are you sure you want to delete the triggered action ${triggeredAction.name}?`,
       accept: () => {
         this.deleteAction(triggeredAction);
-      }
+      },
     });
   }
 
   deleteAction(triggeredAction: TriggeredActionDto) {
-    this.jobMonitorService.deleteTriggeredAction(triggeredAction.id).subscribe(
-      () => {
-        this.reloadTriggeredActions();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Delete',
-          detail: `The triggered action ${triggeredAction.name} was deleted`
-        });
-      }
-    );
+    this.jobMonitorService.deleteTriggeredAction(triggeredAction.id).subscribe(() => {
+      this.reloadTriggeredActions();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Delete',
+        detail: `The triggered action ${triggeredAction.name} was deleted`,
+      });
+    });
   }
 }

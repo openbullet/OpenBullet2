@@ -5,7 +5,7 @@ import { ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-settings.dto';
 @Component({
   selector: 'app-update-proxy-check-target',
   templateUrl: './update-proxy-check-target.component.html',
-  styleUrls: ['./update-proxy-check-target.component.scss']
+  styleUrls: ['./update-proxy-check-target.component.scss'],
 })
 export class UpdateProxyCheckTargetComponent implements OnChanges {
   @Input() target: ProxyCheckTarget | null = null;
@@ -24,7 +24,7 @@ export class UpdateProxyCheckTargetComponent implements OnChanges {
   submitForm() {
     this.confirm.emit({
       url: this.url,
-      successKey: this.successKey
+      successKey: this.successKey,
     });
   }
 

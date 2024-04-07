@@ -7,7 +7,7 @@ import { faArrowRight, faExclamationTriangle } from '@fortawesome/free-solid-svg
 @Component({
   selector: 'app-changelog',
   templateUrl: './changelog.component.html',
-  styleUrls: ['./changelog.component.scss']
+  styleUrls: ['./changelog.component.scss'],
 })
 export class ChangelogComponent implements OnChanges {
   @Input() updateInfo: UpdateInfoDto | null = null;
@@ -16,7 +16,7 @@ export class ChangelogComponent implements OnChanges {
   faExclamationTriangle = faExclamationTriangle;
   faArrowRight = faArrowRight;
 
-  constructor(private infoService: InfoService) { }
+  constructor(private infoService: InfoService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.updateInfo === null) {
@@ -27,28 +27,24 @@ export class ChangelogComponent implements OnChanges {
       if (this.isStagingBuild(this.updateInfo.remoteVersion)) {
         this.newChangelog = {
           version: this.updateInfo.remoteVersion,
-          markdownText: "Staging build, no changelog available."
+          markdownText: 'Staging build, no changelog available.',
         };
       } else {
-        this.infoService.getChangelog(this.updateInfo.remoteVersion).subscribe(
-          (changelog) => {
-            this.newChangelog = changelog;
-          }
-        );
+        this.infoService.getChangelog(this.updateInfo.remoteVersion).subscribe((changelog) => {
+          this.newChangelog = changelog;
+        });
       }
     }
 
     if (this.isStagingBuild(this.updateInfo.currentVersion)) {
       this.changelog = {
         version: this.updateInfo.currentVersion,
-        markdownText: "Staging build, no changelog available."
+        markdownText: 'Staging build, no changelog available.',
       };
     } else {
-      this.infoService.getChangelog(this.updateInfo.currentVersion ?? null).subscribe(
-        (changelog) => {
-          this.changelog = changelog;
-        }
-      );
+      this.infoService.getChangelog(this.updateInfo.currentVersion ?? null).subscribe((changelog) => {
+        this.changelog = changelog;
+      });
     }
   }
 

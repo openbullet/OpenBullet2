@@ -4,7 +4,7 @@ import { DiscordWebhookHitOutput } from 'src/app/main/dtos/job/multi-run-job-opt
 @Component({
   selector: 'app-configure-discord',
   templateUrl: './configure-discord.component.html',
-  styleUrls: ['./configure-discord.component.scss']
+  styleUrls: ['./configure-discord.component.scss'],
 })
 export class ConfigureDiscordComponent {
   @Output() confirm = new EventEmitter<void>();
@@ -38,7 +38,6 @@ export class ConfigureDiscordComponent {
   }
 
   isFormValid() {
-    return this.webhook.startsWith('https') &&
-      this.avatarUrl.startsWith('https');
+    return this.webhook.startsWith('https') && this.avatarUrl.startsWith('https');
   }
 }

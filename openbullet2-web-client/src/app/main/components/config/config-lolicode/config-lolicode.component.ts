@@ -10,7 +10,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-config-lolicode',
   templateUrl: './config-lolicode.component.html',
-  styleUrls: ['./config-lolicode.component.scss']
+  styleUrls: ['./config-lolicode.component.scss'],
 })
 export class ConfigLolicodeComponent {
   // Listen for CTRL+S on the page
@@ -19,14 +19,13 @@ export class ConfigLolicodeComponent {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -44,16 +43,17 @@ export class ConfigLolicodeComponent {
   @ViewChild('startupEditor')
   startupEditor: CodeEditorComponent | undefined = undefined;
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     private settingsService: SettingsService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => {
-        this.config = config;
-        if (this.config?.startupLoliCodeScript !== '') {
-          this.showStartupLoliCodeEditor = true;
-        }
-      });
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+      if (this.config?.startupLoliCodeScript !== '') {
+        this.showStartupLoliCodeEditor = true;
+      }
+    });
   }
 
   editorLoaded() {
@@ -83,10 +83,9 @@ export class ConfigLolicodeComponent {
   }
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+    });
   }
 
   localSave() {

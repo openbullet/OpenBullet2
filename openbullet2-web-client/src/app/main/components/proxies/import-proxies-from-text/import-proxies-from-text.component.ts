@@ -5,13 +5,13 @@ export interface ProxiesToImport {
   defaultType: ProxyType;
   defaultUsername: string;
   defaultPassword: string;
-  proxies: string[]
+  proxies: string[];
 }
 
 @Component({
   selector: 'app-import-proxies-from-text',
   templateUrl: './import-proxies-from-text.component.html',
-  styleUrls: ['./import-proxies-from-text.component.scss']
+  styleUrls: ['./import-proxies-from-text.component.scss'],
 })
 export class ImportProxiesFromTextComponent {
   @Output() confirm = new EventEmitter<ProxiesToImport>();
@@ -19,12 +19,7 @@ export class ImportProxiesFromTextComponent {
   defaultUsername: string = '';
   defaultPassword: string = '';
   defaultProxyType: ProxyType = ProxyType.Http;
-  proxyTypes: ProxyType[] = [
-    ProxyType.Http,
-    ProxyType.Socks4,
-    ProxyType.Socks4a,
-    ProxyType.Socks5
-  ];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
   public reset() {
     this.proxies = '';
@@ -38,7 +33,7 @@ export class ImportProxiesFromTextComponent {
       defaultUsername: this.defaultUsername,
       defaultPassword: this.defaultPassword,
       defaultType: this.defaultProxyType,
-      proxies: this.splitProxies()
+      proxies: this.splitProxies(),
     });
   }
 
@@ -47,6 +42,6 @@ export class ImportProxiesFromTextComponent {
   }
 
   splitProxies() {
-    return this.proxies.split('\n').filter(p => p.trim() !== '');
+    return this.proxies.split('\n').filter((p) => p.trim() !== '');
   }
 }

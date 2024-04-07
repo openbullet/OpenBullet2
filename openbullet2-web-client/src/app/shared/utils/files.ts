@@ -1,5 +1,4 @@
-import { HttpResponse } from "@angular/common/http";
-
+import { HttpResponse } from '@angular/common/http';
 
 export function saveFile(response: HttpResponse<Blob>) {
   // Grab the filename from the Content-Disposition header
@@ -10,9 +9,7 @@ export function saveFile(response: HttpResponse<Blob>) {
   }
 
   let downloadLink = document.createElement('a');
-  downloadLink.href = window.URL.createObjectURL(
-    new Blob([response.body], { type: response.body.type })
-  );
+  downloadLink.href = window.URL.createObjectURL(new Blob([response.body], { type: response.body.type }));
 
   downloadLink.setAttribute('download', filename);
   document.body.appendChild(downloadLink);
@@ -28,8 +25,7 @@ function getFileName(response: HttpResponse<Blob>) {
     }
 
     return /filename="?([^"|;]+)/.exec(contentDisposition)![1];
-  }
-  catch (e) {
+  } catch (e) {
     return 'file';
   }
 }

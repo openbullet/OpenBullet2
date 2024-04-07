@@ -10,7 +10,7 @@ import { WordlistService } from 'src/app/main/services/wordlist.service';
 @Component({
   selector: 'app-upload-wordlist',
   templateUrl: './upload-wordlist.component.html',
-  styleUrls: ['./upload-wordlist.component.scss']
+  styleUrls: ['./upload-wordlist.component.scss'],
 })
 export class UploadWordlistComponent {
   @Input() wordlistTypes: string[] = ['Default'];
@@ -24,10 +24,10 @@ export class UploadWordlistComponent {
   isUploading: boolean = false;
   uploadProgress: number | null = null;
 
-  constructor(private wordlistService: WordlistService,
-    private messageService: MessageService) {
-
-  }
+  constructor(
+    private wordlistService: WordlistService,
+    private messageService: MessageService,
+  ) {}
 
   public reset() {
     this.name = '';
@@ -51,7 +51,8 @@ export class UploadWordlistComponent {
 
     this.isUploading = true;
 
-    this.wordlistService.uploadWordlistFile(this.selectedFile)
+    this.wordlistService
+      .uploadWordlistFile(this.selectedFile)
       .pipe(
         map((event: any) => {
           if (event.type == HttpEventType.UploadProgress) {
@@ -62,7 +63,7 @@ export class UploadWordlistComponent {
             this.messageService.add({
               severity: 'success',
               summary: 'Uploaded',
-              detail: `Wordlist file uploaded to ${resp.filePath}`
+              detail: `Wordlist file uploaded to ${resp.filePath}`,
             });
             this.filePath = resp.filePath;
             this.isUploading = false;
@@ -72,8 +73,9 @@ export class UploadWordlistComponent {
           this.uploadProgress = null;
           console.log(err.message);
           return throwError(() => err.message);
-        })
-      ).subscribe();
+        }),
+      )
+      .subscribe();
   }
 
   uploadError(event: any) {
@@ -96,7 +98,7 @@ export class UploadWordlistComponent {
       name: this.name,
       purpose: this.purpose,
       wordlistType: this.wordlistType,
-      filePath: this.filePath
+      filePath: this.filePath,
     });
   }
 

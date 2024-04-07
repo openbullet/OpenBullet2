@@ -6,7 +6,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   selector: 'app-string-setting',
   templateUrl: './string-setting.component.html',
   styleUrls: ['./string-setting.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class StringSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;

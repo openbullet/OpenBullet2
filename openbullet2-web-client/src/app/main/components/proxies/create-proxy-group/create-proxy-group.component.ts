@@ -4,7 +4,7 @@ import { CreateProxyGroupDto } from 'src/app/main/dtos/proxy-group/create-proxy-
 @Component({
   selector: 'app-create-proxy-group',
   templateUrl: './create-proxy-group.component.html',
-  styleUrls: ['./create-proxy-group.component.scss']
+  styleUrls: ['./create-proxy-group.component.scss'],
 })
 export class CreateProxyGroupComponent {
   @Output() confirm = new EventEmitter<CreateProxyGroupDto>();
@@ -17,7 +17,7 @@ export class CreateProxyGroupComponent {
 
   submitForm() {
     this.confirm.emit({
-      name: this.name
+      name: this.name,
     });
   }
 

@@ -1,4 +1,4 @@
 export interface MRJProxy {
-    host: string;
-    port: number;
+  host: string;
+  port: number;
 }

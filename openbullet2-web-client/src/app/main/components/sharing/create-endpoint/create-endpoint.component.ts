@@ -5,7 +5,7 @@ import { EndpointDto } from 'src/app/main/dtos/sharing/endpoint.dto';
 @Component({
   selector: 'app-create-endpoint',
   templateUrl: './create-endpoint.component.html',
-  styleUrls: ['./create-endpoint.component.scss']
+  styleUrls: ['./create-endpoint.component.scss'],
 })
 export class CreateEndpointComponent {
   @Output() confirm = new EventEmitter<EndpointDto>();
@@ -21,7 +21,7 @@ export class CreateEndpointComponent {
     this.confirm.emit({
       route: this.route,
       apiKeys: [],
-      configIds: []
+      configIds: [],
     });
   }
 

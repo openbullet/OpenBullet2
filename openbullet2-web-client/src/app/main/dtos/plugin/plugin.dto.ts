@@ -1,3 +1,3 @@
 export interface PluginDto {
-    name: string
+  name: string;
 }

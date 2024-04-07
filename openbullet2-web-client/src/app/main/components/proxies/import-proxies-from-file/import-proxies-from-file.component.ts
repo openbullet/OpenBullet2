@@ -7,7 +7,7 @@ import { ProxyType } from 'src/app/main/enums/proxy-type';
 @Component({
   selector: 'app-import-proxies-from-file',
   templateUrl: './import-proxies-from-file.component.html',
-  styleUrls: ['./import-proxies-from-file.component.scss']
+  styleUrls: ['./import-proxies-from-file.component.scss'],
 })
 export class ImportProxiesFromFileComponent {
   @Output() confirm = new EventEmitter<ProxiesToImport>();
@@ -17,16 +17,9 @@ export class ImportProxiesFromFileComponent {
   defaultUsername: string = '';
   defaultPassword: string = '';
   defaultProxyType: ProxyType = ProxyType.Http;
-  proxyTypes: ProxyType[] = [
-    ProxyType.Http,
-    ProxyType.Socks4,
-    ProxyType.Socks4a,
-    ProxyType.Socks5
-  ];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
-  constructor(private messageService: MessageService) {
-
-  }
+  constructor(private messageService: MessageService) {}
 
   public reset() {
     this.fileUpload?.clear();
@@ -49,7 +42,7 @@ export class ImportProxiesFromFileComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Invalid file',
-          detail: `Could not read lines from file ${this.selectedFile?.name}`
+          detail: `Could not read lines from file ${this.selectedFile?.name}`,
         });
         return;
       }
@@ -60,9 +53,9 @@ export class ImportProxiesFromFileComponent {
         defaultUsername: this.defaultUsername,
         defaultPassword: this.defaultPassword,
         defaultType: this.defaultProxyType,
-        proxies: lines
+        proxies: lines,
       });
-    }
+    };
 
     fileReader.readAsText(this.selectedFile);
   }
@@ -72,6 +65,6 @@ export class ImportProxiesFromFileComponent {
   }
 
   readProxiesFromFile() {
-    this.selectedFile
+    this.selectedFile;
   }
 }

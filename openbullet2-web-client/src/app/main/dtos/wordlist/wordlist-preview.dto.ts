@@ -1,4 +1,4 @@
 export interface WordlistPreviewDto {
-    firstLines: string[];
-    sizeInBytes: number
+  firstLines: string[];
+  sizeInBytes: number;
 }

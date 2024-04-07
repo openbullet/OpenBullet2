@@ -5,13 +5,13 @@ export interface RemoteProxiesToImport {
   defaultType: ProxyType;
   defaultUsername: string;
   defaultPassword: string;
-  url: string
+  url: string;
 }
 
 @Component({
   selector: 'app-import-proxies-from-remote',
   templateUrl: './import-proxies-from-remote.component.html',
-  styleUrls: ['./import-proxies-from-remote.component.scss']
+  styleUrls: ['./import-proxies-from-remote.component.scss'],
 })
 export class ImportProxiesFromRemoteComponent {
   @Output() confirm = new EventEmitter<RemoteProxiesToImport>();
@@ -19,12 +19,7 @@ export class ImportProxiesFromRemoteComponent {
   defaultUsername: string = '';
   defaultPassword: string = '';
   defaultProxyType: ProxyType = ProxyType.Http;
-  proxyTypes: ProxyType[] = [
-    ProxyType.Http,
-    ProxyType.Socks4,
-    ProxyType.Socks4a,
-    ProxyType.Socks5
-  ];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
   public reset() {
     this.url = '';
@@ -38,7 +33,7 @@ export class ImportProxiesFromRemoteComponent {
       defaultUsername: this.defaultUsername,
       defaultPassword: this.defaultPassword,
       defaultType: this.defaultProxyType,
-      url: this.url
+      url: this.url,
     });
   }
 

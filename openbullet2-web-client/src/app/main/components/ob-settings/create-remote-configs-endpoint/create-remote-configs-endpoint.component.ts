@@ -5,7 +5,7 @@ import { RemoteConfigsEndpoint } from 'src/app/main/dtos/settings/ob-settings.dt
 @Component({
   selector: 'app-create-remote-configs-endpoint',
   templateUrl: './create-remote-configs-endpoint.component.html',
-  styleUrls: ['./create-remote-configs-endpoint.component.scss']
+  styleUrls: ['./create-remote-configs-endpoint.component.scss'],
 })
 export class CreateRemoteConfigsEndpointComponent {
   @Output() confirm = new EventEmitter<RemoteConfigsEndpoint>();
@@ -22,7 +22,7 @@ export class CreateRemoteConfigsEndpointComponent {
   submitForm() {
     this.confirm.emit({
       url: this.url,
-      apiKey: this.apiKey
+      apiKey: this.apiKey,
     });
   }
 

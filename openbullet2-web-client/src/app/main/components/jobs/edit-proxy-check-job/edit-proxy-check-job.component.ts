@@ -22,13 +22,13 @@ import { TimeSpan } from 'src/app/shared/utils/timespan';
 enum EditMode {
   Create = 'create',
   Edit = 'edit',
-  Clone = 'clone'
+  Clone = 'clone',
 }
 
 @Component({
   selector: 'app-edit-proxy-check-job',
   templateUrl: './edit-proxy-check-job.component.html',
-  styleUrls: ['./edit-proxy-check-job.component.scss']
+  styleUrls: ['./edit-proxy-check-job.component.scss'],
 })
 export class EditProxyCheckJobComponent implements DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
@@ -48,8 +48,8 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   proxyCheckTargets: ProxyCheckTarget[] = [
     {
       url: 'Custom',
-      successKey: ''
-    }
+      successKey: '',
+    },
   ];
   targetSiteUrl: string = 'https://example.com';
   targetSiteSuccessKey: string = 'Example Domain';
@@ -61,12 +61,12 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   defaultProxyGroup = {
     id: -1,
     name: 'All',
-    owner: { id: -2, username: 'System' }
+    owner: { id: -2, username: 'System' },
   };
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
-  fieldsValidity: { [key: string]: boolean; } = {};
+  fieldsValidity: { [key: string]: boolean } = {};
   touched: boolean = false;
 
   constructor(
@@ -77,46 +77,39 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
   ) {
-    combineLatest([activatedRoute.url, activatedRoute.queryParams])
-      .subscribe(results => {
+    combineLatest([activatedRoute.url, activatedRoute.queryParams]).subscribe((results) => {
+      const uriChunks = results[0];
 
-        const uriChunks = results[0];
+      this.mode = <EditMode>uriChunks[2].path;
 
-        this.mode = <EditMode>uriChunks[2].path;
+      const queryParams = results[1];
+      const jobId = queryParams['jobId'];
 
-        const queryParams = results[1];
-        const jobId = queryParams['jobId'];
+      if (jobId !== undefined && !isNaN(jobId)) {
+        this.jobId = parseInt(jobId);
+      }
 
-        if (jobId !== undefined && !isNaN(jobId)) {
-          this.jobId = parseInt(jobId);
-        }
-
-        this.initJobOptions();
-      });
+      this.initJobOptions();
+    });
 
     if (this.userService.isAdmin()) {
-      this.settingsService.getSettings()
-        .subscribe(settings => {
-          this.settings = settings;
-          this.proxyCheckTargets = [
-            {
-              url: 'Custom',
-              successKey: ''
-            },
-            ...settings.generalSettings.proxyCheckTargets
-          ];
-        });
-    }
-
-    this.proxyGroupService.getAllProxyGroups()
-      .subscribe(proxyGroups => {
-        this.proxyGroups = [
-          this.defaultProxyGroup,
-          ...proxyGroups
+      this.settingsService.getSettings().subscribe((settings) => {
+        this.settings = settings;
+        this.proxyCheckTargets = [
+          {
+            url: 'Custom',
+            successKey: '',
+          },
+          ...settings.generalSettings.proxyCheckTargets,
         ];
       });
+    }
+
+    this.proxyGroupService.getAllProxyGroups().subscribe((proxyGroups) => {
+      this.proxyGroups = [this.defaultProxyGroup, ...proxyGroups];
+    });
   }
 
   canDeactivate() {
@@ -125,7 +118,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     }
 
     // Ask for confirmation and return the observable
-    return new Observable<boolean>(observer => {
+    return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
         message: `You have unsaved changes. Are you sure that you want to leave?`,
         header: 'Confirmation',
@@ -137,7 +130,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
         reject: () => {
           observer.next(false);
           observer.complete();
-        }
+        },
       });
     });
   }
@@ -153,29 +146,28 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
       return;
     }
 
-    this.jobService.getProxyCheckJobOptions(this.jobId ?? -1)
-      .subscribe(options => {
-        if (options.target !== null) {
-          this.targetSiteUrl = options.target.url;
-          this.targetSiteSuccessKey = options.target.successKey;
-        }
+    this.jobService.getProxyCheckJobOptions(this.jobId ?? -1).subscribe((options) => {
+      if (options.target !== null) {
+        this.targetSiteUrl = options.target.url;
+        this.targetSiteSuccessKey = options.target.successKey;
+      }
 
-        if (options.startCondition._polyTypeName === StartConditionType.Relative) {
-          this.startAfter = parseTimeSpan(options.startCondition.startAfter);
-          this.startConditionMode = StartConditionMode.Relative;
-        } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
-          this.startAt = moment(options.startCondition.startAt).toDate();
-          this.startConditionMode = StartConditionMode.Absolute;
-        }
+      if (options.startCondition._polyTypeName === StartConditionType.Relative) {
+        this.startAfter = parseTimeSpan(options.startCondition.startAfter);
+        this.startConditionMode = StartConditionMode.Relative;
+      } else if (options.startCondition._polyTypeName === StartConditionType.Absolute) {
+        this.startAt = moment(options.startCondition.startAt).toDate();
+        this.startConditionMode = StartConditionMode.Absolute;
+      }
 
-        this.options = options;
-      });
+      this.options = options;
+    });
   }
 
   onValidityChange(validity: FieldValidity) {
     this.fieldsValidity = {
       ...this.fieldsValidity,
-      [validity.key]: validity.valid
+      [validity.key]: validity.valid,
     };
   }
 
@@ -199,7 +191,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     if (this.startConditionMode === StartConditionMode.Relative) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Relative,
-        startAfter: this.startAfter.toString()
+        startAfter: this.startAfter.toString(),
       };
     }
   }
@@ -212,14 +204,14 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     if (this.startConditionMode === StartConditionMode.Absolute) {
       this.options!.startCondition = {
         _polyTypeName: StartConditionType.Absolute,
-        startAt: this.startAt.toISOString()
+        startAt: this.startAt.toISOString(),
       };
     }
   }
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return this.touched && Object.values(this.fieldsValidity).every(v => v);
+    return this.touched && Object.values(this.fieldsValidity).every((v) => v);
   }
 
   accept() {
@@ -229,42 +221,39 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
     this.options.target = <ProxyCheckTargetDto>{
       url: this.targetSiteUrl,
-      successKey: this.targetSiteSuccessKey
+      successKey: this.targetSiteSuccessKey,
     };
 
     if (this.mode === EditMode.Create) {
-      this.jobService.createProxyCheckJob(this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Created',
-            detail: `Proxy check job ${resp.id} was created`
-          });
-          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      this.jobService.createProxyCheckJob(this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Created',
+          detail: `Proxy check job ${resp.id} was created`,
         });
+        this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      });
     } else if (this.mode === EditMode.Edit) {
-      this.jobService.updateProxyCheckJob(this.jobId!, this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Updated',
-            detail: `Proxy check job ${resp.id} was updated`
-          });
-          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      this.jobService.updateProxyCheckJob(this.jobId!, this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Updated',
+          detail: `Proxy check job ${resp.id} was updated`,
         });
+        this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      });
     } else if (this.mode === EditMode.Clone) {
-      this.jobService.createProxyCheckJob(this.options)
-        .subscribe(resp => {
-          this.touched = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Cloned',
-            detail: `Proxy check job ${resp.id} was cloned from ${this.jobId}`
-          });
-          this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      this.jobService.createProxyCheckJob(this.options).subscribe((resp) => {
+        this.touched = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cloned',
+          detail: `Proxy check job ${resp.id} was cloned from ${this.jobId}`,
         });
+        this.router.navigate([`/job/proxy-check/${resp.id}`]);
+      });
     }
   }
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-rl-settings',
   templateUrl: './rl-settings.component.html',
-  styleUrls: ['./rl-settings.component.scss']
+  styleUrls: ['./rl-settings.component.scss'],
 })
 export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   @HostListener('window:beforeunload') confirmLeavingWithoutSaving(): boolean {
@@ -32,24 +32,21 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'Some fields are invalid, please fix them before saving'
+        detail: 'Some fields are invalid, please fix them before saving',
       });
     }
   }
 
-  fieldsValidity: { [key: string]: boolean; } = {};
+  fieldsValidity: { [key: string]: boolean } = {};
   settings: RLSettingsDto | null = null;
   touched: boolean = false;
   faWrench = faWrench;
   parallelizerTypes: ParallelizerType[] = [
     ParallelizerType.TaskBased,
     ParallelizerType.ThreadBased,
-    ParallelizerType.ParallelBased
+    ParallelizerType.ParallelBased,
   ];
-  browserTypes: BrowserType[] = [
-    BrowserType.Chrome,
-    BrowserType.Firefox
-  ];
+  browserTypes: BrowserType[] = [BrowserType.Chrome, BrowserType.Firefox];
   captchaServiceTypes: CaptchaServiceType[] = [
     CaptchaServiceType.TwoCaptcha,
     CaptchaServiceType.AntiCaptcha,
@@ -71,9 +68,11 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   ];
   CaptchaServiceType = CaptchaServiceType;
 
-  constructor(private settingsService: SettingsService,
+  constructor(
+    private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+  ) {}
 
   canDeactivate() {
     if (!this.touched) {
@@ -81,7 +80,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     }
 
     // Ask for confirmation and return the observable
-    return new Observable<boolean>(observer => {
+    return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
         message: `You have unsaved changes. Are you sure that you want to leave?`,
         header: 'Confirmation',
@@ -93,7 +92,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
         reject: () => {
           observer.next(false);
           observer.complete();
-        }
+        },
       });
     });
   }
@@ -103,22 +102,20 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   }
 
   getSettings() {
-    this.settingsService.getRuriLibSettings()
-      .subscribe(settings => this.settings = settings);
+    this.settingsService.getRuriLibSettings().subscribe((settings) => (this.settings = settings));
   }
 
   saveSettings() {
     if (this.settings === null) return;
-    this.settingsService.updateRuriLibSettings(this.settings)
-      .subscribe(settings => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Saved',
-          detail: 'The settings were successfully saved'
-        });
-        this.touched = false;
-        this.settings = settings;
+    this.settingsService.updateRuriLibSettings(this.settings).subscribe((settings) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Saved',
+        detail: 'The settings were successfully saved',
       });
+      this.touched = false;
+      this.settings = settings;
+    });
   }
 
   confirmRestoreDefaults() {
@@ -127,36 +124,34 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
       Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.restoreDefaults()
+      accept: () => this.restoreDefaults(),
     });
   }
 
   restoreDefaults() {
     this.settings = null;
-    this.settingsService.getDefaultRuriLibSettings()
-      .subscribe(defaultSettings => {
-        this.settingsService.updateRuriLibSettings(defaultSettings)
-          .subscribe(settings => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Restored',
-              detail: 'Settings restored to the default values'
-            });
-            this.settings = settings;
-          })
+    this.settingsService.getDefaultRuriLibSettings().subscribe((defaultSettings) => {
+      this.settingsService.updateRuriLibSettings(defaultSettings).subscribe((settings) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Restored',
+          detail: 'Settings restored to the default values',
+        });
+        this.settings = settings;
       });
+    });
   }
 
   onValidityChange(validity: FieldValidity) {
     this.fieldsValidity = {
       ...this.fieldsValidity,
-      [validity.key]: validity.valid
+      [validity.key]: validity.valid,
     };
   }
 
   // Can save if touched and every field is valid
   canSave() {
-    return this.touched && Object.values(this.fieldsValidity).every(v => v);
+    return this.touched && Object.values(this.fieldsValidity).every((v) => v);
   }
 
   onCaptchaServiceChange(newValue: CaptchaServiceType) {

@@ -4,13 +4,13 @@ import { FieldValidity } from '../../utils/forms';
 @Component({
   selector: 'app-input-list',
   templateUrl: './input-list.component.html',
-  styleUrls: ['./input-list.component.scss']
+  styleUrls: ['./input-list.component.scss'],
 })
 export class InputListComponent implements OnChanges {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() class: string | null = null;
-  @Input() style: { [id: string]: any; } = {};
+  @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder: string = '';
 
@@ -72,9 +72,7 @@ export class InputListComponent implements OnChanges {
     const valid = this.checkValidity(newValue);
 
     if (valid) {
-      this.listChange.emit(
-        newValue.split('\n').filter(v => v.trim() !== '')
-      );
+      this.listChange.emit(newValue.split('\n').filter((v) => v.trim() !== ''));
     }
 
     this.notifyValidity(valid);

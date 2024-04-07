@@ -1,4 +1,4 @@
 export interface AnnouncementDto {
-    lastFetched: string;
-    markdownText: string;
+  lastFetched: string;
+  markdownText: string;
 }

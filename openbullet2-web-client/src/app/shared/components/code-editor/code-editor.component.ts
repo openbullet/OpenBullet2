@@ -10,7 +10,7 @@ declare const monaco: any;
 @Component({
   selector: 'app-code-editor',
   templateUrl: './code-editor.component.html',
-  styleUrls: ['./code-editor.component.scss']
+  styleUrls: ['./code-editor.component.scss'],
 })
 export class CodeEditorComponent implements OnInit {
   @Input() id: string | null = null;
@@ -31,7 +31,8 @@ export class CodeEditorComponent implements OnInit {
 
   constructor(
     private settingsService: SettingsService,
-    private configService: ConfigService) { }
+    private configService: ConfigService,
+  ) {}
 
   ngOnInit(): void {
     this.editorOptions = {
@@ -53,18 +54,19 @@ export class CodeEditorComponent implements OnInit {
       const blockSnippetsObservable = this.configService.getBlockSnippets();
       const customSnippetsObservable = this.settingsService.getCustomSnippets();
 
-      combineLatest([blockSnippetsObservable, customSnippetsObservable])
-        .subscribe(([blockSnippets, customSnippets]) => {
+      combineLatest([blockSnippetsObservable, customSnippetsObservable]).subscribe(
+        ([blockSnippets, customSnippets]) => {
           monaco.loliCodeBlockSnippets = blockSnippets;
           monaco.loliCodeCustomSnippets = customSnippets;
 
           monaco.languages.registerCompletionItemProvider('lolicode', {
             provideCompletionItems: function (model: any, position: any) {
-
               // Check if we are completing BLOCK:
               var textUntilPosition = model.getValueInRange({
-                startLineNumber: position.lineNumber, startColumn: 1,
-                endLineNumber: position.lineNumber, endColumn: position.column
+                startLineNumber: position.lineNumber,
+                startColumn: 1,
+                endLineNumber: position.lineNumber,
+                endColumn: position.column,
               });
 
               if ('BLOCK:'.startsWith(textUntilPosition.trim())) {
@@ -74,9 +76,9 @@ export class CodeEditorComponent implements OnInit {
                       label: 'BLOCK:',
                       kind: monaco.languages.CompletionItemKind.Snippet,
                       insertText: 'BLOCK:',
-                      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
-                    }
-                  ]
+                      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                    },
+                  ],
                 };
               }
 
@@ -85,23 +87,24 @@ export class CodeEditorComponent implements OnInit {
                 startLineNumber: position.lineNumber,
                 endLineNumber: position.lineNumber,
                 startColumn: word.startColumn,
-                endColumn: word.endColumn
+                endColumn: word.endColumn,
               };
 
               if (textUntilPosition.trim().startsWith('BLOCK:')) {
                 return {
-                  suggestions: autoCompleteBlock(monaco, range)
+                  suggestions: autoCompleteBlock(monaco, range),
                 };
               }
 
               return {
-                suggestions: autoCompleteLoliCodeStatement(monaco, range)
+                suggestions: autoCompleteLoliCodeStatement(monaco, range),
               };
-            }
+            },
           });
 
           monaco.loliCodeCompletionsRegistered = true;
-        });
+        },
+      );
     }
   }
 

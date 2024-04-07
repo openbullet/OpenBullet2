@@ -1,3 +1,3 @@
 export interface BotsChangedMessage {
-    newValue: number;
+  newValue: number;
 }

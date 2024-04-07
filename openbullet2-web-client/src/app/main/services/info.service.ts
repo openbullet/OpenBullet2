@@ -1,48 +1,36 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { AnnouncementDto } from "../dtos/info/announcement.dto";
-import { getBaseUrl } from "src/app/shared/utils/host";
-import { ServerInfoDto } from "../dtos/info/server-info.dto";
-import { CollectionInfoDto } from "../dtos/info/collection-info.dto";
-import { PerformanceInfoDto } from "../dtos/info/performance-info.dto";
-import { ChangelogDto } from "../dtos/info/changelog.dto";
-import { UpdateInfoDto } from "../dtos/info/update-info.dto";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AnnouncementDto } from '../dtos/info/announcement.dto';
+import { getBaseUrl } from 'src/app/shared/utils/host';
+import { ServerInfoDto } from '../dtos/info/server-info.dto';
+import { CollectionInfoDto } from '../dtos/info/collection-info.dto';
+import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
+import { ChangelogDto } from '../dtos/info/changelog.dto';
+import { UpdateInfoDto } from '../dtos/info/update-info.dto';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class InfoService {
-    constructor(
-        private http: HttpClient
-    ) { }
+  constructor(private http: HttpClient) {}
 
-    getAnnouncement() {
-        return this.http.get<AnnouncementDto>(
-            getBaseUrl() + '/info/announcement'
-        );
-    }
+  getAnnouncement() {
+    return this.http.get<AnnouncementDto>(getBaseUrl() + '/info/announcement');
+  }
 
-    getServerInfo() {
-        return this.http.get<ServerInfoDto>(
-            getBaseUrl() + '/info/server'
-        );
-    }
+  getServerInfo() {
+    return this.http.get<ServerInfoDto>(getBaseUrl() + '/info/server');
+  }
 
-    getCollectionInfo() {
-        return this.http.get<CollectionInfoDto>(
-            getBaseUrl() + '/info/collection'
-        );
-    }
+  getCollectionInfo() {
+    return this.http.get<CollectionInfoDto>(getBaseUrl() + '/info/collection');
+  }
 
-    getChangelog(version: string | null) {
-        return this.http.get<ChangelogDto>(
-            getBaseUrl() + '/info/changelog' + (version ? `?v=${version}` : '')
-        );
-    }
+  getChangelog(version: string | null) {
+    return this.http.get<ChangelogDto>(getBaseUrl() + '/info/changelog' + (version ? `?v=${version}` : ''));
+  }
 
-    getUpdateInfo() {
-        return this.http.get<UpdateInfoDto>(
-            getBaseUrl() + '/info/update'
-        );
-    }
+  getUpdateInfo() {
+    return this.http.get<UpdateInfoDto>(getBaseUrl() + '/info/update');
+  }
 }

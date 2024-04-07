@@ -5,7 +5,7 @@ import { UpdateProxyGroupDto } from 'src/app/main/dtos/proxy-group/update-proxy-
 @Component({
   selector: 'app-update-proxy-group',
   templateUrl: './update-proxy-group.component.html',
-  styleUrls: ['./update-proxy-group.component.scss']
+  styleUrls: ['./update-proxy-group.component.scss'],
 })
 export class UpdateProxyGroupComponent implements OnChanges {
   @Input() proxyGroup: ProxyGroupDto | null = null;
@@ -26,7 +26,7 @@ export class UpdateProxyGroupComponent implements OnChanges {
 
     this.confirm.emit({
       id: this.proxyGroup.id,
-      name: this.name
+      name: this.name,
     });
   }
 

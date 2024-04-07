@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  faTriangleExclamation,
-  faComments
-} from '@fortawesome/free-solid-svg-icons';
+import { faTriangleExclamation, faComments } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { getSwaggerUrl } from 'src/app/shared/utils/host';
 
@@ -15,7 +12,7 @@ interface Currency {
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
-  styleUrls: ['./info.component.scss']
+  styleUrls: ['./info.component.scss'],
 })
 export class InfoComponent {
   faTriangleExclamation = faTriangleExclamation;
@@ -30,19 +27,19 @@ export class InfoComponent {
     btc: {
       name: 'BTC',
       icon: 'btc.svg',
-      address: '39yMkox6pP8tnSC7rZ5EM4nUUHgPbg1fKM'
+      address: '39yMkox6pP8tnSC7rZ5EM4nUUHgPbg1fKM',
     },
     eth: {
       name: 'ETH',
       icon: 'eth.svg',
-      address: '0xc22116Bcf6c30977bEdFcc03C5B6aAe90B0fD179'
+      address: '0xc22116Bcf6c30977bEdFcc03C5B6aAe90B0fD179',
     },
     bch: {
       name: 'BCH',
       icon: 'bch.svg',
-      address: 'qq02mrtdp454g2zdu534ndpu7jgcr3tvavyzs60m3p'
-    }
-  }
+      address: 'qq02mrtdp454g2zdu534ndpu7jgcr3tvavyzs60m3p',
+    },
+  };
 
   openGitHubRepository() {
     window.open('https://github.com/openbullet/OpenBullet2', '_blank');

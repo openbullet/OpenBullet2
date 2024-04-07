@@ -1,4 +1,4 @@
 export interface ChangelogDto {
-    version: string;
-    markdownText: string;
+  version: string;
+  markdownText: string;
 }

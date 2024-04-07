@@ -6,7 +6,7 @@ import { UpdateHitDto } from 'src/app/main/dtos/hit/update-hit.dto';
 @Component({
   selector: 'app-update-hit',
   templateUrl: './update-hit.component.html',
-  styleUrls: ['./update-hit.component.scss']
+  styleUrls: ['./update-hit.component.scss'],
 })
 export class UpdateHitComponent implements OnChanges {
   @Input() hit: HitDto | null = null;
@@ -19,7 +19,7 @@ export class UpdateHitComponent implements OnChanges {
   faCircleQuestion = faCircleQuestion;
 
   ngOnChanges(changes: SimpleChanges) {
-    this.hitTypes = this.hitTypes.filter(t => t !== 'Any Type');
+    this.hitTypes = this.hitTypes.filter((t) => t !== 'Any Type');
 
     if (this.hit === null) return;
     this.data = this.hit.data;
@@ -37,7 +37,7 @@ export class UpdateHitComponent implements OnChanges {
       id: this.hit.id,
       data: this.data,
       capturedData: this.capturedData,
-      type: this.hitType
+      type: this.hitType,
     });
   }
 }

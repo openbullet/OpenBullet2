@@ -3,7 +3,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 @Component({
   selector: 'app-change-admin-api-key',
   templateUrl: './change-admin-api-key.component.html',
-  styleUrls: ['./change-admin-api-key.component.scss']
+  styleUrls: ['./change-admin-api-key.component.scss'],
 })
 export class ChangeAdminApiKeyComponent {
   @Output() confirm = new EventEmitter<string>();

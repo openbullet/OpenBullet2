@@ -1,11 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BlockParameterDto, EnumBlockParameterDto, SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
+import {
+  BlockParameterDto,
+  EnumBlockParameterDto,
+  SettingInputMode,
+} from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 
 @Component({
   selector: 'app-enum-setting',
   templateUrl: './enum-setting.component.html',
-  styleUrls: ['./enum-setting.component.scss']
+  styleUrls: ['./enum-setting.component.scss'],
 })
 export class EnumSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;

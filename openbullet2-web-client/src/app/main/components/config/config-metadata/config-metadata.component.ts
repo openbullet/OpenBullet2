@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-config-metadata',
   templateUrl: './config-metadata.component.html',
-  styleUrls: ['./config-metadata.component.scss']
+  styleUrls: ['./config-metadata.component.scss'],
 })
 export class ConfigMetadataComponent {
   @ViewChild('editConfigImageComponent')
@@ -20,14 +20,13 @@ export class ConfigMetadataComponent {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -37,10 +36,11 @@ export class ConfigMetadataComponent {
   faTags = faTags;
   editImageModalVisible = false;
 
-  constructor(private configService: ConfigService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+  constructor(
+    private configService: ConfigService,
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
   }
 
   localSave() {

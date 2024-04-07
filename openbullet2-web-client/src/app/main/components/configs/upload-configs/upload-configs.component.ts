@@ -5,7 +5,7 @@ import { FileUpload } from 'primeng/fileupload';
 @Component({
   selector: 'app-upload-configs',
   templateUrl: './upload-configs.component.html',
-  styleUrls: ['./upload-configs.component.scss']
+  styleUrls: ['./upload-configs.component.scss'],
 })
 export class UploadConfigsComponent {
   @Output() confirm = new EventEmitter<File[]>();

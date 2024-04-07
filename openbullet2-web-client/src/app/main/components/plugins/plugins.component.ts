@@ -7,7 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 @Component({
   selector: 'app-plugins',
   templateUrl: './plugins.component.html',
-  styleUrls: ['./plugins.component.scss']
+  styleUrls: ['./plugins.component.scss'],
 })
 export class PluginsComponent implements OnInit {
   plugins: PluginDto[] | null = null;
@@ -19,17 +19,18 @@ export class PluginsComponent implements OnInit {
 
   addPluginModalVisible = false;
 
-  constructor(private pluginService: PluginService,
+  constructor(
+    private pluginService: PluginService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+  ) {}
 
   ngOnInit(): void {
     this.refreshPlugins();
   }
 
   refreshPlugins() {
-    this.pluginService.getAllPlugins()
-      .subscribe(plugins => this.plugins = plugins);
+    this.pluginService.getAllPlugins().subscribe((plugins) => (this.plugins = plugins));
   }
 
   openAddPluginModal() {
@@ -37,28 +38,26 @@ export class PluginsComponent implements OnInit {
   }
 
   addPlugin(file: File) {
-    this.pluginService.addPlugin(file)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Added',
-          detail: `Plugin ${file.name} was added`
-        });
-        this.addPluginModalVisible = false;
-        this.refreshPlugins();
+    this.pluginService.addPlugin(file).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Added',
+        detail: `Plugin ${file.name} was added`,
       });
+      this.addPluginModalVisible = false;
+      this.refreshPlugins();
+    });
   }
 
   deletePlugin(plugin: PluginDto) {
-    this.pluginService.deletePlugin(plugin.name)
-      .subscribe(resp => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Deleted',
-          detail: `Plugin ${plugin.name} was deleted`
-        });
-        this.refreshPlugins();
+    this.pluginService.deletePlugin(plugin.name).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted',
+        detail: `Plugin ${plugin.name} was deleted`,
       });
+      this.refreshPlugins();
+    });
   }
 
   confirmDeletePlugin(plugin: PluginDto) {
@@ -66,7 +65,7 @@ export class PluginsComponent implements OnInit {
       message: `You are about to delete the plugin ${plugin.name}. Are you sure that you want to proceed?`,
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => this.deletePlugin(plugin)
+      accept: () => this.deletePlugin(plugin),
     });
   }
 }

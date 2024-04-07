@@ -1,7 +1,15 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { faPlus, faTriangleExclamation, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
-import { ConfigDto, CustomInputDto, LinesFromFileResourceDto, RandomLinesFromFileResourceDto, RegexDataRuleDto, SimpleDataRuleDto, StringRule } from 'src/app/main/dtos/config/config.dto';
+import {
+  ConfigDto,
+  CustomInputDto,
+  LinesFromFileResourceDto,
+  RandomLinesFromFileResourceDto,
+  RegexDataRuleDto,
+  SimpleDataRuleDto,
+  StringRule,
+} from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ProxyType } from 'src/app/main/enums/proxy-type';
 import { ConfigService } from 'src/app/main/services/config.service';
@@ -10,7 +18,7 @@ import { SettingsService } from 'src/app/main/services/settings.service';
 @Component({
   selector: 'app-config-settings',
   templateUrl: './config-settings.component.html',
-  styleUrls: ['./config-settings.component.scss']
+  styleUrls: ['./config-settings.component.scss'],
 })
 export class ConfigSettingsComponent implements OnInit {
   // Listen for CTRL+S on the page
@@ -19,14 +27,13 @@ export class ConfigSettingsComponent implements OnInit {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -39,12 +46,7 @@ export class ConfigSettingsComponent implements OnInit {
   editImageModalVisible = false;
 
   botStatuses: string[] = [];
-  proxyTypes: ProxyType[] = [
-    ProxyType.Http,
-    ProxyType.Socks4,
-    ProxyType.Socks4a,
-    ProxyType.Socks5
-  ];
+  proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
   wordlistTypes: string[] = [];
   stringRules: StringRule[] = [
     StringRule.EqualTo,
@@ -57,28 +59,28 @@ export class ConfigSettingsComponent implements OnInit {
     StringRule.EndsWith,
   ];
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     private settingsService: SettingsService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
   }
 
   ngOnInit(): void {
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-        this.botStatuses = [
-          'SUCCESS',
-          'NONE',
-          'FAIL',
-          'RETRY',
-          'BAN',
-          'ERROR',
-          ...envSettings.customStatuses.map(s => s.name)
-        ];
-        this.wordlistTypes = envSettings.wordlistTypes.map(w => w.name);
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+      this.botStatuses = [
+        'SUCCESS',
+        'NONE',
+        'FAIL',
+        'RETRY',
+        'BAN',
+        'ERROR',
+        ...envSettings.customStatuses.map((s) => s.name),
+      ];
+      this.wordlistTypes = envSettings.wordlistTypes.map((w) => w.name);
+    });
   }
 
   localSave() {
@@ -96,8 +98,8 @@ export class ConfigSettingsComponent implements OnInit {
           invert: false,
           comparison: StringRule.EqualTo,
           stringToCompare: '',
-          caseSensitive: true
-        }
+          caseSensitive: true,
+        },
       ];
       this.localSave();
     }
@@ -110,8 +112,8 @@ export class ConfigSettingsComponent implements OnInit {
         {
           sliceName: '',
           regexToMatch: '^.*$',
-          invert: false
-        }
+          invert: false,
+        },
       ];
       this.localSave();
     }
@@ -125,8 +127,8 @@ export class ConfigSettingsComponent implements OnInit {
           name: 'resource',
           location: 'resource.txt',
           loopsAround: true,
-          ignoreEmptyLines: true
-        }
+          ignoreEmptyLines: true,
+        },
       ];
       this.localSave();
     }
@@ -140,8 +142,8 @@ export class ConfigSettingsComponent implements OnInit {
           name: 'resource',
           location: 'resource.txt',
           unique: false,
-          ignoreEmptyLines: true
-        }
+          ignoreEmptyLines: true,
+        },
       ];
       this.localSave();
     }
@@ -154,8 +156,8 @@ export class ConfigSettingsComponent implements OnInit {
         {
           description: '',
           variableName: '',
-          defaultAnswer: ''
-        }
+          defaultAnswer: '',
+        },
       ];
       this.localSave();
     }
@@ -166,9 +168,7 @@ export class ConfigSettingsComponent implements OnInit {
       const index = this.config.settings.dataSettings.dataRules.simple.indexOf(rule);
       if (index !== -1) {
         this.config.settings.dataSettings.dataRules.simple.splice(index, 1);
-        this.config.settings.dataSettings.dataRules.simple = [
-          ...this.config.settings.dataSettings.dataRules.simple
-        ];
+        this.config.settings.dataSettings.dataRules.simple = [...this.config.settings.dataSettings.dataRules.simple];
         this.localSave();
       }
     }
@@ -179,9 +179,7 @@ export class ConfigSettingsComponent implements OnInit {
       const index = this.config.settings.dataSettings.dataRules.regex.indexOf(rule);
       if (index !== -1) {
         this.config.settings.dataSettings.dataRules.regex.splice(index, 1);
-        this.config.settings.dataSettings.dataRules.regex = [
-          ...this.config.settings.dataSettings.dataRules.regex
-        ];
+        this.config.settings.dataSettings.dataRules.regex = [...this.config.settings.dataSettings.dataRules.regex];
         this.localSave();
       }
     }
@@ -193,7 +191,7 @@ export class ConfigSettingsComponent implements OnInit {
       if (index !== -1) {
         this.config.settings.dataSettings.resources.linesFromFile.splice(index, 1);
         this.config.settings.dataSettings.resources.linesFromFile = [
-          ...this.config.settings.dataSettings.resources.linesFromFile
+          ...this.config.settings.dataSettings.resources.linesFromFile,
         ];
         this.localSave();
       }
@@ -206,7 +204,7 @@ export class ConfigSettingsComponent implements OnInit {
       if (index !== -1) {
         this.config.settings.dataSettings.resources.randomLinesFromFile.splice(index, 1);
         this.config.settings.dataSettings.resources.randomLinesFromFile = [
-          ...this.config.settings.dataSettings.resources.randomLinesFromFile
+          ...this.config.settings.dataSettings.resources.randomLinesFromFile,
         ];
         this.localSave();
       }
@@ -218,9 +216,7 @@ export class ConfigSettingsComponent implements OnInit {
       const index = this.config.settings.inputSettings.customInputs.indexOf(input);
       if (index !== -1) {
         this.config.settings.inputSettings.customInputs.splice(index, 1);
-        this.config.settings.inputSettings.customInputs = [
-          ...this.config.settings.inputSettings.customInputs
-        ];
+        this.config.settings.inputSettings.customInputs = [...this.config.settings.inputSettings.customInputs];
         this.localSave();
       }
     }

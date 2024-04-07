@@ -6,7 +6,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
   selector: 'app-dictionary-of-strings-setting',
   templateUrl: './dictionary-of-strings-setting.component.html',
   styleUrls: ['./dictionary-of-strings-setting.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class DictionaryOfStringsSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;

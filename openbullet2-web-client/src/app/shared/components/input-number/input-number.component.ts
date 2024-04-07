@@ -4,7 +4,7 @@ import { FieldValidity } from '../../utils/forms';
 @Component({
   selector: 'app-input-number',
   templateUrl: './input-number.component.html',
-  styleUrls: ['./input-number.component.scss']
+  styleUrls: ['./input-number.component.scss'],
 })
 export class InputNumberComponent implements OnInit {
   @Input() id: string | null = null;
@@ -13,7 +13,7 @@ export class InputNumberComponent implements OnInit {
   @Input() max: number | null = null;
   @Input() integer: boolean = true;
   @Input() class: string | null = null;
-  @Input() style: { [id: string]: any; } = {};
+  @Input() style: { [id: string]: any } = {};
   @Input() placeholder: number | string = '';
   @Input() ngModel: number | null = null;
 

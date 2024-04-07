@@ -6,7 +6,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-update-custom-snippet',
   templateUrl: './update-custom-snippet.component.html',
-  styleUrls: ['./update-custom-snippet.component.scss']
+  styleUrls: ['./update-custom-snippet.component.scss'],
 })
 export class UpdateCustomSnippetComponent implements OnChanges {
   @Input() snippet: CustomSnippet | null = null;
@@ -34,7 +34,7 @@ export class UpdateCustomSnippetComponent implements OnChanges {
     this.confirm.emit({
       name: this.name,
       description: this.description,
-      body: this.body
+      body: this.body,
     });
   }
 

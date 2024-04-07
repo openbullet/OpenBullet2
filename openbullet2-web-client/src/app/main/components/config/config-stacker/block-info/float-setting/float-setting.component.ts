@@ -5,7 +5,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 @Component({
   selector: 'app-float-setting',
   templateUrl: './float-setting.component.html',
-  styleUrls: ['./float-setting.component.scss']
+  styleUrls: ['./float-setting.component.scss'],
 })
 export class FloatSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;
@@ -26,7 +26,7 @@ export class FloatSettingComponent {
 
     const value = Number.parseFloat(event);
 
-    if (value < -3.40282347E+38 || value > 3.40282347E+38) {
+    if (value < -3.40282347e38 || value > 3.40282347e38) {
       return;
     }
 

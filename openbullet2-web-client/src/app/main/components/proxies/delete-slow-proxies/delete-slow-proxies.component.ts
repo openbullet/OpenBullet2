@@ -3,13 +3,13 @@ import { ProxyGroupDto } from 'src/app/main/dtos/proxy-group/proxy-group.dto';
 
 export interface DeleteSlowProxiesParams {
   proxyGroupId: number;
-  maxPing: number
+  maxPing: number;
 }
 
 @Component({
   selector: 'app-delete-slow-proxies',
   templateUrl: './delete-slow-proxies.component.html',
-  styleUrls: ['./delete-slow-proxies.component.scss']
+  styleUrls: ['./delete-slow-proxies.component.scss'],
 })
 export class DeleteSlowProxiesComponent {
   @Input() proxyGroup: ProxyGroupDto | null = null;
@@ -25,7 +25,7 @@ export class DeleteSlowProxiesComponent {
 
     this.confirm.emit({
       proxyGroupId: this.proxyGroup.id,
-      maxPing: this.maxPing
+      maxPing: this.maxPing,
     });
   }
 

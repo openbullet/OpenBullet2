@@ -9,7 +9,7 @@ import { VolatileSettingsService } from 'src/app/main/services/volatile-settings
 @Component({
   selector: 'app-add-block',
   templateUrl: './add-block.component.html',
-  styleUrls: ['./add-block.component.scss']
+  styleUrls: ['./add-block.component.scss'],
 })
 export class AddBlockComponent {
   @Input() tree: CategoryTreeNode | null = null;
@@ -29,7 +29,7 @@ export class AddBlockComponent {
 
   constructor(
     private configService: ConfigService,
-    private volatileSettingsService: VolatileSettingsService
+    private volatileSettingsService: VolatileSettingsService,
   ) {
     this.recentlyUsedBlockIds = volatileSettingsService.recentlyUsedBlockIds;
   }
@@ -37,8 +37,8 @@ export class AddBlockComponent {
   public resetCategory() {
     if (this.tree !== null) {
       const mainNode = this.tree.subCategories
-        .find(c => c.name === 'RuriLib')!.subCategories
-        .find(c => c.name === 'Blocks')!;
+        .find((c) => c.name === 'RuriLib')!
+        .subCategories.find((c) => c.name === 'Blocks')!;
 
       this.searchFilter = '';
       this.setcurrentCategory(mainNode);
@@ -48,11 +48,8 @@ export class AddBlockComponent {
   }
 
   selectBlock(blockId: string) {
-    this.configService.getBlockInstance(blockId).subscribe(block => {
-      this.recentlyUsedBlockIds = [
-        blockId,
-        ...this.recentlyUsedBlockIds.filter(id => id !== blockId).slice(0, 5)
-      ];
+    this.configService.getBlockInstance(blockId).subscribe((block) => {
+      this.recentlyUsedBlockIds = [blockId, ...this.recentlyUsedBlockIds.filter((id) => id !== blockId).slice(0, 5)];
 
       this.volatileSettingsService.recentlyUsedBlockIds = this.recentlyUsedBlockIds;
 
@@ -64,15 +61,13 @@ export class AddBlockComponent {
   setcurrentCategory(node: CategoryTreeNode) {
     this.currentCategory = node;
     this.subCategories = node.subCategories;
-    this.descriptors = this.searchFilter === ''
-      ? node.descriptors
-      : this.getFilteredDescriptors(node);
+    this.descriptors = this.searchFilter === '' ? node.descriptors : this.getFilteredDescriptors(node);
   }
 
   getFilteredDescriptors(node: CategoryTreeNode): BlockDescriptorDto[] {
     return [
-      ...node.descriptors.filter(d => d.name.toLowerCase().includes(this.searchFilter.toLowerCase())),
-      ...node.subCategories.flatMap(c => this.getFilteredDescriptors(c))
+      ...node.descriptors.filter((d) => d.name.toLowerCase().includes(this.searchFilter.toLowerCase())),
+      ...node.subCategories.flatMap((c) => this.getFilteredDescriptors(c)),
     ];
   }
 
@@ -81,8 +76,9 @@ export class AddBlockComponent {
       return [];
     }
 
-    return this.currentCategory.subCategories
-      .filter(c => c.name.toLowerCase().includes(this.searchFilter.toLowerCase()));
+    return this.currentCategory.subCategories.filter((c) =>
+      c.name.toLowerCase().includes(this.searchFilter.toLowerCase()),
+    );
   }
 
   getDescriptors(): BlockDescriptorDto[] {
@@ -90,8 +86,9 @@ export class AddBlockComponent {
       return [];
     }
 
-    return this.currentCategory.descriptors
-      .filter(d => d.name.toLowerCase().includes(this.searchFilter.toLowerCase()));
+    return this.currentCategory.descriptors.filter((d) =>
+      d.name.toLowerCase().includes(this.searchFilter.toLowerCase()),
+    );
   }
 
   previousCategory() {

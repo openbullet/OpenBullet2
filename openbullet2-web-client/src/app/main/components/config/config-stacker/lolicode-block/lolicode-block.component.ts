@@ -6,7 +6,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
 @Component({
   selector: 'app-lolicode-block',
   templateUrl: './lolicode-block.component.html',
-  styleUrls: ['./lolicode-block.component.scss']
+  styleUrls: ['./lolicode-block.component.scss'],
 })
 export class LolicodeBlockComponent {
   @Input() block!: LoliCodeBlockInstanceDto;

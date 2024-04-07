@@ -4,7 +4,7 @@ import { CustomWebhookHitOutput } from 'src/app/main/dtos/job/multi-run-job-opti
 @Component({
   selector: 'app-configure-custom-webhook',
   templateUrl: './configure-custom-webhook.component.html',
-  styleUrls: ['./configure-custom-webhook.component.scss']
+  styleUrls: ['./configure-custom-webhook.component.scss'],
 })
 export class ConfigureCustomWebhookComponent {
   @Output() confirm = new EventEmitter<void>();

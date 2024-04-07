@@ -5,7 +5,7 @@ import { ActionType } from 'src/app/main/dtos/monitor/action.dto';
 @Component({
   selector: 'app-add-action',
   templateUrl: './add-action.component.html',
-  styleUrls: ['./add-action.component.scss']
+  styleUrls: ['./add-action.component.scss'],
 })
 export class AddActionComponent {
   @Input() jobType: JobType = JobType.MultiRun;
@@ -25,10 +25,7 @@ export class AddActionComponent {
     ];
 
     if (this.jobType === JobType.MultiRun) {
-      types = types.concat([
-        ActionType.SetBots,
-        ActionType.ReloadProxies,
-      ]);
+      types = types.concat([ActionType.SetBots, ActionType.ReloadProxies]);
     }
 
     return types;

@@ -4,7 +4,7 @@ import { TelegramBotHitOutput } from 'src/app/main/dtos/job/multi-run-job-option
 @Component({
   selector: 'app-configure-telegram',
   templateUrl: './configure-telegram.component.html',
-  styleUrls: ['./configure-telegram.component.scss']
+  styleUrls: ['./configure-telegram.component.scss'],
 })
 export class ConfigureTelegramComponent {
   @Output() confirm = new EventEmitter<void>();

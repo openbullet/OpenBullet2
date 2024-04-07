@@ -6,7 +6,7 @@ import { applyAppTheme } from './shared/utils/theme';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
 })
 export class AppComponent {
   title = 'OpenBullet 2';

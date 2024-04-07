@@ -7,7 +7,7 @@ import { WordlistService } from 'src/app/main/services/wordlist.service';
 @Component({
   selector: 'app-select-wordlist',
   templateUrl: './select-wordlist.component.html',
-  styleUrls: ['./select-wordlist.component.scss']
+  styleUrls: ['./select-wordlist.component.scss'],
 })
 export class SelectWordlistComponent {
   @Output() confirm = new EventEmitter<WordlistDto>();
@@ -19,13 +19,11 @@ export class SelectWordlistComponent {
   selectedWordlist: WordlistDto | null = null;
   preview: WordlistPreviewDto | null = null;
 
-  constructor(
-    private wordlistService: WordlistService
-  ) { }
+  constructor(private wordlistService: WordlistService) {}
 
   public refresh() {
     this.wordlists = null;
-    this.wordlistService.getAllWordlists().subscribe(wordlists => {
+    this.wordlistService.getAllWordlists().subscribe((wordlists) => {
       this.wordlists = wordlists;
       this.filterWordlists();
     });
@@ -38,7 +36,7 @@ export class SelectWordlistComponent {
 
     this.preview = null;
     this.selectedWordlist = wordlist;
-    this.wordlistService.getWordlistPreview(wordlist.id, 10).subscribe(preview => {
+    this.wordlistService.getWordlistPreview(wordlist.id, 10).subscribe((preview) => {
       this.preview = preview;
     });
   }
@@ -58,8 +56,8 @@ export class SelectWordlistComponent {
       return;
     }
 
-    this.filteredWordlists = this.wordlists.filter(
-      wordlist => wordlist.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    this.filteredWordlists = this.wordlists.filter((wordlist) =>
+      wordlist.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
     );
   }
 }

@@ -5,7 +5,7 @@ import { ProxyCheckTarget } from 'src/app/main/dtos/settings/ob-settings.dto';
 @Component({
   selector: 'app-create-proxy-check-target',
   templateUrl: './create-proxy-check-target.component.html',
-  styleUrls: ['./create-proxy-check-target.component.scss']
+  styleUrls: ['./create-proxy-check-target.component.scss'],
 })
 export class CreateProxyCheckTargetComponent {
   @Output() confirm = new EventEmitter<ProxyCheckTarget>();
@@ -22,7 +22,7 @@ export class CreateProxyCheckTargetComponent {
   submitForm() {
     this.confirm.emit({
       url: this.url,
-      successKey: this.successKey
+      successKey: this.successKey,
     });
   }
 

@@ -5,7 +5,7 @@ import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-menu-item',
   templateUrl: './menu-item.component.html',
-  styleUrls: ['./menu-item.component.scss']
+  styleUrls: ['./menu-item.component.scss'],
 })
 export class MenuItemComponent {
   @Input() label!: string;
@@ -13,7 +13,7 @@ export class MenuItemComponent {
   @Input() icon!: IconDefinition;
   @Input() active!: boolean;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   getItemClass(): string {
     return this.active ? 'menu-item selected' : 'menu-item';

@@ -1,3 +1,3 @@
 export interface WordlistFileDto {
-    filePath: string
+  filePath: string;
 }

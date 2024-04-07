@@ -1,5 +1,16 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { faArrowDown, faArrowUp, faBan, faClone, faGripLines, faPlus, faRotateLeft, faSearch, faTrashCan, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowDown,
+  faArrowUp,
+  faBan,
+  faClone,
+  faGripLines,
+  faPlus,
+  faRotateLeft,
+  faSearch,
+  faTrashCan,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
 import { CategoryTreeNode } from 'src/app/main/dtos/config/category-tree.dto';
@@ -18,7 +29,7 @@ interface DeletedBlock {
 @Component({
   selector: 'app-config-stacker',
   templateUrl: './config-stacker.component.html',
-  styleUrls: ['./config-stacker.component.scss']
+  styleUrls: ['./config-stacker.component.scss'],
 })
 export class ConfigStackerComponent implements OnInit {
   // Listen for CTRL+S on the page
@@ -27,14 +38,13 @@ export class ConfigStackerComponent implements OnInit {
     event.preventDefault();
 
     if (this.config !== null) {
-      this.configService.saveConfig(this.config, true)
-        .subscribe(c => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Saved',
-            detail: `${c.metadata.name} was saved`
-          });
+      this.configService.saveConfig(this.config, true).subscribe((c) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Saved',
+          detail: `${c.metadata.name} was saved`,
         });
+      });
     }
   }
 
@@ -74,17 +84,18 @@ export class ConfigStackerComponent implements OnInit {
       foregroundColor: '#fff',
       name: 'LoliCode',
     },
-    parameters: {}
-  }
+    parameters: {},
+  };
 
   faGripLines = faGripLines;
   faTriangleExclamation = faTriangleExclamation;
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     private settingsService: SettingsService,
-    private messageService: MessageService) {
-    this.configService.selectedConfig$
-      .subscribe(config => this.config = config);
+    private messageService: MessageService,
+  ) {
+    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
   }
 
   ngOnInit(): void {
@@ -92,24 +103,22 @@ export class ConfigStackerComponent implements OnInit {
       return;
     }
 
-    this.configService.convertLoliCodeToStack(this.config.loliCodeScript)
-      .subscribe(resp => {
-        this.stack = resp.stack;
-        this.checkStackScrollStatus();
-      });
+    this.configService.convertLoliCodeToStack(this.config.loliCodeScript).subscribe((resp) => {
+      this.stack = resp.stack;
+      this.checkStackScrollStatus();
+    });
 
-    this.configService.getBlockDescriptors()
-      .subscribe(descriptors => {
-        this.descriptors = descriptors;
+    this.configService.getBlockDescriptors().subscribe((descriptors) => {
+      this.descriptors = descriptors;
 
-        this.configService.getCategoryTree()
-          .subscribe(tree => this.categoryTree = new CategoryTreeNode(tree, null, descriptors));
-      });
+      this.configService
+        .getCategoryTree()
+        .subscribe((tree) => (this.categoryTree = new CategoryTreeNode(tree, null, descriptors)));
+    });
 
-    this.settingsService.getEnvironmentSettings()
-      .subscribe(envSettings => {
-        this.envSettings = envSettings;
-      });
+    this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.envSettings = envSettings;
+    });
   }
 
   getDescriptor(block: BlockInstanceTypes): BlockDescriptorDto {
@@ -165,7 +174,7 @@ export class ConfigStackerComponent implements OnInit {
     // If the user is holding ctrl, toggle the selection of this block
     if (event.ctrlKey) {
       if (this.selectedBlocks.includes(block)) {
-        this.selectedBlocks = this.selectedBlocks.filter(b => b !== block);
+        this.selectedBlocks = this.selectedBlocks.filter((b) => b !== block);
       } else {
         this.selectedBlocks.push(block);
       }
@@ -216,7 +225,7 @@ export class ConfigStackerComponent implements OnInit {
     }
 
     // Remove the selected blocks from the stack
-    this.stack = this.stack.filter(block => !this.selectedBlocks.includes(block));
+    this.stack = this.stack.filter((block) => !this.selectedBlocks.includes(block));
 
     // Clear the selection
     this.selectedBlocks = [];
@@ -374,12 +383,11 @@ export class ConfigStackerComponent implements OnInit {
       return;
     }
 
-    this.configService.convertStackToLoliCode(this.stack)
-      .subscribe(resp => {
-        if (this.config !== null) {
-          this.config.loliCodeScript = resp.loliCode;
-          this.configService.saveLocalConfig(this.config)
-        }
-      });
+    this.configService.convertStackToLoliCode(this.stack).subscribe((resp) => {
+      if (this.config !== null) {
+        this.config.loliCodeScript = resp.loliCode;
+        this.configService.saveLocalConfig(this.config);
+      }
+    });
   }
 }

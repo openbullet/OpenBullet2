@@ -1,3 +1,3 @@
 export interface ThemeDto {
-    name: string
+  name: string;
 }
