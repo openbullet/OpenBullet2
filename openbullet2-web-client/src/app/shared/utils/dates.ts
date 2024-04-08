@@ -4,25 +4,26 @@ import { TimeSpan } from './timespan';
 export function parseTimeSpan(input: string): TimeSpan {
   // We assume the format is [-][d.]HH:mm:ss[.millis] e.g. 5.04:01:02.0030010
   // means 5 days, 4 hours, 1 minute, 2 seconds, 3 milliseconds and 1 microsecond
+  let parsedInput = input;
 
-  if (input.startsWith('-')) {
-    input = input.substring(1);
+  if (parsedInput.startsWith('-')) {
+    parsedInput = parsedInput.substring(1);
   }
 
   let days = 0;
   let millis = 0;
-  const bigChunks = input.split('.');
+  const bigChunks = parsedInput.split('.');
 
   if (bigChunks.length > 2) {
     days = Number.parseInt(bigChunks[0]);
-    input = bigChunks[1];
+    parsedInput = bigChunks[1];
   }
 
   if (bigChunks.length === 3) {
     millis = Number.parseInt(bigChunks[2].substring(0, 3));
   }
 
-  const chunks = input.split(':');
+  const chunks = parsedInput.split(':');
   const hours = Number.parseInt(chunks[0]);
   const minutes = Number.parseInt(chunks[1]);
   const seconds = Number.parseInt(chunks[2]);

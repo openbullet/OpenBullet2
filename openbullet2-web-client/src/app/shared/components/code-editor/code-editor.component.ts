@@ -5,6 +5,7 @@ import { ConfigService } from 'src/app/main/services/config.service';
 import { SettingsService } from 'src/app/main/services/settings.service';
 import { autoCompleteBlock, autoCompleteLoliCodeStatement } from '../../languages/lolicode';
 
+// biome-ignore lint/suspicious/noExplicitAny: monaco
 declare const monaco: any;
 
 @Component({
@@ -18,6 +19,7 @@ export class CodeEditorComponent implements OnInit {
   @Input() language = 'lolicode';
   @Input() readOnly = false;
   @Input() theme = 'vs-dark-lolicode';
+  // biome-ignore lint/suspicious/noExplicitAny: any
   editorOptions: any = {};
   isTouched = false;
   model = '';
@@ -60,9 +62,10 @@ export class CodeEditorComponent implements OnInit {
           monaco.loliCodeCustomSnippets = customSnippets;
 
           monaco.languages.registerCompletionItemProvider('lolicode', {
+            // biome-ignore lint/suspicious/noExplicitAny: any
             provideCompletionItems: (model: any, position: any) => {
               // Check if we are completing BLOCK:
-              var textUntilPosition = model.getValueInRange({
+              const textUntilPosition = model.getValueInRange({
                 startLineNumber: position.lineNumber,
                 startColumn: 1,
                 endLineNumber: position.lineNumber,
@@ -82,8 +85,8 @@ export class CodeEditorComponent implements OnInit {
                 };
               }
 
-              var word = model.getWordUntilPosition(position);
-              var range = {
+              const word = model.getWordUntilPosition(position);
+              const range = {
                 startLineNumber: position.lineNumber,
                 endLineNumber: position.lineNumber,
                 startColumn: word.startColumn,

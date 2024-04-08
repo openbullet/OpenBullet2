@@ -5,10 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PascalCasePipe implements PipeTransform {
   transform(value: string, spaces = true): string {
+    let newValue = value;
     if (spaces) {
-      value = value.replace(/([A-Z])/g, ' $1');
+      newValue = newValue.replace(/([A-Z])/g, ' $1');
     }
 
-    return value.replace(/^./, (str) => str.toUpperCase());
+    return newValue.replace(/^./, (str) => str.toUpperCase());
   }
 }

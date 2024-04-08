@@ -13,6 +13,7 @@ export class InputNumberComponent implements OnInit {
   @Input() max: number | null = null;
   @Input() integer = true;
   @Input() class: string | null = null;
+  // biome-ignore lint/suspicious/noExplicitAny: any
   @Input() style: { [id: string]: any } = {};
   @Input() placeholder: number | string = '';
   @Input() ngModel: number | null = null;

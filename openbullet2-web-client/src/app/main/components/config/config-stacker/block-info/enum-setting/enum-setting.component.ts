@@ -33,6 +33,7 @@ export class EnumSettingComponent {
     return enumParameter.options;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: any
   displayFunction(item: any) {
     return item.toString();
   }

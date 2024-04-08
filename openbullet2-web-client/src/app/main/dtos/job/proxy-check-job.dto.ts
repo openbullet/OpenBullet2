@@ -9,7 +9,8 @@ export interface ProxyCheckJobDto extends JobDto {
   checkOnlyUntested: boolean;
   target: ProxyCheckTargetDto | null;
   timeoutMilliseconds: number;
-  checkOutput: any; // TODO: Polymorphic
+  // biome-ignore lint/suspicious/noExplicitAny: Polymorphic
+  checkOutput: any;
   total: number;
   tested: number;
   working: number;

@@ -90,13 +90,13 @@ export function getActionText(action: ActionDto): string {
     case ActionType.StartJob:
       return `Start job ${action.jobId}`;
     case ActionType.DiscordWebhook:
-      return `Send message via Discord webhook`;
+      return 'Send message via Discord webhook';
     case ActionType.TelegramBot:
-      return `Send message via Telegram bot`;
+      return 'Send message via Telegram bot';
     case ActionType.SetBots:
       return `Set bots to ${action.amount}`;
     case ActionType.ReloadProxies:
-      return `Reload proxies`;
+      return 'Reload proxies';
     default:
       return 'Unknown action';
   }

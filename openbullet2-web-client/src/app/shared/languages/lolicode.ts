@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: any
 export function registerLoliCode(monaco: any) {
   // Register a new language
   monaco.languages.register({ id: 'lolicode' });
@@ -549,6 +550,7 @@ export function registerLoliCode(monaco: any) {
   });
 
   monaco.languages.registerCompletionItemProvider('lolicode', {
+    // biome-ignore lint/suspicious/noExplicitAny: any
     provideCompletionItems: (model: any, position: any) => {
       const word = model.getWordUntilPosition(position);
       const range = {
@@ -568,19 +570,21 @@ export function registerLoliCode(monaco: any) {
   });
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: any
 export function autoCompleteBlock(monaco: any, range: any) {
   const blockAutocompletions = [];
-  for (var id in monaco.loliCodeBlockSnippets) {
+  for (const id in monaco.loliCodeBlockSnippets) {
     blockAutocompletions.push({
-      label: 'BLOCK:' + id,
+      label: `BLOCK:${id}`,
       kind: monaco.languages.CompletionItemKind.Snippet,
-      insertText: 'BLOCK:' + id + '\n' + monaco.loliCodeBlockSnippets[id] + 'ENDBLOCK\n',
+      insertText: `BLOCK:${id}\n${monaco.loliCodeBlockSnippets[id]}ENDBLOCK\n`,
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
     });
   }
   return blockAutocompletions;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: any
 export function autoCompleteLoliCodeStatement(monaco: any, range: any) {
   // returning a static list of proposals, not even looking at the prefix (filtering is done by the Monaco editor),
   // here you could do a server side lookup
@@ -740,7 +744,7 @@ export function autoCompleteLoliCodeStatement(monaco: any, range: any) {
     },
   ];
 
-  for (var id in monaco.loliCodeCustomSnippets) {
+  for (const id in monaco.loliCodeCustomSnippets) {
     customAutocompletions.push({
       label: id,
       kind: monaco.languages.CompletionItemKind.Snippet,

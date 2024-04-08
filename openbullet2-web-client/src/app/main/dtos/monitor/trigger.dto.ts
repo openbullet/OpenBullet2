@@ -153,7 +153,7 @@ export function getTriggerText(trigger: TriggerDto): string {
     case TriggerType.JobStatus:
       return `Job status is ${trigger.status}`;
     case TriggerType.JobFinished:
-      return `Job finished`;
+      return 'Job finished';
     case TriggerType.TestedCount:
       return `Tested count ${getComparisonText(trigger.comparison)} ${trigger.amount}`;
     case TriggerType.HitCount:
