@@ -10,6 +10,7 @@ export class InputDictionaryComponent implements OnChanges {
   @Input() id: string | null = null;
   @Input() key!: string;
   @Input() class: string | null = null;
+  // biome-ignore lint/suspicious/noExplicitAny: any
   @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder = '';

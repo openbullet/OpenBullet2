@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noExplicitAny: any
 export function registerLoliScript(monaco: any) {
   // Register a new language
   monaco.languages.register({ id: 'loliscript' });

@@ -64,7 +64,9 @@ export class ConfigSettingsComponent implements OnInit {
     private settingsService: SettingsService,
     private messageService: MessageService,
   ) {
-    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+    });
   }
 
   ngOnInit(): void {

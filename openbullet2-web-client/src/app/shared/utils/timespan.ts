@@ -32,7 +32,9 @@ export class TimeSpan {
   private static round(n: number): number {
     if (n < 0) {
       return Math.ceil(n);
-    } else if (n > 0) {
+    }
+
+    if (n > 0) {
       return Math.floor(n);
     }
 
@@ -89,11 +91,11 @@ export class TimeSpan {
     seconds?: number,
     milliseconds?: number,
   ): TimeSpan {
-    if (milliseconds != undefined && seconds !== undefined) {
-      return this.fromTimeStartingFromDays(daysOrHours, hoursOrMinutes, minutesOrSeconds, seconds, milliseconds);
-    } else {
-      return this.fromTimeStartingFromHours(daysOrHours, hoursOrMinutes, minutesOrSeconds);
+    if (milliseconds !== undefined && seconds !== undefined) {
+      return TimeSpan.fromTimeStartingFromDays(daysOrHours, hoursOrMinutes, minutesOrSeconds, seconds, milliseconds);
     }
+
+    return TimeSpan.fromTimeStartingFromHours(daysOrHours, hoursOrMinutes, minutesOrSeconds);
   }
 
   private static fromTimeStartingFromHours(hours: number, minutes: number, seconds: number): TimeSpan {

@@ -19,8 +19,9 @@ export class FloatSettingComponent {
     this.onChange.emit();
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: This function is only called with events from the input element.
   setValue(event: any) {
-    if (isNaN(event) || isNaN(Number.parseFloat(event))) {
+    if (Number.isNaN(event) || Number.isNaN(Number.parseFloat(event))) {
       return;
     }
 

@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { ConfigMode } from '../dtos/config/config-info.dto';
 import { ConfigService } from '../services/config.service';
 
+// biome-ignore lint/suspicious/noExplicitAny: any
 export const updateCSharpScript: ResolveFn<any> = async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const configService = inject(ConfigService);
   const config = configService.selectedConfig;

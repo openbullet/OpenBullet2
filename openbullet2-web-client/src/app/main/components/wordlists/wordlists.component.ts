@@ -77,7 +77,7 @@ export class WordlistsComponent implements OnInit {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
@@ -90,7 +90,9 @@ export class WordlistsComponent implements OnInit {
   refreshWordlists() {
     if (this.envSettings === null) return;
 
-    this.wordlistService.getAllWordlists().subscribe((wordlists) => (this.wordlists = wordlists));
+    this.wordlistService.getAllWordlists().subscribe((wordlists) => {
+      this.wordlists = wordlists;
+    });
   }
 
   openAddWordlistModal() {
@@ -152,7 +154,7 @@ export class WordlistsComponent implements OnInit {
       this.messageService.add({
         severity: 'success',
         summary: 'Deleted',
-        detail: `Wordlist ${wordlist.name} was deleted` + alsoDeleteFile ? ', along with its file' : '',
+        detail: `Wordlist ${wordlist.name} was deleted${alsoDeleteFile ? ', along with its file' : ''}`,
       });
       this.refreshWordlists();
     });

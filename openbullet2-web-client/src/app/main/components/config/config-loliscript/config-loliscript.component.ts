@@ -43,7 +43,9 @@ export class ConfigLoliscriptComponent {
     private settingsService: SettingsService,
     private messageService: MessageService,
   ) {
-    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+    });
   }
 
   editorLoaded() {

@@ -14,12 +14,10 @@ import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { JobStatus } from 'src/app/main/dtos/job/job-status';
-import { ChangeBotsMessage } from 'src/app/main/dtos/job/messages/change-bots.dto';
 import { PCJNewResultMessage } from 'src/app/main/dtos/job/messages/proxy-check/new-result.dto';
 import { ProxyCheckJobDto } from 'src/app/main/dtos/job/proxy-check-job.dto';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyWorkingStatus } from 'src/app/main/enums/proxy-working-status';
-import { getMockedProxyCheckJobNewResultMessage } from 'src/app/main/mock/messages.mock';
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyCheckJobHubService } from 'src/app/main/services/proxy-check-job.hub.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
@@ -268,7 +266,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   editSettings() {
-    this.router.navigate([`/job/proxy-check/edit`], { queryParams: { jobId: this.jobId } });
+    this.router.navigate(['/job/proxy-check/edit'], { queryParams: { jobId: this.jobId } });
   }
 
   backToJobs() {
@@ -351,7 +349,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'info',
       summary: 'Requested',
-      detail: `Requested to change bots to ${bots}` + (slow ? '. This might take some time' : ''),
+      detail: `Requested to change bots to ${bots}${slow ? '. This might take some time' : ''}`,
     });
 
     this.isChangingBots = false;

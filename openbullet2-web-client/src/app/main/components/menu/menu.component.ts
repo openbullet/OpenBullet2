@@ -244,7 +244,7 @@ export class MenuComponent implements OnDestroy {
     this.menu = [
       this.standardMenu[0],
       {
-        label: 'Config - ' + config.metadata.name,
+        label: `Config - ${config.metadata.name}`,
         items: menuItems,
         saveButton: true,
         onlyAdmin: true,

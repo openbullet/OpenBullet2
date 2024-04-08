@@ -87,7 +87,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
       const queryParams = results[1];
       const jobId = queryParams['jobId'];
 
-      if (jobId !== undefined && !isNaN(jobId)) {
+      if (jobId !== undefined && !Number.isNaN(jobId)) {
         this.jobId = Number.parseInt(jobId);
       }
 
@@ -120,7 +120,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     // Ask for confirmation and return the observable
     return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
-        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        message: 'You have unsaved changes. Are you sure that you want to leave?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {

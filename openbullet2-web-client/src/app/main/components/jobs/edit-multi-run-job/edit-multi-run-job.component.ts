@@ -162,7 +162,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       const queryParams = results[1];
       const jobId = queryParams['jobId'];
 
-      if (jobId !== undefined && !isNaN(jobId)) {
+      if (jobId !== undefined && !Number.isNaN(jobId)) {
         this.jobId = Number.parseInt(jobId);
       }
 
@@ -187,7 +187,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     // Ask for confirmation and return the observable
     return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
-        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        message: 'You have unsaved changes. Are you sure that you want to leave?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
@@ -419,7 +419,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       this.messageService.add({
         severity: 'warn',
         summary: 'Dangerous',
-        detail: `This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!`,
+        detail: 'This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!',
         life: 10000,
       });
     }
@@ -585,7 +585,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   calcCombinations() {
-    return Math.pow(this.dataPoolCombinationsCharSet.length, this.dataPoolCombinationsLength);
+    return this.dataPoolCombinationsCharSet.length ** this.dataPoolCombinationsLength;
   }
 
   calcCombinationsTime(cpm: number): TimeSpan {
@@ -602,7 +602,9 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
     if (this.dataPoolRangeAmount === 0) {
       return 'Nothing';
-    } else if (this.dataPoolRangeAmount === 1) {
+    }
+
+    if (this.dataPoolRangeAmount === 1) {
       return this.dataPoolRangeStart.toString();
     }
 

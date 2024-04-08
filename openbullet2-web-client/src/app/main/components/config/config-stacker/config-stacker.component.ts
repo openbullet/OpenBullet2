@@ -7,7 +7,6 @@ import {
   faGripLines,
   faPlus,
   faRotateLeft,
-  faSearch,
   faTrashCan,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
@@ -95,7 +94,9 @@ export class ConfigStackerComponent implements OnInit {
     private settingsService: SettingsService,
     private messageService: MessageService,
   ) {
-    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+    });
   }
 
   ngOnInit(): void {
@@ -113,7 +114,9 @@ export class ConfigStackerComponent implements OnInit {
 
       this.configService
         .getCategoryTree()
-        .subscribe((tree) => (this.categoryTree = new CategoryTreeNode(tree, null, descriptors)));
+        .subscribe((tree) => {
+          this.categoryTree = new CategoryTreeNode(tree, null, descriptors);
+        });
     });
 
     this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {

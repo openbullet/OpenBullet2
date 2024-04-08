@@ -40,6 +40,7 @@ export class ConfigsComponent implements OnInit {
   faTriangleExclamation = faTriangleExclamation;
   faGears = faGears;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Moment
   moment: any = moment;
 
   displayMode = 'grid';
@@ -105,13 +106,15 @@ export class ConfigsComponent implements OnInit {
     private volatileSettings: VolatileSettingsService,
     private settingsService: SettingsService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshConfigs(false);
     this.displayMode = this.volatileSettings.configsDisplayMode;
 
-    this.settingsService.getSettings().subscribe((settings) => (this.obSettings = settings));
+    this.settingsService.getSettings().subscribe((settings) => {
+      this.obSettings = settings;
+    });
   }
 
   refreshConfigs(reload: boolean) {
@@ -150,7 +153,7 @@ export class ConfigsComponent implements OnInit {
         this.messageService.add({
           severity: 'warn',
           summary: 'Dangerous',
-          detail: `This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!`,
+          detail: 'This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!',
           life: 10000,
         });
       }

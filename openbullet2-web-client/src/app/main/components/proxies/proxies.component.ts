@@ -199,7 +199,7 @@ export class ProxiesComponent implements OnInit {
     private messageService: MessageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -277,9 +277,12 @@ export class ProxiesComponent implements OnInit {
         sortBy: sortBy,
         sortDescending: sortDescending,
       })
-      .subscribe((proxies) => (this.proxies = proxies));
+      .subscribe((proxies) => {
+        this.proxies = proxies;
+      });
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: Event
   lazyLoadProxies(event: any) {
     this.refreshProxies(
       Math.floor(event.first / event.rows) + 1,
@@ -315,7 +318,7 @@ export class ProxiesComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'No proxy group selected',
-        detail: `Select a valid proxy group, or create one, before importing proxies`,
+        detail: 'Select a valid proxy group, or create one, before importing proxies',
       });
       return;
     }
@@ -330,7 +333,7 @@ export class ProxiesComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'No proxy group selected',
-        detail: `Select a valid proxy group, or create one, before importing proxies`,
+        detail: 'Select a valid proxy group, or create one, before importing proxies',
       });
       return;
     }
@@ -345,7 +348,7 @@ export class ProxiesComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'No proxy group selected',
-        detail: `Select a valid proxy group, or create one, before importing proxies`,
+        detail: 'Select a valid proxy group, or create one, before importing proxies',
       });
       return;
     }
@@ -491,11 +494,13 @@ export class ProxiesComponent implements OnInit {
   getWorkingClass(status: string) {
     if (status === 'working') {
       return 'color-good';
-    } else if (status === 'notWorking') {
-      return 'color-bad';
-    } else {
-      return 'color-inactive';
     }
+
+    if (status === 'notWorking') {
+      return 'color-bad';
+    }
+
+    return 'color-inactive';
   }
 
   importProxiesFromText(toImport: ProxiesToImport) {
@@ -542,8 +547,8 @@ export class ProxiesComponent implements OnInit {
       });
   }
 
-  searchBoxKeyDown(event: any) {
-    if (event.key == 'Enter') {
+  searchBoxKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
       this.refreshProxies();
     }
   }

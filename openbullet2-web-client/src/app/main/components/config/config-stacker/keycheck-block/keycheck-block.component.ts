@@ -183,7 +183,7 @@ export class KeycheckBlockComponent implements OnInit {
         color = 'var(--fg-tocheck)';
         break;
 
-      default:
+      default: {
         // Get the first custom status that matches
         const customStatus = this.envSettings.customStatuses.find((s) => s.name === keychain.resultStatus);
 
@@ -191,6 +191,7 @@ export class KeycheckBlockComponent implements OnInit {
           color = customStatus.color;
         }
         break;
+      }
     }
 
     return color;

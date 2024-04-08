@@ -27,7 +27,7 @@ export class UploadWordlistComponent {
   constructor(
     private wordlistService: WordlistService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   public reset() {
     this.name = '';
@@ -54,10 +54,11 @@ export class UploadWordlistComponent {
     this.wordlistService
       .uploadWordlistFile(this.selectedFile)
       .pipe(
+        // biome-ignore lint/suspicious/noExplicitAny: any
         map((event: any) => {
-          if (event.type == HttpEventType.UploadProgress) {
+          if (event.type === HttpEventType.UploadProgress) {
             this.uploadProgress = Math.round((100 / event.total) * event.loaded);
-          } else if (event.type == HttpEventType.Response) {
+          } else if (event.type === HttpEventType.Response) {
             const resp: WordlistFileDto = event.body;
             this.uploadProgress = 100;
             this.messageService.add({
@@ -69,6 +70,7 @@ export class UploadWordlistComponent {
             this.isUploading = false;
           }
         }),
+        // biome-ignore lint/suspicious/noExplicitAny: any
         catchError((err: any) => {
           this.uploadProgress = null;
           console.log(err.message);
@@ -78,6 +80,7 @@ export class UploadWordlistComponent {
       .subscribe();
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: any
   uploadError(event: any) {
     console.log(event);
   }

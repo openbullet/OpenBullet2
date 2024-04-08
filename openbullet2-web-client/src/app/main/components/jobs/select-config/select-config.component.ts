@@ -18,7 +18,7 @@ export class SelectConfigComponent {
   selectedConfig: ConfigInfoDto | null = null;
   readme: string | null = null;
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   public refresh() {
     this.configs = null;
@@ -44,8 +44,8 @@ export class SelectConfigComponent {
     this.confirm.emit(config);
   }
 
-  searchBoxKeyDown(event: any) {
-    if (event.key == 'Enter') {
+  searchBoxKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
       this.filterConfigs();
     }
   }

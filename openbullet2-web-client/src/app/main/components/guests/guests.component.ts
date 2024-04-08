@@ -31,14 +31,16 @@ export class GuestsComponent implements OnInit {
     private guestService: GuestService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshGuests();
   }
 
   refreshGuests() {
-    this.guestService.getAllGuests().subscribe((guests) => (this.guests = guests));
+    this.guestService.getAllGuests().subscribe((guests) => {
+      this.guests = guests;
+    });
   }
 
   openUpdateGuestInfoModal(guest: GuestDto) {

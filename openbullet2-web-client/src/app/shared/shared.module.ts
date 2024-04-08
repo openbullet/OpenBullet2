@@ -22,6 +22,7 @@ import { PascalCasePipe } from './pipes/pascalcase.pipe';
 import { TimeSpanPipe } from './pipes/timespan.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 
+// biome-ignore lint/suspicious/noExplicitAny: monaco
 declare const monaco: any;
 
 const monacoConfig: NgxMonacoEditorConfig = {
@@ -72,4 +73,4 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputDictionaryComponent,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

@@ -383,7 +383,7 @@ export class MultiRunJobComponent {
   }
 
   editSettings() {
-    this.router.navigate([`/job/multi-run/edit`], { queryParams: { jobId: this.jobId } });
+    this.router.navigate(['/job/multi-run/edit'], { queryParams: { jobId: this.jobId } });
   }
 
   backToJobs() {
@@ -473,7 +473,7 @@ export class MultiRunJobComponent {
     this.messageService.add({
       severity: 'info',
       summary: 'Requested',
-      detail: `Requested to change bots to ${bots}` + (slow ? '. This might take some time' : ''),
+      detail: `Requested to change bots to ${bots}${slow ? '. This might take some time' : ''}`,
     });
 
     this.isChangingBots = false;

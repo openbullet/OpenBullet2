@@ -20,6 +20,7 @@ export class ByteArraySettingComponent {
   }
 
   // Given a base64 string, sets the value of the setting.
+  // biome-ignore lint/suspicious/noExplicitAny: This function is only called with events from the input element.
   setValue(event: any) {
     // Make sure the input is a valid base64 string.
     if (

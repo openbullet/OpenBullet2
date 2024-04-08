@@ -34,7 +34,9 @@ export class ConfigReadmeComponent {
     private configService: ConfigService,
     private messageService: MessageService,
   ) {
-    this.configService.selectedConfig$.subscribe((config) => (this.config = config));
+    this.configService.selectedConfig$.subscribe((config) => {
+      this.config = config;
+    });
   }
 
   localSave() {

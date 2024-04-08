@@ -106,7 +106,7 @@ export class HitsComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -189,9 +189,12 @@ export class HitsComponent implements OnInit {
         sortBy: sortBy,
         sortDescending: sortDescending,
       })
-      .subscribe((hits) => (this.hits = hits));
+      .subscribe((hits) => {
+        this.hits = hits;
+      });
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: The signature of the original event is any.
   lazyLoadHits(event: any) {
     this.refreshHits(
       Math.floor(event.first / event.rows) + 1,
@@ -210,8 +213,9 @@ export class HitsComponent implements OnInit {
     this.refreshHits();
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: The signature of the original event is any.
   searchBoxKeyDown(event: any) {
-    if (event.key == 'Enter') {
+    if (event.key === 'Enter') {
       this.refreshHits();
     }
   }
@@ -294,7 +298,9 @@ export class HitsComponent implements OnInit {
   getTypeColor(type: string) {
     if (type === 'SUCCESS') {
       return 'yellowgreen';
-    } else if (type === 'NONE') {
+    }
+
+    if (type === 'NONE') {
       return '#7FFFD4';
     }
 

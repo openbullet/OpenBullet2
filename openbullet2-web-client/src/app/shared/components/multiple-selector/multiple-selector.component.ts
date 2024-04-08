@@ -24,9 +24,11 @@ export class MultipleSelectorComponent<T> implements OnChanges {
   @Output() selectedItemsChange = new EventEmitter<T[]>();
   @Output() onChange = new EventEmitter<T[]>();
 
+  // biome-ignore lint/suspicious/noExplicitAny: TemplateRef
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any> | null = null;
 
   @ViewChild('defaultItemTemplate', { static: true })
+  // biome-ignore lint/suspicious/noExplicitAny: TemplateRef
   defaultItemTemplate: TemplateRef<any> | null = null;
 
   faArrowRight = faArrowRight;

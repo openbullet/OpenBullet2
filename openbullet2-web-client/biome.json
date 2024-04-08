@@ -15,6 +15,9 @@
       "style": {
         "useImportType": "off",
         "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
       }
     }
   }

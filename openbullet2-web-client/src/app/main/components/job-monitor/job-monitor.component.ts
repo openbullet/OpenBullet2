@@ -24,6 +24,7 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
   triggeredActions: TriggeredActionDto[] | null = null;
   getTriggerText = getTriggerText;
   getActionText = getActionText;
+  // biome-ignore lint/suspicious/noExplicitAny: Interval
   interval: any;
 
   constructor(
@@ -31,7 +32,7 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
@@ -70,7 +71,7 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'success',
         summary: 'Set enabled',
-        detail: `The triggered action ${triggeredAction.name} was ` + (enabled ? 'enabled' : 'disabled'),
+        detail: `The triggered action ${triggeredAction.name} was ${enabled ? 'enabled' : 'disabled'}`,
       });
     });
   }
@@ -78,9 +79,9 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
   getJobUrl(triggeredAction: TriggeredActionDto) {
     switch (triggeredAction.jobType) {
       case JobType.MultiRun:
-        return '/job/multi-run/' + triggeredAction.jobId;
+        return `/job/multi-run/${triggeredAction.jobId}`;
       case JobType.ProxyCheck:
-        return '/job/proxy-check/' + triggeredAction.jobId;
+        return `/job/proxy-check/${triggeredAction.jobId}`;
       default:
         return '/jobs';
     }

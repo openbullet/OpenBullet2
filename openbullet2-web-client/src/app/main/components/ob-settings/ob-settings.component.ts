@@ -85,7 +85,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   canDeactivate() {
     if (!this.touched) {
@@ -95,7 +95,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     // Ask for confirmation and return the observable
     return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
-        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        message: 'You have unsaved changes. Are you sure that you want to leave?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
@@ -116,7 +116,9 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
   }
 
   getSettings() {
-    this.settingsService.getSettings().subscribe((settings) => (this.settings = settings));
+    this.settingsService.getSettings().subscribe((settings) => {
+      this.settings = settings;
+    });
   }
 
   getThemes() {

@@ -20,6 +20,7 @@ export class UploadConfigsComponent {
     this.isUploading = false;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: The signature of the original event is any.
   uploadError(event: any) {
     console.log(event);
   }

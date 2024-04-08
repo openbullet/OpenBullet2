@@ -28,7 +28,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   buildDate: Date | null = null;
   faCopy = faCopy;
   faRightFromBracket = faRightFromBracket;
+  // biome-ignore lint/suspicious/noExplicitAny: Timer
   timer: any;
+  // biome-ignore lint/suspicious/noExplicitAny: Timer
   perfTimer: any;
   username = 'admin';
   recentHits: RecentHitsDto | null = null;
@@ -45,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private infoService: InfoService,
     private hitService: HitService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   // Clear the timer when navigating off the page
   ngOnDestroy(): void {
@@ -56,9 +58,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.username = this.userService.loadUserInfo().username;
 
-    this.infoService.getAnnouncement().subscribe((ann) => (this.announcement = ann));
+    this.infoService.getAnnouncement().subscribe((ann) => {
+      this.announcement = ann;
+    });
 
-    this.infoService.getCollectionInfo().subscribe((coll) => (this.collectionInfo = coll));
+    this.infoService.getCollectionInfo().subscribe((coll) => {
+      this.collectionInfo = coll;
+    });
 
     this.infoService.getServerInfo().subscribe((info) => {
       this.serverStartTime = moment(info.startTime);
@@ -72,7 +78,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       }, 1000);
     });
 
-    this.hitService.getRecentHits(7).subscribe((hits) => (this.recentHits = hits));
+    this.hitService.getRecentHits(7).subscribe((hits) => {
+      this.recentHits = hits;
+    });
   }
 
   updateTimes() {

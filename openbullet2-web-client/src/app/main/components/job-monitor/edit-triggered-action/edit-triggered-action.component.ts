@@ -126,7 +126,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     // Ask for confirmation and return the observable
     return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
-        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        message: 'You have unsaved changes. Are you sure that you want to leave?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
@@ -281,6 +281,7 @@ export class EditTriggeredActionComponent implements DeactivatableComponent {
     this.actions.splice(index, 1);
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: any is used to allow any type of value
   displayEnumValue(value: any): string {
     const pascalPipe = new PascalCasePipe();
     return pascalPipe.transform(value);

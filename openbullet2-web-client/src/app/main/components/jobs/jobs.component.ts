@@ -25,6 +25,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   faPen = faPen;
   faClone = faClone;
 
+  // biome-ignore lint/suspicious/noExplicitAny: IntervalId is any.
   intervalId: any;
   refreshingMultiRunJobs = false;
   refreshingProxyCheckJobs = false;
@@ -55,7 +56,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshJobs();
@@ -75,16 +76,24 @@ export class JobsComponent implements OnInit, OnDestroy {
     if (!this.refreshingMultiRunJobs) {
       this.refreshingMultiRunJobs = true;
       this.jobService.getAllMultiRunJobs().subscribe({
-        next: (jobs) => (this.multiRunJobs = jobs),
-        complete: () => (this.refreshingMultiRunJobs = false),
+        next: (jobs) => {
+          this.multiRunJobs = jobs;
+        },
+        complete: () => {
+          this.refreshingMultiRunJobs = false;
+        },
       });
     }
 
     if (!this.refreshingProxyCheckJobs) {
       this.refreshingProxyCheckJobs = true;
       this.jobService.getAllProxyCheckJobs().subscribe({
-        next: (jobs) => (this.proxyCheckJobs = jobs),
-        complete: () => (this.refreshingProxyCheckJobs = false),
+        next: (jobs) => {
+          this.proxyCheckJobs = jobs;
+        },
+        complete: () => {
+          this.refreshingProxyCheckJobs = false;
+        },
       });
     }
   }
@@ -161,7 +170,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate([`/job/multi-run/edit`], { queryParams: { jobId: job.id } });
+    this.router.navigate(['/job/multi-run/edit'], { queryParams: { jobId: job.id } });
   }
 
   editProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
@@ -177,19 +186,19 @@ export class JobsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate([`/job/proxy-check/edit`], { queryParams: { jobId: job.id } });
+    this.router.navigate(['/job/proxy-check/edit'], { queryParams: { jobId: job.id } });
   }
 
   cloneMultiRunJob(job: MultiRunJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
-    this.router.navigate([`/job/multi-run/clone`], { queryParams: { jobId: job.id } });
+    this.router.navigate(['/job/multi-run/clone'], { queryParams: { jobId: job.id } });
   }
 
   cloneProxyCheckJob(job: ProxyCheckJobOverviewDto, event: MouseEvent) {
     event.stopPropagation();
 
-    this.router.navigate([`/job/proxy-check/clone`], { queryParams: { jobId: job.id } });
+    this.router.navigate(['/job/proxy-check/clone'], { queryParams: { jobId: job.id } });
   }
 
   confirmRemoveJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {

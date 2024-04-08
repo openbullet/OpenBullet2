@@ -145,10 +145,14 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
             const chartId = this.chart.canvas.id;
 
             if (chartId === 'cpuChart') {
-              return formatNumber(value, 'en-US', '1.0-0') + '%';
-            } else if (chartId === 'networkChart') {
-              return formatBytes(value, 0) + '/s';
-            } else if (chartId === 'memoryChart') {
+              return `${formatNumber(value, 'en-US', '1.0-0')}%`;
+            }
+
+            if (chartId === 'networkChart') {
+              return `${formatBytes(value, 0)}/s`;
+            }
+
+            if (chartId === 'memoryChart') {
               return formatBytes(value, 0);
             }
 
@@ -206,7 +210,7 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'info',
         summary: 'Requested',
-        detail: `Garbage Collection is on the way!`,
+        detail: 'Garbage Collection is on the way!',
       });
     });
   }
@@ -282,21 +286,25 @@ export class SysperfCardsComponent implements OnInit, OnDestroy {
     if (first === 0) {
       if (last === 0) {
         return ['perf-flat', faCircleMinus, 0];
-      } else if (last > 0) {
-        return ['perf-bad', faCircleArrowUp, 0];
-      } else {
-        return ['perf-good', faCircleArrowDown, 0];
       }
+
+      if (last > 0) {
+        return ['perf-bad', faCircleArrowUp, 0];
+      }
+
+      return ['perf-good', faCircleArrowDown, 0];
     }
 
     const percIncrement = (last - first) / first;
 
     if (percIncrement === 0) {
       return ['perf-flat', faCircleMinus, 0];
-    } else if (percIncrement > 0) {
-      return ['perf-bad', faCircleArrowUp, percIncrement * 100];
-    } else {
-      return ['perf-good', faCircleArrowDown, percIncrement * 100];
     }
+
+    if (percIncrement > 0) {
+      return ['perf-bad', faCircleArrowUp, percIncrement * 100];
+    }
+
+    return ['perf-good', faCircleArrowDown, percIncrement * 100];
   }
 }

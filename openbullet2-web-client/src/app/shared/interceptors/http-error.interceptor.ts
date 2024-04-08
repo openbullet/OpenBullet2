@@ -20,21 +20,23 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private router: Router,
     private messageService: MessageService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Inject the jwt if present
     const jwt = this.userService.getJwt();
+    let nextRequest = request;
 
     if (jwt !== null) {
-      request = request.clone({
+      nextRequest = request.clone({
         setHeaders: {
           Authorization: `Bearer ${jwt}`,
         },
       });
     }
 
-    return next.handle(request).pipe(
+    return next.handle(nextRequest).pipe(
+      // biome-ignore lint/suspicious/noExplicitAny: any
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           const headerValue = event.headers.get('X-Application-Warning');

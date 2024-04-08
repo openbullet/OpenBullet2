@@ -23,7 +23,7 @@ export function getMockedProxyCheckJobNewResultMessage(): PCJNewResultMessage {
   return {
     proxyHost: octets.join('.'),
     proxyPort: Math.floor(Math.random() * 65535),
-    workingStatus: Math.floor(Math.random() * 2) == 1 ? ProxyWorkingStatus.Working : ProxyWorkingStatus.NotWorking,
+    workingStatus: Math.floor(Math.random() * 2) === 1 ? ProxyWorkingStatus.Working : ProxyWorkingStatus.NotWorking,
     ping: Math.floor(Math.random() * 1000),
     country: countries[Math.floor(Math.random() * countries.length)],
   };

@@ -72,7 +72,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   canDeactivate() {
     if (!this.touched) {
@@ -82,7 +82,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     // Ask for confirmation and return the observable
     return new Observable<boolean>((observer) => {
       this.confirmationService.confirm({
-        message: `You have unsaved changes. Are you sure that you want to leave?`,
+        message: 'You have unsaved changes. Are you sure that you want to leave?',
         header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
@@ -102,7 +102,9 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
   }
 
   getSettings() {
-    this.settingsService.getRuriLibSettings().subscribe((settings) => (this.settings = settings));
+    this.settingsService.getRuriLibSettings().subscribe((settings) => {
+      this.settings = settings;
+    });
   }
 
   saveSettings() {

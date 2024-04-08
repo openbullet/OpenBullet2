@@ -12,6 +12,7 @@ export interface VariableDto {
   name: string;
   markedForCapture: boolean;
   type: string;
+  // biome-ignore lint/suspicious/noExplicitAny: any
   value: any;
 }
 

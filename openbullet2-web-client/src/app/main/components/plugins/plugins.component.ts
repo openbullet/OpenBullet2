@@ -23,14 +23,16 @@ export class PluginsComponent implements OnInit {
     private pluginService: PluginService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshPlugins();
   }
 
   refreshPlugins() {
-    this.pluginService.getAllPlugins().subscribe((plugins) => (this.plugins = plugins));
+    this.pluginService.getAllPlugins().subscribe((plugins) => {
+      this.plugins = plugins;
+    });
   }
 
   openAddPluginModal() {
