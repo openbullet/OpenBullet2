@@ -23,7 +23,7 @@ export class PluginsComponent implements OnInit {
     private pluginService: PluginService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.refreshPlugins();

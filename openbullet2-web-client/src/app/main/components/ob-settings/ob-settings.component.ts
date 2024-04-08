@@ -85,7 +85,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) { }
+  ) {}
 
   canDeactivate() {
     if (!this.touched) {

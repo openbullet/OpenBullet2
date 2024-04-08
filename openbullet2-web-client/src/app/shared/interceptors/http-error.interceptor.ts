@@ -20,7 +20,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private router: Router,
     private messageService: MessageService,
     private userService: UserService,
-  ) { }
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Inject the jwt if present

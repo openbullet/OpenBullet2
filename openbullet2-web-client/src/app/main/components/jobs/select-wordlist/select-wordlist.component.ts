@@ -19,7 +19,7 @@ export class SelectWordlistComponent {
   selectedWordlist: WordlistDto | null = null;
   preview: WordlistPreviewDto | null = null;
 
-  constructor(private wordlistService: WordlistService) { }
+  constructor(private wordlistService: WordlistService) {}
 
   public refresh() {
     this.wordlists = null;

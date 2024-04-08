@@ -18,7 +18,7 @@ export class SelectConfigComponent {
   selectedConfig: ConfigInfoDto | null = null;
   readme: string | null = null;
 
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService) {}
 
   public refresh() {
     this.configs = null;

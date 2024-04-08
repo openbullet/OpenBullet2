@@ -39,7 +39,7 @@ export class MultiRunJobHubService {
   private completedEmitter = new EventEmitter<boolean | null>();
   public completed$ = this.completedEmitter.asObservable();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
   createHubConnection(jobId: number) {
     this.hubConnection = new HubConnectionBuilder()

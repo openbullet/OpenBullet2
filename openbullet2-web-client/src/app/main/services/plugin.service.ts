@@ -7,7 +7,7 @@ import { PluginDto } from '../dtos/plugin/plugin.dto';
   providedIn: 'root',
 })
 export class PluginService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllPlugins() {
     return this.http.get<PluginDto[]>(`${getBaseUrl()}/plugin/all`);

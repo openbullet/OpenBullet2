@@ -20,7 +20,7 @@ export class ConfigDebuggerSettingsService {
     if (json !== null) {
       try {
         settings = JSON.parse(json);
-      } catch { }
+      } catch {}
     }
 
     return (

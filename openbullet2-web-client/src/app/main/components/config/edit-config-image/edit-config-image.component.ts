@@ -14,7 +14,7 @@ export class EditConfigImageComponent {
   base64Image: string | null = null;
   remoteUrl = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   setImage(base64Image: string) {
     this.base64Image = base64Image;

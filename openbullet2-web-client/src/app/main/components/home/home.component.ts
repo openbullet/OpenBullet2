@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private infoService: InfoService,
     private hitService: HitService,
     private userService: UserService,
-  ) { }
+  ) {}
 
   // Clear the timer when navigating off the page
   ngOnDestroy(): void {

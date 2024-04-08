@@ -112,11 +112,9 @@ export class ConfigStackerComponent implements OnInit {
     this.configService.getBlockDescriptors().subscribe((descriptors) => {
       this.descriptors = descriptors;
 
-      this.configService
-        .getCategoryTree()
-        .subscribe((tree) => {
-          this.categoryTree = new CategoryTreeNode(tree, null, descriptors);
-        });
+      this.configService.getCategoryTree().subscribe((tree) => {
+        this.categoryTree = new CategoryTreeNode(tree, null, descriptors);
+      });
     });
 
     this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {

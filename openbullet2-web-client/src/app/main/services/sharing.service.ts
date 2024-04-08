@@ -7,7 +7,7 @@ import { EndpointDto } from '../dtos/sharing/endpoint.dto';
   providedIn: 'root',
 })
 export class SharingService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllEndpoints() {
     return this.http.get<EndpointDto[]>(`${getBaseUrl()}/shared/endpoint/all`);

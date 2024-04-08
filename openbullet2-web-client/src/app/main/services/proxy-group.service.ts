@@ -9,7 +9,7 @@ import { UpdateProxyGroupDto } from '../dtos/proxy-group/update-proxy-group.dto'
   providedIn: 'root',
 })
 export class ProxyGroupService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllProxyGroups() {
     return this.http.get<ProxyGroupDto[]>(`${getBaseUrl()}/proxy-group/all`);

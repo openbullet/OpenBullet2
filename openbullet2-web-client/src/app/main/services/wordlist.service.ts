@@ -12,7 +12,7 @@ import { WordlistDto } from '../dtos/wordlist/wordlist.dto';
   providedIn: 'root',
 })
 export class WordlistService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getWordlist(id: number) {
     return this.http.get<WordlistDto>(`${getBaseUrl()}/wordlist`, {

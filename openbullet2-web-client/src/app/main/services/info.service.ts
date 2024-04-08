@@ -11,7 +11,7 @@ import { UpdateInfoDto } from '../dtos/info/update-info.dto';
   providedIn: 'root',
 })
 export class InfoService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAnnouncement() {
     return this.http.get<AnnouncementDto>(`${getBaseUrl()}/info/announcement`);

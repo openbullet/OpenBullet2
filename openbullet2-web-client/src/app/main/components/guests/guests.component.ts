@@ -31,7 +31,7 @@ export class GuestsComponent implements OnInit {
     private guestService: GuestService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.refreshGuests();

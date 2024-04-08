@@ -14,7 +14,7 @@ export class SettingsService {
   // Cached
   private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getEnvironmentSettings() {
     if (this.envSettings$ !== null) {

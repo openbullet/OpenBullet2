@@ -106,7 +106,7 @@ export class HitsComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {

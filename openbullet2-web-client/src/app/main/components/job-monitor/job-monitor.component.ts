@@ -32,7 +32,7 @@ export class JobMonitorComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnDestroy(): void {
     clearInterval(this.interval);

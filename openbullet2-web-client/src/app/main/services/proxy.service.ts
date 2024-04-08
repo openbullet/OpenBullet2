@@ -13,7 +13,7 @@ import { ProxyDto } from '../dtos/proxy/proxy.dto';
   providedIn: 'root',
 })
 export class ProxyService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getProxies(filter: ProxyFiltersDto) {
     return this.http.get<PagedList<ProxyDto>>(`${getBaseUrl()}/proxy/all`, {

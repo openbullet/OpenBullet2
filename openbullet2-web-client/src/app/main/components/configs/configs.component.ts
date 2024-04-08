@@ -106,7 +106,7 @@ export class ConfigsComponent implements OnInit {
     private volatileSettings: VolatileSettingsService,
     private settingsService: SettingsService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.refreshConfigs(false);
@@ -153,7 +153,8 @@ export class ConfigsComponent implements OnInit {
         this.messageService.add({
           severity: 'warn',
           summary: 'Dangerous',
-          detail: 'This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!',
+          detail:
+            'This config could be dangerous as it might contain plain C# code, DO NOT run it unless you trust the source!',
           life: 10000,
         });
       }

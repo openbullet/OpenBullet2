@@ -13,7 +13,7 @@ import { UpdateHitDto } from '../dtos/hit/update-hit.dto';
   providedIn: 'root',
 })
 export class HitService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getHits(filter: ListHitFiltersDto) {
     return this.http.get<PagedList<HitDto>>(`${getBaseUrl()}/hit/all`, {

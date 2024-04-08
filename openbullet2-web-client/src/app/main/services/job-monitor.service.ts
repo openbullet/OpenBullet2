@@ -11,7 +11,7 @@ import {
   providedIn: 'root',
 })
 export class JobMonitorService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllTriggeredActions() {
     return this.http.get<TriggeredActionDto[]>(`${getBaseUrl()}/job-monitor/triggered-action/all`);

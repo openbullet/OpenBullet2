@@ -10,7 +10,7 @@ import { UpdateGuestPasswordDto } from '../dtos/guest/update-guest-password.dto'
   providedIn: 'root',
 })
 export class GuestService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllGuests() {
     return this.http.get<GuestDto[]>(`${getBaseUrl()}/guest/all`);

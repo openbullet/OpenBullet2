@@ -73,4 +73,4 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputDictionaryComponent,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -56,7 +56,7 @@ export class JobsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.refreshJobs();

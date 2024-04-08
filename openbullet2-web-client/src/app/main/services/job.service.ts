@@ -15,7 +15,7 @@ import { ProxyCheckJobDto } from '../dtos/job/proxy-check-job.dto';
   providedIn: 'root',
 })
 export class JobService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllJobs() {
     return this.http.get<JobOverviewDto[]>(`${getBaseUrl()}/job/all`);

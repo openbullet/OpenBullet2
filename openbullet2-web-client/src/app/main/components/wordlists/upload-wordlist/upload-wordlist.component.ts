@@ -27,7 +27,7 @@ export class UploadWordlistComponent {
   constructor(
     private wordlistService: WordlistService,
     private messageService: MessageService,
-  ) { }
+  ) {}
 
   public reset() {
     this.name = '';

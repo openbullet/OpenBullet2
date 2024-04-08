@@ -77,7 +77,7 @@ export class WordlistsComponent implements OnInit {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
