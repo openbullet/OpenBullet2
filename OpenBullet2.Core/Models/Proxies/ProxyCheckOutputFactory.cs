@@ -1,29 +1,30 @@
-﻿using OpenBullet2.Core.Repositories;
-using RuriLib.Models.Proxies;
+﻿using RuriLib.Models.Proxies;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenBullet2.Core.Models.Proxies;
 
 /// <summary>
-/// Factory that creates an <see cref="IProxyCheckOutput"/> from the <see cref="ProxyCheckOutputOptions"/>.
+/// Factory that creates a <see cref="IProxyCheckOutput"/> from the <see cref="ProxyCheckOutputOptions"/>.
 /// </summary>
 public class ProxyCheckOutputFactory
 {
-    private readonly IProxyRepository proxyRepo;
-
-    public ProxyCheckOutputFactory(IProxyRepository proxyRepo)
+    private readonly IServiceScopeFactory _scopeFactory;
+    
+    /// <summary></summary>
+    public ProxyCheckOutputFactory(IServiceScopeFactory scopeFactory)
     {
-        this.proxyRepo = proxyRepo;
+        _scopeFactory = scopeFactory;
     }
 
     /// <summary>
-    /// Creates an <see cref="IProxyCheckOutput"/> from the <see cref="ProxyCheckOutputOptions"/>.
+    /// Creates a <see cref="IProxyCheckOutput"/> from the <see cref="ProxyCheckOutputOptions"/>.
     /// </summary>
     public IProxyCheckOutput FromOptions(ProxyCheckOutputOptions options)
     {
         IProxyCheckOutput output = options switch
         {
-            DatabaseProxyCheckOutputOptions _ => new DatabaseProxyCheckOutput(proxyRepo),
+            DatabaseProxyCheckOutputOptions _ => new DatabaseProxyCheckOutput(_scopeFactory),
             _ => throw new NotImplementedException()
         };
 

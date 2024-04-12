@@ -22,6 +22,7 @@ using RuriLib.Services;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OpenBullet2.Core.Models.Proxies;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -117,6 +118,7 @@ builder.Services.AddSingleton(service =>
         userDataFolder));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
+builder.Services.AddSingleton<ProxyCheckOutputFactory>();
 builder.Services.AddSingleton<JobManagerService>();
 builder.Services.AddSingleton(service =>
     new JobMonitorService(service.GetService<JobManagerService>(),

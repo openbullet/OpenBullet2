@@ -434,7 +434,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         using var client = Factory.CreateClient();
-        var proxyRepository = GetRequiredService<IProxyRepository>();
+        var proxyCheckOutputFactory = GetRequiredService<ProxyCheckOutputFactory>();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var pcJob = CreateProxyCheckJob();
@@ -448,7 +448,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.Url = "https://example.com";
         pcJob.SuccessKey = "<title>Example</title>";
         pcJob.Timeout = TimeSpan.FromSeconds(10);
-        pcJob.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepository);
+        pcJob.ProxyOutput = proxyCheckOutputFactory.FromOptions(new DatabaseProxyCheckOutputOptions());
         var jobEntity = CreateProxyCheckJobEntity(pcJob);
         jobEntity.Id = pcJob.Id;
         dbContext.Jobs.Add(jobEntity);
@@ -524,7 +524,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var proxyRepository = GetRequiredService<IProxyRepository>();
+        var proxyCheckOutputFactory = GetRequiredService<ProxyCheckOutputFactory>();
         var guest = new GuestEntity { Id = 1, Username = "guest" };
         dbContext.Guests.Add(guest);
         var pcJob = CreateProxyCheckJob();
@@ -539,7 +539,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         pcJob.Url = "https://example.com";
         pcJob.SuccessKey = "<title>Example</title>";
         pcJob.Timeout = TimeSpan.FromSeconds(10);
-        pcJob.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepository);
+        pcJob.ProxyOutput = proxyCheckOutputFactory.FromOptions(new DatabaseProxyCheckOutputOptions());
         var jobEntity = CreateProxyCheckJobEntity(pcJob, owner: guest);
         jobEntity.Id = pcJob.Id;
         jobEntity.Owner = guest;

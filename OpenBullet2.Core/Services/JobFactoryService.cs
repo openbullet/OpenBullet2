@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Models.Proxies;
-using OpenBullet2.Core.Repositories;
 using RuriLib.Logging;
 using RuriLib.Models.Bots;
 using RuriLib.Models.Jobs;
@@ -25,8 +24,9 @@ public class JobFactoryService
     private readonly RuriLibSettingsService _settingsService;
     private readonly HitStorageService _hitStorage;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ProxyCheckOutputFactory _proxyCheckOutputFactory;
     private readonly ProxyReloadService _proxyReloadService;
-    private readonly IRandomUAProvider _randomUAProvider;
+    private readonly IRandomUAProvider _randomUaProvider;
     private readonly IRNGProvider _rngProvider;
     private readonly IJobLogger _logger;
     private readonly PluginRepository _pluginRepo;
@@ -37,8 +37,8 @@ public class JobFactoryService
     public int BotLimit { get; init; } = 200;
 
     public JobFactoryService(ConfigService configService, RuriLibSettingsService settingsService, PluginRepository pluginRepo,
-        HitStorageService hitStorage, IServiceScopeFactory scopeFactory,
-        ProxyReloadService proxyReloadService, IRandomUAProvider randomUAProvider, IRNGProvider rngProvider, IJobLogger logger,
+        HitStorageService hitStorage, IServiceScopeFactory scopeFactory, ProxyCheckOutputFactory proxyCheckOutputFactory,
+        ProxyReloadService proxyReloadService, IRandomUAProvider randomUaProvider, IRNGProvider rngProvider, IJobLogger logger,
         IConfiguration config)
     {
         _configService = configService;
@@ -46,8 +46,9 @@ public class JobFactoryService
         _pluginRepo = pluginRepo;
         _hitStorage = hitStorage;
         _scopeFactory = scopeFactory;
+        _proxyCheckOutputFactory = proxyCheckOutputFactory;
         _proxyReloadService = proxyReloadService;
-        _randomUAProvider = randomUAProvider;
+        _randomUaProvider = randomUaProvider;
         _rngProvider = rngProvider;
         _logger = logger;
         
@@ -58,13 +59,14 @@ public class JobFactoryService
             BotLimit = int.Parse(botLimit);
         }
     }
-
+    
     /// <summary>
     /// Creates a <see cref="Job"/> with the provided <paramref name="id"/> and <paramref name="ownerId"/>
     /// from <see cref="JobOptions"/>.
     /// </summary>
     /// <param name="id">The ID of the newly created job, must be unique</param>
     /// <param name="ownerId">The ID of the user who owns the job. 0 for admin</param>
+    /// <param name="options">The options to create the job from</param>
     public Job FromOptions(int id, int ownerId, JobOptions options)
     {
         Job job = options switch
@@ -111,7 +113,7 @@ public class JobFactoryService
             {
                 RandomUA = _settingsService.RuriLibSettings.GeneralSettings.UseCustomUserAgentsList
                     ? new DefaultRandomUAProvider(_settingsService)
-                    : _randomUAProvider,
+                    : _randomUaProvider,
                 RNG = _rngProvider
             },
             DataPool = dataPoolFactory.FromOptionsAsync(options.DataPool).Result
@@ -122,9 +124,6 @@ public class JobFactoryService
 
     private ProxyCheckJob MakeProxyCheckJob(ProxyCheckJobOptions options)
     {
-        using var scope = _scopeFactory.CreateScope();
-        var proxyRepo = scope.ServiceProvider.GetRequiredService<IProxyRepository>();
-
         var job = new ProxyCheckJob(_settingsService, _pluginRepo, _logger)
         {
             StartCondition = options.StartCondition,
@@ -144,12 +143,13 @@ public class JobFactoryService
         var proxies = options.CheckOnlyUntested
             ? job.Proxies.Where(p => p.WorkingStatus == ProxyWorkingStatus.Untested)
             : job.Proxies;
-
-        job.Total = proxies.Count();
-        job.Tested = proxies.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
-        job.Working = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.Working);
-        job.NotWorking = proxies.Count(p => p.WorkingStatus == ProxyWorkingStatus.NotWorking);
-        job.ProxyOutput = new DatabaseProxyCheckOutput(proxyRepo);
+        
+        var proxiesList = proxies.ToList();
+        job.Total = proxiesList.Count;
+        job.Tested = proxiesList.Count(p => p.WorkingStatus != ProxyWorkingStatus.Untested);
+        job.Working = proxiesList.Count(p => p.WorkingStatus == ProxyWorkingStatus.Working);
+        job.NotWorking = proxiesList.Count(p => p.WorkingStatus == ProxyWorkingStatus.NotWorking);
+        job.ProxyOutput = _proxyCheckOutputFactory.FromOptions(new DatabaseProxyCheckOutputOptions());
 
         return job;
     }
