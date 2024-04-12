@@ -18,6 +18,13 @@
         <div class="sidebar-menu">
             <app-menu></app-menu>
         </div>
+        <div *ngIf="canLogout()" class="sidebar-logout">
+            <button class="button button-transparent" 
+                (click)="logout()">
+                <fa-icon [icon]="faRightFromBracket" [fixedWidth]="true"></fa-icon>
+                Log out
+            </button>
+        </div>
     </div>
     <div class="content">
         <router-outlet></router-outlet>

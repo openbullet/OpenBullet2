@@ -5,11 +5,6 @@
             <h1>OpenBullet 2</h1>
             <h5>
                 Welcome back, {{ username | titlecase }}!
-                <button class="button button-transparent" 
-                    pTooltip="Log out"
-                    (click)="logout()">
-                    <fa-icon [icon]="faRightFromBracket" [fixedWidth]="true"></fa-icon>
-                </button>
             </h5>
         </div>
         <div class="col-4 text-right">

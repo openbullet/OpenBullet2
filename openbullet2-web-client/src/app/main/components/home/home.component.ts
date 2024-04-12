@@ -27,7 +27,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   serverTime: Moment | null = null;
   buildDate: Date | null = null;
   faCopy = faCopy;
-  faRightFromBracket = faRightFromBracket;
   // biome-ignore lint/suspicious/noExplicitAny: Timer
   timer: any;
   // biome-ignore lint/suspicious/noExplicitAny: Timer
@@ -47,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private infoService: InfoService,
     private hitService: HitService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   // Clear the timer when navigating off the page
   ngOnDestroy(): void {
@@ -96,10 +95,5 @@ export class HomeComponent implements OnInit, OnDestroy {
   copyCurrentWorkingDirectory() {
     if (this.serverInfo === null) return;
     navigator.clipboard.writeText(this.serverInfo.currentWorkingDirectory);
-  }
-
-  logout() {
-    this.userService.resetJwt();
-    window.location.reload();
   }
 }
