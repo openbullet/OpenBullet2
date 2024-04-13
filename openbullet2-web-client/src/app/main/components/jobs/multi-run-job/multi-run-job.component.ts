@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   faAlignLeft,
@@ -33,6 +33,8 @@ import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
+import { SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
+import { SettingsService } from 'src/app/main/services/settings.service';
 
 interface LogMessage {
   timestamp: Date;
@@ -70,6 +72,8 @@ export class MultiRunJobComponent {
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
   JobProxyMode = JobProxyMode;
+
+  settings: SafeOBSettingsDto | null = null;
 
   statusColor: Record<JobStatus, string> = {
     idle: 'secondary',
@@ -117,6 +121,8 @@ export class MultiRunJobComponent {
   @ViewChild('hitLogComponent')
   hitLogComponent: HitLogComponent | undefined = undefined;
 
+  @ViewChild('hitSoundPlayer') hitSoundPlayer!: ElementRef;
+
   hits: MRJHitDto[] = [];
   filteredHits: MRJHitDto[] = [];
   selectedHits: MRJHitDto[] = [];
@@ -152,6 +158,7 @@ export class MultiRunJobComponent {
     private multiRunJobHubService: MultiRunJobHubService,
     private debuggerSettingsService: ConfigDebuggerSettingsService,
     private configService: ConfigService,
+    private settingsService: SettingsService,
     userService: UserService,
   ) {
     activatedRoute.url.subscribe((url) => {
@@ -159,6 +166,10 @@ export class MultiRunJobComponent {
     });
 
     this.userRole = userService.loadUserInfo().role.toLocaleLowerCase();
+
+    settingsService.getSafeSettings().subscribe((settings) => {
+      this.settings = settings;
+    });
   }
 
   ngOnInit(): void {
@@ -347,6 +358,12 @@ export class MultiRunJobComponent {
 
     if (hitMessage.hit.type === this.selectedHitType) {
       this.filteredHits.push(hitMessage.hit);
+    }
+
+    if (this.settings?.customizationSettings.playSoundOnHit && hitMessage.hit.type === 'SUCCESS') {
+      // Note: if multiple hits are received at the same time, the sound will only play once
+      // to avoid spamming the sound
+      this.hitSoundPlayer.nativeElement.play();
     }
   }
 

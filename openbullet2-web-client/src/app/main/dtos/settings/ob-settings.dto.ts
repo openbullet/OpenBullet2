@@ -76,8 +76,13 @@ export interface CustomizationOBSettings {
 
 export interface SafeOBSettingsDto {
   generalSettings: SafeGeneralOBSettings;
+  customizationSettings: SafeCustomizationOBSettings;
 }
 
 export interface SafeGeneralOBSettings {
   jobManagerUpdateInterval: number;
+}
+
+export interface SafeCustomizationOBSettings {
+  playSoundOnHit: boolean;
 }

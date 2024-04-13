@@ -110,6 +110,7 @@ internal class AutoMapperProfile : Profile
         CreateMap<GeneralSettings, OBGeneralSettingsDto>().ReverseMap();
         CreateMap<GeneralSettings, SafeOBGeneralSettingsDto>();
         CreateMap<CustomizationSettings, OBCustomizationSettingsDto>().ReverseMap();
+        CreateMap<CustomizationSettings, SafeOBCustomizationSettingsDto>();
         CreateMap<GlobalSettings, GlobalSettings>();
         CreateMap<RuriLib.Models.Settings.GeneralSettings, RuriLib.Models.Settings.GeneralSettings>();
         CreateMap<CaptchaSettings, CaptchaSettings>();

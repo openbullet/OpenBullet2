@@ -419,6 +419,15 @@
             </button>
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.customizationSettings.playSoundOnHit"
+                [binary]="true" inputId="playSoundOnHit"
+                label="Play a sound when a hit is found" />
+        </div>
+    </div>
 </div>
 
 <p-dialog 

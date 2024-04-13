@@ -9,6 +9,11 @@ public class SafeOpenBulletSettingsDto
     /// Safe general settings.
     /// </summary>
     public SafeOBGeneralSettingsDto GeneralSettings { get; set; } = new();
+    
+    /// <summary>
+    /// Safe customization settings.
+    /// </summary>
+    public SafeOBCustomizationSettingsDto CustomizationSettings { get; set; } = new();
 }
 
 /// <summary>
@@ -21,4 +26,15 @@ public class SafeOBGeneralSettingsDto
     /// in the job manager page (in milliseconds).
     /// </summary>
     public int JobManagerUpdateInterval { get; set; } = 1000;
+}
+
+/// <summary>
+/// Safe customization settings of OpenBullet 2.
+/// </summary>
+public class SafeOBCustomizationSettingsDto
+{
+    /// <summary>
+    /// Whether to play a sound when a hit is found.
+    /// </summary>
+    public bool PlaySoundOnHit { get; set; } = false;
 }
