@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
@@ -143,8 +144,11 @@ public class SettingsController : ApiController
     [Admin]
     [HttpPatch("admin/password")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> UpdateAdminPassword(UpdateAdminPasswordDto dto)
+    public async Task<ActionResult> UpdateAdminPassword(UpdateAdminPasswordDto dto,
+        [FromServices] IValidator<UpdateAdminPasswordDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         _obSettingsService.Settings.SecuritySettings
             .SetupAdminPassword(dto.Password);
         await _obSettingsService.SaveAsync();

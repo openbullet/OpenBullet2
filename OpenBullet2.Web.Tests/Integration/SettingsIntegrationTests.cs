@@ -263,9 +263,7 @@ public class SettingsIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.NotNull(error);
         Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
-        
-        // TODO: Check the error message, right now it prints the default one
-        // from the ASP.NET Core validation. This needs to be fixed.
+        Assert.Equal(ErrorCode.ValidationError, error.Content!.ErrorCode);
     }
     
     [Fact]

@@ -4,6 +4,15 @@
 ### Health check
 GET {{OpenBullet2.Web_ApiRoot}}/health
 
+### Login
+POST {{OpenBullet2.Web_ApiRoot}}/user/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
 ### Server info
 GET {{OpenBullet2.Web_ApiRoot}}/info/server
 X-Api-Key: {{OpenBullet2.ApiKey}}
