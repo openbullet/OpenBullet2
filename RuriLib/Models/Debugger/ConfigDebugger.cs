@@ -187,6 +187,7 @@ namespace RuriLib.Models.Debugger
 
             // Add resources to global variables
             globals.Resources = resources;
+            globals.OwnerId = 0;
             var scriptGlobals = new ScriptGlobals(data, globals);
 
             // Set custom inputs

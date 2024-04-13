@@ -588,6 +588,7 @@ namespace RuriLib.Models.Jobs
                 }
 
                 globalVariables.Resources = resources;
+                globalVariables.OwnerId = OwnerId;
                 httpClient = new();
                 var runtime = Python.CreateRuntime();
                 var pyengine = runtime.GetEngine("py");
