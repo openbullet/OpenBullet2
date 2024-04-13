@@ -1,5 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { faLink, faPen, faPlus, faUpRightFromSquare, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { faLink, faPen, faPlus, faUpRightFromSquare, faVolumeUp, faWrench, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { DeactivatableComponent } from 'src/app/shared/guards/can-deactivate-form.guard';
@@ -45,12 +45,15 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     }
   }
 
+  @ViewChild('hitSoundPlayer') hitSoundPlayer!: ElementRef;
+
   faPlus = faPlus;
   faX = faX;
   faPen = faPen;
   faLink = faLink;
   faUpRightFromSquare = faUpRightFromSquare;
   faWrench = faWrench;
+  faVolumeUp = faVolumeUp;
 
   // Modals
   createProxyCheckTargetModalVisible = false;
@@ -85,7 +88,7 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   canDeactivate() {
     if (!this.touched) {
@@ -316,5 +319,9 @@ export class OBSettingsComponent implements OnInit, DeactivatableComponent {
 
   onThemeChange(theme: string) {
     applyAppTheme(theme);
+  }
+
+  playHitSound() {
+    this.hitSoundPlayer.nativeElement.play();
   }
 }

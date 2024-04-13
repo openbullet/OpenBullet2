@@ -426,6 +426,12 @@
                 [(ngModel)]="settings.customizationSettings.playSoundOnHit"
                 [binary]="true" inputId="playSoundOnHit"
                 label="Play a sound when a hit is found" />
+            <!-- Icon to test the sound -->
+            <button class="button button-small button-transparent ml-2"
+                (click)="playHitSound()">
+                <fa-icon [icon]="faVolumeUp" [fixedWidth]="true"></fa-icon>
+                Test
+            </button>
         </div>
     </div>
 </div>
@@ -564,3 +570,7 @@
         #addThemeComponent
         (confirm)="uploadTheme($event)" />
 </p-dialog>
+
+<audio #hitSoundPlayer>
+    <source src="../../../../../assets/sounds/hit.wav" type="audio/wav">
+</audio>
