@@ -74,8 +74,11 @@ public class GuestController : ApiController
     /// </summary>
     [HttpPatch("info")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto)
+    public async Task<ActionResult<GuestDto>> UpdateInfo(UpdateGuestInfoDto dto,
+        [FromServices] IValidator<UpdateGuestInfoDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var entity = await GetEntityAsync(dto.Id);
 
         // If the username was changed, make sure it's not taken
@@ -113,8 +116,11 @@ public class GuestController : ApiController
     /// </summary>
     [HttpPatch("password")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<GuestDto>> UpdatePassword(UpdateGuestPasswordDto dto)
+    public async Task<ActionResult<GuestDto>> UpdatePassword(UpdateGuestPasswordDto dto,
+        [FromServices] IValidator<UpdateGuestPasswordDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var entity = await GetEntityAsync(dto.Id);
 
         _mapper.Map(dto, entity);

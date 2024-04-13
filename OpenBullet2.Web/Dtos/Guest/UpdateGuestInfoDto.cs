@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Guest;
 
@@ -10,22 +10,18 @@ public class UpdateGuestInfoDto
     /// <summary>
     /// The id of the guest user to update.
     /// </summary>
-    [Required]
-    public int Id { get; set; }
+    public int Id { get; init; }
 
     /// <summary>
     /// The username the guest user will use to log in.
     /// </summary>
-    [Required]
-    [MinLength(3)]
-    [MaxLength(32)]
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
 
     /// <summary>
     /// The expiration date of the guest user's account, after which
     /// they will not be able to log in anymore.
     /// </summary>
-    public DateTime AccessExpiration { get; set; } = DateTime.MaxValue;
+    public DateTime AccessExpiration { get; init; } = DateTime.MaxValue;
 
     /// <summary>
     /// The list of allowed IP addressed of the guest user.
@@ -35,5 +31,14 @@ public class UpdateGuestInfoDto
     /// domain names like example.dyndns.org,
     /// IPv6 addresses like ::1
     /// </summary>
-    public List<string> AllowedAddresses { get; set; } = new();
+    public List<string> AllowedAddresses { get; init; } = [];
+}
+
+internal class UpdateGuestInfoDtoValidator : AbstractValidator<UpdateGuestInfoDto>
+{
+    public UpdateGuestInfoDtoValidator()
+    {
+        RuleFor(dto => dto.Id).GreaterThan(0);
+        RuleFor(dto => dto.Username).NotEmpty().MinimumLength(3).MaximumLength(32);
+    }
 }
