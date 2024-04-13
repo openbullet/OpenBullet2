@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -341,8 +342,10 @@ public class JobController : ApiController
     [HttpPut("multi-run")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<MultiRunJobDto>> UpdateMultiRunJob(
-        UpdateMultiRunJobDto dto)
+        UpdateMultiRunJobDto dto, [FromServices] IValidator<UpdateMultiRunJobDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         // Make sure job is idle
         var job = GetJob<MultiRunJob>(dto.Id);
 
@@ -383,8 +386,10 @@ public class JobController : ApiController
     [HttpPut("proxy-check")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ProxyCheckJobDto>> UpdateProxyCheckJob(
-        UpdateProxyCheckJobDto dto)
+        UpdateProxyCheckJobDto dto, [FromServices] IValidator<UpdateProxyCheckJobDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         // Make sure job is idle
         var job = GetJob<ProxyCheckJob>(dto.Id);
 
@@ -713,8 +718,11 @@ public class JobController : ApiController
     /// </summary>
     [HttpPost("change-bots")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult> ChangeBots(ChangeBotsDto dto)
+    public async Task<ActionResult> ChangeBots(ChangeBotsDto dto,
+        [FromServices] IValidator<ChangeBotsDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var job = GetJob(dto.JobId);
         EnsureOwnership(job);
 

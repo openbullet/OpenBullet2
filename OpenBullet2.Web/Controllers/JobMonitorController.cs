@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
@@ -78,9 +79,12 @@ public class JobMonitorController : ApiController
     /// </summary>
     [HttpPut("triggered-action")]
     [MapToApiVersion("1.0")]
-    public ActionResult<TriggeredActionDto> Update(
-        UpdateTriggeredActionDto dto)
+    public async Task<ActionResult<TriggeredActionDto>> Update(
+        UpdateTriggeredActionDto dto,
+        [FromServices] IValidator<UpdateTriggeredActionDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var targetAction = GetTriggeredAction(dto.Id);
 
         var newAction = _mapper.Map(dto, targetAction);

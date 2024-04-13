@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Wordlist;
 
@@ -11,7 +11,6 @@ public class CreateWordlistDto
     /// <summary>
     /// The name of the wordlist.
     /// </summary>
-    [Required]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
@@ -27,6 +26,14 @@ public class CreateWordlistDto
     /// <summary>
     /// The path to the actual file on disk.
     /// </summary>
-    [Required]
     public string FilePath { get; set; } = string.Empty;
+}
+
+internal class CreateWordlistDtoValidator : AbstractValidator<CreateWordlistDto>
+{
+    public CreateWordlistDtoValidator()
+    {
+        RuleFor(dto => dto.Name).NotEmpty();
+        RuleFor(dto => dto.FilePath).NotEmpty();
+    }
 }

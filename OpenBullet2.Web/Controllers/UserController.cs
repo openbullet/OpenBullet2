@@ -8,6 +8,7 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
 using System.Net;
 using System.Security.Claims;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -39,8 +40,11 @@ public class UserController : ApiController
     /// </summary>
     [HttpPost("login")]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto)
+    public async Task<ActionResult<LoggedInUserDto>> Login(UserLoginDto dto,
+        [FromServices] IValidator<UserLoginDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         // Admin user
         if (string.Equals(_obSettingsService.Settings.SecuritySettings.AdminUsername, dto.Username,
                 StringComparison.CurrentCultureIgnoreCase))

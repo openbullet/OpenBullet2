@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -120,8 +121,11 @@ public class WordlistController : ApiController
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<WordlistDto>> Create(CreateWordlistDto dto)
+    public async Task<ActionResult<WordlistDto>> Create(CreateWordlistDto dto,
+        [FromServices] IValidator<CreateWordlistDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var apiUser = HttpContext.GetApiUser();
 
         // If the user is a guest, make sure they are not accessing
@@ -254,8 +258,11 @@ public class WordlistController : ApiController
     [HttpPatch("info")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<WordlistDto>> UpdateInfo(
-        UpdateWordlistInfoDto dto)
+        UpdateWordlistInfoDto dto,
+        [FromServices] IValidator<UpdateWordlistInfoDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var entity = await GetEntityAsync(dto.Id);
 
         EnsureOwnership(entity);

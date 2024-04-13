@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Shared;
@@ -45,8 +46,11 @@ public class SharedController : ApiController
     [Admin]
     [HttpPost("endpoint")]
     [MapToApiVersion("1.0")]
-    public ActionResult<EndpointDto> CreateEndpoint(EndpointDto dto)
+    public async Task<ActionResult<EndpointDto>> CreateEndpoint(EndpointDto dto,
+        [FromServices] IValidator<EndpointDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var existing = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 
@@ -72,8 +76,11 @@ public class SharedController : ApiController
     [Admin]
     [HttpPut("endpoint")]
     [MapToApiVersion("1.0")]
-    public ActionResult<EndpointDto> UpdateEndpoint(EndpointDto dto)
+    public async Task<ActionResult<EndpointDto>> UpdateEndpoint(EndpointDto dto,
+        [FromServices] IValidator<EndpointDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var endpoint = _configSharingService.Endpoints.Find(
             e => e.Route == dto.Route);
 

@@ -12,6 +12,7 @@ using OpenBullet2.Web.Models.Identity;
 using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Proxies;
 using System.Text;
+using FluentValidation;
 using Mapper = OpenBullet2.Core.Helpers.Mapper;
 
 namespace OpenBullet2.Web.Controllers;
@@ -63,8 +64,10 @@ public class ProxyController : ApiController
     [HttpPost("add")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Add(
-        AddProxiesFromListDto dto)
+        AddProxiesFromListDto dto, [FromServices] IValidator<AddProxiesFromListDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var groupEntity = await GetProxyGroupEntityAsync(dto.ProxyGroupId);
         EnsureOwnership(groupEntity);
 
@@ -90,8 +93,10 @@ public class ProxyController : ApiController
     [HttpPost("add-from-remote")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> AddFromRemote(
-        AddProxiesFromRemoteDto dto)
+        AddProxiesFromRemoteDto dto, [FromServices] IValidator<AddProxiesFromRemoteDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var groupEntity = await GetProxyGroupEntityAsync(dto.ProxyGroupId);
         EnsureOwnership(groupEntity);
 

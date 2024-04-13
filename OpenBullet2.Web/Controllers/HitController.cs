@@ -15,6 +15,7 @@ using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Extensions;
 using System.Globalization;
 using System.Text;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -48,8 +49,11 @@ public class HitController : ApiController
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<HitDto>> Create(CreateHitDto dto)
+    public async Task<ActionResult<HitDto>> Create(CreateHitDto dto,
+        [FromServices] IValidator<CreateHitDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var apiUser = HttpContext.GetApiUser();
 
         var entity = _mapper.Map<HitEntity>(dto);
@@ -139,8 +143,11 @@ public class HitController : ApiController
     /// <returns></returns>
     [HttpPatch]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<HitDto>> Update(UpdateHitDto dto)
+    public async Task<ActionResult<HitDto>> Update(UpdateHitDto dto,
+        [FromServices] IValidator<UpdateHitDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var entity = await GetEntityAsync(dto.Id);
         EnsureOwnership(entity);
 

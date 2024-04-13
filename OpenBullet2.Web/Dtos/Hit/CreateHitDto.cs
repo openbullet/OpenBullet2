@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Hit;
 
@@ -10,7 +10,6 @@ public class CreateHitDto
     /// <summary>
     /// The data that was provided to the bot to get the hit.
     /// </summary>
-    [Required]
     public string Data { get; set; } = string.Empty;
 
     /// <summary>
@@ -32,7 +31,6 @@ public class CreateHitDto
     /// <summary>
     /// The type of hit, for example SUCCESS, NONE, CUSTOM etc.
     /// </summary>
-    [Required]
     public string Type { get; set; } = string.Empty;
 
     /// <summary>
@@ -63,4 +61,13 @@ public class CreateHitDto
     /// this field contains information about the data pool that was used.
     /// </summary>
     public string? WordlistName { get; set; } = null;
+}
+
+internal class CreateHitDtoValidator : AbstractValidator<CreateHitDto>
+{
+    public CreateHitDtoValidator()
+    {
+        RuleFor(dto => dto.Data).NotEmpty();
+        RuleFor(dto => dto.Type).NotEmpty();
+    }
 }

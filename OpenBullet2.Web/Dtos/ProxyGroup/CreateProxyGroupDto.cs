@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.ProxyGroup;
 
@@ -10,8 +11,13 @@ public class CreateProxyGroupDto
     /// <summary>
     /// The name of the proxy group.
     /// </summary>
-    [Required]
-    [MinLength(3)]
-    [MaxLength(32)]
     public string Name { get; set; } = string.Empty;
+}
+
+internal class CreateProxyGroupDtoValidator : AbstractValidator<CreateProxyGroupDto>
+{
+    public CreateProxyGroupDtoValidator()
+    {
+        RuleFor(dto => dto.Name).NotEmpty().Length(3, 32);
+    }
 }

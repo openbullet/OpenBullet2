@@ -7,7 +7,7 @@ namespace OpenBullet2.Web.Dtos.Proxy;
 /// DTO that contains information about proxies that need to be
 /// saved and added to a group.
 /// </summary>
-public class AddProxiesDto
+public abstract class AddProxiesDto
 {
     /// <summary>
     /// The proxy type to use when not specified in the string,
@@ -30,6 +30,5 @@ public class AddProxiesDto
     /// <summary>
     /// The id of the proxy group to which proxies should be assigned.
     /// </summary>
-    [Required]
     public int ProxyGroupId { get; set; }
 }

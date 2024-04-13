@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.JobMonitor;
 
@@ -11,7 +12,6 @@ public class UpdateTriggeredActionDto
     /// <summary>
     /// The id of the triggered action.
     /// </summary>
-    [Required]
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
@@ -46,4 +46,12 @@ public class UpdateTriggeredActionDto
     /// triggering conditions are verified.
     /// </summary>
     public List<JsonElement> Actions { get; set; } = new();
+}
+
+internal class UpdateTriggeredActionDtoValidator : AbstractValidator<UpdateTriggeredActionDto>
+{
+    public UpdateTriggeredActionDtoValidator()
+    {
+        RuleFor(x => x.Id).NotEmpty();
+    }
 }

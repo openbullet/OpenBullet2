@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -65,8 +66,11 @@ public class ProxyGroupController : ApiController
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ProxyGroupDto>> Create(CreateProxyGroupDto dto)
+    public async Task<ActionResult<ProxyGroupDto>> Create(CreateProxyGroupDto dto,
+        [FromServices] IValidator<CreateProxyGroupDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var apiUser = HttpContext.GetApiUser();
 
         var entity = _mapper.Map<ProxyGroupEntity>(dto);
@@ -91,8 +95,11 @@ public class ProxyGroupController : ApiController
     /// </summary>
     [HttpPut]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ProxyGroupDto>> Update(UpdateProxyGroupDto dto)
+    public async Task<ActionResult<ProxyGroupDto>> Update(UpdateProxyGroupDto dto,
+        [FromServices] IValidator<UpdateProxyGroupDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var entity = await GetEntityAsync(dto.Id);
 
         EnsureOwnership(entity);

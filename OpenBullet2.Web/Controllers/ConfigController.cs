@@ -1,5 +1,6 @@
 using System.Collections.Frozen;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
@@ -142,8 +143,11 @@ public class ConfigController : ApiController
     [Admin]
     [HttpPut]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<ConfigDto>> UpdateConfig(UpdateConfigDto dto)
+    public async Task<ActionResult<ConfigDto>> UpdateConfig(UpdateConfigDto dto,
+        [FromServices] IValidator<UpdateConfigDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         // Make sure a config with this id exists
         var config = GetConfigFromService(dto.Id);
 

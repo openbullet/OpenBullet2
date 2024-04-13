@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.User;
 
@@ -10,12 +10,19 @@ public class UserLoginDto
     /// <summary>
     /// The username of the user.
     /// </summary>
-    [Required]
     public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The password of the user.
     /// </summary>
-    [Required]
     public string Password { get; set; } = string.Empty;
+}
+
+internal class UserLoginDtoValidator : AbstractValidator<UserLoginDto>
+{
+    public UserLoginDtoValidator()
+    {
+        RuleFor(dto => dto.Username).NotEmpty();
+        RuleFor(dto => dto.Password).NotEmpty();
+    }
 }

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Wordlist;
 
@@ -10,13 +10,11 @@ public class UpdateWordlistInfoDto
     /// <summary>
     /// The id of the wordlist to update.
     /// </summary>
-    [Required]
     public int Id { get; set; }
 
     /// <summary>
     /// The name of the wordlist.
     /// </summary>
-    [Required]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
@@ -28,4 +26,13 @@ public class UpdateWordlistInfoDto
     /// The wordlist type.
     /// </summary>
     public string WordlistType { get; set; } = "Default";
+}
+
+internal class UpdateWordlistInfoDtoValidator : AbstractValidator<UpdateWordlistInfoDto>
+{
+    public UpdateWordlistInfoDtoValidator()
+    {
+        RuleFor(dto => dto.Id).GreaterThan(0);
+        RuleFor(dto => dto.Name).NotEmpty();
+    }
 }

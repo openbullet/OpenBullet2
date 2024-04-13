@@ -1,5 +1,6 @@
 ﻿using RuriLib.Models.Configs;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Config;
 
@@ -11,7 +12,6 @@ public class UpdateConfigDto
     /// <summary>
     /// The unique id of the config.
     /// </summary>
-    [Required]
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
@@ -65,4 +65,12 @@ public class UpdateConfigDto
     /// memory, e.g. for debugging needs.
     /// </summary>
     public bool Persistent { get; set; } = true;
+}
+
+internal class UpdateConfigDtoValidator : AbstractValidator<UpdateConfigDto>
+{
+    public UpdateConfigDtoValidator()
+    {
+        RuleFor(dto => dto.Id).NotEmpty();
+    }
 }

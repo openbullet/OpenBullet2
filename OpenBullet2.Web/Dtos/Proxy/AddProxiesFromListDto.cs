@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Proxy;
 
@@ -16,6 +16,14 @@ public class AddProxiesFromListDto : AddProxiesDto
     /// </summary>
     /// <example>(http)127.0.0.1:8080</example>
     /// <example>(socks5)myproxy.com:1234:user:secretpassword</example>
-    [Required]
     public IEnumerable<string> Proxies { get; set; } = Array.Empty<string>();
+}
+
+internal class AddProxiesFromListDtoValidator : AbstractValidator<AddProxiesFromListDto>
+{
+    public AddProxiesFromListDtoValidator()
+    {
+        RuleFor(dto => dto.Proxies).NotEmpty();
+        RuleFor(dto => dto.ProxyGroupId).GreaterThan(0);
+    }
 }

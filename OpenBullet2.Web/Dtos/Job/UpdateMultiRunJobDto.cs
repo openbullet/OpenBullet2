@@ -2,6 +2,7 @@
 using RuriLib.Models.Proxies;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Job;
 
@@ -13,7 +14,6 @@ public class UpdateMultiRunJobDto
     /// <summary>
     /// The id of the job to update.
     /// </summary>
-    [Required]
     public int Id { get; set; }
 
     /// <summary>
@@ -99,4 +99,15 @@ public class UpdateMultiRunJobDto
     /// The options for the outputs where hits will be stored.
     /// </summary>
     public List<JsonElement> HitOutputs { get; set; } = new();
+}
+
+internal class UpdateMultiRunJobDtoValidator : AbstractValidator<UpdateMultiRunJobDto>
+{
+    public UpdateMultiRunJobDtoValidator()
+    {
+        RuleFor(dto => dto.Id).GreaterThan(0);
+        RuleFor(dto => dto.Bots).GreaterThan(0);
+        RuleFor(dto => dto.Skip).GreaterThanOrEqualTo(0);
+        RuleFor(dto => dto.PeriodicReloadIntervalSeconds).GreaterThanOrEqualTo(0);
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace OpenBullet2.Web.Dtos.Job;
+﻿using FluentValidation;
+
+namespace OpenBullet2.Web.Dtos.Job;
 
 /// <summary>
 /// Information needed to change the number of bots in a job.
@@ -14,4 +16,13 @@ public class ChangeBotsDto
     /// The desired number of bots.
     /// </summary>
     public int Bots { get; set; }
+}
+
+internal class ChangeBotsDtoValidator : AbstractValidator<ChangeBotsDto>
+{
+    public ChangeBotsDtoValidator()
+    {
+        RuleFor(dto => dto.JobId).GreaterThan(0);
+        RuleFor(dto => dto.Bots).GreaterThan(0);
+    }
 }

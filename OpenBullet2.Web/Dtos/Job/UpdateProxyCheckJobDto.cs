@@ -1,6 +1,7 @@
 ﻿using OpenBullet2.Web.Dtos.Job.ProxyCheck;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Job;
 
@@ -12,7 +13,6 @@ public class UpdateProxyCheckJobDto
     /// <summary>
     /// The id of the job to update.
     /// </summary>
-    [Required]
     public int Id { get; set; }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class UpdateProxyCheckJobDto
     public int Bots { get; set; } = 1;
 
     /// <summary>
-    /// The ID of the proxy group to check.
+    /// The ID of the proxy group to check. If -1, all groups will be checked.
     /// </summary>
     public int GroupId { get; set; } = -1;
 
@@ -54,4 +54,14 @@ public class UpdateProxyCheckJobDto
     /// The options for the output of a proxy check.
     /// </summary>
     public JsonElement? CheckOutput { get; set; }
+}
+
+internal class UpdateProxyCheckJobDtoValidator : AbstractValidator<UpdateProxyCheckJobDto>
+{
+    public UpdateProxyCheckJobDtoValidator()
+    {
+        RuleFor(dto => dto.Id).GreaterThan(0);
+        RuleFor(dto => dto.Bots).GreaterThan(0);
+        RuleFor(dto => dto.TimeoutMilliseconds).GreaterThan(0);
+    }
 }
