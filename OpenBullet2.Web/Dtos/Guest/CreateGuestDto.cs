@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Dtos.Guest;
 
@@ -10,16 +11,11 @@ public class CreateGuestDto
     /// <summary>
     /// The username the guest user will use to log in.
     /// </summary>
-    [Required]
-    [MinLength(3)]
-    [MaxLength(32)]
     public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The password the guest user will use to log in.
     /// </summary>
-    [Required]
-    [MinLength(8)]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>
@@ -37,4 +33,13 @@ public class CreateGuestDto
     /// IPv6 addresses like ::1
     /// </summary>
     public IEnumerable<string> AllowedAddresses { get; set; } = Array.Empty<string>();
+}
+
+internal class CreateGuestDtoValidator : AbstractValidator<CreateGuestDto>
+{
+    public CreateGuestDtoValidator()
+    {
+        RuleFor(dto => dto.Username).NotEmpty().MinimumLength(3).MaximumLength(32);
+        RuleFor(dto => dto.Password).NotEmpty().MinimumLength(8);
+    }
 }

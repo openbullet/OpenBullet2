@@ -2,6 +2,7 @@
 using OpenBullet2.Web.Models.Errors;
 using System.Net;
 using System.Text.Json;
+using FluentValidation;
 
 namespace OpenBullet2.Web.Middleware;
 
@@ -24,6 +25,12 @@ internal class ExceptionMiddleware
         try
         {
             await _next(context);
+        }
+        catch (ValidationException ex)
+        {
+            await RespondAsync(context,
+                new ApiError(ErrorCode.ValidationError, ex.Message),
+                HttpStatusCode.BadRequest);
         }
         catch (UnauthorizedException ex)
         {

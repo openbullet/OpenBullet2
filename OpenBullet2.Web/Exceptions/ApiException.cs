@@ -43,6 +43,11 @@ public static class ErrorCode
     /// Unauthorized IP address.
     /// </summary>
     public const string UnauthorizedIpAddress = "UNAUTHORIZED_IP_ADDRESS";
+    
+    /// <summary>
+    /// Validation error.
+    /// </summary>
+    public const string ValidationError = "VALIDATION_ERROR";
 
     /// <summary>
     /// Missing auth token.

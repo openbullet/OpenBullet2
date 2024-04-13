@@ -20,3 +20,15 @@ Content-Type: application/json
     "testProxy": null,
     "proxyType": "http"
 }
+
+### Create Guest
+POST {{OpenBullet2.Web_ApiRoot}}/guest
+X-Api-Key: {{OpenBullet2.ApiKey}}
+Content-Type: application/json
+
+{
+    "username": "guest7",
+    "password": "",
+    "accessExpiration": "2022-12-31T23:59:59",
+    "allowedAddresses": []
+}

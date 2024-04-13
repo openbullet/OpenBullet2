@@ -22,6 +22,7 @@ using RuriLib.Services;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FluentValidation;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
 
@@ -87,6 +88,8 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
 
 // Scoped
 builder.Services.AddScoped<IProxyRepository, DbProxyRepository>();

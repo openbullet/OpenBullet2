@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
@@ -21,7 +22,7 @@ public class GuestController : ApiController
     private readonly ILogger<GuestController> _logger;
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
-
+    
     /// <summary></summary>
     public GuestController(IGuestRepository guestRepo, IMapper mapper,
         OpenBulletSettingsService obSettingsService,
@@ -38,8 +39,11 @@ public class GuestController : ApiController
     /// </summary>
     [HttpPost]
     [MapToApiVersion("1.0")]
-    public async Task<ActionResult<GuestDto>> Create(CreateGuestDto dto)
+    public async Task<ActionResult<GuestDto>> Create(CreateGuestDto dto,
+        [FromServices] IValidator<CreateGuestDto> validator)
     {
+        await validator.ValidateAndThrowAsync(dto);
+        
         var existing = await _guestRepo.GetAll()
             .FirstOrDefaultAsync(g => g.Username == dto.Username);
 
