@@ -64,7 +64,7 @@ export class HitsComponent implements OnInit {
               id: 'send-filtered-hits-to-recheck',
               label: 'Send to recheck',
               icon: 'pi pi-fw pi-arrow-right color-accent-light',
-              command: (e) => console.log('SEND TO RECHECK!'), // TODO: Implement
+              command: (e) => this.sendToRecheck(),
             },
             {
               id: 'delete-filtered-hits',
@@ -106,7 +106,7 @@ export class HitsComponent implements OnInit {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -223,8 +223,6 @@ export class HitsComponent implements OnInit {
   deleteFilteredHits() {
     this.hitService
       .deleteHits({
-        pageNumber: null,
-        pageSize: null,
         searchTerm: this.searchTerm,
         type: this.hitType === 'Any Type' ? null : this.hitType,
         minDate: this.rangeDates[0].toISOString(),
@@ -280,8 +278,6 @@ export class HitsComponent implements OnInit {
     this.hitService
       .downloadHits(
         {
-          pageNumber: null,
-          pageSize: null,
           searchTerm: this.searchTerm,
           type: this.hitType === 'Any Type' ? null : this.hitType,
           minDate: this.rangeDates[0].toISOString(),
@@ -352,5 +348,26 @@ export class HitsComponent implements OnInit {
       this.updateHitModalVisible = false;
       this.refreshHits();
     });
+  }
+
+  sendToRecheck() {
+    this.hitService
+      .sendToRecheck({
+        searchTerm: this.searchTerm,
+        type: this.hitType === 'Any Type' ? null : this.hitType,
+        minDate: this.rangeDates[0].toISOString(),
+        maxDate: this.rangeDates[1].toISOString(),
+        configName: this.configName === 'anyConfig' ? null : this.configName,
+        sortBy: null,
+        sortDescending: false,
+      })
+      .subscribe((resp) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sent to recheck',
+          detail: 'The recheck job was created successfully',
+        });
+        this.router.navigate([`/job/multi-run/${resp.jobId}`]);
+      });
   }
 }

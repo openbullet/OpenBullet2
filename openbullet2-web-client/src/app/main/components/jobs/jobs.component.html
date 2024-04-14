@@ -147,7 +147,8 @@
                             </div>
                         </td>
                         <td>{{ mrj.configName }}</td>
-                        <td>{{ mrj.dataPoolInfo }}</td>
+                        <td [pTooltip]="mrj.dataPoolInfo" [tooltipDisabled]="mrj.dataPoolInfo.length <= 20"
+                            tooltipPosition="bottom">{{ mrj.dataPoolInfo | truncate : 20 }}</td>
                         <td>
                             <div [class]="'job-chip bg-' + proxyColor[mrj.proxyMode]">
                                 {{ mrj.proxyMode | uppercase }}

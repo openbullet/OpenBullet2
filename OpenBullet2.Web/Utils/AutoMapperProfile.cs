@@ -271,6 +271,8 @@ internal class AutoMapperProfile : Profile
         // Allow conversion between PagedLists with different generic type
         // (the types must be mapped separately)
         CreateMap(typeof(PagedList<>), typeof(PagedList<>));
+        
+        CreateMap<PaginatedHitFiltersDto, HitFiltersDto>();
 
         // Triggered Actions
         CreateMap<TriggeredAction, TriggeredActionDto>()

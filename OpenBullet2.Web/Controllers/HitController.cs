@@ -16,6 +16,11 @@ using RuriLib.Extensions;
 using System.Globalization;
 using System.Text;
 using FluentValidation;
+using Newtonsoft.Json;
+using OpenBullet2.Core.Models.Data;
+using OpenBullet2.Core.Models.Hits;
+using OpenBullet2.Core.Models.Jobs;
+using RuriLib.Services;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -31,17 +36,30 @@ public class HitController : ApiController
     private readonly ILogger<HitController> _logger;
     private readonly IMapper _mapper;
     private readonly OpenBulletSettingsService _obSettingsService;
-
+    private readonly RuriLibSettingsService _rlSettingsService;
+    private readonly ConfigService _configService;
+    private readonly IJobRepository _jobRepo;
+    private readonly JobFactoryService _jobFactoryService;
+    private readonly JobManagerService _jobManagerService;
+    
     /// <summary></summary>
     public HitController(IHitRepository hitRepo, IGuestRepository guestRepo,
         IMapper mapper, ILogger<HitController> logger,
-        OpenBulletSettingsService obSettingsService)
+        OpenBulletSettingsService obSettingsService,
+        RuriLibSettingsService rlSettingsService,
+        ConfigService configService, IJobRepository jobRepo,
+        JobFactoryService jobFactoryService, JobManagerService jobManagerService)
     {
         _hitRepo = hitRepo;
         _guestRepo = guestRepo;
         _mapper = mapper;
         _logger = logger;
         _obSettingsService = obSettingsService;
+        _rlSettingsService = rlSettingsService;
+        _configService = configService;
+        _jobRepo = jobRepo;
+        _jobFactoryService = jobFactoryService;
+        _jobManagerService = jobManagerService;
     }
 
     /// <summary>
@@ -82,9 +100,9 @@ public class HitController : ApiController
     [HttpGet("all")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<PagedList<HitDto>>> GetAll(
-        [FromQuery] HitFiltersDto dto)
+        [FromQuery] PaginatedHitFiltersDto dto)
     {
-        var query = FilteredQuery(dto);
+        var query = FilteredQuery(_mapper.Map<HitFiltersDto>(dto));
 
         var pagedEntities = await PagedList<HitEntity>.CreateAsync(query,
             dto.PageNumber, dto.PageSize);
@@ -299,6 +317,77 @@ public class HitController : ApiController
         }
 
         return new RecentHitsDto { Dates = dates, Hits = hits };
+    }
+    
+    /// <summary>
+    /// Send all hits that match the filters to recheck by creating
+    /// a temporary file and a MultiRun job. If the hits come from
+    /// the same config, the job will use that config.
+    /// </summary>
+    [HttpPost("send-to-recheck")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<SendToRecheckResultDto>> SendToRecheck(
+        [FromBody] HitFiltersDto dto)
+    {
+        var apiUser = HttpContext.GetApiUser();
+        var query = FilteredQuery(dto);
+        
+        var hits = await query.ToListAsync();
+        
+        if (hits.Count == 0)
+        {
+            throw new ApiException(ErrorCode.NoHitsSelected, "No hits selected to recheck");
+        }
+        
+        var jobOptions = new MultiRunJobOptions();
+        var wordlistType = _rlSettingsService.Environment.WordlistTypes[0].Name;
+        
+        // If all hits come from the same config, use that config
+        if (hits.Select(h => h.ConfigId).Distinct().Count() == 1)
+        {
+            var config = _configService.Configs.Find(c => c.Id == hits[0].ConfigId);
+            
+            // If we cannot find a config with that id anymore, don't set it
+            if (config != null)
+            {
+                jobOptions.ConfigId = config.Id;
+                jobOptions.Bots = config.Settings.GeneralSettings.SuggestedBots;
+                
+                if (config.Settings.DataSettings.AllowedWordlistTypes.Length > 0)
+                {
+                    wordlistType = config.Settings.DataSettings.AllowedWordlistTypes[0];
+                }
+            }
+        }
+        
+        // Write the hits to a temporary file
+        var tempFile = Path.GetTempFileName();
+        await System.IO.File.WriteAllLinesAsync(tempFile, hits.Select(h => h.Data));
+        jobOptions.DataPool = new FileDataPoolOptions
+        {
+            FileName = tempFile,
+            WordlistType = wordlistType
+        };
+        jobOptions.HitOutputs.Add(new DatabaseHitOutputOptions());
+        
+        // Create the job entity and add it to the database
+        var jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        var jobOptionsWrapper = new JobOptionsWrapper { Options = jobOptions };
+        
+        var entity = new JobEntity
+        {
+            Owner = apiUser.Role is UserRole.Admin ? null : await _guestRepo.GetAsync(apiUser.Id),
+            CreationDate = DateTime.Now,
+            JobType = JobType.MultiRun,
+            JobOptions = JsonConvert.SerializeObject(jobOptionsWrapper, jsonSettings)
+        };
+        
+        await _jobRepo.AddAsync(entity);
+        
+        var job = _jobFactoryService.FromOptions(entity.Id, apiUser.Id, jobOptions);
+        _jobManagerService.AddJob(job);
+        
+        return new SendToRecheckResultDto { JobId = entity.Id };
     }
 
     private IQueryable<HitEntity> FilteredQuery(HitFiltersDto dto)

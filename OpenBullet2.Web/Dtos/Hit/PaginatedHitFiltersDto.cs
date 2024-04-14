@@ -1,9 +1,11 @@
-﻿namespace OpenBullet2.Web.Dtos.Hit;
+using OpenBullet2.Web.Dtos.Common;
+
+namespace OpenBullet2.Web.Dtos.Hit;
 
 /// <summary>
 /// Filters to describe a subset of hits.
 /// </summary>
-public class HitFiltersDto
+public class PaginatedHitFiltersDto : PaginationDto
 {
     /// <summary>
     /// The search term to filter results by the hit data,
@@ -15,29 +17,29 @@ public class HitFiltersDto
     /// The config name to filter results by. Optional.
     /// </summary>
     public string? ConfigName { get; set; }
-
+    
     /// <summary>
     /// The hit type. Optional.
     /// </summary>
     public string? Type { get; set; }
-
+    
     /// <summary>
     /// The date and time of the oldest hit that should be retrieved.
     /// Optional.
     /// </summary>
     public DateTime? MinDate { get; set; } = null;
-
+    
     /// <summary>
     /// The date and time of the newest hit that should be retrieved.
     /// Optional.
     /// </summary>
     public DateTime? MaxDate { get; set; } = null;
-
+    
     /// <summary>
     /// The field to sort the hits by. Optional.
     /// </summary>
     public HitSortField? SortBy { get; set; } = null;
-
+    
     /// <summary>
     /// Whether to sort the hits in descending order.
     /// Only used if <see cref="SortBy" /> is set.

@@ -153,6 +153,11 @@ public static class ErrorCode
     /// Hit not found.
     /// </summary>
     public const string HitNotFound = "HIT_NOT_FOUND";
+    
+    /// <summary>
+    /// No hits selected.
+    /// </summary>
+    public const string NoHitsSelected = "NO_HITS_SELECTED";
 
     /// <summary>
     /// Triggered action not found.

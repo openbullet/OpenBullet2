@@ -273,7 +273,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         await dbContext.SaveChangesAsync();
         
         // Act
-        var filters = new HitFiltersDto
+        var filters = new PaginatedHitFiltersDto
         {
             PageNumber = 0,
             PageSize = 25,
@@ -321,7 +321,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         ImpersonateGuest(client, guest);
         
         // Act
-        var filters = new HitFiltersDto
+        var filters = new PaginatedHitFiltersDto
         {
             PageNumber = 0,
             PageSize = 25,
@@ -361,7 +361,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         await dbContext.SaveChangesAsync();
         
         // Act
-        var filters = new HitFiltersDto
+        var filters = new PaginatedHitFiltersDto
         {
             PageNumber = 0,
             PageSize = 25,
@@ -548,8 +548,6 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Act
         var filters = new HitFiltersDto
         {
-            PageNumber = 0,
-            PageSize = 100,
             SearchTerm = "data1",
             Type = null,
             MinDate = null,
@@ -592,8 +590,6 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Act
         var filters = new HitFiltersDto
         {
-            PageNumber = 0,
-            PageSize = 100,
             SearchTerm = null,
             Type = null,
             MinDate = null,

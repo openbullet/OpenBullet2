@@ -4,18 +4,19 @@ import { getBaseUrl } from 'src/app/shared/utils/host';
 import { AffectedEntriesDto } from '../dtos/common/affected-entries.dto';
 import { PagedList } from '../dtos/common/paged-list.dto';
 import { CreateHitDto } from '../dtos/hit/create-hit.dto';
-import { ListHitFiltersDto } from '../dtos/hit/hit-filters.dto';
+import { HitFiltersDto, PaginatedHitFiltersDto } from '../dtos/hit/hit-filters.dto';
 import { HitDto } from '../dtos/hit/hit.dto';
 import { RecentHitsDto } from '../dtos/hit/recent-hits.dto';
 import { UpdateHitDto } from '../dtos/hit/update-hit.dto';
+import { SendToRecheckResultDto } from '../dtos/hit/send-to-recheck-result-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HitService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getHits(filter: ListHitFiltersDto) {
+  getHits(filter: PaginatedHitFiltersDto) {
     return this.http.get<PagedList<HitDto>>(`${getBaseUrl()}/hit/all`, {
       // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
@@ -42,7 +43,7 @@ export class HitService {
     });
   }
 
-  downloadHits(filter: ListHitFiltersDto, format: string) {
+  downloadHits(filter: HitFiltersDto, format: string) {
     return this.http.get<Blob>(`${getBaseUrl()}/hit/download/many`, {
       params: {
         format,
@@ -54,7 +55,7 @@ export class HitService {
     });
   }
 
-  deleteHits(filter: ListHitFiltersDto) {
+  deleteHits(filter: HitFiltersDto) {
     return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/hit/many`, {
       // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
       params: <any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null)),
@@ -75,5 +76,9 @@ export class HitService {
         days,
       },
     });
+  }
+
+  sendToRecheck(filter: HitFiltersDto) {
+    return this.http.post<SendToRecheckResultDto>(`${getBaseUrl()}/hit/send-to-recheck`, filter);
   }
 }
