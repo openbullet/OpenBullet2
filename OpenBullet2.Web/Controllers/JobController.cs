@@ -443,7 +443,8 @@ public class JobController : ApiController
 
         return Ok(job.Config.Settings.InputSettings.CustomInputs.Select(i =>
             new CustomInputQuestionDto {
-                Description = i.Description, DefaultAnswer = i.DefaultAnswer, VariableName = i.VariableName
+                Description = i.Description, DefaultAnswer = i.DefaultAnswer, VariableName = i.VariableName,
+                CurrentAnswer = job.CustomInputsAnswers.TryGetValue(i.VariableName, out var answer) ? answer : null
             }));
     }
 
@@ -455,14 +456,14 @@ public class JobController : ApiController
     [MapToApiVersion("1.0")]
     public ActionResult SetCustomInputs(CustomInputsDto dto)
     {
-        var job = GetJob<MultiRunJob>(dto.Id);
+        var job = GetJob<MultiRunJob>(dto.JobId);
 
-        foreach (var input in dto.Inputs)
+        foreach (var input in dto.Answers)
         {
             job.CustomInputsAnswers[input.VariableName] = input.Answer;
         }
         
-        _logger.LogInformation("Set custom inputs for job {Id}", dto.Id);
+        _logger.LogInformation("Set custom inputs for job {Id}", dto.JobId);
 
         return Ok();
     }

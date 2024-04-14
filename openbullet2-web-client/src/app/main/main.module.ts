@@ -115,6 +115,7 @@ import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
+import { CustomInputsComponent } from './components/jobs/multi-run-job/custom-inputs/custom-inputs.component';
 
 @NgModule({
   declarations: [
@@ -207,6 +208,7 @@ import { MainComponent } from './main.component';
     ChangelogComponent,
     ConfigLoliscriptComponent,
     ChangeAdminApiKeyComponent,
+    CustomInputsComponent,
   ],
   imports: [
     CommonModule,

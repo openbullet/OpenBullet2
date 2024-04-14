@@ -329,6 +329,29 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4" *ngIf="customInputs !== null && customInputs.length > 0">
+        <div class="col-12 px-0">
+            <div class="named-card">
+                <div class="named-card-key d-flex">
+                    Custom inputs
+                    <button class="button button-transparent ml-auto change-bots-button"
+                        *ngIf="job.status === JobStatus.IDLE"
+                        pTooltip="Configure the custom inputs"
+                        tooltipPosition="left"
+                        (click)="customInputsModalVisible = true">
+                        <fa-icon class="color-inactive" [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                    </button>
+                </div>
+                <div class="named-card-value">
+                    <ul class="custom-inputs-list">
+                        <li class="text-small" *ngFor="let input of customInputs">
+                            {{ input.variableName }} = {{ input.currentAnswer ?? 'NOT SET' }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-12 pl-2">
             <h5>Job controls</h5>
@@ -523,9 +546,26 @@
     [closeOnEscape]="true"
     [draggable]="false" 
     [resizable]="false">
-    <app-hit-log
+    <app-hit-log *ngIf="jobId !== null"
         #hitLogComponent
         [jobId]="jobId" />
+</p-dialog>
+
+<p-dialog 
+    #customInputsModal
+    header="Custom Inputs" 
+    [(visible)]="customInputsModalVisible" 
+    [modal]="true" 
+    [style]="{ width: '25vw' }" 
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [draggable]="false" 
+    [resizable]="false">
+    <app-custom-inputs *ngIf="jobId !== null && customInputs !== null"
+        #customInputsComponent
+        [jobId]="jobId"
+        [questions]="customInputs"
+        (confirm)="setCustomInputs($event)" />
 </p-dialog>
 
 <audio #hitSoundPlayer>

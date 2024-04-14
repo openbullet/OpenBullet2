@@ -8,10 +8,10 @@ public class CustomInputsDto
     /// <summary>
     /// The job id for which to set inputs.
     /// </summary>
-    public int Id { get; set; }
+    public int JobId { get; set; }
 
     /// <summary>
     /// The custom inputs values.
     /// </summary>
-    public required IEnumerable<CustomInputAnswerDto> Inputs { get; set; }
+    public required IEnumerable<CustomInputAnswerDto> Answers { get; set; }
 }

@@ -219,3 +219,15 @@
         }
     }
 }
+
+.custom-inputs-list {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+
+    li {
+        span {
+            word-wrap: break-word;
+        }
+    }
+}

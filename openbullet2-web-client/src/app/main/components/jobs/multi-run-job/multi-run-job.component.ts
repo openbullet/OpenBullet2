@@ -35,6 +35,7 @@ import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
 import { SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { SettingsService } from 'src/app/main/services/settings.service';
+import { CustomInputAnswerDto, CustomInputQuestionDto } from 'src/app/main/dtos/job/custom-inputs.dto';
 
 interface LogMessage {
   timestamp: Date;
@@ -74,6 +75,7 @@ export class MultiRunJobComponent {
   JobProxyMode = JobProxyMode;
 
   settings: SafeOBSettingsDto | null = null;
+  customInputs: CustomInputQuestionDto[] | null = null;
 
   statusColor: Record<JobStatus, string> = {
     idle: 'secondary',
@@ -117,6 +119,7 @@ export class MultiRunJobComponent {
   userRole = 'guest';
 
   hitLogModalVisible = false;
+  customInputsModalVisible = false;
 
   @ViewChild('hitLogComponent')
   hitLogComponent: HitLogComponent | undefined = undefined;
@@ -169,6 +172,10 @@ export class MultiRunJobComponent {
 
     settingsService.getSafeSettings().subscribe((settings) => {
       this.settings = settings;
+    });
+
+    this.jobService.getCustomInputs(this.jobId!).subscribe((customInputs) => {
+      this.customInputs = customInputs;
     });
   }
 
@@ -420,7 +427,21 @@ export class MultiRunJobComponent {
   }
 
   start() {
-    console.log('START');
+    // If custom inputs weren't set, show the modal
+    if (
+      this.customInputs !== null &&
+      this.customInputs.length > 0 &&
+      this.customInputs.some(i => i.currentAnswer === null)
+    ) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Missing inputs',
+        detail: 'Please set custom inputs before starting the job',
+      });
+      this.showCustomInputs();
+      return;
+    }
+
     this.jobService.start(this.jobId!).subscribe();
 
     // Clear the hits
@@ -716,5 +737,26 @@ export class MultiRunJobComponent {
 
   hitTypeDisplayFunction(hitType: HitType): string {
     return hitType.toString();
+  }
+
+  showCustomInputs() {
+    this.customInputsModalVisible = true;
+  }
+
+  setCustomInputs(answers: CustomInputAnswerDto[]) {
+    this.jobService.setCustomInputs({
+      jobId: this.jobId!,
+      answers: answers
+    }).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Custom inputs set successfully'
+      });
+      this.customInputsModalVisible = false;
+      this.jobService.getCustomInputs(this.jobId!).subscribe((customInputs) => {
+        this.customInputs = customInputs;
+      });
+    });
   }
 }

@@ -11,7 +11,7 @@ import { ViewAsHtmlComponent } from '../../../config/config-debugger/view-as-htm
   styleUrls: ['./hit-log.component.scss'],
 })
 export class HitLogComponent {
-  @Input() jobId: number | null = null;
+  @Input() jobId!: number;
 
   @ViewChild('viewAsHtmlComponent')
   htmlViewer: ViewAsHtmlComponent | undefined = undefined;
@@ -22,13 +22,9 @@ export class HitLogComponent {
   viewAsHtmlModalVisible = false;
   html = '';
 
-  constructor(private jobService: JobService) {}
+  constructor(private jobService: JobService) { }
 
   public getHitLog(hitId: string) {
-    if (this.jobId === null) {
-      return;
-    }
-
     this.hitLog = null;
 
     this.jobService.getHitLog(this.jobId, hitId).subscribe((hitLog) => {

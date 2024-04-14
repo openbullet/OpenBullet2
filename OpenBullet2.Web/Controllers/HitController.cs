@@ -339,7 +339,10 @@ public class HitController : ApiController
             throw new ApiException(ErrorCode.NoHitsSelected, "No hits selected to recheck");
         }
         
-        var jobOptions = new MultiRunJobOptions();
+        var jobOptions = new MultiRunJobOptions
+        {
+            Name = "Recheck"
+        };
         var wordlistType = _rlSettingsService.Environment.WordlistTypes[0].Name;
         
         // If all hits come from the same config, use that config
