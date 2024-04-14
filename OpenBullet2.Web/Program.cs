@@ -90,11 +90,6 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    // Disable automatic model state validation, we use FluentValidation
-    options.SuppressModelStateInvalidFilter = true;
-});
 
 // Scoped
 builder.Services.AddScoped<IProxyRepository, DbProxyRepository>();
