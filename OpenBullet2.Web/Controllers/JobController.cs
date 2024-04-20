@@ -746,6 +746,26 @@ public class JobController : ApiController
 
         return Ok();
     }
+    
+    /// <summary>
+    /// Get the details of all bots in a multi run job.
+    /// </summary>
+    [HttpGet("multi-run/bot-details")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<IEnumerable<BotDetailsDto>> GetBotDetails(int jobId)
+    {
+        var job = GetJob<MultiRunJob>(jobId);
+        return job.CurrentBotDatas
+            .Take(job.Bots)
+            .Where(d => d is not null)
+            .Select(d => new BotDetailsDto
+            {
+                Id = d.BOTNUM,
+                Data = d.Line.Data,
+                Proxy = d.Proxy?.ToString(),
+                Info = d.ExecutionInfo
+            }).ToList();
+    }
 
     private Job GetJob(int id)
     {

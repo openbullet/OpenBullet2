@@ -41,3 +41,7 @@ Content-Type: application/json
     "accessExpiration": "2022-12-31T23:59:59",
     "allowedAddresses": []
 }
+
+### Get bot details
+GET {{OpenBullet2.Web_ApiRoot}}/job/multi-run/bot-details?jobId=7
+X-Api-Key: {{OpenBullet2.ApiKey}}

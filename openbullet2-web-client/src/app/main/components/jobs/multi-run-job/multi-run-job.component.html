@@ -352,6 +352,53 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4" *ngIf="botDetails.length > 0">
+        <div class="col-12 px-0">
+            <p-table
+                #botDetailsDt
+                [value]="botDetails"
+                [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+                [paginator]="false"
+                [resizableColumns]="true"
+                [scrollable]="true"
+                scrollDirection="horizontal"
+                columnResizeMode="expand"
+                >
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th style="width:2rem">
+                            <div class="d-flex align-items-center">
+                                BOTNUM
+                            </div>
+                        </th>
+                        <th style="width:14rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Data
+                            </div>
+                        </th>
+                        <th style="width:14rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Proxy
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Info
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-botData>
+                    <tr>
+                        <td>{{ botData.id }}</td>
+                        <td>{{ botData.data }}</td>
+                        <td>{{ botData.proxy ?? '-' }}</td>
+                        <td>{{ botData.info }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
     <div class="row mt-4">
         <div class="col-12 pl-2">
             <h5>Job controls</h5>

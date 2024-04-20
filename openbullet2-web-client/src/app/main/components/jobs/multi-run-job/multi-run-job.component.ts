@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   faAlignLeft,
@@ -33,9 +33,10 @@ import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
-import { SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
+import { JobDisplayMode, SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { SettingsService } from 'src/app/main/services/settings.service';
 import { CustomInputAnswerDto, CustomInputQuestionDto } from 'src/app/main/dtos/job/custom-inputs.dto';
+import { BotDetailsDto } from 'src/app/main/dtos/job/multi-run-job-bot-details.dto';
 
 interface LogMessage {
   timestamp: Date;
@@ -54,7 +55,7 @@ enum HitType {
   templateUrl: './multi-run-job.component.html',
   styleUrls: ['./multi-run-job.component.scss'],
 })
-export class MultiRunJobComponent {
+export class MultiRunJobComponent implements OnInit, OnDestroy {
   jobId: number | null = null;
   job: MultiRunJobDto | null = null;
   faAngleLeft = faAngleLeft;
@@ -153,6 +154,9 @@ export class MultiRunJobComponent {
   errorSubscription: Subscription | null = null;
   completedSubscription: Subscription | null = null;
 
+  botsRefreshInterval: ReturnType<typeof setInterval> | null = null;
+  botDetails: BotDetailsDto[] = [];
+
   constructor(
     activatedRoute: ActivatedRoute,
     private router: Router,
@@ -161,9 +165,11 @@ export class MultiRunJobComponent {
     private multiRunJobHubService: MultiRunJobHubService,
     private debuggerSettingsService: ConfigDebuggerSettingsService,
     private configService: ConfigService,
-    private settingsService: SettingsService,
+    settingsService: SettingsService,
     userService: UserService,
   ) {
+    // We are under the assumption that this Observable will immediately
+    // emit the current value, otherwise the component will not work
     activatedRoute.url.subscribe((url) => {
       this.jobId = Number.parseInt(url[2].path);
     });
@@ -172,6 +178,12 @@ export class MultiRunJobComponent {
 
     settingsService.getSafeSettings().subscribe((settings) => {
       this.settings = settings;
+
+      if (settings.generalSettings.defaultJobDisplayMode === JobDisplayMode.Detailed) {
+        this.botsRefreshInterval = setInterval(() => {
+          this.refreshBotDetails();
+        }, 1000);
+      }
     });
 
     this.jobService.getCustomInputs(this.jobId!).subscribe((customInputs) => {
@@ -289,6 +301,10 @@ export class MultiRunJobComponent {
     if (this.getWaitLeftTimer !== null) {
       clearInterval(this.getWaitLeftTimer);
     }
+
+    if (this.botsRefreshInterval !== null) {
+      clearInterval(this.botsRefreshInterval);
+    }
   }
 
   getJobData() {
@@ -314,6 +330,18 @@ export class MultiRunJobComponent {
 
       this.job = job;
     });
+  }
+
+  refreshBotDetails() {
+    if (this.status === JobStatus.RUNNING ||
+      this.status === JobStatus.PAUSING ||
+      this.status === JobStatus.RESUMING ||
+      this.status === JobStatus.STOPPING
+    ) {
+      this.jobService.getBotDetails(this.jobId!).subscribe((botDetails) => {
+        this.botDetails = botDetails;
+      });
+    }
   }
 
   onNewResult(result: MRJNewResultMessage) {

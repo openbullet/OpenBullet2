@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;

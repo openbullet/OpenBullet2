@@ -1,3 +1,5 @@
+using OpenBullet2.Core.Models.Settings;
+
 namespace OpenBullet2.Web.Dtos.Settings;
 
 /// <summary>
@@ -26,6 +28,11 @@ public class SafeOBGeneralSettingsDto
     /// in the job manager page (in milliseconds).
     /// </summary>
     public int JobManagerUpdateInterval { get; set; } = 1000;
+    
+    /// <summary>
+    /// The default display mode for job information.
+    /// </summary>
+    public JobDisplayMode DefaultJobDisplayMode { get; set; } = JobDisplayMode.Standard;
 }
 
 /// <summary>

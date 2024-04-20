@@ -25,8 +25,7 @@ export class JobsComponent implements OnInit, OnDestroy {
   faPen = faPen;
   faClone = faClone;
 
-  // biome-ignore lint/suspicious/noExplicitAny: IntervalId is any.
-  intervalId: any;
+  jobsRefreshInterval: ReturnType<typeof setInterval> | null = null;
   refreshingMultiRunJobs = false;
   refreshingProxyCheckJobs = false;
   showMoreMultiRunJobs = false;
@@ -56,20 +55,22 @@ export class JobsComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshJobs();
 
     this.settingsService.getSafeSettings().subscribe((settings) => {
-      this.intervalId = setInterval(() => {
+      this.jobsRefreshInterval = setInterval(() => {
         this.refreshJobs();
       }, settings.generalSettings.jobManagerUpdateInterval);
     });
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.intervalId);
+    if (this.jobsRefreshInterval !== null) {
+      clearInterval(this.jobsRefreshInterval);
+    }
   }
 
   refreshJobs() {
