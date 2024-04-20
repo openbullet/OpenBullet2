@@ -755,6 +755,7 @@ public class JobController : ApiController
     public ActionResult<IEnumerable<BotDetailsDto>> GetBotDetails(int jobId)
     {
         var job = GetJob<MultiRunJob>(jobId);
+        
         return job.CurrentBotDatas
             .Take(job.Bots)
             .Where(d => d is not null)
