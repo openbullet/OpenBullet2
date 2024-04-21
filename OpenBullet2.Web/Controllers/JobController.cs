@@ -192,7 +192,9 @@ public class JobController : ApiController
         if (id == -1)
         {
             var options = JobOptionsFactory.CreateNew(JobType.MultiRun);
-            return _mapper.Map<MultiRunJobOptionsDto>(options);
+            var mapped = _mapper.Map<MultiRunJobOptionsDto>(options);
+            mapped.Name = $"{HttpContext.GetApiUser().Username}'s job";
+            return mapped;
         }
 
         var entity = await GetEntityAsync(id);
@@ -228,7 +230,9 @@ public class JobController : ApiController
         if (id == -1)
         {
             var options = JobOptionsFactory.CreateNew(JobType.ProxyCheck);
-            return _mapper.Map<ProxyCheckJobOptionsDto>(options);
+            var mapped = _mapper.Map<ProxyCheckJobOptionsDto>(options);
+            mapped.Name = $"{HttpContext.GetApiUser().Username}'s job";
+            return mapped;
         }
 
         var entity = await GetEntityAsync(id);

@@ -17,7 +17,6 @@ import {
   ProxySourceType,
   ProxySourceTypes,
   TelegramBotHitOutput,
-  WordlistDataPool,
 } from 'src/app/main/dtos/job/multi-run-job-options.dto';
 import { StartConditionMode } from 'src/app/main/dtos/job/start-condition-mode';
 import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
