@@ -33,7 +33,7 @@
         </div>
         <div class="col-6 pr-0">
             <p class="readme" 
-                [innerHTML]="config.readme | markdown"></p>
+                [innerHTML]="config.readme | markdown | async"></p>
         </div>
     </div>
 </div>

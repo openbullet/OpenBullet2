@@ -152,7 +152,7 @@
             </button>
         </div>
         <p class="readme mt-3" 
-            [innerHTML]="readme | markdown"></p>
+            [innerHTML]="readme | markdown | async"></p>
     </div>
     <div *ngIf="readme === null || selectedConfig === null"
         class="readme-skeleton">

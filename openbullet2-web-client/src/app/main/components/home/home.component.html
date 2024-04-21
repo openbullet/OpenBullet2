@@ -23,7 +23,7 @@
     <p-card *ngIf="announcement !== null">
         <p class="announcement-label">Announcement</p>
         <p class="announcement" 
-            [innerHTML]="announcement.markdownText | markdown : { disableSanitizer: true }"></p>
+            [innerHTML]="announcement.markdownText | markdown : { disableSanitizer: true } | async"></p>
     </p-card>
 </div>
 

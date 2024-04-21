@@ -11,9 +11,9 @@
             </a>
             to view the new release on GitHub.</span>
     </div>
-    <div [innerHTML]="newChangelog.markdownText | markdown"></div>
+    <div [innerHTML]="newChangelog.markdownText | markdown | async"></div>
     <div class="separator"></div>
 </ng-container>
 <ng-container *ngIf="changelog !== null">
-    <div [innerHTML]="changelog.markdownText | markdown"></div>
+    <div [innerHTML]="changelog.markdownText | markdown | async"></div>
 </ng-container>
