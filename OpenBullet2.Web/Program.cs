@@ -23,6 +23,7 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
+using Microsoft.OpenApi.Models;
 using OpenBullet2.Core.Models.Proxies;
 using Serilog;
 
@@ -77,7 +78,36 @@ builder.Services.AddVersionedApiExplorer(setup =>
     setup.GroupNameFormat = "'v'VVV";
     setup.SubstituteApiVersionInUrl = true;
 });
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Api Key", new OpenApiSecurityScheme
+    {
+        Description = "Enter the API key you configured in OB Settings > Security > Admin API Key",
+        Name = "X-Api-Key",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "ApiKeyScheme"
+    });
+    
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Api Key"
+                },
+                Scheme = "ApiKeyScheme",
+                Name = "X-Api-Key",
+                In = ParameterLocation.Header,
+                
+            },
+            new List<string>()
+        }
+    });
+});
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
