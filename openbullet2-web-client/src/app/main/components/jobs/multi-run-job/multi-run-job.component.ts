@@ -400,6 +400,8 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     if (hitMessage.hit.type === this.selectedHitType) {
       this.filteredHits.push(hitMessage.hit);
+    } else if (this.customStatuses.includes(hitMessage.hit.type) && this.selectedHitType === HitType.Custom) {
+      this.filteredHits.push(hitMessage.hit);
     }
 
     if (this.settings?.customizationSettings.playSoundOnHit && hitMessage.hit.type === 'SUCCESS') {
