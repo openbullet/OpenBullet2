@@ -131,7 +131,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   selectedProxyGroup: ProxyGroupDto = this.defaultProxyGroup;
 
-  fieldsValidity: { [key: string]: boolean } = {};
+  fieldsValidity: { [key: string]: boolean } = { 'configId': false };
   touched = false;
 
   selectConfigModalVisible = false;
@@ -246,6 +246,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
       // If there is a config, we need to fetch it
       if (options.configId !== null) {
+        this.fieldsValidity['configId'] = true;
         this.configService.getInfo(options.configId).subscribe((configInfo) => {
           this.selectedConfigInfo = configInfo;
         });
@@ -350,7 +351,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return this.touched && Object.values(this.fieldsValidity).every((v) => v);
+    return Object.values(this.fieldsValidity).every((v) => v);
   }
 
   accept() {
@@ -428,6 +429,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.options!.bots = config.suggestedBots;
     this.selectConfigModalVisible = false;
     this.touched = true;
+    this.fieldsValidity['configId'] = true;
   }
 
   selectWordlist(wordlist: WordlistDto) {

@@ -211,7 +211,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return this.touched && Object.values(this.fieldsValidity).every((v) => v);
+    return Object.values(this.fieldsValidity).every((v) => v);
   }
 
   accept() {
