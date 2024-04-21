@@ -20,6 +20,7 @@ using RuriLib.Providers.RandomNumbers;
 using RuriLib.Providers.UserAgents;
 using RuriLib.Services;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentValidation;
@@ -251,6 +252,32 @@ app.MapFallbackToController(
 );
 
 var obSettings = app.Services.GetRequiredService<OpenBulletSettingsService>().Settings;
+
+Console.ForegroundColor = ConsoleColor.White;
+Console.WriteLine("""
+                     ____                   ____        ____     __     ___ 
+                    / __ \____  ___  ____  / __ )__  __/ / /__  / /_   |__ \
+                   / / / / __ \/ _ \/ __ \/ __  / / / / / / _ \/ __/   __/ /
+                  / /_/ / /_/ /  __/ / / / /_/ / /_/ / / /  __/ /_    / __/ 
+                  \____/ .___/\___/_/ /_/_____/\__,_/_/_/\___/\__/   /____/ 
+                      /_/                                                                               
+                  """);
+Console.ForegroundColor = ConsoleColor.Red;
+Console.WriteLine("""
+                  
+                  ----------
+                  DISCLAIMER
+                  ----------
+                  Performing attacks on sites you do not own (or you do not have permission to test) is illegal!
+                  The developer will not be held responsible for improper use of this software.
+                  
+                  """);
+
+Console.ForegroundColor = ConsoleColor.White;
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    Console.WriteLine($"DO NOT CLOSE THIS WINDOW{Environment.NewLine}");
+}
 
 if (RootChecker.IsRoot())
 {
