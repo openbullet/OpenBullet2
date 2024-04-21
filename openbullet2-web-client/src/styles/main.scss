@@ -220,6 +220,7 @@ textarea {
 
 .text-small {
     font-size: 12px;
+    color: var(--fg-primary);
 }
 
 p-pickList.configs-picker > div > div.p-picklist-source-controls,
@@ -243,6 +244,7 @@ label {
     font-size: 14px;
     height: 27px;
     line-height: 10px;
+    color: var(--fg-primary);
 }
 
 textarea.input-small {
@@ -305,8 +307,31 @@ ul.p-submenu-list:has(> .long-menu-item) {
     min-width: 500px !important;
 }
 
-.p-dialog-title {
+.p-inputtext,
+.p-dropdown .p-dropdown-label.p-placeholder,
+input,
+.p-card,
+.p-chip,
+.p-datatable-tbody td,
+.pi-chevron-down:before,
+.p-datatable .p-sortable-column .p-sortable-column-icon,
+.p-datatable .p-datatable-thead > tr > th,
+.p-dialog-title,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-icon,
+.p-menubar .p-menuitem-link .p-menuitem-text,
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-submenu-icon,
+.p-column-filter-menu-button {
     color: var(--fg-primary);
+}
+
+.p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--fg-light);
+}
+
+input::placeholder {
+    color: var(--fg-inactive);
 }
 
 /* Scrollbar */
