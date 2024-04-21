@@ -86,4 +86,5 @@ export interface SafeGeneralOBSettings {
 
 export interface SafeCustomizationOBSettings {
   playSoundOnHit: boolean;
+  wordWrap: boolean;
 }

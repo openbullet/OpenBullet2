@@ -44,4 +44,9 @@ public class SafeOBCustomizationSettingsDto
     /// Whether to play a sound when a hit is found.
     /// </summary>
     public bool PlaySoundOnHit { get; set; } = false;
+    
+    /// <summary>
+    /// Whether to wrap words at viewport width in the code editor.
+    /// </summary>
+    public bool WordWrap { get; set; } = false;
 }

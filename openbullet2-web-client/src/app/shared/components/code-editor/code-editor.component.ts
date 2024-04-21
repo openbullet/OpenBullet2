@@ -20,7 +20,7 @@ export class CodeEditorComponent implements OnInit {
   @Input() readOnly = false;
   @Input() theme = 'vs-dark-lolicode';
   // biome-ignore lint/suspicious/noExplicitAny: any
-  editorOptions: any = {};
+  editorOptions: any = null;
   isTouched = false;
   model = '';
 
@@ -34,15 +34,17 @@ export class CodeEditorComponent implements OnInit {
   constructor(
     private settingsService: SettingsService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.editorOptions = {
-      theme: this.theme,
-      language: this.language,
-      readOnly: this.readOnly,
-      // wordWrap: true
-    };
+    this.settingsService.getSafeSettings().subscribe((settings) => {
+      this.editorOptions = {
+        theme: this.theme,
+        language: this.language,
+        readOnly: this.readOnly,
+        wordWrap: settings.customizationSettings.wordWrap ? 'on' : 'off',
+      };
+    });
   }
 
   editorLoaded() {

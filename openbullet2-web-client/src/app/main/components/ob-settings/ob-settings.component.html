@@ -425,6 +425,15 @@
             </button>
         </div>
     </div>
+    <div class="row my-3">
+        <div class="col-12">
+            <p-checkbox
+                (onChange)="touched = true" ngDefaultControl 
+                [(ngModel)]="settings.customizationSettings.wordWrap"
+                [binary]="true" inputId="wordWrap"
+                label="Word Wrap in code editor" />
+        </div>
+    </div>
 </div>
 
 <p-dialog 
