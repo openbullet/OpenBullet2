@@ -199,8 +199,14 @@ export class ConfigStackerComponent implements OnInit {
       return;
     }
 
-    // Add the block to the end of the stack
-    this.stack.push(block);
+    // If there is a selected block, add the new block after it
+    if (this.selectedBlocks.length > 0 && this.lastSelectedBlock !== null) {
+      const index = this.stack.indexOf(this.lastSelectedBlock);
+      this.stack.splice(index + 1, 0, block);
+    } else {
+      // Add the block to the end of the stack
+      this.stack.push(block);
+    }
 
     // Select the block
     this.selectedBlocks = [block];
