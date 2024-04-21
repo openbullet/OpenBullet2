@@ -74,6 +74,11 @@
                                 #
                             </div>
                         </th>
+                        <th style="min-width:4rem" *ngIf="usernames.size >= 2">
+                            <div class="d-flex align-items-center">
+                                Owner
+                            </div>
+                        </th>
                         <th style="min-width:7rem" pResizableColumn>
                             <div class="d-flex align-items-center">
                                 Name
@@ -139,6 +144,9 @@
                 <ng-template pTemplate="body" let-mrj>
                     <tr class="job-row" (click)="viewMultiRunJob(mrj)">
                         <td>{{ mrj.id }}</td>
+                        <td *ngIf="usernames.size >= 2">
+                            {{ usernames.get(mrj.ownerId) }}
+                        </td>
                         <td>{{ mrj.name }}</td>
                         <td>
                             <div [class]="'job-chip bg-' + statusColor[mrj.status]">
@@ -234,6 +242,11 @@
                                 #
                             </div>
                         </th>
+                        <th style="min-width:4rem" *ngIf="usernames.size >= 2">
+                            <div class="d-flex align-items-center">
+                                Owner
+                            </div>
+                        </th>
                         <th style="min-width:7rem" pResizableColumn>
                             <div class="d-flex align-items-center">
                                 Name
@@ -279,6 +292,9 @@
                 <ng-template pTemplate="body" let-pcj>
                     <tr class="job-row" (click)="viewProxyCheckJob(pcj)">
                         <td>{{ pcj.id }}</td>
+                        <td *ngIf="usernames.size >= 2">
+                            {{ usernames.get(pcj.ownerId) }}
+                        </td>
                         <td>{{ pcj.name }}</td>
                         <td>
                             <div [class]="'job-chip bg-' + statusColor[pcj.status]">

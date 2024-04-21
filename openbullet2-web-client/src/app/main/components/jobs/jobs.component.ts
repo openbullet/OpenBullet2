@@ -7,6 +7,9 @@ import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dt
 import { ProxyCheckJobOverviewDto } from '../../dtos/job/proxy-check-job-overview.dto';
 import { JobService } from '../../services/job.service';
 import { SettingsService } from '../../services/settings.service';
+import { UserService } from '../../services/user.service';
+import { GuestService } from '../../services/guest.service';
+import { GuestDto } from '../../dtos/guest/guest.dto';
 
 @Component({
   selector: 'app-jobs',
@@ -49,13 +52,28 @@ export class JobsComponent implements OnInit, OnDestroy {
     default: 'secondary',
   };
 
+  usernames: Map<number, string> = new Map();
+
   constructor(
     private jobService: JobService,
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
-  ) { }
+    private guestService: GuestService,
+    userService: UserService
+  ) {
+    // If this is the admin, get the list of guests to translate
+    // the Owner ID to a username
+    if (userService.isAdmin()) {
+      this.guestService.getAllGuests().subscribe((guests) => {
+        this.usernames.set(0, userService.loadUserInfo().username);
+        for (const guest of guests) {
+          this.usernames.set(guest.id, guest.username);
+        }
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.refreshJobs();
