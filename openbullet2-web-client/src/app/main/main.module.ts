@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgChartsModule } from 'ng2-charts';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AccordionModule } from 'primeng/accordion';
@@ -116,6 +115,7 @@ import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 import { CustomInputsComponent } from './components/jobs/multi-run-job/custom-inputs/custom-inputs.component';
+import { BaseChartDirective } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -235,11 +235,11 @@ import { CustomInputsComponent } from './components/jobs/multi-run-job/custom-in
     DialogModule,
     TableModule,
     ChipModule,
-    NgChartsModule,
+    BaseChartDirective,
     MarkdownModule.forRoot(),
     SharedModule,
     NgxSpinnerModule,
   ],
   providers: [],
 })
-export class MainModule {}
+export class MainModule { }

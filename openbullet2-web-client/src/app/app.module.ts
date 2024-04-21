@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgChartsModule } from 'ng2-charts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxSpinnerConfig } from 'ngx-spinner/lib/config';
 import { MessageService } from 'primeng/api';
@@ -20,6 +19,7 @@ import { AppComponent } from './app.component';
 import { ForgotCredentialsComponent } from './login/forgot-credentials/forgot-credentials.component';
 import { LoginComponent } from './login/login.component';
 import { HttpErrorInterceptor } from './shared/interceptors/http-error.interceptor';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, ForgotCredentialsComponent],
@@ -39,7 +39,7 @@ import { HttpErrorInterceptor } from './shared/interceptors/http-error.intercept
       size: 'medium',
       color: '#fff',
     }),
-    NgChartsModule,
+    BaseChartDirective,
     MessagesModule,
     ConfirmPopupModule,
     ConfirmDialogModule,
@@ -52,7 +52,8 @@ import { HttpErrorInterceptor } from './shared/interceptors/http-error.intercept
       multi: true,
     },
     MessageService,
+    provideCharts(withDefaultRegisterables())
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

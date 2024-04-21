@@ -127,7 +127,7 @@ export class HitsComponent implements OnInit {
         // Update the "Export with format" menu items
         const exportMenuItems = envSettings.exportFormats.map((ef) => {
           return {
-            label: ef.format,
+            label: ef.format.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
             command: () => this.downloadHits(ef.format),
             styleClass: 'long-menu-item',
           };

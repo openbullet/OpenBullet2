@@ -20,9 +20,7 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -88,10 +86,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "openbullet2-web-client:build:production"
+              "buildTarget": "openbullet2-web-client:build:production"
             },
             "development": {
-              "browserTarget": "openbullet2-web-client:build:development"
+              "buildTarget": "openbullet2-web-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -99,16 +97,13 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "openbullet2-web-client:build"
+            "buildTarget": "openbullet2-web-client:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -120,9 +115,7 @@
                 "output": "/assets/monaco/"
               }
             ],
-            "styles": [
-              "src/styles/main.scss"
-            ],
+            "styles": ["src/styles/main.scss"],
             "scripts": []
           }
         }
