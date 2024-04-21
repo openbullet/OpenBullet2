@@ -74,6 +74,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   JobStatus = JobStatus;
   StartConditionType = StartConditionType;
   JobProxyMode = JobProxyMode;
+  HitType = HitType;
 
   settings: SafeOBSettingsDto | null = null;
   customInputs: CustomInputQuestionDto[] | null = null;

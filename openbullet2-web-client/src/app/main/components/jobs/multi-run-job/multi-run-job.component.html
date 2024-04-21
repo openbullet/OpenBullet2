@@ -508,6 +508,7 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
+                                <th *ngIf="selectedHitType === HitType.Custom">Type</th>
                                 <th>Data</th>
                                 <th>Proxy</th>
                                 <th>Captured Data</th>
@@ -519,6 +520,9 @@
                                 (click)="onHitClicked(hit, $event)">
                                 <td class="monospace hit-time">
                                     {{hit.date | date : 'medium'}}
+                                </td>
+                                <td *ngIf="selectedHitType === HitType.Custom" class="monospace">
+                                    {{hit.type}}
                                 </td>
                                 <td class="monospace">
                                     {{hit.data}}
