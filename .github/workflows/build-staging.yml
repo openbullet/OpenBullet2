@@ -68,6 +68,20 @@ jobs:
 
           ${{ env.COMMIT_DESCRIPTION }}
 
+    - name: Notify new build on discord
+      if: success()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        DISCORD_EMBEDS: |
+          [
+            {
+              "title": "New staging build"
+              "description": "Staging release ${{ env.VERSION }} available. Changelog:\n```\n${{ env.COMMIT_DESCRIPTION }}\n```",
+              "color": 5763719
+            }
+          ]
+      uses: Ilshidur/action-discord@master
+
     - name: Setup upterm session
       uses: lhotari/action-upterm@v1
       if: ${{ failure() }}
