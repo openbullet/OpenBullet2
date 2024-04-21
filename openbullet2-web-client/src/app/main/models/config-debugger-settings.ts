@@ -6,6 +6,7 @@ export interface ConfigDebuggerSettings {
   proxyType: string;
   persistLog: boolean;
   stepByStep: boolean;
+  groupCaptures: boolean;
 }
 
 export interface BotLoggerEntry {

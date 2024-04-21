@@ -80,12 +80,19 @@
                 [binary]="true" inputId="stepByStep"
                 label="Step by step" />
         </div>
-        <div class="col-auto pr-0">
+        <div class="col-auto">
             <p-checkbox
                 (onChange)="localSave()" ngDefaultControl 
                 [(ngModel)]="settings.persistLog"
                 [binary]="true" inputId="persistLog"
                 label="Persist Log" />
+        </div>
+        <div class="col-auto pr-0">
+            <p-checkbox
+                (onChange)="localSave()" ngDefaultControl 
+                [(ngModel)]="settings.groupCaptures"
+                [binary]="true" inputId="groupCaptures"
+                label="Group captures" />
         </div>
         <div class="col align-self-stretch text-right">
             <button class="button button-secondary ml-2"

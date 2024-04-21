@@ -86,7 +86,11 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
       }
 
       this.logs = msg.log;
-      this.variables = msg.variables;
+      this.variables = this.settings?.groupCaptures
+        ? [
+          ...msg.variables.filter((v) => !v.markedForCapture),
+          ...msg.variables.filter((v) => v.markedForCapture)
+        ] : msg.variables;
       this.status = msg.status;
 
       this.onNewState();
@@ -122,7 +126,11 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.variables = msg.variables;
+      this.variables = this.settings?.groupCaptures
+        ? [
+          ...msg.variables.filter((v) => !v.markedForCapture),
+          ...msg.variables.filter((v) => v.markedForCapture)
+        ] : msg.variables;
     });
 
     this.statusSubscription = this.debuggerHubService.status$.subscribe((msg) => {

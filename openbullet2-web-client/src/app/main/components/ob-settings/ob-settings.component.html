@@ -129,15 +129,6 @@
         <div class="col-12">
             <p-checkbox
                 (onChange)="touched = true" ngDefaultControl 
-                [(ngModel)]="settings.generalSettings.groupCapturesInDebugger"
-                [binary]="true" inputId="groupCapturesInDebugger"
-                label="Group captures in debugger" />
-        </div>
-    </div>
-    <div class="row my-3">
-        <div class="col-12">
-            <p-checkbox
-                (onChange)="touched = true" ngDefaultControl 
                 [(ngModel)]="settings.generalSettings.ignoreWordlistNameOnHitsDedupe"
                 [binary]="true" inputId="ignoreWordlistNameOnHitsDedupe"
                 label="Ignore the wordlist name when removing duplicates from hits" />

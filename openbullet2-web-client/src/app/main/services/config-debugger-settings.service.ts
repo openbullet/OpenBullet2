@@ -20,7 +20,7 @@ export class ConfigDebuggerSettingsService {
     if (json !== null) {
       try {
         settings = JSON.parse(json);
-      } catch {}
+      } catch { }
     }
 
     return (
@@ -32,6 +32,7 @@ export class ConfigDebuggerSettingsService {
         proxyType: 'http',
         persistLog: false,
         stepByStep: false,
+        groupCaptures: false
       }
     );
   }
