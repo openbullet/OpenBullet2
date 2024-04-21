@@ -76,7 +76,7 @@ jobs:
           [
             {
               "title": "New staging build",
-              "description": "Staging release ${{ env.VERSION }} available. Changelog:\n```\n${{ env.COMMIT_DESCRIPTION }}\n```",
+              "description": "Staging release ${{ env.VERSION }} available",
               "color": 5763719
             }
           ]
