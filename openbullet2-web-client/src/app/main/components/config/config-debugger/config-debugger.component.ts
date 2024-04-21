@@ -68,7 +68,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private truncatePipe: TruncatePipe,
     private userService: UserService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.wordlistTypes = this.envSettings.wordlistTypes.map((t) => t.name);
@@ -204,8 +204,10 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
         return variable.value.toString();
 
       case 'listOfStrings':
+        return `[${variable.value.join(', ')}]`;
+
       case 'dictionaryOfStrings':
-        return JSON.stringify(variable.value);
+        return `{${Object.keys(variable.value).map((k) => `(${k}, ${variable.value[k]})`).join(', ')}}`;
 
       default:
         return '[UNKNOWN TYPE]';
