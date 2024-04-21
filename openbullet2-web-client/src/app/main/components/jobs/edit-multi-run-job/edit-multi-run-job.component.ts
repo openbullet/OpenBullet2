@@ -646,4 +646,11 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       this.selectWordlist(resp);
     });
   }
+
+  formatFilePath(path: string) {
+    return path
+      .replace(/\\/g, '/')
+      .replace(/^"/, '')
+      .replace(/"$/, '');
+  }
 }

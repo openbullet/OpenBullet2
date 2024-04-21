@@ -258,6 +258,7 @@
                             [style]="{ 'min-width': '300px' }"
                             (touched)="touched = true" ngDefaultControl
                             (validityChange)="onValidityChange($event)"
+                            (blur)="proxySource.fileName = formatFilePath(proxySource.fileName)"
                             [(ngModel)]="proxySource.fileName" regex="^.+$"
                             placeholder="proxies.txt" />
                         <app-input-dropdown key="proxySourceDefaultType"
@@ -401,6 +402,7 @@
                     [style]="{ 'min-width': '300px' }"
                     (touched)="touched = true" ngDefaultControl
                     (validityChange)="onValidityChange($event)"
+                    (blur)="dataPoolFileName = formatFilePath(dataPoolFileName)"
                     [(ngModel)]="dataPoolFileName"
                     placeholder="/path/to/my/file.txt" />
                 <div class="mt-2 mb-1">

@@ -49,6 +49,7 @@
             </div>
             <input id="filePath" type="text" class="w-100"
                 spellcheck="false"
+                (blur)="formatFilePath()"
                 [(ngModel)]="filePath"
                 [placeholder]="isAdmin ? '/path/to/wordlist.txt' : 'UserData/Wordlists/example.txt'" />
             <br />

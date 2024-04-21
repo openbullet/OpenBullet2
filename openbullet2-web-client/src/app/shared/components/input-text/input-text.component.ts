@@ -17,6 +17,7 @@ export class InputTextComponent implements OnInit {
   @Input() ngModel: string | null = null;
 
   @Output() touched = new EventEmitter();
+  @Output() blur = new EventEmitter();
   @Output() validityChange = new EventEmitter<FieldValidity>();
   @Output() ngModelChange = new EventEmitter<string>();
 

@@ -7,5 +7,6 @@
     (input)="valueChanging($event)"
     [value]="ngModel"
     (change)="valueChanged($event)"
+    (blur)="blur.emit()"
     [placeholder]="placeholder"
 />

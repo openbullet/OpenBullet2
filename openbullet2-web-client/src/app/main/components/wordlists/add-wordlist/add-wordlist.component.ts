@@ -44,4 +44,11 @@ export class AddWordlistComponent {
   isFormValid() {
     return this.name.length > 0 && this.filePath.length > 0;
   }
+
+  formatFilePath() {
+    this.filePath = this.filePath
+      .replace(/\\/g, '/')
+      .replace(/^"/, '')
+      .replace(/"$/, '');
+  }
 }

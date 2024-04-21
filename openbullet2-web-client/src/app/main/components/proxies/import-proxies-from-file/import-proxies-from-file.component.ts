@@ -19,7 +19,7 @@ export class ImportProxiesFromFileComponent {
   defaultProxyType: ProxyType = ProxyType.Http;
   proxyTypes: ProxyType[] = [ProxyType.Http, ProxyType.Socks4, ProxyType.Socks4a, ProxyType.Socks5];
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService) { }
 
   public reset() {
     this.fileUpload?.clear();
