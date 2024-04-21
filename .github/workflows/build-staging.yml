@@ -75,7 +75,7 @@ jobs:
         DISCORD_EMBEDS: |
           [
             {
-              "title": "New staging build"
+              "title": "New staging build",
               "description": "Staging release ${{ env.VERSION }} available. Changelog:\n```\n${{ env.COMMIT_DESCRIPTION }}\n```",
               "color": 5763719
             }
