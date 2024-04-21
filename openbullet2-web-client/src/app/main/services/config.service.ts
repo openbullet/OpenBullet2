@@ -221,4 +221,13 @@ export class ConfigService {
   getBlockSnippets() {
     return this.http.get<{ [key: string]: string }>(`${getBaseUrl()}/config/block-snippets`);
   }
+
+  getRemoteImage(url: string) {
+    return this.http.get<Blob>(`${getBaseUrl()}/config/remote-image`, {
+      params: {
+        url
+      },
+      responseType: 'blob' as 'json'
+    });
+  }
 }

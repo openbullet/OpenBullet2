@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FileUpload } from 'primeng/fileupload';
+import { ConfigService } from 'src/app/main/services/config.service';
+import { base64ArrayBuffer } from 'src/app/shared/utils/base64ArrayBuffer';
 
 @Component({
   selector: 'app-edit-config-image',
@@ -14,7 +15,7 @@ export class EditConfigImageComponent {
   base64Image: string | null = null;
   remoteUrl = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private configService: ConfigService) { }
 
   setImage(base64Image: string) {
     this.base64Image = base64Image;
@@ -23,17 +24,14 @@ export class EditConfigImageComponent {
   }
 
   downloadImage() {
-    this.http
-      .get<Blob>(this.remoteUrl, {
-        responseType: 'blob' as 'json',
-      })
+    this.configService.getRemoteImage(this.remoteUrl)
       .subscribe((blob) => this.setImageFromBlob(blob));
   }
 
   setImageFromBlob(blob: Blob) {
     const reader = new FileReader();
     reader.onloadend = () => {
-      this.base64Image = window.btoa(reader.result as string);
+      this.base64Image = base64ArrayBuffer(reader.result as ArrayBuffer);
     };
     reader.readAsArrayBuffer(blob);
   }

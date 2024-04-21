@@ -499,6 +499,22 @@ public class ConfigController : ApiController
             Error = error
         };
     }
+    
+    /// <summary>
+    /// Get a remote image (used to bypass CORS).
+    /// </summary>
+    [Admin]
+    [HttpGet("remote-image")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult> GetRemoteImage(string url)
+    {
+        using var client = new HttpClient();
+        
+        // ASP.NET Core will automatically dispose the stream
+        var imageStream = await client.GetStreamAsync(url);
+        
+        return File(imageStream, "image/png");
+    }
 
     private static CategoryTreeNodeDto MapCategoryTreeNode(CategoryTreeNode node)
         => new() {
