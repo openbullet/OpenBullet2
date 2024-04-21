@@ -89,6 +89,8 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     resuming: 'good',
   };
 
+  customStatuses: string[] = ['CUSTOM'];
+
   status: JobStatus = JobStatus.IDLE;
   bots = 0;
 
@@ -184,6 +186,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
           this.refreshBotDetails();
         }, 1000);
       }
+    });
+
+    settingsService.getEnvironmentSettings().subscribe((envSettings) => {
+      this.customStatuses = envSettings.customStatuses.map((s) => s.name);
     });
 
     this.jobService.getCustomInputs(this.jobId!).subscribe((customInputs) => {
@@ -610,7 +616,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
         break;
 
       case HitType.Custom:
-        this.filteredHits = this.hits.filter((h) => h.type === 'CUSTOM');
+        this.filteredHits = this.hits.filter((h) => this.customStatuses.includes(h.type));
         break;
 
       case HitType.ToCheck:
