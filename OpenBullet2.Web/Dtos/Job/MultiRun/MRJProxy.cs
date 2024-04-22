@@ -14,4 +14,14 @@ public class MrjProxy
     /// The port of the proxy.
     /// </summary>
     public int? Port { get; set; }
+    
+    /// <summary>
+    /// The username to use for authentication.
+    /// </summary>
+    public string? Username { get; set; }
+    
+    /// <summary>
+    /// The password to use for authentication.
+    /// </summary>
+    public string? Password { get; set; }
 }

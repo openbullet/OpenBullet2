@@ -714,8 +714,17 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const hit = this.selectedHits[0];
+
     const debuggerSettings = this.debuggerSettingsService.loadLocalSettings();
-    debuggerSettings.testData = this.selectedHits[0].data;
+    debuggerSettings.testData = hit.data;
+
+    if (hit.proxy !== null) {
+      debuggerSettings.testProxy = hit.proxy.username === null || hit.proxy.username.length === 0
+        ? `${hit.proxy.host}:${hit.proxy.port}`
+        : `${hit.proxy.host}:${hit.proxy.port}:${hit.proxy.username}:${hit.proxy.password}`;
+    }
+
     this.debuggerSettingsService.saveLocalSettings(debuggerSettings);
 
     // If there is a selected config, redirect to the correct page

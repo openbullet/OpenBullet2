@@ -35,6 +35,8 @@ export function getMockedMultiRunJobNewResultMessage(): MRJNewResultMessage {
     proxy: {
       host: '1.1.1.1',
       port: 8080,
+      username: null,
+      password: null,
     },
     status: 'FAIL',
   };

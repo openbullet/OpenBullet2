@@ -326,7 +326,15 @@ public sealed class MultiRunJobService : IJobService, IDisposable
                 Date = e.Date,
                 Type = e.Type,
                 Data = e.DataString,
-                Proxy = e.Proxy is not null ? new MrjProxy { Host = e.Proxy.Host, Port = e.Proxy.Port } : null,
+                Proxy = e.Proxy is not null 
+                    ? new MrjProxy
+                    {
+                        Host = e.Proxy.Host,
+                        Port = e.Proxy.Port,
+                        Username = e.Proxy.Username,
+                        Password = e.Proxy.Password
+                    }
+                    : null,
                 CapturedData = e.CapturedDataString
             }
         };

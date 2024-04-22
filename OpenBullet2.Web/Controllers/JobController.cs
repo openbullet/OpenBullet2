@@ -1013,7 +1013,15 @@ public class JobController : ApiController
                 Date = h.Date,
                 Type = h.Type,
                 Data = h.DataString,
-                Proxy = h.Proxy is not null ? new MrjProxy { Host = h.Proxy.Host, Port = h.Proxy.Port } : null,
+                Proxy = h.Proxy is not null 
+                    ? new MrjProxy
+                    {
+                        Host = h.Proxy.Host,
+                        Port = h.Proxy.Port,
+                        Username = h.Proxy.Username,
+                        Password = h.Proxy.Password,
+                    }
+                    : null,
                 CapturedData = h.CapturedDataString
             }).ToList()
         };
