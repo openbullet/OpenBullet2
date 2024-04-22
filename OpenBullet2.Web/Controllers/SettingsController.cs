@@ -5,7 +5,9 @@ using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Settings;
+using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Services;
+using RuriLib.Functions.Captchas;
 using RuriLib.Models.Settings;
 using RuriLib.Services;
 
@@ -73,10 +75,10 @@ public class SettingsController : ApiController
         GlobalSettings settings)
     {
         // NOTE: We use the mapper here to apply the new settings over the
-        // existing ones so we don't update the references and we can
+        // existing ones, so we don't update the references, and we can
         // edit the settings live if a component is using them.
 
-        // NOTE: To check this we can just print the hashcodes before
+        // NOTE: To check this we can just print the hashcode before
         // and after this instruction.
         _mapper.Map(settings, _ruriLibSettingsService.RuriLibSettings);
         await _ruriLibSettingsService.Save();
@@ -218,4 +220,29 @@ public class SettingsController : ApiController
         => _obSettingsService.Settings.GeneralSettings.CustomSnippets
             .Where(s => !string.IsNullOrWhiteSpace(s.Name))
             .ToDictionary(s => s.Name, s => s.Body);
+    
+    /// <summary>
+    /// Check captcha balance for the given service.
+    /// </summary>
+    [Admin]
+    [HttpPost("check-captcha-balance")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<CaptchaBalanceDto>> CheckCaptchaCredit(
+        CaptchaSettings captchaSettings)
+    {
+        var service = CaptchaServiceFactory.GetService(captchaSettings);
+        
+        try
+        {
+            return new CaptchaBalanceDto
+            {
+                Balance = await service.GetBalanceAsync()
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new ApiException(ErrorCode.CaptchaServiceError,
+                $"Error while checking the balance on {captchaSettings.CurrentService}: {ex.Message}");
+        }
+    }
 }

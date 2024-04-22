@@ -4,8 +4,9 @@ import { Observable, shareReplay } from 'rxjs';
 import { getBaseUrl } from 'src/app/shared/utils/host';
 import { EnvironmentSettingsDto } from '../dtos/settings/environment-settings.dto';
 import { OBSettingsDto, SafeOBSettingsDto } from '../dtos/settings/ob-settings.dto';
-import { RLSettingsDto } from '../dtos/settings/rl-settings.dto';
+import { CaptchaRLSettings, RLSettingsDto } from '../dtos/settings/rl-settings.dto';
 import { ThemeDto } from '../dtos/settings/theme.dto';
+import { CaptchaBalanceDto } from '../dtos/settings/captcha-balance.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class SettingsService {
   // Cached
   private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getEnvironmentSettings() {
     if (this.envSettings$ !== null) {
@@ -81,5 +82,10 @@ export class SettingsService {
 
   getCustomSnippets() {
     return this.http.get<{ [key: string]: string }>(`${getBaseUrl()}/settings/custom-snippets`);
+  }
+
+  checkCaptchaBalance(dto: CaptchaRLSettings) {
+    return this.http.post<CaptchaBalanceDto>(
+      `${getBaseUrl()}/settings/check-captcha-balance`, dto);
   }
 }

@@ -72,7 +72,7 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
     private settingsService: SettingsService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   canDeactivate() {
     if (!this.touched) {
@@ -158,5 +158,15 @@ export class RlSettingsComponent implements OnInit, DeactivatableComponent {
 
   onCaptchaServiceChange(newValue: CaptchaServiceType) {
     this.settings!.captchaSettings.currentService = newValue;
+  }
+
+  checkCaptchaBalance() {
+    this.settingsService.checkCaptchaBalance(this.settings!.captchaSettings).subscribe((resp) => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Balance',
+        detail: `The balance for ${this.settings!.captchaSettings.currentService} is ${resp.balance}`,
+      });
+    });
   }
 }

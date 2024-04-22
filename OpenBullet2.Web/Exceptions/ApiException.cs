@@ -218,4 +218,9 @@ public static class ErrorCode
     /// Missing job id.
     /// </summary>
     public const string MissingJobId = "MISSING_JOB_ID";
+    
+    /// <summary>
+    /// Captcha service error.
+    /// </summary>
+    public const string CaptchaServiceError = "CAPTCHA_SERVICE_ERROR";
 }
