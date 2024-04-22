@@ -504,37 +504,33 @@
                     Hits
                 </div>
                 <div class="named-card-value hits">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th *ngIf="selectedHitType === HitType.Custom">Type</th>
-                                <th>Data</th>
-                                <th>Proxy</th>
-                                <th>Captured Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let hit of filteredHits" class="hit"
-                                [class.selected]="isHitSelected(hit)"
-                                (click)="onHitClicked(hit, $event)">
-                                <td class="monospace hit-time">
-                                    {{hit.date | date : 'medium'}}
-                                </td>
-                                <td *ngIf="selectedHitType === HitType.Custom" class="monospace">
-                                    {{hit.type}}
-                                </td>
-                                <td class="monospace">
-                                    {{hit.data}}
-                                </td>
-                                <td class="monospace">
-                                    {{hit.proxy === null ? '-' : hit.proxy.host + ':' + hit.proxy.port}}
-                                </td>
-                                <td class="monospace">
-                                    {{hit.capturedData}}
-                                </td>
-                            </tr>
-                    </table>
+                    <ul class="hits-list">
+                        <li *ngFor="let hit of filteredHits" class="hit"
+                            [class.selected]="isHitSelected(hit)"
+                            (click)="onHitClicked(hit, $event)">
+                            <span class="monospace color-inactive">
+                                [{{hit.date | date : 'medium'}}]
+                            </span>
+                            <span class="monospace" [ngClass]="getHitColorClass(hit.type)">
+                                [{{hit.type}}]
+                            </span>
+                            <span class="monospace">
+                                {{hit.data}}
+                            </span>
+                            <span class="monospace color-inactive">
+                                | 
+                            </span>
+                            <span class="monospace">
+                                {{hit.proxy === null ? '-' : hit.proxy.host + ':' + hit.proxy.port}}
+                            </span>
+                            <span class="monospace color-inactive">
+                                | 
+                            </span>
+                            <span class="monospace">
+                                {{hit.capturedData}}
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="d-flex align-items-center" style="margin-top: 10px;">
@@ -544,7 +540,8 @@
                     </span>
                 </div>
                 <app-input-dropdown key="hitType"
-                    itemClass="input-small" optionClass="input-small"
+                    [itemClass]="'input-small ' + getHitColorClass(selectedHitType)"
+                    optionClass="input-small"
                     ngDefaultControl
                     [displayFunction]="hitTypeDisplayFunction"
                     [options]="hitTypes"

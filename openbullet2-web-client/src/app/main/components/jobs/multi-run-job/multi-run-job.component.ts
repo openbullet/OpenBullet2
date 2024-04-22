@@ -805,4 +805,16 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       });
     });
   }
+
+  getHitColorClass(hitType: string | HitType) {
+    if (hitType === 'SUCCESS') {
+      return 'color-good';
+    }
+
+    if (hitType === 'NONE') {
+      return 'color-tocheck';
+    }
+
+    return 'color-custom';
+  }
 }

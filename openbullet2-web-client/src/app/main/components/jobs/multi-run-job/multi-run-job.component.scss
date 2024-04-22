@@ -137,45 +137,25 @@
     height: 310px;
     overflow-y: auto;
 
-    table {
+    .hits-list {
         width: 100%;
-        border-collapse: collapse;
+        list-style-type: none;
+        padding: 0px;
 
-        th {
-            text-align: left;
+        .hit {
             font-size: 14px;
-            color: var(--fg-inactive);
             padding: 5px 10px 5px 0px;
-        }
+            cursor: pointer;
 
-        tbody {
-            tr {
-                td {
-                    padding: 5px 10px 5px 0px;
-                    cursor: pointer;
-
-                    /* Disable text selection */
-                    -webkit-user-select: none; /* Safari */
-                    -ms-user-select: none; /* IE 10 and IE 11 */
-                    user-select: none; /* Standard syntax */
-                }
-
-                &:hover, &.selected {
-                    background-color: var(--bg-primary);
-                    
-                    td:first-child {
-                        padding: 5px 0px 5px 10px;
-                    }
-                }
+            /* Disable text selection */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+            
+            &:hover, &.selected {
+                background-color: var(--bg-primary);
+                padding: 5px 0px 5px 10px;
             }
-        }
-    }
-
-    .hit {
-        font-size: 14px;
-
-        .hit-time {
-            color: var(--fg-inactive);
         }
     }
 }
