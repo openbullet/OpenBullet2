@@ -166,7 +166,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 Assert.Equal(mrJob.Config.Metadata.Name, j.ConfigName);
                 Assert.Contains("Combinations", j.DataPoolInfo);
                 Assert.Equal(mrJob.Bots, j.Bots);
-                Assert.Equal(mrJob.ProxyMode, j.ProxyMode);
+                Assert.Equal(mrJob.ShouldUseProxies(), j.UseProxies);
             });
     }
     

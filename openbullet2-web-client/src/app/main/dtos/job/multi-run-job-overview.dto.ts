@@ -4,7 +4,7 @@ export interface MultiRunJobOverviewDto extends JobOverviewDto {
   configName: string;
   dataPoolInfo: string;
   bots: number;
-  proxyMode: string;
+  useProxies: boolean;
   dataHits: number;
   dataCustom: number;
   dataToCheck: number;

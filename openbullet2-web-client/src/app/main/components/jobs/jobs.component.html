@@ -151,8 +151,8 @@
                         </td>
                         <td>{{ mrj.configName }}</td>
                         <td>
-                            <div [class]="'job-chip bg-' + proxyColor[mrj.proxyMode]">
-                                {{ mrj.proxyMode | uppercase }}
+                            <div [class]="'job-chip ' + (mrj.useProxies ? 'bg-good' : 'bg-secondary')">
+                                {{ (mrj.useProxies ? 'on' : 'off') | uppercase }}
                             </div>
                         </td>
                         <td>{{ mrj.bots }}</td>

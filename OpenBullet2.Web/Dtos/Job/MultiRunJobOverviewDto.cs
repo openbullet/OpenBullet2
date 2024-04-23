@@ -23,9 +23,10 @@ public class MultiRunJobOverviewDto : JobOverviewDto
     public int Bots { get; set; }
 
     /// <summary>
-    /// The proxy mode.
+    /// Whether to use proxies (depends on both the proxy mode
+    /// and the config's default).
     /// </summary>
-    public JobProxyMode ProxyMode { get; set; }
+    public bool UseProxies { get; set; }
 
     /// <summary>
     /// The number of hits this job got.

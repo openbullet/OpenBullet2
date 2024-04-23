@@ -47,12 +47,6 @@ export class JobsComponent implements OnInit, OnDestroy {
     resuming: 'good',
   };
 
-  proxyColor: Record<string, string> = {
-    on: 'good',
-    off: 'bad',
-    default: 'secondary',
-  };
-
   usernames: Map<number, string> = new Map();
 
   showJobActions = false;

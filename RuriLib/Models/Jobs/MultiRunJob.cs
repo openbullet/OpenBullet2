@@ -988,6 +988,12 @@ namespace RuriLib.Models.Jobs
             JobProxyMode.Off => false,
             _ => throw new NotImplementedException()
         };
+        
+        public bool ShouldUseProxies()
+        {
+            var proxySettings = this.Config?.Settings.ProxySettings;
+            return proxySettings != null && ShouldUseProxies(this.ProxyMode, proxySettings);
+        }
 
         private bool IsHitStatus(string status) => !badStatuses.Contains(status);
 
