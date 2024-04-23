@@ -1,10 +1,17 @@
-﻿namespace OpenBullet2.Web.Dtos.Job.MultiRun;
+﻿using RuriLib.Models.Proxies;
+
+namespace OpenBullet2.Web.Dtos.Job.MultiRun;
 
 /// <summary>
 /// A proxy in a multi run job.
 /// </summary>
 public class MrjProxy
 {
+    /// <summary>
+    /// The type of the proxy.
+    /// </summary>
+    public ProxyType Type { get; set; } = ProxyType.Http;
+    
     /// <summary>
     /// The host of the proxy.
     /// </summary>

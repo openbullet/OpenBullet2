@@ -1016,6 +1016,7 @@ public class JobController : ApiController
                 Proxy = h.Proxy is not null 
                     ? new MrjProxy
                     {
+                        Type = h.Proxy.Type,
                         Host = h.Proxy.Host,
                         Port = h.Proxy.Port,
                         Username = h.Proxy.Username,

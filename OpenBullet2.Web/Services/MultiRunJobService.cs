@@ -267,7 +267,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             DataLine = e.Item.BotData.Line.Data,
             Proxy = e.Item.BotData.Proxy is null
                 ? null
-                : new MrjProxy { Host = e.Item.BotData.Proxy.Host, Port = e.Item.BotData.Proxy.Port },
+                : new MrjProxy
+                {
+                    Type = e.Item.BotData.Proxy.Type,
+                    Host = e.Item.BotData.Proxy.Host,
+                    Port = e.Item.BotData.Proxy.Port,
+                    Username = e.Item.BotData.Proxy.Username,
+                    Password = e.Item.BotData.Proxy.Password
+                },
             ErrorMessage = e.Exception.Message
         };
 
@@ -280,7 +287,14 @@ public sealed class MultiRunJobService : IJobService, IDisposable
             DataLine = e.Item.BotData.Line.Data,
             Proxy = e.Item.BotData.Proxy is null
                 ? null
-                : new MrjProxy { Host = e.Item.BotData.Proxy.Host, Port = e.Item.BotData.Proxy.Port },
+                : new MrjProxy
+                {
+                    Type = e.Item.BotData.Proxy.Type,
+                    Host = e.Item.BotData.Proxy.Host,
+                    Port = e.Item.BotData.Proxy.Port,
+                    Username = e.Item.BotData.Proxy.Username,
+                    Password = e.Item.BotData.Proxy.Password
+                },
             Status = e.Result.BotData.STATUS
         };
 
@@ -329,6 +343,7 @@ public sealed class MultiRunJobService : IJobService, IDisposable
                 Proxy = e.Proxy is not null 
                     ? new MrjProxy
                     {
+                        Type = e.Proxy.Type,
                         Host = e.Proxy.Host,
                         Port = e.Proxy.Port,
                         Username = e.Proxy.Username,

@@ -1,6 +1,7 @@
 import { PerformanceInfoDto } from '../dtos/info/performance-info.dto';
 import { MRJNewResultMessage } from '../dtos/job/messages/multi-run/new-result.dto';
 import { PCJNewResultMessage } from '../dtos/job/messages/proxy-check/new-result.dto';
+import { ProxyType } from '../enums/proxy-type';
 import { ProxyWorkingStatus } from '../enums/proxy-working-status';
 
 export function getMockedSysPerfMetrics(): PerformanceInfoDto {
@@ -33,6 +34,7 @@ export function getMockedMultiRunJobNewResultMessage(): MRJNewResultMessage {
   return {
     dataLine: 'test',
     proxy: {
+      type: ProxyType.Http,
       host: '1.1.1.1',
       port: 8080,
       username: null,
