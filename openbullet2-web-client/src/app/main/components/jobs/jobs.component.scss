@@ -16,3 +16,13 @@
     color: var(--bg-primary);
     display: inline-block;
 }
+
+.job-actions {
+    display: inline-block;
+    width: 180px;
+    transition: width 0.2s;
+
+    &.hidden {
+        width: 0px;
+    }
+}

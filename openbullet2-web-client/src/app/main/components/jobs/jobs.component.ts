@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faBolt, faClone, faPen, faPlay, faPlus, faStop, faX } from '@fortawesome/free-solid-svg-icons';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { JobStatus } from '../../dtos/job/job-status';
 import { MultiRunJobOverviewDto } from '../../dtos/job/multi-run-job-overview.dto';
@@ -9,7 +9,6 @@ import { JobService } from '../../services/job.service';
 import { SettingsService } from '../../services/settings.service';
 import { UserService } from '../../services/user.service';
 import { GuestService } from '../../services/guest.service';
-import { GuestDto } from '../../dtos/guest/guest.dto';
 
 @Component({
   selector: 'app-jobs',
@@ -27,6 +26,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   faPlay = faPlay;
   faPen = faPen;
   faClone = faClone;
+  faAngleLeft = faAngleLeft;
+  faAngleRight = faAngleRight;
 
   jobsRefreshInterval: ReturnType<typeof setInterval> | null = null;
   refreshingMultiRunJobs = false;
@@ -53,6 +54,8 @@ export class JobsComponent implements OnInit, OnDestroy {
   };
 
   usernames: Map<number, string> = new Map();
+
+  showJobActions = false;
 
   constructor(
     private jobService: JobService,
@@ -151,6 +154,11 @@ export class JobsComponent implements OnInit, OnDestroy {
       });
       this.refreshJobs();
     });
+  }
+
+  toggleJobActions(event: MouseEvent) {
+    event.stopPropagation();
+    this.showJobActions = !this.showJobActions;
   }
 
   startJob(job: MultiRunJobOverviewDto | ProxyCheckJobOverviewDto, event: MouseEvent) {

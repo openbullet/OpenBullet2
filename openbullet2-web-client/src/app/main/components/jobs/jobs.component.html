@@ -94,11 +94,6 @@
                                 Config
                             </div>
                         </th>
-                        <th style="min-width:5rem" pResizableColumn>
-                            <div class="d-flex align-items-center">
-                                Data Pool
-                            </div>
-                        </th>
                         <th style="min-width:5rem">
                             <div class="d-flex align-items-center">
                                 Proxies
@@ -107,6 +102,16 @@
                         <th style="min-width:2rem">
                             <div class="d-flex align-items-center">
                                 Bots
+                            </div>
+                        </th>
+                        <th style="width:3rem">
+                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
+                                CPM
+                            </div>
+                        </th>
+                        <th style="width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Progress
                             </div>
                         </th>
                         <th style="width:2rem">
@@ -124,19 +129,10 @@
                                 To check
                             </div>
                         </th>
-                        <th style="width:7rem" pResizableColumn>
+                        <th style="min-width:5rem" pResizableColumn>
                             <div class="d-flex align-items-center">
-                                Progress
+                                Data Pool
                             </div>
-                        </th>
-                        <th style="width:3rem">
-                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
-                                CPM
-                            </div>
-                        </th>
-                        <!-- Enable this only if admin user -->
-                        <th *ngIf="false" style="min-width:10rem" pResizableColumn>
-                            Owner
                         </th>
                         <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
                     </tr>
@@ -154,47 +150,53 @@
                             </div>
                         </td>
                         <td>{{ mrj.configName }}</td>
-                        <td [pTooltip]="mrj.dataPoolInfo" [tooltipDisabled]="mrj.dataPoolInfo.length <= 20"
-                            tooltipPosition="bottom">{{ mrj.dataPoolInfo | truncate : 20 }}</td>
                         <td>
                             <div [class]="'job-chip bg-' + proxyColor[mrj.proxyMode]">
                                 {{ mrj.proxyMode | uppercase }}
                             </div>
                         </td>
                         <td>{{ mrj.bots }}</td>
+                        <td>{{ mrj.cpm }}</td>
+                        <td>{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
                         <td class="color-good">{{ mrj.dataHits }}</td>
                         <td class="color-custom">{{ mrj.dataCustom }}</td>
                         <td class="color-tocheck">{{ mrj.dataToCheck }}</td>
-                        <td>{{ mrj.dataTested }} / {{ mrj.dataTotal }} ({{ mrj.progress | percent:'1.2-2' }})</td>
-                        <td>{{ mrj.cpm }}</td>
-                        <!-- TODO: Rework to get the username -->
-                        <td *ngIf="false">{{ mrj.ownerId }}</td>
+                        <td [pTooltip]="mrj.dataPoolInfo" [tooltipDisabled]="mrj.dataPoolInfo.length <= 20"
+                            tooltipPosition="bottom">{{ mrj.dataPoolInfo | truncate : 20 }}
+                        </td>
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
-                            <button class="button button-transparent"
-                                pTooltip="Start" tooltipPosition="bottom"
-                                (click)="startJob(mrj, $event)">
-                                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                            <button class="button button-transparent d-inline"
+                                pTooltip="Actions..." tooltipPosition="bottom"
+                                (click)="toggleJobActions($event)">
+                                <fa-icon [icon]="showJobActions ? faAngleRight : faAngleLeft" [fixedWidth]="true"></fa-icon>
                             </button>
-                            <button class="button button-transparent"
-                                pTooltip="Abort" tooltipPosition="bottom"
-                                (click)="abortJob(mrj, $event)">
-                                <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Edit" tooltipPosition="bottom"
-                                (click)="editMultiRunJob(mrj, $event)">
-                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Clone" tooltipPosition="bottom"
-                                (click)="cloneMultiRunJob(mrj, $event)">
-                                <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="confirmRemoveJob(mrj, $event)">
-                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
-                            </button>
+                            <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Start" tooltipPosition="bottom"
+                                    (click)="startJob(mrj, $event)">
+                                    <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Abort" tooltipPosition="bottom"
+                                    (click)="abortJob(mrj, $event)">
+                                    <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Edit" tooltipPosition="bottom"
+                                    (click)="editMultiRunJob(mrj, $event)">
+                                    <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="cloneMultiRunJob(mrj, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Remove" tooltipPosition="bottom"
+                                    (click)="confirmRemoveJob(mrj, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </ng-template>
@@ -262,6 +264,16 @@
                                 Bots
                             </div>
                         </th>
+                        <th style="min-width:3rem">
+                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
+                                CPM
+                            </div>
+                        </th>
+                        <th style="min-width:7rem" pResizableColumn>
+                            <div class="d-flex align-items-center">
+                                Progress
+                            </div>
+                        </th>
                         <th style="min-width:2rem">
                             <div class="d-flex align-items-center">
                                 Working
@@ -271,20 +283,6 @@
                             <div class="d-flex align-items-center">
                                 Not working
                             </div>
-                        </th>
-                        <th style="min-width:7rem" pResizableColumn>
-                            <div class="d-flex align-items-center">
-                                Progress
-                            </div>
-                        </th>
-                        <th style="min-width:3rem">
-                            <div pTooltip="Checks Per Minute" class="d-flex align-items-center">
-                                CPM
-                            </div>
-                        </th>
-                        <!-- Enable this only if admin user -->
-                        <th *ngIf="false" style="min-width:10rem" pResizableColumn>
-                            Owner
                         </th>
                         <th alignFrozen="right" pFrozenColumn [frozen]="true"></th>
                     </tr>
@@ -304,38 +302,43 @@
                             </div>
                         </td>
                         <td>{{ pcj.bots }}</td>
+                        <td>{{ pcj.cpm }}</td>
+                        <td>{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
                         <td class="color-good">{{ pcj.working }}</td>
                         <td class="color-bad">{{ pcj.notWorking }}</td>
-                        <td>{{ pcj.tested }} / {{ pcj.total }} ({{ pcj.progress | percent:'1.2-2' }})</td>
-                        <td>{{ pcj.cpm }}</td>
-                        <!-- TODO: Rework to get the username -->
-                        <td *ngIf="false">{{ pcj.ownerId }}</td>
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
-                            <button class="button button-transparent"
-                                pTooltip="Start" tooltipPosition="bottom"
-                                (click)="startJob(pcj, $event)">
-                                <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                            <button class="button button-transparent d-inline"
+                                pTooltip="Actions..." tooltipPosition="bottom"
+                                (click)="toggleJobActions($event)">
+                                <fa-icon [icon]="showJobActions ? faAngleRight : faAngleLeft" [fixedWidth]="true"></fa-icon>
                             </button>
-                            <button class="button button-transparent"
-                                pTooltip="Abort" tooltipPosition="bottom"
-                                (click)="abortJob(pcj, $event)">
-                                <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Edit" tooltipPosition="bottom"
-                                (click)="editProxyCheckJob(pcj, $event)">
-                                <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Clone" tooltipPosition="bottom"
-                                (click)="cloneProxyCheckJob(pcj, $event)">
-                                <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Remove" tooltipPosition="bottom"
-                                (click)="confirmRemoveJob(pcj, $event)">
-                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
-                            </button>
+                            <div [ngClass]="{ 'job-actions': true, 'hidden': !showJobActions }">
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Start" tooltipPosition="bottom"
+                                    (click)="startJob(pcj, $event)">
+                                    <fa-icon [icon]="faPlay" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Abort" tooltipPosition="bottom"
+                                    (click)="abortJob(pcj, $event)">
+                                    <fa-icon [icon]="faStop" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Edit" tooltipPosition="bottom"
+                                    (click)="editMultiRunJob(pcj, $event)">
+                                    <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="cloneMultiRunJob(pcj, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent" *ngIf="showJobActions"
+                                    pTooltip="Remove" tooltipPosition="bottom"
+                                    (click)="confirmRemoveJob(pcj, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </ng-template>
