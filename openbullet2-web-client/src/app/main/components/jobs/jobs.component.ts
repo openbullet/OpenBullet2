@@ -99,7 +99,7 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.refreshingMultiRunJobs = true;
       this.jobService.getAllMultiRunJobs().subscribe({
         next: (jobs) => {
-          this.multiRunJobs = jobs;
+          this.updateMultiRunJobs(jobs);
         },
         complete: () => {
           this.refreshingMultiRunJobs = false;
@@ -111,12 +111,40 @@ export class JobsComponent implements OnInit, OnDestroy {
       this.refreshingProxyCheckJobs = true;
       this.jobService.getAllProxyCheckJobs().subscribe({
         next: (jobs) => {
-          this.proxyCheckJobs = jobs;
+          this.updateProxyCheckJobs(jobs);
         },
         complete: () => {
           this.refreshingProxyCheckJobs = false;
         },
       });
+    }
+  }
+
+  updateMultiRunJobs(jobs: MultiRunJobOverviewDto[]) {
+    // If the job ids are different, we need to update the list
+    if (this.multiRunJobs === null || jobs.length !== this.multiRunJobs.length || jobs.some((job, index) => job.id !== this.multiRunJobs![index].id)) {
+      this.multiRunJobs = jobs;
+      return;
+    }
+
+    // Otherwise, zip the two arrays and update the jobs
+    for (const [index, updatedJob] of jobs.entries()) {
+      const job = this.multiRunJobs![index];
+      Object.assign(job, updatedJob);
+    }
+  }
+
+  updateProxyCheckJobs(jobs: ProxyCheckJobOverviewDto[]) {
+    // If the job ids are different, we need to update the list
+    if (this.proxyCheckJobs === null || jobs.length !== this.proxyCheckJobs.length || jobs.some((job, index) => job.id !== this.proxyCheckJobs![index].id)) {
+      this.proxyCheckJobs = jobs;
+      return;
+    }
+
+    // Otherwise, zip the two arrays and update the jobs
+    for (const [index, updatedJob] of jobs.entries()) {
+      const job = this.proxyCheckJobs![index];
+      Object.assign(job, updatedJob);
     }
   }
 

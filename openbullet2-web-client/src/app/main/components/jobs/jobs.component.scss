@@ -20,7 +20,7 @@
 .job-actions {
     display: inline-block;
     width: 180px;
-    transition: width 0.2s;
+    transition: width 0.5s;
 
     &.hidden {
         width: 0px;
