@@ -299,4 +299,12 @@ export class JobsComponent implements OnInit, OnDestroy {
   viewMultiRunJob(mrj: MultiRunJobOverviewDto) {
     this.router.navigate([`/job/multi-run/${mrj.id}`]);
   }
+
+  getUseProxyChipClass(mrj: MultiRunJobOverviewDto) {
+    if (mrj.status === 'idle') {
+      return 'bg-secondary';
+    }
+
+    return mrj.useProxies ? 'bg-good' : 'bg-bad';
+  }
 }
