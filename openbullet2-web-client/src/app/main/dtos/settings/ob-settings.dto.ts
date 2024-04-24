@@ -80,6 +80,7 @@ export interface SafeOBSettingsDto {
 }
 
 export interface SafeGeneralOBSettings {
+  configSectionOnLoad: ConfigSection;
   jobManagerUpdateInterval: number;
   defaultJobDisplayMode: JobDisplayMode;
 }

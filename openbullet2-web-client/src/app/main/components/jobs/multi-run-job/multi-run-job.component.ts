@@ -33,7 +33,7 @@ import { UserService } from 'src/app/main/services/user.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 import { HitLogComponent } from './hit-log/hit-log.component';
-import { JobDisplayMode, SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
+import { ConfigSection, JobDisplayMode, SafeOBSettingsDto } from 'src/app/main/dtos/settings/ob-settings.dto';
 import { SettingsService } from 'src/app/main/services/settings.service';
 import { CustomInputAnswerDto, CustomInputQuestionDto } from 'src/app/main/dtos/job/custom-inputs.dto';
 import { BotDetailsDto } from 'src/app/main/dtos/job/multi-run-job-bot-details.dto';
@@ -728,23 +728,47 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     this.debuggerSettingsService.saveLocalSettings(debuggerSettings);
 
+    if (this.settings === null) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Settings not loaded yet',
+      });
+      return;
+    }
+
     // If there is a selected config, redirect to the correct page
     // basing on the config's mode
     const config = this.configService.selectedConfig;
 
     if (config === null) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No config selected',
+      });
       return;
     }
 
+    const configSection = this.settings.generalSettings.configSectionOnLoad;
     let route = '';
 
     switch (config.mode) {
-      case ConfigMode.LoliCode:
-        route = 'config/lolicode';
-        break;
-
       case ConfigMode.Stack:
-        route = 'config/stacker';
+      case ConfigMode.LoliCode:
+        switch (configSection) {
+          case ConfigSection.Stacker:
+            route = 'config/stacker';
+            break;
+
+          case ConfigSection.LoliCode:
+            route = 'config/lolicode';
+            break;
+
+          case ConfigSection.CSharpCode:
+            route = 'config/csharp';
+            break;
+        }
         break;
 
       case ConfigMode.CSharp:

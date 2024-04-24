@@ -24,6 +24,11 @@ public class SafeOpenBulletSettingsDto
 public class SafeOBGeneralSettingsDto
 {
     /// <summary>
+    /// Which page to navigate to on config load.
+    /// </summary>
+    public ConfigSection ConfigSectionOnLoad { get; set; } = ConfigSection.Stacker;
+    
+    /// <summary>
     /// The refresh interval for periodically displaying all jobs' progress and information
     /// in the job manager page (in milliseconds).
     /// </summary>
