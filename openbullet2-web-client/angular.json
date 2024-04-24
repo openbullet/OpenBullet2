@@ -38,6 +38,7 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/ngx-spinner/animations/cube-transition.css",
+              "node_modules/prismjs/themes/prism.css",
               "src/styles/main.scss",
               "src/styles/prismjs/prism-vsc-dark-plus.css"
             ],
@@ -46,7 +47,9 @@
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-csharp.min.js",
               "node_modules/prismjs/components/prism-python.min.js",
-              "node_modules/prismjs/components/prism-javascript.min.js"
+              "node_modules/prismjs/components/prism-javascript.min.js",
+              "node_modules/prismjs/components/prism-markup.min.js",
+              "node_modules/prismjs/components/prism-json.min.js"
             ]
           },
           "configurations": {

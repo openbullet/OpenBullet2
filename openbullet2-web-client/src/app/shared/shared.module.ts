@@ -21,6 +21,7 @@ import { MomentPipe } from './pipes/moment.pipe';
 import { PascalCasePipe } from './pipes/pascalcase.pipe';
 import { TimeSpanPipe } from './pipes/timespan.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 // biome-ignore lint/suspicious/noExplicitAny: monaco
 declare const monaco: any;
@@ -44,6 +45,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     PascalCasePipe,
     TimeSpanPipe,
     MomentPipe,
+    SafeHtmlPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
@@ -62,6 +64,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     PascalCasePipe,
     TimeSpanPipe,
     MomentPipe,
+    SafeHtmlPipe,
     InputTextComponent,
     InputNumberComponent,
     InputDropdownComponent,
@@ -73,4 +76,4 @@ const monacoConfig: NgxMonacoEditorConfig = {
     InputDictionaryComponent,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }
