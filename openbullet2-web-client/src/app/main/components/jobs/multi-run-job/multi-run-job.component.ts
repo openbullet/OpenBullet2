@@ -267,9 +267,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     this.errorSubscription = this.multiRunJobHubService.error$.subscribe((error) => {
       if (error !== null) {
         this.messageService.add({
+          key: 'tc',
           severity: 'error',
           summary: `Error - ${error.type}`,
-          detail: error.message,
+          detail: error.message
         });
       }
     });
@@ -277,6 +278,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     this.completedSubscription = this.multiRunJobHubService.completed$.subscribe((completed) => {
       if (completed) {
         this.messageService.add({
+          key: 'tc',
           severity: 'success',
           summary: 'Completed',
           detail: 'Job completed',
@@ -471,6 +473,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       this.customInputs.some(i => i.currentAnswer === null)
     ) {
       this.messageService.add({
+        key: 'tc',
         severity: 'warn',
         summary: 'Missing inputs',
         detail: 'Please set custom inputs before starting the job',
@@ -546,6 +549,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     const slow = this.bots > bots && this.status === JobStatus.RUNNING;
 
     this.messageService.add({
+      key: 'tc',
       severity: 'info',
       summary: 'Requested',
       detail: `Requested to change bots to ${bots}${slow ? '. This might take some time' : ''}`,
@@ -675,6 +679,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     // If no hit selected, show error
     if (this.selectedHits.length === 0) {
       this.messageService.add({
+        key: 'tc',
         severity: 'error',
         summary: 'Invalid',
         detail: 'Please select at least one hit to copy data',
@@ -697,6 +702,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     navigator.clipboard.writeText(data);
     this.messageService.add({
+      key: 'tc',
       severity: 'success',
       summary: 'Copied',
       detail: 'Copied hits data to clipboard',
@@ -707,6 +713,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     // If no hit selected or more than 1 hit selected, show error
     if (this.selectedHits.length !== 1) {
       this.messageService.add({
+        key: 'tc',
         severity: 'error',
         summary: 'Invalid',
         detail: 'Please select one hit to send to the debugger',
@@ -730,6 +737,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     if (this.settings === null) {
       this.messageService.add({
+        key: 'tc',
         severity: 'error',
         summary: 'Error',
         detail: 'Settings not loaded yet',
@@ -743,6 +751,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     if (config === null) {
       this.messageService.add({
+        key: 'tc',
         severity: 'error',
         summary: 'Error',
         detail: 'No config selected',
@@ -791,6 +800,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
     // If no hit selected or more than 1 hit selected, show error
     if (this.selectedHits.length !== 1) {
       this.messageService.add({
+        key: 'tc',
         severity: 'error',
         summary: 'Invalid',
         detail: 'Please select one hit to show the full log',
@@ -820,6 +830,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
       answers: answers
     }).subscribe(() => {
       this.messageService.add({
+        key: 'tc',
         severity: 'success',
         summary: 'Success',
         detail: 'Custom inputs set successfully'

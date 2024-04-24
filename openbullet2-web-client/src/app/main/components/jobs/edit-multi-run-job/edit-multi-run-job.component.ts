@@ -417,6 +417,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   selectConfig(config: ConfigInfoDto) {
     if (config.dangerous) {
       this.messageService.add({
+        key: 'br',
         severity: 'warn',
         summary: 'Dangerous',
         detail:

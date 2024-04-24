@@ -106,7 +106,7 @@ export class ConfigsComponent implements OnInit {
     private volatileSettings: VolatileSettingsService,
     private settingsService: SettingsService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.refreshConfigs(false);
@@ -151,6 +151,7 @@ export class ConfigsComponent implements OnInit {
       });
       if (config.dangerous) {
         this.messageService.add({
+          key: 'br',
           severity: 'warn',
           summary: 'Dangerous',
           detail:
