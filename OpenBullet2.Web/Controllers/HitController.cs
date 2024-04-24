@@ -154,6 +154,20 @@ public class HitController : ApiController
         var bytes = Encoding.UTF8.GetBytes(outputHits);
         return File(bytes, "text/plain", "hits.txt");
     }
+    
+    /// <summary>
+    /// Get all hits that match the filters with the provided format.
+    /// </summary>
+    [HttpGet("formatted/many")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<IEnumerable<string>>> FormatMany(
+        [FromQuery] HitFiltersDto dto, string format = "<DATA> | <CAPTURE>")
+    {
+        var query = FilteredQuery(dto);
+        var hits = await query.ToListAsync();
+
+        return Ok(hits.Select(h => FormatHit(h, format)));
+    }
 
     /// <summary>
     /// Update some fields of a hit.

@@ -55,6 +55,12 @@ export class HitsComponent implements OnInit {
           icon: 'pi pi-fw pi-filter-fill',
           items: [
             {
+              id: 'copy-filtered-hits',
+              label: 'Copy with format',
+              icon: 'pi pi-fw pi-copy color-accent-light',
+              items: [], // This array is filled at runtime
+            },
+            {
               id: 'export-filtered-hits',
               label: 'Export with format',
               icon: 'pi pi-fw pi-file-export color-accent-light',
@@ -133,10 +139,24 @@ export class HitsComponent implements OnInit {
           };
         });
 
+        // Update the "Copy" menu items
+        const copyMenuItems = envSettings.exportFormats.map((ef) => {
+          return {
+            label: ef.format.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+            command: () => this.copyHits(ef.format),
+            styleClass: 'long-menu-item',
+          };
+        });
+
         this.hitMenuItems
           .find((i) => i.id === 'edit')!
           .items!.find((i) => i.id === 'edit-filtered-hits')!
           .items!.find((i) => i.id === 'export-filtered-hits')!.items = exportMenuItems;
+
+        this.hitMenuItems
+          .find((i) => i.id === 'edit')!
+          .items!.find((i) => i.id === 'edit-filtered-hits')!
+          .items!.find((i) => i.id === 'copy-filtered-hits')!.items = copyMenuItems;
 
         this.refreshHits();
       });
@@ -289,6 +309,30 @@ export class HitsComponent implements OnInit {
         format,
       )
       .subscribe((resp) => saveFile(resp));
+  }
+
+  copyHits(format: string) {
+    this.hitService
+      .getFormattedHits(
+        {
+          searchTerm: this.searchTerm,
+          type: this.hitType === 'Any Type' ? null : this.hitType,
+          minDate: this.rangeDates[0].toISOString(),
+          maxDate: this.rangeDates[1].toISOString(),
+          configName: this.configName === 'anyConfig' ? null : this.configName,
+          sortBy: null,
+          sortDescending: false,
+        },
+        format,
+      )
+      .subscribe((resp) => {
+        navigator.clipboard.writeText(resp.join('\n'));
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Copied',
+          detail: `${resp.length} hits were copied to the clipboard`,
+        });
+      });
   }
 
   getTypeColor(type: string) {

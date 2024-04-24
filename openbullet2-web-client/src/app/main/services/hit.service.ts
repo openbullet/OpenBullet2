@@ -55,6 +55,16 @@ export class HitService {
     });
   }
 
+  getFormattedHits(filter: HitFiltersDto, format: string) {
+    return this.http.get<string[]>(`${getBaseUrl()}/hit/formatted/many`, {
+      params: {
+        format,
+        // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
+        ...(<any>Object.fromEntries(Object.entries(filter).filter(([_, v]) => v != null))),
+      },
+    });
+  }
+
   deleteHits(filter: HitFiltersDto) {
     return this.http.delete<AffectedEntriesDto>(`${getBaseUrl()}/hit/many`, {
       // biome-ignore lint/suspicious/noExplicitAny: This is a valid use case for Object.fromEntries
