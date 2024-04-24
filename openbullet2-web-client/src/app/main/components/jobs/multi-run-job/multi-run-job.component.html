@@ -568,6 +568,7 @@
                     <fa-icon [icon]="faBug" [fixedWidth]="true"></fa-icon>
                 </button>
                 <button class="button button-secondary ml-2"
+                    *ngIf="userRole === 'admin'"
                     pTooltip="Show full log of selected hit"
                     tooltipPosition="bottom"
                     (click)="showFullLog()">

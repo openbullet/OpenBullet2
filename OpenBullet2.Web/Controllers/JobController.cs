@@ -548,6 +548,7 @@ public class JobController : ApiController
     /// Get the full debugger log of a hit. Note that bot log must
     /// be enabled in the settings, or it will be blank.
     /// </summary>
+    [Admin]
     [HttpGet("multi-run/hit-log")]
     [MapToApiVersion("1.0")]
     public ActionResult<MrjHitLogDto> GetHitLog(int jobId, string hitId)
