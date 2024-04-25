@@ -74,6 +74,11 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     this.wordlistTypes = this.envSettings.wordlistTypes.map((t) => t.name);
     this.settings = this.debuggerSettingsService.loadLocalSettings();
 
+    // Set the first wordlist type as the current one, so if the user
+    // moves their favourite wordlist type to the top of Environment.ini,
+    // it will be selected by default
+    this.settings.wordlistType = this.wordlistTypes[0];
+
     this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
       // Request the current state
       this.debuggerHubService.getState();
