@@ -206,6 +206,10 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   }
 
   formatVariable(variable: VariableDto): string {
+    if (variable.value === null) {
+      return 'null';
+    }
+
     switch (variable.type) {
       case 'string':
       case 'byteArray':

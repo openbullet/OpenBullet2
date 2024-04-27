@@ -129,9 +129,8 @@
             <div class="logs-container" *ngIf="displayVariables">
                 <div *ngFor="let variable of variables"
                     class="log-message"
-                    [ngStyle]="{ color: variable.markedForCapture ? 'tomato' : 'yellow' }">
-                    {{ variable.name }} ({{ variable.type }}) = {{ formatVariable(variable) }}
-                </div>
+                    [ngStyle]="{ color: variable.markedForCapture ? 'tomato' : 'yellow' }"
+                    >{{ variable.name }} ({{ variable.type }}) = {{ formatVariable(variable) }}</div>
             </div>
         </div>
     </div>
