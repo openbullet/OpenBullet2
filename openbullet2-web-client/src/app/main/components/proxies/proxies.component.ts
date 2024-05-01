@@ -199,7 +199,7 @@ export class ProxiesComponent implements OnInit {
     private messageService: MessageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
@@ -212,10 +212,19 @@ export class ProxiesComponent implements OnInit {
     });
   }
 
-  refreshProxyGroups() {
+  refreshProxyGroups(preselectProxyGroupId: number | null = null) {
     this.proxyGroupService.getAllProxyGroups().subscribe((proxyGroups) => {
       this.proxies = null;
-      this.selectedProxyGroup = this.defaultProxyGroup;
+
+      if (preselectProxyGroupId) {
+        const preselectedProxyGroup = proxyGroups.find((pg) => pg.id === preselectProxyGroupId);
+        if (preselectedProxyGroup) {
+          this.selectedProxyGroup = preselectedProxyGroup;
+        }
+      } else {
+        this.selectedProxyGroup = this.defaultProxyGroup;
+      }
+
       this.proxyGroups = [this.defaultProxyGroup, ...proxyGroups];
       this.refreshProxies();
 
@@ -365,7 +374,7 @@ export class ProxiesComponent implements OnInit {
         detail: `Proxy group ${resp.name} was created`,
       });
       this.createProxyGroupModalVisible = false;
-      this.refreshProxyGroups();
+      this.refreshProxyGroups(resp.id);
     });
   }
 
@@ -377,7 +386,7 @@ export class ProxiesComponent implements OnInit {
         detail: `Proxy group ${resp.name} was updated`,
       });
       this.updateProxyGroupModalVisible = false;
-      this.refreshProxyGroups();
+      this.refreshProxyGroups(resp.id);
     });
   }
 
