@@ -142,6 +142,15 @@ export class ConfigsComponent implements OnInit {
   }
 
   editConfig(config: ConfigInfoDto) {
+    if (config.isRemote) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Remote config',
+        detail: 'This config is stored remotely and cannot be edited',
+      });
+      return;
+    }
+
     this.configService.getConfig(config.id).subscribe((resp) => {
       this.configService.selectConfig(resp);
       this.messageService.add({

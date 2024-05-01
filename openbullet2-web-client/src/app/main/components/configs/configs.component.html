@@ -172,21 +172,23 @@
                             </span>
                         </td>
                         <td class="text-right" alignFrozen="right" pFrozenColumn [frozen]="true">
-                            <button class="button button-transparent"
-                                pTooltip="Clone" tooltipPosition="bottom"
-                                (click)="cloneConfig(config, $event)">
-                                <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Download" tooltipPosition="bottom"
-                                (click)="downloadConfig(config, $event)">
-                                <fa-icon [icon]="faDownload" [fixedWidth]="true"></fa-icon>
-                            </button>
-                            <button class="button button-transparent"
-                                pTooltip="Delete" tooltipPosition="bottom"
-                                (click)="confirmDeleteConfig(config, $event)">
-                                <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
-                            </button>
+                            <ng-container *ngIf="!config.isRemote">
+                                <button class="button button-transparent"
+                                    pTooltip="Clone" tooltipPosition="bottom"
+                                    (click)="cloneConfig(config, $event)">
+                                    <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent"
+                                    pTooltip="Download" tooltipPosition="bottom"
+                                    (click)="downloadConfig(config, $event)">
+                                    <fa-icon [icon]="faDownload" [fixedWidth]="true"></fa-icon>
+                                </button>
+                                <button class="button button-transparent"
+                                    pTooltip="Delete" tooltipPosition="bottom"
+                                    (click)="confirmDeleteConfig(config, $event)">
+                                    <fa-icon class="color-bad" [icon]="faX" [fixedWidth]="true"></fa-icon>
+                                </button>
+                            </ng-container>
                         </td>
                     </tr>
                 </ng-template>

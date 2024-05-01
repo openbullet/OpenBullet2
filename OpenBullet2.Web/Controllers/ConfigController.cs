@@ -134,6 +134,23 @@ public class ConfigController : ApiController
     public ActionResult<ConfigDto> GetConfig(string id)
     {
         var config = GetConfigFromService(id);
+        
+        // This is just a safety check for low-skill users
+        // that might try to get the data of a remote config
+        // through the API, but if they put enough effort they can
+        // easily get it anyway. Remote configs are not meant to be
+        // secure, they are just a way to share configs between
+        // different instances of OpenBullet.
+        if (config.IsRemote)
+        {
+            _logger.LogWarning(
+                "Attempted to get a remote config with id {Id}", id);
+            
+            throw new ActionNotAllowedException(
+                ErrorCode.ActionNotAllowedForRemoteConfig,
+                "You cannot get a remote config's data");
+        }
+        
         return _mapper.Map<ConfigDto>(config);
     }
 
