@@ -312,6 +312,18 @@ p-accordiontab.accordion-tab-header-small {
     }
 }
 
+p-accordiontab {
+    .p-accordion-tab {
+        .p-accordion-header {
+            a {
+                span {
+                    color: var(--fg-primary) !important;
+                }
+            }
+        }
+    }
+}
+
 ul.p-submenu-list:has(> .long-menu-item) {
     min-width: 500px !important;
 }
