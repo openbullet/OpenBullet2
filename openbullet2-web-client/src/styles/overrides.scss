@@ -163,6 +163,32 @@ p-chip.mt-2 > .p-chip {
     background-color: var(--bg-tertiary) !important;
 }
 
+.p-multiselect {
+    background: unset !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-multiselect-panel {
+    background-color: var(--bg-secondary) !important;
+    color: var(--fg-primary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+}
+
+.p-multiselect-header {
+    background-color: var(--bg-secondary) !important;
+    color: var(--fg-primary) !important;
+    border-bottom: 1px solid var(--fg-inactive) !important;
+    padding: 0.3rem 0.5rem !important;
+}
+
+.p-multiselect-panel .p-multiselect-items {
+    padding: 0 !important;
+
+    .p-multiselect-item {
+        padding: 0.3rem 0.5rem !important;
+    }
+}
+
 .p-dropdown {
     background: unset !important;
     border: 1px solid var(--fg-inactive) !important;

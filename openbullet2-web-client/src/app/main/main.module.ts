@@ -17,6 +17,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { PickListModule } from 'primeng/picklist';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -227,6 +228,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ProgressBarModule,
     DropdownModule,
     MenubarModule,
+    MultiSelectModule,
     PickListModule,
     AccordionModule,
     CheckboxModule,

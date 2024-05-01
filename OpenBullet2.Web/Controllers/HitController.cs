@@ -430,9 +430,10 @@ public class HitController : ApiController
             query = query.Where(h => h.ConfigName == dto.ConfigName);
         }
 
-        if (dto.Type is not null)
+        if (dto.Types is not null)
         {
-            query = query.Where(p => p.Type == dto.Type);
+            var types = dto.Types.Split(',');
+            query = query.Where(h => types.Contains(h.Type));
         }
 
         if (dto.MinDate is not null)

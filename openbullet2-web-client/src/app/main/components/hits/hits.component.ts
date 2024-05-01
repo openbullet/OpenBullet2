@@ -29,8 +29,8 @@ export class HitsComponent implements OnInit {
   faFilterCircleXmark = faFilterCircleXmark;
 
   searchTerm = '';
-  hitType = 'Any Type';
-  hitTypes: string[] = ['Any Type', 'SUCCESS', 'NONE'];
+  selectedHitTypes: string[] = [];
+  hitTypes: string[] = ['SUCCESS', 'NONE'];
 
   configName = 'anyConfig';
   configNames: string[] = ['anyConfig'];
@@ -117,7 +117,7 @@ export class HitsComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.searchTerm = params['searchTerm'] ?? '';
-      this.hitType = params['hitType'] ?? 'Any Type';
+      this.selectedHitTypes = (params['hitTypes'] as string)?.split(',') ?? [];
       this.configName = params['configName'] ?? 'anyConfig';
       this.rangeDates = [
         moment(params['minDate'] ?? moment().subtract(7, 'days').toISOString()).toDate(),
@@ -128,7 +128,7 @@ export class HitsComponent implements OnInit {
 
       this.settingsService.getEnvironmentSettings().subscribe((envSettings) => {
         this.envSettings = envSettings;
-        this.hitTypes = ['Any Type', 'SUCCESS', 'NONE', ...envSettings.customStatuses.map((cs) => cs.name)];
+        this.hitTypes = ['SUCCESS', 'NONE', ...envSettings.customStatuses.map((cs) => cs.name)];
 
         // Update the "Export with format" menu items
         const exportMenuItems = envSettings.exportFormats.map((ef) => {
@@ -186,7 +186,7 @@ export class HitsComponent implements OnInit {
           relativeTo: this.activatedRoute,
           queryParams: {
             searchTerm: this.searchTerm === '' ? null : this.searchTerm,
-            hitType: this.hitType === 'Any Type' ? null : this.hitType,
+            hitTypes: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
             configName: this.configName === 'anyConfig' ? null : this.configName,
             minDate: moment(this.rangeDates[0]).toISOString(),
             maxDate: moment(this.rangeDates[1]).toISOString(),
@@ -202,7 +202,7 @@ export class HitsComponent implements OnInit {
         pageNumber,
         pageSize: pageSize ?? this.rowCount,
         searchTerm: this.searchTerm,
-        type: this.hitType === 'Any Type' ? null : this.hitType,
+        types: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
         configName: this.configName === 'anyConfig' ? null : this.configName,
         minDate: this.rangeDates[0].toISOString(),
         maxDate: this.rangeDates[1].toISOString(),
@@ -226,7 +226,7 @@ export class HitsComponent implements OnInit {
 
   clearFilters() {
     this.searchTerm = '';
-    this.hitType = 'Any Type';
+    this.selectedHitTypes = [];
     this.configName = 'anyConfig';
     this.rangeDates = [moment().subtract(7, 'days').toDate(), moment().endOf('day').toDate()];
 
@@ -244,7 +244,7 @@ export class HitsComponent implements OnInit {
     this.hitService
       .deleteHits({
         searchTerm: this.searchTerm,
-        type: this.hitType === 'Any Type' ? null : this.hitType,
+        types: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
         minDate: this.rangeDates[0].toISOString(),
         maxDate: this.rangeDates[1].toISOString(),
         configName: this.configName === 'anyConfig' ? null : this.configName,
@@ -299,7 +299,7 @@ export class HitsComponent implements OnInit {
       .downloadHits(
         {
           searchTerm: this.searchTerm,
-          type: this.hitType === 'Any Type' ? null : this.hitType,
+          types: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
           minDate: this.rangeDates[0].toISOString(),
           maxDate: this.rangeDates[1].toISOString(),
           configName: this.configName === 'anyConfig' ? null : this.configName,
@@ -316,7 +316,7 @@ export class HitsComponent implements OnInit {
       .getFormattedHits(
         {
           searchTerm: this.searchTerm,
-          type: this.hitType === 'Any Type' ? null : this.hitType,
+          types: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
           minDate: this.rangeDates[0].toISOString(),
           maxDate: this.rangeDates[1].toISOString(),
           configName: this.configName === 'anyConfig' ? null : this.configName,
@@ -398,7 +398,7 @@ export class HitsComponent implements OnInit {
     this.hitService
       .sendToRecheck({
         searchTerm: this.searchTerm,
-        type: this.hitType === 'Any Type' ? null : this.hitType,
+        types: this.selectedHitTypes.length === 0 ? null : this.selectedHitTypes.join(','),
         minDate: this.rangeDates[0].toISOString(),
         maxDate: this.rangeDates[1].toISOString(),
         configName: this.configName === 'anyConfig' ? null : this.configName,

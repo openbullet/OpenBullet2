@@ -12,7 +12,7 @@ export interface PaginatedHitFiltersDto {
   pageSize: number | null;
   searchTerm: string | null;
   configName: string | null;
-  type: string | null;
+  types: string | null;
   minDate: string | null;
   maxDate: string | null;
   sortBy: HitSortField | null;
@@ -22,7 +22,7 @@ export interface PaginatedHitFiltersDto {
 export interface HitFiltersDto {
   searchTerm: string | null;
   configName: string | null;
-  type: string | null;
+  types: string | null;
   minDate: string | null;
   maxDate: string | null;
   sortBy: HitSortField | null;

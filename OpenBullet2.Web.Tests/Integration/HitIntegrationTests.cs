@@ -278,7 +278,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             PageNumber = 0,
             PageSize = 25,
             SearchTerm = null,
-            Type = null,
+            Types = null,
             MinDate = null,
             MaxDate = null,
             SortBy = null,
@@ -326,7 +326,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             PageNumber = 0,
             PageSize = 25,
             SearchTerm = null,
-            Type = null,
+            Types = null,
             MinDate = null,
             MaxDate = null,
             SortBy = null,
@@ -366,7 +366,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
             PageNumber = 0,
             PageSize = 25,
             SearchTerm = "AAA",
-            Type = "SUCCESS",
+            Types = "SUCCESS",
             MinDate = DateTime.UtcNow.AddDays(-3),
             MaxDate = DateTime.UtcNow.AddDays(3),
             SortBy = HitSortField.Date,
@@ -549,7 +549,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var filters = new HitFiltersDto
         {
             SearchTerm = "data1",
-            Type = null,
+            Types = null,
             MinDate = null,
             MaxDate = null,
             SortBy = null,
@@ -591,7 +591,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         var filters = new HitFiltersDto
         {
             SearchTerm = null,
-            Type = null,
+            Types = null,
             MinDate = null,
             MaxDate = null,
             SortBy = null,

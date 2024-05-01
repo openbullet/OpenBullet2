@@ -329,7 +329,8 @@ ul.p-submenu-list:has(> .long-menu-item) {
 }
 
 .p-inputtext,
-.p-dropdown .p-dropdown-label.p-placeholder,
+.p-dropdown .p-dropdown-label.p-placeholder, .p-dropdown-trigger, .p-dropdown-item,
+.p-multiselect, .p-multiselect-trigger, .p-multiselect-label, .p-multiselect-item,
 input,
 .p-card,
 .p-chip,
@@ -340,7 +341,7 @@ input,
 .p-dialog-title,
 .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text,
 .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-icon,
-.p-menubar .p-menuitem-link .p-menuitem-text,
+.p-menubar .p-menuitem-link .p-menuitem-text, .p-menuitem-icon,
 .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-submenu-icon,
 .p-column-filter-menu-button {
     color: var(--fg-primary);

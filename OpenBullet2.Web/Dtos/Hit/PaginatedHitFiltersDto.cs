@@ -19,9 +19,9 @@ public class PaginatedHitFiltersDto : PaginationDto
     public string? ConfigName { get; set; }
     
     /// <summary>
-    /// The hit type. Optional.
+    /// The hit types, comma separated. Optional.
     /// </summary>
-    public string? Type { get; set; }
+    public string? Types { get; set; }
     
     /// <summary>
     /// The date and time of the oldest hit that should be retrieved.

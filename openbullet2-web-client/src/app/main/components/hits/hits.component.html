@@ -26,11 +26,14 @@
                 [(ngModel)]="searchTerm"
                 (keydown)="searchBoxKeyDown($event)"
                 placeholder="Search..." />
-            <p-dropdown
-                [(ngModel)]="hitType"
-                (ngModelChange)="refreshHits()"
-                [options]="hitTypes">
-            </p-dropdown>
+            <p-multiSelect
+                [options]="hitTypes"
+                placeholder="Any Type"
+                [filter]="false"
+                [maxSelectedLabels]="1"
+                [(ngModel)]="selectedHitTypes"
+                (ngModelChange)="refreshHits()">
+            </p-multiSelect>
             <p-dropdown
                 class="ml-2"
                 [(ngModel)]="configName"
