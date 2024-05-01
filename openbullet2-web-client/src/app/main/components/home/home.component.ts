@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.serverOffset === null) return;
 
     this.serverTime = addTimeSpan(moment().utc(), this.serverOffset);
-    const uptimeDiff = this.serverTime.diff(this.serverStartTime);
+    const uptimeDiff = moment().utc().diff(this.serverStartTime);
     this.serverUptime = new TimeSpan(uptimeDiff);
   }
 
