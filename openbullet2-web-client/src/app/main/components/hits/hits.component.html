@@ -97,8 +97,8 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns>
                     <tr *ngIf="hits.items.length > 0">
-                        <th style="min-width:10rem" pResizableColumn>
-                            Type
+                        <th style="min-width:10rem" pResizableColumn pSortableColumn="type">
+                            Type <p-sortIcon field="type" />
                         </th>
                         <th style="min-width:7rem" pResizableColumn pSortableColumn="data">
                             <div class="d-flex align-items-center">

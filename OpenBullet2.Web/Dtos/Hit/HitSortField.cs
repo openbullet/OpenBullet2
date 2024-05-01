@@ -6,6 +6,11 @@
 public enum HitSortField
 {
     /// <summary>
+    /// The type of the hit.
+    /// </summary>
+    Type,
+    
+    /// <summary>
     /// The hit's data.
     /// </summary>
     Data,

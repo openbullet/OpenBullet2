@@ -449,6 +449,9 @@ public class HitController : ApiController
         {
             query = dto.SortBy switch
             {
+                HitSortField.Type => dto.SortDescending
+                    ? query.OrderByDescending(h => h.Type)
+                    : query.OrderBy(h => h.Type),
                 HitSortField.Data => dto.SortDescending
                     ? query.OrderByDescending(h => h.Data)
                     : query.OrderBy(h => h.Data),
