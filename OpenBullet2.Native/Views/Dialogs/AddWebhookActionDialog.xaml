@@ -1,0 +1,32 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.AddWebhookActionDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
+      mc:Ignorable="d" 
+      d:DesignHeight="205" d:DesignWidth="320"
+      Title="AddWebhookActionDialog">
+
+    <Grid Height="200" Width="300" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel VerticalAlignment="Center" Grid.Row="0">
+            <Label x:Name="webhookLabel" FontWeight="SemiBold" Content="Webhook"/>
+            <TextBox x:Name="webhookText"/>
+            
+            <!--TELEGRAM ONLY-->
+            <Label Visibility="Collapsed" FontWeight="SemiBold" x:Name="webhookChatId" Content="Chat Id"/>
+            <TextBox Visibility="Collapsed" x:Name="webhookChatIdText"/>
+
+            <Label Content="Message" FontWeight="SemiBold" />
+            <TextBox x:Name="messageText" />
+        </StackPanel>
+
+        <Button Grid.Row="1" x:Name="acceptButton" Click="Accept" Content="ACCEPT" Style="{StaticResource StyledSuccessButton}" Margin="0 5 0 5"/>
+
+    </Grid>
+</Page>

@@ -1,0 +1,57 @@
+﻿<Page x:Class="OpenBullet2.Native.Views.Dialogs.AddTimeElapsedTriggerDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:OpenBullet2.Native.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      
+  mc:Ignorable="d" 
+  d:DesignHeight="190" d:DesignWidth="205"
+  Title="Add Time Elapsed Trigger">
+
+    <Grid Height="185" Width="185" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundMain}" />
+            </Style>
+        </Grid.Resources>
+
+        <Label Margin="0 0 0 10" Grid.Column="0" Grid.Row="0" Content="Condition:" />
+        <ComboBox Margin="0 0 0 10" Grid.Column="1" Grid.Row="0" 
+                  ItemsSource="{Binding NumComparisons}" 
+                  SelectedIndex="0"
+                  x:Name="comparisonBox"/>
+
+
+        <Label Grid.Column="0" Grid.Row="1" Content="Days:" />
+        <mah:NumericUpDown Margin="18 0 0 0" Grid.Column="1" Grid.Row="1" x:Name="daysTextBox" Minimum="0" Interval="1" Width="95" Value="0" TextAlignment="Center"/>
+
+        <Label Grid.Column="0" Grid.Row="2" Content="Hours:" />
+        <mah:NumericUpDown Margin="18 0 0 0" Grid.Column="1" Grid.Row="2" x:Name="hoursTextBox" Minimum="0" Interval="1" Width="95" Value="0" TextAlignment="Center"/>
+
+        <Label Grid.Column="0" Grid.Row="3" Content="Minutes:" />
+        <mah:NumericUpDown Margin="18 0 0 0" Grid.Column="1" Grid.Row="3" x:Name="minutesTextBox" Minimum="0" Interval="1" Width="95" Value="0" TextAlignment="Center"/>
+
+        <Label Grid.Column="0" Grid.Row="4" Content="Seconds:" />
+        <mah:NumericUpDown Margin="18 0 0 0" Grid.Column="1" Grid.Row="4" x:Name="secondsTextBox" Minimum="0" Interval="1" Width="95" Value="0" TextAlignment="Center"/>
+
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" x:Name="acceptButton" Click="Accept" Content="ACCEPT" Style="{StaticResource StyledSuccessButton}" Margin="5 10 5 5"/>
+    </Grid>
+</Page>

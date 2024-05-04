@@ -72,20 +72,20 @@ namespace OpenBullet2.Core.Services
 
         private void SaveStateIfChanged()
         {
-            var json = JsonConvert.SerializeObject(TriggeredActions.ToArray(), jsonSettings);
-            var hash = Crypto.MD5(Encoding.UTF8.GetBytes(json));
-
-            if (hash != lastSavedHash)
+            try
             {
-                try
+                var json = JsonConvert.SerializeObject(TriggeredActions.ToArray(), jsonSettings);
+                var hash = Crypto.MD5(Encoding.UTF8.GetBytes(json));
+
+                if (hash != lastSavedHash)
                 {
                     File.WriteAllText(fileName, json);
                     lastSavedHash = hash;
                 }
-                catch
-                {
-                    // File probably in use
-                }
+            }
+            catch 
+            {
+                // File probably in use or TriggeredActions modified while serializing
             }
         }
 
