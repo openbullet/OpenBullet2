@@ -4,6 +4,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OpenBullet2.Native.Views.Pages"
+      xmlns:vms="clr-namespace:OpenBullet2.Native.ViewModels"
+      xmlns:triggers="clr-namespace:RuriLib.Models.Jobs.Monitor.Triggers;assembly=RuriLib"
+      xmlns:actions="clr-namespace:RuriLib.Models.Jobs.Monitor.Actions;assembly=RuriLib"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      
+      xmlns:status="clr-namespace:RuriLib.Models.Jobs;assembly=RuriLib"
+      
+      
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Monitor">
@@ -11,12 +20,858 @@
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
-    
+
     <Grid>
-        <Label
-            Content="Coming soon (TM)"
-            FontSize="20"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"/>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TOP BAR START-->
+        <StackPanel Orientation="Horizontal" Margin="0 5" Grid.Row="0">
+            <Button Click="CreateTriggeredAction" Margin="0 0 5 0" 
+            Style="{StaticResource StyledSuccessButton}"
+            Width="70" HorizontalAlignment="Left" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Create</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Click="RemoveAll" 
+            Style="{StaticResource StyledDangerButton}"
+            Width="100" HorizontalAlignment="Left" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Close" />
+                    <TextBlock VerticalAlignment="Center" Margin="5 0">Remove All</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <!--TOP BAR END-->
+
+        <!--TRIGGERED ACTIONS START-->
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding TriggeredActionCollection}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type vms:TriggeredActionViewModel}">
+
+                        <Border Margin="0 5 0 5" BorderThickness="1" BorderBrush="Gray">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+
+                                <WrapPanel Grid.Column="0">
+
+                                    <!--SETTINGS-->
+                                    <Border Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!--JOB NUMBER-->
+                                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10">
+                                                <Label Content="Job:"/>
+                                                <mah:NumericUpDown Minimum="0" Interval="1" Width="95" Value="{Binding JobId}"/>
+                                            </StackPanel>
+
+                                            <!--ACTIVE CHECKBOX-->
+                                            <Label Grid.Row="1" Grid.Column="0" Content="Active:"/>
+                                            <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="0 0 -6 0" IsChecked="{Binding IsActive}"/>
+                                            <!--REPEATABLE CHECKBOX-->
+                                            <Label Grid.Row="2" Grid.Column="0" Content="Repeatable:"/>
+                                            <CheckBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Margin="0 0 -6 0" IsChecked="{Binding IsRepeatable}"/>
+                                            <!--EXECUTING STATUS-->
+                                            <Label Grid.Row="3" Grid.Column="0" Content="Executing:"/>
+                                            <Label Grid.Row="3" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Content="{Binding IsExecuting}"/>
+                                            <!--EXECUTIONS COUNT-->
+                                            <Label Grid.Row="4" Grid.Column="0" Content="Executions:"/>
+                                            <Label Grid.Row="4" Grid.Column="1" FontWeight="Bold" HorizontalAlignment="Center" Content="{Binding Executions}"/>
+
+                                            <!--RESET BUTTON-->
+                                            <Button Grid.Row="5" Grid.ColumnSpan="2" Tag="{Binding}" Click="ResetTriggeredAction" Margin="0 10 0 0" Style="{StaticResource StyledWarningButton}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <iconPacks:PackIconMaterialDesign Kind="Refresh" />
+                                                    <TextBlock VerticalAlignment="Center" Margin="5 0">Reset</TextBlock>
+                                                </StackPanel>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+
+
+                                    <!--TRIGGERS-->
+                                    <StackPanel Orientation="Vertical" Margin="0 0 10 0">
+                                        <!--TITLE-->
+                                        <Label FontWeight="Bold" FontSize="16" Content="Triggers"/>
+                                        <!--DESCRIPTION-->
+                                        <Label Content="All must be verified at the same time."/>
+
+                                        <!--TRIGGER BUTTONS SCROLL VIEW-->
+                                        <ScrollViewer Height="97" Width="335">
+                                            <!--TRIGGER BUTTONS CONTAINER-->
+                                            <WrapPanel Margin="0 0 0 5" MaxWidth="335" HorizontalAlignment="Center">
+                                                <!--ADD JOB STATUS TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddJobStatusTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Job Status</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD TIME ELAPSED TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddTimeElapsedTrigger"  Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Time Elpased</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD CPM COUNT TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddCPMCountTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">CPM Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD JOB FINISHED TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddJobFinishedTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Job Finished</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD HIT COUNT TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddHitCountTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Hit Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD TO CHECK TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddToCheckCountTrigger"  Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">ToCheck Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD RETRY COUNT TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddRetryCountTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Retry Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD BAN COUNT TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddBanCountTrigger"  Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Ban Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD TESTED COUNT TRIGGER-->
+                                                <Button Tag="{Binding}" Click="AddTestedCountTrigger" Margin="5 5 5 5" Style="{StaticResource StyledPrimaryButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Tested Count</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                            </WrapPanel>
+                                        </ScrollViewer>
+
+                                        <!--TRIGGER FIELDS-->
+                                        <Border Padding="5" Margin="0 6 0 10" BorderThickness="1" BorderBrush="Gray">
+                                            <ItemsControl ItemsSource="{Binding TriggersCollection}" Tag="{Binding}">
+
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Vertical"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+
+
+                                                <ItemsControl.Template>
+                                                    <ControlTemplate TargetType="ItemsControl">
+                                                        <Grid>
+                                                            <ItemsPresenter />
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontSize="12" FontWeight="Bold" Margin="0 0 0 2"
+                                                               Text="Add some triggers"
+                                                               Visibility="{Binding IsTriggersEmpty, Converter={StaticResource BoolToVis}}" />
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </ItemsControl.Template>
+
+                                                <ItemsControl.Resources>
+                                                    <!--JOB STATUS TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:JobStatusTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Bot status is"/>
+
+                                                            <ComboBox 
+                                                                Grid.Column="1"
+                                                                MaxWidth="100"
+                                                                HorizontalAlignment="Left"
+                                                                ItemsSource="{Binding DataContext.JobStatuses, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                SelectedItem="{Binding Status}"/>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--TIME ELAPSED TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:TimeElapsedTrigger}">
+                                                        <Grid>
+
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" FontWeight="SemiBold" Content="Time elapsed is" VerticalAlignment="Center"/>
+
+                                                            <ComboBox 
+                                                                Grid.Column="1"
+                                                                ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                SelectedItem="{Binding Comparison}"/>
+
+                                                            <StackPanel Margin="5 0 0 0" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Days}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="d " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Hours}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="h " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Minutes}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="m " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Seconds}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="s " />
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="3"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.EditTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledPrimaryButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Pencil" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                            <Button 
+                                                                Grid.Column="4"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--JOB FINISHED TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:JobFinishedTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" FontWeight="SemiBold" Content="Job is finished"/>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--CPM COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:CPMTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="CPM count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--HIT COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:HitCountTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Hit count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--TO CHECK COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:ToCheckCountTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="ToCheck count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--RETRY COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:RetryCountTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Retry count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--BAN COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:BanCountTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Ban count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--TO CHECK COUNT TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type triggers:TestedCountTrigger}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Tested count is"/>
+
+                                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                <ComboBox 
+                                                                    ItemsSource="{Binding DataContext.NumComparisons, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                                    SelectedItem="{Binding Comparison}"/>
+                                                                <TextBox TextAlignment="Center" Width="50" Text="{Binding Amount}"/>
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveTriggerCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+
+                                                </ItemsControl.Resources>
+                                            </ItemsControl>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!--ACTIONS-->
+                                    <StackPanel Orientation="Vertical">
+                                        <!--TITLE-->
+                                        <Label FontWeight="Bold" FontSize="16" Content="Actions"/>
+                                        <!--DESCRIPTION-->
+                                        <Label Content="Executed sequentially."/>
+
+                                        <!--ACTIONS BUTTONS SCROLL VIEW-->
+                                        <ScrollViewer Height="97" Width="335">
+                                            <!--ACTIONS BUTTONS CONTAINER-->
+                                            <WrapPanel Margin="0 0 0 5" MaxWidth="335" HorizontalAlignment="Center">
+                                                <!--ADD ABORT JOB ACTION-->
+                                                <Button Tag="{Binding}" Click="AddAbortJobAction" Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Abort Job</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD STOP JOB ACTION-->
+                                                <Button Tag="{Binding}" Click="AddStopJobAction"  Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Stop Job</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD START JOB ACTION-->
+                                                <Button Tag="{Binding}" Click="AddStartJobAction" Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Start Job</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD WAIT ACTION-->
+                                                <Button Tag="{Binding}" Click="AddWaitAction" Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Wait</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD SET BOTS ACTION-->
+                                                <Button Tag="{Binding}" Click="AddSetBotsAction"  Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Set Bots</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD TELEGRAM WEBHOOK ACTION-->
+                                                <Button Tag="{Binding}" Click="AddTelegramWebhookAction"  Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Telegram Webhook</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <!--ADD DISCORD WEBHOOK ACTION-->
+                                                <Button Tag="{Binding}" Click="AddDiscordWebhookAction"  Margin="5 5 5 5" Style="{StaticResource StyledDangerButton}" HorizontalAlignment="Left" >
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                                        <TextBlock VerticalAlignment="Center" Margin="5 0">Discord Webhook</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                            </WrapPanel>
+                                        </ScrollViewer>
+
+                                        <!--ACTION FIELDS-->
+                                        <Border Padding="5" Margin="0 6 0 10" BorderThickness="1" BorderBrush="Gray">
+                                            <ItemsControl ItemsSource="{Binding ActionsCollection}" Tag="{Binding}">
+
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Vertical"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+
+
+                                                <ItemsControl.Template>
+                                                    <ControlTemplate TargetType="ItemsControl">
+                                                        <Grid>
+                                                            <ItemsPresenter />
+                                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               FontSize="12" FontWeight="Bold" Margin="0 0 0 2"
+                                                               Text="Add some actions"
+                                                               Visibility="{Binding IsActionsEmpty, Converter={StaticResource BoolToVis}}" />
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </ItemsControl.Template>
+
+                                                <ItemsControl.Resources>
+
+                                                    <!--ABORT JOB ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:AbortJobAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Abort job"/>
+
+                                                            <mah:NumericUpDown Grid.Column="1"  Width="100" HorizontalAlignment="Left" TextAlignment="Center" Minimum="0" Value="{Binding JobId}"/>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--STOP JOB ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:StopJobAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Stop job"/>
+
+                                                            <mah:NumericUpDown Grid.Column="1"  Width="100" HorizontalAlignment="Left" TextAlignment="Center" Minimum="0" Value="{Binding JobId}"/>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--START JOB ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:StartJobAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" VerticalAlignment="Center" FontWeight="SemiBold" Content="Start job"/>
+
+                                                            <mah:NumericUpDown Grid.Column="1"  Width="100" HorizontalAlignment="Left" TextAlignment="Center" Minimum="0" Value="{Binding JobId}"/>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--TIME ELAPSED TRIGGER-->
+                                                    <DataTemplate DataType="{x:Type actions:WaitAction}">
+                                                        <Grid>
+
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Label Grid.Column="0" FontWeight="SemiBold" Content="Wait" VerticalAlignment="Center"/>
+
+                                                            <StackPanel Margin="5 0 0 0" Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Days}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="d " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Hours}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="h " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Minutes}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="m " />
+                                                                <TextBlock FontWeight="SemiBold" Text="{Binding Seconds}" />
+                                                                <TextBlock FontWeight="SemiBold" Text="s " />
+                                                            </StackPanel>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.EditActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledPrimaryButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Pencil" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                            <Button 
+                                                                Grid.Column="3"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--SET BOTS ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:SetBotsAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+
+                                                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                                <Label VerticalAlignment="Center" FontWeight="SemiBold" Content="Set bots to"/>
+                                                                <!--<TextBox Width="35" TextAlignment="Center" Text="{Binding Amount}" />-->
+                                                                <mah:NumericUpDown  Width="75"  TextAlignment="Center" Minimum="0" Value="{Binding Amount}"/>
+                                                                <Label VerticalAlignment="Center" FontWeight="SemiBold" Content="in job"/>
+                                                                <mah:NumericUpDown  Width="90"  TextAlignment="Center" Minimum="0" Value="{Binding TargetJobId}"/>
+                                                            </StackPanel>
+                                                            
+
+                                                            <Button 
+                                                                Grid.Column="1"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--TELEGRAM WEBHOOK ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:TelegramBotAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+
+                                                            <Label Grid.Column="0" FontWeight="SemiBold" VerticalAlignment="Center" Content="Send Telegram Webhook"/>
+
+                                                            <Button 
+                                                                Grid.Column="1"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.EditActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledPrimaryButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Pencil" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                            <Button 
+                                                                Grid.Column="2"
+                                                                Margin="5 0 0 0" 
+                                                                Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                    <!--DISCORD WEBHOOK ACTION-->
+                                                    <DataTemplate DataType="{x:Type actions:DiscordWebhookAction}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+
+
+                                                            <Label Grid.Column="0" FontWeight="SemiBold" VerticalAlignment="Center" Content="Send Discord Webhook"/>
+
+                                                            <Button 
+                                                               Grid.Column="1"
+                                                               Margin="5 0 0 0" 
+                                                               Command="{Binding DataContext.EditActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                               CommandParameter="{Binding}" 
+                                                               Style="{StaticResource StyledPrimaryButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Pencil" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                            <Button 
+                                                               Grid.Column="2"
+                                                               Margin="5 0 0 0" 
+                                                               Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" 
+                                                               CommandParameter="{Binding}" 
+                                                               Style="{StaticResource StyledDangerButton}" >
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <iconPacks:PackIconMaterial Kind="Close" />
+                                                                </StackPanel>
+                                                            </Button>
+
+                                                        </Grid>
+                                                    </DataTemplate>
+
+                                                </ItemsControl.Resources>
+                                            </ItemsControl>
+                                        </Border>
+                                    </StackPanel>
+                                </WrapPanel>
+
+                                <!--CORNER BUTTONS-->
+                                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0">
+                                    <!--DUPE BUTTON-->
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Right" Tag="{Binding}"
+                                        Click="DuplicateTriggeredAction" 
+                                        Margin="0 5 5 0" 
+                                        Style="{StaticResource StyledPrimaryButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconFontAwesome Kind="CloneSolid" />
+                                        </StackPanel>
+                                    </Button>
+                                    <!--CLOSE BUTTON-->
+                                    <Button VerticalAlignment="Top" HorizontalAlignment="Right" Tag="{Binding}"
+                                        Click="RemoveTriggeredAction" 
+                                        Margin="0 5 5 0" 
+                                        Style="{StaticResource StyledDangerButton}" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.Resources>
+
+            </ItemsControl>
+
+        </ScrollViewer>
+        <!--TRIGGERED ACTIONS END-->
     </Grid>
 </Page>
