@@ -19,11 +19,11 @@ export const updateCSharpScript: ResolveFn<any> = async (route: ActivatedRouteSn
   // loliCode to C# first
   if (config.mode === ConfigMode.LoliCode) {
     let dto = await lastValueFrom(configService.convertLoliCodeToCSharp(config.settings, config.loliCodeScript));
-
     config.cSharpScript = dto.cSharpScript;
 
-    dto = await lastValueFrom(configService.convertLoliCodeToCSharp(config.settings, config.startupLoliCodeScript));
-
-    config.startupCSharpScript = dto.cSharpScript;
+    if (config.startupLoliCodeScript.trim() !== '') {
+      dto = await lastValueFrom(configService.convertLoliCodeToCSharp(config.settings, config.startupLoliCodeScript));
+      config.startupCSharpScript = dto.cSharpScript;
+    }
   }
 };
