@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
   faAlignLeft,
   faBug,
@@ -30,6 +30,8 @@ import { ViewAsHtmlComponent } from './view-as-html/view-as-html.component';
 export class ConfigDebuggerComponent implements OnInit, OnDestroy {
   @Input() config!: ConfigDto;
   @Input() envSettings!: EnvironmentSettingsDto;
+
+  @Output() currentWordlistTypeChanged = new EventEmitter<string>();
 
   @ViewChild('viewAsHtmlComponent')
   htmlViewer: ViewAsHtmlComponent | undefined = undefined;
@@ -78,6 +80,7 @@ export class ConfigDebuggerComponent implements OnInit, OnDestroy {
     // moves their favourite wordlist type to the top of Environment.ini,
     // it will be selected by default
     this.settings.wordlistType = this.wordlistTypes[0];
+    this.currentWordlistTypeChanged.emit(this.settings.wordlistType);
 
     this.debuggerHubService.createHubConnection(this.config.id).then((_) => {
       // Request the current state

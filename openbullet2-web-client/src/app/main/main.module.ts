@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AccordionModule } from 'primeng/accordion';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -219,6 +220,7 @@ import { BaseChartDirective } from 'ng2-charts';
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
+    AutoCompleteModule,
     AvatarModule,
     TooltipModule,
     InputTextModule,

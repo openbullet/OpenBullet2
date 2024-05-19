@@ -74,21 +74,25 @@
                         *ngIf="setting.type === BlockSettingType.Bool"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-int-setting
                         *ngIf="setting.type === BlockSettingType.Int"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-float-setting
                         *ngIf="setting.type === BlockSettingType.Float"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-string-setting
                         *ngIf="setting.type === BlockSettingType.String"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-enum-setting
                         *ngIf="setting.type === BlockSettingType.Enum"
@@ -99,16 +103,19 @@
                         *ngIf="setting.type === BlockSettingType.ByteArray"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-list-of-strings-setting
                         *ngIf="setting.type === BlockSettingType.ListOfStrings"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                     <app-dictionary-of-strings-setting
                         *ngIf="setting.type === BlockSettingType.DictionaryOfStrings"
                         [parameter]="descriptor.parameters[setting.name]"
                         [setting]="setting"
+                        [stacker]="stacker"
                         (onChange)="valueChanged()" />
                 </div>
             </div>
@@ -118,6 +125,7 @@
         <app-parse-block
             [block]="block"
             [descriptor]="descriptor"
+            [stacker]="stacker"
             (onChange)="valueChanged()" />
     </ng-container>
     <ng-container *ngIf="block.type === BlockInstanceType.LoliCode">
@@ -137,12 +145,14 @@
             [envSettings]="envSettings"
             [block]="block"
             [descriptor]="descriptor"
+            [stacker]="stacker"
             (onChange)="valueChanged()" />
     </ng-container>
     <ng-container *ngIf="block.type === BlockInstanceType.HttpRequest">
         <app-http-request-block
             [block]="block"
             [descriptor]="descriptor"
+            [stacker]="stacker"
             (onChange)="valueChanged()" />
     </ng-container>
 </div>

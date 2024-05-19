@@ -42,7 +42,8 @@
                 (validityChange)="localSave()"
                 ngDefaultControl
                 [options]="wordlistTypes"
-                [(ngModel)]="settings.wordlistType" />
+                [(ngModel)]="settings.wordlistType"
+                (ngModelChange)="currentWordlistTypeChanged.emit($event)" />
             <span class="d-block mt-1 text-small color-inactive">Wordlist type</span>
         </div>
     </div>

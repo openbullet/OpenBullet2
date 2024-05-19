@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { BlockDescriptorDto, BlockDescriptors } from 'src/app/main/dtos/config/block-descriptor.dto';
-import { BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
+import { BlockInstanceType, BlockInstanceTypes } from 'src/app/main/dtos/config/block-instance.dto';
 import { CategoryTreeNode } from 'src/app/main/dtos/config/category-tree.dto';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
@@ -55,6 +55,7 @@ export class ConfigStackerComponent implements OnInit {
   selectedBlocks: BlockInstanceTypes[] = [];
   lastSelectedBlock: BlockInstanceTypes | null = null;
   lastDeletedBlocks: DeletedBlock[] = [];
+  currentWordlistType: string | null = null;
 
   faPlus = faPlus;
   faTrashCan = faTrashCan;
@@ -396,5 +397,75 @@ export class ConfigStackerComponent implements OnInit {
         this.configService.saveLocalConfig(this.config);
       }
     });
+  }
+
+  public getSuggestions(): string[] {
+    const suggestions = [
+      'data.SOURCE', 'data.ERROR', 'data.ADDRESS',
+      'data.HEADERS["name"]', 'data.COOKIES["name"]',
+      'data.STATUS', 'data.RESPONSECODE', 'data.RAWSOURCE', 'data.Line.Data'
+    ];
+
+    // This should never happen, but just in case
+    if (this.envSettings === null) {
+      return suggestions;
+    }
+
+    const wordlistType = this.envSettings.wordlistTypes.find((w) => w.name === this.currentWordlistType);
+
+    // This should never happen, but just in case
+    if (wordlistType === undefined) {
+      return suggestions;
+    }
+
+    for (const slice of wordlistType.slices.concat(wordlistType.slicesAlias)) {
+      // Insert at index 0 to keep the suggestions at the top
+      suggestions.unshift(`input.${slice}`);
+    }
+
+    // This should never happen, but just in case
+    if (this.stack === null) {
+      return suggestions;
+    }
+
+    for (const block of this.stack) {
+      // If it's the currently selected block, stop here
+      // (we don't want to suggest variables from the block we're currently editing
+      // and the ones below it)
+      if (this.selectedBlocks.includes(block)) {
+        break;
+      }
+
+      for (const outputVariable of this.getOutputVariables(block).reverse()) {
+        // If not empty string, add at index 0
+        if (outputVariable.trim() !== '') {
+          suggestions.unshift(outputVariable);
+        }
+      }
+    }
+
+    return suggestions;
+  }
+
+  getOutputVariables(block: BlockInstanceTypes): string[] {
+    switch (block.type) {
+      case BlockInstanceType.Auto: {
+        const descriptor = this.getDescriptor(block);
+        return descriptor.returnType === null
+          ? []
+          : [block.outputVariable];
+      }
+
+      case BlockInstanceType.Parse: {
+        return [block.outputVariable];
+      }
+
+      case BlockInstanceType.Script: {
+        return block.outputVariables.map((v) => v.name);
+      }
+
+      default:
+        return [];
+    }
   }
 }

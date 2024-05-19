@@ -14,6 +14,7 @@ import {
   StrComparison,
 } from 'src/app/main/dtos/config/block-instance.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
+import { ConfigStackerComponent } from '../config-stacker.component';
 
 @Component({
   selector: 'app-keycheck-block',
@@ -24,6 +25,7 @@ export class KeycheckBlockComponent implements OnInit {
   @Input() block!: KeycheckBlockInstanceDto;
   @Input() descriptor!: BlockDescriptorDto;
   @Input() envSettings!: EnvironmentSettingsDto;
+  @Input() stacker!: ConfigStackerComponent;
 
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 

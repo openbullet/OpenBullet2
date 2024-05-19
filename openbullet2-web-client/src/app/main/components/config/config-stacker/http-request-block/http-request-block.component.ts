@@ -11,6 +11,7 @@ import {
   RequestParamsType,
   StandardRequestParamsDto,
 } from 'src/app/main/dtos/config/block-instance.dto';
+import { ConfigStackerComponent } from '../config-stacker.component';
 
 @Component({
   selector: 'app-http-request-block',
@@ -20,6 +21,7 @@ import {
 export class HttpRequestBlockComponent implements OnChanges {
   @Input() block!: HttpRequestBlockInstanceDto;
   @Input() descriptor!: BlockDescriptorDto;
+  @Input() stacker!: ConfigStackerComponent;
 
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 

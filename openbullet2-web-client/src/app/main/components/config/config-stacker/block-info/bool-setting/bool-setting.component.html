@@ -12,6 +12,7 @@
         *ngIf="setting.inputMode === SettingInputMode.Variable"
         class="w-100"
         [setting]="setting"
+        [stacker]="stacker"
         (onChange)="valueChanged()" />
     <app-setting-input-mode
         class="ml-1"

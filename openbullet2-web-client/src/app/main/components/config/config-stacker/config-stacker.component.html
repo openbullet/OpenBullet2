@@ -94,6 +94,7 @@
                     <app-block-info *ngIf="selectedBlocks.length === 1"
                         (onChange)="stackChanged()"
                         [envSettings]="envSettings"
+                        [stacker]="this"
                         [block]="selectedBlocks[0]"
                         [descriptor]="getDescriptor(selectedBlocks[0])" />
                     <div class="block-info-notice" *ngIf="selectedBlocks.length === 0">
@@ -111,6 +112,7 @@
                 <div class="col-5 pl-1 pr-0" *ngIf="envSettings !== null">
                     <app-config-debugger
                         [config]="config"
+                        (currentWordlistTypeChanged)="currentWordlistType = $event"
                         [envSettings]="envSettings" />
                 </div>
             </div>

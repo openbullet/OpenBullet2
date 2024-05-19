@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BlockParameterDto, SettingInputMode } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
+import { ConfigStackerComponent } from '../../config-stacker.component';
 
 @Component({
   selector: 'app-float-setting',
@@ -10,6 +11,7 @@ import { BlockSettingDto } from 'src/app/main/dtos/config/block-instance.dto';
 export class FloatSettingComponent {
   @Input() parameter: BlockParameterDto | null = null;
   @Input() setting!: BlockSettingDto;
+  @Input() stacker!: ConfigStackerComponent;
   @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 
   SettingInputMode = SettingInputMode;

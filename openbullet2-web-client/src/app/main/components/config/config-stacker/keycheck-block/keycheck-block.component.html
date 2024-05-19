@@ -20,6 +20,7 @@
             <app-bool-setting
                 [parameter]="descriptor.parameters['banIfNoMatch']"
                 [setting]="block.settings['banIfNoMatch']"
+                [stacker]="stacker"
                 (onChange)="valueChanged()" />
         </div>
     </div>
@@ -92,26 +93,32 @@
                             <app-bool-setting
                                 *ngIf="key.left.type === BlockSettingType.Bool"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-int-setting
                                 *ngIf="key.left.type === BlockSettingType.Int"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-float-setting
                                 *ngIf="key.left.type === BlockSettingType.Float"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-string-setting
                                 *ngIf="key.left.type === BlockSettingType.String"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-list-of-strings-setting
                                 *ngIf="key.left.type === BlockSettingType.ListOfStrings"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-dictionary-of-strings-setting
                                 *ngIf="key.left.type === BlockSettingType.DictionaryOfStrings"
                                 [setting]="key.left"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                         </div>
                         <div class="key-comparison">
@@ -162,26 +169,32 @@
                             <app-bool-setting
                                 *ngIf="key.right.type === BlockSettingType.Bool"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-int-setting
                                 *ngIf="key.right.type === BlockSettingType.Int"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-float-setting
                                 *ngIf="key.right.type === BlockSettingType.Float"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-string-setting
                                 *ngIf="key.right.type === BlockSettingType.String"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-list-of-strings-setting
                                 *ngIf="key.right.type === BlockSettingType.ListOfStrings"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                             <app-dictionary-of-strings-setting
                                 *ngIf="key.right.type === BlockSettingType.DictionaryOfStrings"
                                 [setting]="key.right"
+                                [stacker]="stacker"
                                 (onChange)="valueChanged()" />
                         </div>
                         <button class="button button-transparent" 

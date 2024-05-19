@@ -297,6 +297,22 @@ p-table.no-header {
     }
 }
 
+.p-autocomplete-panel {
+    background-color: var(--bg-secondary) !important;
+    border: 1px solid var(--fg-inactive) !important;
+
+    .p-autocomplete-items {
+        padding: 0 !important;
+
+        .p-autocomplete-item {
+            padding: 0.3rem !important;
+            color: var(--fg-primary) !important;
+            font-size: 14px !important;
+        }
+    }
+
+}
+
 .code-editor * {
     font-family: 'Chivo Mono' !important;
 }
