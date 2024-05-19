@@ -525,7 +525,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   skipWait() {
-    this.jobService.start(this.jobId!, true).subscribe();
+    this.jobService.skipWait(this.jobId!, true).subscribe();
   }
 
   showEditBotsInput() {
