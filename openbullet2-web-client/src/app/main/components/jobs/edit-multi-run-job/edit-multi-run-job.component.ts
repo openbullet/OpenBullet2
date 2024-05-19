@@ -434,6 +434,11 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   }
 
   selectWordlist(wordlist: WordlistDto) {
+    // If it's a different wordlist than before, set the skip to 0
+    if (this.selectedWordlist !== null && this.selectedWordlist.id !== wordlist.id) {
+      this.options!.skip = 0;
+    }
+
     this.selectedWordlist = wordlist;
     this.dataPoolWordlistId = wordlist.id;
     this.selectWordlistModalVisible = false;
