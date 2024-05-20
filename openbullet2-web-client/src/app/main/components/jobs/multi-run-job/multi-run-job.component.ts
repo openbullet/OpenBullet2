@@ -728,6 +728,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     if (hit.proxy !== null) {
       debuggerSettings.useProxy = true;
+      debuggerSettings.proxyType = hit.proxy.type;
       debuggerSettings.testProxy = hit.proxy.username === null || hit.proxy.username.length === 0
         ? `(${hit.proxy.type})${hit.proxy.host}:${hit.proxy.port}`
         : `(${hit.proxy.type})${hit.proxy.host}:${hit.proxy.port}:${hit.proxy.username}:${hit.proxy.password}`;
