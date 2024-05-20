@@ -22,6 +22,7 @@ export class InfoComponent {
   modalVisible = false;
   modalIcon = 'btc.svg';
   modalAddress = '';
+  getSwaggerUrl = getSwaggerUrl;
 
   donationCurrencies = {
     btc: {
@@ -40,18 +41,6 @@ export class InfoComponent {
       address: 'qq02mrtdp454g2zdu534ndpu7jgcr3tvavyzs60m3p',
     },
   };
-
-  openGitHubRepository() {
-    window.open('https://github.com/openbullet/OpenBullet2', '_blank');
-  }
-
-  openForum() {
-    window.open('https://discourse.openbullet.dev', '_blank');
-  }
-
-  openSwagger() {
-    window.open(getSwaggerUrl(), '_blank');
-  }
 
   openBtcDonationModal() {
     this.setModalCurrency(this.donationCurrencies.btc);

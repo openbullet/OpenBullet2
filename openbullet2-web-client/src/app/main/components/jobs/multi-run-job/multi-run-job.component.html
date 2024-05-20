@@ -20,12 +20,15 @@
         <span>{{job.name}}</span>
         <span class="text-small ml-2 color-inactive">MULTI RUN JOB</span>
     </h2>
-    <button class="button button-secondary edit-button"
-        [disabled]="!canEdit()"
-        (click)="editSettings()">
-        <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
-        Edit Settings
-    </button>
+    <div class="edit-button-container">
+        <app-docs-button path="jobs/multi-run-job/running" class="mr-1" />
+        <button class="button button-secondary"
+            [disabled]="!canEdit()"
+            (click)="editSettings()">
+            <fa-icon [icon]="faPen" [fixedWidth]="true"></fa-icon>
+            Edit Settings
+        </button>
+    </div>
 </div>
 
 <app-spinner *ngIf="job === null" [fullWidth]="true" />

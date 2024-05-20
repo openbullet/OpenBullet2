@@ -4,6 +4,7 @@
 </h1>
 <h6 class="color-inactive">
     Import and manage lists of data lines that jobs can test against your target in parallel
+    <app-docs-button path="wordlists/general-info" buttonClass="color-inactive" />
 </h6>
 
 <app-spinner *ngIf="wordlists === null" [fullWidth]="true" />
@@ -17,18 +18,18 @@
                 </ng-template>
                 <ng-template pTemplate="end">
                     <button class="button button-secondary"
-                    pTooltip="Clear filters" tooltipPosition="bottom"
-                    (click)="wordlistsDt.clear()">
-                    Clear
-                    <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
-                </button>
-                <span class="p-input-icon-left ml-auto">
-                    <input pInputText type="text"
-                        spellcheck="false"
-                        class="ml-2"
-                        [style]="{ height: '33px' }"
-                        (input)="wordlistsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
-                </span>
+                        pTooltip="Clear filters" tooltipPosition="bottom"
+                        (click)="wordlistsDt.clear()">
+                        Clear
+                        <fa-icon [icon]="faFilterCircleXmark" [fixedWidth]="true"></fa-icon>
+                    </button>
+                    <span class="p-input-icon-left ml-auto">
+                        <input pInputText type="text"
+                            spellcheck="false"
+                            class="ml-2"
+                            [style]="{ height: '33px' }"
+                            (input)="wordlistsDt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    </span>
                 </ng-template>
             </p-menubar>
         </div>

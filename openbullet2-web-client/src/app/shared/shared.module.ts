@@ -22,6 +22,8 @@ import { PascalCasePipe } from './pipes/pascalcase.pipe';
 import { TimeSpanPipe } from './pipes/timespan.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { DocsButtonComponent } from './components/docs-button/docs-button.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 // biome-ignore lint/suspicious/noExplicitAny: monaco
 declare const monaco: any;
@@ -55,8 +57,16 @@ const monacoConfig: NgxMonacoEditorConfig = {
     MultipleSelectorComponent,
     InputTimeSpanComponent,
     InputDictionaryComponent,
+    DocsButtonComponent,
   ],
-  imports: [CommonModule, DropdownModule, MonacoEditorModule.forRoot(monacoConfig), FormsModule, FontAwesomeModule],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    MonacoEditorModule.forRoot(monacoConfig),
+    FormsModule,
+    FontAwesomeModule,
+    TooltipModule,
+  ],
   exports: [
     SpinnerComponent,
     TruncatePipe,
@@ -74,6 +84,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     MultipleSelectorComponent,
     InputTimeSpanComponent,
     InputDictionaryComponent,
+    DocsButtonComponent,
   ],
 })
 export class SharedModule { }

@@ -11,30 +11,33 @@
 <div class="container-fluid mt-4">
     <div class="row justify-content-between">
         <div class="col-4 px-0">
-            <button class="button button-secondary mr-2" 
-                (click)="openGitHubRepository()">
-                <img 
-                    class="white-icon mr-2"
-                    src="../../../../assets/icons/github.svg" 
-                    alt="GitHub" />
-                <span>GitHub</span>
-            </button>
-            <button class="button button-secondary mr-2" 
-                (click)="openForum()">
-                <img 
-                    class="mr-2"
-                    src="../../../../assets/icons/discourse.svg" 
-                    alt="GitHub" />
-                <span>Forum</span>
-            </button>
-            <button class="button button-secondary mr-2" 
-                (click)="openSwagger()">
-                <img 
-                    class="mr-2"
-                    src="../../../../assets/icons/swagger.svg" 
-                    alt="Swagger" />
-                <span>API Docs</span>
-            </button>
+            <a href="https://github.com/openbullet/OpenBullet2" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="white-icon mr-2"
+                        src="../../../../assets/icons/github.svg" 
+                        alt="GitHub" />
+                    <span>GitHub</span>
+                </button>
+            </a>
+            <a href="https://discourse.openbullet.dev" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="mr-2"
+                        src="../../../../assets/icons/discourse.svg" 
+                        alt="GitHub" />
+                    <span>Forum</span>
+                </button>
+            </a>
+            <a [href]="getSwaggerUrl()" target="_blank">
+                <button class="button button-secondary mr-2">
+                    <img 
+                        class="mr-2"
+                        src="../../../../assets/icons/swagger.svg" 
+                        alt="Swagger" />
+                    <span>API Docs</span>
+                </button>
+            </a>
         </div>
         <div class="col-4 px-0 text-right">
             <span>Donate with</span>
