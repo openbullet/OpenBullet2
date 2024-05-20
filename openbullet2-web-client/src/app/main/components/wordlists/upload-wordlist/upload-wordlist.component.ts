@@ -1,7 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { FileUpload } from 'primeng/fileupload';
+import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { catchError, map, throwError } from 'rxjs';
 import { CreateWordlistDto } from 'src/app/main/dtos/wordlist/create-wordlist.dto';
 import { WordlistFileDto } from 'src/app/main/dtos/wordlist/wordlist-file.dto';
@@ -27,7 +27,7 @@ export class UploadWordlistComponent {
   constructor(
     private wordlistService: WordlistService,
     private messageService: MessageService,
-  ) {}
+  ) { }
 
   public reset() {
     this.name = '';
@@ -89,6 +89,12 @@ export class UploadWordlistComponent {
     this.filePath = null;
     this.selectedFile = null;
     this.uploadProgress = null;
+  }
+
+  fileSelected(event: FileSelectEvent) {
+    if (this.name.length === 0) {
+      this.name = event.files[0].name;
+    }
   }
 
   submitForm() {

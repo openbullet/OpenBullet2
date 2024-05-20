@@ -53,12 +53,12 @@
                 [auto]="true"
                 (uploadHandler)="selectedFile = $event.files[0]"
                 [multiple]="false"
+                (onSelect)="fileSelected($event)"
                 (onError)="uploadError($event)"
                 (onClear)="clearUpload()"
                 (onRemove)="clearUpload()"
                 accept=".txt"
                 [maxFileSize]="2 * 1000 * 1000 * 1000">
-
             </p-fileUpload>
         </div>
     </div>
