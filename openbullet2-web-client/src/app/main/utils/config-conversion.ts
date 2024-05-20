@@ -17,7 +17,7 @@ export const updateCSharpScript: ResolveFn<any> = async (route: ActivatedRouteSn
 
   // If the config's mode is loliCode, we need to convert the
   // loliCode to C# first
-  if (config.mode === ConfigMode.LoliCode) {
+  if (config.mode === ConfigMode.LoliCode || config.mode === ConfigMode.Stack) {
     let dto = await lastValueFrom(configService.convertLoliCodeToCSharp(config.settings, config.loliCodeScript));
     config.cSharpScript = dto.cSharpScript;
 
