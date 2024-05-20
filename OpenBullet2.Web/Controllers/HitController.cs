@@ -89,8 +89,8 @@ public class HitController : ApiController
 
         var hitDto = _mapper.Map<HitDto>(entity);
         var owner = await _guestRepo.GetAsync(apiUser.Id);
-
-        hitDto.Owner = _mapper.Map<OwnerDto>(owner);
+        
+        hitDto.OwnerId = owner?.Id ?? 0;
         return hitDto;
     }
 

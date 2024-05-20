@@ -38,9 +38,9 @@ public class HitDto
     public string Type { get; set; } = string.Empty;
 
     /// <summary>
-    /// The owner of this hit. Null if owned by the admin user.
+    /// The id of the user that owns the hit, 0 if admin.
     /// </summary>
-    public OwnerDto? Owner { get; set; }
+    public int OwnerId { get; set; }
 
     /// <summary>
     /// The ID of the config that was used to get the hit.
