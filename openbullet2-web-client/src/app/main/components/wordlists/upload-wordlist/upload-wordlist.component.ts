@@ -93,7 +93,8 @@ export class UploadWordlistComponent {
 
   fileSelected(event: FileSelectEvent) {
     if (this.name.length === 0) {
-      this.name = event.files[0].name;
+      // Remove the extension from the file name
+      this.name = event.files[0].name.replace(/\.[^/.]+$/, '');
     }
   }
 
