@@ -14,7 +14,7 @@ namespace RuriLib.Models.Data.DataPools
         {
             Wordlist = wordlist;
             DataList = File.ReadLines(wordlist.Path);
-            Size = DataList.Count();
+            Size = wordlist.Total;
             WordlistType = wordlist.Type.Name;
         }
     }
