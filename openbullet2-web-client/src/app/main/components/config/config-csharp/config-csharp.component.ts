@@ -1,6 +1,7 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { faCode, faGear, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
+import { ConfigMode } from 'src/app/main/dtos/config/config-info.dto';
 import { ConfigDto } from 'src/app/main/dtos/config/config.dto';
 import { EnvironmentSettingsDto } from 'src/app/main/dtos/settings/environment-settings.dto';
 import { ConfigService } from 'src/app/main/services/config.service';
@@ -37,6 +38,7 @@ export class ConfigCsharpComponent {
   wordlistTypes: string[] = [];
   showUsings = false;
   showStartupEditor = false;
+  ConfigMode = ConfigMode;
 
   @ViewChild('editor')
   editor: CodeEditorComponent | undefined = undefined;

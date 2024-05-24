@@ -54,7 +54,7 @@
                 <app-code-editor #startupEditor
                     language="csharp" ngDefaultControl 
                     theme="vs-dark"
-                    [readOnly]="true"
+                    [readOnly]="config.mode !== ConfigMode.CSharp"
                     (loaded)="startupEditorLoaded()"
                     (codeChanged)="startupCodeChanged($event)" />
             </div>
@@ -67,7 +67,7 @@
                     language="csharp" ngDefaultControl 
                     theme="vs-dark"
                     (loaded)="editorLoaded()"
-                    [readOnly]="true"
+                    [readOnly]="config.mode !== ConfigMode.CSharp"
                     (codeChanged)="codeChanged($event)" />
             </div>
         </div>
