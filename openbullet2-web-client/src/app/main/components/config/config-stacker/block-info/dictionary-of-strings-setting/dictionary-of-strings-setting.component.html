@@ -1,6 +1,7 @@
 <div class="d-flex justify-content-between w-100">
     <app-input-dictionary [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Fixed"
+        [style]="{'height': '150px'}"
         class="d-block w-100 input-small monospace"
         ngDefaultControl
         (dictionaryChange)="setValue($event)"
@@ -8,6 +9,7 @@
         pTooltip="{{parameter?.description}}" />
     <app-input-dictionary [key]="setting.name"
         *ngIf="setting.inputMode === SettingInputMode.Interpolated"
+        [style]="{'height': '150px'}"
         class="d-block w-100 input-small interpolated monospace"
         ngDefaultControl
         (dictionaryChange)="setValue($event)"
