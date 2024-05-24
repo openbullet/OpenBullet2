@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faBolt, faFileLines, faGears, faPlus, faSave, faX } from '@fortawesome/free-solid-svg-icons';
+import { faBolt, faFileLines, faGears, faPlus, faRotateRight, faSave, faSync, faX } from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, combineLatest } from 'rxjs';
@@ -83,7 +83,10 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   faPlus = faPlus;
   faX = faX;
   faSave = faSave;
+  faRotateRight = faRotateRight;
   faFileLines = faFileLines;
+
+  isLoading = false;
 
   Object = Object;
   Math = Math;
@@ -351,7 +354,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   // Can accept if touched and every field is valid
   canAccept() {
-    return Object.values(this.fieldsValidity).every((v) => v);
+    return !this.isLoading && Object.values(this.fieldsValidity).every((v) => v);
   }
 
   accept() {
@@ -361,36 +364,57 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
     this.configureDataPool();
 
+    this.isLoading = true;
+
     if (this.mode === EditMode.Create) {
-      this.jobService.createMultiRunJob(this.options).subscribe((resp) => {
-        this.touched = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Created',
-          detail: `Multi run job ${resp.id} was created`,
-        });
-        this.router.navigate([`/job/multi-run/${resp.id}`]);
-      });
+      this.jobService.createMultiRunJob(this.options).subscribe(
+        {
+          next: (resp) => {
+            this.touched = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Created',
+              detail: `Multi run job ${resp.id} was created`,
+            });
+            this.router.navigate([`/job/multi-run/${resp.id}`]);
+          },
+          complete: () => {
+            this.isLoading = false;
+          },
+        }
+      );
     } else if (this.mode === EditMode.Edit) {
-      this.jobService.updateMultiRunJob(this.jobId!, this.options).subscribe((resp) => {
-        this.touched = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: `Multi run job ${resp.id} was updated`,
-        });
-        this.router.navigate([`/job/multi-run/${resp.id}`]);
+      this.jobService.updateMultiRunJob(this.jobId!, this.options).subscribe({
+        next: (resp) => {
+          this.touched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Updated',
+            detail: `Multi run job ${resp.id} was updated`,
+          });
+          this.router.navigate([`/job/multi-run/${resp.id}`]);
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
       });
     } else if (this.mode === EditMode.Clone) {
-      this.jobService.createMultiRunJob(this.options).subscribe((resp) => {
-        this.touched = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Cloned',
-          detail: `Multi run job ${resp.id} was cloned from ${this.jobId}`,
-        });
-        this.router.navigate([`/job/multi-run/${resp.id}`]);
+      this.jobService.createMultiRunJob(this.options).subscribe({
+        next: (resp) => {
+          this.touched = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Cloned',
+            detail: `Multi run job ${resp.id} was cloned from ${this.jobId}`,
+          });
+          this.router.navigate([`/job/multi-run/${resp.id}`]);
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
       });
+    } else {
+      this.isLoading = false;
     }
   }
 

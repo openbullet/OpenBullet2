@@ -26,10 +26,16 @@
         <div class="col-4 pr-0 text-right">
             <app-docs-button path="jobs/multi-run-job/creation" class="mt-2 mr-1" />
             <button class="button button-accent mt-2"
+                pTooltip="Creating... please wait"
+                tooltipPosition="bottom"
+                [tooltipDisabled]="!isLoading"
                 [disabled]="!canAccept()"
                 (click)="accept()">
-                <fa-icon [icon]="faSave" [fixedWidth]="true"></fa-icon>
-                {{ mode | titlecase }} Job
+                <fa-icon [icon]="isLoading ? faRotateRight : faSave"
+                    class="d-inline-block mr-1"
+                    [ngClass]="{ 'spin': isLoading }"
+                    [fixedWidth]="true"></fa-icon>
+                <span *ngIf="!isLoading">{{ mode | titlecase }} Job</span>
             </button>
         </div>
     </div>
