@@ -279,6 +279,7 @@ public class ConfigController : ApiController
 
         // Change the id and save it again
         cloned.Id = Guid.NewGuid().ToString();
+        cloned.Metadata.Name += " (Cloned)";
         await _configRepo.SaveAsync(cloned);
 
         _configService.Configs.Add(cloned);
