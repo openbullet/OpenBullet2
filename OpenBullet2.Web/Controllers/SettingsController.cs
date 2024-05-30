@@ -20,6 +20,7 @@ namespace OpenBullet2.Web.Controllers;
 public class SettingsController : ApiController
 {
     private readonly IMapper _mapper;
+    private readonly IConfiguration _configuration;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly RuriLibSettingsService _ruriLibSettingsService;
     private readonly ThemeService _themeService;
@@ -28,13 +29,34 @@ public class SettingsController : ApiController
     /// <summary></summary>
     public SettingsController(RuriLibSettingsService ruriLibSettingsService,
         OpenBulletSettingsService obSettingsService, IMapper mapper,
-        ThemeService themeService, ILogger<SettingsController> logger)
+        IConfiguration configuration, ThemeService themeService, ILogger<SettingsController> logger)
     {
         _ruriLibSettingsService = ruriLibSettingsService;
         _obSettingsService = obSettingsService;
         _mapper = mapper;
+        _configuration = configuration;
         _themeService = themeService;
         _logger = logger;
+    }
+    
+    /// <summary>
+    /// Get the system settings.
+    /// </summary>
+    [Guest]
+    [HttpGet("system")]
+    [MapToApiVersion("1.0")]
+    public ActionResult<SystemSettingsDto> GetSystemSettings()
+    {
+        var systemSettings = new SystemSettingsDto();
+        
+        var botLimit = _configuration.GetSection("Resources")["BotLimit"];
+        
+        if (botLimit is not null)
+        {
+            systemSettings.BotLimit = int.Parse(botLimit);
+        }
+        
+        return systemSettings;
     }
 
     /// <summary>

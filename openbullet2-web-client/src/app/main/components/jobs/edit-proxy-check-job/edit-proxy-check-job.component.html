@@ -98,6 +98,7 @@
                 (touched)="touched = true" ngDefaultControl
                 (validityChange)="onValidityChange($event)"
                 [(ngModel)]="options.bots" [min]="1"
+                [max]="botLimit"
                 placeholder="10" />
         </div>
     </div>

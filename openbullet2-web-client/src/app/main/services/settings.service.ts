@@ -7,6 +7,7 @@ import { OBSettingsDto, SafeOBSettingsDto } from '../dtos/settings/ob-settings.d
 import { CaptchaRLSettings, RLSettingsDto } from '../dtos/settings/rl-settings.dto';
 import { ThemeDto } from '../dtos/settings/theme.dto';
 import { CaptchaBalanceDto } from '../dtos/settings/captcha-balance.dto';
+import { SystemSettingsDto } from '../dtos/settings/system-settings.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,21 @@ import { CaptchaBalanceDto } from '../dtos/settings/captcha-balance.dto';
 export class SettingsService {
   // Cached
   private envSettings$: Observable<EnvironmentSettingsDto> | null = null;
+  private systemSettings$: Observable<SystemSettingsDto> | null = null;
 
   constructor(private http: HttpClient) { }
+
+  getSystemSettings() {
+    if (this.systemSettings$ !== null) {
+      return this.systemSettings$;
+    }
+
+    this.systemSettings$ = this.http
+      .get<SystemSettingsDto>(`${getBaseUrl()}/settings/system`)
+      .pipe(shareReplay(1));
+
+    return this.systemSettings$;
+  }
 
   getEnvironmentSettings() {
     if (this.envSettings$ !== null) {

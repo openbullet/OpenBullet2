@@ -278,8 +278,9 @@
                         <app-input-number key="bots" class="input-small"
                             ngDefaultControl placeholder="1"
                             [(ngModel)]="desiredBots" [min]="1"
+                            [max]="botLimit"
                         />
-                        <button class="button button-transparent ml-auto" 
+                        <button class="button button-transparent ml-auto"
                             (click)="changeBots(desiredBots)">
                             <fa-icon class="color-good" [icon]="faCheck" [fixedWidth]="true"></fa-icon>
                         </button>

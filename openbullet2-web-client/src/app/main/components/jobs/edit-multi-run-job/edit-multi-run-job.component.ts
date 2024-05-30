@@ -104,6 +104,7 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
   options: MultiRunJobOptionsDto | null = null;
   proxyGroups: ProxyGroupDto[] | null = null;
   wordlistTypes: string[] = [];
+  botLimit = 200;
 
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
@@ -147,8 +148,8 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
 
   constructor(
     activatedRoute: ActivatedRoute,
+    settingsService: SettingsService,
     private proxyGroupService: ProxyGroupService,
-    private settingsService: SettingsService,
     private jobService: JobService,
     private configService: ConfigService,
     private wordlistService: WordlistService,
@@ -175,9 +176,13 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
       this.proxyGroups = [this.defaultProxyGroup, ...proxyGroups];
     });
 
-    this.settingsService.getEnvironmentSettings().subscribe((settings) => {
+    settingsService.getEnvironmentSettings().subscribe((settings) => {
       this.wordlistTypes = settings.wordlistTypes.map((wt) => wt.name);
       this.dataPoolWordlistType = settings.wordlistTypes[0].name;
+    });
+
+    settingsService.getSystemSettings().subscribe((settings) => {
+      this.botLimit = settings.botLimit;
     });
   }
 

@@ -20,6 +20,7 @@ import { StartConditionType } from 'src/app/main/dtos/job/start-condition.dto';
 import { ProxyWorkingStatus } from 'src/app/main/enums/proxy-working-status';
 import { JobService } from 'src/app/main/services/job.service';
 import { ProxyCheckJobHubService } from 'src/app/main/services/proxy-check-job.hub.service';
+import { SettingsService } from 'src/app/main/services/settings.service';
 import { parseTimeSpan } from 'src/app/shared/utils/dates';
 import { TimeSpan } from 'src/app/shared/utils/timespan';
 
@@ -75,6 +76,7 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
 
   isChangingBots = false;
   desiredBots = 1;
+  botLimit = 200;
 
   startTime: moment.Moment | null = null;
   waitLeft: TimeSpan | null = null;
@@ -95,9 +97,14 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
     private jobService: JobService,
     private messageService: MessageService,
     private proxyCheckJobHubService: ProxyCheckJobHubService,
+    settingsService: SettingsService,
   ) {
     activatedRoute.url.subscribe((url) => {
       this.jobId = Number.parseInt(url[2].path);
+    });
+
+    settingsService.getSystemSettings().subscribe((settings) => {
+      this.botLimit = settings.botLimit;
     });
   }
 
@@ -332,6 +339,16 @@ export class ProxyCheckJobComponent implements OnInit, OnDestroy {
   }
 
   changeBots(bots: number) {
+    if (bots < 1 || bots > this.botLimit) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid bots',
+        detail: `Bots must be between 1 and ${this.botLimit}`,
+      });
+
+      return;
+    }
+
     this.jobService.changeBots(this.jobId!, bots).subscribe();
 
     const logMessage = `Requested to change bots to ${bots}`;

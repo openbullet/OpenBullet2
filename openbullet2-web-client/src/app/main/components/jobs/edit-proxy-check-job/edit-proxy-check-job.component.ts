@@ -57,6 +57,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
   startConditionMode: StartConditionMode = StartConditionMode.Absolute;
   startAfter: TimeSpan = new TimeSpan(0);
   startAt: Date = moment().add(1, 'days').toDate();
+  botLimit = 200;
 
   defaultProxyGroup = {
     id: -1,
@@ -71,8 +72,8 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
   constructor(
     activatedRoute: ActivatedRoute,
+    settingsService: SettingsService,
     private proxyGroupService: ProxyGroupService,
-    private settingsService: SettingsService,
     private jobService: JobService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -95,7 +96,7 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
     });
 
     if (this.userService.isAdmin()) {
-      this.settingsService.getSettings().subscribe((settings) => {
+      settingsService.getSettings().subscribe((settings) => {
         this.settings = settings;
         this.proxyCheckTargets = [
           {
@@ -109,6 +110,10 @@ export class EditProxyCheckJobComponent implements DeactivatableComponent {
 
     this.proxyGroupService.getAllProxyGroups().subscribe((proxyGroups) => {
       this.proxyGroups = [this.defaultProxyGroup, ...proxyGroups];
+    });
+
+    settingsService.getSystemSettings().subscribe((settings) => {
+      this.botLimit = settings.botLimit;
     });
   }
 

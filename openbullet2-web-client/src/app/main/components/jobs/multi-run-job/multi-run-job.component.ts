@@ -91,6 +91,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   };
 
   customStatuses: string[] = ['CUSTOM'];
+  botLimit = 200;
 
   status: JobStatus = JobStatus.IDLE;
   bots = 0;
@@ -191,6 +192,10 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
     settingsService.getEnvironmentSettings().subscribe((envSettings) => {
       this.customStatuses = envSettings.customStatuses.map((s) => s.name);
+    });
+
+    settingsService.getSystemSettings().subscribe((settings) => {
+      this.botLimit = settings.botLimit;
     });
 
     this.jobService.getCustomInputs(this.jobId!).subscribe((customInputs) => {
@@ -534,6 +539,16 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
   }
 
   changeBots(bots: number) {
+    if (bots < 1 || bots > this.botLimit) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid bots',
+        detail: `Bots must be between 1 and ${this.botLimit}`,
+      });
+
+      return;
+    }
+
     this.jobService.changeBots(this.jobId!, bots).subscribe();
 
     const logMessage = `Requested to change bots to ${bots}`;
