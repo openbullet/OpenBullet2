@@ -11,6 +11,7 @@ export class InputNumberComponent implements OnInit {
   @Input() key!: string;
   @Input() min: number | null = null;
   @Input() max: number | null = null;
+  @Input() step = 1.0;
   @Input() integer = true;
   @Input() class: string | null = null;
   // biome-ignore lint/suspicious/noExplicitAny: any

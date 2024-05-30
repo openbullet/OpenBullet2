@@ -6,8 +6,7 @@
         (ngModelChange)="setValue($event)"
         [ngModel]="setting.value"
         [integer]="false"
-        [min]="-3.40282347E+38"
-        [max]="3.40282347E+38"
+        [step]=".1"
         pTooltip="{{parameter?.description}}"
         placeholder="0" />
     <app-setting-input-variable
