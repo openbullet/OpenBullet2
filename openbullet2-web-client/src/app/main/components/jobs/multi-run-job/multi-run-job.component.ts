@@ -514,6 +514,7 @@ export class MultiRunJobComponent implements OnInit, OnDestroy {
 
   canAbort() {
     return (
+      this.status === JobStatus.STARTING ||
       this.status === JobStatus.RUNNING ||
       this.status === JobStatus.PAUSED ||
       this.status === JobStatus.PAUSING ||

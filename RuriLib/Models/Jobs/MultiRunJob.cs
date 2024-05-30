@@ -76,6 +76,7 @@ namespace RuriLib.Models.Jobs
         private HttpClient httpClient;
         private AsyncLocker asyncLocker;
         private Timer proxyReloadTimer;
+        private CancellationTokenSource startCts;
 
         // Instance properties and stats
         public List<Hit> Hits { get; private set; } = new List<Hit>();
@@ -452,78 +453,82 @@ namespace RuriLib.Models.Jobs
 
             if (Status is JobStatus.Starting or JobStatus.Running)
                 throw new Exception("Job already started");
-
+            
             try
             {
+                startCts = new CancellationTokenSource();
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                    cancellationToken, startCts.Token);
+                
                 Status = JobStatus.Starting;
                 OnStatusChanged?.Invoke(this, Status);
-
+                
                 asyncLocker = new();
-
+                
                 if (Config == null)
                     throw new NullReferenceException("The Config cannot be null");
-
+                
                 if (DataPool == null)
                     throw new NullReferenceException("The DataPool cannot be null");
-
+                
                 if (Skip >= DataPool.Size)
                     throw new ArgumentException(
                         "The skip must be smaller than the total number of lines in the data pool");
-
+                
                 if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings) &&
                     (ProxySources == null || ProxySources.Count == 0))
                     throw new NullReferenceException(
                         "The list of proxy sources cannot be null or empty when proxies are needed");
-
+                
                 if (!Config.Settings.DataSettings.AllowedWordlistTypes.Contains(DataPool.WordlistType))
                     throw new NotSupportedException("This config does not support the provided Wordlist Type");
-
+                
                 if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings))
                 {
                     // HACK: This should probably not be here, but it will work for now
                     ProxySources.ForEach(p => p.UserId = OwnerId);
-
+                    
                     var proxyPoolOptions =
                         new ProxyPoolOptions { AllowedTypes = Config.Settings.ProxySettings.AllowedProxyTypes };
                     proxyPool = new ProxyPool(ProxySources, proxyPoolOptions);
                     try
                     {
                         await asyncLocker
-                            .Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), cancellationToken)
+                            .Acquire(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync), linkedCts.Token)
                             .ConfigureAwait(false);
-                        await proxyPool.ReloadAllAsync(ShuffleProxies, cancellationToken).ConfigureAwait(false);
+                        await proxyPool.ReloadAllAsync(ShuffleProxies, linkedCts.Token).ConfigureAwait(false);
                     }
                     finally
                     {
                         asyncLocker.Release(typeof(ProxyPool), nameof(ProxyPool.ReloadAllAsync));
                     }
-
+                    
                     if (!proxyPool.Proxies.Any())
                     {
                         throw new Exception(
                             "No proxies that respect the allowed types are available, but the job is set to use proxies");
                     }
                 }
-
+                
                 Status = JobStatus.Waiting;
                 OnStatusChanged?.Invoke(this, Status);
-
+                
                 // Wait for the start condition to be verified
-                await base.Start(cancellationToken).ConfigureAwait(false);
-
+                await base.Start(linkedCts.Token).ConfigureAwait(false);
+                
                 Status = JobStatus.Starting;
                 OnStatusChanged?.Invoke(this, Status);
-
+                
                 // Execute the startup script
                 if (Config.Mode == ConfigMode.LoliCode || Config.Mode == ConfigMode.Stack)
                 {
                     Config.StartupCSharpScript =
                         Loli2CSharpTranspiler.Transpile(Config.StartupLoliCodeScript, Config.Settings);
                 }
-
+                
                 Script script = null;
                 MethodInfo method = null;
-
+                
                 // If not in DLL mode, build the C# script and compile it
                 if (Config.Mode == ConfigMode.DLL)
                 {
@@ -543,39 +548,40 @@ namespace RuriLib.Models.Jobs
                         case ConfigMode.Stack:
                             Config.CSharpScript = Stack2CSharpTranspiler.Transpile(Config.Stack, Config.Settings);
                             break;
-
+                        
                         case ConfigMode.LoliCode:
                             Config.CSharpScript =
                                 Loli2CSharpTranspiler.Transpile(Config.LoliCodeScript, Config.Settings);
                             break;
                     }
-
+                    
                     script = new ScriptBuilder().Build(Config.CSharpScript, Config.Settings.ScriptSettings, pluginRepo);
-                    script.Compile(cancellationToken);
+                    script.Compile(linkedCts.Token);
                 }
-
+                
                 Providers.Security.X509RevocationMode = Config.Mode == ConfigMode.DLL
                     ? System.Security.Cryptography.X509Certificates.X509RevocationMode.Online
                     : System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck;
-
+                
                 var wordlistType =
                     settings.Environment.WordlistTypes.FirstOrDefault(t => t.Name == DataPool.WordlistType);
                 globalVariables = new ExpandoObject();
                 legacyGlobalVariables = new();
                 legacyGlobalCookies = new();
-
+                
                 if (wordlistType == null)
                     throw new NullReferenceException(
                         $"The wordlist type with name {DataPool.WordlistType} was not found in the Environment");
-
+                
                 resources = new();
-
+                
                 // Resources will need to be disposed of
                 foreach (var opt in Config.Settings.DataSettings.Resources)
                 {
                     try
                     {
-                        resources[opt.Name] = opt switch {
+                        resources[opt.Name] = opt switch
+                        {
                             LinesFromFileResourceOptions x => new LinesFromFileResource(x),
                             RandomLinesFromFileResourceOptions x => new RandomLinesFromFileResource(x),
                             _ => throw new NotImplementedException()
@@ -586,7 +592,7 @@ namespace RuriLib.Models.Jobs
                         throw new Exception($"Could not create resource {opt.Name}");
                     }
                 }
-
+                
                 globalVariables.Resources = resources;
                 globalVariables.OwnerId = OwnerId;
                 httpClient = new();
@@ -594,26 +600,28 @@ namespace RuriLib.Models.Jobs
                 var pyengine = runtime.GetEngine("py");
                 var pco = (PythonCompilerOptions)pyengine.GetCompilerOptions();
                 pco.Module &= ~ModuleOptions.Optimized;
-
+                
                 if (!string.IsNullOrWhiteSpace(Config.StartupCSharpScript))
                 {
                     var startupScript = new ScriptBuilder().Build(Config.StartupCSharpScript,
                         Config.Settings.ScriptSettings, pluginRepo);
                     var startupBotData =
                         new BotData(Providers, Config.Settings, new BotLogger(),
-                            new DataLine(string.Empty, wordlistType), null, false) {
-                            CancellationToken = cancellationToken
+                            new DataLine(string.Empty, wordlistType), null, false)
+                        {
+                            CancellationToken = linkedCts.Token
                         };
                     var startupGlobals = new ScriptGlobals(startupBotData, globalVariables);
-                    await startupScript.RunAsync(startupGlobals, null, cancellationToken).ConfigureAwait(false);
+                    await startupScript.RunAsync(startupGlobals, null, linkedCts.Token).ConfigureAwait(false);
                 }
-
-                cancellationToken.ThrowIfCancellationRequested();
-
+                
+                linkedCts.Token.ThrowIfCancellationRequested();
+                
                 long index = 0;
                 var workItems = DataPool.DataList.Select(line =>
                 {
-                    var input = new MultiRunInput {
+                    var input = new MultiRunInput
+                    {
                         Job = this,
                         ProxyPool = proxyPool,
                         BotData = new BotData(Providers, Config.Settings, new BotLogger(),
@@ -630,22 +638,22 @@ namespace RuriLib.Models.Jobs
                         CustomInputsAnswers = CustomInputsAnswers,
                         Index = index++
                     };
-
+                    
                     input.BotData.Logger.Enabled = settings.RuriLibSettings.GeneralSettings.EnableBotLogging &&
                                                    Config.Mode != ConfigMode.DLL;
                     input.BotData.SetObject("httpClient", httpClient); // Add the default HTTP client
                     input.BotData.SetObject("ironPyEngine", pyengine); // Add the IronPython engine
                     input.BotData.AsyncLocker = asyncLocker;
-
+                    
                     return input;
                 });
-
-                cancellationToken.ThrowIfCancellationRequested();
-
+                
+                linkedCts.Token.ThrowIfCancellationRequested();
+                
                 parallelizer = ParallelizerFactory<MultiRunInput, CheckResult>
                     .Create(settings.RuriLibSettings.GeneralSettings.ParallelizerType, workItems,
                         workFunction, Bots, DataPool.Size, Skip, BotLimit);
-
+                
                 parallelizer.CPMLimit = Config.Settings.GeneralSettings.MaximumCPM;
                 parallelizer.NewResult += DataProcessed;
                 parallelizer.StatusChanged += StatusChanged;
@@ -653,15 +661,16 @@ namespace RuriLib.Models.Jobs
                 parallelizer.Error += PropagateError;
                 parallelizer.NewResult += PropagateResult;
                 parallelizer.Completed += PropagateCompleted;
-                parallelizer.Completed += (s, e) =>
-                {
-                    Skip += DataTested;
-                };
-
+                parallelizer.Completed += (s, e) => { Skip += DataTested; };
+                
                 ResetStats();
                 StartTimers();
                 logger?.LogInfo(Id, "All set, starting the execution");
                 await parallelizer.Start().ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                // ignored
             }
             catch (Exception ex)
             {
@@ -676,6 +685,9 @@ namespace RuriLib.Models.Jobs
                     Status = JobStatus.Idle;
                     OnStatusChanged?.Invoke(this, Status);
                 }
+                
+                startCts?.Dispose();
+                startCts = null;
             }
         }
 
@@ -708,6 +720,11 @@ namespace RuriLib.Models.Jobs
                 if (parallelizer is not null)
                 {
                     await parallelizer.Abort().ConfigureAwait(false);
+                }
+                
+                if (startCts is not null)
+                {
+                    await startCts.CancelAsync();
                 }
             }
             catch (Exception ex)
