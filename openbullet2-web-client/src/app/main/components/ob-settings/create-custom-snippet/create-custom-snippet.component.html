@@ -41,8 +41,8 @@
             </div>
             <div style="height: 300px; width: 100%">
                 <app-code-editor
-                    language="lolicode" ngDefaultControl 
-                    [(ngModel)]="body" />
+                    (codeChanged)="body = $event"
+                    language="lolicode" ngDefaultControl />
             </div>
         </div>
     </div>
