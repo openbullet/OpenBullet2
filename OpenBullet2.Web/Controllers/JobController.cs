@@ -41,11 +41,13 @@ public class JobController : ApiController
     private readonly ILogger<JobController> _logger;
     private readonly IMapper _mapper;
     private readonly IProxyGroupRepository _proxyGroupRepo;
+    private readonly IRecordRepository _recordRepo;
 
     /// <summary></summary>
     public JobController(IJobRepository jobRepo, ILogger<JobController> logger,
         IGuestRepository guestRepo, IMapper mapper, JobManagerService jobManager,
-        JobFactoryService jobFactory, IProxyGroupRepository proxyGroupRepo)
+        JobFactoryService jobFactory, IProxyGroupRepository proxyGroupRepo,
+        IRecordRepository recordRepo)
     {
         _jobRepo = jobRepo;
         _logger = logger;
@@ -54,6 +56,7 @@ public class JobController : ApiController
         _jobManager = jobManager;
         _jobFactory = jobFactory;
         _proxyGroupRepo = proxyGroupRepo;
+        _recordRepo = recordRepo;
     }
 
     /// <summary>
@@ -771,6 +774,30 @@ public class JobController : ApiController
                 Proxy = d.Proxy?.ToString(),
                 Info = d.ExecutionInfo
             }).ToList();
+    }
+    
+    /// <summary>
+    /// Get the record of a config and wordlist combination. If no record
+    /// exists, a fake one with checkpoint 0 will be returned.
+    /// </summary>
+    [HttpGet("multi-run/record")]
+    [MapToApiVersion("1.0")]
+    public async Task<ActionResult<RecordDto>> GetRecord(string configId, int wordlistId)
+    {
+        var record = await _recordRepo.GetAll()
+            .FirstOrDefaultAsync(r => r.ConfigId == configId && r.WordlistId == wordlistId);
+
+        if (record is null)
+        {
+            return new RecordDto
+            {
+                ConfigId = configId,
+                WordlistId = wordlistId,
+                Checkpoint = 0
+            };
+        }
+        
+        return _mapper.Map<RecordDto>(record);
     }
 
     private Job GetJob(int id)

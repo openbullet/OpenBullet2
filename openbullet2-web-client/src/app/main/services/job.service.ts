@@ -11,6 +11,7 @@ import { ProxyCheckJobOptionsDto } from '../dtos/job/proxy-check-job-options.dto
 import { ProxyCheckJobOverviewDto } from '../dtos/job/proxy-check-job-overview.dto';
 import { ProxyCheckJobDto } from '../dtos/job/proxy-check-job.dto';
 import { BotDetailsDto } from '../dtos/job/multi-run-job-bot-details.dto';
+import { RecordDto } from '../dtos/job/record.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -172,6 +173,15 @@ export class JobService {
     return this.http.get<BotDetailsDto[]>(`${getBaseUrl()}/job/multi-run/bot-details`, {
       params: {
         jobId,
+      },
+    });
+  }
+
+  getRecord(configId: string, wordlistId: number) {
+    return this.http.get<RecordDto>(`${getBaseUrl()}/job/multi-run/record`, {
+      params: {
+        configId,
+        wordlistId,
       },
     });
   }

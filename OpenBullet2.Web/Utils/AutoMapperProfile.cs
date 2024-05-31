@@ -118,6 +118,8 @@ internal class AutoMapperProfile : Profile
         CreateMap<PuppeteerSettings, PuppeteerSettings>();
         CreateMap<SeleniumSettings, SeleniumSettings>();
 
+        CreateMap<RecordEntity, RecordDto>();
+
         CreateMap<HitEntity, HitDto>();
         CreateMap<UpdateHitDto, HitEntity>();
 

@@ -460,6 +460,8 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.selectConfigModalVisible = false;
     this.touched = true;
     this.fieldsValidity['configId'] = true;
+
+    this.tryApplyRecord();
   }
 
   selectWordlist(wordlist: WordlistDto) {
@@ -472,6 +474,28 @@ export class EditMultiRunJobComponent implements DeactivatableComponent {
     this.dataPoolWordlistId = wordlist.id;
     this.selectWordlistModalVisible = false;
     this.touched = true;
+
+    this.tryApplyRecord();
+  }
+
+  tryApplyRecord() {
+    // If the data pool is a wordlist data pool and there is a config selected,
+    // fetch the record and set the skip to the checkpoint
+    if (this.dataPoolType === DataPoolType.Wordlist && this.selectedWordlist !== null && this.selectedConfigInfo !== null) {
+      this.jobService.getRecord(this.selectedConfigInfo.id, this.selectedWordlist.id).subscribe((record) => {
+        // If not 0 and less than the total lines in the wordlist, set the checkpoint and
+        // notify the user. This is because the backend will return 0 if there is no record
+        if (record.checkpoint !== 0 && record.checkpoint < this.selectedWordlist!.lineCount) {
+          this.options!.skip = record.checkpoint;
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Checkpoint applied',
+            key: 'br',
+            detail: `This config/wordlist pair has been partially checked before, up to line ${record.checkpoint}. The skip has been set to this value`,
+          });
+        }
+      });
+    }
   }
 
   jobProxyModeDisplayFunction(mode: JobProxyMode) {
