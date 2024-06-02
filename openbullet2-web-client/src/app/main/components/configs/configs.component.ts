@@ -72,7 +72,7 @@ export class ConfigsComponent implements OnInit {
         },
         {
           id: 'reload-from-disk',
-          label: 'Reload from disk',
+          label: 'Reload all',
           icon: 'pi pi-fw pi-refresh',
           command: (e) => this.refreshConfigs(true),
         },
