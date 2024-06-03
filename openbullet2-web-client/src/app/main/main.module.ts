@@ -114,6 +114,7 @@ import { AddWordlistComponent } from './components/wordlists/add-wordlist/add-wo
 import { UpdateWordlistInfoComponent } from './components/wordlists/update-wordlist-info/update-wordlist-info.component';
 import { UploadWordlistComponent } from './components/wordlists/upload-wordlist/upload-wordlist.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
+import { ErrorDetailsComponent } from './components/error-details/error-details.component';
 import { MainRoutingModule } from './main-routing.module';
 import { MainComponent } from './main.component';
 import { CustomInputsComponent } from './components/jobs/multi-run-job/custom-inputs/custom-inputs.component';
@@ -157,6 +158,7 @@ import { BaseChartDirective } from 'ng2-charts';
     HitsComponent,
     UpdateHitComponent,
     WordlistsComponent,
+    ErrorDetailsComponent,
     UpdateWordlistInfoComponent,
     UploadWordlistComponent,
     AddWordlistComponent,

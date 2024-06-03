@@ -30,6 +30,7 @@ import { SharingComponent } from './components/sharing/sharing.component';
 import { WordlistsComponent } from './components/wordlists/wordlists.component';
 import { MainComponent } from './main.component';
 import { updateCSharpScript } from './utils/config-conversion';
+import { ErrorDetailsComponent } from './components/error-details/error-details.component';
 
 const routes: Routes = [
   // Main component layout
@@ -191,6 +192,11 @@ const routes: Routes = [
         component: InfoComponent,
         path: 'info',
       },
+      {
+        component: ErrorDetailsComponent,
+        path: 'error-details',
+        canActivate: [() => inject(AdminGuard).canActivate()],
+      },
     ],
   },
   {
@@ -204,4 +210,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MainRoutingModule {}
+export class MainRoutingModule { }

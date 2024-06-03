@@ -1,0 +1,9 @@
+@import "../../../../styles/variables.scss";
+
+.stack-trace .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string {
+    background: none !important;
+}
+
+.reporting-instructions {
+    border: 1px solid var(--fg-bad);
+}

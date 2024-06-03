@@ -30,7 +30,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var userDataFolder = builder.Configuration.GetSection("Settings")
+Globals.UserDataFolder = builder.Configuration.GetSection("Settings")
     .GetValue<string>("UserDataFolder") ?? "UserData";
 
 // Configuration tweaks
@@ -131,7 +131,7 @@ builder.Services.AddScoped<IGuestRepository, DbGuestRepository>();
 builder.Services.AddScoped<IRecordRepository, DbRecordRepository>();
 builder.Services.AddScoped<IWordlistRepository>(service =>
     new HybridWordlistRepository(service.GetService<ApplicationDbContext>(),
-        $"{userDataFolder}/Wordlists"));
+        $"{Globals.UserDataFolder}/Wordlists"));
 
 builder.Services.AddScoped<DataPoolFactoryService>();
 builder.Services.AddScoped<ProxySourceFactoryService>();
@@ -144,30 +144,30 @@ builder.Services.AddSingleton<IUpdateService, UpdateService>();
 builder.Services.AddSingleton<PerformanceMonitorService>();
 builder.Services.AddSingleton<IConfigRepository>(service =>
     new DiskConfigRepository(service.GetService<RuriLibSettingsService>(),
-        $"{userDataFolder}/Configs"));
+        $"{Globals.UserDataFolder}/Configs"));
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton(service =>
     new ConfigSharingService(service.GetRequiredService<IConfigRepository>(),
         service.GetRequiredService<ILogger<ConfigSharingService>>(),
-        userDataFolder));
+        Globals.UserDataFolder));
 builder.Services.AddSingleton<ProxyReloadService>();
 builder.Services.AddSingleton<JobFactoryService>();
 builder.Services.AddSingleton<ProxyCheckOutputFactory>();
 builder.Services.AddSingleton<JobManagerService>();
 builder.Services.AddSingleton(service =>
     new JobMonitorService(service.GetService<JobManagerService>(),
-        $"{userDataFolder}/triggeredActions.json", false));
+        $"{Globals.UserDataFolder}/triggeredActions.json", false));
 builder.Services.AddSingleton<HitStorageService>();
-builder.Services.AddSingleton(_ => new RuriLibSettingsService(userDataFolder));
-builder.Services.AddSingleton(_ => new OpenBulletSettingsService(userDataFolder));
-builder.Services.AddSingleton(_ => new PluginRepository($"{userDataFolder}/Plugins"));
-builder.Services.AddSingleton(_ => new ThemeService($"{userDataFolder}/Themes"));
+builder.Services.AddSingleton(_ => new RuriLibSettingsService(Globals.UserDataFolder));
+builder.Services.AddSingleton(_ => new OpenBulletSettingsService(Globals.UserDataFolder));
+builder.Services.AddSingleton(_ => new PluginRepository($"{Globals.UserDataFolder}/Plugins"));
+builder.Services.AddSingleton(_ => new ThemeService($"{Globals.UserDataFolder}/Themes"));
 builder.Services.AddSingleton<IRandomUAProvider>(
     _ => new IntoliRandomUAProvider("user-agents.json"));
 builder.Services.AddSingleton<IRNGProvider, DefaultRNGProvider>();
 builder.Services.AddSingleton<IJobLogger>(service =>
     new FileJobLogger(service.GetService<RuriLibSettingsService>(),
-        $"{userDataFolder}/Logs/Jobs"));
+        $"{Globals.UserDataFolder}/Logs/Jobs"));
 builder.Services.AddSingleton<ConfigDebuggerService>();
 builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();

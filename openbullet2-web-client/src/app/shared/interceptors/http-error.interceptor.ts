@@ -1,6 +1,5 @@
 import {
   HttpErrorResponse,
-  HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
@@ -9,8 +8,9 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, from, lastValueFrom } from 'rxjs';
 import { UserService } from 'src/app/main/services/user.service';
+import { ApiError } from '../models/api-error';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -22,7 +22,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     private userService: UserService,
   ) { }
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<any> {
+    return from(this.handle(request, next));
+  }
+
+  async handle(request: HttpRequest<unknown>, next: HttpHandler) {
     // Inject the jwt if present
     const jwt = this.userService.getJwt();
     let nextRequest = request;
@@ -35,41 +40,66 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       });
     }
 
-    return next.handle(nextRequest).pipe(
-      // biome-ignore lint/suspicious/noExplicitAny: any
-      tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          const headerValue = event.headers.get('X-Application-Warning');
-          if (headerValue) {
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Warning',
-              detail: headerValue,
-            });
+    try {
+      const response = await lastValueFrom(next.handle(nextRequest));
+
+      if (response instanceof HttpResponse) {
+        const headerValue = response.headers.get('X-Application-Warning');
+        if (headerValue) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warning',
+            detail: headerValue,
+          });
+        }
+      }
+
+      return response;
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        let showMessage = true;
+
+        let apiError: ApiError = error.error;
+
+        // If error is a blob with type application/json, try to parse it
+        if (apiError instanceof Blob && error.headers.get('content-type')?.includes('application/json')) {
+          try {
+            apiError = await apiError.text().then((text) => JSON.parse(text));
+          } catch (e) {
+            console.error('Error parsing API error', e);
           }
         }
-      }),
-      catchError((error) => {
-        if (error instanceof HttpErrorResponse) {
-          let showMessage = true;
 
-          // If unauthorized, clear any invalid jwt and redirect to login page
-          if (this.requireLoginErrorCodes.includes(error.error.errorCode)) {
-            this.userService.resetJwt();
-            this.router.navigate(['/login']);
-            showMessage = false;
-          }
+        // If unauthorized, clear any invalid jwt and redirect to login page
+        if (this.requireLoginErrorCodes.includes(apiError.errorCode)) {
+          this.userService.resetJwt();
+          this.router.navigate(['/login']);
+          showMessage = false;
+        }
 
-          let summary = 'Request Error';
-          let detail = error.error?.message ?? 'See details in the browser console';
+        let summary = 'Request Error';
+        let detail = apiError?.message ?? 'See details in the browser console';
 
-          // Status 0 or -1 means connection refused
-          if (error.status <= 0) {
-            summary = 'Network Error';
-            detail = 'Could not connect to the server';
-          }
+        // Status 0 or -1 means connection refused
+        if (error.status <= 0) {
+          summary = 'Network Error';
+          detail = 'Could not connect to the server';
+        }
 
-          if (showMessage) {
+        if (showMessage) {
+          if (error.status >= 500 && error.status < 600) {
+            summary = 'Server Error';
+            detail = 'An error occurred on the server';
+
+            this.messageService.add({
+              severity: 'error',
+              summary,
+              detail,
+              key: 'err500',
+              life: 300 * 1000,
+              data: error,
+            });
+          } else {
             this.messageService.add({
               severity: 'error',
               summary,
@@ -77,9 +107,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             });
           }
         }
+      }
 
-        return throwError(() => error);
-      }),
-    );
+      throw error;
+    }
   }
 }
