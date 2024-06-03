@@ -206,41 +206,81 @@ namespace Updater
             }
             
             AnsiConsole.MarkupLine("[yellow]Cleaning up the OB2 folder...[/]");
+            
+            var whitelist = new[]
+            {
+                "appsettings.json",
+                "Updater.exe",
+                "Updater.dll",
+                "UserData"
+            };
 
-            // Delete all files except Updater.exe and Updater.dll
-            AnsiConsole.Status()
-                .Start("[yellow]Deleting...[/]", ctx =>
-                {
-                    foreach (var file in Directory.EnumerateFiles(Directory.GetCurrentDirectory()))
+            // The build-files.txt file contains a list of all the files in the current build.
+            // We will delete all those files and folders and clean up the directory.
+            if (File.Exists("build-files.txt"))
+            {
+                var entries = await File.ReadAllLinesAsync("build-files.txt");
+                
+                AnsiConsole.Status()
+                    .Start("[yellow]Deleting...[/]", ctx =>
                     {
-                        if (file.EndsWith("Updater.exe") || file.EndsWith("Updater.dll"))
+                        foreach (var entry in entries.Where(e => !string.IsNullOrWhiteSpace(e)))
                         {
-                            continue;
-                        }
-                        
-                        ctx.Status($"Deleting {file}...");
+                            ctx.Status($"Deleting {entry}...");
                     
-                        File.Delete(file);
-                    }
-                });
-            
-            // Delete all directories except UserData
-            AnsiConsole.Status()
-                .Start("[yellow]Deleting...[/]", ctx =>
-                {
-                    foreach (var dir in Directory.EnumerateDirectories(Directory.GetCurrentDirectory()))
+                            // If the entry is whitelisted, disregard it
+                            if (whitelist.Contains(entry))
+                            {
+                                continue;
+                            }
+                            
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), entry);
+                            
+                            if (File.Exists(path))
+                            {
+                                File.Delete(path);
+                            }
+                            else if (Directory.Exists(path))
+                            {
+                                Directory.Delete(path, true);
+                            }
+                        }
+                    });
+                    
+            }
+            // If the file does not exist, we will delete everything except the whitelisted files and folders.
+            else
+            {
+                AnsiConsole.MarkupLine(
+                    "[yellow]build-files.txt not found, cleaning up everything not in the whitelist...[/]");
+                
+                AnsiConsole.Status()
+                    .Start("[yellow]Deleting...[/]", ctx =>
                     {
-                        if (dir.EndsWith("UserData"))
+                        foreach (var entry in Directory.EnumerateFileSystemEntries(Directory.GetCurrentDirectory()))
                         {
-                            continue;
-                        }
+                            var isDirectory = (File.GetAttributes(entry) & FileAttributes.Directory) == FileAttributes.Directory;
                         
-                        ctx.Status($"Deleting {dir}...");
+                            // If the entry is whitelisted, disregard it
+                            if (whitelist.Contains(Path.GetFileName(entry)))
+                            {
+                                continue;
+                            }
+                        
+                            ctx.Status($"Deleting {entry}...");
                     
-                        Directory.Delete(dir, true);
-                    }
-                });
-            
+                            if (isDirectory)
+                            {
+                                Directory.Delete(entry, true);
+                            }
+                            else
+                            {
+                                File.Delete(entry);
+                            }
+                        }
+                    });
+            }
+
             AnsiConsole.MarkupLine("[yellow]Extracting the archive...[/]");
             
             await AnsiConsole.Status()
@@ -251,6 +291,12 @@ namespace Updater
                     {
                         // Do not extract Updater.exe or Updater.dll
                         if (entry.FullName.EndsWith("Updater.exe") || entry.FullName.EndsWith("Updater.dll"))
+                        {
+                            continue;
+                        }
+                        
+                        // Do not extract appsettings.json
+                        if (entry.FullName.EndsWith("appsettings.json"))
                         {
                             continue;
                         }

@@ -47,6 +47,9 @@ COPY --from=backend /build .
 COPY --from=frontend /build ./wwwroot
 COPY OpenBullet2.Web/dbip-country-lite.mmdb .
 
+# Create a text file with all the files and folders in the current directory, not recursive, to be used by the updater
+RUN ls -1 > build-files.txt
+
 EXPOSE 5000
 
 CMD ["dotnet", "./OpenBullet2.Web.dll", "--urls=http://*:5000"]
