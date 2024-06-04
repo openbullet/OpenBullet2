@@ -11,13 +11,13 @@ RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build/web
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x64 -o /updater/web/win-x64
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x86 -o /updater/web/win-x86
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-arm64 -o /updater/web/win-arm64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r osx-x64 -o /updater/web/osx-x64
-RUN dotnet publish OpenBullet2.Web.Updater -c Release -r osx-arm64 -o /updater/web/osx-arm64
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r linux-x64 -o /updater/web/linux-x64
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r linux-arm64 -o /updater/web/linux-arm64
 RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-x64 -o /updater/native/win-x64
 RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-x86 -o /updater/native/win-x86
 RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-arm64 -o /updater/native/win-arm64
+
+# No osx because it needs codesign and it costs money...
 
 WORKDIR /build/web
 

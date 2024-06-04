@@ -39,19 +39,22 @@ public static class RequirementsChecker
                 if (!result.StandardOutput.Split('\n').Any(line => line.StartsWith("Microsoft.WindowsDesktop.App 8.")))
                 {
                     Utils.ExitWithError("The .NET Windows Desktop Runtime version 8.0 or higher is required to run OpenBullet 2. " +
-                                        "Please install it and relaunch the Updater");
+                                        "Please install it from https://dotnet.microsoft.com/en-us/download/dotnet/8.0 " +
+                                        "and relaunch the Updater");
                 }
             }
             else
             {
-                Utils.ExitWithError("The .NET Windows Desktop Runtime version 8.0 or higher was not found on your system. " +
-                                    "Please install it and relaunch the Updater");
+                Utils.ExitWithError("The .NET Windows Desktop Runtime version 8.0 or higher was not found on your system, " +
+                                    "and is required to run OpenBullet 2. Please install it from " +
+                                    "https://dotnet.microsoft.com/en-us/download/dotnet/8.0 and relaunch the Updater.");
             }
         }
         catch (Exception)
         {
-            Utils.ExitWithError("The .NET Windows Desktop Runtime version 8.0 or higher was not found on your system. " +
-                                "Please install it and relaunch the Updater");
+            Utils.ExitWithError("The .NET Windows Desktop Runtime version 8.0 or higher was not found on your system, " +
+                                "and is required to run OpenBullet 2. Please install it from " +
+                                "https://dotnet.microsoft.com/en-us/download/dotnet/8.0 and relaunch the Updater.");
         }
     }
 }

@@ -24,6 +24,11 @@
     </ItemGroup>
     
     <ItemGroup>
+        <!-- This is required to make the app run on Linux without libicu -->
+        <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <!-- Only trim assemblies that support trimming! -->
         <TrimmableAssembly Include="System.Runtime.CompilerServices.Unsafe" />
         <TrimmableAssembly Include="System.Memory" />

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -12,8 +13,6 @@ public static class FileSystemHelper
     private static readonly string[] _whitelist = new[]
     {
         "appsettings.json",
-        "OpenBullet.Web.Updater.exe",
-        "OpenBullet.Web.Updater.dll",
         "UserData"
     };
     
@@ -60,6 +59,12 @@ public static class FileSystemHelper
                             continue;
                         }
                         
+                        // If it's the current executable, disregard it
+                        if (entry == Process.GetCurrentProcess().MainModule?.FileName)
+                        {
+                            continue;
+                        }
+                        
                         var path = Path.Combine(Directory.GetCurrentDirectory(), entry);
                         
                         if (File.Exists(path))
@@ -89,6 +94,12 @@ public static class FileSystemHelper
                     
                         // If the entry is whitelisted, disregard it
                         if (_whitelist.Contains(Path.GetFileName(entry)))
+                        {
+                            continue;
+                        }
+                        
+                        // If it's the current executable, disregard it
+                        if (entry == Process.GetCurrentProcess().MainModule?.FileName)
                         {
                             continue;
                         }

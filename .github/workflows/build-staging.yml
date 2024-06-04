@@ -60,8 +60,6 @@ jobs:
         mv .updater/web/win-arm64/OpenBullet2.Web.Updater.exe .release/ob2-web-updater-win-arm64.exe
         mv .updater/web/linux-x64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-x64
         mv .updater/web/linux-arm64/OpenBullet2.Web.Updater .release/ob2-web-updater-linux-arm64
-        mv .updater/web/osx-x64/OpenBullet2.Web.Updater .release/ob2-web-updater-osx-x64
-        mv .updater/web/osx-arm64/OpenBullet2.Web.Updater .release/ob2-web-updater-osx-arm64
         mv .updater/native/win-x64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x64.exe
         mv .updater/native/win-x86/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x86.exe
         mv .updater/native/win-arm64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-arm64.exe
