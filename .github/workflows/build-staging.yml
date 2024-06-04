@@ -50,15 +50,21 @@ jobs:
         docker cp openbullet2-extract:/app/updater .updater
         docker rm openbullet2-extract
         mkdir .release
-        zip -r .release/OpenBullet2.Web.zip .web/*
-        zip -r .release/OpenBullet2.Native.zip .native/*
-        mv .updater/win-x64/Updater.exe .release/ob2-updater-win-x64.exe
-        mv .updater/win-x86/Updater.exe .release/ob2-updater-win-x86.exe
-        mv .updater/win-arm64/Updater.exe .release/ob2-updater-win-arm64.exe
-        mv .updater/linux-x64/Updater .release/ob2-updater-linux-x64
-        mv .updater/linux-arm64/Updater .release/ob2-updater-linux-arm64
-        mv .updater/osx-x64/Updater .release/ob2-updater-osx-x64
-        mv .updater/osx-arm64/Updater .release/ob2-updater-osx-arm64
+        cd .web
+        zip -r ../.release/OpenBullet2.Web.zip ./*
+        cd ../.native
+        zip -r ../.release/OpenBullet2.Native.zip ./*
+        cd ..
+        mv .updater/web/win-x64/Updater.exe .release/ob2-web-updater-win-x64.exe
+        mv .updater/web/win-x86/Updater.exe .release/ob2-web-updater-win-x86.exe
+        mv .updater/web/win-arm64/Updater.exe .release/ob2-web-updater-win-arm64.exe
+        mv .updater/web/linux-x64/Updater .release/ob2-web-updater-linux-x64
+        mv .updater/web/linux-arm64/Updater .release/ob2-web-updater-linux-arm64
+        mv .updater/web/osx-x64/Updater .release/ob2-web-updater-osx-x64
+        mv .updater/web/osx-arm64/Updater .release/ob2-web-updater-osx-arm64
+        mv .updater/native/win-x64/Updater.Native.exe .release/ob2-native-updater-win-x64.exe
+        mv .updater/native/win-x86/Updater.Native.exe .release/ob2-native-updater-win-x86.exe
+        mv .updater/native/win-arm64/Updater.Native.exe .release/ob2-native-updater-win-arm64.exe
 
     # Upload the zip to the release
     - name: Upload OpenBullet2.Web
