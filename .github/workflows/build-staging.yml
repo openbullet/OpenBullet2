@@ -50,8 +50,8 @@ jobs:
         docker cp openbullet2-extract:/app/updater ./.updater
         docker rm openbullet2-extract
         mkdir .release
-        zip -r .release/OpenBullet2.Web.zip ./web/*
-        zip -r .release/OpenBullet2.Native.zip ./native/*
+        zip -r .release/OpenBullet2.Web.zip ./.web/*
+        zip -r .release/OpenBullet2.Native.zip ./.native/*
         mv ../.updater/win-x64/Updater.exe ../.release/ob2-updater-win-x64.exe
         mv ../.updater/win-x86/Updater.exe ../.release/ob2-updater-win-x86.exe
         mv ../.updater/win-arm64/Updater.exe ../.release/ob2-updater-win-arm64.exe
