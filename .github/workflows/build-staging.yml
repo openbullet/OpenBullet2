@@ -49,12 +49,9 @@ jobs:
         docker cp openbullet2-extract:/app/native ./.native
         docker cp openbullet2-extract:/app/updater ./.updater
         docker rm openbullet2-extract
-        cd .web
-        zip -r OpenBullet2.Web.zip ./*
-        mv OpenBullet2.Web.zip ../.release/OpenBullet2.Web.zip
-        cd ../.native
-        zip -r OpenBullet2.Native.zip ./*
-        mv OpenBullet2.Native.zip ../.release/OpenBullet2.Native.zip
+        mkdir .release
+        zip -r .release/OpenBullet2.Web.zip ./web/*
+        zip -r .release/OpenBullet2.Native.zip ./native/*
         mv ../.updater/win-x64/Updater.exe ../.release/ob2-updater-win-x64.exe
         mv ../.updater/win-x86/Updater.exe ../.release/ob2-updater-win-x86.exe
         mv ../.updater/win-arm64/Updater.exe ../.release/ob2-updater-win-arm64.exe
