@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using OpenBullet2.Core.Models.Proxies;
 
 namespace OpenBullet2.Native
 {
@@ -104,6 +105,7 @@ namespace OpenBullet2.Native
             services.AddSingleton<UpdateService>();
             services.AddSingleton<ConfigService>();
             services.AddSingleton<ProxyReloadService>();
+            services.AddSingleton<ProxyCheckOutputFactory>();
             services.AddSingleton<JobFactoryService>();
             services.AddSingleton<JobManagerService>();
             services.AddSingleton<JobMonitorService>();

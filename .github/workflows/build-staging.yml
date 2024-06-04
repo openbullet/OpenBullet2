@@ -39,23 +39,37 @@ jobs:
 
     # Build using docker
     - name: Build using docker
-      run: docker build -t openbullet2 -f OpenBullet2.Web/Dockerfile .
+      run: docker build -t openbullet2-build -f Dockerfile.build .
 
     # Extract files from the /app folder of the image into a zip
     - name: Extract files from the image
       run: |
-        docker run --name openbullet2-extract openbullet2 echo "Extracting files"
-        docker cp openbullet2-extract:/app/ ./.publish
+        docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
+        docker cp openbullet2-extract:/app/web ./.web
+        docker cp openbullet2-extract:/app/native ./.native
+        docker cp openbullet2-extract:/app/updater ./.updater
         docker rm openbullet2-extract
-        cd .publish
+        cd .web
         zip -r OpenBullet2.Web.zip ./*
+        mv OpenBullet2.Web.zip ../.release/OpenBullet2.Web.zip
+        cd ../.native
+        zip -r OpenBullet2.Native.zip ./*
+        mv OpenBullet2.Native.zip ../.release/OpenBullet2.Native.zip
+        mv ../.updater/win-x64/Updater.exe ../.release/ob2-updater-win-x64.exe
+        mv ../.updater/win-x86/Updater.exe ../.release/ob2-updater-win-x86.exe
+        mv ../.updater/win-arm64/Updater.exe ../.release/ob2-updater-win-arm64.exe
+        mv ../.updater/linux-x64/Updater ../.release/ob2-updater-linux-x64
+        mv ../.updater/linux-arm64/Updater ../.release/ob2-updater-linux-arm64
+        mv ../.updater/osx-x64/Updater ../.release/ob2-updater-osx-x64
+        mv ../.updater/osx-arm64/Updater ../.release/ob2-updater-osx-arm64
 
     # Upload the zip to the release
     - name: Upload OpenBullet2.Web
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: '.publish/OpenBullet2.Web.zip'
+        file: '.release/*'
+        file_glob: true
         tag: ${{ env.VERSION }}
         overwrite: true
         prerelease: true
