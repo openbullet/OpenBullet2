@@ -45,20 +45,20 @@ jobs:
     - name: Extract files from the image
       run: |
         docker run --name openbullet2-extract openbullet2-build echo "Extracting files"
-        docker cp openbullet2-extract:/app/web ./.web
-        docker cp openbullet2-extract:/app/native ./.native
-        docker cp openbullet2-extract:/app/updater ./.updater
+        docker cp openbullet2-extract:/app/web .web
+        docker cp openbullet2-extract:/app/native .native
+        docker cp openbullet2-extract:/app/updater .updater
         docker rm openbullet2-extract
         mkdir .release
-        zip -r .release/OpenBullet2.Web.zip ./.web/*
-        zip -r .release/OpenBullet2.Native.zip ./.native/*
-        mv ../.updater/win-x64/Updater.exe ../.release/ob2-updater-win-x64.exe
-        mv ../.updater/win-x86/Updater.exe ../.release/ob2-updater-win-x86.exe
-        mv ../.updater/win-arm64/Updater.exe ../.release/ob2-updater-win-arm64.exe
-        mv ../.updater/linux-x64/Updater ../.release/ob2-updater-linux-x64
-        mv ../.updater/linux-arm64/Updater ../.release/ob2-updater-linux-arm64
-        mv ../.updater/osx-x64/Updater ../.release/ob2-updater-osx-x64
-        mv ../.updater/osx-arm64/Updater ../.release/ob2-updater-osx-arm64
+        zip -r .release/OpenBullet2.Web.zip .web/*
+        zip -r .release/OpenBullet2.Native.zip .native/*
+        mv .updater/win-x64/Updater.exe .release/ob2-updater-win-x64.exe
+        mv .updater/win-x86/Updater.exe .release/ob2-updater-win-x86.exe
+        mv .updater/win-arm64/Updater.exe .release/ob2-updater-win-arm64.exe
+        mv .updater/linux-x64/Updater .release/ob2-updater-linux-x64
+        mv .updater/linux-arm64/Updater .release/ob2-updater-linux-arm64
+        mv .updater/osx-x64/Updater .release/ob2-updater-osx-x64
+        mv .updater/osx-arm64/Updater .release/ob2-updater-osx-arm64
 
     # Upload the zip to the release
     - name: Upload OpenBullet2.Web
