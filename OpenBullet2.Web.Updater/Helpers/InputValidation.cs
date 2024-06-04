@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Updater.Native.Helpers;
+namespace OpenBullet2.Web.Updater.Helpers;
 
 public static partial class InputValidation
 {

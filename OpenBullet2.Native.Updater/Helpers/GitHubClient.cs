@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Spectre.Console;
-using Updater.Native.Models;
+using OpenBullet2.Native.Updater.Models;
 
-namespace Updater.Native.Helpers;
+namespace OpenBullet2.Native.Updater.Helpers;
 
 public class GitHubClient : IDisposable
 {

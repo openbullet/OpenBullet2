@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
 
-namespace Updater.Helpers;
+namespace OpenBullet2.Web.Updater.Helpers;
 
 public static class RequirementsChecker
 {

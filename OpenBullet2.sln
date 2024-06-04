@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Proxies.Tests", "Ru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Http.Tests", "RuriLib.Http.Tests\RuriLib.Http.Tests.csproj", "{84E251A1-9F3E-45F7-AD66-AEB254093572}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Web.Updater", "OpenBullet2.Web.Updater\OpenBullet2.Web.Updater.csproj", "{D82CA559-25C3-484F-8E18-22F0B2EC0322}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuriLib.Parallelization", "RuriLib.Parallelization\RuriLib.Parallelization.csproj", "{C341976A-B669-40E8-A468-67518F381A0B}"
 EndProject
@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Core", "OpenBul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Native", "OpenBullet2.Native\OpenBullet2.Native.csproj", "{AF4F29CC-3C09-45FE-9B25-2001694EDF34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater.Native", "Updater.Native\Updater.Native.csproj", "{9D1622CE-8945-40D3-9C09-DA3C07F91F7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenBullet2.Native.Updater", "OpenBullet2.Native.Updater\OpenBullet2.Native.Updater.csproj", "{9D1622CE-8945-40D3-9C09-DA3C07F91F7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBullet2.Web", "OpenBullet2.Web\OpenBullet2.Web.csproj", "{DB95BE95-065B-4C2C-A66B-EC9F9A004C10}"
 EndProject

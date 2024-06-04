@@ -5,10 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Spectre.Console;
 
-namespace Updater.Helpers;
+namespace OpenBullet2.Native.Updater.Helpers;
 
 public static class FileSystemHelper
 {
+    private static readonly string[] _whitelist = new[]
+    {
+        "appsettings.json",
+        "OpenBullet2.Native.Updater.exe",
+        "OpenBullet2.Native.Updater.dll",
+        "UserData"
+    };
+    
     public static async Task<Version?> GetLocalVersionAsync()
     {
         return await AnsiConsole.Status()
@@ -33,13 +41,7 @@ public static class FileSystemHelper
     {
         AnsiConsole.MarkupLine("[yellow]Cleaning up the OB2 folder...[/]");
             
-        var whitelist = new[]
-        {
-            "appsettings.json",
-            "Updater.exe",
-            "Updater.dll",
-            "UserData"
-        };
+        
 
         // The build-files.txt file contains a list of all the files in the current build.
         // We will delete all those files and folders and clean up the directory.
@@ -55,7 +57,7 @@ public static class FileSystemHelper
                         ctx.Status($"Deleting {entry}...");
                 
                         // If the entry is whitelisted, disregard it
-                        if (whitelist.Contains(entry))
+                        if (_whitelist.Contains(entry))
                         {
                             continue;
                         }
@@ -88,7 +90,7 @@ public static class FileSystemHelper
                         var isDirectory = (File.GetAttributes(entry) & FileAttributes.Directory) == FileAttributes.Directory;
                     
                         // If the entry is whitelisted, disregard it
-                        if (whitelist.Contains(Path.GetFileName(entry)))
+                        if (_whitelist.Contains(Path.GetFileName(entry)))
                         {
                             continue;
                         }
@@ -118,19 +120,13 @@ public static class FileSystemHelper
                     using var archive = new ZipArchive(stream);
                     foreach (var entry in archive.Entries)
                     {
-                        // Do not extract Updater.exe or Updater.dll
-                        if (entry.FullName.EndsWith("Updater.exe") || entry.FullName.EndsWith("Updater.dll"))
-                        {
-                            continue;
-                        }
-                        
-                        // Do not extract appsettings.json
-                        if (entry.FullName.EndsWith("appsettings.json"))
+                        // If the entry is whitelisted, disregard it
+                        if (_whitelist.Contains(Path.GetFileName(entry.FullName)))
                         {
                             continue;
                         }
                 
-                        // Do not extract UserData folder
+                        // Do not extract anything in the UserData folder (important)
                         if (entry.FullName.StartsWith("UserData"))
                         {
                             continue;

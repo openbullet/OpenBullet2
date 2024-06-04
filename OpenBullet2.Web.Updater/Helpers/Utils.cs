@@ -1,7 +1,7 @@
 using System;
 using Spectre.Console;
 
-namespace Updater.Native.Helpers;
+namespace OpenBullet2.Web.Updater.Helpers;
 
 public static class Utils
 {

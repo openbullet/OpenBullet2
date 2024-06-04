@@ -2,10 +2,10 @@
 using System;
 using System.Threading.Tasks;
 using CommandLine;
+using OpenBullet2.Native.Updater.Helpers;
 using Spectre.Console;
-using Updater.Native.Helpers;
 
-namespace Updater.Native;
+namespace OpenBullet2.Native.Updater;
 
 public static class Program
 {

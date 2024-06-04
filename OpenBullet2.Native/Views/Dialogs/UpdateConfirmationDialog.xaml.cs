@@ -23,7 +23,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         private void Confirm(object sender, RoutedEventArgs e)
         {
-            Process.Start("Updater.Native.exe");
+            Process.Start("OpenBullet2.Native.Updater.exe");
             Environment.Exit(0);
         }
 

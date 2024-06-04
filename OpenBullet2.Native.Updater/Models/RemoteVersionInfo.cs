@@ -1,5 +1,5 @@
 using System;
 
-namespace Updater.Native.Models;
+namespace OpenBullet2.Native.Updater.Models;
 
 public record RemoteVersionInfo(Version Version, string DownloadUrl, double Size);

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
 
-namespace Updater.Native.Helpers;
+namespace OpenBullet2.Native.Updater.Helpers;
 
 public static class RequirementsChecker
 {

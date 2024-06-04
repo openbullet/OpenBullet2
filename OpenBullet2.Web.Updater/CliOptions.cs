@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace Updater;
+namespace OpenBullet2.Web.Updater;
 
 public class CliOptions
 {

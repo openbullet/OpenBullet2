@@ -2,9 +2,9 @@
 using Spectre.Console;
 using System;
 using System.Threading.Tasks;
-using Updater.Helpers;
+using OpenBullet2.Web.Updater.Helpers;
 
-namespace Updater;
+namespace OpenBullet2.Web.Updater;
 
 public static class Program
 {

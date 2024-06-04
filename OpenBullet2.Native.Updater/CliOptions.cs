@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace Updater.Native;
+namespace OpenBullet2.Native.Updater;
 
 public class CliOptions
 {
