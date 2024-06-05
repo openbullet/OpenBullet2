@@ -10,11 +10,11 @@ namespace OpenBullet2.Native.Updater.Helpers;
 
 public static class FileSystemHelper
 {
-    private static readonly string[] _whitelist = new[]
-    {
+    private static readonly string[] _whitelist =
+    [
         "appsettings.json",
         "UserData"
-    };
+    ];
     
     public static async Task<Version?> GetLocalVersionAsync()
     {
