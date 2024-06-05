@@ -6,12 +6,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS backend
 WORKDIR /code
 
 COPY . .
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build
+RUN dotnet publish OpenBullet2.Web -c Release -o /build
 
 WORKDIR /build
 
-# Remove all .pdb and .xml files
-RUN find . -name "*.pdb" -type f -delete
+# Remove all .xml files
 RUN find . -name "*.xml" -type f -delete
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build

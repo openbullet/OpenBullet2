@@ -11,6 +11,7 @@
         <SelfContained>false</SelfContained>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         -->
+        <DebugType>none</DebugType>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -20,6 +21,15 @@
         <Deterministic>false</Deterministic>
         <UserSecretsId>84096099-9bc0-494f-80a0-d9a7d9e7ecbb</UserSecretsId>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DisableBeauty>False</DisableBeauty>
+        <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
+        <BeautyOnPublishOnly>True</BeautyOnPublishOnly>
+        <BeautyNoRuntimeInfo>False</BeautyNoRuntimeInfo>
+        <BeautyUsePatch>True</BeautyUsePatch>
+        <BeautyLogLevel>Info</BeautyLogLevel>
     </PropertyGroup>
 
     <ItemGroup>
@@ -43,6 +53,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.1"/>
         <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.2"/>
+        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.5"/>
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="9.22.0.87781">
             <PrivateAssets>all</PrivateAssets>

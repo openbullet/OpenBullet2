@@ -7,7 +7,8 @@ WORKDIR /code
 
 COPY . .
 RUN dotnet publish OpenBullet2.Native -c Release -r win-x64 -o /build/native
-RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build/web
+RUN dotnet publish OpenBullet2.Web -c Release -o /build/web
+RUN dotnet publish OpenBullet2.Web -c Release -r win-x64 -o /build/web-win-x64
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x64 -o /updater/web/win-x64
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-x86 -o /updater/web/win-x86
 RUN dotnet publish OpenBullet2.Web.Updater -c Release -r win-arm64 -o /updater/web/win-arm64
@@ -19,21 +20,19 @@ RUN dotnet publish OpenBullet2.Native.Updater -c Release -r win-arm64 -o /update
 
 # No osx because it needs codesign and it costs money...
 
+# Copy the win-x64 executable to the root of the web folder
+RUN cp /build/web-win-x64/OpenBullet2.Web.exe /build/web/OpenBullet2.Web.exe
+
 WORKDIR /build/web
 
-# Remove all .pdb and .xml files
-RUN find . -name "*.pdb" -type f -delete
+# Remove all .xml files
+# (we cannot use <GenerateDocumentationFile>false</GenerateDocumentationFile>
+# because we need it for swagger)
 RUN find . -name "*.xml" -type f -delete
 
 # Manually copy over the dbip-country-lite.mmdb file from /code to /build
 # since for some reason it doesn't get copied over by the dotnet publish command
 RUN cp /code/OpenBullet2.Web/dbip-country-lite.mmdb /build
-
-WORKDIR /build/native
-
-# Remove all .pdb and .xml files
-RUN find . -name "*.pdb" -type f -delete
-RUN find . -name "*.xml" -type f -delete
 
 # --------
 # FRONTEND
