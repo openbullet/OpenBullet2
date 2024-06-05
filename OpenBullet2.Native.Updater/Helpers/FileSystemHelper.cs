@@ -10,12 +10,6 @@ namespace OpenBullet2.Native.Updater.Helpers;
 
 public static class FileSystemHelper
 {
-    private static readonly string[] _whitelist =
-    [
-        "appsettings.json",
-        "UserData"
-    ];
-    
     public static async Task<Version?> GetLocalVersionAsync()
     {
         return await AnsiConsole.Status()
@@ -39,9 +33,7 @@ public static class FileSystemHelper
     public static async Task CleanupInstallationFolderAsync()
     {
         AnsiConsole.MarkupLine("[yellow]Cleaning up the OB2 folder...[/]");
-            
         
-
         // The build-files.txt file contains a list of all the files in the current build.
         // We will delete all those files and folders and clean up the directory.
         if (File.Exists("build-files.txt"))
@@ -55,8 +47,8 @@ public static class FileSystemHelper
                     {
                         ctx.Status($"Deleting {entry}...");
                 
-                        // If the entry is whitelisted, disregard it
-                        if (_whitelist.Contains(entry))
+                        // If it's appsettings.json or the UserData folder, disregard it
+                        if (entry == "appsettings.json" || entry.StartsWith("UserData"))
                         {
                             continue;
                         }
@@ -94,8 +86,8 @@ public static class FileSystemHelper
                     {
                         var isDirectory = (File.GetAttributes(entry) & FileAttributes.Directory) == FileAttributes.Directory;
                     
-                        // If the entry is whitelisted, disregard it
-                        if (_whitelist.Contains(Path.GetFileName(entry)))
+                        // If it's appsettings.json or the UserData folder, disregard it
+                        if (entry == "appsettings.json" || entry.StartsWith("UserData"))
                         {
                             continue;
                         }
@@ -131,8 +123,8 @@ public static class FileSystemHelper
                     using var archive = new ZipArchive(stream);
                     foreach (var entry in archive.Entries)
                     {
-                        // If the entry is whitelisted, disregard it
-                        if (_whitelist.Contains(Path.GetFileName(entry.FullName)))
+                        // Do not extract appsettings.json if it exists
+                        if (entry.FullName.Contains("appsettings.json") && File.Exists("appsettings.json"))
                         {
                             continue;
                         }
