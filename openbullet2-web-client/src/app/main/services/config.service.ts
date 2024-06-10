@@ -11,6 +11,12 @@ import { ConfigReadmeDto } from '../dtos/config/config-readme.dto';
 import { ConfigDto, ConfigSettingsDto } from '../dtos/config/config.dto';
 import { ConvertedCSharpDto, ConvertedLoliCodeDto, ConvertedStackDto } from '../dtos/config/conversion.dto';
 import { UpdateConfigDto } from '../dtos/config/update-config.dto';
+import * as CryptoJS from 'crypto-js';
+
+interface ConfigHashInfo {
+  id: string;
+  hash: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -58,9 +64,45 @@ export class ConfigService {
 
     if (config !== null) {
       this.saveLocalConfig(config);
+      this.saveConfigHash();
     } else {
       this.resetLocalConfig();
     }
+  }
+
+  saveConfigHash() {
+    if (this.selectedConfig === null) {
+      return;
+    }
+
+    const json = JSON.stringify(this.selectedConfig);
+    const configHash = CryptoJS.SHA256(json).toString(CryptoJS.enc.Hex);
+    const configHashInfo = <ConfigHashInfo>{ id: this.selectedConfig.id, hash: configHash };
+    window.localStorage.setItem('configHash', JSON.stringify(configHashInfo));
+  }
+
+  // Checks if the current config was changed and not saved
+  hasUnsavedChanges() {
+    if (this.selectedConfig === null) {
+      return false;
+    }
+
+    const json = JSON.stringify(this.selectedConfig);
+    const configHash = CryptoJS.SHA256(json).toString(CryptoJS.enc.Hex);
+    const existing = window.localStorage.getItem('configHash');
+
+    if (existing === null) {
+      return true;
+    }
+
+    const configHashInfo: ConfigHashInfo = JSON.parse(existing);
+
+    // If it's another config, we cannot compare
+    if (configHashInfo.id !== this.selectedConfig.id) {
+      return false;
+    }
+
+    return configHash !== configHashInfo.hash;
   }
 
   nameChanged(label: string) {
@@ -127,7 +169,11 @@ export class ConfigService {
       persistent,
     };
 
-    return this.updateConfig(updated);
+    return this.updateConfig(updated)
+      .pipe(data => {
+        this.saveConfigHash();
+        return data;
+      });
   }
 
   updateConfig(updated: UpdateConfigDto) {

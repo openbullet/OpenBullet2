@@ -56,7 +56,7 @@ export class ConfigsComponent implements OnInit {
           id: 'create-new',
           label: 'Create new',
           icon: 'pi pi-fw pi-plus color-good',
-          command: (e) => this.createConfig(),
+          command: (e) => this.safeCreateConfig(),
         },
         {
           id: 'upload-files',
@@ -141,7 +141,7 @@ export class ConfigsComponent implements OnInit {
     this.uploadConfigsModalVisible = true;
   }
 
-  editConfig(config: ConfigInfoDto) {
+  safeEditConfig(config: ConfigInfoDto) {
     if (config.isRemote) {
       this.messageService.add({
         severity: 'warn',
@@ -151,6 +151,19 @@ export class ConfigsComponent implements OnInit {
       return;
     }
 
+    if (this.configService.hasUnsavedChanges()) {
+      this.confirmationService.confirm({
+        message: 'You have unsaved changes, are you sure you want to discard them?',
+        header: 'Unsaved changes',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => this.selectConfig(config),
+      });
+    } else {
+      this.selectConfig(config);
+    }
+  }
+
+  selectConfig(config: ConfigInfoDto) {
     this.configService.getConfig(config.id).subscribe((resp) => {
       this.configService.selectConfig(resp);
       this.messageService.add({
@@ -239,6 +252,19 @@ export class ConfigsComponent implements OnInit {
     }
   }
 
+  safeCreateConfig() {
+    if (this.configService.hasUnsavedChanges()) {
+      this.confirmationService.confirm({
+        message: 'You have unsaved changes, are you sure you want to discard them?',
+        header: 'Unsaved changes',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => this.createConfig(),
+      });
+    } else {
+      this.createConfig();
+    }
+  }
+
   createConfig() {
     this.configService.createConfig().subscribe((newConfig) => {
       this.messageService.add({
@@ -251,10 +277,23 @@ export class ConfigsComponent implements OnInit {
     });
   }
 
-  cloneConfig(config: ConfigInfoDto, event: MouseEvent) {
+  safeCloneConfig(config: ConfigInfoDto, event: MouseEvent) {
     event.stopPropagation();
 
-    this.configService.cloneConfig(config.id).subscribe((newConfig) => {
+    if (this.configService.hasUnsavedChanges()) {
+      this.confirmationService.confirm({
+        message: 'You have unsaved changes, are you sure you want to discard them?',
+        header: 'Unsaved changes',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => this.cloneConfig(config),
+      });
+    } else {
+      this.cloneConfig(config);
+    }
+  }
+
+  cloneConfig(config: ConfigInfoDto) {
+    this.configService.cloneConfig(config.id).subscribe(_ => {
       this.messageService.add({
         severity: 'success',
         summary: 'Cloned',

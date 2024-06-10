@@ -137,7 +137,7 @@
                         <td>
                             <a class="color-accent-light"
                                 role="button"
-                                (click)="editConfig(config)" >
+                                (click)="safeEditConfig(config)" >
                                 {{ config.name }}
                             </a>
                         </td>
@@ -175,7 +175,7 @@
                             <ng-container *ngIf="!config.isRemote">
                                 <button class="button button-transparent"
                                     pTooltip="Clone" tooltipPosition="bottom"
-                                    (click)="cloneConfig(config, $event)">
+                                    (click)="safeCloneConfig(config, $event)">
                                     <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
                                 </button>
                                 <button class="button button-transparent"
@@ -198,7 +198,7 @@
     <div [class]="displayMode === 'grid' ? 'row my-3' : 'row my-3 d-none' ">
         <div class="configs-grid">
             <div *ngFor="let config of configs"
-                class="config-item" role="button" (click)="editConfig(config)">
+                class="config-item" role="button" (click)="safeEditConfig(config)">
                 <img class="config-grid-icon mb-2" 
                     [src]="'data:image/png;base64,' + config.base64Image" />
                 <span class="color-accent-light d-block">{{config.name}}</span>
@@ -207,7 +207,7 @@
                 <div class="config-grid-buttons mt-2">
                     <button class="button button-transparent"
                         pTooltip="Clone" tooltipPosition="bottom"
-                        (click)="cloneConfig(config, $event)">
+                        (click)="safeCloneConfig(config, $event)">
                         <fa-icon [icon]="faClone" [fixedWidth]="true"></fa-icon>
                     </button>
                     <button class="button button-transparent"
