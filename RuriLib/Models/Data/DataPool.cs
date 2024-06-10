@@ -12,5 +12,13 @@ namespace RuriLib.Models.Data
 
         /// <summary>The wordlist type for data slicing.</summary>
         public string WordlistType { get; protected set; }
+
+        /// <summary>
+        /// Reloads the data from the source.
+        /// </summary>
+        public virtual void Reload()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

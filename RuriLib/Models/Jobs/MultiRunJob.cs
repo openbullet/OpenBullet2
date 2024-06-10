@@ -475,6 +475,9 @@ namespace RuriLib.Models.Jobs
                     throw new ArgumentException(
                         "The skip must be smaller than the total number of lines in the data pool");
                 
+                // Reload the data pool from the source
+                DataPool.Reload();
+                
                 if (ShouldUseProxies(ProxyMode, Config.Settings.ProxySettings) &&
                     (ProxySources == null || ProxySources.Count == 0))
                     throw new NullReferenceException(

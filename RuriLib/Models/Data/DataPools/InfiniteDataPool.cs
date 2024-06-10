@@ -20,5 +20,11 @@ namespace RuriLib.Models.Data.DataPools
         {
             while (true) yield return string.Empty;
         }
+        
+        /// <inheritdoc/>
+        public override void Reload()
+        {
+            DataList = InfiniteCounter();
+        }
     }
 }
