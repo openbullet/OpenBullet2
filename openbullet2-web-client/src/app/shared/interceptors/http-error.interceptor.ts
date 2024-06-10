@@ -44,13 +44,18 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       const response = await lastValueFrom(next.handle(nextRequest));
 
       if (response instanceof HttpResponse) {
-        const headerValue = response.headers.get('X-Application-Warning');
-        if (headerValue) {
+        const appWarning = response.headers.get('X-Application-Warning');
+        if (appWarning) {
           this.messageService.add({
             severity: 'warn',
             summary: 'Warning',
-            detail: headerValue,
+            detail: appWarning,
           });
+        }
+
+        const newJwt = response.headers.get('X-New-Jwt');
+        if (newJwt) {
+          this.userService.saveJwt(newJwt);
         }
       }
 

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Settings;
@@ -6,6 +7,7 @@ using OpenBullet2.Core.Services;
 using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Exceptions;
+using OpenBullet2.Web.Interfaces;
 using OpenBullet2.Web.Services;
 using RuriLib.Functions.Captchas;
 using RuriLib.Models.Settings;
@@ -20,6 +22,7 @@ namespace OpenBullet2.Web.Controllers;
 public class SettingsController : ApiController
 {
     private readonly IMapper _mapper;
+    private readonly IAuthTokenService _authService;
     private readonly IConfiguration _configuration;
     private readonly OpenBulletSettingsService _obSettingsService;
     private readonly RuriLibSettingsService _ruriLibSettingsService;
@@ -29,11 +32,13 @@ public class SettingsController : ApiController
     /// <summary></summary>
     public SettingsController(RuriLibSettingsService ruriLibSettingsService,
         OpenBulletSettingsService obSettingsService, IMapper mapper,
-        IConfiguration configuration, ThemeService themeService, ILogger<SettingsController> logger)
+        IAuthTokenService authService, IConfiguration configuration,
+        ThemeService themeService, ILogger<SettingsController> logger)
     {
         _ruriLibSettingsService = ruriLibSettingsService;
         _obSettingsService = obSettingsService;
         _mapper = mapper;
+        _authService = authService;
         _configuration = configuration;
         _themeService = themeService;
         _logger = logger;
@@ -151,12 +156,29 @@ public class SettingsController : ApiController
         // existing ones so we don't update the references and we can
         // edit the settings live if a component is using them.
 
+        var oldAdminUsername = _obSettingsService.Settings.SecuritySettings.AdminUsername;
+        var newAdminUsername = settings.SecuritySettings.AdminUsername;
+        
         // NOTE: To check this we can just print the hashcodes before
         // and after this instruction.
         _mapper.Map(settings, _obSettingsService.Settings);
         await _obSettingsService.SaveAsync();
         
         _logger.LogInformation("Updated OpenBullet settings");
+        
+        // If the admin username has changed, sign a new JWT and send it back
+        if (oldAdminUsername != newAdminUsername)
+        {
+            var claims = new[] {
+                new Claim(ClaimTypes.NameIdentifier, "0", ClaimValueTypes.Integer),
+                new Claim(ClaimTypes.Name, newAdminUsername), new Claim(ClaimTypes.Role, "Admin")
+            };
+
+            var lifetimeHours = Math.Clamp(_obSettingsService.Settings.SecuritySettings.AdminSessionLifetimeHours, 0, 9999);
+            var token = _authService.GenerateToken(claims, TimeSpan.FromHours(lifetimeHours));
+            
+            Response.Headers.Append("X-New-Jwt", token);
+        }
 
         return _mapper.Map<OpenBulletSettingsDto>(_obSettingsService.Settings);
     }

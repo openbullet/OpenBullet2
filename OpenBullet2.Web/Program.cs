@@ -203,7 +203,7 @@ app.UseCors(o => o
     .AllowAnyMethod()
     .AllowCredentials() // Needed for SignalR (it uses sticky cookie-based sessions for reconnection)
     .WithOrigins(allowedOrigin)
-    .WithExposedHeaders("Content-Disposition", "X-Application-Warning")
+    .WithExposedHeaders("Content-Disposition", "X-Application-Warning", "X-New-Jwt")
 );
 
 app.UseMiddleware<ExceptionMiddleware>();

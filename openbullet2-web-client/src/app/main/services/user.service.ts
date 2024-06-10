@@ -12,7 +12,7 @@ import { UserInfo } from '../models/user-info';
 export class UserService {
   private unsavedChanges = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   resetJwt() {
     window.localStorage.removeItem('jwt');
