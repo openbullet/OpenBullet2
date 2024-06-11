@@ -543,11 +543,7 @@ namespace RuriLib.Legacy.LS
                         }
 
                         // Print other info
-                        if (completionValue != JsValue.Null)
-                        {
-                            data.Logger.Log($"Completion value: {completionValue}", LogColors.White);
-                        }
-
+                        data.Logger.Log($"Completion value: {completionValue}", LogColors.White);
                         break;
 
                     case ScriptingLanguage.IronPython:
