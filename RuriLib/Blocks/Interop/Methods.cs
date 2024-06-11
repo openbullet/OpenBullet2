@@ -52,8 +52,8 @@ namespace RuriLib.Blocks.Interop
         {
             data.Logger.LogHeader();
             var script = File.ReadAllText(scriptFile);
-            engine.Execute(script);
-            data.Logger.Log($"Executed Jint script with completion value: {engine.GetCompletionValue()}", LogColors.PaleChestnut);
+            var completionValue = engine.Evaluate(script);
+            data.Logger.Log($"Executed Jint script with completion value: {completionValue}", LogColors.PaleChestnut);
             return engine;
         }
 
