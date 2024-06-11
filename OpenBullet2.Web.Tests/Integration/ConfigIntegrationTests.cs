@@ -949,7 +949,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.True(result.IsSuccess);
         var clonedConfig = result.Value;
         Assert.NotEqual(config.Id, clonedConfig.Id);
-        Assert.Equal(config.Metadata.Name, clonedConfig.Metadata.Name);
+        Assert.Equal(config.Metadata.Name + " (Cloned)", clonedConfig.Metadata.Name);
         Assert.Equal(config.Settings.ProxySettings.UseProxies, clonedConfig.Settings.ProxySettings.UseProxies);
         Assert.Equal(config.Settings.DataSettings.AllowedWordlistTypes, clonedConfig.Settings.DataSettings.AllowedWordlistTypes);
         Assert.Equal(config.LoliCodeScript, clonedConfig.LoliCodeScript);

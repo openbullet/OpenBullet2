@@ -64,8 +64,8 @@ jobs:
         mv .updater/native/win-x86/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-x86.exe
         mv .updater/native/win-arm64/OpenBullet2.Native.Updater.exe .release/ob2-native-updater-win-arm64.exe
 
-    # Upload the zip to the release
-    - name: Upload OpenBullet2.Web
+    # Upload the files to the release
+    - name: Upload OpenBullet2 release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
