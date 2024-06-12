@@ -43,6 +43,7 @@ export class CodeEditorComponent implements OnInit {
         language: this.language,
         readOnly: this.readOnly,
         wordWrap: settings.customizationSettings.wordWrap ? 'on' : 'off',
+        fontLigatures: false
       };
     });
   }

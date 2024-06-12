@@ -36,6 +36,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
   defaultOptions: {
     automaticLayout: true,
     fontFamily: 'Chivo Mono',
+    fontLigatures: false,
   },
 };
 

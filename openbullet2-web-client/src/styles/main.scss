@@ -32,18 +32,21 @@ app-root * {
 
 .monospace {
     font-family: Chivo Mono;
+    font-variant-ligatures: none;
 }
 
 code {
     color: var(--fg-accent-light) !important;
     margin: 0rem;
     font-family: Chivo Mono !important;
+    font-variant-ligatures: none !important;
     font-size: 14px !important;
 }
 
 code * {
     font-family: Chivo Mono !important;
     font-size: 14px !important;
+    font-variant-ligatures: none !important;
 }
 
 .button {
@@ -315,6 +318,7 @@ p-table.no-header {
 
 .code-editor * {
     font-family: 'Chivo Mono' !important;
+    font-variant-ligatures: none !important;
 }
 
 p-accordiontab.accordion-tab-header-small {
