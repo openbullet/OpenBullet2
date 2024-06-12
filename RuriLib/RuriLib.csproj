@@ -23,8 +23,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="PuppeteerExtraSharp" Version="1.2.1" />
-    <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
+    <PackageReference Include="PuppeteerExtraSharp" Version="2.0.0" />
+    <PackageReference Include="PuppeteerSharp" Version="18.0.1" />
     <PackageReference Include="Scrypt.NET" Version="1.3.0" />
     <PackageReference Include="Selenium.Support" Version="4.21.0" />
     <PackageReference Include="Selenium.WebDriver" Version="4.21.0" />
