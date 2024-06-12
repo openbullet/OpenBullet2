@@ -8,22 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.15" />
-    <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
-    <PackageReference Include="CaptchaSharp" Version="1.0.13" />
-    <PackageReference Include="CaptchaSharp.Services.More" Version="1.0.6" />
-    <PackageReference Include="IronPython" Version="2.7.11" />
-    <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
-    <PackageReference Include="Jering.Javascript.NodeJS" Version="5.4.4" />
-    <PackageReference Include="Jint" Version="3.0.0-beta-1828" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.8.0" />
-	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="PuppeteerExtraSharp" Version="1.2.1" />
-    <PackageReference Include="PuppeteerSharp" Version="2.0.4" />
-    <PackageReference Include="System.CodeDom" Version="8.0.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
