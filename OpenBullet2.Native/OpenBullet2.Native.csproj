@@ -101,7 +101,7 @@
 
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-        <PackageReference Include="HtmlSanitizer" Version="8.0.865" />
+        <PackageReference Include="HtmlSanitizer" Version="8.1.866-beta" />
         <PackageReference Include="MahApps.Metro" Version="2.4.10" />
         <PackageReference Include="MahApps.Metro.IconPacks" Version="5.0.0" />
         <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
