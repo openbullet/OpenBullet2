@@ -54,6 +54,7 @@
         <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.1.11" />
         <PackageReference Include="nulastudio.NetBeauty" Version="2.1.4.5"/>
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+        <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
