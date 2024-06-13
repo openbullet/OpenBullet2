@@ -73,7 +73,7 @@ export class InputListComponent implements OnChanges {
     const valid = this.checkValidity(newValue);
 
     if (valid) {
-      this.listChange.emit(newValue.split('\n').filter((v) => v.trim() !== ''));
+      this.listChange.emit(newValue.split('\n'));
     }
 
     this.notifyValidity(valid);
