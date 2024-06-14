@@ -31,7 +31,7 @@ public static class Program
         options.Channel ??= Channel.AskForChannel();
         
         // Check if OpenBullet2 is running
-        RequirementsChecker.EnsureOb2NativeNotRunning();
+        await RequirementsChecker.EnsureOb2NativeNotRunningAsync();
         
         // Make sure the user has Microsoft.AspNetCore.App 8.0 or higher installed
         await RequirementsChecker.EnsureDotNetInstalledAsync();

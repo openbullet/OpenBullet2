@@ -4,14 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
+using Spectre.Console;
 
 namespace OpenBullet2.Web.Updater.Helpers;
 
 public static class RequirementsChecker
 {
-    public static void EnsureOb2WebNotRunning()
+    public static async Task EnsureOb2WebNotRunningAsync()
     {
-        if (Process.GetProcessesByName("OpenBullet2.Web").Length > 0)
+        var isRunning = false;
+        
+        await AnsiConsole.Status()
+            .StartAsync("[yellow]Checking if OpenBullet 2 is running...[/]", async ctx =>
+            {
+                // Wait for 10 seconds for the process to close
+                var timeout = TimeSpan.FromSeconds(10);
+                while (Process.GetProcessesByName("OpenBullet2.Web").Length > 0 && timeout > TimeSpan.Zero)
+                {
+                    ctx.Status("[yellow]OpenBullet 2 is running, waiting for it to close...[/]")
+                        .Spinner(Spinner.Known.Dots)
+                        .Refresh();
+                    
+                    await Task.Delay(1000);
+                    timeout -= TimeSpan.FromSeconds(1);
+                }
+                
+                if (Process.GetProcessesByName("OpenBullet2.Web").Length > 0)
+                {
+                    isRunning = true;
+                }
+            });
+
+        if (isRunning)
         {
             Utils.ExitWithError("OpenBullet 2 is currently running, please close it before updating!");
         }
