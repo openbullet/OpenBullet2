@@ -14,6 +14,7 @@ export class InputListComponent implements OnChanges {
   @Input() style: { [id: string]: any } = {};
   @Input() regex: string | RegExp | null = null;
   @Input() placeholder = '';
+  @Input() removeEmptyLines = false;
 
   // IMPORTANT: I could not call this ngModel since it's using other
   // ngModels inside it and THEY CONFLICT! Otherwise if the inner
@@ -73,7 +74,11 @@ export class InputListComponent implements OnChanges {
     const valid = this.checkValidity(newValue);
 
     if (valid) {
-      this.listChange.emit(newValue.split('\n'));
+      if (this.removeEmptyLines) {
+        this.listChange.emit(newValue.split('\n').filter((line) => line.trim() !== ''));
+      } else {
+        this.listChange.emit(newValue.split('\n'));
+      }
     }
 
     this.notifyValidity(valid);

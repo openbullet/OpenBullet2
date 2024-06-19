@@ -42,7 +42,7 @@
             <span>You can type namespaces that you would like to import in the generated C# script, one per line</span>
             <app-input-list key="customUsings"
                 class="d-block w-100 mt-2 monospace"
-                ngDefaultControl
+                ngDefaultControl [removeEmptyLines]="true"
                 (validityChange)="localSave()"
                 [(list)]="config.settings.scriptSettings.customUsings"
                 placeholder="System.Text.RegularExpressions" />
