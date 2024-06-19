@@ -65,6 +65,12 @@ namespace RuriLib.Models.Blocks
             // TAKEONE FROM "MyResource" => "myString"
             if ((match = Regex.Match(input, "TAKEONE FROM (\"[^\"]+\") => @?\"?([^\"]+)\"?")).Success)
             {
+                if (definedVariables.Contains(match.Groups[2].Value))
+                {
+                    return $"{match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
+                }
+
+                definedVariables.Add(match.Groups[2].Value);
                 return $"string {match.Groups[2].Value} = globals.Resources[{match.Groups[1].Value}].TakeOne();";
             }
 
@@ -72,6 +78,12 @@ namespace RuriLib.Models.Blocks
             // TAKE 5 FROM "MyResource" => "myList"
             if ((match = Regex.Match(input, "TAKE ([0-9]+) FROM (\"[^\"]+\") => @?\"?([^\"]+)\"?")).Success)
             {
+                if (definedVariables.Contains(match.Groups[3].Value))
+                {
+                    return $"{match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
+                }
+
+                definedVariables.Add(match.Groups[3].Value);
                 return $"List<string> {match.Groups[3].Value} = globals.Resources[{match.Groups[2].Value}].Take({match.Groups[1].Value});";
             }
 
@@ -136,10 +148,8 @@ namespace RuriLib.Models.Blocks
                     var key = LoliCodeParser.ParseKey(ref line, keyType);
                     return $"while ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
                 }
-                else
-                {
-                    return $"while ({line}){System.Environment.NewLine}{{";
-                }
+
+                return $"while ({line}){System.Environment.NewLine}{{";
             }
 
             // IF
@@ -153,10 +163,8 @@ namespace RuriLib.Models.Blocks
                     var key = LoliCodeParser.ParseKey(ref line, keyType);
                     return $"if ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
                 }
-                else
-                {
-                    return $"if ({line}){System.Environment.NewLine}{{";
-                }
+
+                return $"if ({line}){System.Environment.NewLine}{{";
             }
 
             // ELSE
@@ -177,10 +185,8 @@ namespace RuriLib.Models.Blocks
                     var key = LoliCodeParser.ParseKey(ref line, keyType);
                     return $"}}{System.Environment.NewLine}else if ({CSharpWriter.ConvertKey(key)}){System.Environment.NewLine}{{";
                 }
-                else
-                {
-                    return $"}}{System.Environment.NewLine}else if ({line}){System.Environment.NewLine}{{";
-                }
+
+                return $"}}{System.Environment.NewLine}else if ({line}){System.Environment.NewLine}{{";
             }
 
             // TRY
@@ -233,11 +239,9 @@ namespace RuriLib.Models.Blocks
                 {
                     return $"{match.Groups[1].Value} = {match.Groups[2].Value};";
                 }
-                else
-                {
-                    definedVariables.Add(match.Groups[1].Value);
-                    return $"string {match.Groups[1].Value} = {match.Groups[2].Value};";
-                }
+
+                definedVariables.Add(match.Groups[1].Value);
+                return $"string {match.Groups[1].Value} = {match.Groups[2].Value};";
             }
 
             // SET CAP
@@ -248,11 +252,9 @@ namespace RuriLib.Models.Blocks
                 {
                     return $"{match.Groups[1].Value} = {match.Groups[2].Value};{System.Environment.NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
                 }
-                else
-                {
-                    definedVariables.Add(match.Groups[1].Value);
-                    return $"string {match.Groups[1].Value} = {match.Groups[2].Value};{System.Environment.NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
-                }
+
+                definedVariables.Add(match.Groups[1].Value);
+                return $"string {match.Groups[1].Value} = {match.Groups[2].Value};{System.Environment.NewLine}data.MarkForCapture(nameof({match.Groups[1].Value}));";
             }
 
             // SET USEPROXY
@@ -274,10 +276,8 @@ namespace RuriLib.Models.Blocks
                 {
                     return $"data.Proxy = new Proxy({setProxyParams[0]}, {setProxyParams[1]}, ProxyType.{proxyType});";
                 }
-                else
-                {
-                    return $"data.Proxy = new Proxy({setProxyParams[0]}, {setProxyParams[1]}, ProxyType.{proxyType}, {setProxyParams[3]}, {setProxyParams[4]});";
-                }
+
+                return $"data.Proxy = new Proxy({setProxyParams[0]}, {setProxyParams[1]}, ProxyType.{proxyType}, {setProxyParams[3]}, {setProxyParams[4]});";
             }
 
             // MARK
