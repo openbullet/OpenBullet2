@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using RuriLib.Logging;
 
 namespace RuriLib.Models.Proxies
 {
@@ -23,7 +22,6 @@ namespace RuriLib.Models.Proxies
         private bool isReloadingProxies = false;
         private readonly List<ProxySource> sources;
         private readonly ProxyPoolOptions options;
-        private readonly IJobLogger _logger;
 
         private readonly int minBackoff = 5000;
         private readonly int maxReloadTries = 10;
@@ -32,10 +30,8 @@ namespace RuriLib.Models.Proxies
         /// <summary>
         /// Initializes the proxy pool given the proxy sources.
         /// </summary>
-        public ProxyPool(IEnumerable<ProxySource> sources, ProxyPoolOptions options = null,
-            IJobLogger logger = null)
+        public ProxyPool(IEnumerable<ProxySource> sources, ProxyPoolOptions options = null)
         {
-            _logger = logger;
             this.sources = sources.ToList();
             this.options = options ?? new ProxyPoolOptions();
             this.asyncLocker = new();

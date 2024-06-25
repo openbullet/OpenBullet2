@@ -10,6 +10,8 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using OpenBullet2.Web.Auth;
+using OpenBullet2.Web.Extensions;
+using OpenBullet2.Web.Models.Identity;
 
 namespace OpenBullet2.Web.Controllers;
 
@@ -145,29 +147,48 @@ public class InfoController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<CollectionInfoDto>> GetCollectionInfo()
     {
-        var jobCount = _serviceProvider
-            .GetRequiredService<JobManagerService>().Jobs.Count();
+        var apiUser = HttpContext.GetApiUser();
+        
+        var jobCount = apiUser.Role is UserRole.Admin
+            ? _serviceProvider.GetRequiredService<JobManagerService>()
+                .Jobs.Count()
+            : _serviceProvider.GetRequiredService<JobManagerService>()
+                .Jobs.Count(j => j.OwnerId == apiUser.Id);
 
-        var proxyCount = await _serviceProvider
-            .GetRequiredService<IProxyRepository>().GetAll().CountAsync();
+        var proxyCount = apiUser.Role is UserRole.Admin
+            ? await _serviceProvider.GetRequiredService<IProxyRepository>()
+                .GetAll().CountAsync()
+            : await _serviceProvider.GetRequiredService<IProxyRepository>()
+                .GetAll().CountAsync(p => p.Group.Owner.Id == apiUser.Id);
 
-        var wordlistCount = await _serviceProvider
-            .GetRequiredService<IWordlistRepository>().GetAll().CountAsync();
+        var wordlistCount = apiUser.Role is UserRole.Admin
+            ? await _serviceProvider.GetRequiredService<IWordlistRepository>()
+                .GetAll().CountAsync()
+            : await _serviceProvider.GetRequiredService<IWordlistRepository>()
+                .GetAll().CountAsync(w => w.Owner.Id == apiUser.Id);
 
-        var wordlistLines = await _serviceProvider
-            .GetRequiredService<IWordlistRepository>().GetAll().SumAsync(w => (long)w.Total);
+        var wordlistLines = apiUser.Role is UserRole.Admin
+            ? await _serviceProvider.GetRequiredService<IWordlistRepository>()
+                .GetAll().SumAsync(w => (long)w.Total)
+            : await _serviceProvider.GetRequiredService<IWordlistRepository>()
+                .GetAll().Where(w => w.Owner.Id == apiUser.Id).SumAsync(w => (long)w.Total);
 
-        var hitCount = await _serviceProvider
-            .GetRequiredService<IHitRepository>().GetAll().CountAsync();
+        var hitCount = apiUser.Role is UserRole.Admin
+            ? await _serviceProvider.GetRequiredService<IHitRepository>()
+                .GetAll().CountAsync()
+            : await _serviceProvider.GetRequiredService<IHitRepository>()
+                .GetAll().CountAsync(h => h.OwnerId == apiUser.Id);
 
         var configCount = _serviceProvider
             .GetRequiredService<ConfigService>().Configs.Count;
 
-        var guestCount = await _serviceProvider
-            .GetRequiredService<IGuestRepository>().GetAll().CountAsync();
+        var guestCount = apiUser.Role is UserRole.Admin 
+            ? await _serviceProvider.GetRequiredService<IGuestRepository>().GetAll().CountAsync()
+            : 1; // The guest shouldn't see the total number of guests
 
-        var pluginCount = _serviceProvider
-            .GetRequiredService<PluginRepository>().GetPlugins().Count();
+        var pluginCount = apiUser.Role is UserRole.Admin
+            ? _serviceProvider.GetRequiredService<PluginRepository>().GetPlugins().Count()
+            : 0; // The guest shouldn't see the total number of plugins
 
         return new CollectionInfoDto {
             JobsCount = jobCount,
