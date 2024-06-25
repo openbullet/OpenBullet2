@@ -10,7 +10,7 @@ public class UpdateGuestInfoDto
     /// <summary>
     /// The id of the guest user to update.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
 
     /// <summary>
     /// The username the guest user will use to log in.

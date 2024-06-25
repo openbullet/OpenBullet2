@@ -10,7 +10,7 @@ public class UpdateWordlistInfoDto
     /// <summary>
     /// The id of the wordlist to update.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// The name of the wordlist.

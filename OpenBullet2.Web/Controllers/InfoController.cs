@@ -21,14 +21,17 @@ namespace OpenBullet2.Web.Controllers;
 public class InfoController : ApiController
 {
     private readonly IAnnouncementService _announcementService;
+    private readonly HttpClient _httpClient;
     private readonly IServiceProvider _serviceProvider;
     private readonly IUpdateService _updateService;
 
     /// <summary></summary>
     public InfoController(IAnnouncementService announcementService,
+        HttpClient httpClient,
         IUpdateService updateService, IServiceProvider serviceProvider)
     {
         _announcementService = announcementService;
+        _httpClient = httpClient;
         _updateService = updateService;
         _serviceProvider = serviceProvider;
     }
@@ -91,10 +94,6 @@ public class InfoController : ApiController
         // will set its value to the API version instead of what was passed :|
         string markdown;
 
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.UserAgent.ParseAdd(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-
         // If a version was not provided, use the current version
         v ??= _updateService.CurrentVersion.ToString();
 
@@ -102,7 +101,7 @@ public class InfoController : ApiController
         {
             // The changelog is only present for stable builds in the master branch
             var url = $"https://raw.githubusercontent.com/openbullet/OpenBullet2/master/Changelog/{v}.md";
-            using var response = await client.GetAsync(url);
+            using var response = await _httpClient.GetAsync(url);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {

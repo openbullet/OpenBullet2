@@ -54,7 +54,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.WordlistId, result.Value.WordlistId);
         Assert.Equal(dto.WordlistName, result.Value.WordlistName);
         
-        var hit = dbContext.Hits.FirstOrDefault();
+        var hit = await dbContext.Hits.FirstOrDefaultAsync();
         Assert.NotNull(hit);
         Assert.Equal(dto.Data, hit.Data);
         Assert.Equal(dto.CapturedData, hit.CapturedData);
@@ -75,7 +75,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -114,7 +114,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         Assert.Equal(dto.WordlistId, result.Value.WordlistId);
         Assert.Equal(dto.WordlistName, result.Value.WordlistName);
         
-        var hit = dbContext.Hits.FirstOrDefault();
+        var hit = await dbContext.Hits.FirstOrDefaultAsync();
         Assert.NotNull(hit);
         Assert.Equal(dto.Data, hit.Data);
         Assert.Equal(dto.CapturedData, hit.CapturedData);
@@ -185,7 +185,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var hit = CreateHit();
         dbContext.Hits.Add(hit);
@@ -231,7 +231,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Assert
         Assert.Null(error);
         
-        var hitAfter = dbContext.Hits.FirstOrDefault();
+        var hitAfter = await dbContext.Hits.FirstOrDefaultAsync();
         Assert.Null(hitAfter);
     }
     
@@ -241,7 +241,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var hit = CreateHit();
         dbContext.Hits.Add(hit);
@@ -301,7 +301,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var guest2 = new GuestEntity { Username = "guest2" };
         dbContext.Guests.AddRange(guest, guest2);
         await dbContext.SaveChangesAsync();
@@ -415,7 +415,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -501,7 +501,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -572,7 +572,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -637,7 +637,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -692,14 +692,16 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
     {
         // Arrange
         using var client = Factory.CreateClient();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Guests.Add(guest);
         var hits = Enumerable.Range(0, 100)
             .Select(i => CreateHit());
         dbContext.Hits.AddRange(hits);
         await dbContext.SaveChangesAsync();
         
         RequireLogin();
-        ImpersonateGuest(client, new GuestEntity { Username = "guest" });
+        ImpersonateGuest(client, guest);
         
         // Act
         var result = await DeleteJsonAsync<AffectedEntriesDto>(
@@ -792,7 +794,7 @@ public class HitIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         

@@ -32,7 +32,7 @@ internal class GuestFilter : IAsyncAuthorizationFilter
             
             if (guest is null)
             {
-                throw new UnauthorizedException(ErrorCode.GuestAccountRemoved,
+                throw new UnauthorizedException(ErrorCode.InvalidGuestAccount,
                     "The guest user does not exist in the database");
             }
             

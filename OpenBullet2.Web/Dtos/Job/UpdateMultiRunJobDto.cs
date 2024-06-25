@@ -14,7 +14,7 @@ public class UpdateMultiRunJobDto
     /// <summary>
     /// The id of the job to update.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// The name of the job.

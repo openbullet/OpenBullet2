@@ -80,7 +80,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -180,7 +180,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -269,7 +269,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -364,7 +364,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -400,7 +400,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -484,7 +484,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var pcJob = CreateProxyCheckJob();
@@ -525,7 +525,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var proxyCheckOutputFactory = GetRequiredService<ProxyCheckOutputFactory>();
-        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;
@@ -655,7 +655,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var mrJob = CreateMultiRunJob();
@@ -706,7 +706,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var mrJob = CreateMultiRunJob();
         mrJob.Name = "Test MRJ";
@@ -830,7 +830,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         var pcJob = CreateProxyCheckJob();
@@ -880,7 +880,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var jobManager = GetRequiredService<JobManagerService>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Id = 1, Username = "guest" };
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var pcJob = CreateProxyCheckJob();
         pcJob.Id = 1;

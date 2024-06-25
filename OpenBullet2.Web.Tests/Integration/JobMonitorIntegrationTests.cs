@@ -69,7 +69,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -133,7 +133,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -206,14 +206,17 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
         RequireLogin();
         ImpersonateGuest(client, guest);
         
-        var dto = new CreateTriggeredActionDto();
+        var dto = new CreateTriggeredActionDto
+        {
+            JobId = 1
+        };
         
         // Act
         var result = await PostJsonAsync<TriggeredActionDto>(
@@ -291,14 +294,17 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
         RequireLogin();
         ImpersonateGuest(client, guest);
-        
-        var dto = new UpdateTriggeredActionDto();
+
+        var dto = new UpdateTriggeredActionDto
+        {
+            JobId = 1
+        };
         
         // Act
         var result = await PutJsonAsync<TriggeredActionDto>(
@@ -342,7 +348,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -391,7 +397,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -439,7 +445,7 @@ public class JobMonitorIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         

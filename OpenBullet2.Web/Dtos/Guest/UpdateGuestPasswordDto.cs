@@ -10,7 +10,7 @@ public class UpdateGuestPasswordDto
     /// <summary>
     /// The id of the guest user to update.
     /// </summary>
-    public int Id { get; init; }
+    public required int Id { get; init; }
 
     /// <summary>
     /// The new password the guest user will use to log in.

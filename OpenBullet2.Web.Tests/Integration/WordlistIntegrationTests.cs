@@ -58,7 +58,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist = new WordlistEntity
         {
@@ -101,7 +101,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist = new WordlistEntity
         {
@@ -180,7 +180,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var guest2 = new GuestEntity { Username = "guest" };
         dbContext.Guests.AddRange(guest, guest2);
         var wordlist1 = new WordlistEntity
@@ -302,7 +302,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var fileName = Path.GetTempFileName();
         await File.WriteAllLinesAsync(
@@ -346,7 +346,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist = new WordlistEntity
         {
@@ -427,7 +427,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         Directory.CreateDirectory(Path.Combine(UserDataFolder, "Wordlists"));
         var fileName = Path.Combine(UserDataFolder, "Wordlists", Guid.NewGuid() + ".txt");
@@ -473,7 +473,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var fileName = Path.GetTempFileName();
         await File.WriteAllLinesAsync(
@@ -636,7 +636,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist = new WordlistEntity
         {
@@ -718,7 +718,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist1 = new WordlistEntity
         {
@@ -826,7 +826,7 @@ public class WordlistIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         var wordlist = new WordlistEntity
         {

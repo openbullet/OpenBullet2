@@ -39,10 +39,11 @@ public class ConfigController : ApiController
     private readonly LoliCodeAutocompletionService _loliCodeAutocompletionService;
     private readonly ConfigDebuggerService _configDebuggerService;
     private readonly PluginRepository _pluginRepository;
+    private readonly HttpClient _httpClient;
 
     /// <summary></summary>
     public ConfigController(IConfigRepository configRepo,
-        PluginRepository pluginRepository,
+        PluginRepository pluginRepository, HttpClient httpClient,
         ConfigService configService, IMapper mapper,
         OpenBulletSettingsService obSettingsService,
         LoliCodeAutocompletionService loliCodeAutocompletionService,
@@ -51,6 +52,7 @@ public class ConfigController : ApiController
     {
         _configRepo = configRepo;
         _pluginRepository = pluginRepository;
+        _httpClient = httpClient;
         _configService = configService;
         _mapper = mapper;
         _obSettingsService = obSettingsService;
@@ -524,10 +526,8 @@ public class ConfigController : ApiController
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> GetRemoteImage(string url)
     {
-        using var client = new HttpClient();
-        
         // ASP.NET Core will automatically dispose the stream
-        var imageStream = await client.GetStreamAsync(url);
+        var imageStream = await _httpClient.GetStreamAsync(url);
         
         return File(imageStream, "image/png");
     }

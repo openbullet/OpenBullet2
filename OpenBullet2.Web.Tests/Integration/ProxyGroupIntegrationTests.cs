@@ -24,7 +24,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group1", Owner = guest });
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group2" });
@@ -47,7 +47,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var guest2 = new GuestEntity { Username = "guest2" };
         dbContext.Guests.AddRange(guest, guest2);
         dbContext.ProxyGroups.Add(new ProxyGroupEntity { Name = "group1", Owner = guest });
@@ -98,7 +98,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
         var proxyGroupRepo = GetRequiredService<IProxyGroupRepository>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         dbContext.Guests.Add(guest);
         await dbContext.SaveChangesAsync();
         
@@ -146,7 +146,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var group = new ProxyGroupEntity { Name = "group1", Owner = guest };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);
@@ -172,7 +172,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var group = new ProxyGroupEntity { Name = "group1" };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);
@@ -231,7 +231,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         var proxyGroupRepo = GetRequiredService<IProxyGroupRepository>();
         var proxyRepo = GetRequiredService<IProxyRepository>();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var group = new ProxyGroupEntity { Name = "group1", Owner = guest };
         var proxy1 = new ProxyEntity { Host = "host1", Port = 80, Group = group };
         var proxy2 = new ProxyEntity { Host = "host2", Port = 80, Group = group };
@@ -264,7 +264,7 @@ public class ProxyGroupIntegrationTests(ITestOutputHelper testOutputHelper)
         // Arrange
         using var client = Factory.CreateClient();
         var dbContext = GetRequiredService<ApplicationDbContext>();
-        var guest = new GuestEntity { Username = "guest" };
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
         var group = new ProxyGroupEntity { Name = "group1" };
         dbContext.ProxyGroups.Add(group);
         dbContext.Guests.Add(guest);

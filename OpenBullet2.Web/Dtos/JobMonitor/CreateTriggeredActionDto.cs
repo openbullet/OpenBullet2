@@ -26,7 +26,7 @@ public class CreateTriggeredActionDto
     /// <summary>
     /// The job this triggered action refers to.
     /// </summary>
-    public int JobId { get; set; }
+    public required int JobId { get; set; }
 
     /// <summary>
     /// All triggers that must be verified at the same time in order

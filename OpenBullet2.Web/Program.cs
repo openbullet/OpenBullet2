@@ -173,6 +173,20 @@ builder.Services.AddSingleton<ProxyCheckJobService>();
 builder.Services.AddSingleton<MultiRunJobService>();
 builder.Services.AddSingleton<LoliCodeAutocompletionService>();
 
+// HttpClient
+builder.Services.AddHttpClient<InfoController>(client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
+});
+builder.Services.AddHttpClient<ProxyController>(client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
+});
+builder.Services.AddHttpClient<ConfigController>(client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(Globals.UserAgent);
+});
+
 // Hosted Services
 builder.Services.AddHostedService(
     b => b.GetRequiredService<IUpdateService>());
@@ -296,7 +310,7 @@ PolyDtoCache.Scan();
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
+    await context.Database.MigrateAsync();
 }
 
 // Load the configs
@@ -313,7 +327,7 @@ _ = app.Services.GetRequiredService<JobMonitorService>();
 
 Globals.StartTime = DateTime.UtcNow;
 
-app.Run();
+await app.RunAsync();
 
 // This makes Program visible for integration tests
 #pragma warning disable S1118

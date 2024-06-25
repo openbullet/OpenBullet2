@@ -8,7 +8,7 @@ public class CustomInputsDto
     /// <summary>
     /// The job id for which to set inputs.
     /// </summary>
-    public int JobId { get; set; }
+    public required int JobId { get; set; }
 
     /// <summary>
     /// The custom inputs values.

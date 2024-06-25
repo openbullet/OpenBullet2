@@ -10,12 +10,12 @@ public class ChangeBotsDto
     /// <summary>
     /// The id of the job.
     /// </summary>
-    public int JobId { get; set; }
+    public required int JobId { get; set; }
 
     /// <summary>
     /// The desired number of bots.
     /// </summary>
-    public int Bots { get; set; }
+    public required int Bots { get; set; }
 }
 
 internal class ChangeBotsDtoValidator : AbstractValidator<ChangeBotsDto>

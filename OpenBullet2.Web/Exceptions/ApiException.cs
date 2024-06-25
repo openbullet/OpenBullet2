@@ -82,12 +82,12 @@ public static class ErrorCode
     /// <summary>
     /// The guest account has expired.
     /// </summary>
-    public const string GuestAccountExpired = "GUEST_ACCOUNT_EXPIRED";
+    public const string GuestAccountExpired = "EXPIRED_GUEST_ACCOUNT";
 
     /// <summary>
-    /// The guest account has been removed.
+    /// The guest account is invalid (probably missing from the database).
     /// </summary>
-    public const string GuestAccountRemoved = "GUEST_ACCOUNT_REMOVED";
+    public const string InvalidGuestAccount = "INVALID_GUEST_ACCOUNT";
     
     /// <summary>
     /// The user has no permission to perform this action.

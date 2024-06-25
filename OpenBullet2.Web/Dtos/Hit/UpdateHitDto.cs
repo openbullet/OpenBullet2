@@ -11,7 +11,7 @@ public class UpdateHitDto
     /// <summary>
     /// The id of the hit to update.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// The data that was provided to the bot to get the hit.

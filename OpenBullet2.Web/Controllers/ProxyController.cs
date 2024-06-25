@@ -26,17 +26,20 @@ public class ProxyController : ApiController
 {
     private readonly ILogger<ProxyController> _logger;
     private readonly IMapper _mapper;
+    private readonly HttpClient _httpClient;
     private readonly IProxyGroupRepository _proxyGroupRepo;
     private readonly IProxyRepository _proxyRepo;
 
     /// <summary></summary>
     public ProxyController(IProxyRepository proxyRepo,
         IProxyGroupRepository proxyGroupRepo, IMapper mapper,
+        HttpClient httpClient,
         ILogger<ProxyController> logger)
     {
         _proxyRepo = proxyRepo;
         _proxyGroupRepo = proxyGroupRepo;
         _mapper = mapper;
+        _httpClient = httpClient;
         _logger = logger;
     }
 
@@ -104,12 +107,7 @@ public class ProxyController : ApiController
 
         try
         {
-            using var client = new HttpClient();
-
-            client.DefaultRequestHeaders.TryAddWithoutValidation(
-                "User-Agent", Globals.UserAgent);
-
-            using var response = await client.GetAsync(dto.Url);
+            using var response = await _httpClient.GetAsync(dto.Url);
             var text = await response.Content.ReadAsStringAsync();
 
             lines = text.Split(

@@ -8,7 +8,7 @@ public class GarbageCollectRequestDto
     /// <summary>
     /// The number of the oldest generation to be GC'd. -1 for all.
     /// </summary>
-    public int Generations { get; set; }
+    public required int Generations { get; set; }
 
     /// <summary>
     /// The garbage collection mode.
@@ -18,10 +18,10 @@ public class GarbageCollectRequestDto
     /// <summary>
     /// True to perform a blocking GC, false to perform it whenever it's possible in the background.
     /// </summary>
-    public bool Blocking { get; set; }
+    public required bool Blocking { get; set; }
 
     /// <summary>
     /// True to compact the small object heap, false to sweep only.
     /// </summary>
-    public bool Compacting { get; set; }
+    public required bool Compacting { get; set; }
 }

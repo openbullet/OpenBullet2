@@ -8,7 +8,7 @@ public class JobCommandDto
     /// <summary>
     /// The id of the job.
     /// </summary>
-    public int JobId { get; set; }
+    public required int JobId { get; set; }
 
     /// <summary>
     /// If true, the server waits until the command returns

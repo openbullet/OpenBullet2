@@ -10,7 +10,7 @@ public class UpdateProxyGroupDto
     /// <summary>
     /// The id of the proxy group.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// The name of the proxy group.

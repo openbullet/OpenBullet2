@@ -377,7 +377,7 @@ public class HitController : ApiController
         }
         
         // Write the hits to a temporary file
-        var tempFile = Path.GetTempFileName();
+        var tempFile = Path.GetRandomFileName();
         await System.IO.File.WriteAllLinesAsync(tempFile, hits.Select(h => h.Data));
         jobOptions.DataPool = new FileDataPoolOptions
         {

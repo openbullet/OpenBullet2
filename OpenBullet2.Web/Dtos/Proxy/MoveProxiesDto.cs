@@ -8,5 +8,5 @@ public class MoveProxiesDto : ProxyFiltersDto
     /// <summary>
     /// The id of the destination proxy group.
     /// </summary>
-    public int DestinationGroupId { get; set; }
+    public required int DestinationGroupId { get; set; }
 }

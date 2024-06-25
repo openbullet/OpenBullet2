@@ -14,7 +14,7 @@ import { ApiError } from '../models/api-error';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
-  private requireLoginErrorCodes: string[] = ['MISSING_AUTH_TOKEN', 'INVALID_AUTH_TOKEN', 'NOT_AUTHENTICATED', 'GUEST_ACCOUNT_EXPIRED', 'INVALID_USER'];
+  private requireLoginErrorCodes: string[] = ['MISSING_AUTH_TOKEN', 'INVALID_AUTH_TOKEN', 'NOT_AUTHENTICATED', 'EXPIRED_GUEST_ACCOUNT', 'INVALID_GUEST_ACCOUNT'];
 
   constructor(
     private router: Router,
