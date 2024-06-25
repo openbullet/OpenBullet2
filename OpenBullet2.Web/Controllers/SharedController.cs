@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Shared;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Services;
@@ -31,7 +31,7 @@ public class SharedController : ApiController
     /// <summary>
     /// Get all available shared endpoints.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("endpoint/all")]
     [MapToApiVersion("1.0")]
     public ActionResult<IEnumerable<EndpointDto>> GetAllEndpoints()
@@ -43,7 +43,7 @@ public class SharedController : ApiController
     /// <summary>
     /// Create a shared endpoint.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("endpoint")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<EndpointDto>> CreateEndpoint(EndpointDto dto,
@@ -73,7 +73,7 @@ public class SharedController : ApiController
     /// <summary>
     /// Update a shared endpoint.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPut("endpoint")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<EndpointDto>> UpdateEndpoint(EndpointDto dto,
@@ -101,7 +101,7 @@ public class SharedController : ApiController
     /// <summary>
     /// Delete a shared endpoint.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpDelete("endpoint")]
     [MapToApiVersion("1.0")]
     public ActionResult DeleteEndpoint(string route)

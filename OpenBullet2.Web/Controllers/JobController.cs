@@ -10,7 +10,7 @@ using OpenBullet2.Core.Models.Proxies;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Job;
 using OpenBullet2.Web.Dtos.Job.MultiRun;
@@ -30,7 +30,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage jobs.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class JobController : ApiController
 {
@@ -551,7 +551,7 @@ public class JobController : ApiController
     /// Get the full debugger log of a hit. Note that bot log must
     /// be enabled in the settings, or it will be blank.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("multi-run/hit-log")]
     [MapToApiVersion("1.0")]
     public ActionResult<MrjHitLogDto> GetHitLog(int jobId, string hitId)

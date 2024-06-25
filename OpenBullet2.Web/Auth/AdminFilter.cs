@@ -3,10 +3,9 @@ using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
 
-namespace OpenBullet2.Web.Attributes;
+namespace OpenBullet2.Web.Auth;
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-internal class AdminAttribute : Attribute, IAuthorizationFilter
+internal class AdminFilter : IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {

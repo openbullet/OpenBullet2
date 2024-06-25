@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Info;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
@@ -10,13 +9,14 @@ using RuriLib.Services;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using OpenBullet2.Web.Auth;
 
 namespace OpenBullet2.Web.Controllers;
 
 /// <summary>
 /// Get info about the server.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class InfoController : ApiController
 {

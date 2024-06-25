@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Guest;
 using OpenBullet2.Web.Exceptions;
 
@@ -14,7 +14,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage guest users.
 /// </summary>
-[Admin]
+[TypeFilter<AdminFilter>]
 [ApiVersion("1.0")]
 public class GuestController : ApiController
 {

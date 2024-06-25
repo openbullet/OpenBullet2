@@ -4,12 +4,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Config;
 using OpenBullet2.Web.Dtos.Config.Blocks;
 using OpenBullet2.Web.Dtos.Config.Convert;
-using OpenBullet2.Web.Dtos.ConfigDebugger;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Services;
 using OpenBullet2.Web.Utils;
@@ -17,7 +16,6 @@ using RuriLib.Extensions;
 using RuriLib.Helpers;
 using RuriLib.Helpers.Blocks;
 using RuriLib.Helpers.Transpilers;
-using RuriLib.Logging;
 using RuriLib.Models.Blocks;
 using RuriLib.Models.Configs;
 using RuriLib.Models.Debugger;
@@ -29,7 +27,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage configs.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class ConfigController : ApiController
 {
@@ -128,7 +126,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Get a config's data.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet]
     [MapToApiVersion("1.0")]
     public ActionResult<ConfigDto> GetConfig(string id)
@@ -157,7 +155,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Update a config's data.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPut]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConfigDto>> UpdateConfig(UpdateConfigDto dto,
@@ -219,7 +217,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Create a new config.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConfigDto>> CreateConfig()
@@ -237,7 +235,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Delete a config.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpDelete]
     [MapToApiVersion("1.0")]
     public ActionResult DeleteConfig(string id)
@@ -254,7 +252,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Clone an existing config.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("clone")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<ConfigDto>> CloneConfig(string id)
@@ -293,7 +291,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Download a config as a .opk file.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("download")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DownloadConfig(string id)
@@ -320,7 +318,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Download all available configs as .opk files in a zip archive.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("download/all")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DownloadAllConfigs()
@@ -336,7 +334,7 @@ public class ConfigController : ApiController
     /// Upload configs as .opk archives. OB1 configs (.loli) are also
     /// accepted, and they will be automatically packed into a .opk archive.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("upload/many")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Upload(
@@ -359,7 +357,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Convert a LoliCode script to C# script.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("convert/lolicode/csharp")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConvertedCSharpDto> ConvertLoliCodeToCSharp(
@@ -374,7 +372,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Convert a LoliCode script to a Stack of blocks.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("convert/lolicode/stack")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConvertedStackDto> ConvertLoliCodeToStack(
@@ -393,7 +391,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Convert a Stack of blocks to a LoliCode script.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("convert/stack/lolicode")]
     [MapToApiVersion("1.0")]
     public ActionResult<ConvertedLoliCodeDto> ConvertStackToLoliCode(
@@ -409,7 +407,7 @@ public class ConfigController : ApiController
     /// Get the descriptors of all the available blocks.
     /// </summary>
     /// <returns></returns>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("block-descriptors")]
     [MapToApiVersion("1.0")]
     public ActionResult<Dictionary<string, BlockDescriptorDto>> GetBlockDescriptors()
@@ -433,7 +431,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Get the category tree of all the available blocks.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("category-tree")]
     [MapToApiVersion("1.0")]
     public ActionResult<CategoryTreeNodeDto> GetCategoryTree()
@@ -445,7 +443,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Gets a block instance by id.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("block-instance")]
     [MapToApiVersion("1.0")]
     public ActionResult<object> GetBlockInstance(string id)
@@ -472,7 +470,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Get the block snippets.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("block-snippets")]
     [MapToApiVersion("1.0")]
     public ActionResult<FrozenDictionary<string, string>> GetBlockSnippets()
@@ -481,7 +479,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Debug a config.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("debug")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<DebugConfigResultDto>> Debug(DebugConfigDto dto)
@@ -521,7 +519,7 @@ public class ConfigController : ApiController
     /// <summary>
     /// Get a remote image (used to bypass CORS).
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("remote-image")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> GetRemoteImage(string url)

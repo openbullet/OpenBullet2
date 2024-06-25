@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
-using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Proxy;
 using OpenBullet2.Web.Exceptions;
@@ -13,6 +12,7 @@ using OpenBullet2.Web.Models.Pagination;
 using RuriLib.Models.Proxies;
 using System.Text;
 using FluentValidation;
+using OpenBullet2.Web.Auth;
 using Mapper = OpenBullet2.Core.Helpers.Mapper;
 
 namespace OpenBullet2.Web.Controllers;
@@ -20,7 +20,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage proxies.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class ProxyController : ApiController
 {

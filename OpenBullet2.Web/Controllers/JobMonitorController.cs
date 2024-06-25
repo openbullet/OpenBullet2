@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Jobs;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.JobMonitor;
 using OpenBullet2.Web.Exceptions;
 using RuriLib.Models.Jobs;
@@ -15,7 +15,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage the job monitor and triggered actions.
 /// </summary>
-[Admin]
+[TypeFilter<AdminFilter>]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/job-monitor")]
 public class JobMonitorController : ApiController

@@ -6,7 +6,7 @@ using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Proxies.Sources;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.ProxyGroup;
 using OpenBullet2.Web.Exceptions;
@@ -19,7 +19,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage proxy groups.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 [Route("api/v{version:apiVersion}/proxy-group")]
 public class ProxyGroupController : ApiController

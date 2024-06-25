@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Wordlist;
 using OpenBullet2.Web.Exceptions;
@@ -18,7 +18,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage wordlists.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class WordlistController : ApiController
 {
@@ -180,7 +180,7 @@ public class WordlistController : ApiController
     /// Upload a file to the "UserData/Wordlists" folder. This can then be
     /// used to create a wordlist. Returns the relative file path.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpPost("upload")]
     [MapToApiVersion("1.0")]
     [RequestSizeLimit(long.MaxValue)]
@@ -202,7 +202,7 @@ public class WordlistController : ApiController
     /// </summary>
     /// <param name="id">The id of the wordlist to delete</param>
     /// <param name="alsoDeleteFile">Whether to also delete the file from disk</param>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpDelete]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> Delete(int id, bool alsoDeleteFile)
@@ -221,7 +221,7 @@ public class WordlistController : ApiController
     /// <summary>
     /// Delete all the wordlists that reference a file that was moved or deleted.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpDelete("not-found")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> DeleteNotFound()
@@ -254,7 +254,7 @@ public class WordlistController : ApiController
     /// <summary>
     /// Update the info of a wordlist.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpPatch("info")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<WordlistDto>> UpdateInfo(

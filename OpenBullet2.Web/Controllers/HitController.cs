@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Repositories;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
 using OpenBullet2.Web.Dtos.Common;
 using OpenBullet2.Web.Dtos.Hit;
-using OpenBullet2.Web.Dtos.User;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Extensions;
 using OpenBullet2.Web.Models.Identity;
@@ -20,6 +18,7 @@ using Newtonsoft.Json;
 using OpenBullet2.Core.Models.Data;
 using OpenBullet2.Core.Models.Hits;
 using OpenBullet2.Core.Models.Jobs;
+using OpenBullet2.Web.Auth;
 using RuriLib.Services;
 
 namespace OpenBullet2.Web.Controllers;
@@ -27,7 +26,7 @@ namespace OpenBullet2.Web.Controllers;
 /// <summary>
 /// Manage hits.
 /// </summary>
-[Guest]
+[TypeFilter<GuestFilter>]
 [ApiVersion("1.0")]
 public class HitController : ApiController
 {
@@ -261,7 +260,7 @@ public class HitController : ApiController
     /// Returns the number of deleted hits.
     /// </summary>
     /// <returns></returns>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpDelete("purge")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<AffectedEntriesDto>> Purge()

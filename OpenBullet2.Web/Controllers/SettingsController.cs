@@ -4,7 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OpenBullet2.Core.Models.Settings;
 using OpenBullet2.Core.Services;
-using OpenBullet2.Web.Attributes;
+using OpenBullet2.Web.Auth;
 using OpenBullet2.Web.Dtos.Settings;
 using OpenBullet2.Web.Exceptions;
 using OpenBullet2.Web.Interfaces;
@@ -47,7 +47,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the system settings.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpGet("system")]
     [MapToApiVersion("1.0")]
     public ActionResult<SystemSettingsDto> GetSystemSettings()
@@ -67,7 +67,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the environment settings.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpGet("environment")]
     [MapToApiVersion("1.0")]
     public ActionResult<EnvironmentSettingsDto> GetEnvironmentSettings()
@@ -77,7 +77,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the RuriLib settings.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("rurilib")]
     [MapToApiVersion("1.0")]
     public ActionResult<GlobalSettings> GetRuriLibSettings()
@@ -86,7 +86,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the RuriLib default settings.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("rurilib/default")]
     [MapToApiVersion("1.0")]
     public ActionResult<GlobalSettings> GetRuriLibDefaultSettings()
@@ -95,7 +95,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Update the RuriLib settings.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPut("rurilib")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<GlobalSettings>> UpdateRuriLibSettings(
@@ -119,7 +119,7 @@ public class SettingsController : ApiController
     /// Get the OpenBullet settings.
     /// </summary>
     /// <returns></returns>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet]
     [MapToApiVersion("1.0")]
     public ActionResult<OpenBulletSettingsDto> GetSettings()
@@ -128,7 +128,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the default OpenBullet settings.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("default")]
     [MapToApiVersion("1.0")]
     public ActionResult<OpenBulletSettingsDto> GetDefaultSettings()
@@ -137,7 +137,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get the safe OpenBullet settings that even a guest user is allowed to see.
     /// </summary>
-    [Guest]
+    [TypeFilter<GuestFilter>]
     [HttpGet("safe")]
     [MapToApiVersion("1.0")]
     public ActionResult<SafeOpenBulletSettingsDto> GetSafeSettings()
@@ -146,7 +146,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Update the OpenBullet settings.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPut]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<OpenBulletSettingsDto>> UpdateSettings(
@@ -187,7 +187,7 @@ public class SettingsController : ApiController
     /// Update the password of the admin user. Note that this does NOT
     /// invalidate the tokens that were granted so far.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPatch("admin/password")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> UpdateAdminPassword(UpdateAdminPasswordDto dto,
@@ -207,7 +207,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Add a CSS theme.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("theme")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult> AddTheme(IFormFile file)
@@ -220,7 +220,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get all CSS themes.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("theme/all")]
     [MapToApiVersion("1.0")]
     public ActionResult<List<ThemeDto>> GetAllThemes() =>
@@ -257,7 +257,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Get all custom snippets.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpGet("custom-snippets")]
     [MapToApiVersion("1.0")]
     public ActionResult<Dictionary<string, string>> GetCustomSnippets()
@@ -268,7 +268,7 @@ public class SettingsController : ApiController
     /// <summary>
     /// Check captcha balance for the given service.
     /// </summary>
-    [Admin]
+    [TypeFilter<AdminFilter>]
     [HttpPost("check-captcha-balance")]
     [MapToApiVersion("1.0")]
     public async Task<ActionResult<CaptchaBalanceDto>> CheckCaptchaCredit(

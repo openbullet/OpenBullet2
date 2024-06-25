@@ -85,6 +85,11 @@ public static class ErrorCode
     public const string GuestAccountExpired = "GUEST_ACCOUNT_EXPIRED";
 
     /// <summary>
+    /// The guest account has been removed.
+    /// </summary>
+    public const string GuestAccountRemoved = "GUEST_ACCOUNT_REMOVED";
+    
+    /// <summary>
     /// The user has no permission to perform this action.
     /// </summary>
     public const string InvalidRole = "INVALID_ROLE";
