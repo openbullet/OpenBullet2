@@ -47,14 +47,12 @@ public static class RequirementsChecker
     }
 
     /// <summary>
-    /// Checks if the .NET Windows Desktop Runtime 8.0+ is installed. If the user installed the SDK,
+    /// Checks if the .NET Windows Desktop Runtime is installed. If the user installed the SDK,
     /// it will still work because the runtime is included in the SDK.
     /// </summary>
     public static async Task EnsureDotNetInstalledAsync()
     {
-        var isInstalled = await IsRuntimeInstalledAsync();
-
-        if (isInstalled)
+        if (await IsRuntimeInstalledAsync())
         {
             return;
         }

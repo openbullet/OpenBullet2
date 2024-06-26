@@ -1,6 +1,9 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
@@ -10,6 +13,8 @@ namespace OpenBullet2.Web.Updater.Helpers;
 
 public static class RequirementsChecker
 {
+    private static readonly Version _dotnetVersion = new(8, 0);
+    
     public static async Task EnsureOb2WebNotRunningAsync()
     {
         var isRunning = false;
@@ -42,10 +47,37 @@ public static class RequirementsChecker
     }
 
     /// <summary>
-    /// Checks if the ASP.NET Core Runtime 8.0+ is installed. If the user installed the SDK,
+    /// Checks if the ASP.NET Core Runtime is installed. If the user installed the SDK,
     /// it will still work because the runtime is included in the SDK.
     /// </summary>
     public static async Task EnsureDotNetInstalledAsync()
+    {
+        if (await IsRuntimeInstalledAsync())
+        {
+            return;
+        }
+
+        var installRuntime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            && AnsiConsole.Prompt(
+                new ConfirmationPrompt($"The ASP.NET Core Runtime version {_dotnetVersion} or higher is required to run OpenBullet 2. " +
+                                       "Do you want to download and install it now?"));
+        
+        if (!installRuntime)
+        {
+            Utils.ExitWithError($"The ASP.NET Core Runtime version {_dotnetVersion} or higher is required to run OpenBullet 2. " +
+                                $"Please install it from https://dotnet.microsoft.com/en-us/download/dotnet/{_dotnetVersion} " +
+                                "and relaunch the Updater");
+        }
+        
+        await InstallDotNetRuntimeAsync();
+        
+        if (!await IsRuntimeInstalledAsync())
+        {
+            Utils.ExitWithError("The installation of the ASP.NET Core Runtime failed. Please try again later.");
+        }
+    }
+    
+    private static async Task<bool> IsRuntimeInstalledAsync()
     {
         try
         {
@@ -58,28 +90,61 @@ public static class RequirementsChecker
             // The output of the command is something like:
             // Microsoft.AspNetCore.App 8.0.0 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]
             // Microsoft.NETCore.App 8.0.0 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]
-            
-            if (result.ExitCode == 0)
-            {
-                if (!result.StandardOutput.Split('\n').Any(line => line.StartsWith("Microsoft.AspNetCore.App 8.")))
-                {
-                    Utils.ExitWithError("The ASP.NET Core Runtime version 8.0 or higher is required to run OpenBullet 2. " +
-                                        "Please install it from https://dotnet.microsoft.com/en-us/download/dotnet/8.0 " +
-                                        "and relaunch the Updater");
-                }
-            }
-            else
-            {
-                Utils.ExitWithError("The ASP.NET Core Runtime version 8.0 or higher was not found on your system, " +
-                                    "and is required to run OpenBullet 2. Please install it from " +
-                                    "https://dotnet.microsoft.com/en-us/download/dotnet/8.0 and relaunch the Updater.");
-            }
+            return result.ExitCode == 0 && result.StandardOutput.Split('\n').Any(line =>
+                line.StartsWith($"Microsoft.AspNetCore.App {_dotnetVersion.Major}."));
         }
-        catch (Exception)
+        catch
         {
-            Utils.ExitWithError("The ASP.NET Core Runtime version 8.0 or higher was not found on your system, " +
-                                "and is required to run OpenBullet 2. Please install it from " +
-                                "https://dotnet.microsoft.com/en-us/download/dotnet/8.0 and relaunch the Updater.");
+            return false;
         }
+    }
+    
+    private static async Task InstallDotNetRuntimeAsync()
+    {
+        var runtimeFileName = RuntimeInformation.OSArchitecture switch
+        {
+            Architecture.Arm64 => "aspnetcore-runtime-win-arm64.exe",
+            Architecture.X64 => "aspnetcore-runtime-win-x64.exe",
+            Architecture.X86 => "aspnetcore-runtime-win-x86.exe",
+            _ => throw new NotImplementedException()
+        };
+
+        var downloadUrl = $"https://aka.ms/dotnet/{_dotnetVersion}/{runtimeFileName}";
+        
+        await using var runtimeStream = await DownloadRuntimeAsync(downloadUrl);
+
+        var tempPath = Path.GetTempFileName() + ".exe";
+        await using (var tempStream = File.OpenWrite(tempPath))
+        {
+            await runtimeStream.CopyToAsync(tempStream);
+        }
+        
+        await Cli.Wrap("cmd")
+            .WithArguments($"/c {tempPath}")
+            .WithValidation(CommandResultValidation.None)
+            .ExecuteBufferedAsync();
+    }
+    
+    private static async Task<Stream> DownloadRuntimeAsync(string url)
+    {
+        return await AnsiConsole.Progress()
+            .Columns([
+                new TaskDescriptionColumn(),
+                new ProgressBarColumn(),
+                new PercentageColumn()
+            ])
+            .StartAsync(async ctx => 
+            {
+                var downloadTask = ctx.AddTask("[green]Downloading[/]");
+
+                var progress = new Progress<double>(p =>
+                {
+                    downloadTask.Value = p;
+                });
+                
+                using var client = new HttpClient();
+
+                return await FileDownloader.DownloadAsync(client, url, progress); 
+            });
     }
 }

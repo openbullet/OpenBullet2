@@ -32,7 +32,7 @@ public static class Program
         // Check if OpenBullet2 is running
         await RequirementsChecker.EnsureOb2WebNotRunningAsync();
         
-        // Make sure the user has Microsoft.AspNetCore.App 8.0 or higher installed
+        // Make sure the user has the required .NET runtime installed
         await RequirementsChecker.EnsureDotNetInstalledAsync();
 
         // Fetch info from remote
