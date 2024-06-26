@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { BlockDescriptorDto, VariableType } from 'src/app/main/dtos/config/block-descriptor.dto';
 import { Interpreter, ScriptBlockInstanceDto } from 'src/app/main/dtos/config/block-instance.dto';
@@ -9,7 +9,7 @@ import { CodeEditorComponent } from 'src/app/shared/components/code-editor/code-
   templateUrl: './script-block.component.html',
   styleUrls: ['./script-block.component.scss'],
 })
-export class ScriptBlockComponent {
+export class ScriptBlockComponent implements OnChanges {
   @Input() block!: ScriptBlockInstanceDto;
   @Input() descriptor!: BlockDescriptorDto;
 
@@ -30,6 +30,14 @@ export class ScriptBlockComponent {
     VariableType.ListOfStrings,
     VariableType.DictionaryOfStrings,
   ];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // We need this when switching between two Lolicode blocks,
+    // otherwise the editor will not update the code.
+    if (this.editor !== undefined) {
+      this.editor.code = this.block.script;
+    }
+  }
 
   valueChanged() {
     this.onChange.emit();
