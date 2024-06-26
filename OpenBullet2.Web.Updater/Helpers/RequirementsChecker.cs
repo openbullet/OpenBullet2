@@ -59,22 +59,17 @@ public static class RequirementsChecker
 
         var installRuntime = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             && AnsiConsole.Prompt(
-                new ConfirmationPrompt($"The ASP.NET Core Runtime version {_dotnetVersion} or higher is required to run OpenBullet 2. " +
-                                       "Do you want to download and install it now?"));
+                new ConfirmationPrompt($"The .NET Runtime and ASP.NET Core Runtime version {_dotnetVersion} or higher are required to run OpenBullet 2. " +
+                                       "Do you want to download and install them now?"));
         
         if (!installRuntime)
         {
-            Utils.ExitWithError($"The ASP.NET Core Runtime version {_dotnetVersion} or higher is required to run OpenBullet 2. " +
-                                $"Please install it from https://dotnet.microsoft.com/en-us/download/dotnet/{_dotnetVersion} " +
+            Utils.ExitWithError($"The .NET Runtime and ASP.NET Core Runtime version {_dotnetVersion} or higher are required to run OpenBullet 2. " +
+                                $"Please install them from https://dotnet.microsoft.com/en-us/download/dotnet/{_dotnetVersion} " +
                                 "and relaunch the Updater");
         }
         
         await InstallDotNetRuntimeAsync();
-        
-        if (!await IsRuntimeInstalledAsync())
-        {
-            Utils.ExitWithError("The installation of the ASP.NET Core Runtime failed. Please try again later.");
-        }
     }
     
     private static async Task<bool> IsRuntimeInstalledAsync()
@@ -99,13 +94,15 @@ public static class RequirementsChecker
         }
     }
     
+    // We need to install both the .NET Runtime and the ASP.NET Core Runtime
     private static async Task InstallDotNetRuntimeAsync()
     {
+        // Download and install the .NET Runtime
         var runtimeFileName = RuntimeInformation.OSArchitecture switch
         {
-            Architecture.Arm64 => "aspnetcore-runtime-win-arm64.exe",
-            Architecture.X64 => "aspnetcore-runtime-win-x64.exe",
-            Architecture.X86 => "aspnetcore-runtime-win-x86.exe",
+            Architecture.Arm64 => "dotnet-runtime-win-arm64.exe",
+            Architecture.X64 => "dotnet-runtime-win-x64.exe",
+            Architecture.X86 => "dotnet-runtime-win-x86.exe",
             _ => throw new NotImplementedException()
         };
 
@@ -117,6 +114,30 @@ public static class RequirementsChecker
         await using (var tempStream = File.OpenWrite(tempPath))
         {
             await runtimeStream.CopyToAsync(tempStream);
+        }
+        
+        await Cli.Wrap("cmd")
+            .WithArguments($"/c {tempPath}")
+            .WithValidation(CommandResultValidation.None)
+            .ExecuteBufferedAsync();
+        
+        // Download and install the ASP.NET Core Runtime
+        runtimeFileName = RuntimeInformation.OSArchitecture switch
+        {
+            Architecture.Arm64 => "aspnetcore-runtime-win-arm64.exe",
+            Architecture.X64 => "aspnetcore-runtime-win-x64.exe",
+            Architecture.X86 => "aspnetcore-runtime-win-x86.exe",
+            _ => throw new NotImplementedException()
+        };
+
+        downloadUrl = $"https://aka.ms/dotnet/{_dotnetVersion}/{runtimeFileName}";
+        
+        await using var aspNetCoreRuntimeStream = await DownloadRuntimeAsync(downloadUrl);
+
+        tempPath = Path.GetTempFileName() + ".exe";
+        await using (var tempStream = File.OpenWrite(tempPath))
+        {
+            await aspNetCoreRuntimeStream.CopyToAsync(tempStream);
         }
         
         await Cli.Wrap("cmd")

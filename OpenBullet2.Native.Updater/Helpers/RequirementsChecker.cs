@@ -69,11 +69,6 @@ public static class RequirementsChecker
         }
         
         await InstallDotNetRuntimeAsync();
-        
-        if (!await IsRuntimeInstalledAsync())
-        {
-            Utils.ExitWithError("The installation of the .NET Windows Desktop Runtime failed. Please try again later.");
-        }
     }
 
     private static async Task<bool> IsRuntimeInstalledAsync()
@@ -97,6 +92,7 @@ public static class RequirementsChecker
         }
     }
     
+    // The .NET Windows Desktop Runtime also includes the .NET Runtime
     private static async Task InstallDotNetRuntimeAsync()
     {
         var runtimeFileName = RuntimeInformation.OSArchitecture switch
