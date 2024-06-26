@@ -86,7 +86,7 @@ public static class RequirementsChecker
                 .WithArguments("--list-runtimes")
                 .WithValidation(CommandResultValidation.None)
                 .ExecuteBufferedAsync();
-            
+
             // The output of the command is something like:
             // Microsoft.AspNetCore.App 8.0.0 [/usr/local/share/dotnet/shared/Microsoft.AspNetCore.App]
             // Microsoft.NETCore.App 8.0.0 [/usr/local/share/dotnet/shared/Microsoft.NETCore.App]
