@@ -30,11 +30,12 @@ export class ConfigDebuggerHubService {
   private errorEmitter = new EventEmitter<ErrorMessage | null>();
   public error$ = this.errorEmitter.asObservable();
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   createHubConnection(configId: string) {
+    const encodedConfigId = encodeURIComponent(configId);
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${configId}`, {
+      .withUrl(`${getBaseHubUrl()}/config-debugger?configId=${encodedConfigId}`, {
         accessTokenFactory: () => this.userService.getJwt() ?? '',
       })
       .withAutomaticReconnect()
