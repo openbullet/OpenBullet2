@@ -1540,7 +1540,7 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         ImpersonateGuest(client, guest);
         
         // Act
-        var block = new 
+        var block = new
         {
             Script = "LOG \"Hello, world!\"",
             Id = "loliCode",
@@ -1787,6 +1787,94 @@ public class ConfigIntegrationTests(ITestOutputHelper testOutputHelper)
         // Act
         var result = await GetJsonAsync<Dictionary<string, string>>(
             client, "/api/v1/config/block-snippets");
+        
+        // Assert
+        Assert.False(result.IsSuccess);
+        Assert.NotNull(result.Error);
+        Assert.NotNull(result.Error.Content);
+        Assert.Equal(ErrorCode.NotAdmin, result.Error.Content.ErrorCode);
+    }
+
+    /// <summary>
+    /// Admin can debug a config.
+    /// </summary>
+    [Fact]
+    public async Task Debug_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configService = GetRequiredService<ConfigService>();
+        var config = new Config {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata(),
+            Settings = new ConfigSettings
+            {
+                DataSettings = new DataSettings
+                {
+                    AllowedWordlistTypes = ["Default"]
+                }
+            },
+            IsRemote = false,
+            Mode = ConfigMode.LoliCode,
+            LoliCodeScript = "LOG \"Hello, World!\"\nSET VAR \"TEST\" @input.DATA"
+        };
+        configService.Configs.Add(config);
+        
+        var dto = new DebugConfigDto
+        {
+            ConfigId = config.Id,
+            TestData = "Test data",
+            WordlistType = "Default",
+        };
+        
+        // Act
+        var result = await PostJsonAsync<DebugConfigResultDto>(
+            client, "/api/v1/config/debug", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Value);
+        
+        var variables = result.Value.Variables.ToList();
+
+        Assert.Single(variables);
+
+        var variable = variables[0];
+        
+        Assert.Equal("TEST", variable.Name);
+        Assert.IsType<JsonElement>(variable.Value);
+        
+        var jsonElement = (JsonElement)variable.Value!;
+        
+        Assert.Equal("Test data", jsonElement.GetString());
+        
+        Assert.Contains(result.Value.Log, l => l.Message.Contains("Hello, World!"));
+    }
+
+    /// <summary>
+    /// Guest cannot debug a config (forbidden).
+    /// </summary>
+    [Fact]
+    public async Task Debug_Guest_Forbidden()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        var dto = new DebugConfigDto
+        {
+            ConfigId = Guid.NewGuid().ToString(),
+        };
+        
+        // Act
+        var result = await PostJsonAsync<DebugConfigResultDto>(
+            client, "/api/v1/config/debug", dto);
         
         // Assert
         Assert.False(result.IsSuccess);
