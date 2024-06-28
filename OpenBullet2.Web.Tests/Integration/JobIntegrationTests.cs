@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Net;
+using System.Text.Json;
 using OpenBullet2.Core;
 using OpenBullet2.Core.Entities;
 using OpenBullet2.Core.Models.Data;
@@ -925,12 +926,204 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     }
     
     // Admin can create a multi run job
+    [Fact]
+    public async Task CreateMultiRunJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+        
+        // Act
+        var dto = new CreateMultiRunJobDto
+        {
+            Name = "Test MRJ",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+            {
+                GroupId = -1,
+                PolyTypeName = "groupProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var result = await PostJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        
+        var resultJob = result.Value;
+        Assert.Equal(dto.Name, resultJob.Name);
+    }
     
     // Guest can create a multi run job
+    [Fact]
+    public async Task CreateMultiRunJob_Guest_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var configRepository = GetRequiredService<IConfigRepository>();
+        var config = new Config
+        {
+            Id = Guid.NewGuid().ToString(),
+            Metadata = new ConfigMetadata { Name = "Test Config" }
+        };
+        await configRepository.SaveAsync(config);
+        
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new CreateMultiRunJobDto
+        {
+            Name = "Test MRJ",
+            ConfigId = config.Id,
+            Bots = 10,
+            Skip = 5,
+            ProxyMode = JobProxyMode.On,
+            DataPool = JsonSerializer.SerializeToElement(new InfiniteDataPoolOptionsDto
+            {
+                PolyTypeName = "infiniteDataPool"
+            }, JsonSerializerOptions),
+            HitOutputs = [JsonSerializer.SerializeToElement(new DatabaseHitOutputOptionsDto
+            {
+                PolyTypeName = "databaseHitOutput"
+            }, JsonSerializerOptions)],
+            ProxySources = [JsonSerializer.SerializeToElement(new GroupProxySourceOptionsDto
+            {
+                GroupId = -1,
+                PolyTypeName = "groupProxySource"
+            }, JsonSerializerOptions)],
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var result = await PostJsonAsync<MultiRunJobDto>(
+            client, "/api/v1/job/multi-run", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        
+        var resultJob = result.Value;
+        Assert.Equal(dto.Name, resultJob.Name);
+        Assert.Equal(guest.Id, resultJob.OwnerId);
+    }
     
     // Admin can create a proxy check job
+    [Fact]
+    public async Task CreateProxyCheckJob_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        // Act
+        var dto = new CreateProxyCheckJobDto
+        {
+            Name = "Test PCJ",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var result = await PostJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        
+        var resultJob = result.Value;
+        Assert.Equal(dto.Name, resultJob.Name);
+    }
     
     // Guest can create a proxy check job
+    [Fact]
+    public async Task CreateProxyCheckJob_Guest_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new CreateProxyCheckJobDto
+        {
+            Name = "Test PCJ",
+            Bots = 10,
+            GroupId = -1,
+            CheckOnlyUntested = true,
+            Target = new ProxyCheckTargetDto
+            {
+                Url = "https://example.com",
+                SuccessKey = "<title>Example</title>"
+            },
+            CheckOutput = JsonSerializer.SerializeToElement(new DatabaseProxyCheckOutputOptionsDto
+            {
+                PolyTypeName = "databaseProxyCheckOutput"
+            }, JsonSerializerOptions),
+            TimeoutMilliseconds = 10000,
+            StartCondition = JsonSerializer.SerializeToElement(new RelativeTimeStartConditionDto
+            {
+                StartAfter = TimeSpan.FromSeconds(1),
+                PolyTypeName = "relativeTimeStartCondition"
+            }, JsonSerializerOptions)
+        };
+        var result = await PostJsonAsync<ProxyCheckJobDto>(
+            client, "/api/v1/job/proxy-check", dto);
+        
+        // Assert
+        Assert.True(result.IsSuccess);
+        
+        var resultJob = result.Value;
+        Assert.Equal(dto.Name, resultJob.Name);
+        Assert.Equal(guest.Id, resultJob.OwnerId);
+    }
     
     // Admin can update a multi run job
     
@@ -1017,10 +1210,102 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     // Guest can skip their job's waiting time
     
     // Admin can change the number of bots in a job
+    [Fact]
+    public async Task ChangeBots_Admin_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.Bots = 10;
+        jobManager.AddJob(mrJob);
+        
+        // Act
+        var dto = new ChangeBotsDto
+        {
+            JobId = mrJob.Id,
+            Bots = 5
+        };
+        var error = await PostAsync(
+            client, "/api/v1/job/change-bots", dto);
+        
+        // Assert
+        Assert.Null(error);
+        Assert.Equal(5, mrJob.Bots);
+    }
     
     // Guest cannot change the number of bots in a job not owned by them
+    [Fact]
+    public async Task ChangeBots_Guest_NotOwned_NotFound()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        await dbContext.SaveChangesAsync();
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.Bots = 10;
+        jobManager.AddJob(mrJob);
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new ChangeBotsDto
+        {
+            JobId = mrJob.Id,
+            Bots = 5
+        };
+        var error = await PostAsync(
+            client, "/api/v1/job/change-bots", dto);
+        
+        // Assert
+        Assert.NotNull(error);
+        Assert.Equal(HttpStatusCode.BadRequest, error.Response.StatusCode);
+        Assert.Equal(ErrorCode.JobNotFound, error.Content!.ErrorCode);
+        Assert.Equal(10, mrJob.Bots);
+    }
     
     // Guest can change the number of bots in their job
+    [Fact]
+    public async Task ChangeBots_Guest_Owned_Success()
+    {
+        // Arrange
+        using var client = Factory.CreateClient();
+        var jobManager = GetRequiredService<JobManagerService>();
+        var dbContext = GetRequiredService<ApplicationDbContext>();
+        var guest = new GuestEntity { Id = 1, Username = "guest", AccessExpiration = DateTime.MaxValue };
+        dbContext.Guests.Add(guest);
+        var mrJob = CreateMultiRunJob();
+        mrJob.Name = "Test MRJ";
+        mrJob.Id = 1;
+        mrJob.OwnerId = guest.Id;
+        mrJob.Bots = 10;
+        jobManager.AddJob(mrJob);
+        await dbContext.SaveChangesAsync();
+        
+        RequireLogin();
+        ImpersonateGuest(client, guest);
+        
+        // Act
+        var dto = new ChangeBotsDto
+        {
+            JobId = mrJob.Id,
+            Bots = 5
+        };
+        var error = await PostAsync(
+            client, "/api/v1/job/change-bots", dto);
+        
+        // Assert
+        Assert.Null(error);
+        Assert.Equal(5, mrJob.Bots);
+    }
     
     private MultiRunJob CreateMultiRunJob()
     {
@@ -1045,9 +1330,9 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
     private JobEntity CreateMultiRunJobEntity(Job job, MultiRunJobOptions? options = null)
     {
         // We need to use Newtonsoft.Json here for the TypeNameHandling
-        var jsonSettings = new JsonSerializerSettings
+        var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
         };
         
         var wrapper = new JobOptionsWrapper
@@ -1064,7 +1349,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 ProxyCheckJob _ => JobType.ProxyCheck,
                 _ => throw new NotImplementedException()    
             },
-            JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings)
+            JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, jsonSettings)
         };
     }
     
@@ -1072,9 +1357,9 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
         ProxyCheckJobOptions? options = null, GuestEntity? owner = null)
     {
         // We need to use Newtonsoft.Json here for the TypeNameHandling
-        var jsonSettings = new JsonSerializerSettings
+        var jsonSettings = new Newtonsoft.Json.JsonSerializerSettings
         {
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
         };
         
         var wrapper = new JobOptionsWrapper
@@ -1091,7 +1376,7 @@ public class JobIntegrationTests(ITestOutputHelper testOutputHelper)
                 ProxyCheckJob _ => JobType.ProxyCheck,
                 _ => throw new NotImplementedException()    
             },
-            JobOptions = JsonConvert.SerializeObject(wrapper, jsonSettings),
+            JobOptions = Newtonsoft.Json.JsonConvert.SerializeObject(wrapper, jsonSettings),
             Owner = owner
         };
     }
