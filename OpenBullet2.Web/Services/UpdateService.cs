@@ -36,10 +36,10 @@ public class UpdateService : BackgroundService, IUpdateService
     }
 
     /// <inheritdoc />
-    public Version CurrentVersion { get; } = new(0, 2, 5);
+    public Version CurrentVersion { get; } = new(0, 2, 6);
 
     /// <inheritdoc />
-    public Version RemoteVersion { get; private set; } = new(0, 2, 5);
+    public Version RemoteVersion { get; private set; } = new(0, 2, 6);
 
     /// <inheritdoc />
     public bool IsUpdateAvailable => RemoteVersion > CurrentVersion;
