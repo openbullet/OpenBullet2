@@ -1,15 +1,13 @@
-name: Build + Release | Staging
+name: Build + Release
 
 on:
   push:
     branches:
-    - 'staging'
+    - 'release'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Only run if the commit message contains the string [build]
-    if: contains(github.event.head_commit.message, '[build]')
     steps:
 
     # Checkout the repository
@@ -17,22 +15,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-
-    # Get the commit number
-    - name: Get commit number
-      run: echo "COMMIT_NUMBER=$(git rev-list --count HEAD)" >> $GITHUB_ENV
-
-    # Append the commit number to version.txt
-    - name: Append commit number to version.txt
-      run: echo ".$COMMIT_NUMBER" >> OpenBullet2.Web/version.txt
-
-    # Get the commit description
-    - name: Get commit description
-      run: |
-        echo 'COMMIT_DESCRIPTION<<EOF' >> $GITHUB_ENV
-        git log -1 --pretty=%b >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
-
+        
     # Read the version
     - name: Read version
       run: echo "VERSION=$(cat OpenBullet2.Web/version.txt)" >> $GITHUB_ENV
@@ -73,15 +56,13 @@ jobs:
         file_glob: true
         tag: ${{ env.VERSION }}
         overwrite: true
-        prerelease: true
+        prerelease: false
         make_latest: true
         # Show ONLY the commit description in the release (without)
         body: |
-          This is a **STAGING** build. It might be unstable. Use at your own discretion.
+          This is a **RELEASE** build.
 
-          Changelog:
-
-          ${{ env.COMMIT_DESCRIPTION }}
+          Please refer to [this guide](https://discourse.openbullet.dev/t/how-to-download-and-start-openbullet-2/29) for the download instructions.
 
     - name: Notify new build on discord
       if: success()
@@ -90,8 +71,8 @@ jobs:
         DISCORD_EMBEDS: |
           [
             {
-              "title": "New staging build",
-              "description": "Staging release **${{ env.VERSION }}** available",
+              "title": "New release build",
+              "description": "Release **${{ env.VERSION }}** available",
               "color": 5763719
             }
           ]
