@@ -8,12 +8,12 @@ Performing (D)DoS or credential stuffing attacks on sites you do not have permis
 ## 📚 Documentation
 For detailed information on how to get started with **OpenBullet 2**, check out the [documentation](https://docs.openbullet.dev).
 
-[![Docs](https://img.shields.io/badge/Docs-Read_the_Docs-3ea489.svg)](https://docs.openbullet.dev)
+[![Docs](https://img.shields.io/badge/Docs-Read_the_Docs-2292A4.svg)](https://docs.openbullet.dev)
 
 ## 🌐 Community
 Join our community to discuss and share your experiences with **OpenBullet 2**.
 
-[![Forum](https://img.shields.io/badge/Forum-Join_the_community-1abc9c.svg)](https://discourse.openbullet.dev/)
+[![Forum](https://img.shields.io/badge/Forum-Join_the_community-2292A4.svg)](https://discourse.openbullet.dev/)
 
 ## 📦 Download and setup
 Refer to [this guide](https://discourse.openbullet.dev/t/wip-how-to-download-and-start-openbullet-2/29) on the official forum.
@@ -30,7 +30,7 @@ Refer to [this guide](https://discourse.openbullet.dev/t/wip-how-to-download-and
 ## 🐛 Report Issues
 Found a bug or have a feature request? Please help us improve by submitting an issue.
 
-[![Open an issue](https://img.shields.io/badge/Bug-Report_a_bug-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=bug-report.yaml&title=%5BBug%5D%3A+) [![Request a feature](https://img.shields.io/badge/Feature-Request_a_feature-1abc9c.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=feature_request.md&title=%5BREQUEST%5D)
+[![Open an issue](https://img.shields.io/badge/Bug-Report_a_bug-E74C3C.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=bug-report.yaml&title=%5BBug%5D%3A+) [![Request a feature](https://img.shields.io/badge/Feature-Request_a_feature-2292A4.svg)](https://github.com/openbullet/OpenBullet2/issues/new?template=feature_request.md&title=%5BREQUEST%5D)
 
 ## License
 This software is licensed under the MIT License.
